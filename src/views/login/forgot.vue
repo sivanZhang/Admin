@@ -9,12 +9,12 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">Retrieve Rassword</h3>
       </div>
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user"/>
+          <i class="el-icon-message"></i>
         </span>
         <el-input
           ref="username"
@@ -27,38 +27,15 @@
         />
       </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password"/>
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="Password"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
-        </span>
-      </el-form-item>
-
       <el-button
         :loading="loading"
         type="primary"
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
-      >Login</el-button>
+      >Enter</el-button>
       <el-row :gutter="15">
-        <el-col :span="12" class="link">
-          <router-link to="/forgot">申请账号</router-link>
-        </el-col>
-        <el-col :span="12" class="link">
-          <router-link to="/forgot">找回密码</router-link>
+        <el-col :span="12" class="link" :offset="12">
+          <router-link to="/login">返回登录</router-link>
         </el-col>
       </el-row>
     </el-form>
@@ -73,8 +50,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "281475120@163.com",
-        password: "123456"
+        username: "13032985685",
+        password: "654321"
       },
       loginRules: {
         username: [
@@ -123,8 +100,7 @@ export default {
           this.loading = true;
           this.$store
             .dispatch("user/login", this.loginForm)
-            .then(res => {
-              console.log(res);
+            .then(() => {
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
@@ -148,13 +124,7 @@ export default {
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
-.link {
-  font-size: 14px;
-  color: #fff;
-  &:last-of-type {
-    text-align: right;
-  }
-}
+
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
     color: $cursor;
