@@ -1,30 +1,24 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <el-tabs tab-position="left" style="height: 200px;">
+      <el-tab-pane label="Users">Users</el-tab-pane>
+      <el-tab-pane label="Ungrouped users">Ungrouped users</el-tab-pane>
+    </el-tabs>
+    
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  }
-}
+  name: "Dashboard",
+  computed: {}
+};
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
+.el-tabs--left .el-tabs__nav-scroll {
+  height: auto;
 }
 </style>
