@@ -1,0 +1,34 @@
+.dashboard-container {
+    .el-aside {
+        max-height: calc(100vh - 50px);
+        overflow-y: scroll;
+    }
+    .el-container {
+        min-height: calc(100vh - 50px);
+    }
+    .nav-title {
+        height: 60px;
+        border-top: 1px solid #ddd;
+        .el-col {
+            color: #909399;
+        }
+    }
+    .tag-nav {
+        height: 60px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 5px;
+        &:hover {
+            background-color: #ebeef5;
+        }
+    }
+    .title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .el-main {
+        padding: 0 20px;
+    }
+}
