@@ -1,10 +1,16 @@
 <template>
   <div class="dashboard-container">
-    <el-tabs tab-position="left" style="height: 200px;">
-      <el-tab-pane label="Users">Users</el-tab-pane>
-      <el-tab-pane label="Ungrouped users">Ungrouped users</el-tab-pane>
+    <el-tabs tab-position="left" v-model="tab">
+      <el-tab-pane label="Users">
+        <div class="tab-page"></div>
+      </el-tab-pane>
+      <el-tab-pane label="Ungrouped users">
+        <div class="tab-page"></div>
+      </el-tab-pane>
     </el-tabs>
-    
+    <el-button @click="guan">
+      点我
+    </el-button>
   </div>
 </template>
 
@@ -13,12 +19,22 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "Dashboard",
-  computed: {}
+  data() {
+    return {
+      tab:''
+    }
+  },
+  computed: {},
+  methods:{
+    guan(){
+      this.tab = null;
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.el-tabs--left .el-tabs__nav-scroll {
-  height: auto;
+.dashboard-container{
+  
 }
 </style>
