@@ -29,11 +29,6 @@
     </el-container>
   </div>
 </template>
-        </el-main>
-      </el-container>
-    </el-container>
-  </div>
-</template>
 
 <script>
 import { mapGetters } from "vuex";
