@@ -100,11 +100,8 @@
       position: relative;
 
       .el-tooltip {
-        padding: 0 !important;
-
-        .svg-icon {
-          margin-left: 20px;
-        }
+        font-size: inherit;
+        text-align: center;
       }
     }
 

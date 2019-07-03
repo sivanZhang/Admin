@@ -19,7 +19,9 @@ export default {
     if (icon) {
       vnodes.push(<svg-icon icon-class={icon}/>)
     }
-
+    /* if (icon) {
+    vnodes.push(<i class={icon} />) //使用el ui 的 icon
+    } */
     if (title) {
       vnodes.push(<span slot='title'>{(title)}</span>)
     }
