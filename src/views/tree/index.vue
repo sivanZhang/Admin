@@ -1,17 +1,10 @@
 <template>
-  <div class="app-container">
+  <div>
   </div>
 </template>
 
 <script>
 export default {
-
-  data() {
-    return {
-      
-    }
-  },
-  
 }
 </script>
 
