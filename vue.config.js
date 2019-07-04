@@ -13,7 +13,7 @@ module.exports = {
     publicPath: process.env.NODE_ENV === 'development' ? '/' : './', //生产环境需要改为'./'
     outputDir: 'dist',
     assetsDir: 'static',
-    lintOnSave: process.env.NODE_ENV === 'development',
+    lintOnSave: false,//process.env.NODE_ENV === 'development'
     productionSourceMap: false,
     devServer: {
         port: 8080,

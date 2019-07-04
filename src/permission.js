@@ -29,7 +29,7 @@ router.beforeEach(async(to, from, next) => {
             const hasGetUserInfo = store.getters.name
             if (hasGetUserInfo) {
                 next()
-            } else {
+            } /* else {
                 try {
                     // get user info
                     await store.dispatch('user/getInfo')
@@ -42,7 +42,7 @@ router.beforeEach(async(to, from, next) => {
                     next(`/login?redirect=${to.path}`)
                     NProgress.done()
                 }
-            }
+            } */
         }
     } else {
         /* has no token*/

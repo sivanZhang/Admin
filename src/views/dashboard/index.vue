@@ -1,118 +1,17 @@
 <template>
-  <div class="dashboard-container">
-    <el-container>
-      <el-aside
-        width="210px"
-        style="border-right:1px solid #ddd;padding: 0 5px;margin-right:-17px; z-index:10001"
-      >
-        <div class="tag-nav">Users</div>
-        <div class="tag-nav">Ungrouped users</div>
-        <el-row type="flex" align="middle" class="nav-title">
-          <el-col :span="8">用户组</el-col>
-          <el-col :span="16" style="text-align:right">
-            <el-button @click="addRoot" type="info" size="mini">添加用户组</el-button>
-          </el-col>
-        </el-row>
-        <el-input v-model="nodeLable" placeholder="输入用户组名" style="margin-bottom:30px;"/>
-        <el-tree
-          highlight-current
-          ref="tree2"
-          :data="TreeData"
-          @node-click="clickGroup"
-          :props="defaultProps"
-          class="filter-tree"
-          default-expand-all
-          :expand-on-click-node="false"
-        />
-      </el-aside>
-      <el-container>
-        <el-header class="title" height="120px">{{title}}</el-header>
-        <el-main>
-          <div class="t-header">
-            <el-button type="primary" size="small">添加成员</el-button>
-            <el-button type="danger" size="small">删除成员</el-button>
-            <el-button @click="append" type="warning" size="small">添加子用户组</el-button>
-          </div>
-          <template>
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="date" label></el-table-column>
-              <el-table-column prop="name" label="用户名称"></el-table-column>
-              <el-table-column prop="address" label="邮箱"></el-table-column>
-              <el-table-column prop="name" label="角色"></el-table-column>
-              <el-table-column prop="name" label="是否启用"></el-table-column>
-              <el-table-column prop="name" label="操作"></el-table-column>
-            </el-table>
-          </template>
-        </el-main>
-      </el-container>
-    </el-container>
-  </div>
+    <div id="dashboard">
+        概览
+    </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
-  name: "Dashboard",
-  data() {
-    return {
-      nodeLable:'',
-      NodeData: null,
-      tableData: [{}],
-      title: "title",
-      componentId: "",
-      filterText: "",
-      TreeData: [],
-      defaultProps: {
-        children: "children",
-        label: "label"
-      }
-    };
-  },
-  methods: {
-    //点击用户组  返回点击的用户组的 data 和 node 并让输入框的值= 点击的用户组名
-    clickGroup(data, node) {
-      this.NodeData = [data, node];
-      this.nodeLable = data.label;
-    },
-    addRoot() {
-      if(!this.nodeLable){
-        this.$message.warning('请先输入用户组名');
-        return;
-      }
-      this.TreeData.push({
-        label: this.nodeLable
-      });
-    },
-    append() {
-      if(this.NodeData[1].level===4){
-        this.$message.warning('您只能有4层嵌套组');
-        return;
-      }
-      if(!this.nodeLable){
-        this.$message.warning('请先输入用户组名');
-        return;
-      }
-      const newChild = { label:this.nodeLable, children: [] ,id:this.NodeData[0].$treeNodeId};
-      console.log(this.NodeData)
-      if (!this.NodeData[0].childNodes) {
-        this.$set(this.NodeData[0], "children", []);
-      }
-      this.NodeData[0].children.push(newChild);
-    },
 
-    remove(node, data) {
-      const parent = node.parent;
-      const children = parent.data.children || parent.data;
-      const index = children.findIndex(d => d.id === data.id);
-      children.splice(index, 1);
-    }
-  },
-  watch: {
-    filterText(val) {
-      this.$refs.tree2.filter(val);
-    }
-  }
-};
+}
 </script>
 
-<style lang="scss" scoped src="./home.scss"></style>
+<style lang="scss">
+#dashboard{
+
+}
+</style>

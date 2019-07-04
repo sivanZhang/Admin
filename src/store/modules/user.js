@@ -42,13 +42,13 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({
         email: username.trim(),
-        password: password
+        password: password 
       }).then(response => {
         const {
           data
         } = response
-        commit('SET_TOKEN', `JWT ${data.token}`);
-        setToken(`JWT ${data.token}`)
+        commit('SET_TOKEN', data.token);
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
