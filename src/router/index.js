@@ -47,12 +47,12 @@ export const constantRoutes = [{
     path: '/forgot',
     component: () =>
       import('@/views/login/forgot'),
-    hidden: true
   },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    mate: { breadcrumb: false },
     children: [{
       path: '/dashboard',
       name: 'Home',
@@ -134,16 +134,17 @@ export const constantRoutes = [{
   {
     path: '/settings',
     component: Layout,
+    redirect: '/settings',//设置成父路由的路径后，点击面包屑不会跳转
     meta: { title: '系统设置', icon: 'settings' },
     children: [{
-        path: '/userGroup',
+        path: 'userGroup', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
         name: 'UserGroup',
         component: () =>
           import('@/views/settings/userGroup'),
         meta: { title: '用户和组', icon: 'role' }
       },
       {
-        path: '/wwwww',
+        path: 'wwwww',
         name: 'UserGqqqroup',
         component: () =>
           import('@/views/settings/userGroup1'),

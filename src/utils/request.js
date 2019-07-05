@@ -1,3 +1,9 @@
+/**
+ * 
+ * @file 封装axios请求的配置
+ *  
+ */
+
 import axios from 'axios'
 import qs from 'qs'
 import {
@@ -9,15 +15,15 @@ import {
   getToken
 } from '@/utils/auth'
 // create an axios instance
-const service = axios.create({
+const AXIOS = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 5000,
   transformRequest: [data => {
     return qs.stringify(data);
   }],
 })
-service.defaults.headers['Access-Control-Allow-Origin'] = '*'
-service.interceptors.request.use(
+AXIOS.defaults.headers['Access-Control-Allow-Origin'] = '*'
+AXIOS.interceptors.request.use(
   config => {
     if (store.getters.token) {
       /*  config.headers['Authorization'] = `JWT ${getToken()}` */
@@ -30,16 +36,16 @@ service.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-service.interceptors.response.use(
+AXIOS.interceptors.response.use(
   /**
-   * If you want to get http information such as headers or status
+   * If you want to get AXIOS information such as headers or status
    * Please return  response => response
    */
 
   /**
    * Determine the request status by custom code
    * Here is just an example
-   * You can also judge the status by HTTP Status Code
+   * You can also judge the status by AXIOS Status Code
    */
   response => {
     const res = response
@@ -99,4 +105,4 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+export default AXIOS

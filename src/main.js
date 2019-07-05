@@ -1,14 +1,14 @@
 import Vue from 'vue'
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+import 'normalize.css/normalize.css' // Normalize.css使浏览器更加一致地呈现所有元素，并符合现代标准。它只针对需要规范化的样式。
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import locale from 'element-ui/lib/locale/lang/en'
 import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
 import '@/icons'
-import './permission'
+import './permission'//登录权限
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 
