@@ -14,10 +14,10 @@ export function getEmailCode(payload) {
 }
 //找回密码
 export function postResetPassword(data) {
-  return AXIOS.post('/users/find_password/', data)
+    return AXIOS.post('/users/find_password/', data)
 }
 
 //注册用户
 export function postRegister(data) {
-  return AXIOS.post('/user/register/', data)
+    return AXIOS.post('/users/register/', data)
 }

@@ -24,7 +24,7 @@ module.exports = {
         },
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
-                target: 'https://tl.chidict.com:445',
+                target: 'http://tl.chidict.com:8081',
                 changeOrigin: true,
                 pathRewrite: {
                     ['^' + process.env.VUE_APP_BASE_API]: ''

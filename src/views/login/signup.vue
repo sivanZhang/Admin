@@ -103,11 +103,10 @@
         //验证表单，如果通过则触发http请求
         this.$refs['emailForm'].validate((valid) => {
           if (valid) {
-            this.$refs['SignUpForm'].validate(async (validEmail) => {
+            this.$refs['SignUpForm'].validate((validEmail) => {
               if (validEmail) {
                 this.loading = true;
-                await postRegister({ ...this.emailForm, ...this.SignUpForm }).then(({ data }) => {
-                  console.log(data.status)
+                postRegister({ ...this.emailForm, ...this.SignUpForm }).then(({ data }) => {
                   let type;
                   if (data.status == 0) {
                     type = 'success'
@@ -115,8 +114,11 @@
                     type = 'error'
                   }
                   this.$message[type](data.msg)
+                  this.loading = false;
+                }).catch(()=>{
+                  this.loading = false;
                 })
-                this.loading = false;
+                
               } else {
                 return false;
               }
@@ -135,7 +137,7 @@
             this.isDisabled = true;
             getEmailCode({ ...this.emailForm, state: false }).then(({ data }) => {
               let type;
-              if (data.status === 'ok') {
+              if (data.status == 0) {
                 type = 'success'
               } else {
                 type = 'error'
