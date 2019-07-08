@@ -56,8 +56,7 @@
       }
       const passwordRules = {
         emailcode: [
-          { required: true, trigger: "blur", message: "验证码未填写" },
-          { pattern: /^\d{4}$/, message: "验证码为四位整数" }
+          { required: true, trigger: "blur", message: "验证码未填写" }
         ],
         password: [{
           required: true,
@@ -97,7 +96,7 @@
                 this.loading = true;
                 await postResetPassword({ ...this.emailForm, ...this.passwordForm }).then(({ data }) => {
                   let type;
-                  if (data.status === 'ok') {
+                  if (data.status === 0) {
                     type = 'success'
                   } else {
                     type = 'error'

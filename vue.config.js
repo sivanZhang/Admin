@@ -13,7 +13,7 @@ module.exports = {
     publicPath: process.env.NODE_ENV === 'development' ? '/' : './', //生产环境需要改为'./'
     outputDir: 'dist',
     assetsDir: 'static',
-    lintOnSave: false,//process.env.NODE_ENV === 'development'
+    lintOnSave: false, //process.env.NODE_ENV === 'development'
     productionSourceMap: false,
     devServer: {
         port: 8080,
@@ -24,7 +24,7 @@ module.exports = {
         },
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
-                target: 'https://tl.chidict.com',
+                target: 'https://tl.chidict.com:445',
                 changeOrigin: true,
                 pathRewrite: {
                     ['^' + process.env.VUE_APP_BASE_API]: ''

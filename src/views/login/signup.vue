@@ -20,7 +20,7 @@
           <span class="svg-container">
             <svg-icon icon-class="code" />
           </span>
-          <el-input placeholder="验证码" name="emailcode" v-model.number="SignUpForm.emailcode"></el-input>
+          <el-input placeholder="验证码" name="emailcode" v-model="SignUpForm.emailcode"></el-input>
         </el-form-item>
         <el-button type="text" @click="sendCode" :disabled="isDisabled">{{isDisabled?`${count}秒后重新发送`:'获取验证码'}}</el-button>
       </div>
@@ -65,8 +65,7 @@
           { required: true, trigger: "blur", message: "用户名未填写" }
         ],
         emailcode: [
-          { required: true, trigger: "blur", message: "验证码未填写" },
-          { pattern: /^\d{4}$/, message: "验证码为四位整数" }
+          { required: true, trigger: "blur", message: "验证码未填写" }
         ],
         password: [{
           required: true,
@@ -108,8 +107,9 @@
               if (validEmail) {
                 this.loading = true;
                 await postRegister({ ...this.emailForm, ...this.SignUpForm }).then(({ data }) => {
+                  console.log(data.status)
                   let type;
-                  if (data.status === 'ok') {
+                  if (data.status == 0) {
                     type = 'success'
                   } else {
                     type = 'error'
