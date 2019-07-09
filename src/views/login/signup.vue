@@ -26,7 +26,7 @@
       </div>
       <el-form-item prop="username	">
         <span class="svg-container">
-          <i class="el-icon-user" />
+          <svg-icon icon-class="user" />
         </span>
         <el-input ref="username" v-model="SignUpForm.username" type="text" placeholder="用户名" name="username" />
       </el-form-item>
@@ -71,7 +71,7 @@
           required: true,
           trigger: "blur",
           len: 6,
-          message: "输入新密码"
+          message: "输入新密码",
         }]
       }
       return {

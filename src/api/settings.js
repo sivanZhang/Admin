@@ -1,7 +1,7 @@
 import AXIOS from '@/utils/request'
 //获取部门列表 或者 信息
-export function getDept(params) {
-    return AXIOS.get('/users/emailscode/', { params })
+export function getDept() {
+    return AXIOS.get('/dept/dept/')
 }
 //添加部门
 export function addDept(data) {
@@ -11,7 +11,7 @@ export function addDept(data) {
 export function removeDept(data) {
     return AXIOS.post('/dept/dept/?delete', data)
 }
-//修改
+//部门信息修改
 export function putDept(data) {
     return AXIOS.post('/dept/dept/?01', data)
 }

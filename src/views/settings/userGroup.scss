@@ -1,4 +1,4 @@
-.dashboard-container {
+#userGroup {
     .el-aside {
         max-height: calc(100vh - 50px);
         overflow-y: scroll;
@@ -31,11 +31,12 @@
     .el-main {
         padding: 0 20px;
     }
-    .t-header{
+    .t-header {
         padding: 8px 12px;
         background-color: #E4E7ED;
     }
 }
+
 ::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
