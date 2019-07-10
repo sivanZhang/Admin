@@ -1,17 +1,14 @@
 <template>
-    <div id="dashboard">
-        概览
+    <div>
+        用户概览
     </div>
 </template>
 
 <script>
 export default {
-
+    name:'users'
 }
 </script>
 
 <style lang="scss">
-#dashboard{
-
-}
 </style>
