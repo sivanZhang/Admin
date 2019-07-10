@@ -1,4 +1,22 @@
 #userGroup {
+    .custom-tree-node {
+      color: #aa00ff;
+      height: 40px;
+      line-height: 40px;
+      &:hover {
+        .iconWarp {
+          display: inline-block;
+        }
+      }
+
+      .iconWarp {
+        display: none;
+      }
+    }
+
+    .iconWarp {
+      display: none;
+    }
     .el-aside {
         max-height: calc(100vh - 50px);
         overflow-y: scroll;
