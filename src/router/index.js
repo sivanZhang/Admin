@@ -135,7 +135,10 @@ export const constantRoutes = [{
       }
     ]
   },
-
+  {
+    path: '/videoCheck',
+    component: () => import('@/views/video/videoCheck'),
+  },
   {
     path: 'external-link',
     component: Layout,
