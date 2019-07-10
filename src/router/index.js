@@ -56,7 +56,7 @@ export const constantRoutes = [{
   {
     path: '/',
     component: Layout,
-    redirect: noRedirect,
+    redirect: '/project',
     meta: { title: '概览', icon: 'gailan'},
     children: [{
         path: 'project',
