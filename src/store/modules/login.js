@@ -1,5 +1,5 @@
 //改变一些公共状态的逻辑写在里面
-import * as userApi from '@/api/user'
+import * as userApi from '@/api/login'
 import {
   getToken,
   setToken,
@@ -41,7 +41,7 @@ const actions = {
       })
     })
   },
-  getInfo({commit,state}) {
+  getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       userApi.getInfo(state.token).then(({ data }) => {
         if (!data) {

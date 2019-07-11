@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import { postRegister, getEmailCode } from '@/api/user'
+  import { postRegister, getEmailCode } from '@/api/login'
   export default {
     name: "SignUp",
     data() {

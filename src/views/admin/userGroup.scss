@@ -1,4 +1,7 @@
 #userGroup {
+    .el-delete{
+        position: relative;
+    }
     .custom-tree-node {
       color: #aa00ff;
       height: 40px;
@@ -16,6 +19,10 @@
 
     .iconWarp {
       display: none;
+      font-size: 12px;
+      &>*{
+          cursor: pointer;
+      }
     }
     .el-aside {
         max-height: calc(100vh - 50px);
