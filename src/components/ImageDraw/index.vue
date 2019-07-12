@@ -51,7 +51,7 @@
           pWidth:0,
           pHeight:0,
           lineType:'pencel',
-          lineColor:'red',
+          lineColor:'#ff0000',
           lineWidth:2,
           imageBase64:"",
           context:{},

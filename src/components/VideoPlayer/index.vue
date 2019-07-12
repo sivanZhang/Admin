@@ -179,15 +179,19 @@
       async handleMark(){
         if(this.videoPlayerIsShow){
             let _self=this;
-            _self.playerLoading=true;
-            _self.playerLoadingText="正在获取视频流..."
-            this.videoPlayer.pause(true);
-            this.playerControls.stateIcon = 'el-icon-video-play';   
+            if(this.videoPlayer.getPosition()>0){
+              _self.playerLoading=true;
+              _self.playerLoadingText="正在获取视频流..."
+              this.videoPlayer.pause(true);
+              this.playerControls.stateIcon = 'el-icon-video-play';   
 
-            let { dataURL, width, height } = await new VideoCapture(this.url).capture(this.videoPlayer.getPosition());
-            this.$refs.imageDraw.loadImage(dataURL);
-            this.videoPlayerIsShow=false;  
-            _self.playerLoading=false;
+              let { dataURL, width, height } = await new VideoCapture(this.url).capture(this.videoPlayer.getPosition());
+              this.$refs.imageDraw.loadImage(dataURL);
+              this.videoPlayerIsShow=false;  
+              _self.playerLoading=false;
+            }else{
+              this.$message.error('时间是大于0的数字');
+            }
         }else{
           this.$message.error('已处于视频标注模式');
         }
@@ -291,7 +295,7 @@
         position:absolute;
         top:0;
         left:0;
-        z-index:99;
+        z-index:109;
         text-align: center;
         background: #000;
       }
