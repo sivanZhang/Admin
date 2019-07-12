@@ -1,6 +1,13 @@
 #userGroup {
+    .el-radio-group{
+        display: block;
+        margin: 15px 0;
+    }
     .el-delete{
         position: relative;
+    }
+    .search-group{
+        margin-bottom: 10px;
     }
     .custom-tree-node {
       color: #aa00ff;
@@ -32,8 +39,7 @@
         min-height: calc(100vh - 50px);
     }
     .nav-title {
-        height: 60px;
-        border-top: 1px solid #ddd;
+        padding: 8px 12px;
         .el-col {
             color: #909399;
         }

@@ -11,16 +11,16 @@ import '@/icons'
 import './permission' //登录权限
 import * as filters from '@/filters' // global filters
 Object.keys(filters).forEach(key => {
-    Vue.filter(key, filters[key])
+  Vue.filter(key, filters[key])
 })
 Vue.use(ElementUI, {
-    locale
+  locale,
 })
 Vue.config.productionTip = false
 
 new Vue({
-    el: '#app',
-    router,
-    store,
-    render: h => h(App)
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
 })

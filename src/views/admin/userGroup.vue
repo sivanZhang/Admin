@@ -1,73 +1,55 @@
 <template>
   <div id="userGroup">
     <el-container>
-      <el-aside width="210px" style="border-right:1px solid #ddd;padding: 0 5px;">
-        <div class="tag-nav">Users</div>
-        <div class="tag-nav">Ungrouped users</div>
-        <el-row type="flex" align="middle" class="nav-title">
-          <el-col :span="8">用户组</el-col>
-          <el-col :span="16" style="text-align:right">
-            <el-button @click="openUserGroupForm('add')" type="info" size="small">添加部门</el-button>
-          </el-col>
-        </el-row>
-        <!-- <el-input v-model="nodeLable" placeholder="部门名称" style="margin-bottom:30px;" /> -->
-        <el-tree empty-text="未创建部门" highlight-current ref="tree" :data="TreeData" @node-click="handleNodeClick" :props="defaultProps" class="filter-tree" default-expand-all :expand-on-click-node="false">
-          <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span style="margin-right:6px;">{{node.label}}</span>
-            <span class="iconWarp">
-              <i class="el-icon-plus" @click="openUserGroupForm('add',data)" style="color:#67C23A" title="添加子部门"></i>
-              <i class="el-icon-delete" @click="remove(data)" style="color:#F56C6C" title="删除当前部门"></i>
-            </span>
-          </span>
-        </el-tree>
-      </el-aside>
+      <el-header>
+        <el-radio-group v-model="radio" size="mini">
+          <el-radio-button :label="1">所有用户</el-radio-button>
+          <el-radio-button :label="2">未分组</el-radio-button>
+          <el-radio-button :label="3">部门</el-radio-button>
+        </el-radio-group>
+      </el-header>
       <el-container>
-        <el-main style="margin:17px 0 0;">
+        <el-aside v-if="radio==3" width="240px" style="border-right:1px solid #ddd;padding: 0 5px;">
+          <el-row type="flex" align="middle" class="nav-title">
+            <el-col :span="8">用户组</el-col>
+            <el-col :span="16" style="text-align:right">
+              <el-button @click="openGroupForm('add')" type="info" size="mini">添加部门</el-button>
+            </el-col>
+          </el-row>
+          <el-input size="mini" class="search-group" placeholder="输入关键字进行搜索" v-model="filterText">
+          </el-input>
+          <el-tree class="filter-tree" empty-text="未创建部门" highlight-current ref="tree" :data="TreeData" @node-click="handleGroupClick" :props="defaultProps" default-expand-all :expand-on-click-node="false" :filter-node-method="searchGroup">
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span style="margin-right:6px;">{{node.label}}</span>
+              <span class="iconWarp">
+                <i class="el-icon-plus" @click="openGroupForm('add',data)" style="color:#409EFF" title="添加子部门"></i>
+                <i class="el-icon-delete" @click="removeGroup(data)" style="color:#F56C6C" title="删除当前部门"></i>
+              </span>
+            </span>
+          </el-tree>
+        </el-aside>
+        <el-main>
           <div class="t-header">
-            <el-row type="flex" align="middle">
+            <el-row v-if="radio==3" type="flex" align="middle">
               <el-col :span="12">
-                <el-button @click="openUserGroupForm('update')" type="primary" size="small">修改部门信息</el-button>
-                <el-button type="primary" size="small">添加成员</el-button>
-                <el-button type="danger" size="small">删除成员</el-button>
+                <el-button @click="openGroupForm('update')" type="primary" size="mini">修改部门信息</el-button>
+                <el-button @click="openChangeMember(1)" type="primary" size="mini">添加成员</el-button>
+                <el-button @click="openChangeMember(0)" type="danger" size="mini">删除成员</el-button>
               </el-col>
               <el-col :span="6">
-                <label for="">部门名称</label>： {{ClickedData?ClickedData.name:'--'}}
+                <label for="">部门名称</label>： {{ActiveGroup?ActiveGroup.name:'--'}}
               </el-col>
               <el-col :span="6">
-                <label for="">部门负责人</label>：{{ClickedData?ClickedData.charger_name : '未指定'}}
+                <label for="">部门负责人</label>：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
+              </el-col>
+            </el-row>
+            <el-row v-else type="flex" align="middle">
+              <el-col :span="12">
+                <el-button disabled type="primary" size="mini">添加用户</el-button>
               </el-col>
             </el-row>
           </div>
-          <el-table :data="UserList" stripe style="width: 100%" border>
-            <el-table-column label="头像" width="100" align="center">
-              <template slot-scope="scope">
-                <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
-              </template>
-            </el-table-column>
-            <el-table-column prop="username" label="用户名称" align="center" />
-            <el-table-column prop="email" label="邮箱" align="center" />
-            <el-table-column prop="phone" label="电话" align="center" />
-            <el-table-column label="是否启用" align="center" width="100">
-              <template slot-scope="scope">
-                <!-- <el-checkbox v-model="scope.row.is_active" disabled></el-checkbox> -->
-                <i v-if="scope.row.is_active" class="el-icon-check"></i>
-                <i v-else class="el-icon-close"></i>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center">
-              <template slot-scope="scope">
-                <el-tooltip content="用户权限" placement="top">
-                  <el-button icon="el-icon-user" type="text" />
-                </el-tooltip>
-                <el-tooltip content="编辑用户" placement="top">
-                  <el-button icon="el-icon-edit" type="text" />
-                </el-tooltip>
-                <el-tooltip content="删除用户" placement="top">
-                  <el-button icon="el-icon-delete" type="text" />
-                </el-tooltip>
-              </template>
-            </el-table-column>
-          </el-table>
+          <users-table :UserList="radio==3?GroupUsers:UserList"></users-table>
         </el-main>
       </el-container>
     </el-container>
@@ -85,21 +67,43 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button :loading="Loadings.addDeptLoading" type="primary" @click="DialogType.type==='add'?append():updateGroup()">提 交</el-button>
+        <el-button :loading="Loadings.addDeptLoading" type="primary" @click="DialogType.type==='add'?appendGroup():updateGroup()">提 交</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :title="MemberEditState['title']" :visible.sync="isMemberEditShow" width="460px">
+      <el-select v-model="SelectMembers" multiple placeholder="请选择" style="width:100%" size="medium">
+        <el-option v-for="(item,index) of AllMembers" :label="item.username" :value="item.id" :key="index"></el-option>
+      </el-select>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isMemberEditShow = false">取 消</el-button>
+        <el-button :loading="Loadings.memberEditLoading" :type="MemberEditState.type?'primary':'danger'" @click="changeMember">
+          {{MemberEditState.type?'添 加':'删 除'}}
+        </el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getUserList, getDept, addDept, putDept, removeDept } from "@/api/admin";
+  import { getUserList, getDept, addDept, putDept, removeDept } from "@/api/admin"
+  import usersTable from "@/components/UsersTable"
+  import { mapState } from 'vuex'
   export default {
     name: "userGroup",
+    components: {
+      usersTable
+    },
     data() {
       return {
+        SelectMembers: [],
+        AllMembers: [],
+        MemberEditState: {},
+        isMemberEditShow: false,
+        radio: 1,
+        GroupUsers: [],
+        filterText: '',
         DialogType: {},
-        ClickedData: null,
-        UserList: [],
+        ActiveGroup: null,
         TreeData: [],
         defaultProps: {
           children: "children",
@@ -117,11 +121,69 @@
         },
         Loadings: {
           addDeptLoading: false,
+          memberEditLoading: false
         }
       };
     },
+    computed: {
+      classObject: function() {
+        return {
+          active: this.isActive && !this.error,
+        }
+      },
+      ...mapState({
+        UserList: state => state.admin.UserList
+      })
+    },
     methods: {
-      openUserGroupForm(type, node = null) {
+      openChangeMember(type = 0) {
+        this.SelectMembers=[]
+        if (type) {
+          this.MemberEditState = Object.assign({}, {
+            type,
+            title: '添加成员'
+          })
+          this.AllMembers = Object.assign({},this.UserList)
+        } else {
+          this.MemberEditState = Object.assign({}, {
+            type,
+            title: '删除成员'
+          })
+          this.AllMembers = Object.assign({},this.GroupUsers)
+        }
+        this.isMemberEditShow=true
+      },
+      async changeMember() {
+        if (!this.SelectMembers.length) {
+          this.$message.warning('未选择用户')
+          return
+        }
+        let data = {
+          id: this.ActiveGroup.id,
+          method: 'put',
+        };
+        if (this.MemberEditState.type) {
+          data = { ...data, add_user_ids: this.SelectMembers.join() }
+        } else {
+          data = { ...data, del_user_ids: this.SelectMembers.join() }
+        }
+        this.Loadings.memberEditLoading = true
+            await putDept(data).then(({ data }) => {
+              this.Loadings.memberEditLoading = false
+              if (data.status === 0) {
+                this.$message.success(data.msg)
+                //成功后刷新该组成员
+                this.handleGroupClick(this.ActiveGroup)
+              } else {
+                this.$message.error(data.msg)
+              }
+            }).catch(() => {
+              this.Loadings.memberEditLoading = false
+            })
+            this.isMemberEditShow = false
+      },
+      //打开“用户组”弹窗
+      openGroupForm(type, node = null) {
         if (type === 'add') {
           if (node) {
             this.DialogType = Object.assign({}, {
@@ -144,35 +206,35 @@
             type
           })
           this.GroupForm = Object.assign({}, {
-            parentid: this.ClickedData.parentid,
+            id: this.ActiveGroup.id,
             method: 'put',
-            name: this.ClickedData.name,
-            chargerid:this.ClickedData.charger_id
+            name: this.ActiveGroup.name,
+            chargerid: this.ActiveGroup.charger_id
           })
         }
 
         this.dialogFormVisible = true
       },
-      //Http请求获取用户列表
-      getUsers() {
-        getUserList().then(({ data }) => {
-          this.UserList = [...data];
-        });
-      },
-      //Http请求,获取用户组列表
+      //http获取“用户组”列表
       getDeptList() {
         getDept().then(({ data }) => {
           this.TreeData = [...data.msg];
         });
       },
-      //点击用户组  返回点击的用户组的 data 和 node 并让输入框的值= 点击的用户组名
-      handleNodeClick(data, node) {
-        console.log(data)
-        this.ClickedData = { ...data }
+      /**
+       *
+       *点击用户组事件
+       * @param data 当前点击激活的组
+       *
+       */
+      handleGroupClick(data) {
+        this.ActiveGroup = { ...data }
+        getDept({ id: data.id }).then(({ data }) => {
+          this.GroupUsers = [...data.users]
+        })
       },
-      //添加用户组
-      append() {
-        //验证表单，如果通过则触发http请求
+      appendGroup() {
+        //验证表单
         this.$refs['GroupForm'].validate(async (valid) => {
           if (valid) {
             this.Loadings.addDeptLoading = true
@@ -192,7 +254,7 @@
         })
       },
       updateGroup() {
-        //验证表单，如果通过则触发http请求
+        //验证表单
         this.$refs['GroupForm'].validate(async (valid) => {
           if (valid) {
             this.Loadings.addDeptLoading = true
@@ -211,9 +273,8 @@
           }
         })
       },
-      remove(data) {
-
-        this.$confirm('此操作将永久删除该部门?', '提示', {
+      removeGroup(data) {
+        this.$confirm('此操作将永久删除该部门?', '注意', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning'
@@ -230,11 +291,35 @@
             }
           })
         })
+      },
+      searchGroup(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
       }
     },
-
+    watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val);
+      },
+      radio(val) {
+        switch (val) {
+          case 1:
+            this.$store.dispatch('admin/get_UserList')
+            break
+          case 2:
+            break
+          case 3:
+            if (!this.ActiveGroup) { //如果没有激活的组，则自动选择第一个根组
+              let level1Arr = this.TreeData.filter(item => item.level == 1)
+              this.ActiveGroup = level1Arr[0]
+              this.handleGroupClick(this.ActiveGroup)
+            }
+            break
+        }
+      }
+    },
     created() {
-      this.getUsers();
+      this.$store.dispatch('admin/get_UserList')
       this.getDeptList();
     }
   };
