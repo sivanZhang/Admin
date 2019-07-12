@@ -90,20 +90,24 @@
                 primary: "flash",
                 controls:false,
                 controlbar:"bottom",
-                autostart:true,//自动播放
+                autostart:false,//自动播放
                 events: {
                   onComplete: function () { 
                     _self.playerControls.stateIcon = 'el-icon-video-play';   
                     console.log("播放结束!!!");
                   },
                   onVolume: function () { console.log("声音大小改变!!!"); },
-                  onReady: function () { console.log("准备就绪!!!"); },
+                  onReady: function () { 
+                    console.log("准备就绪!!!"); 
+                    _self.playerControls.stateIcon = 'el-icon-video-play';   
+                    /*this.setMute(true);
+                    _self.playerVolume=0;*/
+                  },
                   onPlay: function () { 
                     console.log("开始播放!!!"); 
                     _self.playerControls.stateIcon = 'el-icon-video-pause';  
                     this.setVolume(_self.playerVolume)
-                    _self.playerFormatDuration=(_self.formatSeconds(this.getDuration()))
-                    _self.playerDuration=this.getDuration();
+                
                     _self.playerVolume=this.getVolume();
                     var playerThis=this;
                     setInterval(function(){
@@ -119,11 +123,17 @@
                   },
                   onBufferChange: function () {
                      console.log("缓冲改变!!!"); 
-                      _self.playerLoading=true;
-                      _self.playerLoadingText="视频缓冲中..."
+                     if (this.videoPlayer.getState() != 'PLAYING') {  
+                          _self.playerLoading=true;
+                         _self.playerLoadingText="视频缓冲中..."
+                      }
+                     
                   },
                   onBufferFull: function () { 
                     console.log("视频缓冲完成!!!"); 
+                    setTimeout(() => {
+                      _self.initPostion();
+                    }, 1000);
                     _self.playerLoading=false;
                     _self.width=document.getElementById("playerBox").offsetWidth;
                     _self.height=document.getElementById("playerBox").offsetHeight;
@@ -144,18 +154,23 @@
               }
         
             });
-            
 
      
     },
     methods:{
+      initPostion(){
+        console.log("init",this.videoPlayer.getDuration())
+         this.playerFormatDuration=(this.formatSeconds(this.videoPlayer.getDuration()))
+         this.playerDuration=this.videoPlayer.getDuration();
+      },
       getEditMode(mode){
-        console.log(mode,11111)
         this.videoPlayerIsShow=mode;
       },
       handleSliderChange(data){
         if(this.videoPlayerIsShow){
             this.videoPlayer.seek(this.playerDuration*data/100);
+            this.playerCurrentPostion=this.playerDuration*data/100; 
+            this.playerFormatCurrentPostion=this.formatSeconds(this.playerDuration*data/100);
         }else{
           this.$message.error('处于视频标注模式');
         }
@@ -164,15 +179,19 @@
       async handleMark(){
         if(this.videoPlayerIsShow){
             let _self=this;
-            _self.playerLoading=true;
-            _self.playerLoadingText="正在获取视频流..."
-            this.videoPlayer.pause(true);
-            this.playerControls.stateIcon = 'el-icon-video-play';   
+            if(this.videoPlayer.getPosition()>0){
+              _self.playerLoading=true;
+              _self.playerLoadingText="正在获取视频流..."
+              this.videoPlayer.pause(true);
+              this.playerControls.stateIcon = 'el-icon-video-play';   
 
-            let { dataURL, width, height } = await new VideoCapture(this.url).capture(this.videoPlayer.getPosition());
-            this.$refs.imageDraw.loadImage(dataURL);
-            this.videoPlayerIsShow=false;  
-            _self.playerLoading=false;
+              let { dataURL, width, height } = await new VideoCapture(this.url).capture(this.videoPlayer.getPosition());
+              this.$refs.imageDraw.loadImage(dataURL);
+              this.videoPlayerIsShow=false;  
+              _self.playerLoading=false;
+            }else{
+              this.$message.error('时间是大于0的数字');
+            }
         }else{
           this.$message.error('已处于视频标注模式');
         }
@@ -276,7 +295,7 @@
         position:absolute;
         top:0;
         left:0;
-        z-index:99;
+        z-index:109;
         text-align: center;
         background: #000;
       }
