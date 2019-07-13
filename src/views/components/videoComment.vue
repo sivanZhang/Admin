@@ -116,7 +116,7 @@ export default {
                     font-size: 12px;
                     border:1px solid #ddd;
                     .user-text{
-                        padding:0 10px;
+                        padding:10px;
                         overflow: hidden;
                         span:first-child{
                             float:left;
@@ -128,10 +128,10 @@ export default {
                         }
                     }
                     .desc-text{
-                        padding:0 10px;
+                        padding:10px;
                     }
                     .pro-text{
-                        padding:0 10px;
+                        padding:10px;
                         img{
                             width: 50px;
                             height:50px;
@@ -145,7 +145,7 @@ export default {
                         }
                     }
                     .reply-text{
-                        padding:0 10px;
+                        padding:10px;
                         input{
                             display: block;
                             width: 100%;

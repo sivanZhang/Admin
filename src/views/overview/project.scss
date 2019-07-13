@@ -1,0 +1,34 @@
+#project {
+    .container {
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        &>div {
+            padding: 20px;
+        }
+        .el-card {
+            position: relative;
+            width: 300px;
+            .dropdow {
+                position: absolute;
+                right: 15px;
+                top: 15px;
+                z-index: 1000;
+            }
+            p {
+                font-style: 12px;
+                color: #909399;
+                margin: 10px 0 5px;
+            }
+            .color {
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 1000;
+                right: 15px;
+                top: 127px;
+            }
+        }
+    }
+}

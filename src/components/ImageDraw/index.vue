@@ -7,6 +7,7 @@
          <el-button class="icon-btn" title="文字工具" @click="changeCanvasMode('text')"><svg-icon icon-class="icon-text"/></el-button>
          <el-button class="icon-btn" title="箭头工具" @click="changeCanvasMode('arrowhead')"><svg-icon icon-class="icon-arrowhead"/></el-button>
          <el-color-picker v-model="lineColor" title="颜色选择器"></el-color-picker>
+         <el-button class="icon-btn" title="撤销" @click="undoDrawImage"><svg-icon icon-class="icon-undo"/></el-button>
          <el-button class="icon-btn" title="完成" @click="saveDrawImage"><svg-icon icon-class="icon-complete"/></el-button>
          <el-button class="icon-btn" title="取消" @click="exitDrawImage"><svg-icon icon-class="icon-cancel"/></el-button>
        </div> 
@@ -70,7 +71,8 @@
           },
           // 储存坐标信息
           drawInfo: [],
-          img: new Image()
+          img: new Image(),
+          imgStack: []
 
          
       }
@@ -95,7 +97,7 @@
            this.img.src =this.imageBase64;
            this.img.onload = () => {
              console.log(_self.img.width+","+_self.img.height);
-             _self.context.drawImage(this.img,0,0,_self.width,_self.height);
+             _self.context.drawImage(this.img,0,0,_self.width-50,_self.height);
             }
             console.log(this.context);
             this.context.lineWidth = this.lineWidth
@@ -122,10 +124,22 @@
             });
             console.log(e)
             if(this.lineType=='pencel'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+              this.imgStack.push(imgData);
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this.context.beginPath()
               this.context.moveTo(e.layerX, e.layerY)
+            }else if(this.lineType=='circle'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+              this.imgStack.push(imgData);           
+            }else if(this.lineType=='rec'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+              this.imgStack.push(imgData);
             }else if(this.lineType=='arrowhead'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+              this.imgStack.push(imgData);
+              this.context.putImageData(this.beginRec.imageData, 0, 0)
+              this.context.beginPath()
               this.beginArrowhead={x:e.layerX,y:e.layerY};
             }else if(this.lineType=='text'){
               var temp=document.getElementById("textAreaCanvas");
@@ -144,11 +158,14 @@
                 textArea.id="textAreaCanvas";
                 let _self = this;
                 textArea.onblur = function(){
+                  var  imgData =_self.context.getImageData(0, 0, _self.width,_self.height);
+                  _self.imgStack.push(imgData);
                   _self.context.putImageData(_self.beginRec.imageData, 0, 0)
                   _self.context.beginPath();
                   _self.context.font="italic small-caps bold 14px arial";
                   _self.context.fillStyle = _self.lineColor;
                   _self.context.fillText(textArea.value, e.layerX, e.layerY);
+                  _self.context.closePath();
                   _self.context.stroke()
                  
                 };
@@ -164,6 +181,7 @@
             let canvasX = e.layerX
             let canvasY = e.layerY
             if (this.lineType === 'rec') { // 绘制矩形时恢复起始点状态再重新绘制
+               
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this.context.beginPath()
               this.context.rect(this.beginRec.x, this.beginRec.y, canvasX - this.beginRec.x, canvasY - this.beginRec.y)
@@ -171,6 +189,7 @@
               info.w = canvasX / this.width - info.x
               info.h = canvasY / this.height - info.y
             } else if (this.lineType === 'circle') { // 绘制椭圆时恢复起始点状态再重新绘制
+             
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this.context.beginPath()
               let a = (canvasX - this.beginRec.x) / 2
@@ -179,16 +198,17 @@
               let info = this.drawInfo[this.drawInfo.length - 1]
               info.a = a / this.width
               info.b = b / this.height
+
             }else if(this.lineType=='pencel'){
                 this.context.lineTo(e.layerX, e.layerY);
             }else if  (this.lineType === 'arrowhead') {
-              console.log(e)
+             
                 this.context.putImageData(this.beginRec.imageData, 0, 0)
                 this.context.beginPath()
                 this.context.fillStyle = this.lineColor;
                 this.context.fillArrow(this.beginArrowhead.x, this.beginArrowhead.y,e.layerX,e.layerY);//或ctx.drawArrow(10, 10, 80, 100)
                 this.context.fill();
-                 
+ 
             }
             this.context.stroke()
           }
@@ -196,6 +216,11 @@
         // 鼠标抬起
         canvasUp (e) {
           if (this.canDraw) {
+            if(this.lineType=='pencel'){
+                this.context.closePath();
+            }else if(this.lineType=='arrowhead'){
+              this.context.closePath();
+            }
             this.canvasMoveUse = false
           }
         },
@@ -282,6 +307,17 @@
           if(temp){
             document.getElementById("drawContext").removeChild(temp);
           }
+        },
+        undoDrawImage:function(){
+            //this.context.clearRect(0, 0, this.width, this.height);
+            //this.initDraw();
+            if (this.imgStack.length > 0) {
+                this.context.clearRect(0, 0, this.width, this.height);
+                var imgData = this.imgStack.pop();
+                this.context.putImageData(imgData, 0, 0);
+            }else{
+                this.$message.error('已经是最后一步了')
+            }
         }
           
     }

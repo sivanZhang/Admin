@@ -13,6 +13,12 @@ body {
     min-width: 1200px;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 label {
     font-weight: 600;
 }
@@ -63,4 +69,12 @@ div:focus {
 // main-container global css
 .app-container {
     padding: 20px;
+}
+@media screen and (max-width:1500px){
+	#playerToolbar .bar-item.el-col-18{
+        width:68%;
+    }
+    #playerToolbar .bar-item.el-col-5{
+        width:22%;
+    }
 }

@@ -26,7 +26,7 @@ export default {
          this.id=id;
          //根据ID读取AJAX获取数据
          this.videoInfo={
-             videoImage:'http://localhost:8080/test/demo.jpg',
+             videoImage:'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
              videoName:"测试名称",
              videoCode:'测试编号'+id,
              videoEndTime:'2019-12-31'
@@ -45,13 +45,14 @@ export default {
         .image{
             float:left;
             width:200px;
-            margin-top:16px;
+            height: 115px;
         }
         .desc{
             float:left;
             padding-left: 10px;
             p{
                 font-size: 14px;
+                padding:10px 0;
                 span:first-child{
                     color: #555666;
                     min-width: 75px;

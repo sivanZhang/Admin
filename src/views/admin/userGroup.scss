@@ -1,35 +1,32 @@
 #userGroup {
-    .el-radio-group{
+    .el-radio-group {
         display: block;
-        margin: 15px 0;
+        margin: 20px 0 15px;
     }
-    .el-delete{
+    .el-delete {
         position: relative;
     }
-    .search-group{
+    .search-group {
         margin-bottom: 10px;
     }
     .custom-tree-node {
-      color: #aa00ff;
-      height: 40px;
-      line-height: 40px;
-      &:hover {
-        .iconWarp {
-          display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        &:hover {
+            .iconWarp {
+                display: inline-block;
+            }
         }
-      }
-
-      .iconWarp {
-        display: none;
-      }
+        .iconWarp {
+            display: none;
+        }
     }
-
     .iconWarp {
-      display: none;
-      font-size: 12px;
-      &>*{
-          cursor: pointer;
-      }
+        display: none;
+        font-size: 12px;
+        &>* {
+            cursor: pointer;
+        }
     }
     .el-aside {
         max-height: calc(100vh - 50px);
