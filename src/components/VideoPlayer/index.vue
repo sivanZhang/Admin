@@ -114,7 +114,9 @@
               this.playerDuration = 0
               this.playerFormatDuration = '00:00'
               this.playerPercentage = 0
-              this.initVideoPlayer()
+              //this.initVideoPlayer()
+              this.videoPlayer.load({file: this.videoUrl});
+              this.videoPlayer.play()
             }
           } else {
             this.isLoadVideo = true
