@@ -8,17 +8,15 @@
                 </div>
                 <div class="video-list">
                     <!-- 视频项目列表 -->
-                    <el-button @click="initSource(index)" v-for="(item,index) in projectList" :key="index">加载{{item.id}}</el-button>
-                     
+                    <video-list ref="videoList" @initSource="initSource"></video-list>
                 </div>
             </el-col>
             <el-col :span="9" class="page-right">
-                <div ref="videoInfo" class="video-info">
+                <div id="videoInfo" class="video-info">
                     <!-- 视频基本信息 -->
-                    <video-info ref="videoInfo1"></video-info>
-                    
+                    <video-info ref="videoInfo"></video-info>
                 </div>
-                <div ref="videoTabs" class="video-tabs">
+                <div id="videoTabs" class="video-tabs">
                     <!-- 视频tab页（Notes、Versions） -->
                     <el-tabs v-model="activeTab" @tab-click="handleTabClick">
                         <el-tab-pane label="备注" name="first">
@@ -48,9 +46,9 @@
                         <el-tab-pane label="信息" name="sixth">信息</el-tab-pane>
                     </el-tabs>
                 </div>
-                <div ref="videoComment" class="video-comment">
+                <div id="videoComment" class="video-comment">
                     <!-- 视频标注列表 -->
-                    <video-comment ref="videoComment1"></video-comment>
+                    <video-comment ref="videoComment"></video-comment>
                     
                 </div>
             </el-col>
@@ -62,15 +60,18 @@
 <script>
 import VideoPlayer from '@/components/VideoPlayer'
 import kscreenshot from 'kscreenshot'
+import VideoList from '@/views/components/videoList'
 import ZoomImg from '@/components/ZoomImg'
 import VideoInfo from '@/views/components/videoInfo'
 import VideoComment from '@/views/components/videoComment'
 
 import demoImg from '@/assets/demo.jpg'
 export default {
-    components: {VideoPlayer,ZoomImg,VideoInfo,VideoComment},
+    components: {VideoPlayer,VideoList,ZoomImg,VideoInfo,VideoComment},
     data () {
       return {
+          screenWidth: document.documentElement.clientWidth,//屏幕宽度
+          screenHeight: document.documentElement.clientHeight,//屏幕高度
           projectList:[{
               id:1,
               url:'http://localhost:8080/test/banner01.mp4'
@@ -87,21 +88,38 @@ export default {
           
       }
     },
+    watch:{
+        screenWidth(val){ //监听屏幕宽度变化
+
+        },
+        screenHeight(val){ //监听屏幕高度变化
+            console.log(val);
+            let videoInfoH = document.getElementById("videoInfo").offsetHeight;
+            let videoTabsH = document.getElementById("videoTabs").offsetHeight;
+            document.getElementById("videoComment").style.height = (val - (videoInfoH + videoTabsH + 20 + 20)) + "px";
+        }
+    },
     created() {
 
     },
     mounted (){
+        var _this = this;
+        window.onresize = function(){ // 定义窗口大小变更通知事件
+        console.log(5555555);
+            _this.screenWidth = document.documentElement.clientWidth; //窗口宽度
+            _this.screenHeight = document.documentElement.clientHeight; //窗口高度
+        };
+        console.log(_this.screenHeight);
         let bH = document.body.offsetHeight;
-        let videoInfoH = this.$refs.videoInfo.offsetHeight;
-        let videoTabsH = this.$refs.videoTabs.offsetHeight;
-        this.$refs.videoComment.style.height = (bH - (videoInfoH + videoTabsH + 60)) + "px";
+        console.log(bH);
+        console.log(document.documentElement.clientHeight);
+        let videoInfoH = document.getElementById("videoInfo").offsetHeight;
+        let videoTabsH = document.getElementById("videoTabs").offsetHeight;
+        document.getElementById("videoComment").style.height = (bH - (videoInfoH + videoTabsH + 20 + 20)) + "px";
         // 注：window.onresize只能在项目内触发1次
         window.onresize = function windowResize () {
             // 通过捕获系统的onresize事件触发我们需要执行的事件
-            let bH = document.body.offsetHeight;
-            let videoInfoH = this.$refs.videoInfo.offsetHeight;
-            let videoTabsH = this.$refs.videoTabs.offsetHeight;
-            this.$refs.videoComment.style.height = (bH - (videoInfoH + videoTabsH + 60)) + "px";
+           
         }
     },
     methods:{
@@ -113,8 +131,8 @@ export default {
             let selectData=this.projectList[index];
             //initVideoUrl
             this.$refs.videoPlayer.initVideoUrl(selectData.url)
-            this.$refs.videoInfo1.initInfo(selectData.id)
-            this.$refs.videoComment1.initInfo(selectData.id)
+            this.$refs.videoInfo.initInfo(selectData.id)
+            this.$refs.videoComment.initInfo(selectData.id)
             }
            
         },
@@ -122,12 +140,12 @@ export default {
            this.imgList.push(obj);
            console.log(this.imgList);
            let bH = document.body.offsetHeight;
-           let videoInfoH = this.$refs.videoInfo.offsetHeight;
-           let videoTabsH = this.$refs.videoTabs.offsetHeight;
-           if(bH - (videoInfoH + videoTabsH + 60 + 53) <= 0){
-               this.$refs.videoComment.style.height = 0 + "px;"
+            let videoInfoH = document.getElementById("videoInfo").offsetHeight;
+            let videoTabsH = document.getElementById("videoTabs").offsetHeight;
+           if(bH - (videoInfoH + videoTabsH + 20 + 20 + 53) <= 0){
+               document.getElementById("videoComment").style.height = 0 + "px;"
            }else{
-                this.$refs.videoComment.style.height = (bH - (videoInfoH + videoTabsH + 60 + 53)) + "px";
+                document.getElementById("videoComment").style.height = (bH - (videoInfoH + videoTabsH + 20 + 20 + 53)) + "px";
            }
            
        },
@@ -163,11 +181,11 @@ export default {
         width:100%;
         height:100%;
         background-color:#fff;
-        overflow-y: hidden;
         .page{
             width:100%;
             height:100%;
-            min-width: 1500px;
+            min-width: 1200px;
+            overflow-y: hidden;
             background-color: #eeeeee;
             .page-left{
                 height:100%;
@@ -180,7 +198,7 @@ export default {
                 }
                 .video-list{
                     width: 100%;
-                    height:28.6%;
+                    height:28.9%;
                     margin-top: 1%;
                     background: #fff;
                 }
