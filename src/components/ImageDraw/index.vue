@@ -129,6 +129,12 @@
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this.context.beginPath()
               this.context.moveTo(e.layerX, e.layerY)
+            }else if(this.lineType=='circle'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+              this.imgStack.push(imgData);           
+            }else if(this.lineType=='rec'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+              this.imgStack.push(imgData);
             }else if(this.lineType=='arrowhead'){
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
               this.imgStack.push(imgData);
@@ -175,8 +181,7 @@
             let canvasX = e.layerX
             let canvasY = e.layerY
             if (this.lineType === 'rec') { // 绘制矩形时恢复起始点状态再重新绘制
-              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
-              this.imgStack.push(imgData);
+               
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this.context.beginPath()
               this.context.rect(this.beginRec.x, this.beginRec.y, canvasX - this.beginRec.x, canvasY - this.beginRec.y)
@@ -184,8 +189,7 @@
               info.w = canvasX / this.width - info.x
               info.h = canvasY / this.height - info.y
             } else if (this.lineType === 'circle') { // 绘制椭圆时恢复起始点状态再重新绘制
-              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
-              this.imgStack.push(imgData);
+             
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this.context.beginPath()
               let a = (canvasX - this.beginRec.x) / 2
@@ -198,15 +202,13 @@
             }else if(this.lineType=='pencel'){
                 this.context.lineTo(e.layerX, e.layerY);
             }else if  (this.lineType === 'arrowhead') {
-                var  imgData =this.context.getImageData(0, 0, this.width, this.height);
-                this.imgStack.push(imgData);
+             
                 this.context.putImageData(this.beginRec.imageData, 0, 0)
                 this.context.beginPath()
                 this.context.fillStyle = this.lineColor;
                 this.context.fillArrow(this.beginArrowhead.x, this.beginArrowhead.y,e.layerX,e.layerY);//或ctx.drawArrow(10, 10, 80, 100)
                 this.context.fill();
-                this.context.closePath();
-
+ 
             }
             this.context.stroke()
           }
@@ -216,6 +218,8 @@
           if (this.canDraw) {
             if(this.lineType=='pencel'){
                 this.context.closePath();
+            }else if(this.lineType=='arrowhead'){
+              this.context.closePath();
             }
             this.canvasMoveUse = false
           }

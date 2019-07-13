@@ -76,13 +76,13 @@
       return {
         projectList: [{
           id: 1,
-          url: 'http://localhost:8081/test/banner01.mp4'
+          url: 'http://localhost:8080/test/banner01.mp4'
         }, {
           id: 2,
-          url: 'http://localhost:8081/test/banner02.mp4'
+          url: 'http://localhost:8080/test/banner02.mp4'
         }, {
           id: 3,
-          url: 'http://localhost:8081/test/banner03.mp4'
+          url: 'http://localhost:8080/test/banner03.mp4'
         }],
         imgList: [],
         zoomImgUrl: '',
