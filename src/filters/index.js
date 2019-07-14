@@ -7,3 +7,6 @@
 export function avatarFormat(text) {
     return `${text}`.substring(0, 1);
 }
+export function dateFormat(date) {
+    return new Date(date).toLocaleDateString();
+}

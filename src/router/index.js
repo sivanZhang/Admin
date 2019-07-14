@@ -53,99 +53,44 @@ export const constantRoutes = [{
         component: () =>
             import ('@/views/login/signup'),
     },
-    {
-        path: '/',
-        component: Layout,
-         redirect: { name: 'project' },
-        meta: { title: '概览', icon: 'gailan' },
-        children: [{
-                path: 'project',
-                name: 'project',
-                component: () =>
-                    import ('@/views/overview/project'),
-                meta: { title: '项目', icon: 'tree' },
-            },
-            {
-                path: 'users',
-                name: 'users',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: { title: '用户', icon: 'user' },
-            }
-        ]
-    },
-    {
-        path: '/nested',
-        component: Layout,
-        redirect: '/nested/menu1',
-        name: 'Nested',
-        meta: {
-            title: 'Nested',
-            icon: 'nested'
-        },
-        children: [{
-                path: 'menu1',
-                component: () =>
-                    import ('@/views/nested/menu1/index'), // Parent router-view
-                name: 'Menu1',
-                meta: { title: 'Menu1' },
-                children: [{
-                        path: 'menu1-1',
-                        component: () =>
-                            import ('@/views/nested/menu1/menu1-1'),
-                        name: 'Menu1-1',
-                        meta: { title: 'Menu1-1' }
-                    },
-                    {
-                        path: 'menu1-2',
-                        component: () =>
-                            import ('@/views/nested/menu1/menu1-2'),
-                        name: 'Menu1-2',
-                        meta: { title: 'Menu1-2' },
-                        children: [{
-                                path: 'menu1-2-1',
-                                component: () =>
-                                    import ('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                                name: 'Menu1-2-1',
-                                meta: { title: 'Menu1-2-1' }
-                            },
-                            {
-                                path: 'menu1-2-2',
-                                component: () =>
-                                    import ('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                                name: 'Menu1-2-2',
-                                meta: { title: 'Menu1-2-2' }
-                            }
-                        ]
-                    },
-                    {
-                        path: 'menu1-3',
-                        component: () =>
-                            import ('@/views/nested/menu1/menu1-3'),
-                        name: 'Menu1-3',
-                        meta: { title: 'Menu1-3' }
-                    }
-                ]
-            },
-            {
-                path: 'menu2',
-                component: () =>
-                    import ('@/views/nested/menu2/index'),
-                meta: { title: 'menu2' }
-            }
-        ]
-    },
+
     {
         path: '/videoCheck',
         component: () =>
             import ('@/views/video/videoCheck'),
     },
     {
-        path: 'external-link',
+        path: '/',
         component: Layout,
+        redirect: { name: 'overview-project' },
+        meta: { title: '概览', icon: 'gailan' },
         children: [{
-            path: 'https://panjiachen.github.io/vue-element-admin-site/zh/guide/',
-            meta: { title: '使用文档', icon: 'link' }
+                path: 'overview-project',
+                name: 'overview-project',
+                component: () =>
+                    import ('@/views/overview/project'),
+                meta: { title: '项目概览', icon: 'tree' },
+            },
+            {
+                path: 'overview-users',
+                name: 'overview-users',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: { title: '用户概览', icon: 'user' },
+            }
+        ]
+    },
+    {
+        path: '/projects',
+        component: Layout,
+        redirect: '/projects',
+        meta: { title: '项目', icon: 'tree' },
+        children: [{
+            path: 'projects-list',
+            name: 'projects-list',
+            component: () =>
+                import ('@/views/projects/projects'),
+            meta: { title: '项目', icon: 'tree' }
         }]
     },
     {
@@ -157,19 +102,26 @@ export const constantRoutes = [{
                 path: 'userGroup', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
                 name: 'UserGroup',
                 component: () =>
-                    import('@/views/admin/userGroup'),
+                    import ('@/views/admin/userGroup'),
                 meta: { title: '用户和组', icon: 'role' }
             },
             {
                 path: 'roles',
                 name: 'UserGqqqroup',
                 component: () =>
-                    import('@/views/admin/roles'),
+                    import ('@/views/admin/roles'),
                 meta: { title: '角色管理', icon: 'role' }
             }
         ]
     },
-
+    {
+        path: 'external-link',
+        component: Layout,
+        children: [{
+            path: 'https://panjiachen.github.io/vue-element-admin-site/zh/guide/',
+            meta: { title: '使用文档', icon: 'link' }
+        }]
+    },
     // 404 page must be placed at the end !!!
     { path: '*', redirect: '/404', hidden: true }
 ]
