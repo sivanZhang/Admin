@@ -21,9 +21,8 @@
           <el-tabs v-model="activeTab" @tab-click="handleTabClick">
             <el-tab-pane label="备注" name="first">
               <div class="mark-cont">
-                <div class="mark-text"><input class="mark-input" placeholder="添加备注..." v-model="markText"/></div>
-                <div class="mark-form" v-if="imgList.length > 0">
-                  <ul class="img-list">
+                <div class="mark-form">
+                  <ul class="img-list" v-if="imgList.length > 0">
                     <li class="img-item" v-for="(item,index) in imgList" :key="index">
                       <img :src="item.imgUrl" @click="zoomImg(item.imgUrl)"/>
                       <span class="name">farame_0712.jpg</span>
@@ -31,7 +30,8 @@
                                  @click="delMarkImage(item,index)"></el-button>
                     </li>
                   </ul>
-                  <div class="btn-group">
+                  <div class="mark-text"><input class="mark-input" placeholder="添加备注..." v-model="markText"/></div>
+                  <div class="btn-group" v-if="imgList.length > 0">
                     <div class="fr">
                       <el-button class="btn cancel-btn">取消</el-button>
                       <el-button type="primary" class="btn add-btn">添加</el-button>
@@ -246,18 +246,19 @@
   .mark-cont {
     width: 100%;
 
-    .mark-text {
-      .mark-input {
-        border: none;
-        outline: none;
-        width: 100%;
-        display: block;
-        line-height: 35px;
-        border-bottom: 1px solid #ddd;
-      }
-    }
+    
 
     .mark-form {
+      .mark-text {
+        .mark-input {
+          border: none;
+          outline: none;
+          width: 100%;
+          display: block;
+          line-height: 35px;
+          border-bottom: 1px solid #ddd;
+        }
+      }
       .img-list {
         list-style: none;
         padding: 0;
@@ -294,6 +295,7 @@
       }
 
       .btn-group {
+        margin-top:10px;
         overflow: hidden;
 
         .fr {

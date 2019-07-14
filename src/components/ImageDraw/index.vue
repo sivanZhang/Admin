@@ -72,7 +72,8 @@
           // 储存坐标信息
           drawInfo: [],
           img: new Image(),
-          imgStack: []
+          imgStack: [],
+          beginDraw:false,
 
          
       }
@@ -82,18 +83,25 @@
     mounted (){
         this.canvas = document.getElementById("ImageDraw");
         this.context =this.canvas.getContext('2d');
+        this.context.clearRect(0, 0, this.width, this.height);
         this.initDraw();
             
      
     },
     methods:{
         loadImage (url) {
+            this.context.clearRect(0, 0, this.width, this.height);
             this.imageBase64=url;
             this.drawContextDisplay = true;
             this.initDraw();
         },
         initDraw () {
            let _self=this;
+           var temp=document.getElementById("textAreaCanvas");
+            if(temp){
+              document.getElementById("drawContext").removeChild(temp);
+            }
+           this.imgStack.length=0
            this.img.src =this.imageBase64;
            this.img.onload = () => {
              console.log(_self.img.width+","+_self.img.height);
@@ -122,13 +130,14 @@
               y: canvasY / this.height,
               type: this.lineType
             });
-            console.log(e)
             if(this.lineType=='pencel'){
+              this.beginDraw=true;
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
               this.imgStack.push(imgData);
               this.context.putImageData(this.beginRec.imageData, 0, 0)
+              this. context.save()
               this.context.beginPath()
-              this.context.moveTo(e.layerX, e.layerY)
+             // this.context.moveTo(e.layerX, e.layerY)
             }else if(this.lineType=='circle'){
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
               this.imgStack.push(imgData);           
@@ -136,37 +145,33 @@
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
               this.imgStack.push(imgData);
             }else if(this.lineType=='arrowhead'){
+              this.beginDraw=true;
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
               this.imgStack.push(imgData);
               this.context.putImageData(this.beginRec.imageData, 0, 0)
+              this. context.save()
               this.context.beginPath()
               this.beginArrowhead={x:e.layerX,y:e.layerY};
             }else if(this.lineType=='text'){
-              var temp=document.getElementById("textAreaCanvas");
-              console.log(temp)
-              if(temp){
-                document.getElementById("drawContext").removeChild(temp);
-              }
+               var temp=document.getElementById("textAreaCanvas");
+                if(temp){
+                  document.getElementById("drawContext").removeChild(temp);
+                }
+                let x= e.layerX;
+                let y= e.layerY;
                 var textArea=document.createElement("textarea");
                 document.getElementById("drawContext").appendChild(textArea);
                 textArea.style.position = "absolute";
-                textArea.style.top = e.layerY + 'px';
-                textArea.style.left = e.layerX + 'px';
+                textArea.style.top = (y-15) + 'px';
+                textArea.style.left = (x+50) + 'px';
                 textArea.style.background = "transparent";
                 textArea.style.color = this.lineColor;
+               // textArea.focus();
                 textArea.style.font="italic small-caps bold 14px arial";
                 textArea.id="textAreaCanvas";
-                let _self = this;
+                 let _self = this;
                 textArea.onblur = function(){
-                  var  imgData =_self.context.getImageData(0, 0, _self.width,_self.height);
-                  _self.imgStack.push(imgData);
-                  _self.context.putImageData(_self.beginRec.imageData, 0, 0)
-                  _self.context.beginPath();
-                  _self.context.font="italic small-caps bold 14px arial";
-                  _self.context.fillStyle = _self.lineColor;
-                  _self.context.fillText(textArea.value, e.layerX, e.layerY);
-                  _self.context.closePath();
-                  _self.context.stroke()
+                  _self.drawText(textArea.value,x,y)
                  
                 };
             }
@@ -174,6 +179,7 @@
         },
          // 鼠标移动时绘制
         canvasMove (e) {
+          console.log(this.lineType,this.canvasMoveUse)
           let _self=this;
           if (this.canvasMoveUse && this.canDraw) {
             this.context.strokeStyle = this.lineColor
@@ -200,14 +206,18 @@
               info.b = b / this.height
 
             }else if(this.lineType=='pencel'){
-                this.context.lineTo(e.layerX, e.layerY);
+                if(this.beginDraw){
+                  this.context.lineTo(e.layerX, e.layerY);
+                  this.context.stroke()
+                }
             }else if  (this.lineType === 'arrowhead') {
-             
+              if(this.beginDraw){
                 this.context.putImageData(this.beginRec.imageData, 0, 0)
                 this.context.beginPath()
                 this.context.fillStyle = this.lineColor;
                 this.context.fillArrow(this.beginArrowhead.x, this.beginArrowhead.y,e.layerX,e.layerY);//或ctx.drawArrow(10, 10, 80, 100)
                 this.context.fill();
+              }
  
             }
             this.context.stroke()
@@ -216,13 +226,29 @@
         // 鼠标抬起
         canvasUp (e) {
           if (this.canDraw) {
+            this.canvasMoveUse = false
             if(this.lineType=='pencel'){
-                this.context.closePath();
+               // this.context.closePath();
             }else if(this.lineType=='arrowhead'){
               this.context.closePath();
             }
-            this.canvasMoveUse = false
           }
+        },
+        drawText(text,x,y){
+          console.log(text)
+          var _self=this;
+          var  imgData =_self.context.getImageData(0, 0, _self.width,_self.height);
+          _self.imgStack.push(imgData);
+         // _self.context.putImageData(_self.beginRec.imageData, 0, 0)
+         // _self.context.save()
+         // _self.context.beginPath();
+            _self.context.textAlign = 'stleft art'
+          _self.context.font="italic small-caps bold 14px arial";
+          _self.context.fillStyle = _self.lineColor;
+          _self.context.fillText(text, x, y);
+          //_self.context.closePath();
+          // _self.context.stroke()
+          //_self.context.save()
         },
         // 绘制椭圆
         drawEllipse (context, x, y, a, b) {
@@ -301,22 +327,27 @@
          * 修改画笔模式
          */
         changeCanvasMode(type){
-          this.lineType=type;
-           let temp=document.getElementById("textAreaCanvas");
-          console.log(temp)
+         this.context.save
+          let temp=document.getElementById("textAreaCanvas");
           if(temp){
             document.getElementById("drawContext").removeChild(temp);
           }
+           this.beginDraw=false;
+          this.lineType=type;
+            this.canvasMoveUse = false
+         
         },
         undoDrawImage:function(){
-            //this.context.clearRect(0, 0, this.width, this.height);
-            //this.initDraw();
+              let temp=document.getElementById("textAreaCanvas");
+              if(temp){
+                document.getElementById("drawContext").removeChild(temp);
+              }
             if (this.imgStack.length > 0) {
                 this.context.clearRect(0, 0, this.width, this.height);
                 var imgData = this.imgStack.pop();
                 this.context.putImageData(imgData, 0, 0);
             }else{
-                this.$message.error('已经是最后一步了')
+               // this.$message.error('已经是最后一步了')
             }
         }
           

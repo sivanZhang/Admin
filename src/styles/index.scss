@@ -77,4 +77,17 @@ div:focus {
     #playerToolbar .bar-item.el-col-5{
         width:22%;
     }
+    .comment-cont .search-header .keyword{
+        width: 105px;
+        font-size: 12px;
+    }
+    .comment-cont .search-header .select-item{
+        width:90px !important;
+    }
+    .comment-cont .search-header .select-item .el-input{
+        font-size:12px;
+    }
+    .comment-cont .search-header .select-item .el-input input{
+        padding-left: 5px;
+    }
 }

@@ -34,7 +34,7 @@ export default {
             id:i,
             proName:"项目名称11"+i,
             version:"00" + i,
-            url:'http://localhost:8081/test/banner01.mp4',
+            url:'http://localhost:8080/test/banner01.mp4',
             videoImage:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
           };
           this.projectList.push(project);
@@ -43,7 +43,7 @@ export default {
               id:i,
               proName:"项目名称11"+i,
               version:"00" + i,
-              url:'http://localhost:8081/test/banner02.mp4',
+              url:'http://localhost:8080/test/banner02.mp4',
               videoImage:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
             };
             this.projectList.push(project);

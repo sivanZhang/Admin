@@ -8,7 +8,7 @@
     <div id="videoPlayer" :style="{display:videoPlayerIsShow?'block':'none'}">Loading the player...</div>
     <el-row id="playerToolbar" v-if="isLoadVideo">
       <el-col :span="1" class="bar-item">
-        <el-button class="btn-item btn-play" :icon="playerControls.stateIcon" @click="playerPlay"></el-button>
+        <el-button class="btn-item btn-play" title="播放/暂停" :icon="playerControls.stateIcon" @click="playerPlay"></el-button>
       </el-col>
       <el-col :span="18" class="bar-item">
         <span class="text">{{playerFormatCurrentPostion}}</span>
@@ -20,9 +20,9 @@
       <el-col :span="5" class="bar-item">
         <span style="color:#fff;">音量:{{playerVolume}}</span>
         <el-button-group class="btn-group">
-          <el-button class="btn-item" @click="changeVolume('sub')"><img :src="iconLower"/></el-button>
-          <el-button class="btn-item" @click="changeVolume('add')"><img :src="iconIncrease"/></el-button>
-          <el-button class="btn-item" @click="handleMark"><img :src="iconMark"/></el-button>
+          <el-button class="btn-item" title="音量调小" @click="changeVolume('sub')"><img :src="iconLower"/></el-button>
+          <el-button class="btn-item" title="音量调大" @click="changeVolume('add')"><img :src="iconIncrease"/></el-button>
+          <el-button class="btn-item" title="截图" @click="handleMark"><img :src="iconMark"/></el-button>
           <!--<el-button class="btn-item" @click="changeFullscreen"><img :src="iconFullscreen"/></el-button>-->
         </el-button-group>
       </el-col>
@@ -213,7 +213,6 @@
       changeSlider() {
         let _self = this
         setInterval(function() {
-          console.log(_self.videoPlayer.getPosition())
           if (_self.videoPlayer.getPosition() != null) {
             _self.playerCurrentPostion = _self.videoPlayer.getPosition()
             _self.playerFormatCurrentPostion = _self.formatSeconds(_self.playerCurrentPostion)
