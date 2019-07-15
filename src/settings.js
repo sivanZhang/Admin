@@ -1,17 +1,35 @@
 module.exports = {
+  title: 'Vue Element Admin',
 
-    title: 'Admin',
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the settings right-panel
+   */
+  showSettings: true,
 
-    /**
-     * @type {boolean} true | false
-     * @description 设置页面header部分是否固定
-     */
-    fixedHeader: true,
+  /**
+   * @type {boolean} true | false
+   * @description Whether need tagsView
+   */
+  tagsView: true,
 
-    /**
-     * @type {boolean} true | false
-     * @description 设置侧边栏是否显示logo
-     */
-    sidebarLogo: true,
-    showSettings: true,
+  /**
+   * @type {boolean} true | false
+   * @description Whether fix the header
+   */
+  fixedHeader: false,
+
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the logo in sidebar
+   */
+  sidebarLogo: false,
+
+  /**
+   * @type {string | array} 'production' | ['production', 'development']
+   * @description Need show err logs component.
+   * The default is only used in the production env
+   * If you want to also use it in dev, you can pass ['production', 'development']
+   */
+  errorLog: 'production'
 }

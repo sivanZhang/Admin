@@ -84,7 +84,7 @@ export const constantRoutes = [{
         path: '/projects',
         component: Layout,
         redirect: '/projects',
-        meta: { title: '项目', icon: 'tree' },
+        meta: { title: '项目', icon: 'tree-table' },
         children: [{
             path: 'projects-list',
             name: 'projects-list',

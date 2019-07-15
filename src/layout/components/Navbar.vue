@@ -1,42 +1,39 @@
 <template>
   <div class="navbar">
-    <div class="left-menu">
-      <!-- 是否展开侧边栏菜单 -->
-      <hamburger
-        :is-active="sidebar.opened"
-        class="hamburger-container"
-        @toggleClick="toggleSideBar"
-      />
-      <!-- 面包屑 -->
-      <breadcrumb class="breadcrumb-container"/>
-    </div>
-    
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+
     <div class="right-menu">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-  <el-menu-item index="1">处理中心</el-menu-item>
-  <el-submenu index="2">
-    <template slot="title">项目</template>
-    <el-menu-item index="2-1">选项1</el-menu-item>
-    <el-menu-item index="2-2">选项2</el-menu-item>
-    <el-menu-item index="2-3">选项3</el-menu-item>
-    <el-submenu index="2-4">
-      <template slot="title">选项4</template>
-      <el-menu-item index="2-4-1">选项1</el-menu-item>
-      <el-menu-item index="2-4-2">选项2</el-menu-item>
-      <el-menu-item index="2-4-3">选项3</el-menu-item>
-    </el-submenu>
-  </el-submenu>
-</el-menu>
-      <el-dropdown class="avatar-container" trigger="click">
+      <template v-if="device!=='mobile'">
+        <search id="header-search" class="right-menu-item" />
+
+        <error-log class="errLog-container right-menu-item hover-effect" />
+
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+
+        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
+        </el-tooltip>
+
+      </template>
+
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-          <i class="el-icon-caret-bottom"/>
+          <img :src="'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80'" class="user-avatar">
+          <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>Home</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown">
+          <router-link to="/profile/index">
+            <el-dropdown-item>Profile</el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">
+          <router-link to="/">
+            <el-dropdown-item>Dashboard</el-dropdown-item>
+          </router-link>
+          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
+            <el-dropdown-item>Github</el-dropdown-item>
+          </a>
+          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>
           <el-dropdown-item divided>
@@ -49,64 +46,74 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
-import Hamburger from "@/components/Hamburger";
+import { mapGetters } from 'vuex'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
+import ErrorLog from '@/components/ErrorLog'
+import Screenfull from '@/components/Screenfull'
+import SizeSelect from '@/components/SizeSelect'
+import Search from '@/components/HeaderSearch'
 
 export default {
-  data() {
-    return {
-      activeIndex: "1"
-    };
-  },
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    ErrorLog,
+    Screenfull,
+    SizeSelect,
+    Search
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar"])
+    ...mapGetters([
+      'sidebar',
+      'avatar',
+      'device'
+    ])
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch("login/logout");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-  .left-menu{
-    display: flex;
-  justify-content: space-between;
-  align-items: center;
-  }
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+
   .hamburger-container {
     line-height: 46px;
     height: 100%;
+    float: left;
     cursor: pointer;
-    transition: background 0.3s;
-    -webkit-tap-highlight-color: transparent;
+    transition: background .3s;
+    -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.025);
+      background: rgba(0, 0, 0, .025)
     }
   }
 
+  .breadcrumb-container {
+    float: left;
+  }
+
+  .errLog-container {
+    display: inline-block;
+    vertical-align: top;
+  }
+
   .right-menu {
-    display: flex;
+    float: right;
     height: 100%;
     line-height: 50px;
 
@@ -124,10 +131,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background 0.3s;
+        transition: background .3s;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          background: rgba(0, 0, 0, .025)
         }
       }
     }

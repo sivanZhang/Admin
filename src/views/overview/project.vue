@@ -9,17 +9,14 @@
                 <i class="el-icon-more"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item>双皮奶</el-dropdown-item>
-                <el-dropdown-item>蚵仔煎</el-dropdown-item>
+                <el-dropdown-item>前往项目</el-dropdown-item>
+                <el-dropdown-item>在侧边栏中打开</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
           <div
             class="color"
-            :style="{backgroundColor:item.color||'#fff',boxShadow: '0 2px 10px 3px rgba(0,0,0, .12)'}"
+            :style="{backgroundColor:item.color||'transparent'}"
           ></div>
           <el-image
             @click="showImg('https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png')"
