@@ -51,10 +51,10 @@
       </div>
     </div>
 
-    <el-dialog :visible.sync="isShowImg" width="50%" :show-close="false">
+    <el-dialog :visible.sync="isShowImg" width="768px" top='80px' :show-close="false">
       <img
         src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-        style="max-width:100%;max-height:50vh"
+        style="width:100%"
       />
     </el-dialog>
   </div>

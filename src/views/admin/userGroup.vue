@@ -12,7 +12,7 @@
       </el-header>
 
       <el-container>
-        <transition name="fade">
+        <transition name="el-zoom-in-center">
           <el-aside
             v-if="radio==3"
             width="240px"
