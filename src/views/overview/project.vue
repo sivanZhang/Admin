@@ -10,7 +10,7 @@
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
-                  <router-link :to="`/projects/project-detail/${item.code}`">前往项目
+                  <router-link :to="`/projects/project-detail/${item.id}`">前往项目
                   </router-link>
                 </el-dropdown-item>
                 <el-dropdown-item>在侧边栏中打开</el-dropdown-item>
