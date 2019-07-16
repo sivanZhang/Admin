@@ -15,7 +15,7 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 Vue.use(ElementUI, {
-  size: Cookies.get('size') || 'medium'
+  size: Cookies.get('size') || 'mini'
 })
 Vue.config.productionTip = false
 
