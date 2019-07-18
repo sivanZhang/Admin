@@ -19,6 +19,7 @@
           </div>
           <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
           <div slot="header" class="box-card-header">
+            {{$store.state.BASE_URL+item.image}}
             <el-image @click="showImg($store.state.BASE_URL+item.image)" class="mini-image" :src="$store.state.BASE_URL+item.image" fit="cover" style="width:100%;height:100%"></el-image>
           </div>
           <div style="padding: 15px;">

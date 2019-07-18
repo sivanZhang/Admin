@@ -2,7 +2,7 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar v-show="!$route.meta.hiddenSideBar" class="sidebar-container" />
-    <div :class="[{hasTagsView:needTagsView,hasSideBar:$route.meta.hiddenSideBar},'main-container']">
+    <div :class="[{hasTagsView:needTagsView,hassidebar:$route.meta.hiddenSideBar},'main-container',]">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
         <tags-view v-if="needTagsView" />

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-page-header @back="goBack" content="详情页面">
+    <el-page-header @back="goBack">
     </el-page-header>
 
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -20,15 +20,17 @@
         <el-menu-item index="4-3">选项3</el-menu-item>
       </el-submenu>
     </el-menu>
-    <div>
-      <el-button icon="el-icon-plus">创建</el-button>
-    </div>
+    <tab-task/>
   </div>
 </template>
 
 <script>
+import tabTask from './components/tab-task'
   export default {
     name: "project-detail",
+    components:{
+      tabTask
+    },
     data() {
       return {};
     },
@@ -38,7 +40,6 @@
         }
     },
     created(){
-      console.log(this.$router,'-----------',this.$route);
     },
     beforeRouteEnter (to, from, next) {
         next()
