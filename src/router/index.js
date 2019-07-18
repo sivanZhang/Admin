@@ -84,7 +84,7 @@ export const constantRoutes = [{
     path: '/projects',
     component: Layout,
     redirect: '/projects',
-    meta: { title: '项目', icon: 'tree-table' },
+    meta: { title: '项目', icon: 'tree-table', hiddenSideBar: true },
     hidden: true,
     alwaysShow: true,
     children: [{
@@ -92,14 +92,14 @@ export const constantRoutes = [{
         name: 'projects-list',
         component: () =>
           import('@/views/projects/projects'),
-        meta: { title: '项目', icon: 'tree' }
+        meta: { title: '项目', icon: 'tree', hiddenSideBar: true }
       },
       {
         path: 'project-detail/:id',
         name: 'project-detail',
         component: () =>
           import('@/views/projects/project-detail'),
-        meta: { title: '项目详情', icon: 'tree' }
+        meta: { title: '项目详情', icon: 'tree', hiddenSideBar: true }
       }
     ]
   },

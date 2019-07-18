@@ -37,6 +37,9 @@
             this.$router.go(-1);
         }
     },
+    created(){
+      console.log(this.$router,'-----------',this.$route);
+    },
     beforeRouteEnter (to, from, next) {
         next()
     }

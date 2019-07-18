@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-form ref="emailForm" :model="emailForm" :rules="emailRules" class="login-form">
       <div class="title-container">
-        <h3 class="title">重置你的密码</h3>
+        <h3 class="title">密码重置</h3>
       </div>
       <el-form-item prop="email">
         <span class="svg-container">

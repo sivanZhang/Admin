@@ -93,6 +93,9 @@
 
     .main-container {
       margin-left: 54px;
+      &.hasSideBar{
+        margin-left: 0;
+      }
     }
 
     .submenu-title-noDropdown {

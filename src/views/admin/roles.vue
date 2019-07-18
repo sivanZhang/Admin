@@ -6,6 +6,9 @@
 
 <script>
   export default {
-    name: "roles"
+    name: "roles",
+    created(){
+      console.log(this.$router,'-----------',this.$route);
+    }
   }
 </script>
