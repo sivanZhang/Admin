@@ -10,10 +10,12 @@
       <el-form-item label="图片" prop="color">
         <el-upload
           class="avatar-uploader"
-          action="http: //tl.chidict.com:8081/projects/projects/"
+          action="/projects/projects/"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-preview="handlePreview"
           :before-upload="beforeAvatarUpload"
+          :auto-upload="false"
         >
           <img v-if="ProjectForm.image" :src="ProjectForm.image" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -70,7 +72,7 @@ export default {
   name: "CreateProject",
   data() {
     return {
-      ProjectForm: {image:null},
+      ProjectForm: { image: null },
       predefineColors: [
         "#ff4500",
         "#ff8c00",
@@ -95,23 +97,29 @@ export default {
     }
   },
   methods: {
-    cancel() {},
+    cancel() {
+      this.isShow = false
+    },
+    handlePreview(file) {
+      console.log(file);
+       this.ProjectForm.image = URL.createObjectURL(file.raw);
+    },
     submitForm() {},
     handleAvatarSuccess(res, file) {
-        this.ProjectForm.image = URL.createObjectURL(file.raw);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+      this.ProjectForm.image = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
       }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    }
   }
 };
 </script>
@@ -121,27 +129,27 @@ export default {
   text-align: center;
 }
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
 
