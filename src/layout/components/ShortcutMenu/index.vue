@@ -10,7 +10,6 @@
           </div>
         </el-col>
         <el-col :span="12" style="text-align:right">
-          <el-button size="mini">显示隐藏项目</el-button>
           <el-button type="primary" size="mini" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
         </el-col>
         <el-col :span="24">
