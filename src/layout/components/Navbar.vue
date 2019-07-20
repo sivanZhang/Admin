@@ -58,6 +58,7 @@
     methods: {
       toggleSideBar() {
         this.$store.dispatch("app/toggleSideBar");
+
       },
       async logout() {
         await this.$store.dispatch("login/logout");

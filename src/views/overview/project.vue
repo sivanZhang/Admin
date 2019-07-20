@@ -1,7 +1,7 @@
 <template>
   <div id="project">
     <div class="container">
-      <div v-for="(item,index) in ProjectList" :key="index">
+      <div v-for="(item,index) in ProjectList" :key="index" style="width: 25%">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown>
