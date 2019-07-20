@@ -1,13 +1,13 @@
 <template>
   <div class="menu-group">
     <div :class="[{active:activeIndex==1},'main-menu']">我的</div>
-
-    <el-popover placement="bottom" width="992" trigger="click">
+    <el-popover placement="bottom" width="900" trigger="click">
       <el-row>
         <el-col :span="12">
-          <el-input placeholder="请输入内容" size="mini" style="width:240px">
+          <div>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
+            <input placeholder="请输入内容" size="mini"/>
+          </div>
         </el-col>
         <el-col :span="12" style="text-align:right">
           <el-button size="mini">显示隐藏项目</el-button>
@@ -20,11 +20,15 @@
             <el-col :span="8">有效的项目</el-col>
           </el-row>
         </el-col>
-        <el-col :span="8">无数据</el-col>
-        <el-col :span="8">无数据</el-col>
+        <el-col :span="8" ><div class="title" style="padding: 5px 0 0px;">无数据</div></el-col>
+        <el-col :span="8" ><div class="title" style="padding: 5px 0 0px;">无数据</div></el-col>
         <el-col :span="8">
-          <div v-for="(item,index) of ProjectList" :key="index">
-            <router-link :to="`/projects/project-detail/${item.id}`">{{item.name}}</router-link>
+          <div v-for="(item,index) of ProjectList" :key="index"  >
+            <router-link :to="`/projects/project-detail/${item.id}`" >
+              <div class="title">
+                {{item.name}}
+              </div>
+            </router-link>
           </div>
         </el-col>
       </el-row>
@@ -73,9 +77,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title{
+  padding: 5px 0 0px;
+}
+.title:hover{
+  cursor:hand;
+  background-color: #eeeeee;
+}
+input {
+  width:240px;
+  border:none;
+  border-bottom: solid 2px deepskyblue;
+}
+input:focus {
+  outline:none;
+}
+
 .list-title {
   padding: 15px 0 5px;
   font-weight: 600;
+  text-align: left;
 }
 .menu-group {
   position: relative;
