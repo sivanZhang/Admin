@@ -61,6 +61,7 @@ export default {
   },
   watch: {
     $route(to, from) {
+      this.isCreateShow = false;
       const reg1 = /^\/admin/,
         reg2 = /^\/projects/;
       if (reg1.test(to.path)) {
