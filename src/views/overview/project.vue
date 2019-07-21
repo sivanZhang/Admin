@@ -1,7 +1,7 @@
 <template>
   <div id="project">
     <div class="container">
-      <div v-for="(item,index) in ProjectList" :key="index" style="width: 25%">
+      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown>
@@ -46,7 +46,6 @@
         </el-card>
       </div>
     </div>
-
     <el-dialog :visible.sync="isShowImg" width="768px" top='80px' :show-close="false">
       <img :src="src" style="width:100%" />
     </el-dialog>
@@ -64,7 +63,7 @@
     data() {
       return {
         isShowImg: false,
-        scr: ""
+        scr: "",
       };
     },
     computed: {
@@ -79,7 +78,8 @@
           this.isShowImg = true;
 
         }
-      }
+      },
+
     },
     created() {
       this.$store.dispatch("project/get_Projects");
@@ -87,4 +87,5 @@
   };
 </script>
 <style lang="scss" src="./project.scss">
+
 </style>
