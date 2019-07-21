@@ -9,10 +9,10 @@
     >
       <el-form-item label="图片" prop="color">
         <el-upload
+          action="#"
           class="avatar-uploader"
-          action="/projects/projects/"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
+          :on-change="handleAvatarSuccess"
           :on-preview="handlePreview"
           :before-upload="beforeAvatarUpload"
           :auto-upload="false"
@@ -130,8 +130,14 @@ export default {
         }
       });
     },
-    handleAvatarSuccess(res, file) {
-      this.ProjectForm.image = URL.createObjectURL(file.raw);
+    handleAvatarSuccess(file, fileList) {
+      let fileName = file.name;
+      let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+      if (regex.test(fileName.toLowerCase())) {
+        this.ProjectForm.image = file.url;
+      } else {
+        this.$message.error("请选择图片文件");
+      }
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
