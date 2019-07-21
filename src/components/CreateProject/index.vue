@@ -36,12 +36,12 @@
           <el-option label="激活" :value="1"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="项目日期" required>
+      <el-form-item label="起止日期" required>
         <el-col :span="11">
           <el-form-item prop="start">
             <el-date-picker
               type="date"
-              placeholder="选择日期"
+              placeholder="项目开始日期"
               v-model="ProjectForm.start"
               style="width: 100%;"
             ></el-date-picker>
@@ -52,7 +52,7 @@
           <el-form-item prop="end">
             <el-date-picker
               type="date"
-              placeholder="选择日期"
+              placeholder="项目结束日期"
               v-model="ProjectForm.end"
               style="width: 100%;"
             ></el-date-picker>
@@ -98,13 +98,38 @@ export default {
   },
   methods: {
     cancel() {
-      this.isShow = false
+      this.isShow = false;
     },
     handlePreview(file) {
       console.log(file);
-       this.ProjectForm.image = URL.createObjectURL(file.raw);
+      this.ProjectForm.image = URL.createObjectURL(file.raw);
     },
-    submitForm() {},
+    submitForm() {
+      this.$refs["passwordForm"].validate(validEmail => {
+        if (validEmail) {
+          this.loading = true;
+          postResetPassword({
+            ...this.emailForm,
+            ...this.passwordForm
+          })
+            .then(({ data }) => {
+              let type;
+              if (data.status == 0) {
+                type = "success";
+              } else {
+                type = "error";
+              }
+              this.$message[type](data.msg);
+              this.loading = false;
+            })
+            .catch(() => {
+              this.loading = false;
+            });
+        } else {
+          return false;
+        }
+      });
+    },
     handleAvatarSuccess(res, file) {
       this.ProjectForm.image = URL.createObjectURL(file.raw);
     },
