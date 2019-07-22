@@ -1,0 +1,196 @@
+<template>
+  <div id="asset-list">
+    <div>
+      <el-button icon="el-icon-plus" @click="showAssetForm">创建资产</el-button>
+    </div>
+
+    <el-table :data="TableData" style="width: 100%" border>
+      <el-table-column prop="name" label="资产名称"></el-table-column>
+      <el-table-column prop="id" label="资产ID"></el-table-column>
+      <el-table-column prop="path" label="资产路径"></el-table-column>
+      <el-table-column prop="creator_name" label="创建人名称"></el-table-column>
+      <el-table-column prop="creator_id" label="创建人ID"></el-table-column>
+      <el-table-column label="缩略图" align="center">
+        <template slot-scope="scope">
+          <el-image :src="$store.state.BASE_URL+scope.row.image">
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <el-tooltip content="删除资产" placement="top">
+            <el-button @click="deleteAssets(scope.row.id)" icon="el-icon-delete" type="text"/>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
+      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
+        <!-- <el-form-item label="图片" prop="color">
+        <el-upload
+          action="#"
+          class="avatar-uploader"
+          :show-file-list="false"
+          :on-change="handleAvatarSuccess"
+          :on-preview="handlePreview"
+          :before-upload="beforeAvatarUpload"
+          :auto-upload="false"
+        >
+          <img v-if="AssetForm.image" :src="AssetForm.image" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        </el-form-item>-->
+        <el-form-item label="资产名称" prop="name">
+          <el-input v-model="AssetForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="存放路径" prop="path">
+          <el-input v-model="AssetForm.path"></el-input>
+        </el-form-item>
+        <el-form-item label="优先等级" prop="priority">
+          <!-- <el-input v-model="AssetForm.code"></el-input> -->
+          <el-radio v-model="AssetForm.priority" :label="0">正常</el-radio>
+          <el-radio v-model="AssetForm.priority" :label="1">优先</el-radio>
+        </el-form-item>
+        <el-form-item label="难度等级" prop="level">
+          <el-select v-model="AssetForm.level" placeholder="请选择难度等级">
+            <el-option
+              v-for="item of LevelList"
+              :key="item"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="资产类别" prop="category">
+          <el-input v-model="AssetForm.category"></el-input>
+        </el-form-item>
+        <el-form-item label="所属团队" prop="team">
+          <el-input v-model="AssetForm.category"></el-input>
+        </el-form-item>
+        <el-form-item label="内部资产版本号" prop="inner_version">
+          <el-input v-model="AssetForm['inner_version']"></el-input>
+        </el-form-item>
+        <el-form-item label="外部资产版本号" prop="outer_version">
+          <el-input v-model="AssetForm['outer_version']"></el-input>
+        </el-form-item>
+        <el-form-item label="所属项目" prop="project">
+          <el-select v-model="AssetForm.project" placeholder="请选择所属项目">
+            <el-option
+              v-for="item of ProjectList"
+              :key="item"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="关联任务" prop="task">
+          <el-input v-model="AssetForm.task"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="cancel">取消</el-button>
+          <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">立即创建</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import * as HTTP from "@/api/assets";
+import { mapState } from "vuex";
+export default {
+  neme: "asset-list",
+  data() {
+    return {
+      TableData: [],
+      AssetForm: {
+        priority: 0
+      },
+      isShow: false,
+      LevelList: [
+        {
+          label: "简单",
+          value: 0
+        },
+        {
+          label: "标准",
+          value: 1
+        },
+        {
+          label: "复杂",
+          value: 2
+        },
+        {
+          label: "高难度",
+          value: 3
+        }
+      ],
+      rules: {
+        name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
+        priority: [{ required: true, message: "请输入优先等级", trigger: "blur" }],
+        level: [{ required: true, message: "请输入难度等级", trigger: "blur" }],
+        path: [{ required: true, message: "请输入路径", trigger: "blur" }],
+      },
+      buttonStates:{
+        createLoading:false,
+      }
+    };
+  },
+  computed:{
+      ...mapState('project',['ProjectList'])
+  },
+  methods: {
+    _getAssetList() {
+      HTTP.getAssets().then(({ data }) => {
+        this.TableData = [...data.msg];
+      });
+    },
+    deleteAssets(id) {
+      this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        HTTP.deleteAssets({ id }).then(({ data }) => {
+          this.$message(data.msg);
+        });
+      });
+    },
+    showAssetForm() {
+      this.isShow = true;
+    },
+    cancel() {
+      this.isShow = false;
+    },
+    addAsset(){
+        this.$refs["assetForm"].validate(valid => {
+        if (valid) {
+          this.createLoading = true;
+          HTTP.postAssets(this.AssetForm).then(({data})=>{
+              this.createLoading = false;
+              this.$message(data.msg)
+              if(data.status===0){
+                  this._getAssetList()
+              }
+              this.isShow = false;
+          }).catch(err=>{
+              this.createLoading = false;
+          })
+        } else {
+          return false;
+        }
+      });
+    }
+  },
+  created() {
+    this._getAssetList();
+  }
+};
+</script>
+<style lang="scss" scoped>
+</style>

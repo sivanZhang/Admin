@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import { addProjects } from "@/api/project";
 export default {
   name: "CreateProject",
   data() {
@@ -85,7 +86,13 @@ export default {
       ],
       rules: {
         name: [{ required: true, message: "请输入项目名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入项目编码", trigger: "blur" }]
+        code: [{ required: true, message: "请输入项目编码", trigger: "blur" }],
+        start: [
+          { required: true, message: "请输入项目开始日期", trigger: "blur" }
+        ],
+        end: [
+          { required: true, message: "请输入项目结束日期", trigger: "blur" }
+        ]
       }
     };
   },
@@ -105,26 +112,20 @@ export default {
       this.ProjectForm.image = URL.createObjectURL(file.raw);
     },
     submitForm() {
-      this.$refs["passwordForm"].validate(validEmail => {
-        if (validEmail) {
-          this.loading = true;
-          postResetPassword({
-            ...this.emailForm,
-            ...this.passwordForm
-          })
-            .then(({ data }) => {
-              let type;
-              if (data.status == 0) {
-                type = "success";
-              } else {
-                type = "error";
-              }
-              this.$message[type](data.msg);
-              this.loading = false;
-            })
-            .catch(() => {
-              this.loading = false;
-            });
+      this.$refs["projectForm"].validate(valid => {
+        if (valid) {
+          const Data = {
+            ...this.ProjectForm,
+            start: this.ProjectForm.start.toLocaleDateString(),
+            end: this.ProjectForm.end.toLocaleDateString()
+          };
+          addProjects(Data).then(({ data }) => {
+            this.$message(data.msg);
+            if (data.status === 0) {
+              this.$store.dispatch("project/get_Projects");
+              this.isShow = false;
+            }
+          });
         } else {
           return false;
         }

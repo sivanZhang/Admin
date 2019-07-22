@@ -1,5 +1,5 @@
 <template>
-  <div id="project">
+  <div id="project" style="margin:-20px">
     <div class="container">
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
@@ -21,7 +21,7 @@
             <el-image
               @click="showImg($store.state.BASE_URL+item.image)"
               class="mini-image"
-              :src="$store.state.BASE_URL+item.image"
+              :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
               style="width:100%;height:100%"
             ></el-image>
@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       isShowImg: false,
-      scr: ""
+      src: ""
     };
   },
   computed: {

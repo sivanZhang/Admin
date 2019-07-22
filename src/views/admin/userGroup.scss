@@ -1,7 +1,7 @@
 #userGroup {
     .el-radio-group {
         display: block;
-        margin: 20px 0 15px;
+        margin: 0 0 15px;
     }
     .el-delete {
         position: relative;
@@ -42,11 +42,9 @@
         }
     }
     .tag-nav {
-        height: 60px;
         display: flex;
         align-items: center;
         cursor: pointer;
-        padding: 5px;
         &:hover {
             background-color: #ebeef5;
         }
@@ -57,7 +55,7 @@
         align-items: center;
     }
     .el-main {
-        padding: 0 20px;
+        padding: 0;
     }
     .t-header {
         padding: 8px 12px;

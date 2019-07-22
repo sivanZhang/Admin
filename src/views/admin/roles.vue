@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div>
     角色管理
   </div>
 </template>
@@ -8,7 +8,7 @@
   export default {
     name: "roles",
     created(){
-      console.log(this.$router,'-----------',this.$route);
+      
     }
   }
 </script>

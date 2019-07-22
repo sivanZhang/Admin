@@ -1,7 +1,7 @@
 <template>
   <div id="userGroup">
     <el-container>
-      <el-header>
+      <el-header style="height:auto;padding:0">
         <el-radio-group v-model="radio" size="mini">
           <el-radio-button :label="1">所有用户</el-radio-button>
 
@@ -16,7 +16,7 @@
           <el-aside
             v-if="radio==3"
             width="240px"
-            style="border-right:1px solid #ddd;padding: 0 5px;"
+            style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
               <el-col :span="8">用户组</el-col>
@@ -30,7 +30,7 @@
 
             <el-tree
               class="filter-tree"
-              empty-text="未创建部门"
+              empty-text="暂无数据"
               highlight-current
               ref="tree"
               :data="TreeData"
