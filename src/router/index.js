@@ -113,7 +113,7 @@ export const constantRoutes = [{
         name: 'UserGroup',
         component: () =>
           import('@/views/admin/userGroup'),
-        meta: { title: '用户和组', icon: 'role' }
+        meta: { title: '用户和工种', icon: 'role' }
       },
       {
         path: 'roles',
