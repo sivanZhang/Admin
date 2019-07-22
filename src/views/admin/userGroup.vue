@@ -7,7 +7,7 @@
 
           <el-radio-button :label="2">未分组</el-radio-button>
 
-          <el-radio-button :label="3">部门</el-radio-button>
+          <el-radio-button :label="3">工种</el-radio-button>
         </el-radio-group>
       </el-header>
 
@@ -22,7 +22,7 @@
               <el-col :span="8">用户组</el-col>
 
               <el-col :span="16" style="text-align:right">
-                <el-button @click="openGroupForm('add')" type="info" size="mini">添加部门</el-button>
+                <el-button @click="openGroupForm('add')" type="info" size="mini">添加工种</el-button>
               </el-col>
             </el-row>
 
@@ -30,7 +30,7 @@
 
             <el-tree
               class="filter-tree"
-              empty-text="暂无数据"
+              empty-text="未创建工种"
               highlight-current
               ref="tree"
               :data="TreeData"
@@ -48,14 +48,14 @@
                     class="el-icon-plus"
                     @click="openGroupForm('add',data)"
                     style="color:#409EFF"
-                    title="添加子部门"
+                    title="添加子工种"
                   ></i>
 
                   <i
                     class="el-icon-delete"
                     @click="removeGroup(data)"
                     style="color:#F56C6C"
-                    title="删除当前部门"
+                    title="删除当前工种"
                   ></i>
                 </span>
               </span>
@@ -67,7 +67,7 @@
           <div class="t-header">
             <el-row v-if="radio==3" type="flex" align="middle">
               <el-col :span="12">
-                <el-button @click="openGroupForm('update')" type="primary" size="mini">修改部门信息</el-button>
+                <el-button @click="openGroupForm('update')" type="primary" size="mini">修改工种信息</el-button>
 
                 <el-button @click="openChangeMember(1)" type="primary" size="mini">添加成员</el-button>
 
@@ -75,13 +75,13 @@
               </el-col>
 
               <el-col :span="6">
-                <label for>部门名称</label>
+                <label for>工种名称</label>
 
                 ： {{ActiveGroup?ActiveGroup.name:'--'}}
               </el-col>
 
               <el-col :span="6">
-                <label for>部门负责人</label>
+                <label for>工种负责人</label>
 
                 ：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
               </el-col>
@@ -103,7 +103,7 @@
 
     <el-dialog :title="DialogType.title" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="GroupForm" ref="GroupForm" :rules="GroupRules">
-        <el-form-item label="部门名" label-width="20%" prop="name">
+        <el-form-item label="工种名" label-width="20%" prop="name">
           <el-input v-model.trim="GroupForm.name" autocomplete="off" style="width:100%"></el-input>
         </el-form-item>
 
@@ -218,7 +218,7 @@ export default {
 
             trigger: "blur",
 
-            message: "部门名称未填写"
+            message: "工种名称未填写"
           }
         ],
 
@@ -228,7 +228,7 @@ export default {
 
             trigger: "blur",
 
-            message: "部门名称未选择"
+            message: "工种负责人未选择"
           }
         ]
       },
@@ -343,7 +343,7 @@ export default {
           this.DialogType = Object.assign(
             {},
             {
-              title: "添加子部门",
+              title: "添加子工种",
 
               type
             }
@@ -359,7 +359,7 @@ export default {
           this.DialogType = Object.assign(
             {},
             {
-              title: "添加部门",
+              title: "添加工种",
 
               type
             }
@@ -371,7 +371,7 @@ export default {
         this.DialogType = Object.assign(
           {},
           {
-            title: "修改部门信息",
+            title: "修改工种信息",
 
             type
           }
@@ -483,7 +483,7 @@ export default {
     },
 
     removeGroup(data) {
-      this.$confirm("此操作将永久删除该部门?", "注意", {
+      this.$confirm("此操作将永久删除该工种?", "注意", {
         confirmButtonText: "删除",
 
         cancelButtonText: "取消",
