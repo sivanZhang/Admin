@@ -28,7 +28,7 @@
           </div>
           <div style="padding: 15px;">
             <mallki class-name="mallki-text" :text="item.name"/>
-            <p>创建者：{{item.creator_name}}</p>
+            <p>创建者：{{item.creator_name}} {{item.date|dateFormat}}</p>
             <el-row>
               <el-col :span="12">
                 <p class="subtitle">工作流</p>
