@@ -12,6 +12,7 @@
       <el-table-column prop="creator_id" label="创建人ID"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
+          {{$store.state.BASE_URL+scope.row.image}}
           <el-image :src="$store.state.BASE_URL+scope.row.image">
             <div slot="placeholder" class="image-slot">
               加载中
@@ -23,7 +24,7 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-tooltip content="删除资产" placement="top">
-            <el-button @click="deleteAssets(scope.row.id)" icon="el-icon-delete" type="text"/>
+            <el-button @click="deleteAssets(scope.row.id)" icon="el-icon-delete" type="text" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -60,7 +61,7 @@
           <el-select v-model="AssetForm.level" placeholder="请选择难度等级">
             <el-option
               v-for="item of LevelList"
-              :key="item"
+              :key="item.value"
               :label="item.label"
               :value="item.value"
             ></el-option>
@@ -80,12 +81,7 @@
         </el-form-item>
         <el-form-item label="所属项目" prop="project">
           <el-select v-model="AssetForm.project" placeholder="请选择所属项目">
-            <el-option
-              v-for="item of ProjectList"
-              :key="item"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
+            <el-option v-for="item of ProjectList" :key="item" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="关联任务" prop="task">
@@ -132,17 +128,19 @@ export default {
       ],
       rules: {
         name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
-        priority: [{ required: true, message: "请输入优先等级", trigger: "blur" }],
+        priority: [
+          { required: true, message: "请输入优先等级", trigger: "blur" }
+        ],
         level: [{ required: true, message: "请输入难度等级", trigger: "blur" }],
-        path: [{ required: true, message: "请输入路径", trigger: "blur" }],
+        path: [{ required: true, message: "请输入路径", trigger: "blur" }]
       },
-      buttonStates:{
-        createLoading:false,
+      buttonStates: {
+        createLoading: false
       }
     };
   },
-  computed:{
-      ...mapState('project',['ProjectList'])
+  computed: {
+    ...mapState("project", ["ProjectList"])
   },
   methods: {
     _getAssetList() {
@@ -156,8 +154,12 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
+        console.log(id);
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message(data.msg);
+          if (data.status === 0) {
+            this._getAssetList();
+          }
         });
       });
     },
@@ -167,20 +169,22 @@ export default {
     cancel() {
       this.isShow = false;
     },
-    addAsset(){
-        this.$refs["assetForm"].validate(valid => {
+    addAsset() {
+      this.$refs["assetForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
-          HTTP.postAssets(this.AssetForm).then(({data})=>{
+          HTTP.postAssets(this.AssetForm)
+            .then(({ data }) => {
               this.createLoading = false;
-              this.$message(data.msg)
-              if(data.status===0){
-                  this._getAssetList()
+              this.$message(data.msg);
+              if (data.status === 0) {
+                this._getAssetList();
               }
               this.isShow = false;
-          }).catch(err=>{
+            })
+            .catch(err => {
               this.createLoading = false;
-          })
+            });
         } else {
           return false;
         }

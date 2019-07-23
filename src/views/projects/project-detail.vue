@@ -6,7 +6,7 @@
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <el-menu-item index="1">任务</el-menu-item>
 
-      <el-menu-item index="2">版本</el-menu-item>
+      <el-menu-item index="2">资产管理</el-menu-item>
       <el-submenu index="3">
         <template slot="title">团队策划</template>
         <el-menu-item index="3-1">选项1</el-menu-item>

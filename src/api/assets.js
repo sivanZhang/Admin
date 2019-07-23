@@ -4,7 +4,7 @@ export function getAssets() {
     return AXIOS.get('/assets/assets/')
 }
 export function deleteAssets(data) {
-    return AXIOS.post('/assets/assets/?delete', data)
+    return AXIOS.post('/assets/assets/?delete', {...data, method: 'delete' })
 }
 //创建资产
 export function postAssets(data) {
