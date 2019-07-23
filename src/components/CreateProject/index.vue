@@ -8,11 +8,12 @@
       class="demo-ProjectForm"
     >
       <el-form-item label="图片" prop="color">
-        <img v-if="ProjectForm.image" :src="SRC" class="avatar" />
+        <img v-if="ProjectForm.image" :src="file" class="avatar" prop="file" />
 
         <el-upload
+        ref="upload"
           class="upload-demo"
-          action="string"
+          action="/appfile/appfile/"
           :on-preview="handlePreview"
           :auto-upload="false"
           :on-change="fileChange"
@@ -118,16 +119,27 @@ export default {
       this.isShow = false;
     },
     submitUpload() {
-      let formData = new FormData();
-      formData.append("file", this.ProjectForm.image);
+      
+      const formData = new FormData();
+      formData.append("image", this.file);
+      formData.append("test", 212);
+
+       
       console.log(this.ProjectForm.image)
       AXIOS
-        .post("/appfile/appfile/", formData)
+        .post("/appfile/appfile/", formData, {
+          headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+        }
+        )
         .then(res => {
           console.log("res");
           console.log(res);
         })
         .catch(err => {});
+        
+        //this.$refs.upload.submit();
     },
     handlePreview(file) {
       this.SRC = URL.createObjectURL(file.raw);
@@ -173,7 +185,7 @@ export default {
       return isJPG && isLt2M;
     },
     fileChange(file, fileList) {
-      
+      this.file = fileList.slice(-3);
     },
   }
 };
