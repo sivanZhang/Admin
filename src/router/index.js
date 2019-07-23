@@ -109,12 +109,19 @@ export const constantRoutes = [{
         redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
         meta: { title: '系统设置', icon: 'settings' },
         children: [{
-                path: 'userGroup', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
-                name: 'UserGroup',
+                path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
+                name: 'profession',
                 component: () =>
                     import ('@/views/admin/userGroup'),
-                meta: { title: '用户和工种', icon: 'group' }
+                meta: { title: '用户', icon: 'group' }
             },
+          {
+            path: 'userGroup',
+            name: 'UserGroup',
+            component: () =>
+              import ('@/views/admin/profession'),
+            meta: { title: '工种', icon: 'profession' }
+          },
             {
                 path: 'roles',
                 name: 'UserGqqqroup',
