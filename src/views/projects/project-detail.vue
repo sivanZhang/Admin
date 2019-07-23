@@ -20,19 +20,25 @@
         <el-menu-item index="4-3">选项3</el-menu-item>
       </el-submenu>
     </el-menu>
-    <tab-task/>
+    <component :is="componentId"></component>
   </div>
 </template>
 
 <script>
 import tabTask from './components/tab-task'
+import tabAssets from './components/tab-assets'
+
   export default {
     name: "project-detail",
     components:{
-      tabTask
+      tabTask,
+      tabAssets
     },
     data() {
-      return {};
+      return {
+        componentId:'tab-task',
+        activeIndex:'1'
+      };
     },
     methods:{
         goBack(){

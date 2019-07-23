@@ -8,19 +8,26 @@
       class="demo-ProjectForm"
     >
       <el-form-item label="图片" prop="color">
+        <img v-if="ProjectForm.image" :src="SRC" class="avatar" />
+
         <el-upload
-          action="#"
-          class="avatar-uploader"
-          :show-file-list="false"
-          :on-change="handleAvatarSuccess"
+          class="upload-demo"
+          action="string"
           :on-preview="handlePreview"
-          :before-upload="beforeAvatarUpload"
           :auto-upload="false"
+          :on-change="fileChange"
         >
-          <img v-if="ProjectForm.image" :src="ProjectForm.image" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button
+            style="margin-left: 10px;"
+            size="small"
+            type="success"
+            @click="submitUpload"
+          >上传到服务器</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
       </el-form-item>
+
       <el-form-item label="颜色" prop="color">
         <el-color-picker v-model="ProjectForm.color" show-alpha :predefine="predefineColors"></el-color-picker>
       </el-form-item>
@@ -69,6 +76,7 @@
 
 <script>
 import { addProjects } from "@/api/project";
+import AXIOS from '@/utils/request'
 export default {
   name: "CreateProject",
   data() {
@@ -93,7 +101,9 @@ export default {
         end: [
           { required: true, message: "请输入项目结束日期", trigger: "blur" }
         ]
-      }
+      },
+      SRC: "",
+      file:null
     };
   },
   props: {
@@ -107,9 +117,21 @@ export default {
     cancel() {
       this.isShow = false;
     },
+    submitUpload() {
+      let formData = new FormData();
+      formData.append("file", this.ProjectForm.image);
+      console.log(this.ProjectForm.image)
+      AXIOS
+        .post("/appfile/appfile/", formData)
+        .then(res => {
+          console.log("res");
+          console.log(res);
+        })
+        .catch(err => {});
+    },
     handlePreview(file) {
-      console.log(file);
-      this.ProjectForm.image = URL.createObjectURL(file.raw);
+      this.SRC = URL.createObjectURL(file.raw);
+      this.ProjectForm.image = file.raw
     },
     submitForm() {
       this.$refs["projectForm"].validate(valid => {
@@ -134,9 +156,7 @@ export default {
     handleAvatarSuccess(file, fileList) {
       let fileName = file.name;
       let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
-      if (regex.test(fileName.toLowerCase())) {
-        this.ProjectForm.image = file.url;
-      } else {
+      if (!regex.test(fileName.toLowerCase())) {
         this.$message.error("请选择图片文件");
       }
     },
@@ -151,7 +171,10 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
-    }
+    },
+    fileChange(file, fileList) {
+      
+    },
   }
 };
 </script>
