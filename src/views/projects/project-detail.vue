@@ -3,52 +3,60 @@
     <el-page-header @back="goBack">
     </el-page-header>
 
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">任务</el-menu-item>
+    <!--        <template slot="title">团队策划</template>-->
+    <!--        <el-menu-item index="3-1">选项1</el-menu-item>-->
+    <!--        <el-menu-item index="3-2">选项2</el-menu-item>-->
+    <!--        <el-menu-item index="3-3">选项3</el-menu-item>-->
+    <!--      </el-submenu>-->
+    <!--      <el-submenu index="4">-->
+    <!--        <template slot="title">控制面板</template>-->
+    <!--        <el-menu-item index="4-1">选项1</el-menu-item>-->
+    <!--        <el-menu-item index="4-2">选项2</el-menu-item>-->
+    <!--        <el-menu-item index="4-3">选项3</el-menu-item>-->
+    <!--      </el-submenu>-->
 
-      <el-menu-item index="2">资产管理</el-menu-item>
-      <el-submenu index="3">
-        <template slot="title">团队策划</template>
-        <el-menu-item index="3-1">选项1</el-menu-item>
-        <el-menu-item index="3-2">选项2</el-menu-item>
-        <el-menu-item index="3-3">选项3</el-menu-item>
-      </el-submenu>
-      <el-submenu index="4">
-        <template slot="title">控制面板</template>
-        <el-menu-item index="4-1">选项1</el-menu-item>
-        <el-menu-item index="4-2">选项2</el-menu-item>
-        <el-menu-item index="4-3">选项3</el-menu-item>
-      </el-submenu>
-    </el-menu>
-    <component :is="componentId"></component>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="任务" name="first">
+        <tab-task></tab-task>
+      </el-tab-pane>
+      <el-tab-pane label="资产管理" name="second">
+        <tab-assets></tab-assets>
+      </el-tab-pane>
+      <el-tab-pane label="团队策划" name="third">团队策划</el-tab-pane>
+      <el-tab-pane label="控制面板" name="fourth">控制面板</el-tab-pane>
+    </el-tabs>
+
   </div>
 </template>
 
 <script>
-import tabTask from './components/tab-task'
-import tabAssets from './components/tab-assets'
+  import tabTask from './components/tab-task'
+  import tabAssets from './components/tab-assets'
 
   export default {
     name: "project-detail",
-    components:{
+    components: {
       tabTask,
       tabAssets
     },
     data() {
       return {
-        componentId:'tab-task',
-        activeIndex:'1'
+        componentId: 'tab-task',
+        activeName: 'first',
       };
     },
-    methods:{
-        goBack(){
-            this.$router.go(-1);
-        }
+    methods: {
+      goBack() {
+        this.$router.go(-1);
+      },
+      handleClick(tab, event) {
+        console.log(tab, event);
+      }
     },
-    created(){
+    created() {
     },
-    beforeRouteEnter (to, from, next) {
-        next()
+    beforeRouteEnter(to, from, next) {
+      next()
     }
   }
 </script>
