@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="526px">
+  <el-dialog title="新建项目" :visible.sync="isShow" width="526px" @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"
@@ -7,30 +7,34 @@
       label-width="100px"
       class="demo-ProjectForm"
     >
-      <el-form-item label="图片" prop="color">
-        <img v-if="ProjectForm.image" :src="file" class="avatar" prop="file" />
-
+      <el-form-item label="图片">
         <el-upload
-        ref="upload"
+          accept="image/jpeg, image/gif, image/png"
+          ref="upload"
           class="upload-demo"
-          action="/appfile/appfile/"
-          :on-preview="handlePreview"
-          :auto-upload="false"
-          :on-change="fileChange"
+          action="/api/appfile/appfile/"
+          :headers="headers"
+          :on-success="handleSuccess"
+          drag
+          :show-file-list="false"
         >
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button
-            style="margin-left: 10px;"
-            size="small"
-            type="success"
-            @click="submitUpload"
-          >上传到服务器</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+          <template v-else>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </template>
         </el-upload>
       </el-form-item>
 
       <el-form-item label="颜色" prop="color">
-        <el-color-picker v-model="ProjectForm.color" show-alpha :predefine="predefineColors"></el-color-picker>
+        <el-color-picker
+          v-model="ProjectForm.color"
+          :predefine="predefineColors"
+          color-format="hex"
+        ></el-color-picker>
       </el-form-item>
       <el-form-item label="项目名称" prop="name">
         <el-input v-model="ProjectForm.name"></el-input>
@@ -77,7 +81,9 @@
 
 <script>
 import { addProjects } from "@/api/project";
-import AXIOS from '@/utils/request'
+import AXIOS from "@/utils/request";
+import { getToken } from "@/utils/auth";/* 
+import { close } from "fs"; */
 export default {
   name: "CreateProject",
   data() {
@@ -104,11 +110,14 @@ export default {
         ]
       },
       SRC: "",
-      file:null
+      file: null,
+      headers: {
+        Authorization: `JWT ${getToken()}`
+      }
     };
   },
   props: {
-    //传ishow控制是否显示状态
+    //父组件接，控制是否显示弹框
     isShow: {
       type: Boolean,
       default: false
@@ -116,35 +125,10 @@ export default {
   },
   methods: {
     cancel() {
-      this.isShow = false;
+      //告诉父组件：不显示弹框
+      this.$emit('update:isShow',false)
     },
-    submitUpload() {
-      
-      const formData = new FormData();
-      formData.append("image", this.file);
-      formData.append("test", 212);
-
-       
-      console.log(this.ProjectForm.image)
-      AXIOS
-        .post("/appfile/appfile/", formData, {
-          headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-        }
-        )
-        .then(res => {
-          console.log("res");
-          console.log(res);
-        })
-        .catch(err => {});
-        
-        //this.$refs.upload.submit();
-    },
-    handlePreview(file) {
-      this.SRC = URL.createObjectURL(file.raw);
-      this.ProjectForm.image = file.raw
-    },
+    //验证，并提交创建项目的表单
     submitForm() {
       this.$refs["projectForm"].validate(valid => {
         if (valid) {
@@ -157,7 +141,7 @@ export default {
             this.$message(data.msg);
             if (data.status === 0) {
               this.$store.dispatch("project/get_Projects");
-              this.isShow = false;
+              this.$emit('update:isShow',false)
             }
           });
         } else {
@@ -165,28 +149,12 @@ export default {
         }
       });
     },
-    handleAvatarSuccess(file, fileList) {
-      let fileName = file.name;
-      let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
-      if (!regex.test(fileName.toLowerCase())) {
-        this.$message.error("请选择图片文件");
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
-    fileChange(file, fileList) {
-      this.file = fileList.slice(-3);
-    },
+    //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
+    handleSuccess(response, file, fileList) {
+      this.SRC = this.$store.state.BASE_URL + response.msg;
+      this.ProjectForm.image = response.msg;
+      this.ProjectForm.image_id = response.id;
+    }
   }
 };
 </script>

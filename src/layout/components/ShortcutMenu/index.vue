@@ -36,7 +36,7 @@
         <i class="el-icon-arrow-down el-icon--right"/>
       </div>
     </el-popover>
-    <create-project :isShow='isCreateShow'/>
+    <create-project v-bind:isShow.sync='isCreateShow'/>
   </div>
 </template>
 
@@ -60,6 +60,7 @@ export default {
     })
   },
   watch: {
+    //根据路由变化控制顶部菜单的active状态
     $route(to, from) {
       this.isCreateShow = false;
       const reg1 = /^\/admin/,

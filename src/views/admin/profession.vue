@@ -8,11 +8,7 @@
             style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
-              <el-col :span="8">用户组</el-col>
-
-              <el-col :span="16" style="text-align:right">
-                <el-button @click="openGroupForm('add')" type="info" size="mini">添加工种</el-button>
-              </el-col>
+               <el-button @click="openGroupForm('add')" type="success" size="mini">添加工种</el-button>
             </el-row>
 
             <el-input size="mini" class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
@@ -65,24 +61,20 @@
 
               <el-col :span="6">
                 <label for>工种名称</label>
-
                 ： {{ActiveGroup?ActiveGroup.name:'--'}}
               </el-col>
 
               <el-col :span="6">
                 <label for>工种负责人</label>
-
                 ：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
               </el-col>
             </el-row>
-
           </div>
 
           <users-table :UserList="GroupUsers"></users-table>
         </el-main>
       </el-container>
     </el-container>
-
 
     <!-- 添加用户组弹出框 -->
 
@@ -111,8 +103,7 @@
           :loading="Loadings.addDeptLoading"
           type="primary"
           @click="DialogType.type==='add'?appendGroup():updateGroup()"
-        >提 交
-        </el-button>
+        >提 交</el-button>
       </div>
     </el-dialog>
 
@@ -139,171 +130,165 @@
           :loading="Loadings.memberEditLoading"
           :type="MemberEditState.type?'primary':'danger'"
           @click="changeMember"
-        >{{MemberEditState.type?'添 加':'删 除'}}
-        </el-button>
+        >{{MemberEditState.type?'添 加':'删 除'}}</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import {
-    getDept,
-    addDept,
-    putDept,
-    removeDept
-  } from "@/api/admin";
+import { getDept, addDept, putDept, removeDept } from "@/api/admin";
 
-  import usersTable from "@/components/UsersTable";
+import usersTable from "@/components/UsersTable";
 
-  import {mapState} from "vuex";
+import { mapState } from "vuex";
 
-  export default {
-    name: 'profession',
-    data() {
-      return {
-        SelectMembers: [],
-        AllMembers: [],
-        MemberEditState: {},
-        isMemberEditShow: false,
-        GroupUsers: [],
-        filterText: "",
-        ActiveGroup: null,
-        TreeData: [],
-        DialogType: {},
-        defaultProps: {
-          children: "children",
+export default {
+  name: "profession",
+  data() {
+    return {
+      SelectMembers: [],
+      AllMembers: [],
+      MemberEditState: {},
+      isMemberEditShow: false,
+      GroupUsers: [],
+      filterText: "",
+      ActiveGroup: null,
+      TreeData: [],
+      DialogType: {},
+      defaultProps: {
+        children: "children",
 
-          label: "name"
-        },
-        GroupForm: {},
-        dialogFormVisible: false,
-        GroupRules: {
-          name: [
-            {
-              required: true,
+        label: "name"
+      },
+      GroupForm: {},
+      dialogFormVisible: false,
+      GroupRules: {
+        name: [
+          {
+            required: true,
 
-              trigger: "blur",
+            trigger: "blur",
 
-              message: "工种名称未填写"
-            }
-          ],
+            message: "工种名称未填写"
+          }
+        ],
 
-          chargerid: [
-            {
-              required: true,
+        chargerid: [
+          {
+            required: true,
 
-              trigger: "blur",
+            trigger: "blur",
 
-              message: "工种负责人未选择"
-            }
-          ]
-        },
-        Loadings: {
-          addDeptLoading: false,
+            message: "工种负责人未选择"
+          }
+        ]
+      },
+      Loadings: {
+        addDeptLoading: false,
 
-          memberEditLoading: false
-        }
+        memberEditLoading: false
       }
+    };
+  },
+  computed: {
+    classObject: function() {
+      return {
+        active: this.isActive && !this.error
+      };
     },
-    computed: {
-      classObject: function () {
-        return {
-          active: this.isActive && !this.error
-        };
-      },
-      ...mapState({
-        UserList: state => state.admin.UserList
-      })
-    },
-    methods: {
-      //http获取“用户组”列表
+    ...mapState({
+      UserList: state => state.admin.UserList
+    })
+  },
+  methods: {
+    //http获取“用户组”列表
 
-      getDeptList() {
-        getDept().then(({data}) => {
-          this.TreeData = [...data.msg];
+    getDeptList() {
+      getDept().then(({ data }) => {
+        this.TreeData = [...data.msg];
+      });
+    },
+    async changeMember() {
+      if (!this.SelectMembers.length) {
+        this.$message.warning("未选择用户");
+
+        return;
+      }
+
+      let data = {
+        id: this.ActiveGroup.id,
+
+        method: "put"
+      };
+
+      if (this.MemberEditState.type) {
+        data = {
+          ...data,
+
+          add_user_ids: this.SelectMembers.join()
+        };
+      } else {
+        data = {
+          ...data,
+
+          del_user_ids: this.SelectMembers.join()
+        };
+      }
+
+      this.Loadings.memberEditLoading = true;
+
+      await putDept(data)
+        .then(({ data }) => {
+          this.Loadings.memberEditLoading = false;
+
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+
+            //成功后刷新该组成员
+
+            this.handleGroupClick(this.ActiveGroup);
+          } else {
+            this.$message.error(data.msg);
+          }
+        })
+
+        .catch(() => {
+          this.Loadings.memberEditLoading = false;
         });
-      },
-      async changeMember() {
-        if (!this.SelectMembers.length) {
-          this.$message.warning("未选择用户");
 
-          return;
-        }
+      this.isMemberEditShow = false;
+    },
+    openChangeMember(type = 0) {
+      this.SelectMembers = [];
 
-        let data = {
-          id: this.ActiveGroup.id,
+      if (type) {
+        this.MemberEditState = Object.assign(
+          {},
+          {
+            type,
 
-          method: "put"
-        };
+            title: "添加成员"
+          }
+        );
 
-        if (this.MemberEditState.type) {
-          data = {
-            ...data,
+        this.AllMembers = Object.assign({}, this.UserList);
+      } else {
+        this.MemberEditState = Object.assign(
+          {},
+          {
+            type,
 
-            add_user_ids: this.SelectMembers.join()
-          };
-        } else {
-          data = {
-            ...data,
+            title: "删除成员"
+          }
+        );
 
-            del_user_ids: this.SelectMembers.join()
-          };
-        }
+        this.AllMembers = Object.assign({}, this.GroupUsers);
+      }
 
-        this.Loadings.memberEditLoading = true;
-
-        await putDept(data)
-          .then(({data}) => {
-            this.Loadings.memberEditLoading = false;
-
-            if (data.status === 0) {
-              this.$message.success(data.msg);
-
-              //成功后刷新该组成员
-
-              this.handleGroupClick(this.ActiveGroup);
-            } else {
-              this.$message.error(data.msg);
-            }
-          })
-
-          .catch(() => {
-            this.Loadings.memberEditLoading = false;
-          });
-
-        this.isMemberEditShow = false;
-      },
-      openChangeMember(type = 0) {
-        this.SelectMembers = [];
-
-        if (type) {
-          this.MemberEditState = Object.assign(
-            {},
-            {
-              type,
-
-              title: "添加成员"
-            }
-          );
-
-          this.AllMembers = Object.assign({}, this.UserList);
-        } else {
-          this.MemberEditState = Object.assign(
-            {},
-            {
-              type,
-
-              title: "删除成员"
-            }
-          );
-
-          this.AllMembers = Object.assign({}, this.GroupUsers);
-        }
-
-        this.isMemberEditShow = true;
-      },
-      /**
+      this.isMemberEditShow = true;
+    },
+    /**
 
        *
 
@@ -315,140 +300,112 @@
 
        */
 
-      handleGroupClick(data) {
-        this.ActiveGroup = {...data};
+    handleGroupClick(data) {
+      this.ActiveGroup = { ...data };
 
-        getDept({
-          id: data.id
-        }).then(({data}) => {
-          this.GroupUsers = [...data.users];
-        });
-      },
+      getDept({
+        id: data.id
+      }).then(({ data }) => {
+        this.GroupUsers = [...data.users];
+      });
+    },
 
-      appendGroup() {
-        //验证表单
+    appendGroup() {
+      //验证表单
 
-        this.$refs["GroupForm"].validate(async valid => {
-          if (valid) {
-            this.Loadings.addDeptLoading = true;
+      this.$refs["GroupForm"].validate(async valid => {
+        if (valid) {
+          this.Loadings.addDeptLoading = true;
 
-            await addDept(this.GroupForm)
-              .then(({data}) => {
-                this.Loadings.addDeptLoading = false;
+          await addDept(this.GroupForm)
+            .then(({ data }) => {
+              this.Loadings.addDeptLoading = false;
 
-                if (data.status === 0) {
-                  this.$message.success(data.msg);
+              if (data.status === 0) {
+                this.$message.success(data.msg);
 
-                  this.getDeptList();
-                } else {
-                  this.$message.error(data.msg);
-                }
-              })
-
-              .catch(() => {
-                this.Loadings.addDeptLoading = false;
-              });
-
-            this.dialogFormVisible = false;
-          }
-        });
-      },
-
-      updateGroup() {
-        //验证表单
-
-        this.$refs["GroupForm"].validate(async valid => {
-          if (valid) {
-            this.Loadings.addDeptLoading = true;
-
-            await putDept(this.GroupForm)
-              .then(({data}) => {
-                this.Loadings.addDeptLoading = false;
-
-                if (data.status === 0) {
-                  this.$message.success(data.msg);
-
-                  this.getDeptList();
-                } else {
-                  this.$message.error(data.msg);
-                }
-              })
-
-              .catch(() => {
-                this.Loadings.addDeptLoading = false;
-              });
-
-            this.dialogFormVisible = false;
-          }
-        });
-      },
-
-      removeGroup(data) {
-        this.$confirm("此操作将永久删除该工种?", "注意", {
-          confirmButtonText: "删除",
-
-          cancelButtonText: "取消",
-
-          type: "warning"
-        }).then(() => {
-          removeDept({
-            id: data.id,
-
-            method: "delete"
-          }).then(({data}) => {
-            if (data.status === 0) {
-              this.$message.success(data.msg);
-
-              this.getDeptList();
-            } else {
-              this.$message.error(data.msg);
-            }
-          });
-        });
-      },
-
-      searchGroup(value, data) {
-        if (!value) return true;
-
-        return data.name.indexOf(value) !== -1;
-      },
-      //打开“用户组”弹窗
-
-      openGroupForm(type, node = null) {
-        if (type === "add") {
-          if (node) {
-            this.DialogType = Object.assign(
-              {},
-              {
-                title: "添加子工种",
-
-                type
+                this.getDeptList();
+              } else {
+                this.$message.error(data.msg);
               }
-            );
+            })
 
-            this.GroupForm = Object.assign(
-              {},
-              {
-                parentid: node.id
+            .catch(() => {
+              this.Loadings.addDeptLoading = false;
+            });
+
+          this.dialogFormVisible = false;
+        }
+      });
+    },
+
+    updateGroup() {
+      //验证表单
+
+      this.$refs["GroupForm"].validate(async valid => {
+        if (valid) {
+          this.Loadings.addDeptLoading = true;
+
+          await putDept(this.GroupForm)
+            .then(({ data }) => {
+              this.Loadings.addDeptLoading = false;
+
+              if (data.status === 0) {
+                this.$message.success(data.msg);
+
+                this.getDeptList();
+              } else {
+                this.$message.error(data.msg);
               }
-            );
+            })
+
+            .catch(() => {
+              this.Loadings.addDeptLoading = false;
+            });
+
+          this.dialogFormVisible = false;
+        }
+      });
+    },
+
+    removeGroup(data) {
+      this.$confirm("此操作将永久删除该工种?", "注意", {
+        confirmButtonText: "删除",
+
+        cancelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+        removeDept({
+          id: data.id,
+
+          method: "delete"
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+
+            this.getDeptList();
           } else {
-            this.DialogType = Object.assign(
-              {},
-              {
-                title: "添加工种",
-
-                type
-              }
-            );
-
-            this.GroupForm = {};
+            this.$message.error(data.msg);
           }
-        } else if (type === "update") {
+        });
+      });
+    },
+
+    searchGroup(value, data) {
+      if (!value) return true;
+
+      return data.name.indexOf(value) !== -1;
+    },
+    //打开“用户组”弹窗
+
+    openGroupForm(type, node = null) {
+      if (type === "add") {
+        if (node) {
           this.DialogType = Object.assign(
             {},
             {
-              title: "修改工种信息",
+              title: "添加子工种",
 
               type
             }
@@ -457,33 +414,61 @@
           this.GroupForm = Object.assign(
             {},
             {
-              id: this.ActiveGroup.id,
-
-              method: "put",
-
-              name: this.ActiveGroup.name,
-
-              chargerid: this.ActiveGroup.charger_id
+              parentid: node.id
             }
           );
+        } else {
+          this.DialogType = Object.assign(
+            {},
+            {
+              title: "添加工种",
+
+              type
+            }
+          );
+
+          this.GroupForm = {};
         }
+      } else if (type === "update") {
+        this.DialogType = Object.assign(
+          {},
+          {
+            title: "修改工种信息",
 
-        this.dialogFormVisible = true;
-      },
-    },
-    watch: {
-      filterText(val) {
-        this.$refs.tree.filter(val);
+            type
+          }
+        );
+
+        this.GroupForm = Object.assign(
+          {},
+          {
+            id: this.ActiveGroup.id,
+
+            method: "put",
+
+            name: this.ActiveGroup.name,
+
+            chargerid: this.ActiveGroup.charger_id
+          }
+        );
       }
-    },
-    created() {
-      this.getDeptList();
-    },
 
-    components: {
-      usersTable
-    },
+      this.dialogFormVisible = true;
+    }
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    }
+  },
+  created() {
+    this.getDeptList();
+  },
+
+  components: {
+    usersTable
   }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
