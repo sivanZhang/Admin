@@ -13,9 +13,7 @@ export default {
     usersTable
   },
   computed: {
-    ...mapState({
-      UserList: state => state.admin.UserList
-    })
+    ...mapState('admin',['UserList'])
   },
   created() {
     !this.UserList && this.$store.dispatch("admin/get_UserList");

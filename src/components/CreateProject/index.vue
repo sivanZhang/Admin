@@ -37,15 +37,30 @@
         ></el-color-picker>
       </el-form-item>
       <el-form-item label="项目名称" prop="name">
-        <el-input v-model="ProjectForm.name"></el-input>
+        <el-input v-model.trim="ProjectForm.name"></el-input>
       </el-form-item>
       <el-form-item label="项目编码" prop="code">
         <el-input v-model="ProjectForm.code"></el-input>
       </el-form-item>
+      <el-form-item label="项目预算" prop="budget">
+        <el-input v-model="ProjectForm.budget">
+          <span slot="append">万</span>
+        </el-input>
+      </el-form-item>
       <el-form-item label="工作流" prop="region">
-        <el-select v-model="ProjectForm.status" placeholder="请选择活动区域">
+        <el-select v-model="ProjectForm.status" placeholder="请选择工作流">
           <el-option label="草稿" :value="0"></el-option>
           <el-option label="激活" :value="1"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="负责人" prop="region">
+        <el-select v-model="ProjectForm.chargerid" placeholder="请选择负责人">
+          <el-option
+            v-for="item of UserList"
+            :label="item.username"
+            :value="item.id"
+            :key="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="起止日期" required>
@@ -82,7 +97,9 @@
 <script>
 import { addProjects } from "@/api/project";
 import AXIOS from "@/utils/request";
-import { getToken } from "@/utils/auth";/* 
+import { getToken } from "@/utils/auth";
+import { mapState } from "vuex";
+/* 
 import { close } from "fs"; */
 export default {
   name: "CreateProject",
@@ -107,6 +124,13 @@ export default {
         ],
         end: [
           { required: true, message: "请输入项目结束日期", trigger: "blur" }
+        ],
+        budget: [
+          {
+            pattern: /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/,
+            message: "请输入数字",
+            trigger: "change"
+          }
         ]
       },
       SRC: "",
@@ -123,10 +147,13 @@ export default {
       default: false
     }
   },
+  computed: {
+    ...mapState("admin", ["UserList"])
+  },
   methods: {
     cancel() {
       //告诉父组件：不显示弹框
-      this.$emit('update:isShow',false)
+      this.$emit("update:isShow", false);
     },
     //验证，并提交创建项目的表单
     submitForm() {
@@ -141,7 +168,7 @@ export default {
             this.$message(data.msg);
             if (data.status === 0) {
               this.$store.dispatch("project/get_Projects");
-              this.$emit('update:isShow',false)
+              this.$emit("update:isShow", false);
             }
           });
         } else {
@@ -154,6 +181,19 @@ export default {
       this.SRC = this.$store.state.BASE_URL + response.msg;
       this.ProjectForm.image = response.msg;
       this.ProjectForm.image_id = response.id;
+    }
+  },
+  created() {
+    !this.UserList && this.$store.dispatch("admin/get_UserList");
+  },
+  watch:{
+    isShow(val){
+      //弹框关闭后，form数据重置、验证重置
+      if (!val){
+        this.SRC = ''
+        this.ProjectForm = {}
+        this.$refs['projectForm'].resetFields()
+      }
     }
   }
 };

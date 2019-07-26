@@ -1,18 +1,22 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
+      <Drawer :closable="false" v-model="value1" width="526">
+        <div slot="title">
+          wqwq
+        </div>
+        <project-drawer/>
+      </Drawer>
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown>
-              <el-button type="text" style="color:#333;font-size:18px">
-                <i class="el-icon-more"></i>
-              </el-button>
+              <i class="el-icon-more"></i>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
                 </el-dropdown-item>
-                <el-dropdown-item>在侧边栏中打开</el-dropdown-item>
+                <el-dropdown-item @click.native="value1 = true">在侧边栏中打开</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -27,7 +31,7 @@
             ></el-image>
           </div>
           <div style="padding: 15px;">
-            <mallki class-name="mallki-text" :text="item.name"/>
+            <mallki class-name="mallki-text" @click.native="value1 = true" :text="item.name" />
             <p>创建者：{{item.creator_name}} {{item.date|dateFormat}}</p>
             <el-row>
               <el-col :span="12">
@@ -52,7 +56,7 @@
       </div>
     </div>
     <el-dialog :visible.sync="isShowImg" width="768px" top="80px" :show-close="false">
-      <img :src="src" style="width:100%">
+      <img :src="src" style="width:100%" />
     </el-dialog>
   </div>
 </template>
@@ -60,21 +64,22 @@
 <script>
 import { mapState } from "vuex";
 import Mallki from "@/components/TextHoverEffect/Mallki";
+import projectDrawer from "@/components/projectDrawer";
 export default {
   name: "project",
   components: {
-    Mallki
+    Mallki,
+    projectDrawer
   },
   data() {
     return {
       isShowImg: false,
-      src: ""
+      src: "",
+      value1:false
     };
   },
   computed: {
-    ...mapState({
-      ProjectList: state => state.project.ProjectList
-    })
+    ...mapState("project", ["ProjectList"])
   },
   methods: {
     showImg(url = null) {

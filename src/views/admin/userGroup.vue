@@ -35,10 +35,7 @@
     },
 
     computed: {
-
-      ...mapState({
-        UserList: state => state.admin.UserList
-      })
+      ...mapState('admin',['UserList'])
     },
 
     methods: {},

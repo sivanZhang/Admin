@@ -184,7 +184,7 @@ export default {
   },
   methods: {
     _getAssetList() {
-      HTTP.getAssets().then(({ data }) => {
+      HTTP.queryAssets().then(({ data }) => {
         this.TableData = [...data.msg];
       });
     },

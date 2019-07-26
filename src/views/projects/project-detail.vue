@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-page-header @back="goBack">
-    </el-page-header>
+   <!--  <el-page-header @back="goBack">
+    </el-page-header> -->
 
     <!--        <template slot="title">团队策划</template>-->
     <!--        <el-menu-item index="3-1">选项1</el-menu-item>-->
@@ -46,9 +46,9 @@
       };
     },
     methods: {
-      goBack() {
+      /* goBack() {
         this.$router.go(-1);
-      },
+      }, */
       handleClick(tab, event) {
         console.log(tab, event);
       }

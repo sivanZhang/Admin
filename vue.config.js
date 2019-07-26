@@ -77,15 +77,15 @@ module.exports = {
         config
         // https://webpack.js.org/configuration/devtool/#development
             .when(process.env.NODE_ENV === 'development',
-                config => config.devtool('cheap-source-map')
-            )
-            /* 
-                config.module
-                  .rule('iview')
-                  .test(/iview.src.*?js$/)
-                  .use('babel')
-                  .loader('babel-loader')
-                  .end() */
+            config => config.devtool('cheap-source-map')
+        )
+
+        config.module
+            .rule('iview')
+            .test(/iview.src.*?js$/)
+            .use('babel')
+            .loader('babel-loader')
+            .end()
         config
             .when(process.env.NODE_ENV !== 'development',
                 config => {

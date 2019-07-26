@@ -7,7 +7,7 @@
     <el-table :data="TableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
               style="width: 100%"
               border
-              stripe="true"
+              :stripe="true"
               :row-style="{'font-size':'14px'}"
               :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
@@ -42,7 +42,7 @@
         :page-sizes="pageSizeList"
         :pagesize="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total=TableData.length>
+        :total="TableData.length">
       </el-pagination>
     </div>
     <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
@@ -162,7 +162,9 @@ export default {
   },
   methods: {
     _getAssetList() {
-      HTTP.getAssets().then(({ data }) => {
+      HTTP.queryAssets({
+        project:this.$route.params.id
+      }).then(({ data }) => {
         this.TableData = [...data.msg];
       });
     },
