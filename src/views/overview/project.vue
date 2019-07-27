@@ -1,7 +1,7 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
-      <Drawer :closable="false" v-model="value1" width="526" closable :mask-closable="false">
+      <Drawer closable v-model="value1" width="526" :mask="false">
         <header slot="header">
           我是头部内容
         </header>
