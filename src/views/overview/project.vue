@@ -1,10 +1,10 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
-      <Drawer :closable="false" v-model="value1" width="526">
-        <div slot="title">
-          wqwq
-        </div>
+      <Drawer :closable="false" v-model="value1" width="526" closable :mask-closable="false">
+        <header slot="header">
+          我是头部内容
+        </header>
         <project-drawer/>
       </Drawer>
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
