@@ -184,7 +184,7 @@ export default {
     }
   },
   created() {
-    !this.UserList && this.$store.dispatch("admin/get_UserList");
+    !this.UserList && (this.$store.dispatch("admin/get_UserList"));
   },
   watch:{
     isShow(val){

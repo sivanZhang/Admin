@@ -88,26 +88,31 @@ export const constantRoutes = [{
         hidden: true,
         alwaysShow: true,
         children: [{
-                path: 'projects-list',
-                name: 'projects-list',
-                component: () =>
-                    import ('@/views/projects/projects'),
-                meta: { title: '项目', icon: 'tree', hiddenSideBar: true }
-            },
-            {
-                path: 'project-detail/:id',
-                name: 'project-detail',
-                component: () =>
-                    import ('@/views/projects/project-detail'),
-                meta: { title: '项目详情', icon: 'tree', hiddenSideBar: true }
-            }
-        ]
+            path: 'project-detail/:id',
+            name: 'project-detail',
+            component: () =>
+                import ('@/views/projects/project-detail'),
+            meta: { title: '项目详情', icon: 'tree', hiddenSideBar: true }
+        }]
+    },
+    {
+        path: '/task',
+        component: Layout,
+        redirect: '/task',
+        meta: { title: '我的任务', icon: 'task' },
+        children: [{
+            path: 'task',
+            name: 'task',
+            component: () =>
+                import ('@/views/task/task'),
+            meta: { title: '我的任务', icon: 'task' }
+        }]
     },
     {
         path: '/admin',
         component: Layout,
         redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
-        meta: { title: '系统设置', icon: 'settings' },
+        meta: { title: '用户设置', icon: 'settings' },
         children: [{
                 path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
                 name: 'profession',
@@ -115,13 +120,13 @@ export const constantRoutes = [{
                     import ('@/views/admin/userGroup'),
                 meta: { title: '用户', icon: 'group' }
             },
-          {
-            path: 'userGroup',
-            name: 'UserGroup',
-            component: () =>
-              import ('@/views/admin/profession'),
-            meta: { title: '工种', icon: 'profession' }
-          },
+            {
+                path: 'userGroup',
+                name: 'UserGroup',
+                component: () =>
+                    import ('@/views/admin/profession'),
+                meta: { title: '工种', icon: 'profession' }
+            },
             {
                 path: 'roles',
                 name: 'UserGqqqroup',

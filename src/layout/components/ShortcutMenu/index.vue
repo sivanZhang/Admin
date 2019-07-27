@@ -101,6 +101,7 @@ input:focus {
 }
 .menu-group {
   position: relative;
+  font-size: 14px;
   .active {
     color: rgb(24, 144, 255);
   }

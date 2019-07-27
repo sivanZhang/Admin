@@ -16,7 +16,7 @@ export default {
     ...mapState('admin',['UserList'])
   },
   created() {
-    !this.UserList && this.$store.dispatch("admin/get_UserList");
+    !this.UserList && (this.$store.dispatch("admin/get_UserList"));
   }
 };
 </script>

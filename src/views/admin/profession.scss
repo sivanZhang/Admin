@@ -42,6 +42,13 @@
         justify-content: center;
         align-items: center;
     }
+    .custom-tree-node {
+        &:hover {
+            .iconWarp {
+                display: inline-block;
+            }
+        }
+    }
 }
 
 ::-webkit-scrollbar {
