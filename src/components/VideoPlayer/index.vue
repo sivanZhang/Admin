@@ -5,7 +5,18 @@
        element-loading-background="rgba(0, 0, 0, 0.8)">
     <image-draw ref="imageDraw" class="img-vision" :style="{display:!videoPlayerIsShow?'block':'none'}" :width="width"
                 :height="height" @getDrawImage="getDrawImage" @getEditMode="getEditMode"></image-draw>
-    <div id="videoPlayer" :style="{display:videoPlayerIsShow?'block':'none'}">Loading the player...</div>
+    <div id="videoPlayer" :style="{display:videoPlayerIsShow?'block':'none'}">
+              <div :style="{display:videoPlayerNoVideoIsShow?'block':'none'}">暂无视频</div>
+
+       <video    
+        id="myVideo"
+        class="video-js">
+        <source
+            :src="videoUrl"
+            type="video/mp4" >
+        </video>
+    </div>
+   
     <el-row id="playerToolbar" v-if="isLoadVideo">
       <el-col :span="1" class="bar-item">
         <el-button class="btn-item btn-play" title="播放/暂停" :icon="playerControls.stateIcon" @click="playerPlay"></el-button>
@@ -18,7 +29,7 @@
         <span class="text">{{playerFormatDuration}}</span>
       </el-col>
       <el-col :span="5" class="bar-item">
-        <span style="color:#fff;">音量:{{playerVolume}}</span>
+        <span style="color:#fff;">音量:{{playerVolume*10}}</span>
         <el-button-group class="btn-group">
           <el-button class="btn-item" title="音量调小" @click="changeVolume('sub')"><img :src="iconLower"/></el-button>
           <el-button class="btn-item" title="音量调大" @click="changeVolume('add')"><img :src="iconIncrease"/></el-button>
@@ -53,178 +64,203 @@
 
       }
 
+
     },
     data() {
       return {
-        width: 0,
-        height: 0,
-        videoUrl: null,
-        isLoadVideo: true,
+        width:0,
+        height:0,
+        videoUrl: "",
+        videoPlayer: null,
+        isLoadVideo: false,
         playerLoading: false,
+        videoPlayerNoVideoIsShow:true,
         playerLoadingText: '视频加载中',
         iconIncrease: iconIncrease,
         iconLower: iconLower,
         iconFullscreen: iconFullscreen,
         iconMark: iconMark,
         videoPlayerIsShow: true,
-        videoPlayer: null,
         kscreenshot: null,
         fullscreen: false,
         playerControls: {
           stateIcon: 'el-icon-video-pause'
         },
-        playerVolume: 10,
+        playerVolume: 0.8,
         playerDuration: 0,
         playerFormatDuration: '00:00',
         playerCurrentPostion: 0,
         playerFormatCurrentPostion: '00:00',
-        playerPercentage: 0
+        playerPercentage: 0,
+        initNextVideoUrl:null,
       }
     },
     created() {
-      console.log('chongxinjiaz')
+      console.log('chongxinjiaz');
+      this.keyup();
+     
+       
     },
     mounted() {
-      if (this.url) {
-        this.videoUrl = this.url
-        this.initVideoPlayer()
-      } else {
-        this.isLoadVideo = false
-      }
-
+      this.initVideo();
+      this.width = document.getElementById('playerBox').offsetWidth
+      this.height = document.getElementById('playerBox').offsetHeight
     },
     methods: {
+      keyup(){ 
+        var _self=this;
+         let frameTime = 1 / 25;
+         document.onkeydown = function (event) {
+          let e = event || window.event || arguments.callee.caller.arguments[0];
+          console.log(e.keyCode,_self.videoPlayer)
+           if (_self.videoPlayer.paused()) { //or you can force it to pause here
+              if (e && e.keyCode === 37) { //left arrow
+                  //one frame back
+                  _self.videoPlayer.currentTime ( Math.max(0, _self.videoPlayer.currentTime() - frameTime));
+              } else if (e && e.keyCode === 39) { //right arrow
+                  //one frame forward
+                  //Don't go past the end, otherwise you may get an error
+                  console.log(2222, Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime))
+
+                  _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
+              }
+          }else{
+            if ((e && e.keyCode === 37) || (e && e.keyCode === 39)) { //left arrow
+                  //one frame back
+                _self.$message.error('必须处于暂停模式下方可使用上一帧下一帧')
+              }
+          }
+        };
+ 
+      },
       /**
        * 加载视频资源
        */
-      initVideoUrl(url) {
+      initVideoUrl(url,pWidth,pHeight) {
+        var _self=this;
+        this.isLoadVideo = true;
+
         if (url == this.videoUrl) {
           this.$message.error('该视频已处于播放模式')
         } else {
-          if (this.videoPlayer) {
-            this.isLoadVideo = true
-              this.videoUrl = url
-              this.playerCurrentPostion = 0
-              this.playerFormatCurrentPostion = '00:00'
-              this.playerDuration = 0
-              this.playerFormatDuration = '00:00'
-              this.playerPercentage = 0
-              //this.initVideoPlayer()
-              this.videoPlayer.load({file: this.videoUrl});
-              this.videoPlayer.play()
-          } else {
-            this.isLoadVideo = true
-            this.videoUrl = url
-            this.initVideoPlayer()
-          }
+          this.videoPlayerNoVideoIsShow=false,
+           this.videoUrl = url;
+           this.videoPlayer.width(pWidth + 'px');
+           this.videoPlayer.height(pHeight +'px');
+           this.videoPlayer.src(this.videoUrl);
+           this.videoPlayer.load(this.videoUrl);
+           this.videoPlayer.pause();
+           setTimeout(() => {
+             _self.playerStepInterval();
+           }, 1000);
+          
+
 
         }
+      },
+      initNextVideo(videoProject){
+        this.initNextVideoUrl=videoProject;
+      },
+      /**
+       * video.js
+       */
+      initVideo() {
+        var _self=this;
+         this.videoPlayer = videojs(myVideo, {
+            controls: false,
+            autoplay: 'muted',
+            width: '0px',
+            //设置视频播放器的显示高度（以像素为单位）
+            height: '0px',
+            preload: 'auto',
+            volume:(this.playerVolume/100),
+            plugins: {
+              framebyframe: {
+                fps: 25,
+                steps: [
+                  { text: '-5', step: -5 },
+                  { text: '-1', step: -1 },
+                  { text: '+1', step: 1 },
+                  { text: '+5', step: 5 },
+                ]
+              }
+            }
+          },function(){
+            this.on('ended',function () {
+              console.log('播放完毕');
+              if(_self.initNextVideoUrl==null){
+                _self.$message.error('暂无下一个视频源');
+              _self.playerControls.stateIcon = 'el-icon-video-play'
 
+              }else{
+                 _self.$message.error('正在切换下一个视频源');
+                  //_self.playerDuration= 0,
+                  //_self.playerFormatDuration= '00:00',
+                //_self. playerCurrentPostion= 0,
+                  //_self.playerFormatCurrentPostion= '00:00',
+                  //_self.playerPercentage= 0,
+                  _self.videoUrl=_self.initNextVideoUrl.url
+                  _self.videoPlayer.src(_self.initNextVideoUrl.url);
+                  _self.videoPlayer.load(_self.initNextVideoUrl.url);
+                  _self.videoPlayer.pause();
+                  _self.videoPlayer.autoplay(true);
+                  setTimeout(() => {
+                    _self.playerStepInterval();
+                  }, 1000);
+              }
+              console.log(_self.initNextVideoUrl)
+            });
+          });
       },
 
-      /**
-       * 初始化视频播放器
-       */
-      initVideoPlayer() {
+      playerPlay(){
+           console.log(this.videoPlayer);
+           if(this.videoPlayer.paused()){
 
-        let _self = this
-
-        this.videoPlayer = jwplayer('videoPlayer').setup({
-          flashplayer: '/lib/jwplayer-v6.1.2972/player.swf',
-          file: this.videoUrl,
-          height: '100%',
-          width: '100%',
-          bgcolor: '#ffffff',
-          abouttext: '',
-          primary: 'flash',
-          controls: false,
-          controlbar: 'bottom',
-          autostart: false,//自动播放
-          events: {
-            onComplete: function() {
-              _self.playerControls.stateIcon = 'el-icon-video-play'
-              console.log('播放结束!!!')
-
-            },
-            onVolume: function() {
-              console.log('声音大小改变!!!')
-            },
-            onReady: function() {
-              console.log('准备就绪!!!')
-              this.seek(0)
-              _self.playerControls.stateIcon = 'el-icon-video-play'
-
-            },
-            onPlay: function() {
-              console.log('开始播放!!!')
-              _self.playerLoading = false
-              _self.playerControls.stateIcon = 'el-icon-video-pause'
-              this.setVolume(_self.playerVolume)
-              _self.playerVolume = this.getVolume()
-              _self.playerCurrentPostion = this.getPosition()
-              _self.playerFormatCurrentPostion = _self.formatSeconds(_self.playerCurrentPostion)
-              _self.playerPercentage = ((_self.playerCurrentPostion / _self.playerDuration) * 100)
-              _self.changeSlider()
-            },
-            onPause: function() {
-              console.log('暂停!!!')
-              _self.playerControls.stateIcon = 'el-icon-video-play'
-
-            },
-            onBufferChange: function() {
-              let buffer = this.getBuffer()
-              console.log('缓冲改变!!!' + buffer)
-              if (buffer == 100) {
-                _self.playerLoading = false
+           }
+           if (this.videoPlayerIsShow) {
+              if (this.videoPlayer.paused()) {
+                this.videoPlayer.play()
+                this.playerControls.stateIcon = 'el-icon-video-pause';
+                this.playerStepInterval();
               } else {
-
+                this.videoPlayer.pause()
+                this.playerControls.stateIcon = 'el-icon-video-play'
               }
-
-            },
-            onBufferFull: function() {
-              console.log('视频缓冲完成!!!' + this.getBuffer())
-              _self.playerLoading = false
-              setTimeout(() => {
-                _self.initPostion()
-              }, 1000)
-              _self.width = document.getElementById('playerBox').offsetWidth
-              _self.height = document.getElementById('playerBox').offsetHeight
-            },
-            onError: function(obj) {
-              console.log('播放器出错!!!' + obj.message)
-              _self.$message.error('视频加载出错,请检查视频路径')
-            },
-            onFullscreen: function(obj) {
-              if (obj.fullscreen) {
-                console.log('全屏')
-                _self.fullscreen = true
-              } else {
-                _self.fullscreen = false
-              }
-            },
-            onMute: function(obj) {
-              console.log('静音/取消静音')
+            } else {
+              this.$message.error('处于视频标注模式')
+            }
+      },
+      playerStepInterval(){
+          this.playerDuration=this.videoPlayer.duration();
+          this.playerFormatDuration = (this.formatSeconds( this.playerDuration));
+          var _self=this;
+          setInterval(function() {
+           _self.playerCurrentPostion = _self.videoPlayer.currentTime();
+            _self.playerFormatCurrentPostion = _self.formatSeconds(_self.playerCurrentPostion);
+            _self.playerPercentage = ((_self.playerCurrentPostion / _self.playerDuration) * 100);
+        }, 1000);
+      },
+      changeVolume: function(type) {
+        if (this.videoPlayerIsShow) {
+          this.videoPlayer.muted(false);
+          console.log(this.playerVolume)
+          if ('add' == type) {
+            if (this.playerVolume < 1) {
+              this.playerVolume += 0.1
+            }
+          } else if ('sub' == type) {
+            if (this.playerVolume > 0) {
+              this.playerVolume -= 0.1
             }
           }
-
-        })
-
+          this.playerVolume=Math.round(this.playerVolume*10)/10;
+          this.videoPlayer.volume(this.playerVolume)
+        } else {
+          this.$message.error('处于视频标注模式')
+        }
       },
-      changeSlider() {
-        let _self = this
-        setInterval(function() {
-          if (_self.videoPlayer.getPosition() != null) {
-            _self.playerCurrentPostion = _self.videoPlayer.getPosition()
-            _self.playerFormatCurrentPostion = _self.formatSeconds(_self.playerCurrentPostion)
-            _self.playerPercentage = ((_self.playerCurrentPostion / _self.playerDuration) * 100)
-          }
-        }, 1000)
-      },
-      initPostion() {
-        console.log('init', this.videoPlayer.getDuration())
-        this.playerFormatDuration = (this.formatSeconds(this.videoPlayer.getDuration()))
-        this.playerDuration = this.videoPlayer.getDuration()
-      },
+       
       getEditMode(mode) {
         this.videoPlayerIsShow = mode
         this.$emit('getCurrentVideoMode', mode)
@@ -232,9 +268,7 @@
       },
       handleSliderChange(data) {
         if (this.videoPlayerIsShow) {
-          this.videoPlayer.seek(this.playerDuration * data / 100)
-          this.playerCurrentPostion = this.playerDuration * data / 100
-          this.playerFormatCurrentPostion = this.formatSeconds(this.playerDuration * data / 100)
+         
         } else {
           this.$message.error('处于视频标注模式')
         }
@@ -244,13 +278,12 @@
         this.$emit('getCurrentVideoMode', !this.videoPlayerIsShow)
         if (this.videoPlayerIsShow) {
           let _self = this
-          if (this.videoPlayer.getPosition() > 0) {
+          if (this.videoPlayer.currentTime() > 0) {
             _self.playerLoading = true
             _self.playerLoadingText = '正在获取视频流...'
-            this.videoPlayer.pause(true)
+            this.videoPlayer.pause()
             this.playerControls.stateIcon = 'el-icon-video-play'
-
-            let { dataURL, width, height } = await new VideoCapture(this.videoUrl).capture(this.videoPlayer.getPosition())
+            let { dataURL, width, height } = await new VideoCapture(this.videoUrl).capture(_self.playerCurrentPostion)
             this.$refs.imageDraw.loadImage(dataURL)
             this.videoPlayerIsShow = false
             _self.playerLoading = false
@@ -265,47 +298,14 @@
       getDrawImage(drawImage) {
         var obj = {
           imgUrl: drawImage,
-          currentPosition: this.videoPlayer.getPosition()
+          currentPosition: this.videoPlayer.currentTime()
         }
         this.$emit('getCutImg', obj)
         this.videoPlayerIsShow = true
         this.$emit('getCurrentVideoMode', true)
 
       },
-      playerPlay: function() {
-        if (this.videoPlayerIsShow) {
-          if (this.videoPlayer.getState() != 'PLAYING') {
-            this.videoPlayer.play(true)
-            this.playerControls.stateIcon = 'el-icon-video-pause'
-          } else {
-            this.videoPlayer.play(false)
-            this.playerControls.stateIcon = 'el-icon-video-play'
-          }
-        } else {
-          this.$message.error('处于视频标注模式')
-        }
-
-      },
-      changeVolume: function(type) {
-        if (this.videoPlayerIsShow) {
-          if ('add' == type) {
-            if (this.playerVolume < 100) {
-              this.playerVolume += 5
-            }
-          } else if ('sub' == type) {
-            if (this.playerVolume > 0) {
-              this.playerVolume -= 5
-            }
-          }
-          this.videoPlayer.setVolume(this.playerVolume)
-        } else {
-          this.$message.error('处于视频标注模式')
-        }
-
-      },
-      changeFullscreen: function() {
-        this.videoPlayer.setFullscreen(true)
-      },
+      
       formatSeconds(value) {
         var theTime = parseInt(value)// 秒
         var middle = 0// 分
@@ -375,7 +375,7 @@
     height: 38px;
     line-height: 38px;
     width: 100%;
-    background-color: transparent;
+    background-color: #303133;
     position: absolute;
     bottom: 0;
     left: 0;

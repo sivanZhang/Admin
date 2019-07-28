@@ -77,7 +77,9 @@
         activeTab: 'first',
         demoImg: demoImg,
         markText: '',
-        currentVideoIsEdit: false
+        currentVideoIsEdit: false,
+        pWidth:0,
+        pHeight:0
       }
     },
     created() {
@@ -86,18 +88,27 @@
         let bH = document.body.offsetHeight;
         let videoInfoH = document.getElementById("videoInfo").offsetHeight;
         let videoTabsH = document.getElementById("videoTabs").offsetHeight;
+
+        let videoPlayer=document.getElementsByClassName("video-player");
+        this.pHeight = videoPlayer[0].offsetHeight;
+        this.pWidth = videoPlayer[0].offsetWidth;
+        console.log(this.pWidth+';'+this.pHeight);
+        
+
         document.getElementById("videoComment").style.height = (bH - (videoInfoH + videoTabsH + 20 + 20)) + "px";
     },
     methods: {
-      initSource(selectProject) {
+    
+      initSource(projectList) {
         if (this.currentVideoIsEdit) {
           this.$message.error('处于视频标注模式')
         } else {
-          console.log("选中的",selectProject)
-          
-          this.$refs.videoPlayer.initVideoUrl(selectProject.url)
-          this.$refs.videoInfo.initInfo(selectProject.id)
-          this.$refs.videoComment.initInfo(selectProject.id)
+          console.log("选中的",projectList[0])
+          console.log(projectList[1])
+          this.$refs.videoPlayer.initVideoUrl(projectList[0].url,this.pWidth,this.pHeight);
+           this.$refs.videoPlayer.initNextVideo(projectList[1])
+          this.$refs.videoInfo.initInfo(projectList[0].id)
+          this.$refs.videoComment.initInfo(projectList[0].id)
         }
       },
       getMarkImage(obj) {

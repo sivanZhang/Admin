@@ -104,8 +104,8 @@
            this.imgStack.length=0
            this.img.src =this.imageBase64;
            this.img.onload = () => {
-             console.log(_self.img.width+","+_self.img.height);
-             _self.context.drawImage(this.img,0,0,_self.width-50,_self.height);
+             console.log("图片加载完毕",_self.img.width+","+_self.img.height);
+             _self.context.drawImage(_self.img,0,0,_self.width-50,_self.height);
             }
             console.log(this.context);
             this.context.lineWidth = this.lineWidth
