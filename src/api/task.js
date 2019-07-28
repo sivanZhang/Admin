@@ -20,6 +20,6 @@ export function deleteTask(data) {
     return AXIOS.post('/task/task/?delete', data)
 }
 //修改任务
-export function putTask(params = null) {
-    return AXIOS.get('/task/task/?01')
+export function putTask(data) {
+    return AXIOS.post('/task/task/?01', data)
 }

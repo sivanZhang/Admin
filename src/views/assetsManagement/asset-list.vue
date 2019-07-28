@@ -20,11 +20,11 @@
       <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
       <el-table-column label="缩略图" align="center">
+        
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image">
-            <div slot="placeholder" class="image-slot">
-              加载中
-              <span class="dot">...</span>
+          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width:120px">
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
             </div>
           </el-image>
         </template>
@@ -135,7 +135,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
-      SRC:'',
+      SRC: "",
       TableData: [],
       AssetForm: {
         priority: 0

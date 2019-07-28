@@ -4,22 +4,22 @@ import 'normalize.css/normalize.css' // Normalize.css使浏览器更加一致地
 import ElementUI from 'element-ui'
 import './styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
-import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
 import '@/icons'
 import './permission' //登录权限
 import * as filters from '@/filters' // global filters
- 
+
 
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 
 Vue.prototype.$video = Video
- 
+
 import 'iview/dist/styles/iview.css';
- 
+import '@/styles/index.scss' // global css
+
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
 })

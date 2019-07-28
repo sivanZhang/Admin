@@ -23,6 +23,14 @@
         &>div {
             padding: 20px;
         }
+        .image-slot {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 56px;
+            background: #DCDFE6;
+        }
         .el-card {
             position: relative;
             width: 100%;

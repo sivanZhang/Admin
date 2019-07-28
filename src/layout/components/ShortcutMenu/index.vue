@@ -6,37 +6,43 @@
         <el-col :span="12">
           <div>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            <input placeholder="请输入内容" size="mini"/>
+            <input placeholder="请输入内容" size="mini" />
           </div>
         </el-col>
         <el-col :span="12" style="text-align:right">
           <el-button type="primary" size="mini" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
         </el-col>
         <el-col :span="24">
-          <el-row class="list-title">
+          <el-row class="list-title" gutter="20">
             <el-col :span="8">最近打开的项目</el-col>
             <el-col :span="8">我的项目</el-col>
             <el-col :span="8">有效的项目</el-col>
           </el-row>
         </el-col>
-        <el-col :span="8" ><div class="title" style="padding: 5px 0 0px;">无数据</div></el-col>
-        <el-col :span="8" ><div class="title" style="padding: 5px 0 0px;">无数据</div></el-col>
-        <el-col :span="8">
-          <div v-for="(item,index) of ProjectList" :key="index"  >
-            <router-link :to="`/projects/project-detail/${item.id}`" >
-              <div class="title">
-                {{item.name}}
+        <el-col :span="24">
+          <el-row gutter="20">
+            <el-col :span="8">
+              <div class="title" style="padding: 5px 0 0px;">无数据</div>
+            </el-col>
+            <el-col :span="8">
+              <div class="title" style="padding: 5px 0 0px;">无数据</div>
+            </el-col>
+            <el-col :span="8">
+              <div v-for="(item,index) of ProjectList" :key="index">
+                <router-link :to="`/projects/project-detail/${item.id}`">
+                  <div class="title">{{item.name}}</div>
+                </router-link>
               </div>
-            </router-link>
-          </div>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
       <div slot="reference" :class="[{active:activeIndex==2},'main-menu']">
         项目
-        <i class="el-icon-arrow-down el-icon--right"/>
+        <i class="el-icon-arrow-down el-icon--right" />
       </div>
     </el-popover>
-    <create-project v-bind:isShow.sync='isCreateShow'/>
+    <create-project v-bind:isShow.sync="isCreateShow" />
   </div>
 </template>
 
@@ -51,7 +57,7 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      isCreateShow:false,
+      isCreateShow: false
     };
   },
   computed: {
@@ -78,20 +84,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title{
+.title {
   padding: 5px 0 0px;
 }
-.title:hover{
-  cursor:hand;
+.title:hover {
+  cursor: hand;
   background-color: #eeeeee;
 }
 input {
-  width:240px;
-  border:none;
+  width: 240px;
+  border: none;
   border-bottom: solid 2px deepskyblue;
 }
 input:focus {
-  outline:none;
+  outline: none;
 }
 
 .list-title {

@@ -3,26 +3,25 @@ import * as userApi from '@/api/login'
 import {
     getToken,
     setToken,
-    removeToken
+    removeToken,
+    getUserInfo,
+    setUserInfo
 } from '@/utils/auth'
 import {
     resetRouter
 } from '@/router'
+import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    name: '',
-    avatar: ''
+    userInfo: getUserInfo() || null
 }
 
 const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
     },
-    SET_NAME: (state, name) => {
-        state.name = name
-    },
-    SET_AVATAR: (state, avatar) => {
-        state.avatar = avatar
+    SET_USERINFO: (state, userInfo) => {
+        state.userInfo = userInfo
     }
 }
 
@@ -34,27 +33,10 @@ const actions = {
                 password: password
             }).then(({ data }) => {
                 commit('SET_TOKEN', data.token);
-                setToken(data.token)
+                setToken(data.token);
+                commit('SET_USERINFO', data);
+                setUserInfo(data);
                 resolve()
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
-    getInfo({ commit, state }) {
-        return new Promise((resolve, reject) => {
-            userApi.getInfo(state.token).then(({ data }) => {
-                if (!data) {
-                    reject('Verification failed, please Login again.')
-                }
-                const {
-                    name,
-                    avatar
-                } = data
-
-                commit('SET_NAME', name)
-                commit('SET_AVATAR', avatar)
-                resolve(data)
             }).catch(error => {
                 reject(error)
             })

@@ -83,9 +83,12 @@
         <el-form-item label="总工时" prop="total_hour">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
+        <el-form-item label="自定义属性" prop="extra_attr">
+          <el-input v-model="TaskForm['extra_attr']"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
-          <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">立即创建</el-button>
+          <el-button :loading="buttonStates.createLoading" type="primary" @click="createTask">立即创建</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -93,7 +96,8 @@
 </template>
 
 <script>
- import {mapState} from "vuex";
+import * as HTTP from "@/api/task";
+import { mapState } from "vuex";
 export default {
   name: "tab-task",
   data() {
@@ -104,10 +108,17 @@ export default {
         priority: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],
-        content: [{ required: true, message: "请输入任务内容", trigger: "blur" }],
-        executorlist: [{ required: true,type: Array, message: "请输入任务执行人", trigger: "blur" }
+        content: [
+          { required: true, message: "请输入任务内容", trigger: "blur" }
         ],
-        'total_hour':[
+        executorlist: [
+          {
+            required: true,
+            message: "请输入任务执行人",
+            trigger: "blur"
+          }
+        ],
+        total_hour: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ]
       },
@@ -115,31 +126,31 @@ export default {
       buttonStates: {
         createLoading: false
       },
-      TaskForm: {priority:0},
-      StatusList:[
+      TaskForm: { priority: 0 },
+      StatusList: [
         {
-          label:'草稿',
-          value:0
+          label: "草稿",
+          value: 0
         },
         {
-          label:'已启动',
-          value:1
+          label: "已启动",
+          value: 1
         },
         {
-          label:'结束',
-          value:2
+          label: "结束",
+          value: 2
         },
         {
-          label:'任务超时',
-          value:3
+          label: "任务超时",
+          value: 3
         }
       ]
     };
   },
   props: [],
   computed: {
-      ...mapState('admin',['UserList'])
-    },
+    ...mapState("admin", ["UserList"])
+  },
   methods: {
     openDialog() {
       this.isDialogShow = true;
@@ -147,26 +158,46 @@ export default {
     cancel() {
       this.isDialogShow = false;
     },
-    addAsset(){
+    createTask() {
       this.$refs["TaskForm"].validate(valid => {
-        this.buttonStates.createLoading = true
+        this.buttonStates.createLoading = true;
         if (valid) {
-          addProjects(this.TaskForm).then(({ data }) => {
-            this.buttonStates.createLoading = false
-            this.$message(data.msg);
-            if (data.status === 0) {
-            }
-          }).catch(err=>{
-            this.buttonStates.createLoading = false
-          });
+          function dataFormat(params) {
+            let time = new Date(params);
+            return `${time.toLocaleDateString()} ${
+              time.toTimeString().split(" ")[0]
+            }`; //'yyyy/mm/dd hh:mm:ss'
+          }
+          let data = {
+            ...this.TaskForm,
+            start_date: dataFormat(this.TaskForm.datetime[0]),
+            end_date: dataFormat(this.TaskForm.datetime[1])
+          };
+          delete data.datetime;
+          HTTP.addTask(data)
+            .then(({ data }) => {
+              this.buttonStates.createLoading = false;
+              this.$message(data.msg);
+              if (data.status === 0) {
+              }
+            })
+            .catch(err => {
+              this.buttonStates.createLoading = false;
+            });
         } else {
           return false;
         }
       });
+    },
+    getTasks(){
+      HTTP.queryTask().then(({data})=>{
+        console.log(data)
+      })
     }
   },
-  created(){
-    !this.UserList && (this.$store.dispatch("admin/get_UserList"))
+  created() {
+    !this.UserList && this.$store.dispatch("admin/get_UserList");
+    this.getTasks()
   }
 };
 </script>
