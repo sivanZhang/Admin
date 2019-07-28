@@ -3,7 +3,9 @@ import * as userApi from '@/api/login'
 import {
     getToken,
     setToken,
-    removeToken
+    removeToken,
+    getUserInfo,
+    setUserinfo
 } from '@/utils/auth'
 import {
     resetRouter
@@ -11,7 +13,7 @@ import {
 import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    userInfo: null
+    userInfo: getUserInfo()
 }
 
 const mutations = {
@@ -31,8 +33,9 @@ const actions = {
                 password: password
             }).then(({ data }) => {
                 commit('SET_TOKEN', data.token);
-                setToken(data.token)
+                setToken(data.token);
                 commit('SET_USERINFO', data);
+                setUserinfo(data);
                 resolve()
             }).catch(error => {
                 reject(error)
