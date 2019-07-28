@@ -20,14 +20,14 @@ export function removeToken() {
     return Cookies.remove(TokenKey)
 }
 //cookie中获取
-export function getUserinfo() {
-    return Cookies.get(Userinfo)
+export function getUserInfo() {
+    return Cookies.get('UserInfo')
 }
 //cookie中设置Toke
-export function setUserinfo(token) {
-    return Cookies.set(Userinfo, token)
+export function setUserInfo(data) {
+    return Cookies.set('UserInfo', data)
 }
 //cookie中删除Toke
-export function removeUserinfo() {
-    return Cookies.remove(Userinfo)
+export function removeUserInfo() {
+    return Cookies.remove('UserInfo')
 }

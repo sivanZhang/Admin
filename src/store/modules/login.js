@@ -5,7 +5,7 @@ import {
     setToken,
     removeToken,
     getUserInfo,
-    setUserinfo
+    setUserInfo
 } from '@/utils/auth'
 import {
     resetRouter
@@ -13,7 +13,7 @@ import {
 import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    userInfo: getUserInfo()
+    userInfo: getUserInfo() || null
 }
 
 const mutations = {
@@ -35,7 +35,7 @@ const actions = {
                 commit('SET_TOKEN', data.token);
                 setToken(data.token);
                 commit('SET_USERINFO', data);
-                setUserinfo(data);
+                setUserInfo(data);
                 resolve()
             }).catch(error => {
                 reject(error)
