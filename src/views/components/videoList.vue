@@ -54,7 +54,14 @@ export default {
     initSource(index){
       let selectProject=this.projectList[index];
       console.log(selectProject)
-      this.$emit("initSource",selectProject);
+      let projectList=new Array();
+      projectList[0]=selectProject;
+      if(index+1!=this.projectList.length){
+        projectList[1]=this.projectList[index+1];
+      }else{
+        projectList[1]=null;
+      }
+      this.$emit("initSource",projectList);
     }
   }
 };

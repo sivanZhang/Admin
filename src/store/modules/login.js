@@ -8,6 +8,7 @@ import {
 import {
     resetRouter
 } from '@/router'
+import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
     userInfo: null
