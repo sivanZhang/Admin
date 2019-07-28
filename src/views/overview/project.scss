@@ -1,75 +1,71 @@
 #project {
-  .container {
-    .mini-image {
-      cursor: pointer;
-      overflow: hidden;
-      opacity: 1;
-
-      &:hover {
-        opacity: .8;
-        transition: all 2s;
-      }
-    }
-
-    width: 100%;
-    display: flex;
-    flex-flow: row wrap;
-
-    &>div {
-      padding: 20px;
-    }
-
-    .el-card {
-      position: relative;
-      width: 288px;
-
-      .el-card__header {
-        padding: 0px !important;
-      }
-
-      .box-card-header {
-        position: relative;
-        height: 162px;
-        overflow: hidden;
-
-        img {
-          width: 100%;
-          height: 100%;
-          transition: all 0.2s linear;
-
-          &:hover {
-            transform: scale(1.1, 1.1);
-            filter: contrast(130%);
-          }
+    .container {
+        width: fit-content;
+        display: flex;
+        flex-flow: row wrap;
+        .cycle-task {
+            width: 25%;
         }
-      }
-
-      .dropdow {
-        position: absolute;
-        right: 15px;
-        top: 15px;
-        z-index: 3;
-      }
-
-      p {
-        font-size: 12px;
-        color: #909399;
-        margin: 10px 0 5px;
-
-        &.subtitle {
-          margin: 30px 0 5px;
+        @media screen and (min-width:1600px) {
+            .cycle-task {
+                width: 20%;
+            }
         }
-      }
-
-      .color {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        position: absolute;
-        z-index: 2;
-        right: 15px;
-        top: 140px;
-      }
+        .mini-image {
+            cursor: pointer;
+            overflow: hidden;
+            opacity: 1;
+            &:hover {
+                opacity: .8;
+                transition: all 2s;
+            }
+        }
+        &>div {
+            padding: 20px;
+        }
+        .el-card {
+            position: relative;
+            width: 100%;
+            .el-card__header {
+                padding: 0px !important;
+            }
+            .box-card-header {
+                position: relative;
+                height: 162px;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    transition: all 0.2s linear;
+                    &:hover {
+                        transform: scale(1.1, 1.1);
+                        filter: contrast(130%);
+                    }
+                }
+            }
+            .dropdow {
+                position: absolute;
+                right: 15px;
+                top: 15px;
+                z-index: 3;
+            }
+            p {
+                font-size: 12px;
+                color: #909399;
+                margin: 10px 0 5px;
+                &.subtitle {
+                    margin: 30px 0 5px;
+                }
+            }
+            .color {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 2;
+                right: 15px;
+                top: 140px;
+            }
+        }
     }
-  }
 }

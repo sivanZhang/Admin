@@ -1,11 +1,14 @@
 <template>
-  <div class="dashboard-container">
+  <div>
     角色管理
   </div>
 </template>
 
 <script>
   export default {
-    name: "roles"
+    name: "roles",
+    created(){
+      
+    }
   }
 </script>

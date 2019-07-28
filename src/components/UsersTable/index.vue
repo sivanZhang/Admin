@@ -1,6 +1,10 @@
 <template>
   <div>
-    <el-table :data="UserList" stripe style="width: 100%" border>
+    <el-table
+      :data="UserList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      stripe style="width: 100%" border
+      :row-style="{'font-size':'14px'}"
+      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
       <el-table-column label="头像" width="100" align="center">
         <template slot-scope="scope">
           <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
@@ -19,17 +23,28 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-tooltip content="用户权限" placement="top">
-            <el-button icon="el-icon-user" type="text" />
+            <el-button icon="el-icon-user" type="text" style="color:deepskyblue" size="20px"/>
           </el-tooltip>
           <el-tooltip content="编辑用户" placement="top">
-            <el-button icon="el-icon-edit" type="text" />
+            <el-button icon="el-icon-edit" type="text" style="color:lawngreen" size="20px"/>
           </el-tooltip>
           <el-tooltip content="删除用户" placement="top">
-            <el-button icon="el-icon-delete" type="text" />
+            <el-button icon="el-icon-delete" type="text" style="color:red" size="20px" />
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
+    <div class="block" style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :pagesize="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total=UserList.length>
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -40,6 +55,24 @@
       UserList: {
         type: Array
       }
+    },
+    data(){
+      return {
+        currentPage:1,
+        pageSize:10,
+        pageSizeList:[10,20,50,100],
+      }
+    },
+    methods:{
+      //分页
+      handleSizeChange(val) {
+        this.pageSize=val;
+        //console.log(this.pagesize);
+      },
+      handleCurrentChange(currentPage) {
+        this.currentPage=currentPage;
+        //console.log(this.currentPage);
+      },
     }
   }
 </script>

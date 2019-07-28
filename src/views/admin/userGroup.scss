@@ -1,14 +1,12 @@
 #userGroup {
     .el-radio-group {
         display: block;
-        margin: 20px 0 15px;
+        margin: 0 0 15px;
     }
     .el-delete {
         position: relative;
     }
-    .search-group {
-        margin-bottom: 10px;
-    }
+
     .custom-tree-node {
         height: 40px;
         line-height: 40px;
@@ -28,25 +26,15 @@
             cursor: pointer;
         }
     }
-    .el-aside {
-        max-height: calc(100vh - 50px);
-        overflow-y: scroll;
-    }
+
     .el-container {
         min-height: calc(100vh - 50px);
     }
-    .nav-title {
-        padding: 8px 12px;
-        .el-col {
-            color: #909399;
-        }
-    }
+
     .tag-nav {
-        height: 60px;
         display: flex;
         align-items: center;
         cursor: pointer;
-        padding: 5px;
         &:hover {
             background-color: #ebeef5;
         }
@@ -56,13 +44,8 @@
         justify-content: center;
         align-items: center;
     }
-    .el-main {
-        padding: 0 20px;
-    }
-    .t-header {
-        padding: 8px 12px;
-        background-color: #E4E7ED;
-    }
+
+
 }
 
 ::-webkit-scrollbar {

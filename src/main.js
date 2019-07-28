@@ -11,23 +11,27 @@ import router from './router'
 import '@/icons'
 import './permission' //登录权限
 import * as filters from '@/filters' // global filters
+ 
 
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 
 Vue.prototype.$video = Video
-
+ 
+import 'iview/dist/styles/iview.css';
+ 
 Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key])
+    Vue.filter(key, filters[key])
 })
 Vue.use(ElementUI, {
-  size: Cookies.get('size') || 'mini'
+    size: Cookies.get('size') || 'mini'
 })
 Vue.config.productionTip = false
-
+import { Drawer } from 'iview';
+Vue.component('Drawer', Drawer);
 new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
+    el: '#app',
+    router,
+    store,
+    render: h => h(App)
 })
