@@ -113,23 +113,17 @@
          document.onkeydown = function (event) {
           let e = event || window.event || arguments.callee.caller.arguments[0];
           console.log(e.keyCode,_self.videoPlayer)
-           if (_self.videoPlayer.paused()) { //or you can force it to pause here
-              if (e && e.keyCode === 37) { //left arrow
+           if (e && e.keyCode === 37) { //left arrow
                   //one frame back
                   _self.videoPlayer.currentTime ( Math.max(0, _self.videoPlayer.currentTime() - frameTime));
-              } else if (e && e.keyCode === 39) { //right arrow
-                  //one frame forward
-                  //Don't go past the end, otherwise you may get an error
-                  console.log(2222, Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime))
+            } else if (e && e.keyCode === 39) { //right arrow
+                //one frame forward
+                //Don't go past the end, otherwise you may get an error
+                console.log(2222, Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime))
 
-                  _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
-              }
-          }else{
-            if ((e && e.keyCode === 37) || (e && e.keyCode === 39)) { //left arrow
-                  //one frame back
-                _self.$message.error('必须处于暂停模式下方可使用上一帧下一帧')
-              }
-          }
+                _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
+            }
+            
         };
  
       },
