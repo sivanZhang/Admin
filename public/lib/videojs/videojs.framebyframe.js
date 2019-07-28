@@ -25,7 +25,7 @@ var FBFButton = videojs.extend(VjsButton, {
 function framebyframe(options) {
     var player = this,
         frameTime = 1 / 30; // assume 30 fps
-
+        console.log(1)
     player.ready(function() {
         options.steps.forEach(function(opt) {
             player.controlBar.addChild(

@@ -113,17 +113,33 @@
          document.onkeydown = function (event) {
           let e = event || window.event || arguments.callee.caller.arguments[0];
           console.log(e.keyCode,_self.videoPlayer)
-           if (e && e.keyCode === 37) { //left arrow
+           /** /if (_self.videoPlayer.paused()) { //or you can force it to pause here
+             
+          }else{
+            if ((e && e.keyCode === 37) || (e && e.keyCode === 39)) { //left arrow
                   //one frame back
-                  _self.videoPlayer.currentTime ( Math.max(0, _self.videoPlayer.currentTime() - frameTime));
-            } else if (e && e.keyCode === 39) { //right arrow
-                //one frame forward
-                //Don't go past the end, otherwise you may get an error
-                console.log(2222, Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime))
-
-                _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
-            }
-            
+                _self.$message.error('必须处于暂停模式下方可使用上一帧下一帧')
+              }
+          }*/
+         
+          _self.playerControls.stateIcon = 'el-icon-video-play'
+           if (e && e.keyCode === 37) { //left arrow
+            _self.videoPlayer.pause()
+              _self.videoPlayer.currentTime ( Math.max(0, _self.videoPlayer.currentTime() - frameTime));
+          } else if (e && e.keyCode === 39) { //right arrow
+              _self.videoPlayer.pause()
+              _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
+          }else if(e && e.keyCode === 32){
+            console.log(_self.videoPlayer.paused())
+            if (_self.videoPlayer.paused()) {
+                _self.videoPlayer.play()
+                _self.playerControls.stateIcon = 'el-icon-video-pause';
+                _self.playerStepInterval();
+              } else {
+                _self.videoPlayer.pause()
+                _self.playerControls.stateIcon = 'el-icon-video-play'
+              }
+          }
         };
  
       },
@@ -137,6 +153,8 @@
         if (url == this.videoUrl) {
           this.$message.error('该视频已处于播放模式')
         } else {
+           _self.playerControls.stateIcon = 'el-icon-video-play'
+
           this.videoPlayerNoVideoIsShow=false,
            this.videoUrl = url;
            this.videoPlayer.width(pWidth + 'px');
@@ -162,7 +180,7 @@
         var _self=this;
          this.videoPlayer = videojs(myVideo, {
             controls: false,
-            autoplay: 'muted',
+            autoplay: true,
             width: '0px',
             //设置视频播放器的显示高度（以像素为单位）
             height: '0px',
