@@ -10,19 +10,15 @@ import {
 } from '@/router'
 const state = {
     token: getToken(),
-    name: '',
-    avatar: ''
+    userInfo: null
 }
 
 const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
     },
-    SET_NAME: (state, name) => {
-        state.name = name
-    },
-    SET_AVATAR: (state, avatar) => {
-        state.avatar = avatar
+    SET_USERINFO: (state, userInfo) => {
+        state.userInfo = userInfo
     }
 }
 
@@ -35,26 +31,8 @@ const actions = {
             }).then(({ data }) => {
                 commit('SET_TOKEN', data.token);
                 setToken(data.token)
+                commit('SET_USERINFO', data);
                 resolve()
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
-    getInfo({ commit, state }) {
-        return new Promise((resolve, reject) => {
-            userApi.getInfo(state.token).then(({ data }) => {
-                if (!data) {
-                    reject('Verification failed, please Login again.')
-                }
-                const {
-                    name,
-                    avatar
-                } = data
-
-                commit('SET_NAME', name)
-                commit('SET_AVATAR', avatar)
-                resolve(data)
             }).catch(error => {
                 reject(error)
             })

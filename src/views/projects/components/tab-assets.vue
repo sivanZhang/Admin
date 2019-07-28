@@ -189,6 +189,7 @@ export default {
     cancel() {
       this.isShow = false;
     },
+    //新建资产
     addAsset() {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {

@@ -28,7 +28,11 @@
               :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
               style="width:100%;height:100%"
-            ></el-image>
+            >
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+            </el-image>
           </div>
           <div style="padding: 15px;">
             <mallki class-name="mallki-text" @click.native="value1 = true" :text="item.name" />
