@@ -5,7 +5,7 @@
     </div>
 
     <el-table
-      :data="TableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="AssetList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       style="width: 100%"
       border
       :stripe="true"
@@ -51,27 +51,34 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="pageSizeList"
-        :pagesize="pageSize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="TableData.length"
+        :total="AssetList.length"
       ></el-pagination>
     </div>
     <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
       <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
-        <!-- <el-form-item label="图片" prop="color">
-        <el-upload
-          action="#"
-          class="avatar-uploader"
-          :show-file-list="false"
-          :on-change="handleAvatarSuccess"
-          :on-preview="handlePreview"
-          :before-upload="beforeAvatarUpload"
-          :auto-upload="false"
-        >
-          <img v-if="AssetForm.image" :src="AssetForm.image" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-        </el-form-item>-->
+        <el-form-item label="图片">
+          <el-upload
+            accept="image/jpeg, image/gif, image/png"
+            ref="upload"
+            class="upload-demo"
+            action="/api/appfile/appfile/"
+            :headers="headers"
+            :on-success="handleSuccess"
+            drag
+            :show-file-list="false"
+          >
+            <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+            <template v-else>
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">
+                将文件拖到此处，或
+                <em>点击上传</em>
+              </div>
+            </template>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="资产名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
@@ -96,19 +103,14 @@
         <el-form-item label="资产类别" prop="category">
           <el-input v-model="AssetForm.category"></el-input>
         </el-form-item>
-        <el-form-item label="所属团队" prop="team">
+        <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="内部资产版本号" prop="inner_version">
           <el-input v-model="AssetForm['inner_version']"></el-input>
         </el-form-item>
         <el-form-item label="外部资产版本号" prop="outer_version">
           <el-input v-model="AssetForm['outer_version']"></el-input>
-        </el-form-item>
-        <el-form-item label="所属项目" prop="project">
-          <el-select v-model="AssetForm.project" placeholder="请选择所属项目">
-            <el-option v-for="item of ProjectList" :key="item" :label="item.name" :value="item.id"></el-option>
-          </el-select>
         </el-form-item>
         <el-form-item label="关联任务" prop="task">
           <el-input v-model="AssetForm.task"></el-input>
@@ -125,11 +127,12 @@
 <script>
 import * as HTTP from "@/api/assets";
 import { mapState } from "vuex";
+import { getToken } from "@/utils/auth";
 export default {
   neme: "asset-list",
   data() {
     return {
-      TableData: [],
+      SRC: "",
       AssetForm: {
         priority: 0
       },
@@ -165,20 +168,21 @@ export default {
       },
       currentPage: 1,
       pageSize: 10,
-      pageSizeList: [10, 20, 50, 100]
+      pageSizeList: [10, 20, 50, 100],
+      headers: {
+        Authorization: `JWT ${getToken()}`
+      }
     };
   },
   computed: {
     ...mapState("project", ["ProjectList"])
   },
+  props: {
+    AssetList: {
+      type: Array
+    }
+  },
   methods: {
-    _getAssetList() {
-      HTTP.queryAssets({
-        project: this.$route.params.id
-      }).then(({ data }) => {
-        this.TableData = [...data.msg];
-      });
-    },
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -189,7 +193,7 @@ export default {
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message(data.msg);
           if (data.status === 0) {
-            this._getAssetList();
+            this.$emit("refresh");
           }
         });
       });
@@ -205,12 +209,18 @@ export default {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
+          this.AssetForm = Object.assign({}, this.AssetForm, {
+            project: this.$route.params.id
+          });
           HTTP.postAssets(this.AssetForm)
             .then(({ data }) => {
               this.createLoading = false;
               this.$message(data.msg);
               if (data.status === 0) {
-                this._getAssetList();
+                this.$emit("refresh");
+                this.AssetForm = Object.assign({},{
+                  priority: 0
+                })
               }
               this.isShow = false;
             })
@@ -221,6 +231,12 @@ export default {
           return false;
         }
       });
+    },
+    //监听图片上传成功
+    handleSuccess(response, file, fileList) {
+      this.SRC = this.$store.state.BASE_URL + response.msg;
+      this.AssetForm.image = response.msg;
+      this.AssetForm.image_id = response.id;
     },
     //分页
     handleSizeChange(val) {
@@ -237,7 +253,7 @@ export default {
     }
   },
   created() {
-    this._getAssetList();
+    this.$emit("refresh");
   }
 };
 </script>

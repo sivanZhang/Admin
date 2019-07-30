@@ -92,6 +92,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属资产">
+          <el-select v-model="TaskForm.asset" placeholder="请选择难度等级">
+            <el-option
+              v-for="item of AssetList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
           <el-date-picker
             v-model="TaskForm.datetime"
@@ -207,6 +217,11 @@ export default {
       return arr.join();
     }
   },
+  props:{
+    AssetList:{
+      type:Array
+    }
+  },
   computed: {
     ...mapState("admin", ["UserList"])
   },
@@ -254,7 +269,8 @@ export default {
               new Date(this.ActiveRow.end_date * 1000)
             ],
             executorlist,
-            manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null
+            manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
+            asset:this.ActiveRow.asset.id
           };
           delete this.TaskForm.executor;
           delete this.TaskForm.creator;
@@ -279,7 +295,8 @@ export default {
           let data = {
             ...this.TaskForm,
             start_date: dataFormat(this.TaskForm.datetime[0]),
-            end_date: dataFormat(this.TaskForm.datetime[1])
+            end_date: dataFormat(this.TaskForm.datetime[1]),
+            project:this.$route.params.id
           };
           if (this.TaskForm.executorlist.length) {
             data["executorlist"] = data["executorlist"].join();
