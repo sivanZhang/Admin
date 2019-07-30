@@ -13,14 +13,14 @@
           <el-button type="primary" size="mini" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
         </el-col>
         <el-col :span="24">
-          <el-row class="list-title" gutter="20">
+          <el-row class="list-title" :gutter="20">
             <el-col :span="8">最近打开的项目</el-col>
             <el-col :span="8">我的项目</el-col>
             <el-col :span="8">有效的项目</el-col>
           </el-row>
         </el-col>
         <el-col :span="24">
-          <el-row gutter="20">
+          <el-row :gutter="20">
             <el-col :span="8">
               <div class="title" style="padding: 5px 0 0px;">无数据</div>
             </el-col>

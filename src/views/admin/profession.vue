@@ -8,10 +8,10 @@
             style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
-               <el-button @click="openGroupForm('add')" type="success" size="mini">添加工种</el-button>
+               <el-button @click="openGroupForm('add')" type="success">添加工种</el-button>
             </el-row>
 
-            <el-input size="mini" class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
+            <el-input  class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
 
             <el-tree
               class="filter-tree"
@@ -52,11 +52,11 @@
           <div class="t-header">
             <el-row type="flex" align="middle">
               <el-col :span="12">
-                <el-button @click="openGroupForm('update')" type="primary" size="mini">修改工种信息</el-button>
+                <el-button @click="openGroupForm('update')" type="primary" >修改工种信息</el-button>
 
-                <el-button @click="openChangeMember(1)" type="primary" size="mini">添加成员</el-button>
+                <el-button @click="openChangeMember(1)" type="primary" >添加成员</el-button>
 
-                <el-button @click="openChangeMember(0)" type="danger" size="mini">删除成员</el-button>
+                <el-button @click="openChangeMember(0)" type="danger" >删除成员</el-button>
               </el-col>
 
               <el-col :span="6">

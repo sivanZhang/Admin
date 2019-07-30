@@ -23,13 +23,13 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-tooltip content="用户权限" placement="top">
-            <el-button icon="el-icon-user" type="text" style="color:deepskyblue" size="20px"/>
+            <el-button icon="el-icon-user" type="text" style="color:deepskyblue" />
           </el-tooltip>
           <el-tooltip content="编辑用户" placement="top">
-            <el-button icon="el-icon-edit" type="text" style="color:lawngreen" size="20px"/>
+            <el-button icon="el-icon-edit" type="text" style="color:lawngreen" />
           </el-tooltip>
           <el-tooltip content="删除用户" placement="top">
-            <el-button icon="el-icon-delete" type="text" style="color:red" size="20px" />
+            <el-button icon="el-icon-delete" type="text" style="color:red"  />
           </el-tooltip>
         </template>
       </el-table-column>
