@@ -21,6 +21,7 @@
         row-key="id"
         :tree-props="{ children: 'sub_task' }"
         @row-click="rowSelected"
+        border 
       >
         <!-- default-expand-all -->
         <el-table-column prop="name" label="任务"></el-table-column>
@@ -270,7 +271,8 @@ export default {
             ],
             executorlist,
             manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
-            asset:this.ActiveRow.asset.id
+            asset:this.ActiveRow.asset.id,
+            method:'put'
           };
           delete this.TaskForm.executor;
           delete this.TaskForm.creator;
@@ -353,7 +355,7 @@ export default {
         .then(() => {
           HTTP.deleteTask(this.ActiveRow.id).then(({ data }) => {
             this.$message(data.msg);
-            if (data.state === 0) {
+            if (data.status === 0) {
               this.getTasks();
             }
           });

@@ -1,7 +1,7 @@
 <template>
   <div class="menu-group">
     <div :class="[{active:activeIndex==1},'main-menu']">我的</div>
-    <el-popover placement="bottom" width="900" trigger="click">
+    <el-popover @show="hasData" placement="bottom" width="900" trigger="click">
       <el-row>
         <el-col :span="12">
           <div>
@@ -61,9 +61,12 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      ProjectList: state => state.project.ProjectList
-    })
+    ...mapState('project',['ProjectList'])
+  },
+  methods:{
+    hasData(){
+      !this.ProjectList && (this.$store.dispatch("project/get_Projects"))
+    }
   },
   watch: {
     //根据路由变化控制顶部菜单的active状态
