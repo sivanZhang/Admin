@@ -11,7 +11,11 @@
       />
     </div>
     <!-- 添加备注的按钮是否显示 -->
-    <div class="button-show" style="display: flex;justify-content: flex-end;padding: 5px" v-show="buttons">
+    <div
+      class="button-show"
+      style="display: flex;justify-content: flex-end;padding: 5px"
+      v-show="buttons"
+    >
       <el-button @click="buttons=!buttons">取消</el-button>
       <el-button type="primary" @click="addRemarks">添加备注</el-button>
     </div>
@@ -20,7 +24,12 @@
       <!-- 备注筛选 -->
       <div class="search-header">
         <!-- 筛选条件 -->
-        <input class="input-remarks" placeholder="在此输入筛选条件..." v-model="optionInput" :change="optionSel(optionInput)"/>
+        <input
+          class="input-remarks"
+          placeholder="在此输入筛选条件..."
+          v-model=" optionInput"
+          
+        />
         <!-- 备注筛选框 -->
         <el-select v-model="timeRemarks" multiple placeholder="请选择" size="mini">
           <el-option
@@ -187,7 +196,7 @@ export default {
     }
   },
   created() {
-    this.getRemarkList();
+    if (optionInput == "") this.getRemarkList();
   },
   watch: {
     project: {
@@ -201,6 +210,22 @@ export default {
         this.getRemarkList();
       }
       //deep: true
+    },
+    optionInput:{
+      handler:function(newVal, oldVal){
+        if(newVal){
+          const msg = {
+          appid: this.project.id,
+          apptype: 4,
+          name: this.optionInput
+        };
+        getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+        });
+        }else{
+          this.getRemarkList();
+        }
+      }
     }
   },
   data() {
@@ -216,7 +241,7 @@ export default {
       pid: null,
       RemarksData: [],
       buttons: false,
-      optionInput:"",
+      optionInput: "",
       options: [
         {
           value: "1",
@@ -245,17 +270,7 @@ export default {
   components: {},
   methods: {
     //筛选备注
-    optionSel(optionInput){
-      console.log(this.optionInput);
-      const msg = {
-        appid:this.project.id,
-        apptype: 4,
-        name: this.optionInput
-      }
-      getRemark(msg).then(({ data }) => {
-        this.RemarksData = [...data.msg];
-      });
-    },
+    
     //获取备注列表
     getRemarkList() {
       const msg = {
@@ -280,7 +295,7 @@ export default {
             if (data.status === 0) {
               this.$message.success(data.msg);
               this.remarks = "";
-              
+              this.buttons = false;
               this.getRemarkList();
             } else {
               this.$message.error(data.msg);
@@ -328,7 +343,7 @@ export default {
         removeRemark({
           method: "delete",
 
-          id: todo.id 
+          id: todo.id
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
