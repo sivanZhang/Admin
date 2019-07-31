@@ -9,18 +9,13 @@
       style="width: 100%"
       border
       :stripe="true"
-      :row-style="{'font-size':'14px'}"
-      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}"
+      :row-style="{'font-size':'13px'}"
+      :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
     >
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
-      <el-table-column prop="name" label="资产名称" align="center"></el-table-column>
-      <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
-      <el-table-column prop="path" label="资产路径" align="center"></el-table-column>
-      <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
-      <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width: 120px;">
+          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width: 50px;height: 30px;">
             <div slot="placeholder" class="image-slot">
               加载中
               <span class="dot">...</span>
@@ -31,6 +26,20 @@
           </el-image>
         </template>
       </el-table-column>
+      <el-table-column prop="name" label="资产名称" align="left"></el-table-column>
+      <el-table-column prop="category" label="类型" align="left"></el-table-column>
+      
+      <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
+      <el-table-column prop="priority" label="优先级" align="left"></el-table-column>
+      <el-table-column prop="level" label="难度等级" align="left"></el-table-column>
+      <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
+      <el-table-column prop="path" label="资产路径" align="left"></el-table-column>
+      <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
+      <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
+      <el-table-column prop="status" label="状态" align="left"></el-table-column>
+      <el-table-column prop="executor" label="执行人" align="left"></el-table-column>
+      <el-table-column prop="deadline" label="截止日期" align="left"></el-table-column>
+      <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-tooltip content="删除资产" placement="top">
@@ -258,5 +267,9 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss" >
+ .el-table--border th, .el-table--border td{
+   /*zjw*/
+   border-right: 0px solid #dfe6ec;
+ }
 </style>
