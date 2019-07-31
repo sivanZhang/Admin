@@ -285,12 +285,13 @@ export default {
           break;
       }
       this.isDialogShow = true;
+      this.$refs['TaskForm'].resetFields()
     },
     //添加或者修改任务
     editTask() {
       this.$refs["TaskForm"].validate(valid => {
-        this.buttonStates.createLoading = true;
         if (valid) {
+          this.buttonStates.createLoading = true;
           function dataFormat(params) {
             return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
           }

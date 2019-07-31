@@ -454,6 +454,7 @@ export default {
       }
 
       this.dialogFormVisible = true;
+      this.$refs['GroupForm'].resetFields()
     }
   },
   watch: {

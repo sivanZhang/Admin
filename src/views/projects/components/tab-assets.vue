@@ -200,9 +200,11 @@ export default {
     },
     showAssetForm() {
       this.isShow = true;
+      this.$refs['assetForm'].resetFields()
     },
     cancel() {
       this.isShow = false;
+      
     },
     //新建资产
     addAsset() {
