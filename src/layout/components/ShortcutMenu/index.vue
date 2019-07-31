@@ -6,11 +6,11 @@
         <el-col :span="12">
           <div>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            <input placeholder="请输入内容" size="mini" />
+            <input placeholder="请输入内容"/>
           </div>
         </el-col>
         <el-col :span="12" style="text-align:right">
-          <el-button type="primary" size="mini" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
+          <el-button type="primary"  @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
         </el-col>
         <el-col :span="24">
           <el-row class="list-title" :gutter="20">
@@ -72,7 +72,7 @@ export default {
     //根据路由变化控制顶部菜单的active状态
     $route(to, from) {
       this.isCreateShow = false;
-      const reg1 = /^\/admin/,
+      const reg1 = /^\/task/,
         reg2 = /^\/projects/;
       if (reg1.test(to.path)) {
         this.activeIndex = 1;

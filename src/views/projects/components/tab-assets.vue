@@ -39,7 +39,6 @@
               icon="el-icon-delete"
               type="text"
               style="color:red"
-              size="25px"
             />
           </el-tooltip>
         </template>

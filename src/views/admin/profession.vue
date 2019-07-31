@@ -113,7 +113,6 @@
         multiple
         placeholder="请选择"
         style="width:100%"
-        size="medium"
       >
         <el-option
           v-for="(item,index) of AllMembers"

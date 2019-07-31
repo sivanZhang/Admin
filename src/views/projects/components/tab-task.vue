@@ -233,6 +233,10 @@ export default {
     },
     //打开对话框
     openDialog(Type) {
+      if(!this.UserList.length){
+        this.$message.warning('请先创建项目资产')
+        return false
+      }
       this.DialogType = Type;
       switch (this.DialogType) {
         case 1:
