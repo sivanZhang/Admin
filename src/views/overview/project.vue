@@ -1,13 +1,14 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
-      <Drawer closable v-model="value1" width="526" :mask="false">
+      <Drawer  closable v-model="value1" width="526" :mask="false">
         <header slot="header">
           我是头部内容
+          {{project}}
         </header>
-        <project-drawer/>
+        <project-drawer :project="project" />
       </Drawer>
-      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
+      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index" >
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown>
@@ -16,7 +17,7 @@
                 <el-dropdown-item>
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="value1 = true">在侧边栏中打开</el-dropdown-item>
+                <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -28,14 +29,10 @@
               :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
               style="width:100%;height:100%"
-            >
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
-            </el-image>
+            ></el-image>
           </div>
           <div style="padding: 15px;">
-            <mallki class-name="mallki-text" @click.native="value1 = true" :text="item.name" />
+            <mallki class-name="mallki-text" @click.native="show(item)" :text="item.name" />
             <p>创建者：{{item.creator_name}} {{item.date|dateFormat}}</p>
             <el-row>
               <el-col :span="12">
@@ -75,11 +72,14 @@ export default {
     Mallki,
     projectDrawer
   },
+ 
   data() {
     return {
       isShowImg: false,
       src: "",
-      value1:false
+      value1:false,
+      project: null,
+      
     };
   },
   computed: {
@@ -93,6 +93,10 @@ export default {
       } else {
         this.url = null;
       }
+    },
+    show(item){
+      this.project=item;
+      this.value1 = true;
     }
   },
   created() {
