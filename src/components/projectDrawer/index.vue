@@ -8,8 +8,7 @@
            <remarks :project="project"></remarks>
           </el-tab-pane>
           <el-tab-pane label="任务" name="second"></el-tab-pane>
-          <el-tab-pane label="版本" name="third">版本</el-tab-pane>
-          <el-tab-pane label="链接" name="fourth">链接</el-tab-pane>
+          <el-tab-pane label="资产" name="third">资产</el-tab-pane> 
           <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
           <el-tab-pane label="信息" name="sixth">{{project}}</el-tab-pane>
         </el-tabs>
