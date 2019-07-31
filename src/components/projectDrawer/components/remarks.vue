@@ -111,7 +111,7 @@
                 </template>
                 <template v-else>
                   <li class="comment-item" >
-                    <el-button 
+                    <el-button style="margin-left: 5px;"
                     @click="showAll=item.id"
                     v-show="item.subs.length - 1>0?item.subs.length - 1:0"
                   >显示剩余{{item.subs.length - 1}}条回复</el-button>
@@ -414,9 +414,9 @@ export default {
 #remarks {
   input {
     width: 460px;
-    height: 20px;
+    height: 25px;
     border: none;
-    font-size:14px;
+    font-size:12px;
     border-bottom: solid 2px #999999;
   }
   input:focus {
@@ -476,7 +476,8 @@ export default {
           }
         }
         .desc-text {
-          padding: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
           font-size: 12px;
         }
         .pro-text {
@@ -539,10 +540,7 @@ export default {
             font-size: 12px
           }
         }
-        .desc-text {
-          padding: 10px;
-          font-size: 12px;
-        }
+         
       }
     }
     .reply-text {
