@@ -1,7 +1,7 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <el-button icon="el-icon-plus" type="primary" size="medium" @click="showAssetForm">创建资产</el-button>
+      <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">创建资产</el-button>
     </div>
 
     <el-table
@@ -37,7 +37,6 @@
               icon="el-icon-delete"
               type="text"
               style="color:red"
-              size="25px"
             />
           </el-tooltip>
         </template>
@@ -205,6 +204,7 @@ export default {
     },
     showAssetForm() {
       this.isShow = true;
+      this.$refs['assetForm'].resetFields()
     },
     cancel() {
       this.isShow = false;

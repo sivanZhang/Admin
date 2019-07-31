@@ -62,7 +62,7 @@ AXIOS.interceptors.response.use(
             })
             if (res.status === 401) {
                 // to re-login
-                MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+                MessageBox.confirm('抱歉，您没有权限', {
                     confirmButtonText: 'Re-Login',
                     cancelButtonText: 'Cancel',
                     type: 'warning'

@@ -2,7 +2,7 @@
   <div id="userGroup">
     <el-container>
         <el-header style="padding:0px;margin: 0px">
-          <el-radio-group v-model="radio" size="small">
+          <el-radio-group v-model="radio">
             <el-radio-button :label="1">所有用户</el-radio-button>
             <el-radio-button :label="2">未分组</el-radio-button>
           </el-radio-group>

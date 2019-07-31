@@ -3,16 +3,19 @@
     <el-table
       :data="UserList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       stripe style="width: 100%" border
-      :row-style="{'font-size':'14px'}"
-      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
+      :row-style="{'font-size':'13px'}"
+      :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
       <el-table-column label="头像" width="100" align="center">
         <template slot-scope="scope">
           <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名称" align="center" />
-      <el-table-column prop="email" label="邮箱" align="center" />
-      <el-table-column prop="phone" label="电话" align="center" />
+      <el-table-column prop="username" label="姓名" align="left" />
+      <el-table-column prop="sex" label="性别" align="left" width="50"/>
+      <el-table-column prop="email" label="邮箱" align="left" />
+      <el-table-column prop="phone" label="电话" align="left" />
+      <el-table-column prop="dept" label="工种" align="left" />
+      <el-table-column prop="role" label="职务/角色" align="left" />
       <el-table-column label="是否启用" align="center" width="100">
         <template slot-scope="scope">
           <!-- <el-checkbox v-model="scope.row.is_active" disabled></el-checkbox> -->
@@ -23,13 +26,13 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-tooltip content="用户权限" placement="top">
-            <el-button icon="el-icon-user" type="text" style="color:deepskyblue" size="20px"/>
+            <el-button icon="el-icon-user" type="text" style="color:deepskyblue" />
           </el-tooltip>
           <el-tooltip content="编辑用户" placement="top">
-            <el-button icon="el-icon-edit" type="text" style="color:lawngreen" size="20px"/>
+            <el-button icon="el-icon-edit" type="text" style="color:lawngreen" />
           </el-tooltip>
           <el-tooltip content="删除用户" placement="top">
-            <el-button icon="el-icon-delete" type="text" style="color:red" size="20px" />
+            <el-button icon="el-icon-delete" type="text" style="color:red"  />
           </el-tooltip>
         </template>
       </el-table-column>

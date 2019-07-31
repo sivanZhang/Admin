@@ -39,7 +39,7 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-      <el-button size="medium" :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">提交申请</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">提交申请</el-button>
       <el-row :gutter="15">
         <el-col :span="12" class="link" :offset="12">
           <router-link to="/login">返回登录</router-link>
