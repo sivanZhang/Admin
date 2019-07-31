@@ -34,8 +34,7 @@ export default {
 /* Mallki */
 
 .link--mallki {
-  cursor: pointer;
-  font-weight: 600;
+  cursor: pointer; 
   color: #333;
   font-family: 'Dosis', sans-serif;
   -webkit-transition: color 0.5s 0.25s;
