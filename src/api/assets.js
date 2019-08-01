@@ -1,8 +1,8 @@
 import AXIOS from '@/utils/request'
 //获取资产列表（搜索）
-export function getAssets() {
-    return AXIOS.get('/assets/assets/')
-}
+// export function getAssets() {
+//     return AXIOS.get('/assets/assets/')
+// }
 export function deleteAssets(data) {
     return AXIOS.post('/assets/assets/?delete', {...data, method: 'delete' })
 }
@@ -12,5 +12,5 @@ export function postAssets(data) {
 }
 //获取资产
 export function queryAssets(params) {
-    return AXIOS.get('/assets/assets/?01', { params })
+    return AXIOS.get('/assets/assets/', { params })
 }
