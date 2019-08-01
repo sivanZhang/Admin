@@ -2,7 +2,7 @@
   <div>
     <el-table
       :data="UserList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      stripe style="width: 100%" border
+      stripe style="width: 100%;border:1px solid #dfe6ec;border-bottom-width:0;"
       :row-style="{'font-size':'14px'}"
       :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
       <el-table-column label="头像" width="100" align="center">
