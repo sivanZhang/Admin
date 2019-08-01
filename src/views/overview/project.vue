@@ -1,14 +1,11 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
-      <Drawer  closable v-model="value1" width="526" :mask="false">
-        <header slot="header">
-          我是头部内容
-          {{project}}
-        </header>
+      <Drawer closable v-model="value1" width="526" :mask="false">
+        <Header :project="project"></Header>
         <project-drawer :project="project" />
       </Drawer>
-      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index" >
+      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown>
@@ -66,20 +63,21 @@
 import { mapState } from "vuex";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
+import Header from "@/views/overview/components/Header"
 export default {
   name: "project",
   components: {
     Mallki,
-    projectDrawer
+    projectDrawer,
+    Header
   },
- 
+
   data() {
     return {
       isShowImg: false,
       src: "",
-      value1:false,
-      project: null,
-      
+      value1: false,
+      project: null
     };
   },
   computed: {
@@ -94,8 +92,8 @@ export default {
         this.url = null;
       }
     },
-    show(item){
-      this.project=item;
+    show(item) {
+      this.project = item;
       this.value1 = true;
     }
   },
@@ -105,4 +103,5 @@ export default {
 };
 </script>
 <style lang="scss" src="./project.scss">
+
 </style>
