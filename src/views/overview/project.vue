@@ -8,8 +8,8 @@
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
-            <el-dropdown>
-              <i class="el-icon-more"></i>
+            <el-dropdown placement='bottom' trigger="click">
+              <el-button type="text" style="color:#333"><i class="el-icon-more"></i></el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
