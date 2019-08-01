@@ -26,8 +26,8 @@
         </el-col>
         <el-col :span="15">
           <el-row>
-            <el-col :span="6" class="project-name">项目名称</el-col>
-            <el-col :span="18" class="project-name">{{project.name}}</el-col>
+            <el-col :span="6" class="project-name">项目状态</el-col>
+            <el-col :span="18" class="project-name">{{project.status}}</el-col>
           </el-row>
           <el-row>
             <el-col :span="6" class="project-comment">项目编码</el-col>
@@ -35,6 +35,13 @@
               :span="18"
               class="project-comment"
             >{{project.code}}</el-col>
+          </el-row>
+           <el-row>
+            <el-col :span="6" class="project-comment">开始日期</el-col>
+            <el-col
+              :span="18"
+              class="project-comment"
+            >{{project.date_start |dateFormat}}</el-col>
           </el-row>
           <el-row>
             <el-col :span="6" class="project-comment">截止日期</el-col>
