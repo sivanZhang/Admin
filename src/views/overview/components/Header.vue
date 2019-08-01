@@ -25,16 +25,16 @@
         </el-col>
         <el-col :span="15">
           <el-row>
-            <el-col :span="6" style="margin:30px 0px 0px 0px;font-size: 14px;font-weight:400">项目名称</el-col>
-            <el-col :span="18" style="margin:30px 0px 0px 0px;font-size: 14px;font-weight:400">{{project.name}}</el-col>
+            <el-col :span="6" style="margin:30px 0px 0px 0px;font-size: 12px;font-weight:400">项目名称</el-col>
+            <el-col :span="18" style="margin:30px 0px 0px 0px;font-size: 12px;font-weight:400">{{project.name}}</el-col>
           </el-row>
           <el-row>
-            <el-col :span="6" style="margin:10px 0px 0px 0px;font-size: 14px;font-weight:400">项目编码</el-col>
-            <el-col :span="18" style="margin:10px 0px 0px 0px;font-size: 14px;font-weight:400">{{project.code}}</el-col>
+            <el-col :span="6" style="margin:10px 0px 0px 0px;font-size: 12px;font-weight:400">项目编码</el-col>
+            <el-col :span="18" style="margin:10px 0px 0px 0px;font-size: 12px;font-weight:400">{{project.code}}</el-col>
           </el-row>
           <el-row>
-            <el-col :span="6" style="margin:10px 0px 0px 0px;font-size: 14px;font-weight:400">截止日期</el-col>
-            <el-col :span="18" style="margin:10px 0px 0px 0px;font-size: 14px;font-weight:400">{{project.date_end |dateFormat}}</el-col>
+            <el-col :span="6" style="margin:10px 0px 0px 0px;font-size: 12px;font-weight:400">截止日期</el-col>
+            <el-col :span="18" style="margin:10px 0px 0px 0px;font-size: 12px;font-weight:400">{{project.date_end |dateFormat}}</el-col>
           </el-row>
         </el-col>
       </div>
@@ -60,21 +60,22 @@ export default {
 #header {
   .header-first {
     //height: 60px;
-    border-bottom: 1px solid #999999;
+    border-bottom: 1px solid rgb(221, 221, 221);
     display: flex-wrap;
-    justify-content: flex-start;
-    padding-left: 10px;
+    justify-content: flex-start; 
     font-size: 16px !important;
     font-weight: 300 !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-bottom: 10px;
     .project-name {
       font-size: 16px !important;
       font-weight: 300 !important;
     }
     .project-type {
       font-size: 12px;
+      color:#a9abae;
     }
     .color {
       width: 42px;

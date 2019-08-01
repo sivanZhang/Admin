@@ -69,7 +69,9 @@ export default {
   right: 15px;
   top: 140px;
 }
-
+#videoTabs{
+  width:500px;
+}
 .video-info {
   padding: 10px;
   height: 165px;

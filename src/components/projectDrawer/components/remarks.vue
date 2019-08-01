@@ -417,7 +417,7 @@ export default {
     height: 25px;
     border: none;
     font-size:12px;
-    border-bottom: solid 2px #999999;
+    border-bottom: solid 1px rgb(221, 221, 221);
   }
   input:focus {
     outline: none;
@@ -425,11 +425,11 @@ export default {
   }
   .input-remarks {
     width: 200px;
-    height: 20px;
+    height: 28px;
     font-size:12px;
     
     border: none;
-    border-bottom: solid 2px #999999;
+    border-bottom: solid 1px rgb(221, 221, 221);
   }
   .input-remarks:focus {
     outline: none;
