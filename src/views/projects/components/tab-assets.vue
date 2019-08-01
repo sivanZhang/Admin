@@ -140,7 +140,7 @@
       draggable
       :mask="false"
     >
-    <links :link-list="LinkList" :level-list="LevelList" :asset-id="activeAsset.id"></links>
+    <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
     </Drawer>
   </div>
 </template>
