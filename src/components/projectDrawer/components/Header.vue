@@ -65,7 +65,7 @@
             <span class="project-name">{{project.name}}</span>
           </el-row>
           <el-row>
-            <div class="project-type">{{'project'}}</div>
+            <div class="project-type">{{'资产'}}</div>
           </el-row>
         </el-col>
       </div>
@@ -80,18 +80,25 @@
         </el-col>
         <el-col :span="15">
           <el-row>
-            <el-col :span="6" class="project-name">项目名称</el-col>
+            <el-col :span="6" class="project-name">资产类型</el-col>
             <el-col :span="18" class="project-name">{{project.name}}</el-col>
           </el-row>
           <el-row>
-            <el-col :span="6" class="project-comment">项目编码</el-col>
+            <el-col :span="6" class="project-comment">创建人</el-col>
             <el-col
               :span="18"
               class="project-comment"
             >{{project.code}}</el-col>
           </el-row>
           <el-row>
-            <el-col :span="6" class="project-comment">截止日期</el-col>
+            <el-col :span="6" class="project-comment">优先级</el-col>
+            <el-col
+              :span="18"
+              class="project-comment"
+            >{{project.date_end |dateFormat}}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6" class="project-comment">资产状态</el-col>
             <el-col
               :span="18"
               class="project-comment"
