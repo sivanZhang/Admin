@@ -63,7 +63,7 @@
 import { mapState } from "vuex";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
-import Header from "@/views/overview/components/Header"
+import Header from "@/components/projectDrawer/components/Header"
 export default {
   name: "project",
   components: {

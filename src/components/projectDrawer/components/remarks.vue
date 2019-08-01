@@ -221,7 +221,7 @@ export default {
         if(newVal){
           const msg = {
           appid: this.project.id,
-          apptype: 4,
+          apptype: this.project.entity_type,
           name: this.optionInput
         };
         getRemark(msg).then(({ data }) => {
@@ -280,7 +280,7 @@ export default {
     getRemarkList() {
       const msg = {
         appid: this.project.id,
-        apptype: 4
+        apptype: this.project.entity_type
       };
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
@@ -291,7 +291,7 @@ export default {
       if (this.remarks) {
         this.remarksResult = {
           entity_id: this.project.id,
-          entity_type: 4,
+          entity_type: this.project.entity_type,
           pid: this.pid,
           content: this.remarks
         };
@@ -316,7 +316,7 @@ export default {
       if (this.comment[item.id]) {
         this.commentResult = {
           entity_id: this.project.id,
-          entity_type: 4,
+          entity_type: this.project.entity_type,
           pid: item.id,
           content: this.comment[item.id]
         };
