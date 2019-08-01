@@ -1,112 +1,96 @@
 <template>
   <div id="header">
     <template v-if="project.entity_type === 4">
-        <div style="height:170px">
-      <div class="header-first">
-        <el-col :span="3">
-          <div class="color" :style="{backgroundColor:project.color||'transparent'}"></div>
-        </el-col>
-        <el-col :span="21">
-          <el-row>
-            <span class="project-name">{{project.name}}</span>
-          </el-row>
-          <el-row>
-            <div class="project-type">{{'project'}}</div>
-          </el-row>
-        </el-col>
+      <div style="height:170px">
+        <div class="header-first">
+          <el-col :span="3">
+            <div class="color" :style="{backgroundColor:project.color||'transparent'}"></div>
+          </el-col>
+          <el-col :span="21">
+            <el-row>
+              <span class="project-name">
+                <router-link :to="`/projects/project-detail/${project.id}`">{{project.name}}</router-link>
+              </span>
+            </el-row>
+            <el-row>
+              <div class="project-type">{{'project'}}</div>
+            </el-row>
+          </el-col>
+        </div>
+        <div class="header-body">
+          <el-col :span="9">
+            <el-image
+              class="mini-image"
+              :src="project.image?$store.state.BASE_URL+project.image:''"
+              fit="cover"
+              style="width: 150px;height: 100px;float: left;margin-right: 10px"
+            ></el-image>
+          </el-col>
+          <el-col :span="15">
+            <el-row>
+              <el-col :span="6" class="project-name">项目状态</el-col>
+              <el-col :span="18" class="project-name">{{project.status|projectStatus}}</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6" class="project-comment">项目编码</el-col>
+              <el-col :span="18" class="project-comment">{{project.code}}</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6" class="project-comment">开始日期</el-col>
+              <el-col :span="18" class="project-comment">{{project.date_start |dateFormat}}</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6" class="project-comment">截止日期</el-col>
+              <el-col :span="18" class="project-comment">{{project.date_end |dateFormat}}</el-col>
+            </el-row>
+          </el-col>
+        </div>
       </div>
-      <div class="header-body">
-        <el-col :span="9">
-          <el-image
-            class="mini-image"
-            :src="project.image?$store.state.BASE_URL+project.image:''"
-            fit="cover"
-            style="width: 150px;height: 100px;float: left;margin-right: 10px"
-          ></el-image>
-        </el-col>
-        <el-col :span="15">
-          <el-row>
-            <el-col :span="6" class="project-name">项目状态</el-col>
-            <el-col :span="18" class="project-name">{{project.status}}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6" class="project-comment">项目编码</el-col>
-            <el-col
-              :span="18"
-              class="project-comment"
-            >{{project.code}}</el-col>
-          </el-row>
-           <el-row>
-            <el-col :span="6" class="project-comment">开始日期</el-col>
-            <el-col
-              :span="18"
-              class="project-comment"
-            >{{project.date_start |dateFormat}}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6" class="project-comment">截止日期</el-col>
-            <el-col
-              :span="18"
-              class="project-comment"
-            >{{project.date_end |dateFormat}}</el-col>
-          </el-row>
-        </el-col>
-      </div>
-    </div>
     </template>
     <template v-if="project.entity_type === 5">
-        <div style="height:170px">
-      <div class="header-first">
-        <el-col :span="3">
-          <svg-icon icon-class="asset" style="width:40px;height:40px"></svg-icon>
-        </el-col>
-        <el-col :span="21">
-          <el-row>
-            <span class="project-name">{{project.name}}</span>
-          </el-row>
-          <el-row>
-            <div class="project-type">{{'资产'}}</div>
-          </el-row>
-        </el-col>
+      <div style="height:170px">
+        <div class="header-first">
+          <el-col :span="3">
+            <svg-icon icon-class="asset" style="width:40px;height:40px"></svg-icon>
+          </el-col>
+          <el-col :span="21">
+            <el-row>
+              <span class="project-name">{{project.name}}</span>
+            </el-row>
+            <el-row>
+              <div class="project-type">{{'资产'}}</div>
+            </el-row>
+          </el-col>
+        </div>
+        <div class="header-body">
+          <el-col :span="9">
+            <el-image
+              class="mini-image"
+              :src="project.image?$store.state.BASE_URL+project.image:''"
+              fit="cover"
+              style="width: 150px;height: 100px;float: left;margin-right: 10px"
+            ></el-image>
+          </el-col>
+          <el-col :span="15">
+            <el-row>
+              <el-col :span="6" class="project-name">资产类型</el-col>
+              <el-col :span="18" class="project-name">{{project.category}}</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6" class="project-comment">创建人</el-col>
+              <el-col :span="18" class="project-comment">{{project.creator_name}}</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6" class="project-comment">优先级</el-col>
+              <el-col :span="18" class="project-comment">{{project.priority |Priority}}</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6" class="project-comment">难度等级</el-col>
+              <el-col :span="18" class="project-comment">{{project.level |Level}}</el-col>
+            </el-row>
+          </el-col>
+        </div>
       </div>
-      <div class="header-body">
-        <el-col :span="9">
-          <el-image
-            class="mini-image"
-            :src="project.image?$store.state.BASE_URL+project.image:''"
-            fit="cover"
-            style="width: 150px;height: 100px;float: left;margin-right: 10px"
-          ></el-image>
-        </el-col>
-        <el-col :span="15">
-          <el-row>
-            <el-col :span="6" class="project-name">资产类型</el-col>
-            <el-col :span="18" class="project-name">{{project.name}}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6" class="project-comment">创建人</el-col>
-            <el-col
-              :span="18"
-              class="project-comment"
-            >{{project.code}}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6" class="project-comment">优先级</el-col>
-            <el-col
-              :span="18"
-              class="project-comment"
-            >{{project.date_end |dateFormat}}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6" class="project-comment">资产状态</el-col>
-            <el-col
-              :span="18"
-              class="project-comment"
-            >{{project.date_end |dateFormat}}</el-col>
-          </el-row>
-        </el-col>
-      </div>
-    </div>
     </template>
   </div>
 </template>
@@ -141,6 +125,10 @@ export default {
     .project-name {
       font-size: 16px !important;
       font-weight: 300 !important;
+
+      :hover {
+        color: rgba(59, 59, 211, 0.849);
+      }
     }
     .project-type {
       font-size: 12px;

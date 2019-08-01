@@ -30,3 +30,34 @@ export function projectStatus(code) {
 export function numberFormat(num) {
     return (+num).toLocaleString(undefined, { maximumFractionDigits: 2 })
 }
+//资产优先级
+export function Priority(priority) {
+    switch (priority) {
+        case 0:
+            return '正常'
+            break
+        case 1:
+            return '优先'
+            break
+        
+        
+    }
+}
+//难度等级
+export function Level(level) {
+    switch (level) {
+        case 0:
+            return '简单'
+            break
+        case 1:
+            return '标准'
+            break
+        case 2:
+            return '复杂'
+            break
+        case 3:
+            return '高难度'
+            break
+        
+    }
+}
