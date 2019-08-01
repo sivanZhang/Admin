@@ -1,7 +1,7 @@
 <template>
   <div id="remarks">
     <!--添加备注输入框  -->
-    <div style="width: 100%">
+    <div style="width: 100%;padding:0 0 10px">
       <input
         type="text"
         v-model="remarks"
@@ -11,18 +11,29 @@
       />
     </div>
     <!-- 添加备注的按钮是否显示 -->
-    <div class="button-show" style="display: flex;justify-content: flex-end;padding: 5px" v-show="buttons">
-      <el-button @click="buttons=!buttons">取消</el-button>
-      <el-button type="primary" @click="addRemarks">添加备注</el-button>
+    <div
+      class="button-show"
+      style="display: flex;justify-content: flex-end;padding: 5px"
+      v-show="buttons"
+    >
+      <el-button @click="buttons=!buttons" size="small">取消</el-button>
+      <el-button type="primary" @click="addRemarks"  size="small">添加备注</el-button>
     </div>
     <!-- 备注展示与筛选 -->
     <div class="remark-cont">
       <!-- 备注筛选 -->
-      <div class="search-header">
+      <div class="search-header" style="display:flex;width: 100%;padding:10px 0 10px">
         <!-- 筛选条件 -->
-        <input class="input-remarks" placeholder="在此输入筛选条件..." v-model="optionInput" :change="optionSel(optionInput)"/>
+        <div style="width:220px">
+          <input
+          class="input-remarks"
+          placeholder="在此输入筛选条件..."
+          v-model=" optionInput"
+        />
+        </div>
+        
         <!-- 备注筛选框 -->
-        <el-select v-model="timeRemarks" multiple placeholder="请选择" size="mini">
+        <el-select v-model="timeRemarks" multiple placeholder="请选择" size="mini" style="border:0px">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -64,7 +75,7 @@
                 class="mini-image"
                 :src="project.image?$store.state.BASE_URL+project.image:''"
                 fit="cover"
-                style="width: 50px;height: 50px;vertical-align: middle"
+                style="width: 30px;height: 30px;float: left;margin-right: 10px"
               ></el-image>
               <!-- 进入实体的链接 -->
               <span>
@@ -99,10 +110,13 @@
                   </li>
                 </template>
                 <template v-else>
-                  <el-button
+                  <li class="comment-item" >
+                    <el-button style="margin-left: 5px;"
                     @click="showAll=item.id"
                     v-show="item.subs.length - 1>0?item.subs.length - 1:0"
                   >显示剩余{{item.subs.length - 1}}条回复</el-button>
+                  </li>
+                  
                   <template v-if="showAll==item.id">
                     <li class="comment-item" v-for="(todo,index) in item.subs" :key="index">
                       <div>
@@ -187,7 +201,7 @@ export default {
     }
   },
   created() {
-    this.getRemarkList();
+    if (optionInput == "") this.getRemarkList();
   },
   watch: {
     project: {
@@ -201,6 +215,22 @@ export default {
         this.getRemarkList();
       }
       //deep: true
+    },
+    optionInput:{
+      handler:function(newVal, oldVal){
+        if(newVal){
+          const msg = {
+          appid: this.project.id,
+          apptype: 4,
+          name: this.optionInput
+        };
+        getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+        });
+        }else{
+          this.getRemarkList();
+        }
+      }
     }
   },
   data() {
@@ -216,7 +246,7 @@ export default {
       pid: null,
       RemarksData: [],
       buttons: false,
-      optionInput:"",
+      optionInput: "",
       options: [
         {
           value: "1",
@@ -245,17 +275,7 @@ export default {
   components: {},
   methods: {
     //筛选备注
-    optionSel(optionInput){
-      console.log(this.optionInput);
-      const msg = {
-        appid:this.project.id,
-        apptype: 4,
-        name: this.optionInput
-      }
-      getRemark(msg).then(({ data }) => {
-        this.RemarksData = [...data.msg];
-      });
-    },
+    
     //获取备注列表
     getRemarkList() {
       const msg = {
@@ -280,7 +300,7 @@ export default {
             if (data.status === 0) {
               this.$message.success(data.msg);
               this.remarks = "";
-              
+              this.buttons = false;
               this.getRemarkList();
             } else {
               this.$message.error(data.msg);
@@ -328,7 +348,7 @@ export default {
         removeRemark({
           method: "delete",
 
-          id: todo.id 
+          id: todo.id
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
@@ -394,8 +414,9 @@ export default {
 #remarks {
   input {
     width: 460px;
-    height: 20px;
+    height: 25px;
     border: none;
+    font-size:12px;
     border-bottom: solid 2px #999999;
   }
   input:focus {
@@ -405,6 +426,8 @@ export default {
   .input-remarks {
     width: 200px;
     height: 20px;
+    font-size:12px;
+    
     border: none;
     border-bottom: solid 2px #999999;
   }
@@ -426,13 +449,12 @@ export default {
           display: block;
           width: 40px;
           height: 40px;
-          margin-top: 10px;
           text-align: center;
           line-height: 40px;
-          font-size: 18px;
-          background: #409eff;
+          font-size: 24px;
+          background: #3bacf8;
           color: #fff;
-          border-radius: 50%;
+          border-radius: 40px;
         }
       }
       .desc {
@@ -450,24 +472,25 @@ export default {
           span:last-child {
             float: right;
             color: #666;
+            font-size: 14px
           }
         }
         .desc-text {
-          padding: 10px;
-          font-size: 16px;
+          padding-left: 10px;
+          padding-right: 10px;
+          font-size: 12px;
         }
         .pro-text {
           padding: 10px;
-          img {
-            width: 50px;
-            height: 50px;
-            vertical-align: middle;
-          }
           span {
             vertical-align: middle;
             padding-left: 10px;
-            color: #409eff;
-            font-size: 14px;
+            color: #49a0f7;
+            font-size: 12px;
+            font-weight: 400;
+            :hover{
+              color:#1b5186; 
+            }
           }
         }
       }
@@ -483,17 +506,19 @@ export default {
       .user-shot {
         float: center;
         width: 10%;
+        padding:5px;
         border-top: 1px solid #ddd;
         span {
+          
           display: block;
           width: 30px;
           height: 30px;
           text-align: center;
           line-height: 30px;
-          font-size: 18px;
-          background: #1380ee;
+          font-size: 20px;
+          background: #3bacf8;
           color: #fff;
-          border-radius: 50%;
+          border-radius: 30px;
         }
       }
       .comment-desc {
@@ -507,16 +532,15 @@ export default {
           span:first-child {
             float: left;
             color: #999;
+            font-weight: 300;
           }
           span:last-child {
             float: right;
             color: #666;
+            font-size: 12px
           }
         }
-        .desc-text {
-          padding: 10px;
-          font-size: 12px;
-        }
+         
       }
     }
     .reply-text {

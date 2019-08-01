@@ -4,7 +4,7 @@
       <el-col :span="15" class="page-left">
         <div class="video-player">
           <!-- 播放器 -->
-          <video-player ref='videoPlayer' @getCutImg="getMarkImage" @getCurrentVideoMode="getCurrentVideoMode"/>
+          <video-player ref='videoPlayer' @getCutImg="getMarkImage" @getCurrentVideoMode="getCurrentVideoMode" @getCurrentPlayId="getCurrentPlayId"/>
         </div>
         <div class="video-list">
           <!-- 视频列表 -->
@@ -153,6 +153,12 @@
       getCurrentVideoMode(mode) {
         this.currentVideoIsEdit = !mode
         console.log('currentVideoIsEdit', this.currentVideoIsEdit)
+      },
+      getCurrentPlayId(id){
+        console.log(id);
+        
+        this.$refs.videoList.getCurrentPlayId(id);
+
       }
     }
   }
@@ -175,12 +181,12 @@
                 margin-right:0.5%;
                 .video-player{
                     width: 100%;
-                    height:70%;
+                    height:65%;
                     background:#fff;
                 }
                 .video-list{
                     width: 100%;
-                    height:28.9%;
+                    height:33.9%;
                     margin-top: 1%;
                     background: #fff;
                 }

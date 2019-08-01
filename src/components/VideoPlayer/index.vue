@@ -211,6 +211,7 @@
                 //_self. playerCurrentPostion= 0,
                   //_self.playerFormatCurrentPostion= '00:00',
                   //_self.playerPercentage= 0,
+                  _self.$emit('getCurrentPlayId', _self.initNextVideoUrl.id)
                   _self.videoUrl=_self.initNextVideoUrl.url
                   _self.videoPlayer.src(_self.initNextVideoUrl.url);
                   _self.videoPlayer.load(_self.initNextVideoUrl.url);
