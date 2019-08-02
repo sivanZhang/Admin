@@ -61,3 +61,29 @@ export function Level(level) {
         
     }
 }
+//通知是否已读
+export function isRead(data){
+    switch(data){
+        case 0 :
+            return '未读'
+            break
+        case 1:
+            return '已读'
+            break
+    }
+}
+//通知的紧急程度
+export function urgencyLevel(data){
+    switch (data) {
+        case 0:
+            return '一般'
+            break
+        case 1:
+            return '紧急'
+            break
+        case 2:
+            return '特急'
+            break
+        
+    }
+}

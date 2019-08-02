@@ -9,7 +9,7 @@
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        
+        <notice id="notice" class="right-menu-item"/>
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
@@ -41,6 +41,7 @@ import Settings from './Settings'
   import Screenfull from "@/components/Screenfull";
   import Search from "@/components/HeaderSearch";
   import ShortcutMenu from "./ShortcutMenu";
+  import Notice from "@/components/Notice"
 
   export default {
     data(){
@@ -55,6 +56,7 @@ import Settings from './Settings'
       Search,
       ShortcutMenu,
       Settings,
+      Notice
     },
     computed: {
       ...mapGetters(["sidebar", "avatar", "device"]),
