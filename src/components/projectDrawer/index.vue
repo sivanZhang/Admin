@@ -10,7 +10,9 @@
           <el-tab-pane label="任务" name="second"></el-tab-pane>
           <el-tab-pane label="资产" name="third">资产</el-tab-pane>
           <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
-          <el-tab-pane label="信息" name="sixth">{{project}}</el-tab-pane>
+          <el-tab-pane label="信息" name="sixth">
+            <info :project="project" />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -19,7 +21,7 @@
 
 <script>
 import remarks from "@/components/projectDrawer/components/remarks";
-
+import info from "@/components/projectDrawer/components/info";
 export default {
   props: {
     project: {
@@ -36,7 +38,7 @@ export default {
     };
   },
   name: "projectDrawer",
-  components: { remarks },
+  components: { remarks, info },
 
   methods: {
     handleTabClick(tab, event) {

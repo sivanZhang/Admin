@@ -1,5 +1,6 @@
 <template>
   <div id="header">
+    <!-- 项目头部展示 -->
     <template v-if="project.entity_type === 4">
       <div style="height:170px">
         <div class="header-first">
@@ -47,6 +48,7 @@
         </div>
       </div>
     </template>
+    <!-- 资产的头部展示 -->
     <template v-if="project.entity_type === 5">
       <div style="height:170px">
         <div class="header-first">

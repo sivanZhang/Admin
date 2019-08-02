@@ -11,7 +11,9 @@
           <el-tab-pane label="链接" name="third"></el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
           <el-tab-pane label="动态" name="sixth">动态</el-tab-pane>
-          <el-tab-pane label="信息" name="seventh">{{project}}</el-tab-pane>
+          <el-tab-pane label="信息" name="seventh">
+            <info :project="project" />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -20,6 +22,7 @@
 
 <script>
 import remarks from "@/components/projectDrawer/components/remarks"
+import info from "@/components/projectDrawer/components/info"
 export default {
   name: "assets-drawer",
   props:{
@@ -32,7 +35,7 @@ export default {
       activeTab: "first"
     };
   },
-  components: {remarks},
+  components: {remarks,info},
   methods: {
     handleTabClick(tab, event) {
       //this.getRemarkList();
