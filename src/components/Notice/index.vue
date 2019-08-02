@@ -60,8 +60,14 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="通知" prop="title"></el-table-column>
+        <el-table-column type="selection" width="35"></el-table-column>
+        <el-table-column label="通知" width="150" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <router-link :to="`${scope.row.url}`">{{scope.row.title}}</router-link>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否已读" :formatter="readFormat"></el-table-column>
+        <el-table-column label="紧急程度" :formatter="urgencyFormat"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-tooltip content="删除资产" placement="top">
@@ -98,6 +104,31 @@ export default {
   },
 
   methods: {
+    //列表中是否已读显示
+    readFormat: function(row, column) {
+      switch (row.read) {
+        case 0:
+          return "未读";
+          break;
+        case 1:
+          return "已读";
+          break;
+      }
+    },
+    //列表中紧急程度显示
+    urgencyFormat: function(row, column) {
+      switch (row.urgency_level) {
+        case 0:
+          return "一般";
+          break;
+        case 1:
+          return "紧急";
+          break;
+        case 2:
+          return "特急";
+          break;
+      }
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
