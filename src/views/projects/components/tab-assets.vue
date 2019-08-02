@@ -13,7 +13,7 @@
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
       highlight-current-row
-      @row-click="rowSelected"
+      @row-dblclick="rowSelected"
       row-class-name="hover">
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
@@ -136,9 +136,9 @@
     <Drawer
       :title="activeAsset.name+' 的环节详情'"
       v-model="isDrawerShow"
-      width="50%"
-      draggable
-      :mask="false"
+      width="512px"
+      mask
+      mask-closable
     >
     <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
     </Drawer>

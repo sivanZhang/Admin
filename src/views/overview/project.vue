@@ -20,13 +20,17 @@
           </div>
           <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
           <div slot="header" class="box-card-header">
-            <el-image
+             <el-image
               @click="showImg($store.state.BASE_URL+item.image)"
               class="mini-image"
               :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
               style="width:100%;height:100%"
-            ></el-image>
+            >
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+            </el-image>
           </div>
           <div style="padding: 15px;">
             <mallki class-name="mallki-text" @click.native="show(item)" :text="item.name" />

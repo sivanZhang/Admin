@@ -34,7 +34,7 @@ const actions = {
     get_DeptList({
         commit
     }) {
-        getDept().then(({
+        return getDept().then(({
             data
         }) => {
             commit('SET_DEPTLIST', data.msg)
