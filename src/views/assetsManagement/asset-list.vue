@@ -213,7 +213,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        console.log(id);
+        //console.log(id);
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message(data.msg);
           if (data.status === 0) {
