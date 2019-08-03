@@ -1,4 +1,7 @@
 #project {
+    .el-dialog__header{
+        display:none;
+    }
     .container {
         width: fit-content;
         display: flex;

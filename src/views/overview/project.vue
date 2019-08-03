@@ -10,8 +10,8 @@
           <div class="dropdow">
             <el-dropdown placement='bottom' trigger="click">
               <el-button type="text" style="color:#333"><i class="el-icon-more"></i></el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>
+              <el-dropdown-menu slot="dropdown" style="margin-top:0px">
+                <el-dropdown-item >
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
@@ -107,7 +107,5 @@ export default {
 };
 </script>
 <style lang="scss" src="./project.scss">
-.el-dialog__header{
-    display:none;
-}
+
 </style>
