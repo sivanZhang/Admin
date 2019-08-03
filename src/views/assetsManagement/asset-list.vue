@@ -9,8 +9,7 @@
       style="width: 100%;border:1px solid #dfe6ec;border-bottom-width:0;"
       :stripe="true"
       :row-style="{'font-size':'14px'}"
-      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}"
-    >
+      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column prop="name" label="资产名称" align="center"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
@@ -61,8 +60,8 @@
         :total="TableData.length"
       ></el-pagination>
     </div>
-    <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
-      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
+      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
         <el-form-item label="图片">
           <el-upload
             accept="image/jpeg, image/gif, image/png"

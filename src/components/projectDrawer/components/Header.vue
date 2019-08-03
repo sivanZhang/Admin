@@ -1,7 +1,7 @@
 <template>
-  <div id="header">
+  <div id="d-header">
     <!-- 项目头部展示 -->
-    <template v-if="project.entity_type === 4">
+    <template v-if="project && project.entity_type === 4">
       <div style="height:170px">
         <div class="header-first">
           <el-col :span="3">
@@ -20,12 +20,22 @@
         </div>
         <div class="header-body">
           <el-col :span="9">
-            <el-image
+            <!-- <el-image
               class="mini-image"
               :src="project.image?$store.state.BASE_URL+project.image:''"
               fit="cover"
               style="width: 150px;height: 100px;float: left;margin-right: 10px"
-            ></el-image>
+            ></el-image>-->
+            <el-image
+              :src="project.image?$store.state.BASE_URL+project.image:''"
+              class="mini-image"
+              fit="cover"
+              style="width: 150px;height: 100px;float: left;margin-right: 10px"
+            >
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
           </el-col>
           <el-col :span="15">
             <el-row>
@@ -49,7 +59,7 @@
       </div>
     </template>
     <!-- 资产的头部展示 -->
-    <template v-if="project.entity_type === 5">
+    <template v-if="project && project.entity_type === 5">
       <div style="height:170px">
         <div class="header-first">
           <el-col :span="3">
@@ -99,7 +109,7 @@
 
 <script>
 export default {
-  name: "header",
+  name: "d-header",
   props: {
     project: {
       type: Object
@@ -112,7 +122,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#header {
+#d-header {
   .header-first {
     //height: 60px;
     border-bottom: 1px solid rgb(221, 221, 221);

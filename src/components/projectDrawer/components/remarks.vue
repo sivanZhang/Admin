@@ -17,7 +17,7 @@
       v-show="buttons"
     >
       <el-button @click="buttons=!buttons" size="small">取消</el-button>
-      <el-button type="primary" @click="addRemarks"  size="small">添加备注</el-button>
+      <el-button type="primary" @click="addRemarks" size="small">添加备注</el-button>
     </div>
     <!-- 备注展示与筛选 -->
     <div class="remark-cont">
@@ -25,13 +25,9 @@
       <div class="search-header" style="display:flex;width: 100%;padding:10px 0 10px">
         <!-- 筛选条件 -->
         <div style="width:220px">
-          <input
-          class="input-remarks"
-          placeholder="在此输入筛选条件..."
-          v-model=" optionInput"
-        />
+          <input class="input-remarks" placeholder="在此输入筛选条件..." v-model=" optionInput" />
         </div>
-        
+
         <!-- 备注筛选框 -->
         <el-select v-model="timeRemarks" multiple placeholder="请选择" size="mini" style="border:0px">
           <el-option
@@ -110,13 +106,14 @@
                   </li>
                 </template>
                 <template v-else>
-                  <li class="comment-item" >
-                    <el-button style="margin-left: 5px;"
-                    @click="showAll=item.id"
-                    v-show="item.subs.length - 1>0?item.subs.length - 1:0"
-                  >显示剩余{{item.subs.length - 1}}条回复</el-button>
+                  <li class="comment-item">
+                    <el-button
+                      style="margin-left: 5px;"
+                      @click="showAll=item.id"
+                      v-show="item.subs.length - 1>0?item.subs.length - 1:0"
+                    >显示剩余{{item.subs.length - 1}}条回复</el-button>
                   </li>
-                  
+
                   <template v-if="showAll==item.id">
                     <li class="comment-item" v-for="(todo,index) in item.subs" :key="index">
                       <div>
@@ -200,9 +197,6 @@ export default {
       type: Object
     }
   },
-  created() {
-    if (optionInput == "") this.getRemarkList();
-  },
   watch: {
     project: {
       handler: function(newVal, oldVal) {
@@ -216,18 +210,18 @@ export default {
       }
       //deep: true
     },
-    optionInput:{
-      handler:function(newVal, oldVal){
-        if(newVal){
+    optionInput: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
           const msg = {
-          appid: this.project.id,
-          apptype: this.project.entity_type,
-          name: this.optionInput
-        };
-        getRemark(msg).then(({ data }) => {
-          this.RemarksData = [...data.msg];
-        });
-        }else{
+            appid: this.project.id,
+            apptype: this.project.entity_type,
+            name: this.optionInput
+          };
+          getRemark(msg).then(({ data }) => {
+            this.RemarksData = [...data.msg];
+          });
+        } else {
           this.getRemarkList();
         }
       }
@@ -242,6 +236,7 @@ export default {
       comment: [],
       commentResult: {},
       remarks: "",
+      timeRemarks: [],
       remarksResult: {},
       pid: null,
       RemarksData: [],
@@ -275,7 +270,7 @@ export default {
   components: {},
   methods: {
     //筛选备注
-    
+
     //获取备注列表
     getRemarkList() {
       const msg = {
@@ -406,6 +401,11 @@ export default {
         });
       });
     }
+  },
+  created() {
+    if (!this.optionInput){
+      this.getRemarkList()
+    }
   }
 };
 </script>
@@ -416,7 +416,7 @@ export default {
     width: 460px;
     height: 25px;
     border: none;
-    font-size:12px;
+    font-size: 12px;
     border-bottom: solid 1px rgb(221, 221, 221);
   }
   input:focus {
@@ -426,8 +426,8 @@ export default {
   .input-remarks {
     width: 200px;
     height: 28px;
-    font-size:12px;
-    
+    font-size: 12px;
+
     border: none;
     border-bottom: solid 1px rgb(221, 221, 221);
   }
@@ -472,7 +472,7 @@ export default {
           span:last-child {
             float: right;
             color: #666;
-            font-size: 14px
+            font-size: 14px;
           }
         }
         .desc-text {
@@ -488,8 +488,8 @@ export default {
             color: #49a0f7;
             font-size: 12px;
             font-weight: 400;
-            :hover{
-              color:#1b5186; 
+            :hover {
+              color: #1b5186;
             }
           }
         }
@@ -506,10 +506,9 @@ export default {
       .user-shot {
         float: center;
         width: 10%;
-        padding:5px;
+        padding: 5px;
         border-top: 1px solid #ddd;
         span {
-          
           display: block;
           width: 30px;
           height: 30px;
@@ -537,10 +536,9 @@ export default {
           span:last-child {
             float: right;
             color: #666;
-            font-size: 12px
+            font-size: 12px;
           }
         }
-         
       }
     }
     .reply-text {

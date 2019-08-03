@@ -68,8 +68,8 @@
       ></el-pagination>
     </div>
 
-    <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
-      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
+      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
         <el-form-item label="图片">
           <el-upload
             accept="image/jpeg, image/gif, image/png"
@@ -316,6 +316,6 @@ export default {
   cursor: pointer;
 }
 #asset-list{
-  min-height: calc(100vh - 104px);
+  min-height: calc(100vh - 159px);
 }
 </style>

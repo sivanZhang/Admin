@@ -16,23 +16,13 @@ import {
 } from '@/utils/auth'
 // create an axios instance
 const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BASE_API,
-        timeout: 5000,
-        transformRequest: [data => {
-            return qs.stringify(data);
-        }],
-    })
-    /* export function addLinks(data) {
-        return AXIOS.post('/links/links/', data, {
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-            },
-            transformRequest: [data => {
-                return JSON.stringify(data)
-            }],
-            timeout: 10000,
-        })
-    } */
+    baseURL: process.env.VUE_APP_BASE_API,
+    timeout: 5000,
+    transformRequest: [data => {
+        return qs.stringify(data);
+    }],
+})
+AXIOS.defaults.headers['Access-Control-Allow-Origin'] = '*'
 AXIOS.interceptors.request.use(
     config => {
         if (store.getters.token) {

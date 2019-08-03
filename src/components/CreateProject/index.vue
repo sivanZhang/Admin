@@ -4,8 +4,10 @@
       :model="ProjectForm"
       :rules="rules"
       ref="projectForm"
-      label-width="100px"
+      label-width="80px"
       class="demo-ProjectForm"
+      label-position="left"
+      hide-required-asterisk
     >
       <el-form-item label="图片">
         <el-upload
@@ -200,6 +202,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-form-item__label {
+  font-size: 12px
+}
 .line {
   text-align: center;
 }
@@ -225,6 +230,10 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+label{
+  font-size: 12px;
+  font-weight: 500;
 }
 </style>
 

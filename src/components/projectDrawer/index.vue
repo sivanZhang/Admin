@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       activeTab: "first",
-      project: this.project,
       Loadings: {
         addRemarksLoading: false
       }
