@@ -137,7 +137,7 @@
     <Drawer
       :title="activeAsset.name+' 的环节详情'"
       v-model="isDrawerShow"
-      width="384px"
+      width="512px"
       inner
       :mask="false"
       :transfer="false"
@@ -316,6 +316,6 @@ export default {
   cursor: pointer;
 }
 #asset-list{
-  min-height: calc(100vh - 158px);
+  min-height: calc(100vh - 104px);
 }
 </style>
