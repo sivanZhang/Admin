@@ -107,5 +107,7 @@ export default {
 };
 </script>
 <style lang="scss" src="./project.scss">
-
+.el-dialog__header{
+    display:none;
+}
 </style>
