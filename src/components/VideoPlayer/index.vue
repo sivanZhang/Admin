@@ -281,7 +281,9 @@
       },
       handleSliderChange(data) {
         if (this.videoPlayerIsShow) {
-         
+          let time=this.playerDuration * data / 100;
+          console.log(time)
+          this.videoPlayer.currentTime(time);
         } else {
           this.$message.error('处于视频标注模式')
         }
