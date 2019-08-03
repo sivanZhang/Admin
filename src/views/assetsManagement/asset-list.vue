@@ -19,7 +19,7 @@
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width:120px">
+          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width:64px;height:36px" fit="cover">
             <div slot="error" class="image-slot">
               <i class="el-icon-picture" style="color:#909399"></i>
             </div>
