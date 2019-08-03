@@ -1,9 +1,5 @@
 <template>
   <div id="asset-list">
-    <Drawer closable v-model="value1" width="526" :mask="false">
-      <Header :project="project"></Header>
-      <assetsDrawer :project="project" />
-    </Drawer>
     <div style="padding-bottom:15px;">
       <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">创建资产</el-button>
     </div>
@@ -50,6 +46,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
+      <Header :project="project"></Header>
+      <assetsDrawer :project="project" />
+    </Drawer>
     <div class="block" style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"

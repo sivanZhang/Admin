@@ -14,7 +14,8 @@
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
       highlight-current-row
       @row-dblclick="rowSelected"
-      row-class-name="hover">
+      row-class-name="hover"
+    >
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
@@ -136,11 +137,12 @@
     <Drawer
       :title="activeAsset.name+' 的环节详情'"
       v-model="isDrawerShow"
-      width="512px"
-      mask
-      mask-closable
+      width="384px"
+      inner
+      :mask="false"
+      :transfer="false"
     >
-    <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
+      <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
     </Drawer>
   </div>
 </template>
@@ -150,9 +152,10 @@ import * as HTTP from "@/api/assets";
 import { addLinks, getLinks } from "@/api/links";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
-import links from './links'
+import links from "./links";
 export default {
-  components:{/*  */
+  components: {
+    /*  */
     links
   },
   neme: "asset-list",
@@ -311,5 +314,8 @@ export default {
 }
 .hover {
   cursor: pointer;
+}
+#asset-list{
+  min-height: calc(100vh - 158px);
 }
 </style>

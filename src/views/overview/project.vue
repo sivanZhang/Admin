@@ -1,11 +1,11 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
-      <Drawer closable v-model="value1" width="526" :mask="false">
+      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
+        <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
         <Header :project="project"></Header>
         <project-drawer :project="project" />
       </Drawer>
-      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown placement='bottom' trigger="click">
