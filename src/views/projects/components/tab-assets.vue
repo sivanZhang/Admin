@@ -5,12 +5,16 @@
     </div>
 
     <el-table
+      ref="assetTable"
       :data="AssetList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       style="width: 100%"
       border
       :stripe="true"
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+      highlight-current-row
+      @row-dblclick="rowSelected"
+      row-class-name="hover"
     >
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
@@ -28,7 +32,6 @@
       </el-table-column>
       <el-table-column prop="name" label="资产名称" align="left"></el-table-column>
       <el-table-column prop="category" label="类型" align="left"></el-table-column>
-      
       <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
       <el-table-column prop="priority" label="优先级" align="left"></el-table-column>
       <el-table-column prop="level" label="难度等级" align="left"></el-table-column>
@@ -64,6 +67,7 @@
         :total="AssetList.length"
       ></el-pagination>
     </div>
+
     <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
       <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
         <el-form-item label="图片">
@@ -129,17 +133,37 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <Drawer
+      :title="activeAsset.name+' 的环节详情'"
+      v-model="isDrawerShow"
+      width="512px"
+      inner
+      :mask="false"
+      :transfer="false"
+    >
+      <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
+    </Drawer>
   </div>
 </template>
 
 <script>
 import * as HTTP from "@/api/assets";
+import { addLinks, getLinks } from "@/api/links";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
+import links from "./links";
 export default {
+  components: {
+    /*  */
+    links
+  },
   neme: "asset-list",
   data() {
     return {
+      activeAsset: {},
+      LinkList: [],
+      isDrawerShow: false,
       SRC: "",
       AssetForm: {
         priority: 0
@@ -191,6 +215,12 @@ export default {
     }
   },
   methods: {
+    //行被点击后出发
+    rowSelected(row) {
+      this.activeAsset = row;
+      this.isDrawerShow = true;
+      this.getLinkList();
+    },
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -208,11 +238,10 @@ export default {
     },
     showAssetForm() {
       this.isShow = true;
-      this.$refs['assetForm'].resetFields()
+      this.$refs["assetForm"].resetFields();
     },
     cancel() {
       this.isShow = false;
-      
     },
     //新建资产
     addAsset() {
@@ -228,9 +257,12 @@ export default {
               this.$message(data.msg);
               if (data.status === 0) {
                 this.$emit("refresh");
-                this.AssetForm = Object.assign({},{
-                  priority: 0
-                })
+                this.AssetForm = Object.assign(
+                  {},
+                  {
+                    priority: 0
+                  }
+                );
               }
               this.isShow = false;
             })
@@ -240,6 +272,13 @@ export default {
         } else {
           return false;
         }
+      });
+    },
+    getLinkList() {
+      getLinks({
+        asset: this.activeAsset.id
+      }).then(res => {
+        this.LinkList = [...res.data.msg];
       });
     },
     //监听图片上传成功
@@ -268,8 +307,15 @@ export default {
 };
 </script>
 <style lang="scss" >
- .el-table--border th, .el-table--border td{
-   /*zjw*/
-   border-right: 0px solid #dfe6ec;
- }
+.el-table--border th,
+.el-table--border td {
+  /*zjw*/
+  border-right: 0px solid #dfe6ec;
+}
+.hover {
+  cursor: pointer;
+}
+#asset-list{
+  min-height: calc(100vh - 104px);
+}
 </style>

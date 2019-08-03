@@ -3,12 +3,10 @@
     <div style="padding-bottom:15px;">
       <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">创建资产</el-button>
     </div>
-
     <el-table
       class="el-table"
       :data="TableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      style="width: 100%;"
-      border
+      style="width: 100%;border:1px solid #dfe6ec;border-bottom-width:0;"
       :stripe="true"
       :row-style="{'font-size':'14px'}"
       :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}"
@@ -20,9 +18,8 @@
       <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
       <el-table-column label="缩略图" align="center">
-        
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width:120px">
+          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width:64px;height:36px" fit="cover">
             <div slot="error" class="image-slot">
               <i class="el-icon-picture" style="color:#909399"></i>
             </div>
@@ -39,9 +36,20 @@
               style="color:red"
             />
           </el-tooltip>
+          <el-tooltip content="侧栏打开" placement="top">
+            <svg-icon
+              @click.native="show(scope.row.id)"
+              icon-class="openAssetSide"
+              style="width:12px;height:13px;margin-left:20px"
+            />
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
+    <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
+      <Header :project="project"></Header>
+      <assetsDrawer :project="project" />
+    </Drawer>
     <div class="block" style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
@@ -130,12 +138,15 @@
 import * as HTTP from "@/api/assets";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
+import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
+import Header from "@/components/projectDrawer/components/Header"
 export default {
   neme: "asset-list",
   data() {
     return {
       SRC: "",
       TableData: [],
+      project: null,
       AssetForm: {
         priority: 0
       },
@@ -174,7 +185,8 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       headers: {
         Authorization: `JWT ${getToken()}`
-      }
+      },
+      value1: false
     };
   },
 
@@ -182,9 +194,17 @@ export default {
     ...mapState("project", ["ProjectList"])
   },
   methods: {
+    show(id) {
+      //console.log(id);
+      this.value1 = true;
+      HTTP.queryAssets({ id }).then(({ data }) => {
+        this.project = {...[...data.msg][0],id};
+      });
+    },
     _getAssetList() {
       HTTP.queryAssets().then(({ data }) => {
         this.TableData = [...data.msg];
+        console.log(this.TableData);
       });
     },
     deleteAssets(id) {
@@ -193,7 +213,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        console.log(id);
+        //console.log(id);
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message(data.msg);
           if (data.status === 0) {
@@ -204,7 +224,7 @@ export default {
     },
     showAssetForm() {
       this.isShow = true;
-      this.$refs['assetForm'].resetFields()
+      this.$refs["assetForm"].resetFields();
     },
     cancel() {
       this.isShow = false;
@@ -249,6 +269,10 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     }
+  },
+  components: {
+    assetsDrawer,
+    Header
   },
   created() {
     this._getAssetList();

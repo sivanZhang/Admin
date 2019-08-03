@@ -30,3 +30,60 @@ export function projectStatus(code) {
 export function numberFormat(num) {
     return (+num).toLocaleString(undefined, { maximumFractionDigits: 2 })
 }
+//资产优先级
+export function Priority(priority) {
+    switch (priority) {
+        case 0:
+            return '正常'
+            break
+        case 1:
+            return '优先'
+            break
+        
+        
+    }
+}
+//难度等级
+export function Level(level) {
+    switch (level) {
+        case 0:
+            return '简单'
+            break
+        case 1:
+            return '标准'
+            break
+        case 2:
+            return '复杂'
+            break
+        case 3:
+            return '高难度'
+            break
+        
+    }
+}
+//通知是否已读
+export function isRead(data){
+    switch(data){
+        case 0 :
+            return '未读'
+            break
+        case 1:
+            return '已读'
+            break
+    }
+}
+//通知的紧急程度
+export function urgencyLevel(data){
+    switch (data) {
+        case 0:
+            return '一般'
+            break
+        case 1:
+            return '紧急'
+            break
+        case 2:
+            return '特急'
+            break
+        
+    }
+}

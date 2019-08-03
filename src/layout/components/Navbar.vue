@@ -8,14 +8,9 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        <notice id="notice" class="right-menu-item"/>
       </template>
-
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -23,34 +18,45 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
-            <el-dropdown-item>主页</el-dropdown-item>
+            <el-dropdown-item><i class="el-icon-s-home"></i> 主页</el-dropdown-item>
           </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">注销</span>
+          <el-dropdown-item @click.native="isDShow=!isDShow"><i class="el-icon-s-tools"></i> 设置</el-dropdown-item>
+          <el-dropdown-item>
+            <span style="display:block;" @click="logout"><i class="el-icon-switch-button"></i> 注销</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <Drawer title="Global style settings" v-model="isDShow" closable :mask-closable="false" :mask="false">
+       <settings/>
+    </Drawer>
   </div>
 </template>
 
 <script>
+import Settings from './Settings'
   import { mapGetters } from "vuex";
   import Breadcrumb from "@/components/Breadcrumb";
   import Hamburger from "@/components/Hamburger";
   import Screenfull from "@/components/Screenfull";
-  import SizeSelect from "@/components/SizeSelect";
   import Search from "@/components/HeaderSearch";
   import ShortcutMenu from "./ShortcutMenu";
+  import Notice from "@/components/Notice"
 
   export default {
+    data(){
+      return{
+        isDShow:false
+      }
+    },
     components: {
       Breadcrumb,
       Hamburger,
       Screenfull,
-      SizeSelect,
       Search,
       ShortcutMenu,
+      Settings,
+      Notice
     },
     computed: {
       ...mapGetters(["sidebar", "avatar", "device"]),

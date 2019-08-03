@@ -20,7 +20,7 @@
         highlight-current-row
         row-key="id"
         :tree-props="{ children: 'sub_task' }"
-        @row-click="rowSelected"
+        @current-change="rowSelected"
         border 
       >
         <!-- default-expand-all -->

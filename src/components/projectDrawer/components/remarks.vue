@@ -111,7 +111,7 @@
                 </template>
                 <template v-else>
                   <li class="comment-item" >
-                    <el-button 
+                    <el-button style="margin-left: 5px;"
                     @click="showAll=item.id"
                     v-show="item.subs.length - 1>0?item.subs.length - 1:0"
                   >显示剩余{{item.subs.length - 1}}条回复</el-button>
@@ -221,7 +221,7 @@ export default {
         if(newVal){
           const msg = {
           appid: this.project.id,
-          apptype: 4,
+          apptype: this.project.entity_type,
           name: this.optionInput
         };
         getRemark(msg).then(({ data }) => {
@@ -280,7 +280,7 @@ export default {
     getRemarkList() {
       const msg = {
         appid: this.project.id,
-        apptype: 4
+        apptype: this.project.entity_type
       };
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
@@ -291,7 +291,7 @@ export default {
       if (this.remarks) {
         this.remarksResult = {
           entity_id: this.project.id,
-          entity_type: 4,
+          entity_type: this.project.entity_type,
           pid: this.pid,
           content: this.remarks
         };
@@ -316,7 +316,7 @@ export default {
       if (this.comment[item.id]) {
         this.commentResult = {
           entity_id: this.project.id,
-          entity_type: 4,
+          entity_type: this.project.entity_type,
           pid: item.id,
           content: this.comment[item.id]
         };
@@ -414,10 +414,10 @@ export default {
 #remarks {
   input {
     width: 460px;
-    height: 20px;
+    height: 25px;
     border: none;
-    font-size:14px;
-    border-bottom: solid 2px #999999;
+    font-size:12px;
+    border-bottom: solid 1px rgb(221, 221, 221);
   }
   input:focus {
     outline: none;
@@ -425,11 +425,11 @@ export default {
   }
   .input-remarks {
     width: 200px;
-    height: 20px;
+    height: 28px;
     font-size:12px;
     
     border: none;
-    border-bottom: solid 2px #999999;
+    border-bottom: solid 1px rgb(221, 221, 221);
   }
   .input-remarks:focus {
     outline: none;
@@ -476,7 +476,8 @@ export default {
           }
         }
         .desc-text {
-          padding: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
           font-size: 12px;
         }
         .pro-text {
@@ -539,10 +540,7 @@ export default {
             font-size: 12px
           }
         }
-        .desc-text {
-          padding: 10px;
-          font-size: 12px;
-        }
+         
       }
     }
     .reply-text {

@@ -1,16 +1,17 @@
 <template>
-  <div id="project-drawer">
+  <div id="assets-drawer">
     <div class="page-right">
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-          <el-tab-pane label="备注" name="first">
-            <remarks :project="project"></remarks>
+          <el-tab-pane label="组件" name="first"></el-tab-pane>
+          <el-tab-pane label="备注" name="second">
+            <remarks :project="project"/>
           </el-tab-pane>
-          <el-tab-pane label="任务" name="second"></el-tab-pane>
-          <el-tab-pane label="资产" name="third">资产</el-tab-pane>
-          <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
-          <el-tab-pane label="信息" name="sixth">
+          <el-tab-pane label="链接" name="third"></el-tab-pane>
+          <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
+          <el-tab-pane label="动态" name="sixth">动态</el-tab-pane>
+          <el-tab-pane label="信息" name="seventh">
             <info :project="project" />
           </el-tab-pane>
         </el-tabs>
@@ -20,26 +21,21 @@
 </template>
 
 <script>
-import remarks from "@/components/projectDrawer/components/remarks";
-import info from "@/components/projectDrawer/components/info";
+import remarks from "@/components/projectDrawer/components/remarks"
+import info from "@/components/projectDrawer/components/info"
 export default {
-  props: {
-    project: {
-      type: Object
+  name: "assets-drawer",
+  props:{
+    project:{
+      type:Object
     }
   },
   data() {
     return {
-      activeTab: "first",
-      project: this.project,
-      Loadings: {
-        addRemarksLoading: false
-      }
+      activeTab: "first"
     };
   },
-  name: "projectDrawer",
-  components: { remarks, info },
-
+  components: {remarks,info},
   methods: {
     handleTabClick(tab, event) {
       //this.getRemarkList();
@@ -117,4 +113,3 @@ export default {
   }
 }
 </style>
-

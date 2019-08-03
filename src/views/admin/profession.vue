@@ -18,7 +18,7 @@
               empty-text="未创建工种"
               highlight-current
               ref="tree"
-              :data="TreeData"
+              :data="DeptList"
               @node-click="handleGroupClick"
               :props="defaultProps"
               default-expand-all
@@ -153,7 +153,6 @@ export default {
       GroupUsers: [],
       filterText: "",
       ActiveGroup: null,
-      TreeData: [],
       DialogType: {},
       defaultProps: {
         children: "children",
@@ -196,17 +195,13 @@ export default {
         active: this.isActive && !this.error
       };
     },
-    ...mapState({
-      UserList: state => state.admin.UserList
-    })
+    ...mapState('admin',['UserList','DeptList'])
   },
   methods: {
     //http获取“用户组”列表
 
     getDeptList() {
-      getDept().then(({ data }) => {
-        this.TreeData = [...data.msg];
-      });
+      this.$store.dispatch('admin/get_DeptList')
     },
     async changeMember() {
       if (!this.SelectMembers.length) {

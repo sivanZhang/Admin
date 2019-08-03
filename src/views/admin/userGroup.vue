@@ -10,7 +10,6 @@
         <el-main style="padding: 0px">
           <users-table :UserList="UserList" ></users-table>
         </el-main>
-
     </el-container>
   </div>
 </template>
