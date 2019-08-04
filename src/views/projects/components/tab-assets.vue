@@ -19,7 +19,7 @@
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width: 50px;height: 30px;">
+          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width: 50px;height: 30px;" @click.native="show(scope.row.id)">
             <div slot="placeholder" class="image-slot">
               加载中
               <span class="dot">...</span>
@@ -68,8 +68,8 @@
       ></el-pagination>
     </div>
 
-    <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
-      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
+      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
         <el-form-item label="图片">
           <el-upload
             accept="image/jpeg, image/gif, image/png"
@@ -91,7 +91,7 @@
             </template>
           </el-upload>
         </el-form-item>
-        <el-form-item label="资产名称" prop="name">
+        <el-form-item label="资产名称" prop="name" >
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
         <el-form-item label="存放路径" prop="path">
@@ -133,14 +133,17 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
+     <Drawer closable v-model="value1" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
+      <Header :project="project"></Header>
+      <assetsDrawer :project="project" :RemarksData="RemarksData" />
+    </Drawer>
     <Drawer
       :title="activeAsset.name+' 的环节详情'"
       v-model="isDrawerShow"
       width="512px"
       inner
-      :mask="false"
       :transfer="false"
+      :mask-style="{backgroundColor: 'transparent'}"
     >
       <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
     </Drawer>
@@ -148,19 +151,27 @@
 </template>
 
 <script>
+import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
+import Header from "@/components/projectDrawer/components/Header"
 import * as HTTP from "@/api/assets";
 import { addLinks, getLinks } from "@/api/links";
+import { getRemark } from "@/api/remark";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
 import links from "./links";
 export default {
   components: {
     /*  */
-    links
+    links,
+    assetsDrawer,
+    Header
   },
   neme: "asset-list",
   data() {
     return {
+      project: null,
+      RemarksData: [],
+      value1: false,
       activeAsset: {},
       LinkList: [],
       isDrawerShow: false,
@@ -215,6 +226,20 @@ export default {
     }
   },
   methods: {
+    show(id) {
+      //console.log(id);
+      this.value1 = true;
+      HTTP.queryAssets({ id }).then(({ data }) => {
+        this.project = {...[...data.msg][0],id};
+      });
+      const msg = {
+          appid: id,
+          apptype: 5
+        };
+        getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+        });
+    },
     //行被点击后出发
     rowSelected(row) {
       this.activeAsset = row;
@@ -316,6 +341,6 @@ export default {
   cursor: pointer;
 }
 #asset-list{
-  min-height: calc(100vh - 104px);
+  min-height: calc(100vh - 159px);
 }
 </style>

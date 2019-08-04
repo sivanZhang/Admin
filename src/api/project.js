@@ -3,7 +3,11 @@ import AXIOS from '@/utils/request'
 export function getProjects() {
     return AXIOS.get('/projects/projects/')
 }
-//创建项目/projects/projects/
+//创建项目
 export function addProjects(data) {
     return AXIOS.post('/projects/projects/', data)
+}
+//编辑项目
+export function putProjects(data) {
+    return AXIOS.post('/projects/projects/?01', data)
 }

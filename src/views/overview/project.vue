@@ -2,16 +2,24 @@
   <div id="project" style="margin:-20px">
     <div class="container">
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
-        <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
-        <Header :project="project"></Header>
-        <project-drawer :project="project" />
-      </Drawer>
+        <Drawer closable v-model="isDrawerShow" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
+          <drawer-header :project="project" style="padding:10px"/>
+          <project-drawer :project="project" :RemarksData="RemarksData"/>
+        </Drawer>
+        <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
+          <div slot="title">
+          </div>
+          <drawer-header :project="project" style="padding:10px"/>
+          <project-drawer :project="project" />
+        </el-drawer> -->
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
-            <el-dropdown placement='bottom' trigger="click">
-              <el-button type="text" style="color:#333"><i class="el-icon-more"></i></el-button>
+            <el-dropdown placement="bottom" trigger="click">
+              <el-button type="text" style="color:#333">
+                <i class="el-icon-more"></i>
+              </el-button>
               <el-dropdown-menu slot="dropdown" style="margin-top:0px">
-                <el-dropdown-item >
+                <el-dropdown-item>
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
@@ -20,21 +28,21 @@
           </div>
           <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
           <div slot="header" class="box-card-header">
-             <el-image
+            <el-image
               @click="showImg($store.state.BASE_URL+item.image)"
               class="mini-image"
               :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
               style="width:100%;height:100%"
             >
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
             </el-image>
           </div>
           <div style="padding: 15px;">
             <mallki class-name="mallki-text" @click.native="show(item)" :text="item.name" />
-            <p>创建者：{{item.creator_name}} {{item.date|dateFormat}}</p>
+            <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
             <el-row>
               <el-col :span="12">
                 <p class="subtitle">工作流</p>
@@ -65,23 +73,25 @@
 
 <script>
 import { mapState } from "vuex";
+import { getRemark } from "@/api/remark";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
-import Header from "@/components/projectDrawer/components/Header"
+import DrawerHeader from "@/components/projectDrawer/components/Header";
 export default {
   name: "project",
   components: {
     Mallki,
     projectDrawer,
-    Header
+    DrawerHeader
   },
 
   data() {
     return {
       isShowImg: false,
       src: "",
-      value1: false,
-      project: null
+      isDrawerShow: false,
+      project:null,
+      RemarksData: [],
     };
   },
   computed: {
@@ -98,7 +108,14 @@ export default {
     },
     show(item) {
       this.project = item;
-      this.value1 = true;
+      this.isDrawerShow = true;
+      const msg = {
+          appid: this.project.id,
+          apptype: this.project.entity_type
+        };
+        getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+        });
     }
   },
   created() {
@@ -107,5 +124,4 @@ export default {
 };
 </script>
 <style lang="scss" src="./project.scss">
-
 </style>

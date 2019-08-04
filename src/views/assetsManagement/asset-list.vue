@@ -9,8 +9,7 @@
       style="width: 100%;border:1px solid #dfe6ec;border-bottom-width:0;"
       :stripe="true"
       :row-style="{'font-size':'14px'}"
-      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}"
-    >
+      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column prop="name" label="资产名称" align="center"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
@@ -36,39 +35,28 @@
               style="color:red"
             />
           </el-tooltip>
-          <el-tooltip content="侧栏打开" placement="top">
-            <svg-icon
-              @click.native="show(scope.row.id)"
-              icon-class="openAssetSide"
-              style="width:12px;height:13px;margin-left:20px"
-            />
-          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-    <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
-      <Header :project="project"></Header>
-      <assetsDrawer :project="project" />
-    </Drawer>
     <div class="block" style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="pageSizeList"
-        :pagesize="pageSize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="TableData.length"
       ></el-pagination>
     </div>
-    <el-dialog title="新建资产" :visible.sync="isShow" width="526px">
-      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="120px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
+      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
         <el-form-item label="图片">
           <el-upload
             accept="image/jpeg, image/gif, image/png"
             ref="upload"
             class="upload-demo"
-            action="/api/appfile/appfile/"
+            :action="action"
             :headers="headers"
             :on-success="handleSuccess"
             drag
@@ -136,17 +124,19 @@
 
 <script>
 import * as HTTP from "@/api/assets";
+
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
-import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
-import Header from "@/components/projectDrawer/components/Header"
+
 export default {
   neme: "asset-list",
   data() {
+    const isPro = Object.is(process.env.NODE_ENV, 'production')
     return {
+      action:isPro?'http://tl.chidict.com:8081/appfile/appfile/':'/api/appfile/appfile/',
       SRC: "",
       TableData: [],
-      project: null,
+      
       AssetForm: {
         priority: 0
       },
@@ -186,7 +176,7 @@ export default {
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      value1: false
+      
     };
   },
 
@@ -194,17 +184,11 @@ export default {
     ...mapState("project", ["ProjectList"])
   },
   methods: {
-    show(id) {
-      //console.log(id);
-      this.value1 = true;
-      HTTP.queryAssets({ id }).then(({ data }) => {
-        this.project = {...[...data.msg][0],id};
-      });
-    },
+    
     _getAssetList() {
       HTTP.queryAssets().then(({ data }) => {
         this.TableData = [...data.msg];
-        console.log(this.TableData);
+       // console.log(this.TableData);
       });
     },
     deleteAssets(id) {
@@ -271,8 +255,7 @@ export default {
     }
   },
   components: {
-    assetsDrawer,
-    Header
+    
   },
   created() {
     this._getAssetList();

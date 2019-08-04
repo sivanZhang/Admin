@@ -5,7 +5,7 @@
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
           <el-tab-pane label="备注" name="first">
-            <remarks :project="project"></remarks>
+            <remarks :project="project" :RemarksData="RemarksData"></remarks>
           </el-tab-pane>
           <el-tab-pane label="任务" name="second"></el-tab-pane>
           <el-tab-pane label="资产" name="third">资产</el-tab-pane>
@@ -23,26 +23,31 @@
 import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 export default {
-  props: {
-    project: {
-      type: Object
-    }
-  },
+  props: [
+    "project",
+    "RemarksData"
+  ],
   data() {
     return {
       activeTab: "first",
-      project: this.project,
-      Loadings: {
-        addRemarksLoading: false
-      }
+      
     };
   },
   name: "projectDrawer",
   components: { remarks, info },
-
+  // watch: {
+  //   project: {
+  //     handler: function(newVal, oldVal) {
+  //       if (newVal) {
+  //         this.project = newVal;
+  //       }
+  //     },
+  //     deep: true
+  //   }
+  // },
   methods: {
     handleTabClick(tab, event) {
-      //this.getRemarkList();
+      // this.getRemarkList();
       console.log(tab, event);
     }
   }

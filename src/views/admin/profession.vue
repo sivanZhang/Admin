@@ -8,10 +8,10 @@
             style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
-               <el-button @click="openGroupForm('add')" type="success">添加工种</el-button>
+              <el-button @click="openGroupForm('add')" type="success">添加工种</el-button>
             </el-row>
 
-            <el-input  class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
+            <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
 
             <el-tree
               class="filter-tree"
@@ -52,11 +52,13 @@
           <div class="t-header">
             <el-row type="flex" align="middle">
               <el-col :span="12">
-                <el-button @click="openGroupForm('update')" type="primary" >修改工种信息</el-button>
+                <el-button @click="openGroupForm('update')" type="primary">修改工种信息</el-button>
 
-                <el-button @click="openChangeMember(1)" type="primary" >添加成员</el-button>
+                <el-button @click="openChangeMember(1)" type="primary">添加成员</el-button>
 
-                <el-button @click="openChangeMember(0)" type="danger" >删除成员</el-button>
+                <el-button @click="openChangeMember(0)" type="danger">删除成员</el-button>
+
+                <el-button @click="show(ActiveGroup)" type="warning">审批流程</el-button>
               </el-col>
 
               <el-col :span="6">
@@ -73,10 +75,24 @@
 
           <users-table :UserList="GroupUsers"></users-table>
         </el-main>
+        <!-- 右击侧栏展示审批流程 -->
+        <template v-if="isDrawerShow">
+          <Drawer
+            :title="activeTemplate.name+'的审批流程'"
+            v-model="isDrawerShow"
+            width="512px"
+            inner
+            :mask="false"
+            :transfer="false"
+          >
+            <links :LinkTemplateList="LinkTemplateList" :deptId="activeTemplate.id" :deptName="activeTemplate.name" @refresh="show(ActiveGroup)"></links>
+             
+          </Drawer>
+        </template>
+
+        <!-- 添加用户组弹出框 -->
       </el-container>
     </el-container>
-
-    <!-- 添加用户组弹出框 -->
 
     <el-dialog :title="DialogType.title" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="GroupForm" ref="GroupForm" :rules="GroupRules">
@@ -108,12 +124,7 @@
     </el-dialog>
 
     <el-dialog :title="MemberEditState['title']" :visible.sync="isMemberEditShow" width="460px">
-      <el-select
-        v-model="SelectMembers"
-        multiple
-        placeholder="请选择"
-        style="width:100%"
-      >
+      <el-select v-model="SelectMembers" multiple placeholder="请选择" style="width:100%">
         <el-option
           v-for="(item,index) of AllMembers"
           :label="item.username"
@@ -136,21 +147,32 @@
 </template>
 
 <script>
-import { getDept, addDept, putDept, removeDept } from "@/api/admin";
+import {
+  getDept,
+  addDept,
+  putDept,
+  removeDept,
+  getWKTemplate,
+  getRoles
+} from "@/api/admin";
 
 import usersTable from "@/components/UsersTable";
-
+import links from "./components/links"
 import { mapState } from "vuex";
 
 export default {
   name: "profession",
   data() {
     return {
+      isDrawerShow: false,
+      activeTemplate: null,
+      LinkTemplateList: [],
       SelectMembers: [],
       AllMembers: [],
       MemberEditState: {},
       isMemberEditShow: false,
       GroupUsers: [],
+      
       filterText: "",
       ActiveGroup: null,
       DialogType: {},
@@ -195,13 +217,12 @@ export default {
         active: this.isActive && !this.error
       };
     },
-    ...mapState('admin',['UserList','DeptList'])
+    ...mapState("admin", ["UserList", "DeptList"])
   },
   methods: {
     //http获取“用户组”列表
-
     getDeptList() {
-      this.$store.dispatch('admin/get_DeptList')
+      this.$store.dispatch("admin/get_DeptList");
     },
     async changeMember() {
       if (!this.SelectMembers.length) {
@@ -293,10 +314,25 @@ export default {
        *
 
        */
+    // 单击流程审批按钮触发事件
+    show(ActiveGroup) {
+      this.activeTemplate = ActiveGroup;
+      console.log(this.activeTemplate.name);
+      this.isDrawerShow = true;
+      getWKTemplate({
+        dept: this.activeTemplate.id
+      }).then(({ data }) => {
+        this.LinkTemplateList = [...data.msg];
+        console.log("LinkTemplateList");
+        console.log(this.LinkTemplateList);
+      });
+      
+    },
 
+    // 工种单击触发事件
     handleGroupClick(data) {
       this.ActiveGroup = { ...data };
-
+      console.log(this.ActiveGroup.id);
       getDept({
         id: data.id
       }).then(({ data }) => {
@@ -448,7 +484,7 @@ export default {
       }
 
       this.dialogFormVisible = true;
-      this.$refs['GroupForm'].resetFields()
+      this.$refs["GroupForm"].resetFields();
     }
   },
   watch: {
@@ -461,7 +497,7 @@ export default {
   },
 
   components: {
-    usersTable
+    usersTable,links
   }
 };
 </script>

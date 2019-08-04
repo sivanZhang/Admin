@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
-        <h3 class="title">系统登录</h3>
+        <h3 class="title">wefxs</h3>
       </div>
 
       <el-form-item prop="username">
@@ -22,7 +22,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px; height:37px;" @click.native.prevent="handleLogin">登录</el-button>
       <el-row :gutter="15">
         <el-col :span="12" class="link">
           <router-link to="/signup">申请账号</router-link>
@@ -175,7 +175,7 @@
 
     .login-form {
       position: relative;
-      width: 520px;
+      width: 407px;
       max-width: 100%;
       padding: 160px 35px 0;
       margin: 0 auto;
