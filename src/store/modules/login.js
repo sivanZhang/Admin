@@ -13,9 +13,8 @@ import {
 import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    userInfo: JSON.parse(getUserInfo()) || null
+    userInfo: getUserInfo() || null
 }
-
 const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
