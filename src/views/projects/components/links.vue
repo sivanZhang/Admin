@@ -4,7 +4,7 @@
       <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
     </template>
     <template v-else>
-      <el-steps direction="vertical" :active="1" :space="180">
+      <el-steps direction="vertical" :active="1" >
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
           <div slot="title" style="font-size:14px">{{item.dept.name}}</div>
           <ul slot="description" style="width:400px;">
