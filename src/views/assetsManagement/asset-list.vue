@@ -56,7 +56,7 @@
             accept="image/jpeg, image/gif, image/png"
             ref="upload"
             class="upload-demo"
-            action="/api/appfile/appfile/"
+            :action="action"
             :headers="headers"
             :on-success="handleSuccess"
             drag
@@ -131,7 +131,9 @@ import { getToken } from "@/utils/auth";
 export default {
   neme: "asset-list",
   data() {
+    const isPro = Object.is(process.env.NODE_ENV, 'production')
     return {
+      action:isPro?'http://tl.chidict.com:8081/appfile/appfile/':'/api/appfile/appfile/',
       SRC: "",
       TableData: [],
       

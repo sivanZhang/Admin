@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="526px" @closed="cancel()" >
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" @closed="cancel()" >
     <el-form
       :model="ProjectForm"
       :rules="rules"
@@ -43,6 +43,9 @@
       </el-form-item>
       <el-form-item label="项目编码" prop="code">
         <el-input v-model="ProjectForm.code"></el-input>
+      </el-form-item>
+      <el-form-item label="盘符" prop="asset_path">
+        <el-input v-model="ProjectForm['asset_path']"></el-input>
       </el-form-item>
       <el-form-item label="项目预算" prop="budget">
         <el-input v-model="ProjectForm.budget">
@@ -133,6 +136,9 @@ export default {
             message: "请输入数字",
             trigger: "change"
           }
+        ],
+        'asset_path':[
+          { required: true, message: "请输入项目盘符", trigger: "blur" }
         ]
       },
       SRC: "",
@@ -181,8 +187,9 @@ export default {
     //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
-      this.ProjectForm.image = response.msg;
+      this.ProjectForm['image'] = response.msg;
       this.ProjectForm.image_id = response.id;
+      
     }
   },
   created() {

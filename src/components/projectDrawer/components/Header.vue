@@ -2,40 +2,52 @@
   <div id="d-header">
     <!-- 项目头部展示 -->
     <template v-if="project && project.entity_type === 4">
-      <div style="height:170px">
-        <div class="header-first">
+      <div>
+        <el-row class="header-first">
           <el-col :span="3">
             <div class="color" :style="{backgroundColor:project.color||'transparent'}"></div>
           </el-col>
           <el-col :span="21">
-            <el-row>
+            <div>
               <span class="project-name">
                 <router-link :to="`/projects/project-detail/${project.id}`">{{project.name}}</router-link>
               </span>
-            </el-row>
-            <el-row>
+            </div>
+            <div>
               <div class="project-type">{{'project'}}</div>
-            </el-row>
+            </div>
           </el-col>
-        </div>
-        <div class="header-body">
+        </el-row>
+        <el-row :gutter="20" type="flex" align="top" class="header-body" style="margin-top: 20px;">
           <el-col :span="9">
-            <!-- <el-image
-              class="mini-image"
-              :src="project.image?$store.state.BASE_URL+project.image:''"
-              fit="cover"
-              style="width: 150px;height: 100px;float: left;margin-right: 10px"
-            ></el-image>-->
+            <!-- {{project.image}}
+            {{SRC}}-->
+            <!-- 
             <el-image
-              :src="project.image?$store.state.BASE_URL+project.image:''"
-              class="mini-image"
-              fit="cover"
-              style="width: 150px;height: 100px;float: left;margin-right: 10px"
+                v-if="SRC"
+                :src="SRC"
+                fit="cover"
+                style="width: 160px;height: 90px;"
+            ></el-image>-->
+            <el-upload
+              accept="image/jpeg, image/gif, image/png"
+              ref="upload"
+              class="upload-demo"
+              action="/api/appfile/appfile/"
+              :headers="headers"
+              :on-success="handleSuccess"
+              drag
+              :show-file-list="false"
             >
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
-              </div>
-            </el-image>
+              <el-image v-if="SRC" :src="SRC" fit="cover" style="width: 160px;height: 90px;"></el-image>
+              <template v-else>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                  拖入图片，或
+                  <em>点击上传</em>
+                </div>
+              </template>
+            </el-upload>
           </el-col>
           <el-col :span="15">
             <el-row>
@@ -55,7 +67,7 @@
               <el-col :span="18" class="project-comment">{{project.date_end |dateFormat}}</el-col>
             </el-row>
           </el-col>
-        </div>
+        </el-row>
       </div>
     </template>
     <!-- 资产的头部展示 -->
@@ -108,6 +120,9 @@
 </template>
 
 <script>
+import { putProjects } from "@/api/project";
+import { getToken } from "@/utils/auth";
+import { log } from "util";
 export default {
   name: "d-header",
   props: {
@@ -116,13 +131,57 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      headers: {
+        Authorization: `JWT ${getToken()}`
+      },
+      SRC:
+        this.project && this.project.image
+          ? this.$store.state.BASE_URL + this.project.image
+          : ""
+    };
+  },
+  watch: {
+    project(val) {
+      this.SRC = this.project && this.project.image
+          ? this.$store.state.BASE_URL + this.project.image
+          : ""
+    }
+  },
+  methods: {
+    //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
+    handleSuccess(response, file, fileList) {
+      this.SRC = this.$store.state.BASE_URL + response.msg;
+      const data = {
+        image: response.msg,
+        image_id: response.id,
+        method: "put",
+        name: this.project.name,
+        color: this.project.color,
+        id: this.project.id
+      };
+      putProjects(data).then(({ data }) => {
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$store.dispatch("project/get_Projects");
+        }
+      });
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 #d-header {
+  & /deep/ .el-upload-dragger {
+    height: 90px;
+    width: 160px;
+    font-size: 12px;
+    .el-icon-upload {
+      margin: 0;
+      font-size: 40px;
+    }
+  }
   .header-first {
     //height: 60px;
     border-bottom: 1px solid rgb(221, 221, 221);
@@ -159,7 +218,6 @@ export default {
     cursor: pointer;
     overflow: hidden;
     opacity: 1;
-    margin: 25px 0px 0px 0px;
 
     &:hover {
       opacity: 0.8;
@@ -167,12 +225,11 @@ export default {
     }
   }
   .project-name {
-    margin: 30px 0px 0px 0px;
     font-size: 12px;
     font-weight: 400;
   }
   .project-comment {
-    margin: 10px 0px 0px 0px;
+    margin-top: 10px;
     font-size: 12px;
     font-weight: 400;
   }
