@@ -38,14 +38,6 @@
         </template>
       </el-table-column>
     </el-table>
-<<<<<<< HEAD
-   
-=======
-    <Drawer closable v-model="value1" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
-      <Header :project="project"></Header>
-      <assetsDrawer :project="project" />
-    </Drawer>
->>>>>>> 31398df0c03c1868dd8b0c192df572cb6ade5d79
     <div class="block" style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
