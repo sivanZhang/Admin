@@ -1,8 +1,8 @@
 <template>
   <div id="videoCheck">
     <el-row class="page">
-      <el-col :span="15" class="page-left">
-        <div class="video-player">
+      <el-col :span="15" class="page-left" style="height:850px;">
+        <div class="video-player" style="height：550px;">
           <!-- 播放器 -->
           <video-player ref='videoPlayer' @getCutImg="getMarkImage" @getCurrentVideoMode="getCurrentVideoMode" @getCurrentPlayId="getCurrentPlayId"/>
         </div>
@@ -86,11 +86,12 @@
     },
     mounted() {
         let bH = document.body.offsetHeight;
+        console.log(bH)
         let videoInfoH = document.getElementById("videoInfo").offsetHeight;
         let videoTabsH = document.getElementById("videoTabs").offsetHeight;
 
         let videoPlayer=document.getElementsByClassName("video-player");
-        this.pHeight = videoPlayer[0].offsetHeight;
+        this.pHeight =videoPlayer[0].offsetHeight;
         this.pWidth = videoPlayer[0].offsetWidth;
         console.log(this.pWidth+';'+this.pHeight);
         
@@ -104,7 +105,7 @@
           this.$message.error('处于视频标注模式')
         } else {
           console.log("选中的",projectList[0])
-          console.log(projectList[1])
+          console.log(this.pWidth,this.pHeight)
           this.$refs.videoPlayer.initVideoUrl(projectList[0],this.pWidth,this.pHeight);
            this.$refs.videoPlayer.initNextVideo(projectList[1])
           this.$refs.videoInfo.initInfo(projectList[0].id)
@@ -168,7 +169,7 @@
  #videoCheck{
         width:100%;
         height:100%;
-        background-color:#fff;
+        background-color:#eee;
         .page{
             width:100%;
             height:100%;
