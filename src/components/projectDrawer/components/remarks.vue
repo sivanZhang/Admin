@@ -208,7 +208,7 @@ export default {
       timeRemarks: [],
       remarksResult: {},
       pid: null,
-      // RemarksData: [],
+      RemarkData: this.RemarksData,
       buttons: false,
       optionInput: "",
       options: [
@@ -256,7 +256,7 @@ export default {
             name: newVal
           };
           getRemark(msg).then(({ data }) => {
-            this.RemarksData = [...data.msg];
+            this.RemarkData = [...data.msg];
           });
         } else {
           this.getRemarkList();
@@ -275,7 +275,7 @@ export default {
           apptype: this.project.entity_type
         };
         getRemark(msg).then(({ data }) => {
-          this.RemarksData = [...data.msg];
+          this.RemarkData = [...data.msg];
         });
       }
     },
