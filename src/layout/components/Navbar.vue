@@ -27,7 +27,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <Drawer title="Global style settings" v-model="isDShow" closable :mask-closable="false" :mask="false">
+    <Drawer title="Global style settings" v-model="isDShow" :mask-style="{backgroundColor: 'transparent'}">
        <settings/>
     </Drawer>
   </div>

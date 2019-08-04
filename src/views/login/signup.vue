@@ -228,7 +228,7 @@
 
     .login-form {
       position: relative;
-      width: 520px;
+      width: 407px;
       max-width: 100%;
       padding: 0 35px 0;
       margin: 0 auto;
@@ -255,7 +255,7 @@
         color: $light_gray;
         margin: 0px auto 40px auto;
         text-align: center;
-        font-weight: bold;
+        font-weight: 100;
       }
     }
 

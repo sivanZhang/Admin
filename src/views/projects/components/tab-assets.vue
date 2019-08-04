@@ -142,8 +142,8 @@
       v-model="isDrawerShow"
       width="512px"
       inner
-      :mask="false"
       :transfer="false"
+      :mask-style="{backgroundColor: 'transparent'}"
     >
       <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
     </Drawer>

@@ -2,9 +2,12 @@
 export function avatarFormat(text) {
     return `${text}`.substring(0, 1);
 }
-//时间戳格式化为 yyyy/dd/mm
+//时间戳格式化为 yyyy/dd/mmdateTimeFormat
 export function dateFormat(date) {
     return new Date(date * 1000).toLocaleDateString();
+}
+export function dateTimeFormat(date) {
+    return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`;
 }
 //项目工作流格式化
 export function projectStatus(code) {
@@ -39,8 +42,8 @@ export function Priority(priority) {
         case 1:
             return '优先'
             break
-        
-        
+
+
     }
 }
 //难度等级
@@ -58,13 +61,13 @@ export function Level(level) {
         case 3:
             return '高难度'
             break
-        
+
     }
 }
 //通知是否已读
-export function isRead(data){
-    switch(data){
-        case 0 :
+export function isRead(data) {
+    switch (data) {
+        case 0:
             return '未读'
             break
         case 1:
@@ -73,7 +76,7 @@ export function isRead(data){
     }
 }
 //通知的紧急程度
-export function urgencyLevel(data){
+export function urgencyLevel(data) {
     switch (data) {
         case 0:
             return '一般'
@@ -84,7 +87,7 @@ export function urgencyLevel(data){
         case 2:
             return '特急'
             break
-        
+
     }
 }
 //审批流程等级

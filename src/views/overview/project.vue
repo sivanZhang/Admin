@@ -2,12 +2,11 @@
   <div id="project" style="margin:-20px">
     <div class="container">
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
-        <Drawer closable v-model="isDrawerShow" width="526" :mask="false" inner :transfer="false">
+        <Drawer closable v-model="isDrawerShow" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
           <drawer-header :project="project" style="padding:10px"/>
           <project-drawer :project="project" :RemarksData="RemarksData"/>
         </Drawer>
-
-        <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="true" :modal="false" :modal-append-to-body="false">
+        <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
           <div slot="title">
           </div>
           <drawer-header :project="project" style="padding:10px"/>
@@ -43,7 +42,7 @@
           </div>
           <div style="padding: 15px;">
             <mallki class-name="mallki-text" @click.native="show(item)" :text="item.name" />
-            <p>创建者：{{item.creator_name}} {{item.date|dateFormat}}</p>
+            <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
             <el-row>
               <el-col :span="12">
                 <p class="subtitle">工作流</p>

@@ -2,8 +2,12 @@
   <div>
     <el-badge :value="12" class="item">
     <svg-icon icon-class="notice" @click="show" />
+<<<<<<< HEAD
     </el-badge>
     <Drawer closable v-model="value1" width="526" :mask="false">
+=======
+    <Drawer closable v-model="value1" width="526" :mask-style="{backgroundColor: 'transparent'}">
+>>>>>>> 31398df0c03c1868dd8b0c192df572cb6ade5d79
       {{$store.state.login.userInfo.msg}}
       <div>
         <el-button
