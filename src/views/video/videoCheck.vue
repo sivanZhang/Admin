@@ -25,7 +25,7 @@
                   <ul class="img-list" v-if="imgList.length > 0">
                     <li class="img-item" v-for="(item,index) in imgList" :key="index">
                       <img :src="item.imgUrl" @click="zoomImg(item.imgUrl)"/>
-                      <span class="name">farame_0712.jpg</span>
+                      <span class="name">{{item.currentName}}(第{{item.currentFrame}}帧)</span>
                       <el-button class="btn del-btn" icon="el-icon-delete-solid"
                                  @click="delMarkImage(item,index)"></el-button>
                     </li>
@@ -105,7 +105,7 @@
         } else {
           console.log("选中的",projectList[0])
           console.log(projectList[1])
-          this.$refs.videoPlayer.initVideoUrl(projectList[0].url,this.pWidth,this.pHeight);
+          this.$refs.videoPlayer.initVideoUrl(projectList[0],this.pWidth,this.pHeight);
            this.$refs.videoPlayer.initNextVideo(projectList[1])
           this.$refs.videoInfo.initInfo(projectList[0].id)
           this.$refs.videoComment.initInfo(projectList[0].id)

@@ -53,6 +53,7 @@
   import { Loading } from 'element-ui'
   import ImageDraw from '@/components/ImageDraw'
   import { constants } from 'crypto'
+    import { drawImage } from '@/api/video'
 
   export default {
     components: { ImageDraw },
@@ -93,12 +94,18 @@
         playerFormatCurrentPostion: '00:00',
         playerPercentage: 0,
         initNextVideoUrl:null,
+        currentProject:null,
       }
     },
     created() {
       console.log('chongxinjiaz');
       this.keyup();
-     
+       /** drawImage({}).then(({ data }) => {
+                  console.log(data);
+                }).catch(()=>{
+                  this.loading = false;
+                })*/
+      
        
     },
     mounted() {
@@ -146,16 +153,17 @@
       /**
        * 加载视频资源
        */
-      initVideoUrl(url,pWidth,pHeight) {
+      initVideoUrl(project,pWidth,pHeight) {
         var _self=this;
+        _self.currentProject=project;
         this.isLoadVideo = true;
-
+        let url=project.url;
         if (url == this.videoUrl) {
           this.$message.error('该视频已处于播放模式')
         } else {
            _self.playerControls.stateIcon = 'el-icon-video-play'
-
-          this.videoPlayerNoVideoIsShow=false,
+           console.log(this.videoPlayer.paused());
+           this.videoPlayerNoVideoIsShow=false,
            this.videoUrl = url;
            this.videoPlayer.width(pWidth + 'px');
            this.videoPlayer.height(pHeight +'px');
@@ -180,7 +188,7 @@
         var _self=this;
          this.videoPlayer = videojs(myVideo, {
             controls: false,
-            autoplay: true,
+            autoplay: false,
             width: '0px',
             //设置视频播放器的显示高度（以像素为单位）
             height: '0px',
@@ -211,14 +219,16 @@
                 //_self. playerCurrentPostion= 0,
                   //_self.playerFormatCurrentPostion= '00:00',
                   //_self.playerPercentage= 0,
+                  _self.currentProject=_self.initNextVideoUrl;
                   _self.$emit('getCurrentPlayId', _self.initNextVideoUrl.id)
                   _self.videoUrl=_self.initNextVideoUrl.url
                   _self.videoPlayer.src(_self.initNextVideoUrl.url);
                   _self.videoPlayer.load(_self.initNextVideoUrl.url);
                   _self.videoPlayer.pause();
                   _self.videoPlayer.autoplay(true);
+                  _self.playerStepInterval();
                   setTimeout(() => {
-                    _self.playerStepInterval();
+                    
                   }, 1000);
               }
               console.log(_self.initNextVideoUrl)
@@ -246,7 +256,7 @@
       },
       playerStepInterval(){
           this.playerDuration=this.videoPlayer.duration();
-          this.playerFormatDuration = (this.formatSeconds( this.playerDuration));
+          this.playerFormatDuration =(this.formatSeconds( this.playerDuration));
           var _self=this;
           setInterval(function() {
            _self.playerCurrentPostion = _self.videoPlayer.currentTime();
@@ -289,6 +299,9 @@
         }
 
       },
+      /**
+       * 发起截图
+       */
       async handleMark() {
         this.$emit('getCurrentVideoMode', !this.videoPlayerIsShow)
         if (this.videoPlayerIsShow) {
@@ -310,8 +323,17 @@
         }
 
       },
+      /**
+       * 截图回调
+       */
       getDrawImage(drawImage) {
+        let frameTime=1000/25;//一帧多少毫秒
+        let frames=this.videoPlayer.currentTime()*1000/frameTime;
+        frames=Math.ceil(frames);
+        console.log(frames)
         var obj = {
+          currentFrame:frames,
+          currentName:this.currentProject.proName,
           imgUrl: drawImage,
           currentPosition: this.videoPlayer.currentTime()
         }
@@ -322,7 +344,25 @@
       },
       
       formatSeconds(value) {
-        var theTime = parseInt(value)// 秒
+        if( window.isNaN(value)){
+         // this.$message.error('无效视频')
+          return "00:00"
+        }
+        var value=parseInt(value)
+        var second=value%60;
+        var minute=(value-second)/60;
+        var hour=(minute-(minute%60))/60;
+        if(hour!=0){
+          minute=minute%60;
+          return (hour<10?"0"+hour:hour)+":"+(minute<10?"0"+minute:+minute)+":"+(second<10?"0"+second:second);
+        }else{
+          if(minute===0){
+            return "00:"+(second<10?"0"+second:second);
+          }else if(minute>0){
+            return (minute<10?"0"+minute:+minute)+":"+second
+          }
+        }
+        /*var theTime = parseInt(value)// 秒
         var middle = 0// 分
         var hour = 0// 小时
 
@@ -356,7 +396,9 @@
         if ((result + '').split(':').length == 1) {
           result = '00:' + result
         }
-        return result
+        return result*/
+
+
       }
 
     }
@@ -391,7 +433,7 @@
     line-height: 38px;
     width: 100%;
     background-color: #303133;
-    position: absolute;
+    //position: absolute;
     bottom: 0;
     left: 0;
     z-index: 100;
