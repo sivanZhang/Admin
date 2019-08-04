@@ -13,7 +13,7 @@ import {
 import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    userInfo: getUserInfo() || null
+    userInfo: getUserInfo() ? JSON.parse(getUserInfo()) : null
 }
 const mutations = {
     SET_TOKEN: (state, token) => {
@@ -67,10 +67,12 @@ const actions = {
         commit,
         state
     }) {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
+        return new Promise((resolve, reject) => {
+            commit('SET_TOKEN', '')
+            removeToken()
+            resetRouter()
+            resolve()
+        })
     },
     resetToken({
         commit

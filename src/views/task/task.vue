@@ -3,49 +3,28 @@
     <div class="layout_main_top">
       <div class="layout_main_top_left">
         <div class="layout_task">
-          <h2>2</h2>
-          <span class="layout_top_span">任务</span>
+          <h2>{{MyTaskList.length}}</h2>
+          <span class="layout_top_span">所有任务</span>
         </div>
         <div class="layout_task">
-          <h2>0</h2>
-          <span class="layout_top_span">未开始</span>
+          <h2>{{DraftArr.length}}</h2>
+          <span class="layout_top_span">草稿</span>
         </div>
         <div class="layout_task">
-          <h2>0</h2>
+          <h2>{{InProgressArr.length}}</h2>
           <span class="layout_top_span">进行中</span>
         </div>
-      </div>
-      <div class="layout_main_top_right">
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期一</span>
+        <div class="layout_task">
+          <h2>{{TimeOutArrr.length}}</h2>
+          <span class="layout_top_span">超时</span>
         </div>
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期二</span>
-        </div>
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期三</span>
-        </div>
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期四</span>
-        </div>
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期五</span>
-        </div>
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期六</span>
-        </div>
-        <div class="layout_week">
-          <h2>-</h2>
-          <span class="layout_top_span">星期日</span>
+        <div class="layout_task">
+          <h2>{{RestartArr.length}}</h2>
+          <span class="layout_top_span">重启</span>
         </div>
       </div>
     </div>
+    <el-divider></el-divider>
     <el-tabs type="border-card">
       <el-tab-pane label="任务板">
         <div class="task-board">
@@ -102,7 +81,7 @@
             <div class="tasks-foot">
               <div class="content-box" v-show="taskAvailableUnFold">
                 <div class="task-title">
-                  <span class="task-title-justify">可用任务</span>
+                  <span class="task-title-justify">草稿</span>
                   <span class="svg-contain">
                     <svg-icon
                       icon-class="eye-open"
@@ -122,12 +101,17 @@
                   </el-select>
                 </div>
                 <div class="content">
-                  <span class="task-show">无任何任务</span>
+                  <el-card
+                    v-for="item of DraftArr"
+                    :key="item.id"
+                    shadow="never"
+                    :body-style="{backgroundColor:'#909399',color:'#fff'}"
+                  >{{item.name}}</el-card>
                 </div>
               </div>
               <div class="fold-box" v-show="taskAvailableFold">
                 <div style="height: 400px;">
-                  <span class="task-vertical">可用任务</span>
+                  <span class="task-vertical">草稿</span>
                 </div>
                 <div style="height: 100px;">
                   <span class="svg-contain">
@@ -140,7 +124,7 @@
               </div>
               <div class="content-box" v-show="notStartedUnFold">
                 <div class="task-title">
-                  <span class="task-title-justify">Not Started</span>
+                  <span class="task-title-justify">进行中</span>
                   <span class="svg-contain">
                     <svg-icon
                       icon-class="eye-open"
@@ -160,12 +144,17 @@
                   </el-select>
                 </div>
                 <div class="content">
-                  <span class="task-show">无任何任务</span>
+                  <el-card
+                    v-for="item of InProgressArr"
+                    :key="item.id"
+                    shadow="never"
+                    :body-style="{backgroundColor:'#67C23A',color:'#fff'}"
+                  >{{item.name}}</el-card>
                 </div>
               </div>
               <div class="fold-box" v-show="notStartedFold">
                 <div style="height: 400px;">
-                  <span class="task-vertical">Not Started</span>
+                  <span class="task-vertical">进行中</span>
                 </div>
                 <div style="height: 100px;">
                   <span class="svg-contain">
@@ -178,7 +167,7 @@
               </div>
               <div class="content-box" v-show="inProgressUnFold">
                 <div class="task-title">
-                  <span class="task-title-justify">In Progress</span>
+                  <span class="task-title-justify">超时</span>
                   <span class="svg-contain">
                     <svg-icon
                       icon-class="eye-open"
@@ -198,12 +187,17 @@
                   </el-select>
                 </div>
                 <div class="content">
-                  <span class="task-show">无任何任务</span>
+                  <el-card
+                    v-for="item of TimeOutArrr"
+                    :key="item.id"
+                    shadow="never"
+                    :body-style="{backgroundColor:'#F56C6C',color:'#fff'}"
+                  >{{item.name}}</el-card>
                 </div>
               </div>
               <div class="fold-box" v-show="inProgressFold">
                 <div style="height: 400px;">
-                  <span class="task-vertical">In Progress</span>
+                  <span class="task-vertical">超时</span>
                 </div>
                 <div style="height: 100px;">
                   <span class="svg-contain">
@@ -216,7 +210,7 @@
               </div>
               <div class="content-box" v-show="doneUnFold">
                 <div class="task-title">
-                  <span class="task-title-justify">Done</span>
+                  <span class="task-title-justify">重启</span>
                   <span class="svg-contain">
                     <svg-icon
                       icon-class="eye-open"
@@ -236,12 +230,17 @@
                   </el-select>
                 </div>
                 <div class="content">
-                  <span class="task-show">无任何任务</span>
+                  <el-card
+                    v-for="item of RestartArr"
+                    :key="item.id"
+                    shadow="never"
+                    :body-style="{backgroundColor:'#E6A23C',color:'#fff'}"
+                  >{{item.name}}</el-card>
                 </div>
               </div>
               <div class="fold-box" v-show="doneFold">
                 <div style="height: 400px;">
-                  <span class="task-vertical">Done</span>
+                  <span class="task-vertical">重启</span>
                 </div>
                 <div style="height: 100px;">
                   <span class="svg-contain">
@@ -298,7 +297,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务列表" style="height: 500px">
+      <el-tab-pane label="任务列表">
         <div class="task-list"></div>
         <div class="task-list-top">
           <span class="sort">排序方式</span>
@@ -345,9 +344,34 @@
           </el-select>
           <el-checkbox v-model="checked">显示已完成/锁定的项目</el-checkbox>
         </div>
-        <div class="task-list-body"></div>
+        <el-table
+          :data="MyTaskList"
+          style="width: 100%;margin-top:20px"
+          highlight-current-row
+          row-key="id"
+          :tree-props="{ children: 'sub_task' }"
+          borders
+        >
+          <!-- default-expand-all -->
+          <el-table-column prop="name" label="任务名称"></el-table-column>
+          <el-table-column prop="content" label="任务内容"></el-table-column>
+          <el-table-column label="任务状态">
+            <template slot-scope="scope">{{scope.row.status|projectStatus}}</template>
+          </el-table-column>
+          <el-table-column label="优先级">
+            <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
+          </el-table-column>
+          <el-table-column label="开始日期">
+            <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
+          </el-table-column>
+          <el-table-column prop="end_date" label="截止日期">
+            <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+          </el-table-column>
+          <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
+          
+        </el-table>
       </el-tab-pane>
-      <el-tab-pane label="时间表" style="height: 500px"></el-tab-pane>
+      <!-- <el-tab-pane label="时间表" style="height: 500px"></el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -357,7 +381,11 @@ import { queryMyTask } from "@/api/task";
 export default {
   data() {
     return {
-      myTaskList:[],
+      MyTaskList: [],
+      DraftArr: [],
+      InProgressArr: [],
+      TimeOutArrr: [],
+      RestartArr: [],
       //任务是循环出来的
       taskList: [
         {
@@ -481,6 +509,24 @@ export default {
       checked: false
     };
   },
+  filters: {
+    statusFilter(val) {
+      switch (val) {
+        case 0:
+          return "草稿";
+          break;
+        case 1:
+          return "已启动";
+          break;
+        case 2:
+          return "结束";
+          break;
+        case 3:
+          return "任务超时";
+          break;
+      }
+    }
+  },
   methods: {
     //任务板右侧标签页事件
     handleClick(tab, event) {
@@ -498,21 +544,33 @@ export default {
         document.getElementById("task-board-right").style.width = 30 + "%";
       }
     },
-    getMyTasks(){
-      console.log({
-        user:this.$store.state.login.userInfo
+    async getMyTasks() {
+      await queryMyTask({
+        user: this.$store.state.login.userInfo.id
+      }).then(({ data }) => {
+        this.MyTaskList = [...data.msg];
       });
-      
-      queryMyTask({
-        user:this.$store.state.login.userInfo.id
-      }).then(({data})=>{
-        this.myTaskList = [...data.msg]
-      })
+      this.MyTaskList.forEach(item => {
+        switch (item.status) {
+          case 0:
+            this.DraftArr.push(item);
+            break;
+          case 1:
+            this.InProgressArr.push(item);
+            break;
+          case 2:
+            this.TimeOutArrr.push(item);
+            break;
+          case 3:
+            this.RestartArr.push(item);
+            break;
+        }
+      });
     }
   },
   computed: {},
-  created(){
-    this.getMyTasks()
+  created() {
+    this.getMyTasks();
   }
 };
 </script>

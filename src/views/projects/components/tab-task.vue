@@ -30,7 +30,7 @@
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
         <el-table-column label="状态">
-          <template slot-scope="scope">{{scope.row.status|statusFilter}}</template>
+          <template slot-scope="scope">{{scope.row.status|projectStatus}}</template>
         </el-table-column>
         <el-table-column label="创建者">
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
@@ -40,10 +40,10 @@
         </el-table-column>
         <el-table-column prop="content" label="描述" show-overflow-tooltip></el-table-column>
         <el-table-column label="开始日期">
-          <template slot-scope="scope">{{scope.row.start_date|dateFilter}}</template>
+          <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="end_date" label="截止日期">
-          <template slot-scope="scope">{{scope.row.end_date|dateFilter}}</template>
+          <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
       </el-table>
@@ -191,25 +191,6 @@ export default {
     };
   },
   filters: {
-    statusFilter(val) {
-      switch (val) {
-        case 0:
-          return "草稿";
-          break;
-        case 1:
-          return "已启动";
-          break;
-        case 2:
-          return "结束";
-          break;
-        case 3:
-          return "任务超时";
-          break;
-      }
-    },
-    dateFilter(val) {
-      return new Date(val * 1000).toLocaleDateString();
-    },
     executorFilter(val) {
       let arr = [];
       val.forEach(item => {
