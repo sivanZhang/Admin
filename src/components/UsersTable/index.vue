@@ -23,6 +23,7 @@
           <i v-else class="el-icon-close"></i>
         </template>
       </el-table-column>
+      <!--
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-tooltip content="用户权限" placement="top">
@@ -36,6 +37,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      -->
     </el-table>
     <div class="block" style="text-align: right">
       <el-pagination
