@@ -4,7 +4,7 @@
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
         <Drawer closable v-model="isDrawerShow" width="526" :mask="false" inner :transfer="false">
           <drawer-header :project="project" style="padding:10px"/>
-          <project-drawer :project="project" />
+          <project-drawer :project="project" :RemarksData="RemarksData"/>
         </Drawer>
 
         <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="true" :modal="false" :modal-append-to-body="false">
@@ -74,6 +74,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { getRemark } from "@/api/remark";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
@@ -90,7 +91,8 @@ export default {
       isShowImg: false,
       src: "",
       isDrawerShow: false,
-      project:null
+      project:null,
+      RemarksData: [],
     };
   },
   computed: {
@@ -108,6 +110,13 @@ export default {
     show(item) {
       this.project = item;
       this.isDrawerShow = true;
+      const msg = {
+          appid: this.project.id,
+          apptype: this.project.entity_type
+        };
+        getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+        });
     }
   },
   created() {

@@ -192,41 +192,10 @@ import { getRemark, addRemark, removeRemark } from "@/api/remark";
 
 import { getUserList } from "@/api/admin";
 export default {
-  props: {
-    project: {
-      type: Object
-    }
-  },
-  watch: {
-    project: {
-      handler: function(newVal, oldVal) {
-        if (newVal) {
-          this.getRemarkList();
-        }
-        if (newVal.id != oldVal.id) {
-          this.getRemarkList();
-        }
-        this.getRemarkList();
-      }
-      //deep: true
-    },
-    optionInput: {
-      handler: function(newVal, oldVal) {
-        if (newVal) {
-          const msg = {
-            appid: this.project.id,
-            apptype: this.project.entity_type,
-            name: this.optionInput
-          };
-          getRemark(msg).then(({ data }) => {
-            this.RemarksData = [...data.msg];
-          });
-        } else {
-          this.getRemarkList();
-        }
-      }
-    }
-  },
+  props:[
+    "project","RemarksData"
+  ],
+
   data() {
     return {
       all: false,
@@ -239,7 +208,7 @@ export default {
       timeRemarks: [],
       remarksResult: {},
       pid: null,
-      RemarksData: [],
+      // RemarksData: [],
       buttons: false,
       optionInput: "",
       options: [
@@ -268,18 +237,47 @@ export default {
   },
   name: "remarks",
   components: {},
+  watch: {
+    project: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          this.project = newVal;
+          //this.getRemarkList();
+        }
+      },
+      deep: true
+    },
+    optionInput: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          const msg = {
+            appid: this.project.id,
+            apptype: this.project.entity_type,
+            name: newVal
+          };
+          getRemark(msg).then(({ data }) => {
+            this.RemarksData = [...data.msg];
+          });
+        } else {
+          this.getRemarkList();
+        }
+      }
+    }
+  },
   methods: {
     //筛选备注
 
     //获取备注列表
     getRemarkList() {
-      const msg = {
-        appid: this.project.id,
-        apptype: this.project.entity_type
-      };
-      getRemark(msg).then(({ data }) => {
-        this.RemarksData = [...data.msg];
-      });
+      if (this.project) {
+        const msg = {
+          appid: this.project.id,
+          apptype: this.project.entity_type
+        };
+        getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+        });
+      }
     },
     //添加备注
     addRemarks() {
@@ -400,11 +398,6 @@ export default {
           }
         });
       });
-    }
-  },
-  created() {
-    if (!this.optionInput){
-      this.getRemarkList()
     }
   }
 };
