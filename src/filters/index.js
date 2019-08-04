@@ -87,3 +87,21 @@ export function urgencyLevel(data){
         
     }
 }
+//审批流程等级
+export function WKLevel(data){
+    switch (data) {
+        case 0:
+            return '收文'
+            break
+        case 1:
+            return '一级审批'
+            break
+        case 2:
+            return '二级审批'
+            break
+        case 3:
+            return '三级审批'
+            break
+        
+    }
+}

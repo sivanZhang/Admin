@@ -6,7 +6,7 @@
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
           <el-tab-pane label="组件" name="first"></el-tab-pane>
           <el-tab-pane label="备注" name="second">
-            <remarks :project="project"/>
+            <remarks :project="project" :RemarksData="RemarksData"/>
           </el-tab-pane>
           <el-tab-pane label="链接" name="third"></el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
@@ -25,11 +25,10 @@ import remarks from "@/components/projectDrawer/components/remarks"
 import info from "@/components/projectDrawer/components/info"
 export default {
   name: "assets-drawer",
-  props:{
-    project:{
-      type:Object
-    }
-  },
+  props: [
+    "project",
+    "RemarksData"
+  ],
   data() {
     return {
       activeTab: "first"

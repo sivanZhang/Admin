@@ -35,27 +35,17 @@
               style="color:red"
             />
           </el-tooltip>
-          <el-tooltip content="侧栏打开" placement="top">
-            <svg-icon
-              @click.native="show(scope.row.id)"
-              icon-class="openAssetSide"
-              style="width:12px;height:13px;margin-left:20px"
-            />
-          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-    <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
-      <Header :project="project"></Header>
-      <assetsDrawer :project="project" />
-    </Drawer>
+   
     <div class="block" style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="pageSizeList"
-        :pagesize="pageSize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="TableData.length"
       ></el-pagination>
@@ -135,17 +125,17 @@
 
 <script>
 import * as HTTP from "@/api/assets";
+
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
-import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
-import Header from "@/components/projectDrawer/components/Header"
+
 export default {
   neme: "asset-list",
   data() {
     return {
       SRC: "",
       TableData: [],
-      project: null,
+      
       AssetForm: {
         priority: 0
       },
@@ -185,7 +175,7 @@ export default {
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      value1: false
+      
     };
   },
 
@@ -193,17 +183,11 @@ export default {
     ...mapState("project", ["ProjectList"])
   },
   methods: {
-    show(id) {
-      //console.log(id);
-      this.value1 = true;
-      HTTP.queryAssets({ id }).then(({ data }) => {
-        this.project = {...[...data.msg][0],id};
-      });
-    },
+    
     _getAssetList() {
       HTTP.queryAssets().then(({ data }) => {
         this.TableData = [...data.msg];
-        console.log(this.TableData);
+       // console.log(this.TableData);
       });
     },
     deleteAssets(id) {
@@ -270,8 +254,7 @@ export default {
     }
   },
   components: {
-    assetsDrawer,
-    Header
+    
   },
   created() {
     this._getAssetList();

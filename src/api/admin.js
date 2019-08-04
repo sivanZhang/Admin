@@ -15,6 +15,14 @@ export function removeDept(data) {
 export function putDept(data) {
     return AXIOS.post('/dept/dept/?01', data)
 }
+//获取某工种下的审批模板列表
+export function getWKTemplate(params){
+    return AXIOS.get('/wktemplate/wktemplate_v2/', {params})
+}
+//给某工种添加模板
+export function addWKTemplate(params){
+    return AXIOS.post('/wktemplate/wktemplate/',{params})
+}
 //获取用户列表
 export function getUserList() {
     return AXIOS.get('/users/list/')

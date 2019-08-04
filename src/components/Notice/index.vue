@@ -1,6 +1,8 @@
 <template>
   <div>
+    <el-badge :value="12" class="item">
     <svg-icon icon-class="notice" @click="show" />
+    </el-badge>
     <Drawer closable v-model="value1" width="526" :mask="false">
       {{$store.state.login.userInfo.msg}}
       <div>
@@ -199,6 +201,10 @@ export default {
 </script>
 
 <style scoped>
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
 svg-icon {
   display: inline-block;
   cursor: pointer;
