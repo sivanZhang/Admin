@@ -203,8 +203,9 @@ export default {
 
 <style scoped>
 .item {
-  margin-top: 10px;
-  margin-right: 40px;
+    position: static; 
+    margin-left: -10px;
+    margin-top: -16px;
 }
 svg-icon {
   display: inline-block;
