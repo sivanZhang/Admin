@@ -1,7 +1,8 @@
 <template>
   <div>
-    <el-badge :value="12" class="item">
+    
     <svg-icon icon-class="notice" @click="show" />
+    <el-badge :value="notice.length" class="item">
     </el-badge>
     <Drawer closable v-model="value1" width="526" :mask-style="{backgroundColor: 'transparent'}">
       {{$store.state.login.userInfo.msg}}
