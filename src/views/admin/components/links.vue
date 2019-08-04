@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { getRoles } from "@/api/admin";
+import { getRoles, addWKTemplate } from "@/api/admin";
 export default {
   name: "links",
   data() {
@@ -67,8 +67,7 @@ export default {
       },
       isDrawerShow: false,
       rolesList: [],
-      value: "",
-      rules: null
+      value: ""
     };
   },
   props: ["LinkTemplateList", "deptId", "deptName"],
@@ -88,16 +87,33 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-        this.rules=  this.dynamicValidateForm.domains.forEach((item, index) => {
-            this.dynamicValidateForm.domains[index] = Object.assign({},{
-              role_id: this.dynamicValidateForm.domains[index].value,
-              level: index + 1
-            });
+          this.dynamicValidateForm.domains.forEach((item, index) => {
+            this.dynamicValidateForm.domains[index] = Object.assign(
+              {},
+              {
+                role_id: this.dynamicValidateForm.domains[index].value,
+                level: index + 1
+              }
+            );
           });
-          console.log(this.rules);
-        } else {
-          console.log("error submit!!");
-          return false;
+          const msg = {
+            rule: [...this.dynamicValidateForm.domains ],
+            dept: this.deptId
+          };
+          console.log(msg);
+          addWKTemplate(msg)
+            .then(({ data }) => {
+              this.$message(data.msg);
+              if (data.status === 0) {
+                
+                this.$emit("refresh");
+                this.isDrawerShow = false;
+                this.dynamicValidateForm.domains.value = "";
+              }else{
+                this.$message(data.msg);
+              }
+            })
+            .catch(() => {});
         }
       });
     },

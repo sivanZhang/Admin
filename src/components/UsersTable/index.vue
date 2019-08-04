@@ -45,7 +45,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="pageSizeList"
-        :pagesize="pageSize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total=UserList.length>
       </el-pagination>

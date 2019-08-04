@@ -21,7 +21,15 @@ export function getWKTemplate(params){
 }
 //给某工种添加模板
 export function addWKTemplate(params){
-    return AXIOS.post('/wktemplate/wktemplate/',{params})
+    return AXIOS.post('/wktemplate/wktemplate_v2/',params,{
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }],
+        timeout: 10000,
+    })
 }
 //获取用户列表
 export function getUserList() {

@@ -317,7 +317,7 @@ export default {
     // 单击流程审批按钮触发事件
     show(ActiveGroup) {
       this.activeTemplate = ActiveGroup;
-      console.log(this.activeTemplate.name);
+      console.log(this.activeTemplate.id);
       this.isDrawerShow = true;
       getWKTemplate({
         dept: this.activeTemplate.id
@@ -332,7 +332,7 @@ export default {
     // 工种单击触发事件
     handleGroupClick(data) {
       this.ActiveGroup = { ...data };
-      console.log(this.ActiveGroup.id);
+     // console.log(this.ActiveGroup.id);
       getDept({
         id: data.id
       }).then(({ data }) => {
