@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <Drawer closable v-model="value1" width="526" :mask="false" inner :transfer="false">
+    <Drawer closable v-model="value1" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
       <Header :project="project"></Header>
       <assetsDrawer :project="project" />
     </Drawer>

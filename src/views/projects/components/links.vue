@@ -4,26 +4,20 @@
       <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
     </template>
     <template v-else>
-      <el-steps direction="vertical" :active="1" >
+      <el-steps direction="vertical" :active="1">
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
           <div slot="title" style="font-size:14px">{{item.dept.name}}</div>
           <ul slot="description" style="width:400px;">
-            <li>
-              制作要求: {{item.content}}
-            </li>
+            <li>制作要求: {{item.content}}</li>
             <template>
-              <li>
-              开始日期: {{item.date_and_user.date_start?new Date(item.date_and_user.date_start*1000).toLocaleDateString():''}}
-            </li>
-            <li>
-              截止日期: {{item.date_and_user.date_end?new Date(item.date_and_user.date_end*1000).toLocaleDateString():''}}
-            </li>
+              <li>开始日期: {{item.date_and_user.date_start?new Date(item.date_and_user.date_start*1000).toLocaleDateString():''}}</li>
+              <li>截止日期: {{item.date_and_user.date_end?new Date(item.date_and_user.date_end*1000).toLocaleDateString():''}}</li>
             </template>
           </ul>
         </el-step>
       </el-steps>
     </template>
-    <el-dialog title="添加环节" :visible.sync="isDrawerShow" width="512px" center :modal="false">
+    <el-dialog title="添加环节" :visible.sync="isDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
           <el-button type="text" icon="el-icon-plus" @click="before(index)">前置</el-button>
@@ -81,7 +75,7 @@ export default {
   name: "links",
   data() {
     return {
-      isDrawerShow: false,
+      isDialogShow: false,
       LinkForm: {},
       createLoading: false,
       selectList: [],
@@ -102,10 +96,10 @@ export default {
       this.FormList.splice(ind + 1, 0, {});
     },
     showLinksForm() {
-      this.isDrawerShow = true;
+      this.isDialogShow = true;
     },
     cancel() {
-      this.isDrawerShow = false;
+      this.isDialogShow = false;
     },
     addLinks() {
       function dataFormat(params) {
@@ -145,9 +139,11 @@ export default {
           if (data.status === 0) {
             this.$emit("refresh");
             this.isDialogShow = false;
+            this.FormList = [{}];
           }
         })
         .catch(err => {
+          this.isDialogShow = false;
           this.createLoading = false;
         });
     },

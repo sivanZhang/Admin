@@ -1,7 +1,7 @@
 <template>
   <div>
     <svg-icon icon-class="notice" @click="show" />
-    <Drawer closable v-model="value1" width="526" :mask="false">
+    <Drawer closable v-model="value1" width="526" :mask-style="{backgroundColor: 'transparent'}">
       {{$store.state.login.userInfo.msg}}
       <div>
         <el-button
