@@ -23,3 +23,7 @@ export function deleteTask(id) {
 export function putTask(data) {
     return AXIOS.post('/task/task/?01', data)
 }
+//获取我的任务
+export function queryMyTask(params) {
+    return AXIOS.get('/task/task/?02', { params })
+}

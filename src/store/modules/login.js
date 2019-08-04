@@ -13,7 +13,7 @@ import {
 import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    userInfo: getUserInfo() || null
+    userInfo: JSON.parse(getUserInfo()) || null
 }
 
 const mutations = {
@@ -26,12 +26,19 @@ const mutations = {
 }
 
 const actions = {
-    login({ commit }, { username, password }) {
+    login({
+        commit
+    }, {
+        username,
+        password
+    }) {
         return new Promise((resolve, reject) => {
             userApi.login({
                 email: username.trim(),
                 password: password
-            }).then(({ data }) => {
+            }).then(({
+                data
+            }) => {
                 commit('SET_TOKEN', data.token);
                 setToken(data.token);
                 commit('SET_USERINFO', data);
@@ -61,12 +68,10 @@ const actions = {
         commit,
         state
     }) {
-        return new Promise((resolve, reject) => {
-            commit('SET_TOKEN', '')
-            removeToken()
-            resetRouter()
-            resolve()
-        })
+        commit('SET_TOKEN', '')
+        removeToken()
+        resetRouter()
+        resolve()
     },
     resetToken({
         commit

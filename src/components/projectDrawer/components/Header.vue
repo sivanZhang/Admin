@@ -20,15 +20,6 @@
         </el-row>
         <el-row :gutter="20" type="flex" align="top" class="header-body" style="margin-top: 20px;">
           <el-col :span="9">
-            <!-- {{project.image}}
-            {{SRC}}-->
-            <!-- 
-            <el-image
-                v-if="SRC"
-                :src="SRC"
-                fit="cover"
-                style="width: 160px;height: 90px;"
-            ></el-image>-->
             <el-upload
               accept="image/jpeg, image/gif, image/png"
               ref="upload"
