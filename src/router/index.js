@@ -62,11 +62,7 @@ export const constantRoutes = [{
             import ('@/views/login/signup'),
     },
 
-    {
-        path: '/videoCheck',
-        component: () =>
-            import ('@/views/video/videoCheck'),
-    },
+     
     {
         path: '/',
         component: Layout,
@@ -137,6 +133,30 @@ export const constantRoutes = [{
                 import ('@/views/task/task'),
             meta: {
                 title: '我的任务',
+                icon: 'task'
+            }
+        }]
+    },
+    // {
+    //     path: '/videoCheck',
+    //     component: () =>
+    //         import ('@/views/video/videoCheck'),
+    // },
+    {
+        path: '/videoCheck',
+        component: Layout,
+        redirect: '/videoCheck',
+        meta: {
+            title: '我的任务',
+            icon: 'task'
+        },
+        children: [{
+            path: 'videoCheck',
+            name: 'videoCheck',
+            component: () =>
+            import ('@/views/video/videoCheck'),
+            meta: {
+                title: '视频审核',
                 icon: 'task'
             }
         }]
