@@ -53,7 +53,7 @@
               <span>{{item.user.username}}</span>
               <!-- 备注时间 -->
               <span>
-                {{item.date|dateFormat}}
+                {{item.date|dateTimeFormat}}
                 <!-- 删除备注按钮 -->
                 <el-dropdown>
                   <i class="el-icon-more"></i>
@@ -91,7 +91,7 @@
                         <p class="user-text">
                           <span>{{todo.user.username}}</span>
                           <span>
-                            {{todo.date |dateFormat}}
+                            {{todo.date |dateTimeFormat}}
                             <el-dropdown>
                               <i class="el-icon-more"></i>
                               <el-dropdown-menu slot="dropdown">
