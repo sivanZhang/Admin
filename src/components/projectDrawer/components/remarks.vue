@@ -124,7 +124,7 @@
                           <p class="user-text">
                             <span>{{todo.user.username}}</span>
                             <span>
-                              {{todo.date |dateFormat}}
+                              {{todo.date |dateTimeFormat}}
                               <el-dropdown>
                                 <i class="el-icon-more"></i>
                                 <el-dropdown-menu slot="dropdown">
@@ -148,7 +148,7 @@
                           <p class="user-text">
                             <span>{{item.subs[item.subs.length - 1].user.username}}</span>
                             <span>
-                              {{item.subs[item.subs.length - 1].date |dateFormat}}
+                              {{item.subs[item.subs.length - 1].date |dateTimeFormat}}
                               <el-dropdown>
                                 <i class="el-icon-more"></i>
                                 <el-dropdown-menu slot="dropdown">
