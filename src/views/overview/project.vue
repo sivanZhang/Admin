@@ -2,16 +2,24 @@
   <div id="project" style="margin:-20px">
     <div class="container">
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
-        <Drawer closable v-model="isDrawerShow" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
-          <drawer-header :project="project" style="padding:10px"/>
-          <project-drawer :project="project" :RemarksData="RemarksData"/>
+        <Drawer
+          closable
+          v-model="isDrawerShow"
+          width="526"
+          inner
+          :transfer="false"
+          :mask-style="{backgroundColor: 'transparent'}"
+          :append-to-body="true"
+        >
+          <drawer-header :project="project" style="padding:10px" />
+          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData"/>
         </Drawer>
         <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
           <div slot="title">
           </div>
           <drawer-header :project="project" style="padding:10px"/>
           <project-drawer :project="project" />
-        </el-drawer> -->
+        </el-drawer>-->
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown placement="bottom" trigger="click">
@@ -74,6 +82,7 @@
 <script>
 import { mapState } from "vuex";
 import { getRemark } from "@/api/remark";
+import { queryAssets } from "@/api/assets";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
@@ -90,8 +99,9 @@ export default {
       isShowImg: false,
       src: "",
       isDrawerShow: false,
-      project:null,
+      project: null,
       RemarksData: [],
+      TableData: []
     };
   },
   computed: {
@@ -110,12 +120,17 @@ export default {
       this.project = item;
       this.isDrawerShow = true;
       const msg = {
-          appid: this.project.id,
-          apptype: this.project.entity_type
-        };
-        getRemark(msg).then(({ data }) => {
-          this.RemarksData = [...data.msg];
-        });
+        appid: this.project.id,
+        apptype: this.project.entity_type
+      };
+      getRemark(msg).then(({ data }) => {
+        this.RemarksData = [...data.msg];
+      });
+      queryAssets({
+        project: this.project.id
+      }).then(({ data }) => {
+        this.TableData = [...data.msg];
+      });
     }
   },
   created() {
