@@ -8,7 +8,9 @@
             <remarks :project="project" :RemarksData="RemarksData"></remarks>
           </el-tab-pane>
           <el-tab-pane label="任务" name="second"></el-tab-pane>
-          <el-tab-pane label="资产" name="third">资产</el-tab-pane>
+          <el-tab-pane label="资产" name="third">
+            <assets :project="project"  :assetsList="assetsList"/>
+          </el-tab-pane>
           <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
@@ -22,10 +24,12 @@
 <script>
 import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
+import assets from "@/components/projectDrawer/components/assets"
 export default {
   props: [
     "project",
-    "RemarksData"
+    "RemarksData",
+    "assetsList"
   ],
   data() {
     return {
@@ -34,7 +38,7 @@ export default {
     };
   },
   name: "projectDrawer",
-  components: { remarks, info },
+  components: { remarks, info, assets },
   // watch: {
   //   project: {
   //     handler: function(newVal, oldVal) {
