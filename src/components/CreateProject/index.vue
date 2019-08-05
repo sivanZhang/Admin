@@ -8,8 +8,7 @@
       class="demo-ProjectForm"
       label-position="left"
       hide-required-asterisk
-    >
-      <el-form-item label="图片">
+    > 
         <el-upload
           accept="image/jpeg, image/gif, image/png"
           ref="upload"
@@ -28,8 +27,7 @@
               <em>点击上传</em>
             </div>
           </template>
-        </el-upload>
-      </el-form-item>
+        </el-upload> 
 
       <el-form-item label="颜色" prop="color">
         <el-color-picker
