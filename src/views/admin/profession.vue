@@ -82,11 +82,15 @@
             v-model="isDrawerShow"
             width="512px"
             inner
-            :mask="false"
+            :mask-style="{backgroundColor: 'transparent'}"
             :transfer="false"
           >
-            <links :LinkTemplateList="LinkTemplateList" :deptId="activeTemplate.id" :deptName="activeTemplate.name" @refresh="show(ActiveGroup)"></links>
-             
+            <links
+              :LinkTemplateList="LinkTemplateList"
+              :deptId="activeTemplate.id"
+              :deptName="activeTemplate.name"
+              @refresh="show(ActiveGroup)"
+            ></links>
           </Drawer>
         </template>
 
@@ -157,7 +161,7 @@ import {
 } from "@/api/admin";
 
 import usersTable from "@/components/UsersTable";
-import links from "./components/links"
+import links from "./components/links";
 import { mapState } from "vuex";
 
 export default {
@@ -172,7 +176,7 @@ export default {
       MemberEditState: {},
       isMemberEditShow: false,
       GroupUsers: [],
-      
+
       filterText: "",
       ActiveGroup: null,
       DialogType: {},
@@ -326,13 +330,12 @@ export default {
         console.log("LinkTemplateList");
         console.log(this.LinkTemplateList);
       });
-      
     },
 
     // 工种单击触发事件
     handleGroupClick(data) {
       this.ActiveGroup = { ...data };
-     // console.log(this.ActiveGroup.id);
+      // console.log(this.ActiveGroup.id);
       getDept({
         id: data.id
       }).then(({ data }) => {
@@ -497,7 +500,8 @@ export default {
   },
 
   components: {
-    usersTable,links
+    usersTable,
+    links
   }
 };
 </script>

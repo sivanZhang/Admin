@@ -1,11 +1,16 @@
 <template>
   <div>
-    
     <svg-icon icon-class="notice" @click="show" />
-    <el-badge :value="notice.length" class="item">
-    </el-badge>
-    <Drawer closable v-model="value1" width="526" :mask-style="{backgroundColor: 'transparent'}">
-      {{$store.state.login.userInfo.msg}}
+    <el-badge :value="notice.length" class="item"></el-badge>
+    <Drawer
+      closable
+      height="500"
+      v-model="value1"
+      width="526"
+      :mask-style="{backgroundColor: 'transparent'}"
+      :transfer="false"
+      :append-to-body="true"
+    >
       <div>
         <el-button
           type="warning"
@@ -203,9 +208,9 @@ export default {
 
 <style scoped>
 .item {
-    position: static; 
-    margin-left: -10px;
-    margin-top: -16px;
+  position: static;
+  margin-left: -10px;
+  margin-top: -16px;
 }
 svg-icon {
   display: inline-block;
