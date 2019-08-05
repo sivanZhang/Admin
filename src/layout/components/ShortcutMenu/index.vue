@@ -6,11 +6,11 @@
         <el-col :span="12">
           <div>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            <input placeholder="请输入内容"/>
+            <input placeholder="请输入内容" />
           </div>
         </el-col>
         <el-col :span="12" style="text-align:right">
-          <el-button type="primary"  @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
+          <el-button type="primary" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
         </el-col>
         <el-col :span="24">
           <el-row class="list-title" :gutter="20">
@@ -25,7 +25,11 @@
               <div class="title" style="padding: 5px 0 0px;">无数据</div>
             </el-col>
             <el-col :span="8">
-              <div class="title" style="padding: 5px 0 0px;">无数据</div>
+              <div v-for="(todo,index) of MyTask" :key="index">
+                <router-link :to="`/projects/project-detail/${todo.id}`">
+                  <div class="title">{{todo.name}}</div>
+                </router-link>
+              </div>
             </el-col>
             <el-col :span="8">
               <div v-for="(item,index) of ProjectList" :key="index">
@@ -49,6 +53,7 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import CreateProject from "@/components/CreateProject";
+import { queryMyTask } from "@/api/task";
 export default {
   components: {
     CreateProject
@@ -57,15 +62,27 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      isCreateShow: false
+      isCreateShow: false,
+      MyTask: null
     };
   },
-  computed: {
-    ...mapState('project',['ProjectList'])
+  created() {
+    this.getMyTask();
   },
-  methods:{
-    hasData(){
-      !this.ProjectList && (this.$store.dispatch("project/get_Projects"))
+  computed: {
+    ...mapState("project", ["ProjectList"])
+  },
+  methods: {
+    hasData() {
+      !this.ProjectList && this.$store.dispatch("project/get_Projects");
+    },
+    getMyTask() {
+      queryMyTask({
+        MyTask: null
+      }).then(({ data }) => {
+        this.MyTask = [...data.msg];
+        //console.log(this.MyTask);
+      });
     }
   },
   watch: {
