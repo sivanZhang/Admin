@@ -3,6 +3,11 @@ import AXIOS from '@/utils/request'
 export function getDept(params) {
     return AXIOS.get('/dept/dept/', { params })
 }
+//查询属于该用户部门的所有用户信息
+export function getDeptUsers(params) {
+    return AXIOS.get('/dept/dept/?02', { params })
+}
+
 //添加工种
 export function addDept(data) {
     return AXIOS.post('/dept/dept/', data)
@@ -16,12 +21,12 @@ export function putDept(data) {
     return AXIOS.post('/dept/dept/?01', data)
 }
 //获取某工种下的审批模板列表
-export function getWKTemplate(params){
-    return AXIOS.get('/wktemplate/wktemplate_v2/', {params})
+export function getWKTemplate(params) {
+    return AXIOS.get('/wktemplate/wktemplate_v2/', { params })
 }
 //给某工种添加模板
-export function addWKTemplate(params){
-    return AXIOS.post('/wktemplate/wktemplate_v2/',params,{
+export function addWKTemplate(params) {
+    return AXIOS.post('/wktemplate/wktemplate_v2/', params, {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8'
         },

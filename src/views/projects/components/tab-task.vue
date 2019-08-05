@@ -1,8 +1,11 @@
 <template>
   <div id="task">
     <div>
-      <el-dropdown>
-        <el-button type="primary">
+      <el-button type="primary" icon="el-icon-plus"  @click.native="openDialog(2)">
+          创建
+        </el-button>
+      <!-- <el-dropdown>
+        <el-button type="primary"  @click.native="openDialog(2)">
           创建
           <i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
@@ -10,7 +13,7 @@
           <el-dropdown-item @click.native="openDialog(1)">主任务</el-dropdown-item>
           <el-dropdown-item @click.native="openDialog(2)">子任务</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown> -->
       <el-button icon="el-icon-download" type="primary">导入</el-button>
       <el-button icon="el-icon-edit" type="primary" @click.native="openDialog(3)">修改</el-button>
       <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
@@ -51,11 +54,11 @@
 
     <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="510px">
       <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="120px">
-        <el-form-item label="任务名称" prop="name">
-          <el-input v-model="TaskForm.name"></el-input>
+        <el-form-item label="任务名称" prop="name" >
+          <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
         </el-form-item>
         <el-form-item label="任务内容" prop="content">
-          <el-input type="textarea" :rows="3" v-model="TaskForm.content"></el-input>
+          <el-input type="textarea" :rows="3" v-model="TaskForm.content" placeholder="请填写任务内容"></el-input>
         </el-form-item>
         <el-form-item label="任务等级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
@@ -74,7 +77,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择难度等级">
+          <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
             <el-option
               v-for="item of UserList"
               :label="item.username"
@@ -84,7 +87,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务主管" prop="manager">
-          <el-select v-model="TaskForm.manager" placeholder="请选择难度等级">
+          <el-select v-model="TaskForm.manager" placeholder="请选择任务主管">
             <el-option
               v-for="item of UserList"
               :label="item.username"
@@ -94,7 +97,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属资产">
-          <el-select v-model="TaskForm.asset" placeholder="请选择难度等级">
+          <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
             <el-option
               v-for="item of AssetList"
               :label="item.name"
@@ -132,59 +135,19 @@
 </template>
 <script>
 import * as HTTP from "@/api/task";
-import { mapState } from "vuex";
 import { log } from "util";
 import { Transform } from "stream";
+import myMixin from './mixins'
 export default {
+  mixins: [myMixin],
   name: "tab-task",
   data() {
     return {
       tableData: [],
-      rules: {
-        name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
-        priority: [
-          { required: true, message: "请输入优先等级", trigger: "blur" }
-        ],
-        content: [
-          { required: true, message: "请输入任务内容", trigger: "blur" }
-        ],
-        executorlist: [
-          {
-            required: true,
-            message: "请输入任务执行人",
-            trigger: "blur"
-          }
-        ],
-        total_hour: [
-          { required: true, message: "请输入总工时", trigger: "blur" }
-        ],
-        datetime: [
-          { required: true, message: "请输入任务时间", trigger: "blur" }
-        ]
-      },
       isDialogShow: false,
       buttonStates: {
         createLoading: false
       },
-      TaskForm: {},
-      StatusList: [
-        {
-          label: "草稿",
-          value: 0
-        },
-        {
-          label: "已启动",
-          value: 1
-        },
-        {
-          label: "结束",
-          value: 2
-        },
-        {
-          label: "任务超时",
-          value: 3
-        }
-      ],
       ActiveRow: {},
       DialogType: null,
       dialogTitle: ""
@@ -203,9 +166,6 @@ export default {
     AssetList:{
       type:Array
     }
-  },
-  computed: {
-    ...mapState("admin", ["UserList"])
   },
   methods: {
     //行被点击后出发
