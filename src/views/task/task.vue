@@ -102,10 +102,11 @@
                 </div>
                 <div class="content">
                   <el-card
+                    :style="{margin:'10px 0'}"
                     v-for="item of DraftArr"
                     :key="item.id"
                     shadow="never"
-                    :body-style="{backgroundColor:'#909399',color:'#fff'}"
+                    :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </div>
               </div>
@@ -145,10 +146,11 @@
                 </div>
                 <div class="content">
                   <el-card
+                    :style="{margin:'10px 0'}"
                     v-for="item of InProgressArr"
                     :key="item.id"
                     shadow="never"
-                    :body-style="{backgroundColor:'#67C23A',color:'#fff'}"
+                    :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </div>
               </div>
@@ -188,10 +190,11 @@
                 </div>
                 <div class="content">
                   <el-card
+                    :style="{margin:'10px 0'}"
                     v-for="item of TimeOutArrr"
                     :key="item.id"
                     shadow="never"
-                    :body-style="{backgroundColor:'#F56C6C',color:'#fff'}"
+                    :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </div>
               </div>
@@ -231,10 +234,11 @@
                 </div>
                 <div class="content">
                   <el-card
+                    :style="{margin:'10px 0'}"
                     v-for="item of RestartArr"
                     :key="item.id"
                     shadow="never"
-                    :body-style="{backgroundColor:'#E6A23C',color:'#fff'}"
+                    :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </div>
               </div>
@@ -368,7 +372,6 @@
             <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
           </el-table-column>
           <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
-          
         </el-table>
       </el-tab-pane>
       <!-- <el-tab-pane label="时间表" style="height: 500px"></el-tab-pane> -->

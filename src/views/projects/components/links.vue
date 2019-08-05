@@ -6,7 +6,10 @@
     <template v-else>
       <el-steps direction="vertical" :active="1">
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
-          <div slot="title" style="font-size:14px">{{item.dept.name}}</div>
+          <div slot="title" style="font-size:14px">
+            {{item.dept.name}}
+            <el-button @click="showTaskForm(item.link_id,item.dept.id)">添加任务</el-button>
+          </div>
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
             <template>
@@ -66,20 +69,94 @@
         <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
       </el-row>
     </el-dialog>
+    <!-- 添加任务 -->
+    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="510px" :modal="false">
+      <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="120px">
+        <el-form-item label="任务名称" prop="name">
+          <el-input v-model="TaskForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="任务内容" prop="content">
+          <el-input type="textarea" :rows="3" v-model="TaskForm.content"></el-input>
+        </el-form-item>
+        <el-form-item label="任务等级" prop="priority">
+          <!-- <el-input v-model="TaskForm.code"></el-input> -->
+          <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+        </el-form-item>
+        <el-form-item label="任务状态" prop="status">
+          <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
+            <el-option
+              v-for="item of StatusList"
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="任务执行人" prop="executorlist">
+          <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择执行人">
+            <el-option
+              v-for="item of DeptUsers"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="任务主管" prop="manager">
+          <el-select v-model="TaskForm.manager" placeholder="请选择主管">
+            <el-option
+              v-for="item of DeptUsers"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="任务时间" prop="datetime">
+          <el-date-picker
+            v-model="TaskForm.datetime"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="总工时" prop="total_hour">
+          <el-input v-model="TaskForm['total_hour']"></el-input>
+        </el-form-item>
+        <el-form-item label="自定义属性" prop="extra_attr">
+          <el-input v-model="TaskForm['extra_attr']"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="cancel">取消</el-button>
+          <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { addTask } from "@/api/task";
 import { addLinks } from "@/api/links";
+import { getDeptUsers } from "@/api/admin";
+import myMixin from "./mixins";
 export default {
+  mixins: [myMixin],
   name: "links",
   data() {
     return {
+      isCreateTaskShow: false,
+      TaskForm: {},
       isDialogShow: false,
       LinkForm: {},
       createLoading: false,
+      createTaskLoading: false,
       selectList: [],
-      FormList: [{}]
+      FormList: [{}],
+      DeptUsers: []
     };
   },
   props: ["LinkList", "assetId"],
@@ -100,6 +177,59 @@ export default {
     },
     cancel() {
       this.isDialogShow = false;
+    },
+    //取消对话框
+    cancelTask() {
+      this.isCreateTaskShow = false;
+    },
+    showTaskForm(link_id,id) {
+      this.isCreateTaskShow = true;
+      this.TaskForm = Object.assign(
+        {},
+        {
+          priority: 0,
+          asset: this.assetId,
+          project: this.$route.params.id,
+          link_id
+        }
+      );
+      getDeptUsers({id}).then(res=>{
+        this.DeptUsers = [...res.data.users]
+      })
+    },
+    addTasks() {
+      this.$refs["TaskForm"].validate(valid => {
+        if (valid) {
+          this.createTaskLoading = true;
+          function dataFormat(params) {
+            return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+          }
+          let data = {
+            ...this.TaskForm,
+            start_date: dataFormat(this.TaskForm.datetime[0]),
+            end_date: dataFormat(this.TaskForm.datetime[1]),
+            project: this.$route.params.id
+          };
+          if (this.TaskForm.executorlist.length) {
+            data["executorlist"] = data["executorlist"].join();
+          }
+          delete data.datetime;
+          addTask(data)
+            .then(({ data }) => {
+              this.createTaskLoading = false;
+              this.$message(data.msg);
+              if (data.status === 0) {
+                this.getTasks();
+                this.isDialogShow = false;
+              }
+            })
+            .catch(err => {
+              this.createTaskLoading = false;
+            });
+        } else {
+          return false;
+        }
+      });
     },
     addLinks() {
       function dataFormat(params) {
