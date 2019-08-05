@@ -30,6 +30,8 @@
           </el-image>
         </template>
       </el-table-column>
+      <el-table-column prop="changci" label="场次" align="center"></el-table-column>
+      <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
       <el-table-column prop="name" label="资产名称" align="left"></el-table-column>
       <el-table-column prop="category" label="类型" align="left"></el-table-column>
       <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
