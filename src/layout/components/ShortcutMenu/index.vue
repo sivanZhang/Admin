@@ -22,7 +22,11 @@
         <el-col :span="24">
           <el-row :gutter="20">
             <el-col :span="8">
-              <div class="title" style="padding: 5px 0 0px;">无数据</div>
+              <div v-for="(item,index) of [...cacheProjectList]" :key="index">
+                <router-link :to="`/projects/project-detail/${item.id}`">
+                  <div class="title">{{item.name}}</div>
+                </router-link>
+              </div>
             </el-col>
             <el-col :span="8">
               <div v-for="(todo,index) of MyTask" :key="index">
@@ -33,9 +37,7 @@
             </el-col>
             <el-col :span="8">
               <div v-for="(item,index) of ProjectList" :key="index">
-                <router-link :to="`/projects/project-detail/${item.id}`">
-                  <div class="title">{{item.name}}</div>
-                </router-link>
+                <div class="title" @click="targetDetail(item.id)">{{item.name}}</div>
               </div>
             </el-col>
           </el-row>
@@ -70,7 +72,10 @@ export default {
     this.getMyTask();
   },
   computed: {
-    ...mapState("project", ["ProjectList"])
+    ...mapState({
+      'ProjectList':state=>state.project.ProjectList,
+      'cacheProjectList':state=>state.app.cacheProjectList,
+    })
   },
   methods: {
     hasData() {
@@ -83,6 +88,10 @@ export default {
         this.MyTask = [...data.msg];
         //console.log(this.MyTask);
       });
+    },
+    targetDetail(item) {
+      this.$router.push({ name: "project-detail", params: { id:item.id } });
+      this.$store.conmmit('app/CACHEPRPJECT',item)
     }
   },
   watch: {
