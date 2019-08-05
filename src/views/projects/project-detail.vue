@@ -1,17 +1,17 @@
 <template>
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="镜头" name="first">
-        <tab-assets @refresh="getAssetList()" :AssetList="TableData" />
+      <el-tab-pane label="镜头" name="tab0">
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()" />
       </el-tab-pane>
-      <el-tab-pane label="资产管理" name="first">
-        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()"/>
+      <el-tab-pane label="资产管理" name="tab1">
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()" />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="second">
-        <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList()"/>
+      <el-tab-pane label="任务" name="tab2">
+        <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList()" />
       </el-tab-pane>
-      <el-tab-pane label="团队策划" name="third">团队策划</el-tab-pane>
-      <el-tab-pane label="控制面板" name="fourth">控制面板</el-tab-pane>
+      <el-tab-pane label="团队策划" name="tab3">团队策划</el-tab-pane>
+      <el-tab-pane label="控制面板" name="tab4">控制面板</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -29,9 +29,9 @@ export default {
   },
   data() {
     return {
-      activeName: "first",
+      activeName: "tab0",
       AssetList: [],
-      TaskList:[]
+      TaskList: []
     };
   },
   methods: {
@@ -45,7 +45,7 @@ export default {
         this.AssetList = [...data.msg];
       });
     },
-    getTaskList(){
+    getTaskList() {
       queryTask({ project: this.$route.params.id }).then(({ data }) => {
         this.TaskList = [...data.msg];
       });

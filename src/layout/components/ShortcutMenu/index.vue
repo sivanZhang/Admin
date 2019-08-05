@@ -22,22 +22,25 @@
         <el-col :span="24">
           <el-row :gutter="20">
             <el-col :span="8">
-              <div v-for="(item,index) of [...cacheProjectList]" :key="index">
-                <router-link :to="`/projects/project-detail/${item.id}`">
-                  <div class="title">{{item.name}}</div>
-                </router-link>
+              <template v-if="CacheList.length">
+                <div v-for="(item,index) of CacheList" :key="index">
+                  <router-link :to="`/projects/project-detail/${item.id}`">
+                    <div class="title">{{item.name}}</div>
+                  </router-link>
+                </div>
+              </template>
+              <div v-else class="title">
+                暂无数据
               </div>
             </el-col>
             <el-col :span="8">
               <div v-for="(todo,index) of MyTask" :key="index">
-                <router-link :to="`/projects/project-detail/${todo.id}`">
-                  <div class="title">{{todo.name}}</div>
-                </router-link>
+                <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
             </el-col>
             <el-col :span="8">
               <div v-for="(item,index) of ProjectList" :key="index">
-                <div class="title" @click="targetDetail(item.id)">{{item.name}}</div>
+                <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
             </el-col>
           </el-row>
@@ -73,8 +76,8 @@ export default {
   },
   computed: {
     ...mapState({
-      'ProjectList':state=>state.project.ProjectList,
-      'cacheProjectList':state=>state.app.cacheProjectList,
+      ProjectList: state => state.project.ProjectList,
+      CacheList: state => state.app.CacheList
     })
   },
   methods: {
@@ -90,8 +93,8 @@ export default {
       });
     },
     targetDetail(item) {
-      this.$router.push({ name: "project-detail", params: { id:item.id } });
-      this.$store.conmmit('app/CACHEPRPJECT',item)
+      this.$router.push({ name: "project-detail", params: { id: item.id } });
+      this.$store.commit("app/CACHEPRPJECT", item);
     }
   },
   watch: {

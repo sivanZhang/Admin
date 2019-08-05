@@ -4,15 +4,19 @@ const state = {
     sidebar: {
         opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
         withoutAnimation: false,
-        cacheProjectList: new Map()
     },
     device: 'desktop',
-    size: Cookies.get('size') || 'medium'
+    size: Cookies.get('size') || 'medium',
+    CacheList: []
 }
 
 const mutations = {
     CACHEPRPJECT: (state, project) => {
-        state.cacheProjectList.add(project)
+        if (state.CacheList.some(item => item.id === project.id)) {
+            return false
+        } else {
+            state.CacheList.push(project)
+        }
     },
     TOGGLE_SIDEBAR: state => {
         state.sidebar.opened = !state.sidebar.opened
