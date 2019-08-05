@@ -30,7 +30,7 @@
               drag
               :show-file-list="false"
             >
-              <el-image v-if="SRC" :src="SRC" fit="cover" style="width: 160px;height: 90px;"></el-image>
+              <el-image v-if="SRC" :src="SRC" fit="cover" style="width: 160px;height: 100px;"></el-image>
               <template v-else>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
@@ -165,7 +165,7 @@ export default {
 <style lang="scss" scoped>
 #d-header {
   & /deep/ .el-upload-dragger {
-    height: 90px;
+    height: 100px;
     width: 160px;
     font-size: 12px;
     .el-icon-upload {
