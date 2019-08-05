@@ -78,7 +78,7 @@ export default {
     },
     getMyTask() {
       queryMyTask({
-        MyTask: null
+        mine: null
       }).then(({ data }) => {
         this.MyTask = [...data.msg];
         //console.log(this.MyTask);

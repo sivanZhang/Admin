@@ -25,5 +25,5 @@ export function putTask(data) {
 }
 //获取我的任务
 export function queryMyTask(params) {
-    return AXIOS.get('/task/task/?mytask', { params })
+    return AXIOS.get('/projects/projects/?mine', { params })
 }
