@@ -58,7 +58,7 @@ export default {
               proName:"项目名称11"+i,
               version:"00" + i,
               time:"12:33",
-              url:'https://chiship.oss-cn-shanghai.aliyuncs.com/banner01.mp4',
+              url:'https://chiship.oss-cn-shanghai.aliyuncs.com/banner03.mp4',
               videoImage:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
             };
             this.projectList.push(project);

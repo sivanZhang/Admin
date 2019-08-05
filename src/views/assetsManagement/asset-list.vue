@@ -11,6 +11,8 @@
       :row-style="{'font-size':'14px'}"
       :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
+      <el-table-column prop="changci" label="场次" align="center"></el-table-column>
+      <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
       <el-table-column prop="name" label="资产名称" align="center"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
       <el-table-column prop="path" label="资产路径" align="center"></el-table-column>
