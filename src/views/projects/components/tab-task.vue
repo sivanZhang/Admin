@@ -58,7 +58,7 @@
         <el-form-item label="任务内容" prop="content">
           <el-input type="textarea" :rows="3" v-model="TaskForm.content" placeholder="请填写任务内容"></el-input>
         </el-form-item>
-        <el-form-item label="任务等级" prop="priority">
+        <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
           <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>

@@ -1,6 +1,9 @@
 <template>
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="镜头" name="first">
+        <tab-assets @refresh="getAssetList()" :AssetList="TableData" />
+      </el-tab-pane>
       <el-tab-pane label="资产管理" name="first">
         <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()"/>
       </el-tab-pane>
