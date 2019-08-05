@@ -8,7 +8,7 @@
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
           <div slot="title" style="font-size:14px">
             {{item.dept.name}}
-            <el-button @click="showTaskForm(item.link_id,item.dept.id)">添加任务</el-button>
+            <el-button @click="showTaskForm(item.link_id)">添加任务</el-button>
           </div>
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
@@ -193,8 +193,8 @@ export default {
           link_id
         }
       );
-      getDeptUsers({id}).then(res=>{
-        this.DeptUsers = [...res.data.users]
+      getDeptUsers({user:this.$store.state.login.userInfo.id}).then(res=>{
+        this.DeptUsers = [...res.data.msg]
       })
     },
     addTasks() {

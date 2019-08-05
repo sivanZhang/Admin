@@ -1,6 +1,7 @@
 //用户管理和工种公共状态
 import {
-    getDept
+    getDept,
+    getDeptUsers
 } from "@/api/admin";
 import {
     getUserList
@@ -8,6 +9,7 @@ import {
 const state = {
     UserList: null,
     DeptList: null,
+    DeptUsers: null
 }
 
 const mutations = {
@@ -16,6 +18,9 @@ const mutations = {
     },
     SET_DEPTLIST: (state, arr) => {
         state.DeptList = [...arr]
+    },
+    SET_DEPTUSERS: (state, arr) => {
+        state.DeptUsers = [...arr]
     },
 }
 
@@ -40,6 +45,17 @@ const actions = {
             commit('SET_DEPTLIST', data.msg)
         }).catch(() => {
             commit('SET_DEPTLIST', null)
+        })
+    },
+    get_DeptUsers({
+        commit
+    }) {
+        return getDeptUsers(data).then(({
+            data
+        }) => {
+            commit('SET_DEPTUSERS', data.msg)
+        }).catch(() => {
+            commit('SET_DEPTUSERS', null)
         })
     }
 }
