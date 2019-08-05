@@ -117,7 +117,8 @@ export default {
 
 <style lang="scss" scoped>
 .title {
-  padding: 5px 0 0px;
+  padding: 4px 0;
+  cursor: pointer;
 }
 .title:hover {
   cursor: hand;
@@ -133,7 +134,7 @@ input:focus {
 }
 
 .list-title {
-  padding: 15px 0 5px;
+  padding: 6px 0;
   font-weight: 600;
   text-align: left;
 }

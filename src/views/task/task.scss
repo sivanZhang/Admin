@@ -41,7 +41,6 @@
         display: flex;
         //justify-content: flex-start;
         .task-board-left {
-            width: 70%;
             padding-right: 10px;
             //align-items: center;
             .tasks-top {
@@ -60,16 +59,7 @@
                     }
                 }
                 .fold-icon {
-                    display: flex;
-                    width: 10%;
-                    justify-content: center;
-                    .svg-contain {
-                        padding: 6px 5px 6px 15px;
-                        color: black;
-                        vertical-align: middle;
-                        width: 30px;
-                        display: inline-block;
-                    }
+                    text-align: right;
                 }
             }
             .tasks-foot {
@@ -150,11 +140,8 @@
             }
         }
     }
-    .svg-contain {
-        width: 20%;
-        padding: 12px 0;
-        color: black;
-        vertical-align: middle;
-        display: inline-block;
+    .fold-icon {
+        text-align: right;
+        cursor: pointer;
     }
 }
