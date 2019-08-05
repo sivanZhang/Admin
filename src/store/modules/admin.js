@@ -25,6 +25,7 @@ const mutations = {
 }
 
 const actions = {
+    //获取所有用户的列表
     get_UserList({
         commit
     }, params) {
@@ -36,6 +37,7 @@ const actions = {
             commit('SET_USERLIST', null)
         })
     },
+    //获取工种列表
     get_DeptList({
         commit
     }) {
@@ -47,10 +49,15 @@ const actions = {
             commit('SET_DEPTLIST', null)
         })
     },
+    //获取已登录用户同部门的用户列表
     get_DeptUsers({
-        commit
+        state,
+        commit,
+        rootState
     }) {
-        return getDeptUsers(data).then(({
+        return getDeptUsers({
+            user: rootState.login.userInfo.id
+        }).then(({
             data
         }) => {
             commit('SET_DEPTUSERS', data.msg)

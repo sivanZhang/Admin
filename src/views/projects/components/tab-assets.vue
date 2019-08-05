@@ -1,7 +1,7 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">创建资产</el-button>
+      <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
     </div>
 
     <el-table
@@ -147,7 +147,7 @@
       :transfer="false"
       :mask-style="{backgroundColor: 'transparent'}"
     >
-      <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList"></links>
+      <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList" @get-tasks="getTasks"></links>
     </Drawer>
   </div>
 </template>
@@ -228,6 +228,9 @@ export default {
     }
   },
   methods: {
+    getTasks(){
+      this.$emit('get-tasks')
+    },
     show(id) {
       //console.log(id);
       this.value1 = true;

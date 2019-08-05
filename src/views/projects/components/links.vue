@@ -98,7 +98,7 @@
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择执行人">
             <el-option
               v-for="item of DeptUsers"
-              :label="item.username"
+              :label="item.name"
               :value="item.id"
               :key="item.id"
             ></el-option>
@@ -108,7 +108,7 @@
           <el-select v-model="TaskForm.manager" placeholder="请选择主管">
             <el-option
               v-for="item of DeptUsers"
-              :label="item.username"
+              :label="item.name"
               :value="item.id"
               :key="item.id"
             ></el-option>
@@ -130,7 +130,7 @@
           <el-input v-model="TaskForm['extra_attr']"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="cancelTask">取消</el-button>
           <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
         </el-form-item>
       </el-form>
@@ -142,7 +142,9 @@
 import { addTask } from "@/api/task";
 import { addLinks } from "@/api/links";
 import { getDeptUsers } from "@/api/admin";
+import { mapState } from "vuex";
 import myMixin from "./mixins";
+import { type } from 'os';
 export default {
   mixins: [myMixin],
   name: "links",
@@ -156,14 +158,11 @@ export default {
       createTaskLoading: false,
       selectList: [],
       FormList: [{}],
-      DeptUsers: []
     };
   },
-  props: ["LinkList", "assetId"],
+  props:['LinkList','assetId'],
   computed: {
-    DeptList() {
-      return this.$store.state.admin.DeptList;
-    }
+    ...mapState('admin',['DeptUsers','DeptList'])
   },
   methods: {
     before(ind) {
@@ -182,7 +181,7 @@ export default {
     cancelTask() {
       this.isCreateTaskShow = false;
     },
-    showTaskForm(link_id,id) {
+    showTaskForm(link_id, id) {
       this.isCreateTaskShow = true;
       this.TaskForm = Object.assign(
         {},
@@ -193,9 +192,6 @@ export default {
           link_id
         }
       );
-      getDeptUsers({user:this.$store.state.login.userInfo.id}).then(res=>{
-        this.DeptUsers = [...res.data.msg]
-      })
     },
     addTasks() {
       this.$refs["TaskForm"].validate(valid => {
@@ -219,7 +215,8 @@ export default {
               this.createTaskLoading = false;
               this.$message(data.msg);
               if (data.status === 0) {
-                this.getTasks();
+                this.cancelTask()
+                this.$emit('get-tasks')
                 this.isDialogShow = false;
               }
             })

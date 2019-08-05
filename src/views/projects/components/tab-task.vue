@@ -1,9 +1,7 @@
 <template>
   <div id="task">
     <div>
-      <el-button type="primary" icon="el-icon-plus"  @click.native="openDialog(2)">
-          创建
-        </el-button>
+      <el-button type="primary" icon="el-icon-plus" @click.native="openDialog(2)">创建</el-button>
       <!-- <el-dropdown>
         <el-button type="primary"  @click.native="openDialog(2)">
           创建
@@ -13,18 +11,18 @@
           <el-dropdown-item @click.native="openDialog(1)">主任务</el-dropdown-item>
           <el-dropdown-item @click.native="openDialog(2)">子任务</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown> -->
+      </el-dropdown>-->
       <el-button icon="el-icon-download" type="primary">导入</el-button>
       <el-button icon="el-icon-edit" type="primary" @click.native="openDialog(3)">修改</el-button>
       <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
       <el-table
-        :data="tableData"
+        :data="TaskList"
         style="width: 100%;margin-top:20px"
         highlight-current-row
         row-key="id"
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"
-        border 
+        border
       >
         <!-- default-expand-all -->
         <el-table-column prop="name" label="任务"></el-table-column>
@@ -54,7 +52,7 @@
 
     <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="510px">
       <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="120px">
-        <el-form-item label="任务名称" prop="name" >
+        <el-form-item label="任务名称" prop="name">
           <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
         </el-form-item>
         <el-form-item label="任务内容" prop="content">
@@ -79,8 +77,8 @@
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
             <el-option
-              v-for="item of UserList"
-              :label="item.username"
+              v-for="item of DeptUsers"
+              :label="item.name"
               :value="item.id"
               :key="item.id"
             ></el-option>
@@ -89,8 +87,8 @@
         <el-form-item label="任务主管" prop="manager">
           <el-select v-model="TaskForm.manager" placeholder="请选择任务主管">
             <el-option
-              v-for="item of UserList"
-              :label="item.username"
+              v-for="item of DeptUsers"
+              :label="item.name"
               :value="item.id"
               :key="item.id"
             ></el-option>
@@ -98,12 +96,7 @@
         </el-form-item>
         <el-form-item label="所属资产">
           <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
-            <el-option
-              v-for="item of AssetList"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
+            <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -137,13 +130,14 @@
 import * as HTTP from "@/api/task";
 import { log } from "util";
 import { Transform } from "stream";
-import myMixin from './mixins'
+import myMixin from "./mixins";
+import { mapState } from "vuex";
 export default {
   mixins: [myMixin],
   name: "tab-task",
   data() {
     return {
-      tableData: [],
+      TaskList:[],
       isDialogShow: false,
       buttonStates: {
         createLoading: false
@@ -162,10 +156,18 @@ export default {
       return arr.join();
     }
   },
-  props:{
-    AssetList:{
-      type:Array
+  props: {
+    AssetList: {
+      type: Array
+    },
+    TaskList:{
+      type: Array
     }
+  },
+  computed: {
+    ...mapState({
+      DeptUsers: state => state.admin.DeptUsers
+    })
   },
   methods: {
     //行被点击后出发
@@ -174,10 +176,6 @@ export default {
     },
     //打开对话框
     openDialog(Type) {
-      if(!this.UserList.length){
-        this.$message.warning('请先创建项目资产')
-        return false
-      }
       this.DialogType = Type;
       switch (this.DialogType) {
         case 1:
@@ -216,35 +214,32 @@ export default {
             ],
             executorlist,
             manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
-            asset:this.ActiveRow.asset.id,
-            method:'put'
+            asset: this.ActiveRow.asset.id,
+            method: "put"
           };
           delete this.TaskForm.executor;
           delete this.TaskForm.creator;
-          delete this.TaskForm.create_time;
-          delete this.TaskForm.create_time;
-          delete this.TaskForm.create_time;
           delete this.TaskForm.create_time;
           delete this.TaskForm.category;
           delete this.TaskForm["sub_task"];
           break;
       }
       this.isDialogShow = true;
-      this.$refs['TaskForm'].resetFields()
     },
     //添加或者修改任务
     editTask() {
       this.$refs["TaskForm"].validate(valid => {
         if (valid) {
           this.buttonStates.createLoading = true;
-          function dataFormat(params) {
-            return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+          function changeDateFormat(dateVal) {
+            return new Date(dateVal).toLocaleDateString(); 
+            //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
           }
           let data = {
             ...this.TaskForm,
-            start_date: dataFormat(this.TaskForm.datetime[0]),
-            end_date: dataFormat(this.TaskForm.datetime[1]),
-            project:this.$route.params.id
+            start_date: changeDateFormat(this.TaskForm.datetime[0]),
+            end_date: changeDateFormat(this.TaskForm.datetime[1]),
+            project: this.$route.params.id
           };
           if (this.TaskForm.executorlist.length) {
             data["executorlist"] = data["executorlist"].join();
@@ -257,7 +252,7 @@ export default {
                 this.buttonStates.createLoading = false;
                 this.$message(data.msg);
                 if (data.status === 0) {
-                  this.getTasks()
+                  this.getTasks();
                   this.isDialogShow = false;
                 }
               })
@@ -270,7 +265,7 @@ export default {
                 this.buttonStates.createLoading = false;
                 this.$message(data.msg);
                 if (data.status === 0) {
-                  this.getTasks()
+                  this.getTasks();
                   this.isDialogShow = false;
                 }
               })
@@ -286,6 +281,7 @@ export default {
     //取消对话框
     cancel() {
       this.isDialogShow = false;
+      this.$refs["TaskForm"].resetFields();
     },
     //删除任务http请求
     deleteTask() {
@@ -310,14 +306,10 @@ export default {
     },
     //获取任务列表
     getTasks() {
-      HTTP.queryTask({ project: this.$route.params.id }).then(({ data }) => {
-        this.tableData = [...data.msg];
-      });
+      this.$emit('get-tasks')
     }
   },
   created() {
-    //如果用户列表为空则请求用户列表
-    !this.UserList && this.$store.dispatch("admin/get_UserList");
     this.getTasks();
   }
 };
