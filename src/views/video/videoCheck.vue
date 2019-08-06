@@ -86,7 +86,6 @@
     },
     mounted() {
         let bH = document.body.offsetHeight;
-        console.log(bH)
         let videoInfoH = document.getElementById("videoInfo").offsetHeight;
         let videoTabsH = document.getElementById("videoTabs").offsetHeight;
 
@@ -100,18 +99,19 @@
     },
     methods: {
     
-      initSource(projectList) {
+      initSource(projectList,index,projectLists) {
         if (this.currentVideoIsEdit) {
           this.$message.error('处于视频标注模式')
         } else {
           console.log("选中的",projectList[0])
-          console.log(this.pWidth,this.pHeight)
+          console.log(11111111,index,projectLists)
           this.$refs.videoPlayer.initVideoUrl(projectList[0],this.pWidth,this.pHeight);
-           this.$refs.videoPlayer.initNextVideo(projectList[1])
+          this.$refs.videoPlayer.initNextVideo(index,projectLists)
           this.$refs.videoInfo.initInfo(projectList[0].id)
           this.$refs.videoComment.initInfo(projectList[0].id)
         }
       },
+      
       getMarkImage(obj) {
         this.imgList.push(obj)
         console.log(this.imgList)

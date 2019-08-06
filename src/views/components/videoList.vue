@@ -3,7 +3,7 @@
     <ul id="videoSliderList">
       <li v-for="(item,index) in selectProjects" :key="index" @click="initSource(index)">
         <span class="color-slider" :class="index%2==0?'on':''">
-          {{item.time}}
+          {{item.proName}}[{{item.time}}]
           <font v-if="currentPlayId==item.id">正在播放</font>
           </span>
       </li>
@@ -81,7 +81,9 @@ export default {
       }else{
         projectList[1]=null;
       }
-      this.$emit("initSource",projectList);
+      this.$emit("initSource",projectList,index,this.selectProjects);
+    //  this.$emit("initSources",index,this.selectProjects);
+
     },
     checkedProject(data){
       console.log("监听点击",data);
