@@ -89,7 +89,7 @@
           </el-form-item>
         </el-col>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="subbtn">
         <el-button @click="cancel">取消</el-button>
         <el-button type="primary" @click="submitForm">立即创建</el-button>
       </el-form-item>
@@ -205,9 +205,7 @@ export default {
 };
 </script>
 <style>
-.el-dialog__body{
-     padding-top:0px;/*zhangjiwei*/
-}
+
 </style>
 <style lang="scss" scoped>
 .el-form-item__label {
@@ -249,6 +247,18 @@ label {
 .el-upload-dragger {
   width: 440px;
   height:220px;
+}
+.el-dialog__body{
+     padding-top:0px;/*zhangjiwei*/
+}
+.subbtn{  
+  text-align:center;
+  
+}
+.subbtn{
+ .el-form-item__content{
+margin-left:0px !important;
+ }
 }
 </style>
 
