@@ -231,10 +231,5 @@ svg-icon {
   margin-bottom: 0;
   width: 50%;
 }
-</style>
-<style lang="scss">
-.ivu-drawer-content{
-  top:85px;
-}
-</style>
+</style> 
 
