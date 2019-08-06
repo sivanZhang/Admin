@@ -19,7 +19,11 @@
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width: 50px;height: 30px;" @click.native="show(scope.row.id)">
+          <el-image
+            :src="$store.state.BASE_URL+scope.row.image"
+            style="width: 50px;height: 30px;"
+            @click.native="show(scope.row.id)"
+          >
             <div slot="placeholder" class="image-slot">
               加载中
               <span class="dot">...</span>
@@ -35,8 +39,8 @@
       <el-table-column prop="name" label="资产名称" align="left"></el-table-column>
       <el-table-column prop="category" label="类型" align="left"></el-table-column>
       <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
-      <el-table-column prop="priority" label="优先级" align="left"></el-table-column>
-      <el-table-column prop="level" label="难度等级" align="left"></el-table-column>
+      <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
+      <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
       <el-table-column prop="path" label="资产路径" align="left"></el-table-column>
       <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
@@ -71,7 +75,14 @@
     </div>
 
     <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
-      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
+      <el-form
+        :model="AssetForm"
+        :rules="rules"
+        ref="assetForm"
+        label-width="100px"
+        hide-required-asterisk
+        label-position="left"
+      >
         <el-form-item label="图片">
           <el-upload
             accept="image/jpeg, image/gif, image/png"
@@ -93,7 +104,7 @@
             </template>
           </el-upload>
         </el-form-item>
-        <el-form-item label="资产名称" prop="name" >
+        <el-form-item label="资产名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
         <el-form-item label="存放路径" prop="path">
@@ -135,7 +146,14 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-     <Drawer closable v-model="value1" width="526" inner :transfer="false" :mask-style="{backgroundColor: 'transparent'}">
+    <Drawer
+      closable
+      v-model="value1"
+      width="526"
+      inner
+      :transfer="false"
+      :mask-style="{backgroundColor: 'transparent'}"
+    >
       <Header :project="project"></Header>
       <assetsDrawer :project="project" :RemarksData="RemarksData" />
     </Drawer>
@@ -147,14 +165,19 @@
       :transfer="false"
       :mask-style="{backgroundColor: 'transparent'}"
     >
-      <links :link-list="LinkList" :asset-id="activeAsset.id" @refresh="getLinkList" @get-tasks="getTasks"></links>
+      <links
+        :link-list="LinkList"
+        :asset-id="activeAsset.id"
+        @refresh="getLinkList"
+        @get-tasks="getTasks"
+      ></links>
     </Drawer>
   </div>
 </template>
 
 <script>
 import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
-import Header from "@/components/projectDrawer/components/Header"
+import Header from "@/components/projectDrawer/components/Header";
 import * as HTTP from "@/api/assets";
 import { addLinks, getLinks } from "@/api/links";
 import { getRemark } from "@/api/remark";
@@ -228,22 +251,22 @@ export default {
     }
   },
   methods: {
-    getTasks(){
-      this.$emit('get-tasks')
+    getTasks() {
+      this.$emit("get-tasks");
     },
     show(id) {
       //console.log(id);
       this.value1 = true;
       HTTP.queryAssets({ id }).then(({ data }) => {
-        this.project = {...[...data.msg][0],id};
+        this.project = { ...[...data.msg][0], id };
       });
       const msg = {
-          appid: id,
-          apptype: 5
-        };
-        getRemark(msg).then(({ data }) => {
-          this.RemarksData = [...data.msg];
-        });
+        appid: id,
+        apptype: 5
+      };
+      getRemark(msg).then(({ data }) => {
+        this.RemarksData = [...data.msg];
+      });
     },
     //行被点击后出发
     rowSelected(row) {
@@ -329,6 +352,34 @@ export default {
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
+    //难度等级格式化显示
+    Level: function(row, column) {
+      switch (row.level) {
+        case 0:
+          return "简单";
+          break;
+        case 1:
+          return "标准";
+          break;
+        case 2:
+          return "复杂";
+          break;
+        case 3:
+          return "高难度";
+          break;
+      }
+    },
+    //优先级格式化显示
+    Priority: function(row, column) {
+      switch (row.priority) {
+        case 0:
+          return "正常";
+          break;
+        case 1:
+          return "优先";
+          break;
+      }
     }
   },
   created() {
@@ -345,7 +396,7 @@ export default {
 .hover {
   cursor: pointer;
 }
-#asset-list{
+#asset-list {
   min-height: calc(100vh - 159px);
 }
 </style>
