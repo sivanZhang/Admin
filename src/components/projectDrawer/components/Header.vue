@@ -30,7 +30,7 @@
               drag
               :show-file-list="false"
             >
-            <el-tooltip class="item" effect="dark" content="拖动可换图片" placement="top">
+            <el-tooltip class="item" effect="dark" content="拖动至此处可替换图片" placement="top">
               <el-image v-if="SRC" :src="SRC" fit="cover"  style="width: 160px;height: 100px;"></el-image>
               
               <template v-else>
