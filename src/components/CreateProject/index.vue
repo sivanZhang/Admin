@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" @closed="cancel()" >
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"
@@ -8,26 +8,26 @@
       class="demo-ProjectForm"
       label-position="left"
       hide-required-asterisk
-    > 
-        <el-upload
-          accept="image/jpeg, image/gif, image/png"
-          ref="upload"
-          class="upload-demo"
-          action="/api/appfile/appfile/"
-          :headers="headers"
-          :on-success="handleSuccess"
-          drag
-          :show-file-list="false"
-        >
-          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
-          <template v-else>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或
-              <em>点击上传</em>
-            </div>
-          </template>
-        </el-upload> 
+    >
+      <el-upload
+        accept="image/jpeg, image/gif, image/png"
+        ref="upload"
+        class="upload-demo"
+        action="/api/appfile/appfile/"
+        :headers="headers"
+        :on-success="handleSuccess"
+        drag
+        :show-file-list="false"
+      >
+        <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+        <template v-else>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+        </template>
+      </el-upload>
 
       <el-form-item label="颜色" prop="color">
         <el-color-picker
@@ -135,7 +135,7 @@ export default {
             trigger: "change"
           }
         ],
-        'asset_path':[
+        asset_path: [
           { required: true, message: "请输入项目盘符", trigger: "blur" }
         ]
       },
@@ -185,21 +185,20 @@ export default {
     //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
-      this.ProjectForm['image'] = response.msg;
+      this.ProjectForm["image"] = response.msg;
       this.ProjectForm.image_id = response.id;
-      
     }
   },
   created() {
-    !this.UserList && (this.$store.dispatch("admin/get_UserList"));
+    !this.UserList && this.$store.dispatch("admin/get_UserList");
   },
-  watch:{
-    isShow(val){
+  watch: {
+    isShow(val) {
       //弹框关闭后，form数据重置、验证重置
-      if (!val){
-        this.SRC = ''
-        this.ProjectForm = {}
-        this.$refs['projectForm'].resetFields()
+      if (!val) {
+        this.SRC = "";
+        this.ProjectForm = {};
+        this.$refs["projectForm"].resetFields();
       }
     }
   }
@@ -208,7 +207,7 @@ export default {
 
 <style lang="scss" scoped>
 .el-form-item__label {
-  font-size: 12px
+  font-size: 12px;
 }
 .line {
   text-align: center;
@@ -236,9 +235,15 @@ export default {
   height: 178px;
   display: block;
 }
-label{
+label {
   font-size: 12px;
   font-weight: 500;
 }
 </style>
+<style lang="scss">
+.el-upload-dragger {
+  width: 440px;
+}
+</style>
+
 

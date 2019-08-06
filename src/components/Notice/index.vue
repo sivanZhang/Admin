@@ -9,7 +9,6 @@
       width="526"
       :mask-style="{backgroundColor: 'transparent'}"
       :transfer="false"
-      :append-to-body="true"
     >
       <div>
         <el-button
@@ -233,3 +232,9 @@ svg-icon {
   width: 50%;
 }
 </style>
+<style lang="scss">
+.ivu-drawer-content{
+  top:85px;
+}
+</style>
+

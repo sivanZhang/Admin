@@ -30,7 +30,9 @@
               drag
               :show-file-list="false"
             >
-              <el-image v-if="SRC" :src="SRC" fit="cover" style="width: 160px;height: 100px;"></el-image>
+            <el-tooltip class="item" effect="dark" content="拖动可换图片" placement="top">
+              <el-image v-if="SRC" :src="SRC" fit="cover"  style="width: 160px;height: 100px;"></el-image>
+              
               <template v-else>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
@@ -38,6 +40,7 @@
                   <em>点击上传</em>
                 </div>
               </template>
+            </el-tooltip>
             </el-upload>
           </el-col>
           <el-col :span="15">

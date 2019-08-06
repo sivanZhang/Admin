@@ -6,7 +6,7 @@
           closable
           v-model="isDrawerShow"
           width="526"
-          inner
+          
           :transfer="false"
           :mask-style="{backgroundColor: 'transparent'}"
           :append-to-body="true"
@@ -49,9 +49,11 @@
             </el-image>
           </div>
           <div style="padding: 15px;">
-            <mallki class-name="mallki-text" @click.native="show(item)" :text="item.name" />
+            <router-link :to="`/projects/project-detail/${item.id}`">
+            <mallki class-name="mallki-text"  :text="item.name" />
+            </router-link>
             <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
-            <el-row>
+            <el-row @click.native="show(item)">
               <el-col :span="12">
                 <p class="subtitle">工作流</p>
                 <div>{{item.status|projectStatus}}</div>
