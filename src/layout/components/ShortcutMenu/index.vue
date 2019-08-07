@@ -152,9 +152,5 @@ input:focus {
   }
 }
 </style>
-<style lang="scss">
-.el-upload-dragger{
-  width:440px
-}
-</style>
+
 

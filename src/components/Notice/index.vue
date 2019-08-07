@@ -318,10 +318,6 @@ svg-icon {
   width: 50%;
 }
 </style> 
-<style lang="scss" >
-.el-icon {
-  margin-left: -25px;
-}
-</style>
+
 
 

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" style="top: -100px;" @closed="cancel()">
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px"  @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"
@@ -204,8 +204,14 @@ export default {
   }
 };
 </script>
-<style>
-
+<style lang="scss">
+.el-upload-dragger{
+  width: 440px;
+  height: 220px
+}
+.el-dialog__body{
+  padding-top:0px
+}
 </style>
 <style lang="scss" scoped>
 .el-form-item__label {
