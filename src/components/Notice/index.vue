@@ -92,22 +92,9 @@
 
               <el-table-column label="通知" width="150" show-overflow-tooltip>
                 <template slot-scope="scope">
-                  <el-tooltip
-                    v-if="scope.row.read == 0"
-                    class="item"
-                    effect="dark"
-                    content="未读"
-                    placement="top"
-                  >
-                    <svg-icon
-                      v-if="scope.row.read == 0"
-                      icon-class="notice-close"
-                      style="display: inline-block;cursor: pointer;fill: #5a5e66;"
-                    />
-                  </el-tooltip>
-                  <el-tooltip v-else class="item" effect="dark" content="已读" placement="top">
-                    <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-                  </el-tooltip>
+                  <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
+
+                  <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
 
                   <router-link :to="`${scope.row.url}`">{{scope.row.title}}</router-link>
                 </template>
