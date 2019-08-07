@@ -36,7 +36,11 @@
                 :disabled="this.multipleSelection.length === 0"
               >批量删除</el-button>
               <!--disabled值动态显示，默认为true,当选中复选框后值为false-->
-              <el-button @click="updateIsReads" type="primary">标记为已读</el-button>
+              <el-button
+                @click="updateIsReads"
+                type="primary"
+                :disabled="this.multipleSelection.length === 0"
+              >标记为已读</el-button>
             </div>
 
             <el-table

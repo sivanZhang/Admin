@@ -207,8 +207,13 @@ export default {
 <style lang="scss">
 .el-upload-dragger{
   width: 440px;
-  height: 220px
+  height: 220px;
+  border: 0px
 }
+.el-upload-dragger:hover{
+  border-color: transparent;
+}
+
 .el-dialog__body{
   padding-top:0px
 }
