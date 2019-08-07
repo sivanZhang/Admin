@@ -241,12 +241,14 @@ export default {
 label {
   font-size: 12px;
   font-weight: 500;
-}
-</style>
-<style lang="scss">
-.el-upload-dragger {
-  width: 440px;
-  height:220px;
+} 
+.upload-demo {
+  .el-upload{
+      .el-upload-dragger {
+        width: 440px;
+        height:220px;
+      }
+    }
 }
 .el-dialog__body{
      padding-top:0px;/*zhangjiwei*/
