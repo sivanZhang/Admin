@@ -11,11 +11,18 @@
       :transfer="false"
     >
       <div id="notice-header" style="border-bottom:1px soild #999999">
-       <div style="font-size:20px"> {{loginMessage.msg}}</div>
-       <el-row style="padding-top:10px">
-         <el-col :span="4">电子邮件：</el-col>
-         <el-col :span="20">{{loginMessage.email}}</el-col>
-       </el-row>
+        <el-row>
+          <el-col :span="4">
+            <svg-icon icon-class="people2" style="width:50px;height:50px;"></svg-icon>
+          </el-col>
+          <el-col :span="20">
+            <el-row style="font-size:20px">{{loginMessage.msg}}</el-row>
+            <el-row style="padding-top:10px">
+              <el-col :span="4">电子邮件：</el-col>
+              <el-col :span="20">{{loginMessage.email}}</el-col>
+            </el-row>
+          </el-col>
+        </el-row>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="分配" name="first">分配</el-tab-pane>
@@ -24,7 +31,7 @@
           <div>
             <div>
               <el-button
-                type="warning"
+                type="danger"
                 @click="delNotices"
                 :disabled="this.multipleSelection.length === 0"
               >批量删除</el-button>
@@ -82,7 +89,7 @@
                 </template>
               </el-table-column>
               <el-table-column type="selection" width="35"></el-table-column>
-              <el-table-column align="center">
+              <el-table-column width="45" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
                     v-if="scope.row.read == 0"
@@ -91,16 +98,19 @@
                     content="未读"
                     placement="top"
                   >
-                    <i v-if="scope.row.read == 0" class="el-icon-message" style="color:orange"></i>
+                    <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
+                  </el-tooltip>
+                  <el-tooltip v-else class="item" effect="dark" content="已读" placement="top">
+                    <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="通知" width="150" show-overflow-tooltip>
+              <el-table-column label="通知" width="150" align="center" show-overflow-tooltip>
                 <template slot-scope="scope">
                   <router-link :to="`${scope.row.url}`">{{scope.row.title}}</router-link>
                 </template>
               </el-table-column>
-              <el-table-column label="紧急程度" align="center">
+              <el-table-column label="紧急程度" align="center" width="70">
                 <template slot-scope="scope">
                   <el-tooltip
                     v-if="scope.row.urgency_level == 0"
@@ -130,6 +140,9 @@
                     <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
                   </el-tooltip>
                 </template>
+              </el-table-column>
+              <el-table-column label="时间" align="center">
+                <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
               </el-table-column>
             </el-table>
           </div>
