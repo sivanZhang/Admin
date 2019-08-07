@@ -14,3 +14,8 @@ export function removeNotice(data){
 export function getNotices(params){
     return AXIOS.get('/notice/notice/?list', { params })
 }
+
+//修改是否已读
+export function putNotice(params){
+    return AXIOS.post('/notice/notice/?put', params)
+}
