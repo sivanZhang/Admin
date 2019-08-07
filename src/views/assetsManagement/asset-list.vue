@@ -51,9 +51,9 @@
         :total="TableData.length"
       ></el-pagination>
     </div>
-    <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="480px">
       <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
-        <el-form-item label="图片">
+        
           <el-upload
             accept="image/jpeg, image/gif, image/png"
             ref="upload"
@@ -73,7 +73,7 @@
               </div>
             </template>
           </el-upload>
-        </el-form-item>
+        
         <el-form-item label="资产名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>

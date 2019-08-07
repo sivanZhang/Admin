@@ -47,7 +47,7 @@
               @selection-change="handleSelectionChange"
               @row-click="updateIsRead"
             >
-              <el-table-column type="expand">
+              <el-table-column type="expand" style="padding-left:0px">
                 <template slot-scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">
                     <el-row>
@@ -88,8 +88,9 @@
                   </el-form>
                 </template>
               </el-table-column>
-              <el-table-column type="selection" width="35"></el-table-column>
-              <el-table-column width="45" align="center">
+              <el-table-column type="selection" width="40"></el-table-column>
+
+              <el-table-column label="通知" width="150" show-overflow-tooltip>
                 <template slot-scope="scope">
                   <el-tooltip
                     v-if="scope.row.read == 0"
@@ -98,15 +99,16 @@
                     content="未读"
                     placement="top"
                   >
-                    <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
+                    <svg-icon
+                      v-if="scope.row.read == 0"
+                      icon-class="notice-close"
+                      style="display: inline-block;cursor: pointer;fill: #5a5e66;"
+                    />
                   </el-tooltip>
                   <el-tooltip v-else class="item" effect="dark" content="已读" placement="top">
                     <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
                   </el-tooltip>
-                </template>
-              </el-table-column>
-              <el-table-column label="通知" width="150" align="center" show-overflow-tooltip>
-                <template slot-scope="scope">
+
                   <router-link :to="`${scope.row.url}`">{{scope.row.title}}</router-link>
                 </template>
               </el-table-column>
@@ -141,7 +143,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="时间" align="center">
+              <el-table-column label="时间">
                 <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
               </el-table-column>
             </el-table>
@@ -316,4 +318,10 @@ svg-icon {
   width: 50%;
 }
 </style> 
+<style lang="scss" >
+.el-icon {
+  margin-left: -25px;
+}
+</style>
+
 
