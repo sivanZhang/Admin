@@ -6,10 +6,12 @@ import {
 } from "@/api/task";
 import draggable from "vuedraggable";
 import top from './components/top'
+import taskForm from './components/task-form'
 export default {
     components: {
         draggable,
-        top
+        top,
+        taskForm
     },
     data() {
         return {
@@ -32,27 +34,6 @@ export default {
                 {
                     label: '暂停',
                     value: 4
-                }
-            ],
-            customColors: [{
-                    color: "#f56c6c",
-                    percentage: 20
-                },
-                {
-                    color: "#e6a23c",
-                    percentage: 40
-                },
-                {
-                    color: "#6f7ad3",
-                    percentage: 60
-                },
-                {
-                    color: "#1989fa",
-                    percentage: 80
-                },
-                {
-                    color: "#5cb87a",
-                    percentage: 100
                 }
             ],
             createLoading: false,
@@ -242,6 +223,7 @@ export default {
                     } else {
                         this.$message.warning(res.data.msg);
                     }
+                    this.isDialogShow = false
                     this.createLoading = false;
                 })
                 .catch(err => {

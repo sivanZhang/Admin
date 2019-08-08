@@ -317,39 +317,9 @@
           <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="提交记录"></el-tab-pane>
     </el-tabs>
     <el-dialog title="任务执行" :visible.sync="isDialogShow" width="512px" center :modal="false">
-      <el-form :model="TaskRecord" ref="task-form" label-width="80px">
-        <el-form-item label="标题" prop="title">
-          <el-input type="text" v-model="TaskRecord.title" style="width:100%"></el-input>
-        </el-form-item>
-        <el-form-item label="完成内容" prop="content">
-          <el-input type="textarea" v-model="TaskRecord.content" style="width:100%"></el-input>
-        </el-form-item>
-        <el-form-item label="完成进度" prop="content">
-          <el-row type="flex" align="middle">
-            <el-col :span="10">
-              <el-input-number v-model="TaskRecord.schedule" :min="0" :max="100" :step="10"></el-input-number>
-            </el-col>
-            <el-col :span="14">
-              <el-progress
-                :percentage="TaskRecord.schedule"
-                :color="customColors"
-                :text-inside="true"
-                :stroke-width="20"
-              ></el-progress>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item label="工时" prop="labor_hour">
-          <el-input-number v-model="TaskRecord.labor_hour" :min="1"></el-input-number>
-        </el-form-item>
-      </el-form>
-      <el-row type="flex" justify="end">
-        <el-button @click="cancel">取消</el-button>
-        <el-button :loading="createLoading" type="primary" @click="addRecord()">提交</el-button>
-      </el-row>
+      <task-form :task-record.sync='TaskRecord' :createLoading="createLoading" @addRecord="addRecord" @cancel="cancel"/>
     </el-dialog>
   </div>
 </template>

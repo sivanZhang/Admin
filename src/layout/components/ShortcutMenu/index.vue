@@ -101,7 +101,7 @@ export default {
     //根据路由变化控制顶部菜单的active状态
     $route(to, from) {
       this.isCreateShow = false;
-      const reg1 = /^\/task/,
+      const reg1 = /^\/task\/task/,
         reg2 = /^\/projects/;
       if (reg1.test(to.path)) {
         this.activeIndex = 1;
