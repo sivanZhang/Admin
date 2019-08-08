@@ -1,147 +1,32 @@
 #layout_main {
-    .layout_main_top {
-        display: flex;
-    }
-    .layout_main_top_left {
-        display: flex;
-        width: 70%;
-        height: 50px;
-        justify-content: flex-start
-    }
-    .layout_main_top_right {
-        display: flex;
-        width: 30%;
-        height: 50px;
-        justify-content: flex-end;
-    }
-    .layout_task {
-        width: 100px;
-        height: 40px;
-        border-right: 1px solid #999999;
-        text-align: center;
-        .layout_top_span {
-            color: #999999;
-            font-size: small
-        }
-        &:first-child {
-            border-left: 1px solid #999999;
-        }
-    }
-    .layout_week {
-        width: 60px;
-        height: 40px;
-        border-left: 1px solid #999999;
-        text-align: center;
-        .layout_top_span {
-            color: #999999;
-            font-size: small
-        }
-    }
-    .task-board {
-        display: flex;
-        //justify-content: flex-start;
-        .task-board-left {
-            padding-right: 10px;
-            //align-items: center;
-            .tasks-top {
-                display: flex;
-                .list {
-                    display: flex;
-                    width: 90%;
-                    justify-content: flex-start;
-                    padding-bottom: 5px;
-                    .svg-container {
-                        padding: 6px 5px 6px 15px;
-                        color: black;
-                        vertical-align: middle;
-                        width: 40px;
-                        display: inline-block;
-                    }
-                }
-                .fold-icon {
-                    text-align: right;
-                }
-            }
-            .tasks-foot {
-                //background-color: #20a0ff;
-                height: 500px;
-                display: flex;
-                justify-content: flex-start;
-                .content-box {
-                    width: 300px;
-                    align-items: flex-end;
-                    .task-title {
-                        display: flex;
-                        justify-content: space-between;
-                        .task-title-justify {
-                            padding: 12px 0;
-                            color: black;
-                            vertical-align: middle;
-                            display: inline-block;
-                            font-size: large;
-                        }
-                    }
-                    .sort-order {
-                        display: flex;
-                        justify-content: center;
-                        .sort {
-                            vertical-align: middle;
-                            padding: 6px 0;
-                            width: 100px;
-                            font-size: small;
-                        }
-                    }
-                }
-                .fold-box {
-                    width: 50px;
-                    display: flow;
-                    border-right: #999999 solid 1px;
-                    .task-vertical {
-                        width: 100%;
-                        height: 400px;
-                        writing-mode: vertical-rl;
-                        font-size: large;
-                    }
-                }
-            }
-        }
-        .task-board-right {
-            width: 30%;
-            padding-left: 10px;
-            border-left: 1px solid #999999;
-            .task-coming {
-                height: 400px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                .task-coming-show {
-                    font-size: larger;
-                    color: #999999
-                }
-            }
-            .dynamic {
-                display: flex;
-                justify-content: flex-start
-            }
-        }
-        .task-list {
-            display: flex;
-            align-items: flex-start;
-            .task-list-top {
-                display: flex;
-                justify-content: flex-start;
-                border-bottom: 1px solid #999999;
-                .sort {
-                    vertical-align: middle;
-                    padding: 6px;
-                    width: 100px;
-                    font-size: small;
-                }
-            }
-        }
-    }
     .fold-icon {
         text-align: right;
         cursor: pointer;
     }
+    .project-warp {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+    .board-column-content {
+        height: auto;
+        min-height: 60px;
+    }
+    .status {
+        i {
+            display: none;
+        }
+        &:hover {
+            i {
+                display: block;
+            }
+        }
+    }
+}
+
+.flip-list-move {
+    transition: transform 0.5s;
+}
+
+.no-move {
+    transition: transform 0s;
 }

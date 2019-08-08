@@ -1,44 +1,18 @@
 <template>
   <div id="layout_main">
-    <div class="layout_main_top">
-      <div class="layout_main_top_left">
-        <div class="layout_task">
-          <h2>{{MyTaskList.length}}</h2>
-          <span class="layout_top_span">所有任务</span>
-        </div>
-        <div class="layout_task">
-          <h2>{{DraftArr.length}}</h2>
-          <span class="layout_top_span">草稿</span>
-        </div>
-        <div class="layout_task">
-          <h2>{{InProgressArr.length}}</h2>
-          <span class="layout_top_span">进行中</span>
-        </div>
-        <div class="layout_task">
-          <h2>{{TimeOutArrr.length}}</h2>
-          <span class="layout_top_span">超时</span>
-        </div>
-        <div class="layout_task">
-          <h2>{{RestartArr.length}}</h2>
-          <span class="layout_top_span">重启</span>
-        </div>
-      </div>
-    </div>
+    <top :arr="topArr" />
     <el-divider></el-divider>
-    <el-tabs type="border-card">
+    <el-tabs>
       <el-tab-pane label="任务板">
         <div>
           <el-row>
             <el-col :span="18" class="list">
-              <!--              点击图标显示小型网格布局-->
               <span class="svg-container" title="显示小型网格布局">
                 <svg-icon icon-class="list_min"></svg-icon>
               </span>
-              <!--              点击图标显示大型网格布局-->
               <span class="svg-container" title="大型网格布局">
                 <svg-icon icon-class="list_max"></svg-icon>
               </span>
-              <!--              select选择器，选择项目，默认选择所有-->
               <el-select
                 v-model="value1"
                 multiple
@@ -54,7 +28,6 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              <!--              select选择器，选择任务完成进度，默认选择所有-->
               <el-select
                 v-model="value2"
                 multiple
@@ -75,129 +48,179 @@
               <svg-icon icon-class="fold" @click="taskBoardRightShow"></svg-icon>
             </el-col>
           </el-row>
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <div class="task-title">
-                <span class="task-title-justify">草稿</span>
-                <span class="svg-contain">
-                  <svg-icon
-                    icon-class="eye-open"
-                    @click="taskAvailableUnFold=!taskAvailableUnFold;taskAvailableFold=!taskAvailableFold"
-                  ></svg-icon>
-                </span>
-              </div>
-              <div class="sort-order">
-                <span class="sort">排序方式</span>
-                <el-select v-model="taskAvailableSel" placeholder="截止日期" size="mini">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="content">
-                <el-card
-                  :style="{margin:'10px 0'}"
-                  v-for="item of DraftArr"
-                  :key="item.id"
-                  shadow="never"
-                  :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
-                >{{item.name}}</el-card>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="task-title">
-                <span class="task-title-justify">进行中</span>
-                <span class="svg-contain">
-                  <svg-icon
-                    icon-class="eye-open"
-                    @click="notStartedUnFold=!notStartedUnFold;notStartedFold=!notStartedFold"
-                  ></svg-icon>
-                </span>
-              </div>
-              <div class="sort-order">
-                <span class="sort">排序方式</span>
-                <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="content">
-                <el-card
-                  :style="{margin:'10px 0'}"
-                  v-for="item of InProgressArr"
-                  :key="item.id"
-                  shadow="never"
-                  :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
-                >{{item.name}}</el-card>
+          <el-divider></el-divider>
+          <el-row type="flex" justify="space-between" :gutter="15">
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="4">草稿</el-col>
+                  <el-col :span="20" style="text-align:right">
+                    <span class="sort">排序方式</span>
+                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value+item.label"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <draggable
+                  :list="DraftArr"
+                  :group="{name:'task'}"
+                  :move="checkMove"
+                  class="board-column-content"
+                >
+                  <transition-group>
+                    <el-card
+                      @click.native="openDialog(item)"
+                      :style="{margin:'10px 0'}"
+                      v-for="item of DraftArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
+                </draggable>
               </div>
             </el-col>
-            <el-col :span="6">
-              <div class="task-title">
-                <span class="task-title-justify">超时</span>
-                <span class="svg-contain">
-                  <svg-icon
-                    icon-class="eye-open"
-                    @click="inProgressUnFold=!inProgressUnFold;inProgressFold=!inProgressFold"
-                  ></svg-icon>
-                </span>
-              </div>
-              <div class="sort-order">
-                <span class="sort">排序方式</span>
-                <el-select v-model="inProgressSel" placeholder="截止日期" size="mini">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="content">
-                <el-card
-                  :style="{margin:'10px 0'}"
-                  v-for="item of TimeOutArrr"
-                  :key="item.id"
-                  shadow="never"
-                  :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
-                >{{item.name}}</el-card>
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="4">进行中</el-col>
+                  <el-col :span="20" style="text-align:right">
+                    <span class="sort">排序方式</span>
+                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value+item.label"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <draggable
+                  :list="InProgressArr"
+                  :group="{name:'task'}"
+                  :move="checkMove"
+                  class="board-column-content"
+                >
+                  <!-- ($event,1) -->
+                  <transition-group>
+                    <el-card
+                      @click.native="openDialog(item)"
+                      :style="{margin:'10px 0'}"
+                      v-for="item of InProgressArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
+                </draggable>
               </div>
             </el-col>
-            <el-col :span="6">
-              <div class="task-title">
-                <span class="task-title-justify">重启</span>
-                <span class="svg-contain">
-                  <svg-icon
-                    icon-class="eye-open"
-                    @click="doneUnFold=!doneUnFold;doneFold=!doneFold"
-                  ></svg-icon>
-                </span>
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="4">完成</el-col>
+                  <el-col :span="20" style="text-align:right">
+                    <span class="sort">排序方式</span>
+                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <draggable
+                  class="board-column-content"
+                  :list="FinishedArr"
+                  :group="{name:'task'}"
+                  :move="checkMove"
+                >
+                  <transition-group>
+                    <el-card
+                      :style="{margin:'10px 0'}"
+                      v-for="item of FinishedArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
+                </draggable>
               </div>
-              <div class="sort-order">
-                <span class="sort">排序方式</span>
-                <el-select v-model="doneSel" placeholder="截止日期" size="mini">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
+            </el-col>
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="4">超时</el-col>
+                  <el-col :span="20" style="text-align:right">
+                    <span class="sort">排序方式</span>
+                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <draggable
+                  class="board-column-content"
+                  :list="TimeOutArr"
+                  :group="{name:'task'}"
+                  :move="checkMove"
+                >
+                  <transition-group>
+                    <el-card
+                      :style="{margin:'10px 0'}"
+                      v-for="item of TimeOutArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
+                </draggable>
               </div>
-              <div class="content">
-                <el-card
-                  :style="{margin:'10px 0'}"
-                  v-for="item of RestartArr"
-                  :key="item.id"
-                  shadow="never"
-                  :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
-                >{{item.name}}</el-card>
+            </el-col>
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="4">暂停</el-col>
+                  <el-col :span="20" style="text-align:right">
+                    <span class="sort">排序方式</span>
+                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <draggable
+                  class="board-column-content"
+                  :list="PauseArr"
+                  :group="{name:'task'}"
+                  :move="checkMove"
+                >
+                  <transition-group>
+                    <el-card
+                      :style="{margin:'10px 0'}"
+                      v-for="item of PauseArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
+                </draggable>
               </div>
             </el-col>
           </el-row>
@@ -207,7 +230,6 @@
         <div class="task-list"></div>
         <div class="task-list-top">
           <span class="sort">排序方式</span>
-          <!--             select选择器，任务列表中选择任务列表的排序方式 -->
           <el-select v-model="taskListSortSel" placeholder="截止日期" size="mini">
             <el-option
               v-for="item in options"
@@ -262,7 +284,26 @@
           <el-table-column prop="name" label="任务名称"></el-table-column>
           <el-table-column prop="content" label="任务内容"></el-table-column>
           <el-table-column label="任务状态">
-            <template slot-scope="scope">{{scope.row.status|projectStatus}}</template>
+            <template slot-scope="scope">
+              <!-- <div class="status">
+                {{scope.row.status|projectStatus}}
+                <icon class="el-icon-edit" />
+              </div>
+              -->
+              <el-select
+                :value="scope.row.status"
+                placeholder="请选择"
+                @change="statusChange($event,scope.row)"
+                class="my-select"
+              >
+                <el-option
+                  v-for="item in StatusList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
           </el-table-column>
           <el-table-column label="优先级">
             <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
@@ -276,208 +317,44 @@
           <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
         </el-table>
       </el-tab-pane>
-      <!-- <el-tab-pane label="时间表" style="height: 500px"></el-tab-pane> -->
+      <el-tab-pane label="提交记录"></el-tab-pane>
     </el-tabs>
+    <el-dialog title="任务执行" :visible.sync="isDialogShow" width="512px" center :modal="false">
+      <el-form :model="TaskRecord" ref="task-form" label-width="80px">
+        <el-form-item label="标题" prop="title">
+          <el-input type="text" v-model="TaskRecord.title" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="完成内容" prop="content">
+          <el-input type="textarea" v-model="TaskRecord.content" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="完成进度" prop="content">
+          <el-row type="flex" align="middle">
+            <el-col :span="10">
+              <el-input-number v-model="TaskRecord.schedule" :min="0" :max="100" :step="10"></el-input-number>
+            </el-col>
+            <el-col :span="14">
+              <el-progress
+                :percentage="TaskRecord.schedule"
+                :color="customColors"
+                :text-inside="true"
+                :stroke-width="20"
+              ></el-progress>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="工时" prop="labor_hour">
+          <el-input-number v-model="TaskRecord.labor_hour" :min="1"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <el-row type="flex" justify="end">
+        <el-button @click="cancel">取消</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addRecord()">提交</el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
-<script>
-import { queryMyTask } from "@/api/task";
-export default {
-  data() {
-    return {
-      MyTaskList: [],
-      DraftArr: [],
-      InProgressArr: [],
-      TimeOutArrr: [],
-      RestartArr: [],
-      //任务是循环出来的
-      taskList: [
-        {
-          value: "1",
-          label: "任何项目"
-        }
-      ],
-      //任务是否完成是固定的选项
-      taskProgress: [
-        {
-          value: "1",
-          label: "任何备注"
-        },
-        {
-          value: "2",
-          label: "已完成"
-        },
-        {
-          value: "3",
-          label: "未完成"
-        }
-      ],
-      //选择类型的固定选项
-      typeList: [
-        {
-          value: "1",
-          label: "任何类型"
-        },
-        {
-          value: "2",
-          label: "备注"
-        },
-        {
-          value: "3",
-          label: "资产上传"
-        },
-        {
-          value: "4",
-          label: "状态更改"
-        },
-        {
-          value: "5",
-          label: "任务分配"
-        }
-      ],
-      //任务时间的固定选项
-      taskTime: [
-        {
-          value: "1",
-          label: "昨天"
-        },
-        {
-          value: "2",
-          label: "上星期"
-        },
-        {
-          value: "3",
-          label: "最近一个月"
-        }
-      ],
-      //排序方式选择
-      options: [
-        {
-          value: "1",
-          label: "截止时间"
-        },
-        {
-          value: "2",
-          label: "项目"
-        },
-        {
-          value: "3",
-          label: "状态"
-        },
-        {
-          value: "4",
-          label: "父级"
-        },
-        {
-          value: "5",
-          label: "优先级"
-        }
-      ],
-      //选择项目的返回值，根据这个值筛选展示出的任务
-      value1: [],
-      //选择是否完成的返回值，根据这个值筛选展示出的任务
-      value2: [],
-      //选择任务类型的返回值
-      value3: [],
-      //选择任务时间的返回值
-      value4: [],
-      //可用任务排序方式的选择返回
-      taskAvailableSel: [],
-      //not started 排序方式的选择返回
-      notStartedSel: [],
-      //in progress 排序方式的选择返回
-      inProgressSel: [],
-      //done 排序方式的选择返回
-      doneSel: [],
-      //任务显示展开
-      taskAvailableFold: false,
-      notStartedFold: false,
-      inProgressFold: false,
-      doneFold: false,
-      //任务显示未展开
-      taskAvailableUnFold: true,
-      notStartedUnFold: true,
-      inProgressUnFold: true,
-      doneUnFold: true,
-      //右侧标签页默认选项,动态
-      activeName: "second",
-      //右侧标签页是否显示的标志
-      flag: true,
-      //任务列表的排序方式的返回
-      taskListSortSel: [],
-      //任务列表中选择项目的返回
-      taskListProgramSel: [],
-      //任务列表中选择完成进度的返回
-      taskListProgressSel: [],
-      //复选框，显示已完成/锁定的项目
-      checked: false
-    };
-  },
-  filters: {
-    statusFilter(val) {
-      switch (val) {
-        case 0:
-          return "草稿";
-          break;
-        case 1:
-          return "已启动";
-          break;
-        case 2:
-          return "结束";
-          break;
-        case 3:
-          return "任务超时";
-          break;
-      }
-    }
-  },
-  methods: {
-    //任务板右侧标签页事件
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
-    //是否显示任务板右侧
-    taskBoardRightShow() {
-      if (this.flag) {
-        this.flag = !this.flag;
-        document.getElementById("task-board-left").style.width = 100 + "%";
-        document.getElementById("task-board-right").style.width = 0 + "%";
-      } else {
-        this.flag = !this.flag;
-        document.getElementById("task-board-left").style.width = 70 + "%";
-        document.getElementById("task-board-right").style.width = 30 + "%";
-      }
-    },
-    async getMyTasks() {
-      await queryMyTask({
-        user: this.$store.state.login.userInfo.id
-      }).then(({ data }) => {
-        this.MyTaskList = [...data.msg];
-      });
-      this.MyTaskList.forEach(item => {
-        switch (item.status) {
-          case 0:
-            this.DraftArr.push(item);
-            break;
-          case 1:
-            this.InProgressArr.push(item);
-            break;
-          case 2:
-            this.TimeOutArrr.push(item);
-            break;
-          case 3:
-            this.RestartArr.push(item);
-            break;
-        }
-      });
-    }
-  },
-  computed: {},
-  created() {
-    this.getMyTasks();
-  }
-};
+<script src="./task.js">
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

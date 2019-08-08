@@ -2,13 +2,13 @@
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="镜头" name="tab0">
-        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()" />
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="资产管理" name="tab1">
-        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()" />
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2">
-        <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList()" />
+        <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="团队策划" name="tab3">团队策划</el-tab-pane>
       <el-tab-pane label="控制面板" name="tab4">控制面板</el-tab-pane>
@@ -45,8 +45,17 @@ export default {
         this.AssetList = [...data.msg];
       });
     },
-    getTaskList() {
-      queryTask({ project: this.$route.params.id }).then(({ data }) => {
+    getTaskList(keywords) {
+      let data = {
+        project: this.$route.params.id
+      };
+      if (keywords) {
+        data = {
+          ...data,
+          name: keywords
+        };
+      }
+      queryTask(data).then(({ data }) => {
         this.TaskList = [...data.msg];
       });
     }

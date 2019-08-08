@@ -25,5 +25,17 @@ export function putTask(data) {
 }
 //获取我的任务
 export function queryMyTask(params) {
-    return AXIOS.get('/projects/projects/?mine', { params })
+    return AXIOS.get('/task/task/?mytask', { params })
+}
+//查询任务执行记录
+export function queryTaskRecord(params) {
+    return AXIOS.get('/task/taskrecord/', { params })
+}
+//新建执行记录
+export function addTaskRecord(data) {
+    return AXIOS.post('/task/taskrecord/', data)
+}
+//修改执行记录
+export function putTaskRecord(data) {
+    return AXIOS.post('/task/task/?status', data)
 }
