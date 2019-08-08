@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="镜头" name="tab0">
-        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()" />
+        <tab-lens  />
       </el-tab-pane>
       <el-tab-pane label="资产管理" name="tab1">
         <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList()" />
@@ -20,12 +20,14 @@
 import { queryAssets } from "@/api/assets";
 import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
+import tabLens from "./components/tab-lens"
 import { queryTask } from "@/api/task";
 export default {
   name: "project-detail",
   components: {
     tabTask,
-    tabAssets
+    tabAssets,
+    tabLens
   },
   data() {
     return {
