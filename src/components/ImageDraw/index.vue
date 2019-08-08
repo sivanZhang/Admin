@@ -170,7 +170,6 @@
                 textArea.style.font="italic small-caps bold 14px arial";
                 textArea.id="textAreaCanvas";
                  let _self = this;
-               
                   var  imgData =_self.context.getImageData(0, 0, _self.width,_self.height);
                   _self.imgStack.push(imgData);
 
@@ -249,8 +248,8 @@
           _self.context.fillStyle = _self.lineColor;
           _self.context.fillText(text, x, y);
           //_self.context.closePath();
-           _self.context.stroke()
-          _self.context.save()
+          // _self.context.stroke()
+          //_self.context.save()
         },
         // 绘制椭圆
         drawEllipse (context, x, y, a, b) {
@@ -340,9 +339,6 @@
          
         },
         undoDrawImage:function(){
-          if(this.lineType=='text'){
-            this.$message.error('文字工具模式下不能撤销')
-          }else{
             let temp=document.getElementById("textAreaCanvas");
               if(temp){
                 document.getElementById("drawContext").removeChild(temp);
@@ -355,8 +351,6 @@
                  this.initDraw();
                // this.$message.error('已经是最后一步了')
             }
-          }
-            
         }
           
     }
