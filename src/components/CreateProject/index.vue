@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px"  @closed="cancel()">
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"
@@ -108,7 +108,10 @@ export default {
   name: "CreateProject",
   data() {
     return {
-      ProjectForm: { image: null },
+      ProjectForm: {
+        image: null,
+        color: "#409EFF"
+      },
       predefineColors: [
         "#ff4500",
         "#ff8c00",
@@ -205,17 +208,17 @@ export default {
 };
 </script>
 <style lang="scss">
-.el-upload-dragger{
+.el-upload-dragger {
   width: 440px;
   height: 220px;
-  border: 0px
+  border: 0px;
 }
-.el-upload-dragger:hover{
+.el-upload-dragger:hover {
   border-color: transparent;
 }
 
-.el-dialog__body{
-  padding-top:0px
+.el-dialog__body {
+  padding-top: 0px;
 }
 </style>
 <style lang="scss" scoped>
@@ -252,26 +255,25 @@ export default {
 label {
   font-size: 12px;
   font-weight: 500;
-} 
+}
 .upload-demo {
-  .el-upload{
-      .el-upload-dragger {
-        width: 440px;
-        height:220px;
-      }
+  .el-upload {
+    .el-upload-dragger {
+      width: 440px;
+      height: 220px;
     }
+  }
 }
-.el-dialog__body{
-     padding-top:0px;/*zhangjiwei*/
+.el-dialog__body {
+  padding-top: 0px; /*zhangjiwei*/
 }
-.subbtn{  
-  text-align:center;
-  
+.subbtn {
+  text-align: center;
 }
-.subbtn{
- .el-form-item__content{
-margin-left:0px !important;
- }
+.subbtn {
+  .el-form-item__content {
+    margin-left: 0px !important;
+  }
 }
 </style>
 
