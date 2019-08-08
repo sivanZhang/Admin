@@ -1,8 +1,10 @@
 <template>
   <div id="task">
     <div>
-      <el-button type="primary" icon="el-icon-plus" @click.native="openDialog(2)">创建</el-button>
-      <!-- <el-dropdown>
+      <el-row>
+        <el-col :span="15">
+          <el-button type="primary" icon="el-icon-plus" @click.native="openDialog(2)">创建</el-button>
+          <!-- <el-dropdown>
         <el-button type="primary"  @click.native="openDialog(2)">
           创建
           <i class="el-icon-arrow-down el-icon--right"></i>
@@ -11,10 +13,23 @@
           <el-dropdown-item @click.native="openDialog(1)">主任务</el-dropdown-item>
           <el-dropdown-item @click.native="openDialog(2)">子任务</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>-->
-      <el-button icon="el-icon-download" type="primary">导入</el-button>
-      <el-button icon="el-icon-edit" type="primary" @click.native="openDialog(3)">修改</el-button>
-      <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
+          </el-dropdown>-->
+          <el-button icon="el-icon-download" type="primary">导入</el-button>
+          <el-button icon="el-icon-edit" type="primary" @click.native="openDialog(3)">修改</el-button>
+          <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
+        </el-col>
+        <el-col :span="9" style="text-align:right">
+          <el-input
+            placeholder="输入关键字搜索"
+            style="width:200px;"
+            v-model="keyword"
+            class="input-with-select"
+          >
+            <el-button @click="getTasks(1)" slot="append" icon="el-icon-search" type="primary" />
+          </el-input>
+           <el-button  @click="getTasks()" icon="el-icon-refresh-left" type="primary">重置</el-button>
+        </el-col>
+      </el-row>
       <el-table
         :data="TaskList"
         style="width: 100%;margin-top:20px"
@@ -26,7 +41,7 @@
       >
         <!-- default-expand-all -->
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column prop="category" label="类型"></el-table-column>
+        <el-table-column prop="category" label="制作环节"></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
@@ -51,7 +66,7 @@
     </div>
 
     <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="510px">
-      <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="120px">
+      <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="120px">
         <el-form-item label="任务名称" prop="name">
           <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
         </el-form-item>
@@ -76,22 +91,12 @@
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
-            <el-option
-              v-for="item of DeptUsers"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务主管" prop="manager">
           <el-select v-model="TaskForm.manager" placeholder="请选择任务主管">
-            <el-option
-              v-for="item of DeptUsers"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属资产">
@@ -137,7 +142,7 @@ export default {
   name: "tab-task",
   data() {
     return {
-      TaskList:[],
+      keyword: "",
       isDialogShow: false,
       buttonStates: {
         createLoading: false
@@ -160,7 +165,7 @@ export default {
     AssetList: {
       type: Array
     },
-    TaskList:{
+    TaskList: {
       type: Array
     }
   },
@@ -228,11 +233,11 @@ export default {
     },
     //添加或者修改任务
     editTask() {
-      this.$refs["TaskForm"].validate(valid => {
+      this.$refs["TaskRef"].validate(valid => {
         if (valid) {
           this.buttonStates.createLoading = true;
           function changeDateFormat(dateVal) {
-            return new Date(dateVal).toLocaleDateString(); 
+            return new Date(dateVal).toLocaleDateString();
             //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
           }
           let data = {
@@ -281,7 +286,7 @@ export default {
     //取消对话框
     cancel() {
       this.isDialogShow = false;
-      this.$refs["TaskForm"].resetFields();
+      this.$refs["TaskRef"].resetFields();
     },
     //删除任务http请求
     deleteTask() {
@@ -305,8 +310,12 @@ export default {
         .catch(() => {});
     },
     //获取任务列表
-    getTasks() {
-      this.$emit('get-tasks')
+    getTasks(type) {
+      if(type){
+        this.$emit("get-tasks",this.keyword)
+      }else{
+        this.$emit("get-tasks")
+      }
     }
   },
   created() {

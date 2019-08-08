@@ -38,11 +38,15 @@ const actions = {
             }).then(({
                 data
             }) => {
-                commit('SET_TOKEN', data.token);
-                setToken(data.token);
-                commit('SET_USERINFO', data);
-                setUserInfo(data);
-                resolve()
+                if (data.status === 0) {
+                    commit('SET_TOKEN', data.token);
+                    setToken(data.token);
+                    commit('SET_USERINFO', data);
+                    setUserInfo(data);
+                    resolve(data)
+                } else {
+                    reject(data)
+                }
             }).catch(error => {
                 reject(error)
             })

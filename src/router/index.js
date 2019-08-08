@@ -62,7 +62,7 @@ export const constantRoutes = [{
             import ('@/views/login/signup'),
     },
 
-     
+
     {
         path: '/',
         component: Layout,
@@ -130,7 +130,7 @@ export const constantRoutes = [{
             path: 'task',
             name: 'task',
             component: () =>
-                import ('@/views/task/task'),
+                import ('@/views/task'),
             meta: {
                 title: '我的任务',
                 icon: 'task'
@@ -154,7 +154,7 @@ export const constantRoutes = [{
             path: 'videoCheck',
             name: 'videoCheck',
             component: () =>
-            import ('@/views/video/videoCheck'),
+                import ('@/views/video/videoCheck'),
             meta: {
                 title: '视频审核',
                 icon: 'task'

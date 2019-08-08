@@ -74,7 +74,7 @@
       ></el-pagination>
     </div>
 
-    <el-dialog title="新建资产" :visible.sync="isShow" width="500px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="480px">
       <el-form
         :model="AssetForm"
         :rules="rules"
@@ -82,8 +82,7 @@
         label-width="100px"
         hide-required-asterisk
         label-position="left"
-      >
-        <el-form-item label="图片">
+      > 
           <el-upload
             accept="image/jpeg, image/gif, image/png"
             ref="upload"
@@ -102,8 +101,7 @@
                 <em>点击上传</em>
               </div>
             </template>
-          </el-upload>
-        </el-form-item>
+          </el-upload> 
         <el-form-item label="资产名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
@@ -130,16 +128,7 @@
         </el-form-item>
         <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
-        </el-form-item>-->
-        <el-form-item label="内部资产版本号" prop="inner_version">
-          <el-input v-model="AssetForm['inner_version']"></el-input>
-        </el-form-item>
-        <el-form-item label="外部资产版本号" prop="outer_version">
-          <el-input v-model="AssetForm['outer_version']"></el-input>
-        </el-form-item>
-        <el-form-item label="关联任务" prop="task">
-          <el-input v-model="AssetForm.task"></el-input>
-        </el-form-item>
+        </el-form-item>--> 
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">立即创建</el-button>

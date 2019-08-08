@@ -55,8 +55,7 @@
           password: [{
             required: true,
             trigger: "blur",
-            len: 6,
-            message: "The password can not be less than 6 digits"
+            message: "Please enter the password"
           }]
         },
         loading: false,
@@ -92,8 +91,10 @@
               .then(res => {
                 this.$router.push({ path: this.redirect || "/" });
                 this.loading = false;
+                this.$message.success(res.msg)
               })
-              .catch(() => {
+              .catch((err) => {
+                this.$message.error(err.msg)
                 this.loading = false;
               });
           } else {

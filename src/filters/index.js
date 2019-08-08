@@ -25,7 +25,7 @@ export function projectStatus(code) {
             return '超期'
             break
         case 4:
-            return '重启'
+            return '暂停'
             break
     }
 }
@@ -91,7 +91,7 @@ export function urgencyLevel(data) {
     }
 }
 //审批流程等级
-export function WKLevel(data){
+export function WKLevel(data) {
     switch (data) {
         case 0:
             return '收文'
@@ -105,6 +105,6 @@ export function WKLevel(data){
         case 3:
             return '三级审批'
             break
-        
+
     }
 }
