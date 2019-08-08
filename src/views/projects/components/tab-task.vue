@@ -41,7 +41,7 @@
       >
         <!-- default-expand-all -->
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column prop="category" label="类型"></el-table-column>
+        <el-table-column prop="category" label="制作环节"></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>

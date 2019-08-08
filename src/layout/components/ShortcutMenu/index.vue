@@ -16,7 +16,7 @@
           <el-row class="list-title" :gutter="20">
             <el-col :span="8">最新项目</el-col>
             <el-col :span="8">我的项目</el-col>
-            <el-col :span="8">有效的项目</el-col>
+            <el-col :span="8">进行中的项目</el-col>
           </el-row>
         </el-col>
         <el-col :span="24">
@@ -152,4 +152,5 @@ input:focus {
   }
 }
 </style>
+
 

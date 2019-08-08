@@ -1,10 +1,10 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" style="top: -100px;" @closed="cancel()">
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"
       ref="projectForm"
-      label-width="80px"
+      label-width="85px"
       class="demo-ProjectForm"
       label-position="left"
       hide-required-asterisk
@@ -42,8 +42,14 @@
       <el-form-item label="项目编码" prop="code">
         <el-input v-model="ProjectForm.code"></el-input>
       </el-form-item>
-      <el-form-item label="盘符" prop="asset_path">
-        <el-input v-model="ProjectForm['asset_path']"></el-input>
+      <el-form-item label="Windows路径" prop="windows_path">
+        <el-input v-model="ProjectForm.windows_path"></el-input>
+      </el-form-item>
+      <el-form-item label="Mac路径" prop="mac_path">
+        <el-input v-model="ProjectForm.mac_path"></el-input>
+      </el-form-item>
+      <el-form-item label="Linux路径" prop="linux_path">
+        <el-input v-model="ProjectForm.linux_path"></el-input>
       </el-form-item>
       <el-form-item label="项目预算" prop="budget">
         <el-input v-model="ProjectForm.budget">
@@ -108,7 +114,10 @@ export default {
   name: "CreateProject",
   data() {
     return {
-      ProjectForm: { image: null },
+      ProjectForm: {
+        image: null,
+        color: "#409EFF"
+      },
       predefineColors: [
         "#ff4500",
         "#ff8c00",
@@ -135,9 +144,7 @@ export default {
             trigger: "change"
           }
         ],
-        asset_path: [
-          { required: true, message: "请输入项目盘符", trigger: "blur" }
-        ]
+        
       },
       SRC: "",
       file: null,
@@ -204,8 +211,19 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="scss">
+.el-upload-dragger {
+  width: 440px;
+  height: 220px;
+  border: 0px;
+}
+.el-upload-dragger:hover {
+  border-color: transparent;
+}
 
+.el-dialog__body {
+  padding-top: 0px;
+}
 </style>
 <style lang="scss" scoped>
 .el-form-item__label {
@@ -242,23 +260,24 @@ label {
   font-size: 12px;
   font-weight: 500;
 }
-</style>
-<style lang="scss">
-.el-upload-dragger {
-  width: 440px;
-  height:220px;
+.upload-demo {
+  .el-upload {
+    .el-upload-dragger {
+      width: 440px;
+      height: 220px;
+    }
+  }
 }
-.el-dialog__body{
-     padding-top:0px;/*zhangjiwei*/
+.el-dialog__body {
+  padding-top: 0px; /*zhangjiwei*/
 }
-.subbtn{  
-  text-align:center;
-  
+.subbtn {
+  text-align: center;
 }
-.subbtn{
- .el-form-item__content{
-margin-left:0px !important;
- }
+.subbtn {
+  .el-form-item__content {
+    margin-left: 0px !important;
+  }
 }
 </style>
 
