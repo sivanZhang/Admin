@@ -4,7 +4,7 @@
       :model="ProjectForm"
       :rules="rules"
       ref="projectForm"
-      label-width="80px"
+      label-width="85px"
       class="demo-ProjectForm"
       label-position="left"
       hide-required-asterisk
@@ -42,8 +42,14 @@
       <el-form-item label="项目编码" prop="code">
         <el-input v-model="ProjectForm.code"></el-input>
       </el-form-item>
-      <el-form-item label="盘符" prop="asset_path">
-        <el-input v-model="ProjectForm['asset_path']"></el-input>
+      <el-form-item label="Windows路径" prop="windows_path">
+        <el-input v-model="ProjectForm.windows_path"></el-input>
+      </el-form-item>
+      <el-form-item label="Mac路径" prop="mac_path">
+        <el-input v-model="ProjectForm.mac_path"></el-input>
+      </el-form-item>
+      <el-form-item label="Linux路径" prop="linux_path">
+        <el-input v-model="ProjectForm.linux_path"></el-input>
       </el-form-item>
       <el-form-item label="项目预算" prop="budget">
         <el-input v-model="ProjectForm.budget">
@@ -138,9 +144,7 @@ export default {
             trigger: "change"
           }
         ],
-        asset_path: [
-          { required: true, message: "请输入项目盘符", trigger: "blur" }
-        ]
+        
       },
       SRC: "",
       file: null,

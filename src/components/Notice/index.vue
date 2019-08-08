@@ -27,7 +27,7 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="分配" name="first">分配</el-tab-pane>
         <el-tab-pane label="版本" name="second">版本</el-tab-pane>
-        <el-tab-pane label="动态" name="third">
+        <el-tab-pane label="通知" name="third">
           <div>
             <div>
               <el-button
