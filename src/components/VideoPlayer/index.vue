@@ -15,7 +15,7 @@
             :src="videoUrl"
             type="video/mp4" >
         </video>
-        <div :style="{display:videoPlayerNoVideoIsShow?'block':'none'}">暂无视频</div>
+        <!--<div :style="{display:videoPlayerNoVideoIsShow?'block':'none'}">暂无视频</div>-->
 
     </div>
    
@@ -134,28 +134,29 @@
          document.onkeydown = function (event) {
           let e = event || window.event || arguments.callee.caller.arguments[0];
           console.log(e.keyCode,_self.videoPlayer)
-           
-         
-          _self.playerControls.stateIcon = 'el-icon-video-play'
-           if (e && e.keyCode === 37) { //left arrow
-            _self.videoPlayer.pause()
-              _self.videoPlayer.currentTime ( Math.max(0, _self.videoPlayer.currentTime() - frameTime));
-          } else if (e && e.keyCode === 39) { //right arrow
+          if (_self.videoPlayerIsShow) {
+
+           _self.playerControls.stateIcon = 'el-icon-video-play'
+            if (e && e.keyCode === 37) { //left arrow
               _self.videoPlayer.pause()
-              _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
-          }else if(e && e.keyCode === 32){
-            console.log(_self.videoPlayer.paused())
-            if (_self.videoPlayer.paused()) {
-                _self.videoPlayer.play()
-                _self.playerControls.stateIcon = 'el-icon-video-pause';
-                _self.playerStepInterval();
-              } else {
+                _self.videoPlayer.currentTime ( Math.max(0, _self.videoPlayer.currentTime() - frameTime));
+            } else if (e && e.keyCode === 39) { //right arrow
                 _self.videoPlayer.pause()
-                _self.playerControls.stateIcon = 'el-icon-video-play'
-              }
-          }
+                _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
+            }else if(e && e.keyCode === 32){
+              console.log(_self.videoPlayer.paused())
+              if (_self.videoPlayer.paused()) {
+                  _self.videoPlayer.play()
+                  _self.playerControls.stateIcon = 'el-icon-video-pause';
+                  _self.playerStepInterval();
+                } else {
+                  _self.videoPlayer.pause()
+                  _self.playerControls.stateIcon = 'el-icon-video-play'
+                }
+            }
+           }
         };
- 
+       
       },
       /**
        * 加载视频资源

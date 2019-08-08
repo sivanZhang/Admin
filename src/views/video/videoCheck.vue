@@ -95,7 +95,7 @@
         console.log(this.pWidth+';'+this.pHeight);
         
 
-        document.getElementById("videoComment").style.height = (bH - (videoInfoH + videoTabsH + 20 + 20)) + "px";
+        document.getElementById("videoComment").style.height = (bH - (videoInfoH + videoTabsH + 20 + 20+94)) + "px";
     },
     methods: {
     
