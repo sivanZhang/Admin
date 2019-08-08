@@ -51,7 +51,7 @@
               @selection-change="handleSelectionChange"
               @row-click="updateIsRead"
             >
-              <el-table-column type="expand" style="padding-left:0px">
+              <el-table-column type="expand" width="15">
                 <template slot-scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">
                     <el-row>
@@ -92,9 +92,9 @@
                   </el-form>
                 </template>
               </el-table-column>
-              <el-table-column type="selection" width="40"></el-table-column>
+              <el-table-column type="selection"  width="28"></el-table-column>
 
-              <el-table-column label="通知" width="150" show-overflow-tooltip>
+              <el-table-column label="通知" width="200" show-overflow-tooltip>
                 <template slot-scope="scope">
                   <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
 
@@ -233,7 +233,7 @@ export default {
     //批量删除通知
     delNotices() {
       const ids = this.multipleSelection.map(item => item.id).join(",");
-      //console.log(ids);
+      console.log(ids);
       this.$confirm("确定删除？", "注意", {
         confirmButtonText: "删除",
 
@@ -242,33 +242,10 @@ export default {
         type: "warning"
       }).then(() => {
         HTTP.removeNotice({
-          method: "delete",
-          ids: ids
+          ids: ids,
+          method: "delete"
         }).then(({ data }) => {
-          if (data.status === "ok") {
-            this.$message.success(data.msg);
-            this.$refs.multipleTable.clearSelection();
-            this.getNoticeDetail();
-          } else {
-            this.$message.error(data.msg);
-          }
-        });
-      });
-    },
-    //单个删除通知
-    delNotice(id) {
-      this.$confirm("确定删除此条通知？", "注意", {
-        confirmButtonText: "删除",
-
-        concelButtonText: "取消",
-
-        type: "warning"
-      }).then(() => {
-        HTTP.removeNotice({
-          method: "delete",
-          ids: id
-        }).then(({ data }) => {
-          if (data.status === "ok") {
+          if (data.status === 0) {
             this.$message.success(data.msg);
             this.$refs.multipleTable.clearSelection();
             this.getNoticeDetail();
