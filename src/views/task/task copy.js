@@ -4,14 +4,14 @@ import {
     putTaskRecord,
     queryTaskRecord
 } from "@/api/task";
-import draggable from "vuedraggable"
+import draggable from "vuedraggable";
 import top from './components/top'
 import taskForm from './components/task-form'
 export default {
     components: {
         draggable,
         top,
-        taskForm,
+        taskForm
     },
     data() {
         return {
@@ -130,8 +130,7 @@ export default {
             taskListSortSel: [],
             taskListProgramSel: [],
             taskListProgressSel: [],
-            checked: false,
-            dargType: true
+            checked: false
         };
     },
     methods: {
@@ -161,64 +160,40 @@ export default {
             // to avoid Firefox bug
             dataTransfer.setData("Text", "");
         },
-        checkMove() {
-            return false
-        },
-        handelChanged(e) {
-            const self = this
-            if (e.to.dataset.arr === e.from.dataset.arr) {
-                return false
-            }
-            /* 
-                        console.log(e.to.dataset.arr, e.from.dataset.arr, e.item.dataset.taskid, e.newIndex, e.oldIndex); */
-            let status
-                /* let itemArr = this[e.to.dataset.arr][e.newIndex]
+        checkMove(e) {
+            console.log(e);
+            return false;
 
-                function cancelDrag() {
-                    self[e.to.dataset.arr][e.newIndex].splice(e.newIndex, 1)
-                    self[e.from.dataset.arr][e.oldIndex].splice(e.oldIndex, 0, itemArr)
-                    debugger
-                    console.log();
-                } */
-            switch (e.to.dataset.arr) {
-                case 'DraftArr':
-                    status = 0
-                    break;
-                case 'InProgressArr':
-                    status = 1
-                    break;
-                case 'FinishedArr':
-                    status = 2
-                    break;
-                case 'TimeOutArr':
-                    status = 3
-                    break;
-                case 'PauseArr':
-                    status = 4
-                    break;
-            }
-            let loading = this.$loading({
-                fullscreen: true
-            });
-            putTaskRecord({
-                method: 'put',
-                id: e.item.dataset.taskid,
-                status
-            }).then(({
-                data
-            }) => {
-                loading.close()
-                if (data.status === 0) {
-                    this[e.to.dataset.arr][e.newIndex]['status'] = status
-                    this.$message.success(data.msg)
-                } else {
-                    this.$message.warning(data.msg)
+            /* console.log(e); */
+
+            /* if (e.draggedContext.element.status !== e.relatedContext.element.status) {
+                let loading = this.$loading({
+                    fullscreen: true
+                });
+                putTaskRecord({
+                    method: 'put',
+                    id: e.draggedContext.element.id,
+                    status: e.relatedContext.element.status,
+                }).then(({
+                    data
+                }) => {
+                    loading.close()
+                    if (data.status === 0) {
+                        e.draggedContext.element.status = e.relatedContext.element.status
+                        this.$message.success(data.msg)
+                    } else {
+                        this.$message.warning(data.msg).
+                        e.returnValue = false
+                    }
                     this.getMyTasks()
-                }
-            }).catch(err => {
-                loading.close()
-                this.getMyTasks()
-            })
+                }).catch(err => {
+                    this.$message.error(data.msg)
+                    loading.close()
+                    e.returnValue = false
+                })
+            } else {
+                return false
+            } */
         },
         cancel() {
             this.isDialogShow = false;

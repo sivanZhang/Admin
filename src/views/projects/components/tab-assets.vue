@@ -46,8 +46,23 @@
       <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
       <el-table-column prop="status" label="状态" align="left"></el-table-column>
-      <el-table-column prop="executor" label="执行人" align="left"></el-table-column>
-      <el-table-column prop="deadline" label="截止日期" align="left"></el-table-column>
+      <el-table-column label="当前环节" align="center" width="160px">
+        <el-table-column prop="link" label="工种" align="left">
+          <template slot-scope="scope">
+            <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="截止日期" align="left" >
+          <template slot-scope="scope">
+            <div v-for="(todo,index) of scope.row.link" :key="index" style="position:top">
+             {{todo.date_end|dateFormat}}
+            </div>
+          </template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="计划截止日期" align="left" width="95px">
+        <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
+      </el-table-column>
       <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
@@ -74,7 +89,7 @@
       ></el-pagination>
     </div>
 
-    <el-dialog title="新建资产" :visible.sync="isShow" width="480px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="480px" top="5vh">
       <el-form
         :model="AssetForm"
         :rules="rules"
@@ -82,26 +97,26 @@
         label-width="100px"
         hide-required-asterisk
         label-position="left"
-      > 
-          <el-upload
-            accept="image/jpeg, image/gif, image/png"
-            ref="upload"
-            class="upload-demo"
-            action="/api/appfile/appfile/"
-            :headers="headers"
-            :on-success="handleSuccess"
-            drag
-            :show-file-list="false"
-          >
-            <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
-            <template v-else>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">
-                将文件拖到此处，或
-                <em>点击上传</em>
-              </div>
-            </template>
-          </el-upload> 
+      >
+        <el-upload
+          accept="image/jpeg, image/gif, image/png"
+          ref="upload"
+          class="upload-demo"
+          action="/api/appfile/appfile/"
+          :headers="headers"
+          :on-success="handleSuccess"
+          drag
+          :show-file-list="false"
+        >
+          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+          <template v-else>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </template>
+        </el-upload>
         <el-form-item label="资产名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
@@ -128,7 +143,7 @@
         </el-form-item>
         <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
-        </el-form-item>--> 
+        </el-form-item>-->
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">立即创建</el-button>
