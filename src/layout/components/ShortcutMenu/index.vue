@@ -34,12 +34,12 @@
               </div>
             </el-col>
             <el-col :span="8">
-              <div v-for="(todo,index) of MyTask" :key="index">
+              <div v-for="(todo,index) of MyTask.slice(0, 9)" :key="index">
                 <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
             </el-col>
             <el-col :span="8">
-              <div v-for="(item,index) of ProjectList" :key="index">
+              <div v-for="(item,index) of ProjectList.slice(0, 9)" :key="index">
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
             </el-col>
