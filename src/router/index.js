@@ -219,7 +219,16 @@ export const constantRoutes = [{
                 title: '资产列表',
                 icon: 'assetlist'
             }
-        }, ]
+        }, {
+            path: 'asset-import', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
+            name: 'asset-import',
+            component: () =>
+                import ('@/views/assetsManagement/asset-import'),
+            meta: {
+                title: '资产导入',
+                icon: 'assetlist'
+            }
+        },]
     },
     {
         path: 'external-link',
