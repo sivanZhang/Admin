@@ -18,8 +18,12 @@
           <el-col :span="20">
             <el-row style="font-size:20px">{{loginMessage.msg}}</el-row>
             <el-row style="padding-top:10px">
-              <el-col :span="4">电子邮件：</el-col>
+              <el-col :span="4" align="right">电子邮件：</el-col>
               <el-col :span="20">{{loginMessage.email}}</el-col>
+            </el-row>
+            <el-row style="padding-top:10px">
+              <el-col :span="4" align="right">工种：</el-col>
+              <el-col :span="20"></el-col>
             </el-row>
           </el-col>
         </el-row>
@@ -148,6 +152,7 @@
 
 <script>
 import * as HTTP from "@/api/notice";
+
 export default {
   name: "Notice",
   created() {
@@ -162,7 +167,8 @@ export default {
       active: null,
       multipleSelection: [],
       activeName: "third",
-      loginMessage: this.$store.state.login.userInfo
+      loginMessage: this.$store.state.login.userInfo,
+      
     };
   },
 
@@ -196,6 +202,8 @@ export default {
         //   console.log(this.notice);
       });
     },
+   
+   
     //修改是否已读
     updateIsRead(row) {
       console.log(row);
