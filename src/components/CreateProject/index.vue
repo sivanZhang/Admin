@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" margin-top="5px" @closed="cancel()">
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" top="5vh" @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"

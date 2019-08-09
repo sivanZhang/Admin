@@ -51,7 +51,7 @@
         :total="TableData.length"
       ></el-pagination>
     </div>
-    <el-dialog title="新建资产" :visible.sync="isShow" width="480px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="480px" top="5vh">
       <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
         
           <el-upload
