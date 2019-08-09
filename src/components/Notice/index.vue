@@ -15,14 +15,14 @@
           <el-col :span="4">
             <svg-icon icon-class="people2" style="width:50px;height:50px;"></svg-icon>
           </el-col>
-          <el-col :span="20">
+          <el-col :span="14">
             <el-row style="font-size:20px">{{loginMessage.msg}}</el-row>
             <el-row style="padding-top:10px">
-              <el-col :span="4" align="right">电子邮件：</el-col>
+              <el-col :span="3" align="right">邮箱：</el-col>
               <el-col :span="20">{{loginMessage.email}}</el-col>
             </el-row>
             <el-row style="padding-top:10px">
-              <el-col :span="4" align="right">工种：</el-col>
+              <el-col :span="3" align="right">工种：</el-col>
               <el-col :span="20"></el-col>
             </el-row>
           </el-col>
