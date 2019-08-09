@@ -162,12 +162,15 @@ export default {
             dataTransfer.setData("Text", "");
         },
         checkMove() {
-            return this.dargType
+            return false
         },
         handelChanged(e) {
             const self = this
-                /* 
-                            console.log(e.to.dataset.arr, e.from.dataset.arr, e.item.dataset.taskid, e.newIndex, e.oldIndex); */
+            if (e.to.dataset.arr === e.from.dataset.arr) {
+                return false
+            }
+            /* 
+                        console.log(e.to.dataset.arr, e.from.dataset.arr, e.item.dataset.taskid, e.newIndex, e.oldIndex); */
             let status
                 /* let itemArr = this[e.to.dataset.arr][e.newIndex]
 
@@ -175,7 +178,7 @@ export default {
                     self[e.to.dataset.arr][e.newIndex].splice(e.newIndex, 1)
                     self[e.from.dataset.arr][e.oldIndex].splice(e.oldIndex, 0, itemArr)
                     debugger
-                    console.log(self[e.to.dataset.arr], self[e.from.dataset.arr]);
+                    console.log();
                 } */
             switch (e.to.dataset.arr) {
                 case 'DraftArr':

@@ -5,49 +5,44 @@
     <el-tabs>
       <el-tab-pane label="任务板">
         <div>
-          <el-row>
-            <el-col :span="18" class="list">
-              <span class="svg-container" title="显示小型网格布局">
-                <svg-icon icon-class="list_min"></svg-icon>
-              </span>
-              <span class="svg-container" title="大型网格布局">
-                <svg-icon icon-class="list_max"></svg-icon>
-              </span>
-              <el-select
-                v-model="value1"
-                multiple
-                placeholder="任何项目"
-                size="mini"
-                collapse-tags
-                style="margin-left: 20px;"
-              >
-                <el-option
-                  v-for="item in taskList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-              <el-select
-                v-model="value2"
-                multiple
-                collapse-tags
-                style="margin-left: 20px;"
-                placeholder="任何备注"
-                size="mini"
-              >
-                <el-option
-                  v-for="item in taskProgress"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="6" class="fold-icon">
-              <svg-icon icon-class="fold" @click="taskBoardRightShow"></svg-icon>
-            </el-col>
-          </el-row>
+          <div>
+            <span class="svg-container" title="显示小型网格布局">
+              <svg-icon icon-class="list_min"></svg-icon>
+            </span>
+            <span class="svg-container" title="大型网格布局">
+              <svg-icon icon-class="list_max"></svg-icon>
+            </span>
+            <el-select
+              v-model="value1"
+              multiple
+              placeholder="任何项目"
+              size="mini"
+              collapse-tags
+              style="margin-left: 20px;"
+            >
+              <el-option
+                v-for="item in taskList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <el-select
+              v-model="value2"
+              multiple
+              collapse-tags
+              style="margin-left: 20px;"
+              placeholder="任何备注"
+              size="mini"
+            >
+              <el-option
+                v-for="item in taskProgress"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
           <el-divider></el-divider>
           <el-row type="flex" justify="space-between" :gutter="15">
             <el-col>
@@ -69,9 +64,9 @@
                 <draggable
                   v-model="DraftArr"
                   :group="{name:'task'}"
-                  
                   :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="DraftArr"
+                  @end="handelChanged"
+                  data-arr="DraftArr"
                   class="board-column-content"
                 >
                   <el-card
@@ -79,7 +74,7 @@
                     :style="{margin:'10px 0'}"
                     v-for="item of DraftArr"
                     :key="item.id"
-                    shadow="never" :data-taskid="item.id"
+                    :data-taskid="item.id"
                     :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
@@ -105,7 +100,8 @@
                   v-model="InProgressArr"
                   :group="{name:'task'}"
                   :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="InProgressArr"
+                  @end="handelChanged"
+                  data-arr="InProgressArr"
                   class="board-column-content"
                 >
                   <!-- ($event,1) -->
@@ -115,7 +111,7 @@
                     :style="{margin:'10px 0'}"
                     v-for="item of InProgressArr"
                     :key="item.id"
-                    shadow="never" :data-taskid="item.id"
+                    :data-taskid="item.id"
                     :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
@@ -140,16 +136,18 @@
                 <draggable
                   class="board-column-content"
                   v-model="FinishedArr"
-                  :group="{name:'task'}"
+                  v-bind:options="{group:'task'}"
                   :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="FinishedArr"
+                  :move="checkMove"
+                  @end="handelChanged"
+                  data-arr="FinishedArr"
                 >
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of FinishedArr"
                     :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
+                    :data-taskid="item.id"
+                    :body-style="{backgroundColor:'#409EFF',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
@@ -175,13 +173,14 @@
                   v-model="TimeOutArr"
                   :group="{name:'task'}"
                   :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="TimeOutArr"
+                  @end="handelChanged"
+                  data-arr="TimeOutArr"
                 >
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of TimeOutArr"
                     :key="item.id"
-                    shadow="never" :data-taskid="item.id"
+                    :data-taskid="item.id"
                     :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
@@ -208,14 +207,15 @@
                   v-model="PauseArr"
                   :group="{name:'task'}"
                   :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="PauseArr"
+                  @end="handelChanged"
+                  data-arr="PauseArr"
                 >
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of PauseArr"
                     :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
+                    :data-taskid="item.id"
+                    :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
