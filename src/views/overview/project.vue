@@ -6,13 +6,12 @@
           closable
           v-model="isDrawerShow"
           width="526"
-          
           :transfer="false"
           :mask-style="{backgroundColor: 'transparent'}"
           :append-to-body="true"
         >
           <drawer-header :project="project" style="padding:10px" />
-          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData"/>
+          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData" />
         </Drawer>
         <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
           <div slot="title">
@@ -50,7 +49,7 @@
           </div>
           <div style="padding: 15px;">
             <router-link :to="`/projects/project-detail/${item.id}`">
-            <mallki class-name="mallki-text"  :text="item.name" />
+              <mallki class-name="mallki-text" :text="item.name" />
             </router-link>
             <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
             <el-row @click.native="show(item)">
@@ -60,7 +59,12 @@
               </el-col>
               <el-col :span="12">
                 <p class="subtitle">项目预算</p>
-                <div>¥{{item.budget|numberFormat}}</div>
+                <div style="display:flex;">
+                  <div>
+                    ¥{{item.budget|numberFormat}}
+                  </div>
+                  <div style="font-size:10px;margin-top:1px;font-weight:400">{{"万元"}}</div>
+                </div>
               </el-col>
               <el-col :span="12">
                 <p class="subtitle">开始日期</p>
