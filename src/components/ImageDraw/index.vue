@@ -96,11 +96,13 @@
             this.initDraw();
         },
         initDraw () {
+          this.canvasMoveUse=false
            let _self=this;
            var temp=document.getElementById("textAreaCanvas");
             if(temp){
               document.getElementById("drawContext").removeChild(temp);
             }
+              this.context.clearRect(0, 0, this.width, this.height);
            this.imgStack.length=0
            this.img.src =this.imageBase64;
            this.img.onload = () => {
@@ -130,29 +132,32 @@
               y: canvasY / this.height,
               type: this.lineType
             });
+             var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+             this.imgStack.push(imgData);
             if(this.lineType=='pencel'){
               this.beginDraw=true;
-              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
-              this.imgStack.push(imgData);
+             
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this. context.save()
               this.context.beginPath()
              // this.context.moveTo(e.layerX, e.layerY)
             }else if(this.lineType=='circle'){
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
-              this.imgStack.push(imgData);           
+             // this.imgStack.push(imgData);           
             }else if(this.lineType=='rec'){
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
               this.imgStack.push(imgData);
             }else if(this.lineType=='arrowhead'){
               this.beginDraw=true;
               var  imgData =this.context.getImageData(0, 0, this.width, this.height);
-              this.imgStack.push(imgData);
+              //this.imgStack.push(imgData);
               this.context.putImageData(this.beginRec.imageData, 0, 0)
               this. context.save()
               this.context.beginPath()
               this.beginArrowhead={x:e.layerX,y:e.layerY};
             }else if(this.lineType=='text'){
+              var  imgData =this.context.getImageData(0, 0, this.width, this.height);
+                 // this.imgStack.push(imgData);
                var temp=document.getElementById("textAreaCanvas");
                 if(temp){
                   document.getElementById("drawContext").removeChild(temp);
@@ -170,8 +175,7 @@
                 textArea.style.font="italic small-caps bold 14px arial";
                 textArea.id="textAreaCanvas";
                  let _self = this;
-                  var  imgData =_self.context.getImageData(0, 0, _self.width,_self.height);
-                  _self.imgStack.push(imgData);
+                  this.canvasMoveUse = false;
 
                 textArea.onblur = function(){
                   _self.drawText(textArea.value,x,y)
@@ -182,7 +186,7 @@
         },
          // 鼠标移动时绘制
         canvasMove (e) {
-          console.log(this.lineType,this.canvasMoveUse)
+          console.log(this.lineType,this.canvasMoveUse,this.canDraw)
           let _self=this;
           if (this.canvasMoveUse && this.canDraw) {
             this.context.strokeStyle = this.lineColor
@@ -222,6 +226,9 @@
                 this.context.fill();
               }
  
+            }else if  (this.lineType === 'text') {
+              
+                this.canvasMoveUse = false
             }
             this.context.stroke()
           }
@@ -339,10 +346,11 @@
          
         },
         undoDrawImage:function(){
+          console.log(this.imgStack.length);
             let temp=document.getElementById("textAreaCanvas");
               if(temp){
                 document.getElementById("drawContext").removeChild(temp);
-              }
+            }
             if (this.imgStack.length > 0) {
                 this.context.clearRect(0, 0, this.width, this.height);
                 var imgData = this.imgStack.pop();
