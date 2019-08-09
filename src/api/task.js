@@ -11,7 +11,7 @@ export function addTaskLogs(data) {
 export function addTask(data) {
     return AXIOS.post('/task/task/', data)
 }
-//获取任务
+//获取任务或者详情
 export function queryTask(params = null) {
     return AXIOS.get('/task/task/', { params })
 }

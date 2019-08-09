@@ -2,10 +2,10 @@
   <div id="layout_main">
     <top :arr="topArr" />
     <el-divider></el-divider>
-    <el-tabs>
+    <el-tabs type="border-card">
       <el-tab-pane label="任务板">
         <div>
-          <div>
+          <!-- <div>
             <span class="svg-container" title="显示小型网格布局">
               <svg-icon icon-class="list_min"></svg-icon>
             </span>
@@ -42,8 +42,7 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-          </div>
-          <el-divider></el-divider>
+          </div>-->
           <el-row type="flex" justify="space-between" :gutter="15">
             <el-col>
               <div class="project-warp">
@@ -98,7 +97,7 @@
                 </el-row>
                 <draggable
                   v-model="InProgressArr"
-                  :group="{name:'task'}"
+                  group="task"
                   :sort="false"
                   @end="handelChanged"
                   data-arr="InProgressArr"
@@ -136,7 +135,7 @@
                 <draggable
                   class="board-column-content"
                   v-model="FinishedArr"
-                  v-bind:options="{group:'task'}"
+                  group="task"
                   :sort="false"
                   :move="checkMove"
                   @end="handelChanged"
@@ -171,7 +170,7 @@
                 <draggable
                   class="board-column-content"
                   v-model="TimeOutArr"
-                  :group="{name:'task'}"
+                  group="task"
                   :sort="false"
                   @end="handelChanged"
                   data-arr="TimeOutArr"
@@ -205,7 +204,7 @@
                 <draggable
                   class="board-column-content"
                   v-model="PauseArr"
-                  :group="{name:'task'}"
+                  group="task"
                   :sort="false"
                   @end="handelChanged"
                   data-arr="PauseArr"
@@ -233,6 +232,9 @@
         >
           <el-tabs>
             <el-tab-pane label="执行记录">
+              <tabLog :loglist="LogList" :logsLoading="logsLoading"/>
+            </el-tab-pane>
+            <el-tab-pane label="执行任务">
               <task-form
                 :task-record.sync="TaskRecord"
                 :createLoading="createLoading"
@@ -240,8 +242,9 @@
                 @cancel="cancel"
               />
             </el-tab-pane>
-            <el-tab-pane label="执行任务">222</el-tab-pane>
-            <el-tab-pane label="任务详情">222</el-tab-pane>
+            <el-tab-pane label="任务详情">
+              <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading"/>
+            </el-tab-pane>
             <el-tab-pane label="备注">222</el-tab-pane>
           </el-tabs>
         </Drawer>

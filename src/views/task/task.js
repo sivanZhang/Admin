@@ -2,19 +2,28 @@ import {
     queryMyTask,
     addTaskRecord,
     putTaskRecord,
-    queryTaskRecord
+    queryTaskRecord,
+    queryTask
 } from "@/api/task";
 import draggable from "vuedraggable"
 import top from './components/top'
 import taskForm from './components/task-form'
+import tabLog from "./components/tab-log"
+import tabTaskDtail from "./components/tab-task-detail"
 export default {
     components: {
         draggable,
         top,
         taskForm,
+        tabLog,
+        tabTaskDtail
     },
     data() {
         return {
+            TaskDetail: { name: '' },
+            detailLoading: false,
+            logsLoading: false,
+            LogList: [],
             isDrag: false,
             isDrawerShow: false,
             StatusList: [{
@@ -131,7 +140,6 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
-            dargType: true
         };
     },
     methods: {
@@ -157,10 +165,6 @@ export default {
                 loading.close()
             })
         },
-        setData(dataTransfer) {
-            // to avoid Firefox bug
-            dataTransfer.setData("Text", "");
-        },
         checkMove() {
             return false
         },
@@ -169,17 +173,7 @@ export default {
             if (e.to.dataset.arr === e.from.dataset.arr) {
                 return false
             }
-            /* 
-                        console.log(e.to.dataset.arr, e.from.dataset.arr, e.item.dataset.taskid, e.newIndex, e.oldIndex); */
             let status
-                /* let itemArr = this[e.to.dataset.arr][e.newIndex]
-
-                function cancelDrag() {
-                    self[e.to.dataset.arr][e.newIndex].splice(e.newIndex, 1)
-                    self[e.from.dataset.arr][e.oldIndex].splice(e.oldIndex, 0, itemArr)
-                    debugger
-                    console.log();
-                } */
             switch (e.to.dataset.arr) {
                 case 'DraftArr':
                     status = 0
@@ -229,6 +223,7 @@ export default {
                 task_id: obj.id,
                 type: 0
             });
+
         },
         addRecord() {
             this.createLoading = true;
@@ -253,6 +248,28 @@ export default {
                 task_id: row.id,
                 type: 0
             });
+            this.logsLoading = true
+            queryTaskRecord({
+                task_id: row.id,
+            }).then(({
+                data
+            }) => {
+                this.LogList = [...data.msg]
+                this.logsLoading = false
+            }).catch(() => {
+                this.logsLoading = false
+            })
+            this.detailLoading = true
+            queryTask({
+                id: row.id,
+            }).then(({
+                data
+            }) => {
+                this.TaskDetail = {...data.msg }
+                this.detailLoading = false
+            }).catch(() => {
+                this.detailLoading = false
+            })
         },
         //http获取‘我的任务’
         async getMyTasks() {

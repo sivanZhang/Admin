@@ -1,6 +1,6 @@
 <template>
   <div class="menu-group">
-    <div :class="[{active:activeIndex==1},'main-menu']">我的</div>
+    <router-link to="/task/task/"><div :class="[{active:activeIndex==1},'main-menu']">我的</div></router-link>
     <el-popover @show="hasData" placement="bottom" width="900" trigger="click">
       <el-row>
         <el-col :span="12">
