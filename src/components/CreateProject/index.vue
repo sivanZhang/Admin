@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" @closed="cancel()">
+  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" top="5vh" @closed="cancel()">
     <el-form
       :model="ProjectForm"
       :rules="rules"
@@ -80,6 +80,7 @@
               placeholder="项目开始日期"
               v-model="ProjectForm.start"
               style="width: 100%;"
+              :picker-options="pickerBeginDateBefore"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -91,6 +92,7 @@
               placeholder="项目结束日期"
               v-model="ProjectForm.end"
               style="width: 100%;"
+              :picker-options="pickerBeginDateAfter"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -143,13 +145,33 @@ export default {
             message: "请输入数字",
             trigger: "change"
           }
-        ],
-        
+        ]
       },
       SRC: "",
       file: null,
       headers: {
         Authorization: `JWT ${getToken()}`
+      },
+      pickerBeginDateBefore: {
+        disabledDate: time => {
+          let beginDateVal = this.ProjectForm.end;
+          if (beginDateVal) {
+            return time.getTime() > beginDateVal;
+          } else {
+            return (
+              time.getTime() <
+              new Date(new Date().toLocaleDateString()).getTime()
+            );
+          }
+        }
+      },
+      pickerBeginDateAfter: {
+        disabledDate: time => {
+          let beginDateVal = this.ProjectForm.start;
+          if (beginDateVal) {
+            return time.getTime() < beginDateVal;
+          }
+        }
       }
     };
   },

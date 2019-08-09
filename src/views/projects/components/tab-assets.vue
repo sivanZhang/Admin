@@ -74,7 +74,7 @@
       ></el-pagination>
     </div>
 
-    <el-dialog title="新建资产" :visible.sync="isShow" width="480px">
+    <el-dialog title="新建资产" :visible.sync="isShow" width="480px" top="5vh">
       <el-form
         :model="AssetForm"
         :rules="rules"
