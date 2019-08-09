@@ -67,21 +67,21 @@
                   </el-col>
                 </el-row>
                 <draggable
-                  v-model="DraftArr"
-                  :group="{name:'task'}"
-                  
-                  :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="DraftArr"
+                  :list="DraftArr"
+                  v-bind:options="{group:'task'}"
+                  @change="checkMove"
                   class="board-column-content"
                 >
-                  <el-card
-                    @click.native="openDialog(item)"
-                    :style="{margin:'10px 0'}"
-                    v-for="item of DraftArr"
-                    :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                  <transition-group>
+                    <el-card
+                      @click.native="openDialog(item)"
+                      :style="{margin:'10px 0'}"
+                      v-for="item of DraftArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
                 </draggable>
               </div>
             </el-col>
@@ -102,22 +102,22 @@
                   </el-col>
                 </el-row>
                 <draggable
-                  v-model="InProgressArr"
-                  :group="{name:'task'}"
-                  :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="InProgressArr"
+                  :list="InProgressArr"
+                  :options="{group:'task'}"
+                  @change="checkMove"
                   class="board-column-content"
                 >
                   <!-- ($event,1) -->
-
-                  <el-card
-                    @click.native="openDialog(item)"
-                    :style="{margin:'10px 0'}"
-                    v-for="item of InProgressArr"
-                    :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                  <transition-group>
+                    <el-card
+                      @click.native="openDialog(item)"
+                      :style="{margin:'10px 0'}"
+                      v-for="item of InProgressArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
                 </draggable>
               </div>
             </el-col>
@@ -139,18 +139,19 @@
                 </el-row>
                 <draggable
                   class="board-column-content"
-                  v-model="FinishedArr"
-                  :group="{name:'task'}"
-                  :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="FinishedArr"
+                  :list="FinishedArr"
+                  :options="{group:'task'}"
+                  @change="checkMove"
                 >
-                  <el-card
-                    :style="{margin:'10px 0'}"
-                    v-for="item of FinishedArr"
-                    :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                  <transition-group>
+                    <el-card
+                      :style="{margin:'10px 0'}"
+                      v-for="item of FinishedArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
                 </draggable>
               </div>
             </el-col>
@@ -172,18 +173,19 @@
                 </el-row>
                 <draggable
                   class="board-column-content"
-                  v-model="TimeOutArr"
-                  :group="{name:'task'}"
-                  :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="TimeOutArr"
+                  :list="TimeOutArr"
+                  :options="{group:'task'}"
+                  @change="checkMove"
                 >
-                  <el-card
-                    :style="{margin:'10px 0'}"
-                    v-for="item of TimeOutArr"
-                    :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                  <transition-group>
+                    <el-card
+                      :style="{margin:'10px 0'}"
+                      v-for="item of TimeOutArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
                 </draggable>
               </div>
             </el-col>
@@ -205,18 +207,19 @@
                 </el-row>
                 <draggable
                   class="board-column-content"
-                  v-model="PauseArr"
-                  :group="{name:'task'}"
-                  :sort="false"
-                  :move="checkMove" @end="handelChanged" data-arr="PauseArr"
+                  :list="PauseArr"
+                  :options="{group:'task'}"
+                  @change="checkMove"
                 >
-                  <el-card
-                    :style="{margin:'10px 0'}"
-                    v-for="item of PauseArr"
-                    :key="item.id"
-                    shadow="never" :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                  <transition-group>
+                    <el-card
+                      :style="{margin:'10px 0'}"
+                      v-for="item of PauseArr"
+                      :key="item.id"
+                      shadow="never"
+                      :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
+                    >{{item.name}}</el-card>
+                  </transition-group>
                 </draggable>
               </div>
             </el-col>

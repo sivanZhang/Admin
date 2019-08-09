@@ -8,8 +8,8 @@
         border: 1px solid #ddd;
     }
     .board-column-content {
-        height: auto;
-        min-height: 60px;
+        height: 100%;
+        min-height: 300px;
     }
     .status {
         i {
@@ -21,12 +21,4 @@
             }
         }
     }
-}
-
-.flip-list-move {
-    transition: transform 0.5s;
-}
-
-.no-move {
-    transition: transform 0s;
 }
