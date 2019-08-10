@@ -84,7 +84,7 @@ export default {
       if (obj && "name" in obj) return obj.name;
     },
     executorFilter(arr) {
-      if (arr.length) {
+      if (Array.isArray(arr) && arr.length) {
         return arr
           .map(item => {
             return item.name;

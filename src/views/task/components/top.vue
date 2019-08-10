@@ -2,7 +2,7 @@
     <div class="layout_main_top">
       <div class="layout_main_top_left">
         <div class="layout_task" v-for="(item,index) of props.arr" :key="index">
-          <h2>{{item.num}}</h2>
+          <h3>{{item.num}}</h3>
           <span class="layout_top_span">{{item.title}}</span>
         </div>
       </div>

@@ -20,7 +20,9 @@ export default {
     },
     data() {
         return {
-            TaskDetail: { name: '' },
+            TaskDetail: {
+                name: ''
+            },
             detailLoading: false,
             logsLoading: false,
             LogList: [],
@@ -158,6 +160,7 @@ export default {
                 if (data.status === 0) {
                     row.status = status
                     this.$message.success(data.msg)
+                    this.resetTasks()
                 } else {
                     this.$message.warning(data.msg)
                 }
@@ -204,14 +207,14 @@ export default {
                 loading.close()
                 if (data.status === 0) {
                     this[e.to.dataset.arr][e.newIndex]['status'] = status
+                    self.resetTasks()
                     this.$message.success(data.msg)
                 } else {
                     this.$message.warning(data.msg)
-                    this.getMyTasks()
                 }
             }).catch(err => {
                 loading.close()
-                this.getMyTasks()
+                self.resetTasks()
             })
         },
         cancel() {
@@ -231,6 +234,7 @@ export default {
                 .then(res => {
                     if (res.data.status === 0) {
                         this.$message.success(res.data.msg);
+                        this.getMyTasks()
                     } else {
                         this.$message.warning(res.data.msg);
                     }
@@ -265,7 +269,9 @@ export default {
             }).then(({
                 data
             }) => {
-                this.TaskDetail = {...data.msg }
+                this.TaskDetail = {
+                    ...data.msg
+                }
                 this.detailLoading = false
             }).catch(() => {
                 this.detailLoading = false
@@ -273,23 +279,22 @@ export default {
         },
         //http获取‘我的任务’
         async getMyTasks() {
-            this.DraftArr = []
-            this.InProgressArr = []
-            this.FinishedArr = []
-            this.TimeOutArr = []
-            this.PauseArr = []
             await queryMyTask({
                 user: this.$store.state.login.userInfo.id
             }).then(({
                 data
             }) => {
                 this.MyTaskList = [...data.msg];
+                this.resetTasks()
             });
-            this.DraftArr['status'] = 0
-            this.InProgressArr['status'] = 1
-            this.FinishedArr['status'] = 2
-            this.TimeOutArr['status'] = 3
-            this.PauseArr['status'] = 4
+
+        },
+        resetTasks() {
+            this.DraftArr = []
+            this.InProgressArr = []
+            this.FinishedArr = []
+            this.TimeOutArr = []
+            this.PauseArr = []
             this.MyTaskList.forEach(item => {
                 switch (item.status) {
                     case 0:
@@ -342,5 +347,5 @@ export default {
     },
     created() {
         this.getMyTasks();
-    }
+    },
 };
