@@ -1,7 +1,9 @@
 <template>
   <div class="menu-group">
-    <router-link to="/task/task/"><div :class="[{active:activeIndex==1},'main-menu']">我的</div></router-link>
-    <el-popover @show="hasData" placement="bottom" width="900" trigger="click">
+    <router-link to="/task/task/">
+      <div :class="[{active:activeIndex==1},'main-menu']">我的</div>
+    </router-link>
+    <el-popover placement="bottom" width="900" trigger="click">
       <el-row>
         <el-col :span="12">
           <div>
@@ -29,19 +31,27 @@
                   </router-link>
                 </div>
               </template>
-              <div v-else class="title">
-                暂无数据
-              </div>
+              <div v-else class="title">暂无数据</div>
             </el-col>
             <el-col :span="8">
-              <div v-for="(todo,index) of MyTask.slice(0, 9)" :key="index">
+              <div v-for="(todo,index) of MyTask.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
+              <router-link v-if="ProjectList.length>10" to="/">
+                <el-button type="text">
+                  查看更多..
+                </el-button>
+              </router-link>
             </el-col>
             <el-col :span="8">
-              <div v-for="(item,index) of ProjectList.slice(0, 9)" :key="index">
+              <div v-for="(item,index) of ProjectList.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
+              <router-link v-if="ProjectList.length>10" to="/">
+                <el-button type="text">
+                  查看更多..
+                </el-button>
+              </router-link>
             </el-col>
           </el-row>
         </el-col>
@@ -72,7 +82,12 @@ export default {
     };
   },
   created() {
-    this.getMyTask();
+    if (!this.MyTask) {
+      this.getMyTask();
+    }
+    if (!this.ProjectList) {
+      this.$store.dispatch("project/get_Projects");
+    }
   },
   computed: {
     ...mapState({
@@ -81,9 +96,6 @@ export default {
     })
   },
   methods: {
-    hasData() {
-      !this.ProjectList && this.$store.dispatch("project/get_Projects");
-    },
     getMyTask() {
       queryMyTask({
         mine: null
