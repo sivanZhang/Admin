@@ -67,8 +67,8 @@
       </el-table>
     </div>
 
-    <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="510px">
-      <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="120px">
+    <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="490px">
+      <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <el-form-item label="任务名称" prop="name">
           <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
         </el-form-item>
@@ -144,6 +144,7 @@ export default {
   name: "tab-task",
   data() {
     return {
+      DeptUsers:[],
       keyword: "",
       isDialogShow: false,
       buttonStates: {
@@ -178,11 +179,6 @@ export default {
       type: Array
     }
   },
-  computed: {
-    ...mapState({
-      DeptUsers: state => state.admin.DeptUsers
-    })
-  },
   methods: {
     //行被点击后出发
     rowSelected(row) {
@@ -207,8 +203,9 @@ export default {
           this.TaskForm = {
             priority: 0,
             pid: this.ActiveRow.id,
-            asset: this.ActiveRow.asset.id
+            asset: this.ActiveRow.asset.id,
           };
+          this.DeptUsers = this.ActiveRow.executor
           break;
         case 3:
           if (!Object.keys(this.ActiveRow).length) {

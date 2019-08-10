@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form v-model="TaskRecord" ref="task-form" label-width="80px">
+    <el-form v-model="TaskRecord" ref="task-form" label-width="100px" label-position="left">
       <el-form-item label="标题" prop="title">
         <el-input type="text" v-model="TaskRecord.title" style="width:100%"></el-input>
       </el-form-item>

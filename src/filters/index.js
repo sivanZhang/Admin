@@ -2,13 +2,14 @@
 export function avatarFormat(text) {
     return `${text}`.substring(0, 1);
 }
-//时间戳格式化为 yyyy/dd/mmdateTimeFormat
+//时间戳格式化为 yyyy/dd/mm
 export function dateFormat(date) {
     if (date)
         return new Date(date * 1000).toLocaleDateString();
     else
         return '-'
 }
+//时间戳格式化为 yyyy/dd/mm hh:mm:ss
 export function dateTimeFormat(date) {
     if (date)
         return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`;
@@ -48,8 +49,6 @@ export function Priority(priority) {
         case 1:
             return '优先'
             break
-
-
     }
 }
 //难度等级
@@ -67,7 +66,6 @@ export function Level(level) {
         case 3:
             return '高难度'
             break
-
     }
 }
 //通知是否已读

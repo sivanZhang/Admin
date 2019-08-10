@@ -4,7 +4,7 @@
       :model="ProjectForm"
       :rules="rules"
       ref="projectForm"
-      label-width="85px"
+      label-width="100px"
       class="demo-ProjectForm"
       label-position="left"
       hide-required-asterisk

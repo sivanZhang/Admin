@@ -8,7 +8,7 @@
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
           <div slot="title" style="font-size:14px">
             {{item.dept.name}}
-            <el-button @click="showTaskForm(item.link_id)">添加任务</el-button>
+            <el-button @click="showTaskForm(item.link_id,item.dept.id)">添加任务</el-button>
           </div>
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
@@ -28,7 +28,7 @@
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
         <el-col :span="20">
-          <el-form :model="item" label-width="80px">
+          <el-form :model="item" label-width="90px">
             <el-form-item
               label="环节内容"
               prop="content"
@@ -70,8 +70,8 @@
       </el-row>
     </el-dialog>
     <!-- 添加任务 -->
-    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="510px" :modal="false">
-      <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="120px">
+    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="490px" :modal="false">
+      <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="100px">
         <el-form-item label="任务名称" prop="name">
           <el-input v-model="TaskForm.name"></el-input>
         </el-form-item>
@@ -96,12 +96,12 @@
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择执行人">
-            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务主管" prop="manager">
           <el-select v-model="TaskForm.manager" placeholder="请选择主管">
-            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -132,6 +132,7 @@
 import { addTask } from "@/api/task";
 import { addLinks } from "@/api/links";
 import { getDeptUsers } from "@/api/admin";
+import { getDept } from "@/api/admin";
 import { mapState } from "vuex";
 import myMixin from "./mixins";
 import { type } from "os";
@@ -140,6 +141,7 @@ export default {
   name: "links",
   data() {
     return {
+      DeptUsers:[],
       isCreateTaskShow: false,
       TaskForm: {},
       isDialogShow: false,
@@ -152,7 +154,7 @@ export default {
   },
   props: ["LinkList", "assetId"],
   computed: {
-    ...mapState("admin", ["DeptUsers", "DeptList"])
+    ...mapState("admin", ["DeptList"])//DeptUsers是根据登录账号得来的
   },
   methods: {
     before(ind) {
@@ -171,7 +173,14 @@ export default {
     cancelTask() {
       this.isCreateTaskShow = false;
     },
-    showTaskForm(link_id, id) {
+    showTaskForm(link_id, dept_id) {
+      getDept({
+        id:dept_id
+      }).then(res=>{
+        this.DeptUsers = [...res.data.users]
+        console.log(this.DeptUsers);
+        
+      })
       this.isCreateTaskShow = true;
       this.TaskForm = Object.assign(
         {},

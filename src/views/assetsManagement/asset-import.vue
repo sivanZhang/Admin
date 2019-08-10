@@ -1,7 +1,7 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <el-button icon="el-icon-plus" type="primary" @click="importAsset">导入资产</el-button>
+      <el-button icon="el-icon-plus" type="success" @click="importAsset" class="pan-btn green-btn" size="mini">导入资产</el-button>
     </div>
      
   </div>

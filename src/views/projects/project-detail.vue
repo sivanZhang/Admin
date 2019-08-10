@@ -65,7 +65,6 @@ export default {
   created() {
     this.getAssetList();
     this.getTaskList();
-    this.$store.dispatch("admin/get_DeptUsers");
   }
 };
 </script>

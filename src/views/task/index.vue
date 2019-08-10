@@ -74,7 +74,7 @@
                     v-for="item of DraftArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#909399',color:'#fff',padding:'15px'}"
+                    :body-style="{backgroundColor:'#808695',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
@@ -111,7 +111,7 @@
                     v-for="item of InProgressArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#67C23A',color:'#fff',padding:'15px'}"
+                    :body-style="{backgroundColor:'#19be6b',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
@@ -146,7 +146,7 @@
                     v-for="item of FinishedArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#409EFF',color:'#fff',padding:'15px'}"
+                    :body-style="{backgroundColor:'#2d8cf0',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
@@ -180,7 +180,7 @@
                     v-for="item of TimeOutArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#F56C6C',color:'#fff',padding:'15px'}"
+                    :body-style="{backgroundColor:'#ed4014',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
@@ -214,7 +214,7 @@
                     v-for="item of PauseArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#E6A23C',color:'#fff',padding:'15px'}"
+                    :body-style="{backgroundColor:'#ff9900',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
