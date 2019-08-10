@@ -13,8 +13,8 @@
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
             <template>
-              <li>开始日期: {{item.date_and_user.date_start?new Date(item.date_and_user.date_start*1000).toLocaleDateString():''}}</li>
-              <li>截止日期: {{item.date_and_user.date_end?new Date(item.date_and_user.date_end*1000).toLocaleDateString():''}}</li>
+              <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
+              <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
             </template>
           </ul>
         </el-step>
@@ -96,22 +96,12 @@
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择执行人">
-            <el-option
-              v-for="item of DeptUsers"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务主管" prop="manager">
           <el-select v-model="TaskForm.manager" placeholder="请选择主管">
-            <el-option
-              v-for="item of DeptUsers"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -144,7 +134,7 @@ import { addLinks } from "@/api/links";
 import { getDeptUsers } from "@/api/admin";
 import { mapState } from "vuex";
 import myMixin from "./mixins";
-import { type } from 'os';
+import { type } from "os";
 export default {
   mixins: [myMixin],
   name: "links",
@@ -157,12 +147,12 @@ export default {
       createLoading: false,
       createTaskLoading: false,
       selectList: [],
-      FormList: [{}],
+      FormList: [{}]
     };
   },
-  props:['LinkList','assetId'],
+  props: ["LinkList", "assetId"],
   computed: {
-    ...mapState('admin',['DeptUsers','DeptList'])
+    ...mapState("admin", ["DeptUsers", "DeptList"])
   },
   methods: {
     before(ind) {
@@ -215,8 +205,8 @@ export default {
               this.createTaskLoading = false;
               this.$message(data.msg);
               if (data.status === 0) {
-                this.cancelTask()
-                this.$emit('get-tasks')
+                this.cancelTask();
+                this.$emit("get-tasks");
                 this.isDialogShow = false;
               }
             })

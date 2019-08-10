@@ -4,13 +4,16 @@ export function avatarFormat(text) {
 }
 //时间戳格式化为 yyyy/dd/mmdateTimeFormat
 export function dateFormat(date) {
-    if(date)
+    if (date)
         return new Date(date * 1000).toLocaleDateString();
     else
         return '-'
 }
 export function dateTimeFormat(date) {
-    return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`;
+    if (date)
+        return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`;
+    else
+        return '-'
 }
 //项目工作流格式化
 export function projectStatus(code) {

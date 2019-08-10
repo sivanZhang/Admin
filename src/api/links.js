@@ -2,7 +2,7 @@ import AXIOS from '@/utils/request'
 import QS from 'qs'
 //获取环节
 export function getLinks(params) {
-    return AXIOS.get('links/links/', {
+    return AXIOS.get('/links/links/', {
         params
     })
 }
