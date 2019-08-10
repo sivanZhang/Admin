@@ -11,3 +11,7 @@ export function addProjects(data) {
 export function putProjects(data) {
     return AXIOS.post('/projects/projects/?01', data)
 }
+//我的项目
+export function getMyProject(params){
+    return AXIOS.get('/projects/projects/?mine',{params})
+}
