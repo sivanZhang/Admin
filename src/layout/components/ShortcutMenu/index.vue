@@ -34,13 +34,11 @@
               <div v-else class="title">暂无数据</div>
             </el-col>
             <el-col :span="8">
-              <div v-for="(todo,index) of MyTask.filter((item,index)=>index<=9)" :key="index">
+              <div v-for="(todo,index) of MyProject.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
               <router-link v-if="ProjectList.length>10" to="/">
-                <el-button type="text">
-                  查看更多..
-                </el-button>
+                <el-button type="text">查看更多..</el-button>
               </router-link>
             </el-col>
             <el-col :span="8">
@@ -48,9 +46,7 @@
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
               <router-link v-if="ProjectList.length>10" to="/">
-                <el-button type="text">
-                  查看更多..
-                </el-button>
+                <el-button type="text">查看更多..</el-button>
               </router-link>
             </el-col>
           </el-row>
@@ -68,7 +64,7 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import CreateProject from "@/components/CreateProject";
-import { queryMyTask } from "@/api/task";
+import { getMyProject } from "@/api/project";
 export default {
   components: {
     CreateProject
@@ -78,11 +74,11 @@ export default {
     return {
       activeIndex: 0,
       isCreateShow: false,
-      MyTask: null
+      MyProject: null
     };
   },
   created() {
-    if (!this.MyTask) {
+    if (!this.MyProject) {
       this.getMyTask();
     }
     if (!this.ProjectList) {
@@ -97,10 +93,10 @@ export default {
   },
   methods: {
     getMyTask() {
-      queryMyTask({
+      getMyProject({
         mine: null
       }).then(({ data }) => {
-        this.MyTask = [...data.msg];
+        this.MyProject = [...data.msg];
         //console.log(this.MyTask);
       });
     },
