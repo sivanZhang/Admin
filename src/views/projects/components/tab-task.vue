@@ -41,7 +41,9 @@
       >
         <!-- default-expand-all -->
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column prop="category" label="制作环节"></el-table-column>
+        <el-table-column label="制作环节">
+          <template slot-scope="scope">{{scope.row.category|categoryFilter}}</template>
+        </el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
@@ -159,6 +161,13 @@ export default {
         arr.push(item.name);
       });
       return arr.join();
+    },
+    categoryFilter(obj){
+      if('name' in obj){
+        return obj['name']
+      }else{
+        return ''
+      }
     }
   },
   props: {
