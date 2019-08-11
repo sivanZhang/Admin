@@ -1,5 +1,5 @@
 <template>
-  <div style="width:526px;min-height:969px">
+  <div style="width:526px;min-height:969px;padding:10px">
     <div id="notice-header" style="border-bottom:1px soild #999999">
       <el-row>
         <el-col :span="4">
@@ -67,9 +67,8 @@
           ></el-pagination>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务详情" name="second">
-          {{myTaskRecord}}
-          
+      <el-tab-pane label="任务详情" name="second" disabled >
+        <detail :detail="myTaskDetail" :project="project" :asset="asset"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -77,7 +76,7 @@
 
 <script>
 import * as HTTP from "@/api/task";
-
+import detail from "./components/detail"
 export default {
   name: "myTaskPlug",
   data() {
@@ -87,7 +86,9 @@ export default {
       activeName: "first",
       loginMessage: this.$store.state.login.userInfo,
       MyTask: null,
-      myTaskRecord: null,
+      myTaskDetail: {},
+      asset:{},
+      project:{},
       currentPage: 1,
       pageSize: 10,
       pageSizeList: [10, 20, 50, 100]
@@ -118,17 +119,19 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     },
-    openTaskDetail(id) {
-      const taskId = id;
-      console.log(taskId);
+    openTaskDetail(id) { 
       HTTP.getTaskDetail({
-        id: taskId
+        id: id
       }).then(({ data }) => {
-        this.myTaskRecord = [data.msg];
-        console.log(this.myTaskRecord)
+        this.myTaskDetail = data.msg;
+        this.project = data.msg.project;
+        this.asset = data.msg.asset;
       });
       this.activeName = "second";
     }
+  },
+  components:{
+    detail
   }
 };
 </script>

@@ -112,3 +112,21 @@ export function WKLevel(data) {
 
     }
 }
+//任务状态
+export function taskStatus(data){
+    switch (data) {
+        case 0:
+            return '草稿'
+            break
+        case 1:
+            return '已启动'
+            break
+        case 2:
+            return '结束'
+            break
+        case 3:
+            return '任务超时'
+            break
+
+    }
+}
