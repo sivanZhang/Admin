@@ -46,6 +46,18 @@ export const constantRoutes = [{
         hidden: true
     },
     {
+        path: '/login_myTask',
+        component: () =>
+            import ('@/views/myTask/loginMyTask'),
+        hidden: true
+    },
+    {
+        path: '/myTaskPlug',
+        component: () =>
+            import ('@/views/myTask/myTaskPlug'),
+        hidden: true
+    },
+    {
         path: '/404',
         component: () =>
             import ('@/views/404'),
