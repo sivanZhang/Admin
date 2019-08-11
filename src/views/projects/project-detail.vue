@@ -58,7 +58,7 @@ export default {
         };
       }
       queryTask(data).then(({ data }) => {
-        this.TaskList = [...data.msg];
+        this.TaskList = [...data.msg]
       });
     }
   },

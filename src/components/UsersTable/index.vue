@@ -4,7 +4,7 @@
       :data="UserList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       stripe style="width: 100%" border
       :row-style="{'font-size':'13px'}"
-      :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
+      :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}" v-loading="tableLoading">
       <el-table-column label="头像" width="100" align="center">
         <template slot-scope="scope">
           <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
@@ -59,6 +59,10 @@
     props: {
       UserList: {
         type: Array
+      },
+      tableLoading:{
+        type:Boolean,
+        default:false
       }
     },
     data(){

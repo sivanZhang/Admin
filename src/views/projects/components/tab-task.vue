@@ -27,7 +27,7 @@
           >
             <el-button @click="getTasks(1)" slot="append" icon="el-icon-search" type="primary" />
           </el-input>
-           <el-button  @click="getTasks()" icon="el-icon-refresh-left" type="primary">重置</el-button>
+          <el-button @click="getTasks()" icon="el-icon-refresh-left" type="primary">重置</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -93,12 +93,12 @@
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
-            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务主管" prop="manager">
           <el-select v-model="TaskForm.manager" placeholder="请选择任务主管">
-            <el-option v-for="item of DeptUsers" :label="item.name" :value="item.id" :key="item.id"></el-option>
+            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属资产">
@@ -139,12 +139,13 @@ import { log } from "util";
 import { Transform } from "stream";
 import myMixin from "./mixins";
 import { mapState } from "vuex";
+import { getDeptUsers } from "@/api/admin";
 export default {
   mixins: [myMixin],
   name: "tab-task",
   data() {
     return {
-      DeptUsers:[],
+      DeptUsers: [],
       keyword: "",
       isDialogShow: false,
       buttonStates: {
@@ -163,11 +164,11 @@ export default {
       });
       return arr.join();
     },
-    categoryFilter(obj){
-      if('name' in obj){
-        return obj['name']
-      }else{
-        return ''
+    categoryFilter(obj) {
+      if ("name" in obj) {
+        return obj["name"];
+      } else {
+        return "";
       }
     }
   },
@@ -187,7 +188,12 @@ export default {
     //打开对话框
     openDialog(Type) {
       this.DialogType = Type;
-      switch (this.DialogType) {
+      getDeptUsers({
+        id: this.ActiveRow.dept
+      }).then(res => {
+        this.DeptUsers = [...res.data.users]
+      });
+      switch (Type) {
         case 1:
           this.dialogTitle = "创建任务";
           this.TaskForm = {
@@ -204,8 +210,8 @@ export default {
             priority: 0,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
+            link_id: this.ActiveRow.link
           };
-          this.DeptUsers = this.ActiveRow.executor
           break;
         case 3:
           if (!Object.keys(this.ActiveRow).length) {
@@ -228,11 +234,15 @@ export default {
             asset: this.ActiveRow.asset.id,
             method: "put"
           };
+          console.log(this.TaskForm,'~~~~~~~~~~~~');
+          
           delete this.TaskForm.executor;
           delete this.TaskForm.creator;
           delete this.TaskForm.create_time;
           delete this.TaskForm.category;
+          delete this.TaskForm.project
           delete this.TaskForm["sub_task"];
+          delete this.TaskForm["link"];
           break;
       }
       this.isDialogShow = true;
@@ -317,10 +327,10 @@ export default {
     },
     //获取任务列表
     getTasks(type) {
-      if(type){
-        this.$emit("get-tasks",this.keyword)
-      }else{
-        this.$emit("get-tasks")
+      if (type) {
+        this.$emit("get-tasks", this.keyword);
+      } else {
+        this.$emit("get-tasks");
       }
     }
   },

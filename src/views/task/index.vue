@@ -3,7 +3,7 @@
     <top :arr="topArr" />
     <el-divider></el-divider>
     <el-tabs type="border-card">
-      <el-tab-pane label="任务板">
+      <el-tab-pane label="任务板" lazy>
         <div>
           <!-- <div>
             <span class="svg-container" title="显示小型网格布局">
@@ -222,7 +222,7 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务列表">
+      <el-tab-pane label="任务列表" lazy>
         <Drawer
           v-model="isDrawerShow"
           width="512px"
@@ -231,10 +231,10 @@
           :transfer="false"
         >
           <el-tabs>
-            <el-tab-pane label="执行记录">
+            <el-tab-pane label="执行记录" lazy>
               <tabLog :loglist="LogList" :logsLoading="logsLoading"/>
             </el-tab-pane>
-            <el-tab-pane label="执行任务">
+            <el-tab-pane label="执行任务" lazy>
               <task-form
                 :task-record.sync="TaskRecord"
                 :createLoading="createLoading"
@@ -242,10 +242,10 @@
                 @cancel="cancel"
               />
             </el-tab-pane>
-            <el-tab-pane label="任务详情">
+            <el-tab-pane label="任务详情" lazy>
               <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading"/>
             </el-tab-pane>
-            <el-tab-pane label="备注">222</el-tab-pane>
+            <el-tab-pane label="备注" lazy>222</el-tab-pane>
           </el-tabs>
         </Drawer>
         <div class="task-list"></div>

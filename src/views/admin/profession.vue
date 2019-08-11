@@ -73,7 +73,7 @@
             </el-row>
           </div>
 
-          <users-table :UserList="GroupUsers"></users-table>
+          <users-table :UserList="GroupUsers" :table-loading="tableLoading"></users-table>
         </el-main>
         <!-- 右击侧栏展示审批流程 -->
         <template v-if="isDrawerShow">
@@ -168,6 +168,7 @@ export default {
   name: "profession",
   data() {
     return {
+      tableLoading: false,
       isDrawerShow: false,
       activeTemplate: null,
       LinkTemplateList: [],
@@ -176,7 +177,6 @@ export default {
       MemberEditState: {},
       isMemberEditShow: false,
       GroupUsers: [],
-
       filterText: "",
       ActiveGroup: null,
       DialogType: {},
@@ -335,12 +335,15 @@ export default {
     // 工种单击触发事件
     handleGroupClick(data) {
       this.ActiveGroup = { ...data };
-      // console.log(this.ActiveGroup.id);
+      this.tableLoading = true
       getDept({
         id: data.id
       }).then(({ data }) => {
         this.GroupUsers = [...data.users];
-      });
+        this.tableLoading = false
+      }).catch(err=>{
+        this.tableLoading = false
+      })
     },
 
     appendGroup() {
