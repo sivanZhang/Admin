@@ -25,7 +25,11 @@ export function putTask(data) {
 }
 //获取我的任务
 export function queryMyTask(params) {
-    return AXIOS.get('/task/task/?mytask', { params })
+    return AXIOS.get('/task/task/?inplugin', { params })
+}
+//根据id获取任务详情
+export function getTaskDetail(params){
+    return AXIOS.get('/task/task/?id=12',{params})
 }
 //查询任务执行记录
 export function queryTaskRecord(params) {
