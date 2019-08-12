@@ -8,7 +8,7 @@
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
           <div slot="title" style="font-size:14px">
             {{item.dept.name}}
-            <el-button @click="showTaskForm(item.link_id,item.dept.id)">添加任务</el-button>
+            <el-button @click="showTaskForm(item.link_id,item.dept.id,item.content)">添加任务</el-button>
           </div>
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
@@ -78,12 +78,13 @@
         <el-form-item label="任务内容" prop="content">
           <el-input type="textarea" :rows="3" v-model="TaskForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="任务等级" prop="priority">
+        <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
           <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
+        
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
             <el-option
@@ -173,7 +174,7 @@ export default {
     cancelTask() {
       this.isCreateTaskShow = false;
     },
-    showTaskForm(link_id, dept_id) {
+    showTaskForm(link_id, dept_id,content) {
       getDept({
         id:dept_id
       }).then(res=>{
@@ -188,7 +189,8 @@ export default {
           priority: 0,
           asset: this.assetId,
           project: this.$route.params.id,
-          link_id
+          link_id,
+          content
         }
       );
     },

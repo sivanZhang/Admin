@@ -36,8 +36,8 @@ export function queryTaskRecord(params) {
     return AXIOS.get('/task/taskrecord/', { params })
 }
 //新建执行记录
-export function addTaskRecord(data) {
-    return AXIOS.post('/task/taskrecord/', data)
+export function addTaskRecord(params) {
+    return AXIOS.post('/task/taskrecord/',params)
 }
 //修改执行记录
 export function putTaskRecord(data) {
