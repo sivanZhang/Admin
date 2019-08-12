@@ -284,7 +284,10 @@ export default {
             }).then(({
                 data
             }) => {
-                this.MyTaskList = [...data.msg];
+                [...data.msg].forEach(item => {
+                        this.MyTaskList.push(item.task)
+                    })
+                    /* this.MyTaskList = [...data.msg]; */
                 this.resetTasks()
             });
 

@@ -240,9 +240,9 @@ export const constantRoutes = [{
                 title: '资产导入',
                 icon: 'assetlist'
             }
-        },]
+        }, ]
     },
-    {
+    /* {
         path: 'external-link',
         component: Layout,
         children: [{
@@ -252,7 +252,7 @@ export const constantRoutes = [{
                 icon: 'link'
             }
         }]
-    },
+    }, */
     // 404 page must be placed at the end !!!
     {
         path: '*',
