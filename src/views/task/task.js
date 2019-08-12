@@ -145,6 +145,7 @@ export default {
         };
     },
     methods: {
+        //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
             let loading = this.$loading({
                 fullscreen: true

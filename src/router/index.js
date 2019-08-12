@@ -159,10 +159,19 @@ export const constantRoutes = [{
         component: Layout,
         redirect: '/videoCheck',
         meta: {
-            title: '我的任务',
+            title: '视频审核',
             icon: 'task'
         },
         children: [{
+            path: 'my-audit',
+            name: 'my-audit',
+            component: () =>
+                import ('@/views/video/my-audit'),
+            meta: {
+                title: '我的审核',
+                icon: 'task'
+            }
+        }, {
             path: 'videoCheck',
             name: 'videoCheck',
             component: () =>

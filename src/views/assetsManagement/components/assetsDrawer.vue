@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       activeTab: "first"
-    };
+    }
   },
   components: {remarks,info},
   methods: {
