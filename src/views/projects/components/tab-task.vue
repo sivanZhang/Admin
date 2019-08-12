@@ -81,12 +81,7 @@
           <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
-        <el-form-item label="任务难度" prop="grade">
-          <!-- <el-input v-model="TaskForm.code"></el-input> -->
-          <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
-        </el-form-item>
+        
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
             <el-option
@@ -204,7 +199,6 @@ export default {
           this.dialogTitle = "创建任务";
           this.TaskForm = {
             priority: 0,
-            grade:0
           };
           break;
         case 2:
@@ -215,7 +209,6 @@ export default {
           this.dialogTitle = `创建 ${this.ActiveRow.name} 的子任务`;
           this.TaskForm = {
             priority: 0,
-            grade:0,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
             link_id: this.ActiveRow.link
