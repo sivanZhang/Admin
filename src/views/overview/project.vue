@@ -11,7 +11,7 @@
           :append-to-body="true"
         >
           <drawer-header :project="project" style="padding:10px" />
-          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData" />
+          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData" @refresh="show"/>
         </Drawer>
         <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
           <div slot="title">

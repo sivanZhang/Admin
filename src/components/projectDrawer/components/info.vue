@@ -5,7 +5,18 @@
       <div>
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
-          <el-col :span="15" class="comment">{{project.name}}</el-col>
+          <el-col :span="15" class="comment">
+            <span v-if="!editing" @dblclick="edit">{{project.name}}</span>
+            <input
+              type="text"
+              ref="input"
+              v-if="editing"
+              class="input"
+              value="project.name"
+              v-model="name"
+              @blur="save"
+            />
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">项目编码</el-col>
@@ -54,15 +65,39 @@
 </template>
 
 <script>
+import { putProjects } from "@/api/project";
 export default {
-  props: [
-    "project"
-  ],
+  props: ["project"],
   name: "info",
   data() {
-    return {};
+    return {
+      editing: false,
+      name: null
+    };
   },
-  methods: {}
+
+  methods: {
+    edit() {
+      this.editing = true;
+      this.$nextTick(() => {
+        this.$refs.input.focus();
+      });
+    },
+    save() {
+      this.editing = false;
+      putProjects({
+        method: "put",
+        id: this.project.id,
+        name: this.name
+      }).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          this.project.name = this.name;
+          this.name = null;
+        }
+      });
+    }
+  }
 };
 </script>
 
@@ -71,6 +106,14 @@ export default {
   .comment {
     padding: 15px 10px;
     font-size: 14px;
+  }
+  input {
+    width: 240px;
+    border: none;
+    border-bottom: solid 2px deepskyblue;
+  }
+  input:focus {
+    outline: none;
   }
 }
 </style>
