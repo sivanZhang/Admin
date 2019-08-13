@@ -1,5 +1,5 @@
 <template>
-  <div style="width:526px;min-height:969px;padding:10px">
+  <div style="width:526px;padding:10px">
     <div id="notice-header" style="border-bottom:1px soild #999999">
       <el-row>
         <el-col :span="4">
