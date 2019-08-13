@@ -14,7 +14,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // 进度条配置
 
-const whiteList = ['/login', '/forgot', '/signup', '/login_myTask'] // 不重定向的页面
+const whiteList = ['/login', '/forgot', '/signup', '/login-task'] // 不重定向的页面
 
 router.beforeEach(async(to, from, next) => {
     // 进度条开始
