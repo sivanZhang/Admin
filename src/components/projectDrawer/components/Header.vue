@@ -34,10 +34,12 @@
               <el-image v-if="SRC" :src="SRC" fit="cover"  style="width: 160px;height: 100px;"></el-image>
               
               <template v-else>
-                <i class="el-icon-upload"></i>
+                <div style="padding-top:15px">
+                  <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
                   拖入图片，或
                   <em>点击上传</em>
+                </div>
                 </div>
               </template>
             </el-tooltip>

@@ -128,18 +128,19 @@ export default {
   },
   methods: {
     submitForm(Type) {
-      if (Type === 0) {
+      if (Type === "0") {
         this.$refs["taskRecord"].validate(valid => {
           if (valid) {
             const Data = {
               ...this.taskRecord,
               task_id: this.detail.id,
-              type: 0,
-              comment: ""
+              type:0 ,
+              
             };
             console.log(Data);
             addTaskRecord(Data).then(({ data }) => {
-              this.$message(data.mag);
+              if(data.status === 0)
+                this.$message(data.msg);
             });
           }
         });
@@ -153,7 +154,8 @@ export default {
             };
             console.log(Data2);
             addTaskRecord(Data2).then(({ data }) => {
-              this.$message(data.mag);
+              if(data.status === 0)
+                this.$message(data.msg);
             });
           }
         });

@@ -84,7 +84,12 @@
           <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
-        
+        <el-form-item label="任务难度" prop="grade">
+          <!-- <el-input v-model="TaskForm.code"></el-input> -->
+          <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
+        </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
             <el-option
@@ -100,11 +105,7 @@
             <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务主管" prop="manager">
-          <el-select v-model="TaskForm.manager" placeholder="请选择主管">
-            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+        
         <el-form-item label="任务时间" prop="datetime">
           <el-date-picker
             v-model="TaskForm.datetime"
@@ -117,9 +118,7 @@
         <el-form-item label="总工时" prop="total_hour">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
-        <el-form-item label="自定义属性" prop="extra_attr">
-          <el-input v-model="TaskForm['extra_attr']"></el-input>
-        </el-form-item>
+        
         <el-form-item>
           <el-button @click="cancelTask">取消</el-button>
           <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
@@ -187,6 +186,7 @@ export default {
         {},
         {
           priority: 0,
+          grade:0,
           asset: this.project.id,
           project: this.$route.params.id,
           link_id,
