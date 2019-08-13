@@ -18,7 +18,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20" type="flex" align="top" class="header-body" style="margin-top: 20px;">
+        <el-row :gutter="20" type="flex" align="top" class="header-body" >
           <el-col :span="9">
             <el-upload
               accept="image/jpeg, image/gif, image/png"
@@ -208,6 +208,7 @@ export default {
   }
 }
 .header-body {
+  padding-top:10px;
   .mini-image {
     cursor: pointer;
     overflow: hidden;

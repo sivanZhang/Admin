@@ -153,7 +153,7 @@ export default {
       FormList: [{}]
     };
   },
-  props: ["LinkList", "assetId"],
+  props: ["LinkList", "project"],
   computed: {
     ...mapState("admin", ["DeptList"])//DeptUsers是根据登录账号得来的
   },
@@ -187,7 +187,7 @@ export default {
         {},
         {
           priority: 0,
-          asset: this.assetId,
+          asset: this.project.id,
           project: this.$route.params.id,
           link_id,
           content
@@ -236,7 +236,7 @@ export default {
       this.FormList.forEach((item, index) => {
         this.FormList[index] = Object.assign({}, this.FormList[index], {
           dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
-          asset: this.assetId
+          asset: this.project.id
         });
 
         if (

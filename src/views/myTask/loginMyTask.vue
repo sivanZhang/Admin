@@ -108,7 +108,7 @@ export default {
           this.$store
             .dispatch("login/login", this.loginForm)
             .then(res => {
-              this.$router.push({ path: '/myTaskPlug' });
+              this.$router.push({ path: '/mytaskplug' });
               this.loading = false;
               this.$message.success(res.msg);
             })
@@ -124,7 +124,7 @@ export default {
     }
   },
   mounted(){
-    document.body.style.minWidth = 'auto'
+    document.body.style.minWidth = '526px'
   }
 };
 </script>
@@ -156,6 +156,7 @@ $cursor: #fff;
 .login-container {
   width:100%;
   min-height: 100%;
+  
   .el-input {
     display: inline-block;
     height: 47px;
@@ -201,6 +202,7 @@ $light_gray: #eee;
   .login-form {
     position: relative;
     min-height: 100vh;//视口高度
+    min-width: 526px;
     padding: 160px 65px 0;
     // margin: 0 auto;
     overflow: hidden;

@@ -52,7 +52,7 @@ export const constantRoutes = [{
         hidden: true
     },
     {
-        path: '/myTaskPlug',
+        path: '/mytaskplug',
         component: () =>
             import ('@/views/myTask/myTaskPlug'),
         hidden: true
