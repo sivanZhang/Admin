@@ -48,7 +48,7 @@
           <el-form
             ref="taskRecord"
             :model="taskRecord"
-            label-width="80px"
+            label-width="100px"
             label-position="left"
             :rules="rules"
           >

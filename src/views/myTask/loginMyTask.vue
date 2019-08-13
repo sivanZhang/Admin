@@ -154,8 +154,8 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-  width: 526px;
-  min-height: 969px;
+  width:100%;
+  min-height: 100%;
   .el-input {
     display: inline-block;
     height: 47px;
