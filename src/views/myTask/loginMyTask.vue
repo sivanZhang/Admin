@@ -122,6 +122,9 @@ export default {
         }
       });
     }
+  },
+  mounted(){
+    document.body.style.minWidth = 'auto'
   }
 };
 </script>
@@ -190,15 +193,14 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
-  min-height: 100%;
+  min-height: 100vh;
   width: 100%;
   
   overflow: hidden;
 
   .login-form {
     position: relative;
-    width: 526px;
-    min-height: 969px;
+    min-height: 100vh;//视口高度
     padding: 160px 65px 0;
     // margin: 0 auto;
     overflow: hidden;

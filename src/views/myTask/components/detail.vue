@@ -159,6 +159,9 @@ export default {
         });
       }
     }
+  },
+  mounted(){
+    document.body.style.minWidth = 'auto'
   }
 };
 </script>

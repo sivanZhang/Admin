@@ -132,6 +132,9 @@ export default {
   },
   components:{
     detail
+  },
+  mounted(){
+    document.body.style.minWidth = 'auto'
   }
 };
 </script>
