@@ -221,6 +221,7 @@ export default {
   created() {
     !this.UserList && this.$store.dispatch("admin/get_UserList");
   },
+ 
   watch: {
     isShow(val) {
       //弹框关闭后，form数据重置、验证重置
@@ -244,13 +245,15 @@ export default {
 }
 
 .el-dialog__body {
-  padding-top: 0px;
+  padding: 10px 20px;
+}
+.el-form-item--mini .el-form-item__label {
+    line-height: 28px;
+    font-size: 12px;
 }
 </style>
 <style lang="scss" scoped>
-.el-form-item__label {
-  font-size: 12px;
-}
+
 
 .line {
   text-align: center;

@@ -61,9 +61,9 @@
                 <p class="subtitle">项目预算</p>
                 <div style="display:flex;">
                   <div>
-                    ¥{{item.budget|numberFormat}}
+                    ¥{{item.budget|numberFormat}}万元
                   </div>
-                  <div style="font-size:10px;margin-top:1px;font-weight:400">{{"万元"}}</div>
+                  
                 </div>
               </el-col>
               <el-col :span="12">
