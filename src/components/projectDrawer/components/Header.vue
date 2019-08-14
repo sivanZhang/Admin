@@ -18,7 +18,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20" type="flex" align="top" class="header-body" style="margin-top: 20px;">
+        <el-row :gutter="20" type="flex" align="top" class="header-body" >
           <el-col :span="9">
             <el-upload
               accept="image/jpeg, image/gif, image/png"
@@ -34,10 +34,12 @@
               <el-image v-if="SRC" :src="SRC" fit="cover"  style="width: 160px;height: 100px;"></el-image>
               
               <template v-else>
-                <i class="el-icon-upload"></i>
+                <div style="padding-top:15px">
+                  <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
                   拖入图片，或
                   <em>点击上传</em>
+                </div>
                 </div>
               </template>
             </el-tooltip>
@@ -208,6 +210,7 @@ export default {
   }
 }
 .header-body {
+  padding-top:10px;
   .mini-image {
     cursor: pointer;
     overflow: hidden;

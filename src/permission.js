@@ -14,7 +14,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // 进度条配置
 
-const whiteList = ['/login', '/forgot', '/signup'] // 不重定向的页面
+const whiteList = ['/login', '/forgot', '/signup', '/login-task'] // 不重定向的页面
 
 router.beforeEach(async(to, from, next) => {
     // 进度条开始
@@ -30,31 +30,31 @@ router.beforeEach(async(to, from, next) => {
         if (to.path === '/login') {
             // 如果已经登录，跳转login页面会重定向到首页
             next({ path: '/' })
-            NProgress.done()//加载进度条完成
-        } else {//如果跳转非login页
+            NProgress.done() //加载进度条完成
+        } else { //如果跳转非login页
             next()
-            /*const hasGetUserInfo = store.getters.name//获取状态机中取到的username
-            if (hasGetUserInfo) {//如果取到name 就正常跳转
-                next()
-            }  else {//没有取到就获取用户信息
-                try {
-                    // get user info
-                    await store.dispatch('login/getInfo')
-
+                /*const hasGetUserInfo = store.getters.name//获取状态机中取到的username
+                if (hasGetUserInfo) {//如果取到name 就正常跳转
                     next()
-                } catch (error) {
-                    // remove token and go to login page to re-login
-                    await store.dispatch('login/resetToken')
-                    Message.error(error || 'Has Error')
-                    next(`/login?redirect=${to.path}`)
-                    NProgress.done()
-                }
-            } */
+                }  else {//没有取到就获取用户信息
+                    try {
+                        // get user info
+                        await store.dispatch('login/getInfo')
+
+                        next()
+                    } catch (error) {
+                        // remove token and go to login page to re-login
+                        await store.dispatch('login/resetToken')
+                        Message.error(error || 'Has Error')
+                        next(`/login?redirect=${to.path}`)
+                        NProgress.done()
+                    }
+                } */
         }
-    } else {//没有token
-        
-        if (whiteList.indexOf(to.path) !== -1) {//判断是否在不重定向的名单中
-            next()//正常跳转
+    } else { //没有token
+
+        if (whiteList.indexOf(to.path) !== -1) { //判断是否在不重定向的名单中
+            next() //正常跳转
         } else {
             //重定向到login页面
             next(`/login?redirect=${to.path}`)

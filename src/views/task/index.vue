@@ -3,7 +3,7 @@
     <top :arr="topArr" />
     <el-divider></el-divider>
     <el-tabs type="border-card">
-      <el-tab-pane label="任务板" lazy>
+      <el-tab-pane label="任务板" lazy class="tab-task">
         <div>
           <!-- <div>
             <span class="svg-container" title="显示小型网格布局">
@@ -222,17 +222,18 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务列表" lazy>
+      <el-tab-pane label="任务列表" lazy class="tab-task">
         <Drawer
           v-model="isDrawerShow"
           width="512px"
           inner
           :mask-style="{backgroundColor: 'transparent'}"
           :transfer="false"
+          draggable
         >
           <el-tabs>
             <el-tab-pane label="执行记录" lazy>
-              <tabLog :loglist="LogList" :logsLoading="logsLoading"/>
+              <tabLog :loglist="LogList" :logsLoading="logsLoading" />
             </el-tab-pane>
             <el-tab-pane label="执行任务" lazy>
               <task-form
@@ -243,13 +244,13 @@
               />
             </el-tab-pane>
             <el-tab-pane label="任务详情" lazy>
-              <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading"/>
+              <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
             </el-tab-pane>
             <el-tab-pane label="备注" lazy>222</el-tab-pane>
           </el-tabs>
         </Drawer>
         <div class="task-list"></div>
-        <div class="task-list-top">
+        <!-- <div class="task-list-top">
           <span class="sort">排序方式</span>
           <el-select v-model="taskListSortSel" placeholder="截止日期" size="mini">
             <el-option
@@ -259,7 +260,6 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <!--              select选择器，任务列表中选择项目，默认选择所有-->
           <el-select
             v-model="taskListProgramSel"
             multiple
@@ -275,7 +275,6 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <!--              select选择器，任务列表中选择任务完成进度，默认选择所有-->
           <el-select
             v-model="taskListProgressSel"
             multiple
@@ -292,15 +291,16 @@
             ></el-option>
           </el-select>
           <el-checkbox v-model="checked">显示已完成/锁定的项目</el-checkbox>
-        </div>
+        </div> -->
+        
         <el-table
           :data="MyTaskList"
           style="width: 100%;margin-top:20px"
           highlight-current-row
           borders
           @row-click="taskBoardRightShow"
+          border
         >
-          <!-- default-expand-all -->
           <el-table-column prop="name" label="任务名称"></el-table-column>
           <el-table-column prop="content" label="任务内容"></el-table-column>
           <el-table-column label="任务状态">

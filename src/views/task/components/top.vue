@@ -27,14 +27,14 @@
     .layout_task {
         width: 100px;
         height: 40px;
-        border-right: 1px solid #999999;
+        border-right: 1px solid #ddd;
         text-align: center;
         .layout_top_span {
-            color: #999999;
+            color: #909399;
             font-size: small
         }
         &:first-child {
-            border-left: 1px solid #999999;
+            border-left: 1px solid #ddd;
         }
     }
 </style>

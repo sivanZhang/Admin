@@ -89,14 +89,7 @@ export default {
       
     };
   },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
-      },
-      immediate: true
-    }
-  },
+  
   methods: {
     showPwd() {
       if (this.passwordType === "password") {
@@ -115,7 +108,7 @@ export default {
           this.$store
             .dispatch("login/login", this.loginForm)
             .then(res => {
-              this.$router.push({ path: '/myTaskPlug' });
+              this.$router.push({ path: '/mytaskplug' });
               this.loading = false;
               this.$message.success(res.msg);
             })
@@ -129,6 +122,9 @@ export default {
         }
       });
     }
+  },
+  mounted(){
+    document.body.style.minWidth = '526px'
   }
 };
 </script>
@@ -158,8 +154,9 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-  width: 526px;
-  min-height: 969px;
+  width:100%;
+  min-height: 100%;
+  
   .el-input {
     display: inline-block;
     height: 47px;
@@ -197,15 +194,15 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
-  min-height: 100%;
+  min-height: 100vh;
   width: 100%;
   
   overflow: hidden;
 
   .login-form {
     position: relative;
-    width: 526px;
-    min-height: 969px;
+    min-height: 100vh;//视口高度
+    min-width: 526px;
     padding: 160px 65px 0;
     // margin: 0 auto;
     overflow: hidden;

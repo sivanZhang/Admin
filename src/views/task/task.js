@@ -145,6 +145,7 @@ export default {
         };
     },
     methods: {
+        //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
             let loading = this.$loading({
                 fullscreen: true
@@ -284,7 +285,10 @@ export default {
             }).then(({
                 data
             }) => {
-                this.MyTaskList = [...data.msg];
+                [...data.msg].forEach(item => {
+                        this.MyTaskList.push(item.task)
+                    })
+                    /* this.MyTaskList = [...data.msg]; */
                 this.resetTasks()
             });
 

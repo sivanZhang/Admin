@@ -8,7 +8,7 @@
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
           <div slot="title" style="font-size:14px">
             {{item.dept.name}}
-            <el-button @click="showTaskForm(item.link_id,item.dept.id)">添加任务</el-button>
+            <el-button @click="showTaskForm(item.link_id,item.dept.id,item.content)">添加任务</el-button>
           </div>
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
@@ -78,11 +78,17 @@
         <el-form-item label="任务内容" prop="content">
           <el-input type="textarea" :rows="3" v-model="TaskForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="任务等级" prop="priority">
+        <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
           <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+        </el-form-item>
+        <el-form-item label="任务难度" prop="grade">
+          <!-- <el-input v-model="TaskForm.code"></el-input> -->
+          <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
@@ -99,11 +105,7 @@
             <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务主管" prop="manager">
-          <el-select v-model="TaskForm.manager" placeholder="请选择主管">
-            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+        
         <el-form-item label="任务时间" prop="datetime">
           <el-date-picker
             v-model="TaskForm.datetime"
@@ -116,9 +118,7 @@
         <el-form-item label="总工时" prop="total_hour">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
-        <el-form-item label="自定义属性" prop="extra_attr">
-          <el-input v-model="TaskForm['extra_attr']"></el-input>
-        </el-form-item>
+        
         <el-form-item>
           <el-button @click="cancelTask">取消</el-button>
           <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
@@ -152,7 +152,7 @@ export default {
       FormList: [{}]
     };
   },
-  props: ["LinkList", "assetId"],
+  props: ["LinkList", "project"],
   computed: {
     ...mapState("admin", ["DeptList"])//DeptUsers是根据登录账号得来的
   },
@@ -173,7 +173,7 @@ export default {
     cancelTask() {
       this.isCreateTaskShow = false;
     },
-    showTaskForm(link_id, dept_id) {
+    showTaskForm(link_id, dept_id,content) {
       getDept({
         id:dept_id
       }).then(res=>{
@@ -186,9 +186,11 @@ export default {
         {},
         {
           priority: 0,
-          asset: this.assetId,
+          grade:0,
+          asset: this.project.id,
           project: this.$route.params.id,
-          link_id
+          link_id,
+          content
         }
       );
     },
@@ -234,7 +236,7 @@ export default {
       this.FormList.forEach((item, index) => {
         this.FormList[index] = Object.assign({}, this.FormList[index], {
           dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
-          asset: this.assetId
+          asset: this.project.id
         });
 
         if (

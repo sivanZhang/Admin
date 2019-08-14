@@ -1,5 +1,5 @@
 <template>
-  <div style="width:526px;min-height:969px;padding:10px">
+  <div style="width:100%;height:100%;min-width:526px;padding:10px">
     <div id="notice-header" style="border-bottom:1px soild #999999">
       <el-row>
         <el-col :span="4">
@@ -132,6 +132,9 @@ export default {
   },
   components:{
     detail
+  },
+  mounted(){
+    document.body.style.minWidth = 'auto'
   }
 };
 </script>

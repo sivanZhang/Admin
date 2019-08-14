@@ -13,7 +13,7 @@
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
       highlight-current-row
-      @row-dblclick="rowSelected"
+
       row-class-name="hover"
     >
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
@@ -52,11 +52,13 @@
             <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="截止日期" align="left" >
+        <el-table-column label="截止日期" align="left">
           <template slot-scope="scope">
-            <div v-for="(todo,index) of scope.row.link" :key="index" style="position:top">
-             {{todo.date_end|dateFormat}}
-            </div>
+            <div
+              v-for="(todo,index) of scope.row.link"
+              :key="index"
+              style="position:top"
+            >{{todo.date_end|dateFormat}}</div>
           </template>
         </el-table-column>
       </el-table-column>
@@ -159,23 +161,13 @@
       :mask-style="{backgroundColor: 'transparent'}"
     >
       <Header :project="project"></Header>
-      <assetsDrawer :project="project" :RemarksData="RemarksData" />
-    </Drawer>
-    <Drawer
-      :title="activeAsset.name+' 的环节详情'"
-      v-model="isDrawerShow"
-      width="512px"
-      inner
-      :transfer="false"
-      :mask-style="{backgroundColor: 'transparent'}"
-    >
-      <links
-        :link-list="LinkList"
-        :asset-id="activeAsset.id"
-        @refresh="getLinkList"
+      <assetsDrawer
+        :project="project"
+        :RemarksData="RemarksData"
         @get-tasks="getTasks"
-      ></links>
+      />
     </Drawer>
+   
   </div>
 </template>
 
@@ -183,15 +175,15 @@
 import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
 import Header from "@/components/projectDrawer/components/Header";
 import * as HTTP from "@/api/assets";
-import { addLinks, getLinks } from "@/api/links";
+
 import { getRemark } from "@/api/remark";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
-import links from "./links";
+
 export default {
   components: {
     /*  */
-    links,
+    
     assetsDrawer,
     Header
   },
@@ -201,8 +193,8 @@ export default {
       project: null,
       RemarksData: [],
       value1: false,
-      activeAsset: {},
-      LinkList: [],
+      activeAsset: null,
+     
       isDrawerShow: false,
       SRC: "",
       AssetForm: {
@@ -272,12 +264,7 @@ export default {
         this.RemarksData = [...data.msg];
       });
     },
-    //行被点击后出发
-    rowSelected(row) {
-      this.activeAsset = row;
-      this.isDrawerShow = true;
-      this.getLinkList();
-    },
+    
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -331,13 +318,7 @@ export default {
         }
       });
     },
-    getLinkList() {
-      getLinks({
-        asset: this.activeAsset.id
-      }).then(res => {
-        this.LinkList = [...res.data.msg];
-      });
-    },
+   
     //监听图片上传成功
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;

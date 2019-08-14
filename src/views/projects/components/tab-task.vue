@@ -82,7 +82,7 @@
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
-          <!-- <el-input v-model="TaskForm.code"></el-input> -->
+          
           <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
           <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
           <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
@@ -102,11 +102,7 @@
             <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务主管" prop="manager">
-          <el-select v-model="TaskForm.manager" placeholder="请选择任务主管">
-            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+        
         <el-form-item label="所属资产">
           <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
             <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id"></el-option>
@@ -124,9 +120,7 @@
         <el-form-item label="总工时" prop="total_hour">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
-        <el-form-item label="自定义属性" prop="extra_attr">
-          <el-input v-model="TaskForm['extra_attr']"></el-input>
-        </el-form-item>
+        
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button

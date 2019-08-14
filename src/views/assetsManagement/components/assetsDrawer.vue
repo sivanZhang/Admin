@@ -4,9 +4,17 @@
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-          <el-tab-pane label="组件" name="first"></el-tab-pane>
+          <el-tab-pane label="制作环节" name="first">
+            <links
+              :link-list="LinkList"
+              :project="project"
+              :LinkList="LinkList"
+              @refresh="getLinkList"
+              @get-tasks="getTasks"
+            ></links>
+          </el-tab-pane>
           <el-tab-pane label="备注" name="second">
-            <remarks :project="project" :RemarksData="RemarksData"/>
+            <remarks :project="project" :RemarksData="RemarksData" />
           </el-tab-pane>
           <el-tab-pane label="链接" name="third"></el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
@@ -21,25 +29,45 @@
 </template>
 
 <script>
-import remarks from "@/components/projectDrawer/components/remarks"
-import info from "@/components/projectDrawer/components/info"
+import remarks from "@/components/projectDrawer/components/remarks";
+import info from "@/components/projectDrawer/components/info";
+import links from "@/views/projects/components/links";
+import { addLinks, getLinks } from "@/api/links";
 export default {
   name: "assets-drawer",
-  props: [
-    "project",
-    "RemarksData"
-  ],
+  props: ["project", "RemarksData"],
   data() {
     return {
-      activeTab: "first"
+      activeTab: "first",
+      LinkList: []
     };
   },
-  components: {remarks,info},
+  
+  watch:{
+    project:{
+      handler:function(newVal,oldVal){
+        if(newVal.id){
+          this.getLinkList();
+        }
+      }
+    }
+  },
+  components: { remarks, info, links },
   methods: {
     handleTabClick(tab, event) {
       //this.getRemarkList();
       console.log(tab, event);
-    }
+    },
+    getTasks() {
+      this.$emit("get-tasks");
+    },
+     getLinkList() {
+      getLinks({
+        asset: this.project.id
+      }).then(res => {
+        this.LinkList = [...res.data.msg];
+      });
+    },
   }
 };
 </script>

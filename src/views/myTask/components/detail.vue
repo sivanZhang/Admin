@@ -27,7 +27,7 @@
       </el-col>
     </el-row>
     <div style="padding-top:20px">
-      <el-row style="border:2px solid #999999;height:120px">
+      <el-row style="height:120px">
         <el-col :span="4">
           <span style="font-size:14px">制作内容：</span>
         </el-col>
@@ -48,50 +48,38 @@
           <el-form
             ref="taskRecord"
             :model="taskRecord"
-            label-width="80px"
+            label-width="100px"
             label-position="left"
             :rules="rules"
           >
-            <el-form-item label="标题" prop="title">
-              <el-input v-model="taskRecord.title"></el-input>
+            <el-form-item label="任务状态" prop="status">
+              <el-radio v-model="taskRecord.status" label="0">正在进行</el-radio>
+              <el-radio v-model="taskRecord.status" label="1">已完成</el-radio>
             </el-form-item>
-            <el-form-item label="完成任务" prop="content">
-              <el-input type="textarea" v-model="taskRecord.content"></el-input>
+            <el-form-item label="标题" prop="title" >
+              <el-input v-model="taskRecord.title" :disabled="taskRecord.status>0?true:false"></el-input>
+            </el-form-item>
+            <el-form-item label="完成任务" prop="content" >
+              <el-input type="textarea" v-model="taskRecord.content" :disabled="taskRecord.status>0?true:false"></el-input>
             </el-form-item>
             <el-form-item label="工时" prop="labor_hour">
-              <el-input v-model="taskRecord.labor_hour">
+              <el-input v-model="taskRecord.labor_hour" :disabled="taskRecord.status>0?true:false">
                 <span slot="append">小时</span>
               </el-input>
             </el-form-item>
-            <el-form-item label="完成进度" prop="schedule">
-              <el-slider v-model="taskRecord.schedule"></el-slider>
+            <el-form-item label="完成进度" prop="schedule" >
+              <el-slider v-model="taskRecord.schedule" :disabled="taskRecord.status>0?true:false"></el-slider>
             </el-form-item>
-            <el-form-item label="任务状态" prop="status">
-              <el-radio v-model="taskRecord.status" label="0">正在进行</el-radio>
-            </el-form-item>
-            <el-form-item class="subbtn" align="right">
-              <el-button type="primary" @click="submitForm(0)">提交审批</el-button>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="完成当前任务" name="second">
-          <!-- 情况说明comment
-          提交-->
-          <el-form
-            ref="taskRecordFinish"
-            :model="taskRecordFinish"
-            label-width="110px"
-            label-position="left"
-            :rules="rules2"
-          >
+
             <el-form-item label="完成情况说明" prop="comment">
-              <el-input v-model="taskRecordFinish.comment" type="textarea" ></el-input>
-            </el-form-item>
-            <el-form-item label="任务状态" prop="status">
-              <el-radio v-model="taskRecordFinish.status" label="1">已完成</el-radio>
+              <el-input
+                v-model="taskRecord.comment"
+                type="textarea"
+                :disabled="taskRecord.status>0?false:true"
+              ></el-input>
             </el-form-item>
             <el-form-item class="subbtn" align="right">
-              <el-button type="primary" @click="submitForm(1)">提交审批</el-button>
+              <el-button type="primary" @click="submitForm(taskRecord.status)">提交审批</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -109,65 +97,73 @@ export default {
     return {
       activeName: "first",
       taskRecord: {
-        status: "0"
-      },
-      taskRecordFinish:{
-        status:"1"
+        status:"0"
       },
 
       rules: {
         title: [
           {
-            required: true,
+           
             message: "请输入任务执行记录的标题",
             trigger: "blur"
           }
         ],
         content: [
           {
-            required: true,
+            
             message: "请输入任务执行记录的内容",
             trigger: "blur"
           }
         ],
         labor_hour: [
-          { required: true, message: "请输入任务执行的工时", trigger: "blur" }
-        ],
-        
+          {  message: "请输入任务执行的工时", trigger: "blur" }
+        ]
       },
-      rules2:{
+      rules2: {
         comment: [
-          { required: true, message: "请输入任务完成情况说明", trigger: "blur" }
-        ],
+          {  message: "请输入任务完成情况说明", trigger: "blur" }
+        ]
       }
     };
   },
   methods: {
     submitForm(Type) {
-
-      if(Type === 0){
+      if (Type === "0") {
         this.$refs["taskRecord"].validate(valid => {
-        if (valid) {
-          const Data = { ...this.taskRecord, task_id: this.detail.id, type: 0 ,comment:""};
-          console.log(Data);
-          addTaskRecord(Data).then(({ data }) => {
-            this.$message(data.mag);
-          });
-        }
-      });
-      }else{
-        this.$refs["taskRecordFinish"].validate(valid => {
-        if (valid) {
-          const Data2 = { ...this.taskRecordFinish, task_id: this.detail.id, type: 1 };
-          console.log(Data2);
-          addTaskRecord(Data2).then(({ data }) => {
-            this.$message(data.mag);
-          });
-        }
-      });
+          if (valid) {
+            const Data = {
+              ...this.taskRecord,
+              task_id: this.detail.id,
+              type:0 ,
+              
+            };
+            console.log(Data);
+            addTaskRecord(Data).then(({ data }) => {
+              if(data.status === 0)
+                this.$message(data.msg);
+            });
+          }
+        });
+      } else {
+        this.$refs["taskRecord"].validate(valid => {
+          if (valid) {
+            const Data2 = {
+              ...this.taskRecord,
+              task_id: this.detail.id,
+              type: 1
+            };
+            console.log(Data2);
+            addTaskRecord(Data2).then(({ data }) => {
+              if(data.status === 0)
+                this.$message(data.msg);
+            });
+          }
+        });
       }
-      
     }
+  },
+  mounted(){
+    document.body.style.minWidth = 'auto'
   }
 };
 </script>

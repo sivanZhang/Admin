@@ -33,22 +33,24 @@
               </template>
               <div v-else class="title">暂无数据</div>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="MyProject">
               <div v-for="(todo,index) of MyProject.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
-              <router-link v-if="ProjectList.length>10" to="/">
+              <router-link v-if="MyProject && MyProject.length>10" to="/">
                 <el-button type="text">查看更多..</el-button>
               </router-link>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
+            <el-col :span="8" v-if="ProjectList">
               <div v-for="(item,index) of ProjectList.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
-              <router-link v-if="ProjectList.length>10" to="/">
+              <router-link v-if="ProjectList && ProjectList.length>10" to="/">
                 <el-button type="text">查看更多..</el-button>
               </router-link>
             </el-col>
+            <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
           </el-row>
         </el-col>
       </el-row>

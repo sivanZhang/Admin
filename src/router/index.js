@@ -46,13 +46,13 @@ export const constantRoutes = [{
         hidden: true
     },
     {
-        path: '/login_myTask',
+        path: '/login-task',
         component: () =>
             import ('@/views/myTask/loginMyTask'),
         hidden: true
     },
     {
-        path: '/myTaskPlug',
+        path: '/mytaskplug',
         component: () =>
             import ('@/views/myTask/myTaskPlug'),
         hidden: true
@@ -159,10 +159,19 @@ export const constantRoutes = [{
         component: Layout,
         redirect: '/videoCheck',
         meta: {
-            title: '我的任务',
+            title: '视频审核',
             icon: 'task'
         },
         children: [{
+            path: 'my-audit',
+            name: 'my-audit',
+            component: () =>
+                import ('@/views/video/my-audit'),
+            meta: {
+                title: '我的审核',
+                icon: 'task'
+            }
+        }, {
             path: 'videoCheck',
             name: 'videoCheck',
             component: () =>
@@ -240,9 +249,9 @@ export const constantRoutes = [{
                 title: '资产导入',
                 icon: 'assetlist'
             }
-        },]
+        }, ]
     },
-    {
+    /* {
         path: 'external-link',
         component: Layout,
         children: [{
@@ -252,7 +261,7 @@ export const constantRoutes = [{
                 icon: 'link'
             }
         }]
-    },
+    }, */
     // 404 page must be placed at the end !!!
     {
         path: '*',
