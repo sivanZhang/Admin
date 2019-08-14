@@ -27,6 +27,7 @@ Vue.use(ElementUI, {
     size: Cookies.get('size') || 'mini'
 })
 Vue.config.productionTip = false
+
 import { Drawer } from 'iview';
 Vue.component('Drawer', Drawer);
 new Vue({
