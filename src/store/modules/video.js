@@ -2,16 +2,16 @@
 import Cookies from 'js-cookie'
 
 function getIds() {
-    return Cookies.get('IDS')
+    return Cookies.get('Selection')
 }
 const state = {
-    Ids: getIds() ? JSON.parse(getIds()) : null
+    Selection: getIds() ? JSON.parse(getIds()) : []
 }
 
 const mutations = {
-    SET_IDS: (state, arr) => {
-        state.Ids = [...arr]
-        Cookies.set('IDS', arr)
+    SET_SELECTION: (state, arr) => {
+        state.Selection = [...arr]
+        Cookies.set('Selection', arr)
     }
 }
 
