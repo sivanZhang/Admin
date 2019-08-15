@@ -27,7 +27,6 @@
 <script>
 import * as HTTP from "@/api/assets";
 import XLSX from "xlsx";
-import { mapState } from "vuex";
 import ImportTableTemplate from "@/views/components/importTableTemplate";
 export default {
   neme: "asset-import",
@@ -41,7 +40,7 @@ export default {
         path: "路径",
         name: "资产名称",
         //creator: "创建者",
-        team: "资产当前属于哪个部门",
+        //team: "资产当前属于哪个部门",
         inner_version: "内部资产版本号",
         outer_version: "外部资产版本号",
         priority: "优先级（高中低）",
@@ -61,10 +60,6 @@ export default {
     };
   },
   components: { ImportTableTemplate },
-
-  computed: {
-    ...mapState("project", ["ProjectList"])
-  },
   methods: {
     openFile() {
       this.$refs.file_inp.click();
@@ -72,7 +67,6 @@ export default {
     //导入excel 变异为数组
     importExcel(obj) {
       let _self = this;
-      let arr;
       if (!obj.files) {
         return;
       }
@@ -89,23 +83,16 @@ export default {
       reader.onload = function(e) {
         var data = e.target.result;
         var workbook = XLSX.read(data, { type: "binary" });
-        arr = XLSX.utils.sheet_to_json(
+        _self.testDataJSON = XLSX.utils.sheet_to_json(
           workbook.Sheets[workbook.SheetNames[0]],
           {
+            header:1,//二维数组展示
             raw: false,
             skipHeader: true
           }
         );
         obj.value = null;
-        _self.testDataJSON = [];
-        arr.forEach((obj, index) => {
-          _self.testDataJSON.splice(index, 0, []);
-
-          for (let item in obj) {
-            _self.testDataJSON[index].push(obj[item]);
-          }
-          console.log(_self.testDataJSON);
-        });
+        _self.testDataJSON.shift()//去掉工作表头的数据
       };
       reader.readAsBinaryString(file);
       _self.importAsset();
@@ -136,10 +123,9 @@ export default {
       // _self.uploadDisabled= true
       console.log("组装好的数据-------", data);
       data = { ...data, project: this.$route.params.id };
-      //此处接入ajax
+      //提交jsons数据
       HTTP.uploadAssets(data).then(({data}) => {
-        this.$message(`资产创建成功${create_asset.success_num}条、失败${create_asset.failure_num}条`)
-        this.$message(`环节创建成功${create_link.success_num}条、失败${create_link.failure_num}条`)
+        this.$message(`资产创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`)
       });
     },
     //导入数据

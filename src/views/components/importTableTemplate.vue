@@ -198,6 +198,8 @@ export default {
           data.isEdit=false;
          this.tableData.push(data);
        } 
+       console.log('this.tableData:',this.tableData);
+       
        this.tableLoading=false;
 
      },
@@ -206,6 +208,8 @@ export default {
      */
     changeHandlerRadio(value){
       if(this.hasBindKey.indexOf(value)<0){
+        console.log(this.selectCurrentCol);
+        
         let label=this.tableCols[this.selectCurrentCol.index].label;
         this.tableCols[this.selectCurrentCol.index].label=label.split(",")[0]+","+this.keysMap[value];
         this.tableCols[this.selectCurrentCol.index].name=value;
