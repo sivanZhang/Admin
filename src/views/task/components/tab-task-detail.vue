@@ -98,6 +98,7 @@ export default {
 <style lang="scss" scoped>
 .task-ditail {
   font-size: 13px;
+  overflow-y: auto;
   .el-row + .el-row {
     margin-top: 10px;
   }

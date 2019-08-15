@@ -6,7 +6,11 @@
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
           <el-col :span="15" class="comment">
-            <span v-if="!editing" @dblclick="edit">{{project.name}}</span>
+            <div  @mouseover="showEdit=true" @mouseleave="showEdit = false">
+              <span v-if="!editing">{{project.name}}</span>
+            <i class="el-icon-edit" style="color:blue" v-if="showEdit"  @click="edit"></i>
+            
+            </div>
             <input
               type="text"
               ref="input"
@@ -33,6 +37,10 @@
         <el-row>
           <el-col :span="6" class="comment">结束日期</el-col>
           <el-col :span="15" class="comment">{{project.date_end|dateFormat}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">客户信息</el-col>
+          <el-col :span="15" class="comment">{{project.client.client_name}}</el-col>
         </el-row>
       </div>
     </template>
@@ -72,12 +80,14 @@ export default {
   data() {
     return {
       editing: false,
-      name: null
+      name: null,
+      showEdit:false
     };
   },
 
   methods: {
     edit() {
+      this.showEdit = false;
       this.editing = true;
       this.$nextTick(() => {
         this.$refs.input.focus();
@@ -105,10 +115,10 @@ export default {
 #info {
   .comment {
     padding: 15px 10px;
-    font-size: 14px;
+    font-size: 12px;
   }
   input {
-    width: 240px;
+    width: 100px;
     border: none;
     border-bottom: solid 2px deepskyblue;
   }
