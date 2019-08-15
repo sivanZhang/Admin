@@ -137,8 +137,9 @@ export default {
       console.log("组装好的数据-------", data);
       data = { ...data, project: this.$route.params.id };
       //此处接入ajax
-      HTTP.uploadAssets(data).then(res => {
-        console.log(res);
+      HTTP.uploadAssets(data).then(({data}) => {
+        this.$message(`资产创建成功${create_asset.success_num}条、失败${create_asset.failure_num}条`)
+        this.$message(`环节创建成功${create_link.success_num}条、失败${create_link.failure_num}条`)
       });
     },
     //导入数据

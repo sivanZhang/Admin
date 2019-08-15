@@ -4,10 +4,10 @@
       :element-loading-text="tableLoadingText"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)">
-        <!-- <el-row>
+        <el-row>
             <el-button type="success" @click="mergeCell()">合并单元格</el-button>
             <el-button type="danger" @click="cancelCell()">取消合并</el-button>
-        </el-row> -->
+        </el-row>
         <el-table
             :data="tableData"
             border
