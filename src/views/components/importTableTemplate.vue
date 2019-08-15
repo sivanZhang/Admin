@@ -86,6 +86,7 @@
   </div>
 </template>
 <script>
+import { log } from 'util';
 export default {
   name: 'ImportTableTemplate',
   data() {
@@ -127,6 +128,7 @@ export default {
         for(let key in this.keysMap){
             this.dealKeys.push(key)
         }
+        console.log('this.dealKeys:',this.dealKeys);
         this.getTableHeader();
     },
     getAssemblingData(){
