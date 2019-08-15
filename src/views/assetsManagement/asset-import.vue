@@ -3,19 +3,20 @@
     <div style="padding-bottom:15px;">
       <input class="file_inp" ref="file_inp" type="file" @change="importExcel($event.target)" />
       <el-button
-        icon="el-icon-download"
+        icon="el-icon-circle-plus"
         type="success"
         @click="openFile"
         class="pan-btn green-btn"
         size="mini"
       >导入资产</el-button>
       <el-button
-        icon="el-icon-download"
+        icon="el-icon-upload"
         type="success"
         @click="getAsset"
         class="pan-btn green-btn"
         size="mini"
-      >获取当前表格数据</el-button>
+        :disabled="uploadDisabled"
+      >上传</el-button>
     </div>
     <div>
       <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
@@ -27,15 +28,13 @@
 import * as HTTP from "@/api/assets";
 import XLSX from "xlsx";
 import { mapState } from "vuex";
-import { getToken } from "@/utils/auth";
-import { Loading } from "element-ui";
 import ImportTableTemplate from "@/views/components/importTableTemplate";
-
 export default {
   neme: "asset-import",
   data() {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
+      uploadDisabled:true,
       keysMap: {
         category: "资产类别",
         image: "缩略图",
@@ -63,7 +62,9 @@ export default {
   },
   components: { ImportTableTemplate },
 
-  computed: {},
+  computed: {
+    ...mapState("project", ["ProjectList"])
+  },
   methods: {
     openFile() {
       this.$refs.file_inp.click();
@@ -96,19 +97,19 @@ export default {
           }
         );
         obj.value = null;
-        _self.testDataJSON=[]
+        _self.testDataJSON = [];
         arr.forEach((obj, index) => {
-           _self.testDataJSON.splice(index,0,[])
-           
+          _self.testDataJSON.splice(index, 0, []);
+
           for (let item in obj) {
-            _self.testDataJSON[index].push(obj[item])
+            _self.testDataJSON[index].push(obj[item]);
           }
           console.log(_self.testDataJSON);
-          
         });
       };
       reader.readAsBinaryString(file);
-      _self.importAsset()
+      _self.importAsset();
+      _self.uploadDisabled= false
     },
     changeHandlerRadio(value) {
       if (this.hasBindKey.indexOf(value) < 0) {
@@ -132,8 +133,104 @@ export default {
      * 组件中必须 @returnAssemblingData="returnAssemblingData"
      */
     returnAssemblingData(data) {
+      // _self.uploadDisabled= true
       console.log("组装好的数据-------", data);
       //此处接入ajax
+      HTTP.uploadAssets({
+        keys: [
+          "category",
+          "image",
+          "path",
+          "name",
+          "team",
+          "inner_version",
+          "outer_version",
+          "session",
+          "frame",
+          "episode",
+          "links"
+        ],
+        values: [
+          [
+            "4",
+            "",
+            "aa",
+            "资产1_lh",
+            "3",
+            "inner_version",
+            "outer_version",
+            "0",
+            "",
+            "1",
+            "5",
+            [
+              {
+                content: "名字1",
+                date_start: "2019/12/09",
+                date_end: "2019/12/09",
+                asset: "资11",
+                dept: "合成"
+              }
+            ]
+          ],
+
+          [
+            "",
+            "b",
+            "bb",
+            "资产2_lh",
+            "",
+            "",
+            "",
+            "1",
+            "2",
+            "11",
+            "25",
+            [
+              {
+                content: "名字1",
+                date_start: "2019/12/09",
+                date_end: "2019/12/09",
+                asset: "资22",
+                dept: "合成"
+              }
+            ]
+          ],
+          [
+            "",
+            "c",
+            "cc",
+            "资产3_lh",
+            "",
+            "",
+            "",
+            "0",
+            "3",
+            "",
+            "",
+            [
+              {
+                content: "名字3",
+                date_start: "2019/12/09",
+                date_end: "2019/12/09",
+                asset: "资33",
+                dept: "合成"
+              },
+              {
+                content: "名字4",
+                date_start: "2019/12/09",
+                date_end: "2019/12/09",
+                asset: "资33",
+                dept: "动画"
+              }
+            ]
+          ]
+        ],
+
+        project: 6
+      }).then(res => {
+        console.log(res);
+      });
     },
     //导入数据
     importAsset() {
@@ -151,7 +248,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.file_inp{
+.file_inp {
   display: none;
 }
 </style>

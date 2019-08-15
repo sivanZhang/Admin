@@ -14,3 +14,7 @@ export function postAssets(data) {
 export function queryAssets(params) {
     return AXIOS.get('/assets/assets/', { params })
 }
+//导入资产列表
+export function uploadAssets(data) {
+    return AXIOS.post('/asset/', data)
+}

@@ -101,7 +101,10 @@ export default {
   computed: {
     ...mapState("video", ["Selection"])
   },
-  created() {},
+  created() {
+    console.log('Selection:',this.Selection);
+    
+  },
   mounted() {
     let bH = document.body.offsetHeight;
     let videoInfoH = document.getElementById("videoInfo").offsetHeight;
@@ -117,21 +120,21 @@ export default {
   },
   methods: {
     commitApprove() {
-      const data = {
+      /* const data = {
         asset_id:this.Active.asset.id,
         project_id:this.Active.asset.project,
         link_id:this.Active.asset.id,
         approve_result:this.approve_result,
         suggestion:this.markText
-      }
-      console.log('qwewqdsadsavdata');
+      } */
+      console.log(this.Active.asset);
       
-      postApprove(data).then(res=>{
+      /* postApprove(data).then(res=>{
         this.$message(res.data.msg)
         if(res.data.status === 0 ){
           this.imgList = []
         }
-      })
+      }) */
     },
     initSource(projectList,index,projectLists) {
         if (this.currentVideoIsEdit) {
