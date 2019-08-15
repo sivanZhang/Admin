@@ -4,7 +4,10 @@ import AXIOS from '@/utils/request'
 //     return AXIOS.get('/assets/assets/')
 // }
 export function deleteAssets(data) {
-    return AXIOS.post('/assets/assets/?delete', {...data, method: 'delete' })
+    return AXIOS.post('/assets/assets/?delete', {
+        ...data,
+        method: 'delete'
+    })
 }
 //创建资产
 export function postAssets(data) {
@@ -12,9 +15,19 @@ export function postAssets(data) {
 }
 //获取资产
 export function queryAssets(params) {
-    return AXIOS.get('/assets/assets/', { params })
+    return AXIOS.get('/assets/assets/', {
+        params
+    })
 }
 //导入资产列表
 export function uploadAssets(data) {
-    return AXIOS.post('/asset/', data)
+    return AXIOS.post('/assets/batch/', data, {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }],
+        timeout: 10000,
+    })
 }

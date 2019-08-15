@@ -2,6 +2,7 @@
   <div id="asset-list">
     <div style="padding-bottom:15px;">
       <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
+      <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
     </div>
 
     <el-table
@@ -247,6 +248,9 @@ export default {
     }
   },
   methods: {
+    targetImport(){
+      this.$router.push({name:'asset-import',params:{id:this.$route.params.id}})
+    },
     getTasks() {
       this.$emit("get-tasks");
     },
