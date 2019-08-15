@@ -301,7 +301,7 @@
           @row-click="taskBoardRightShow"
           border
         >
-          <el-table-column type="index" label="序号"></el-table-column>
+          <el-table-column type="index" label="序号" align="center" width="80"></el-table-column>
           <el-table-column prop="id" label="ID"></el-table-column>
           <el-table-column prop="name" label="任务名称"></el-table-column>
           <el-table-column prop="content" label="任务内容"></el-table-column>

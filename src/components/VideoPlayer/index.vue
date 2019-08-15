@@ -45,14 +45,14 @@
 </template>
 
 <script>
-  document.body.onkeydown = function (event) {
+  /* document.body.onkeydown = function (event) {
       var e = window.event || event;
       if(e.preventDefault){
           e.preventDefault();
       }else{
           window.event.returnValue = false;
       }
-  }
+  } */
   import VideoCapture from 'video-capture'
   import kscreenshot from 'kscreenshot'
   import { setInterval, clearInterval } from 'timers'

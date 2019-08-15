@@ -5,13 +5,13 @@
       stripe style="width: 100%" border
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}" v-loading="tableLoading">
-      <el-table-column label="头像" width="100" align="center">
+      <el-table-column label="头像" width="80" align="center">
         <template slot-scope="scope">
           <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
         </template>
       </el-table-column>
       <el-table-column prop="username" label="姓名" align="left" />
-      <el-table-column prop="sex" label="性别" align="left" width="50"/>
+      <el-table-column prop="sex" label="性别" align="center" width="50"/>
       <el-table-column prop="email" label="邮箱" align="left" />
       <el-table-column prop="phone" label="电话" align="left" />
       <el-table-column prop="dept" label="工种" align="left" />
