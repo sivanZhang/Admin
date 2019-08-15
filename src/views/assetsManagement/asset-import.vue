@@ -81,7 +81,6 @@ export default {
     //获得编辑后的数据
     getAsset(){
       this.$refs.tableTemplate.getAssemblingData()
-      //此处接入ajax
     },
     /**
      * 获取表格组装好的数据
@@ -89,6 +88,8 @@ export default {
      */
     returnAssemblingData(data){
       console.log("组装好的数据-------",data);
+            //此处接入ajax
+
     },
     //导入数据
     importAsset(){
