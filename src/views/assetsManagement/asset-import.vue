@@ -151,4 +151,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.file_inp{
+  display: none;
+}
 </style>
