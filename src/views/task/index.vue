@@ -291,8 +291,8 @@
             ></el-option>
           </el-select>
           <el-checkbox v-model="checked">显示已完成/锁定的项目</el-checkbox>
-        </div> -->
-        
+        </div>-->
+
         <el-table
           :data="MyTaskList"
           style="width: 100%;margin-top:20px"
@@ -301,6 +301,8 @@
           @row-click="taskBoardRightShow"
           border
         >
+          <el-table-column type="index" label="序号"></el-table-column>
+          <el-table-column prop="id" label="ID"></el-table-column>
           <el-table-column prop="name" label="任务名称"></el-table-column>
           <el-table-column prop="content" label="任务内容"></el-table-column>
           <el-table-column label="任务状态">

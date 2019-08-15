@@ -1,13 +1,25 @@
 <template>
   <div class="video-cont">
-    <ul id="videoSliderList">
+    <!-- <ul id="videoSliderList">
       <li v-for="(item,index) in selectProjects" :key="index" @click="initSource(index)">
         <span class="color-slider" :class="index%2==0?'on':''">
           {{item.asset.name}} {{item.time}}
           <font v-if="currentPlayId==item.asset.id">正在播放</font>
         </span>
       </li>
-    </ul>
+    </ul>-->
+    <div id="videoSliderList">
+      <el-button
+        :type="currentPlayId==item.asset.id?'success':'error'"
+        v-for="(item,index) in selectProjects"
+        :key="index"
+        @click="initSource(index)"
+        icon="el-icon-video-play"
+        style="margin: 10px 2%;"
+      >{{item.asset.name}} {{item.time}}</el-button>
+    </div>
+    <!-- 
+    el-icon-video-play-->
     <!-- <el-button type="primary" style="margin:10px 0 0 10px;" @click="addVideoList">加入播放队列{{selectProjectIds}}</el-button> -->
     <el-checkbox-group v-model="selectProjectIds">
       <ul class="list">
@@ -16,17 +28,16 @@
           <el-checkbox :label="index" :key="index" @change="changeCheckedProject($event,item)">
             <p class="pro-name">{{item.asset.name}}</p>
           </el-checkbox>
+          
           <div>
-            <div class="pro-video">
-              <el-image :src="item.asset.image?$store.state.BASE_URL+item.asset.image:''" fit="cover">
-                <div
-                  slot="error"
-                  style="height: 100%;display: flex;justify-content: center;align-items: center;font-size: 56px;background: #dcdfe6;"
-                >
-                  <i class="el-icon-picture" style="color:#909399"></i>
-                </div>
-              </el-image>
-            </div>
+            <el-image :src="item.asset.image?$store.state.BASE_URL+item.asset.image:''" fit="cover">
+              <div
+                slot="error"
+                style="height: 100%;display: flex;justify-content: center;align-items: center;font-size: 56px;background: #dcdfe6;"
+              >
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
             <p>当前版本：{{item.asset.inner_version}}</p>
           </div>
         </li>
@@ -102,9 +113,9 @@ export default {
     checkedProject(data) {
       console.log("监听点击", data);
     },
-    changeCheckedProject(e,item) {
+    changeCheckedProject(e, item) {
       //加入虚拟数据  后期不要
-      if(e){
+      if (e) {
         item = {
           ...item,
           time: "02:33",
@@ -113,7 +124,7 @@ export default {
             "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
         };
 
-      this.selectProjects.push(item);
+        this.selectProjects.push(item);
       }
     },
     addVideoList() {}
@@ -126,7 +137,7 @@ export default {
   white-space: nowrap;
   width: 100%;
   overflow: auto;
-  li {
+  /* li {
     width: 20%;
     display: inline-block;
     margin: 10px 2%;
@@ -143,7 +154,7 @@ export default {
     .on {
       background: #67c23a;
     }
-  }
+  } */
 }
 .video-cont {
   width: 100%;
@@ -151,25 +162,18 @@ export default {
   .list {
     list-style: none;
     padding: 10px;
-    margin: 0;
-    overflow: hidden;
+    margin: 0; /* 
+    overflow: hidden; */
     // height: 100%;
     height: calc(100% - 90px);
     .item {
       float: left;
       width: 19%;
-      height: 100%;
+      height: 180px;
       border: 1px dotted #ddd;
       margin: 0 0.5%;
       background: #fff;
       padding: 10px;
-      p {
-        padding: 0 5px 0 5px;
-        margin: 0 0 10px 0;
-        font-weight: normal;
-      }
-      .pro-name {
-      }
       .el-image {
         width: 100%;
         height: 90px;

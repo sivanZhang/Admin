@@ -123,7 +123,9 @@ export default {
         link_id:this.Active.asset.id,
         approve_result:this.approve_result,
         suggestion:this.markText
-      };
+      }
+      console.log('qwewqdsadsavdata');
+      
       postApprove(data).then(res=>{
         this.$message(res.data.msg)
         if(res.data.status === 0 ){
@@ -135,8 +137,7 @@ export default {
         if (this.currentVideoIsEdit) {
           this.$message.error('处于视频标注模式')
         } else {
-          console.log("选中的",projectList[0])
-          console.log(11111111,index,projectLists)
+          console.log('点击传回',[...arguments])
           this.$refs.videoPlayer.initVideoUrl(projectList[0],this.pWidth,this.pHeight);
           this.$refs.videoPlayer.initNextVideo(index,projectLists)
           this.$refs.videoInfo.initInfo(projectList[0].id)
@@ -146,7 +147,6 @@ export default {
 
     getMarkImage(obj) {
       this.imgList.push(obj);
-      console.log(this.imgList);
       let bH = document.body.offsetHeight;
       let videoInfoH = document.getElementById("videoInfo").offsetHeight;
       let videoTabsH = document.getElementById("videoTabs").offsetHeight;
@@ -192,7 +192,6 @@ export default {
     },
     getCurrentPlayId(id) {
       console.log(id);
-
       this.$refs.videoList.getCurrentPlayId(id);
     }
   }

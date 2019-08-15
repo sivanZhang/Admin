@@ -5,7 +5,6 @@
       type="success"
       @click="approve"
       class="pan-btn green-btn"
-      size="mini"
     >任务审核</el-button>
     <el-table
       :data="AuditList"
