@@ -6,9 +6,33 @@
     <template v-else>
       <el-steps direction="vertical" :active="1">
         <el-step v-for="item of LinkList" :key="item.link_id" status="process">
-          <div slot="title" style="font-size:14px">
+          <div
+            slot="title"
+            style="font-size:14px;display:flex;justify-content:flex-start"
+            @mouseenter="show=item.link_id"
+            @mouseleave="show=null"
+          >
             {{item.dept.name}}
-            <el-button @click="showTaskForm(item.link_id,item.dept.id,item.content)">添加任务</el-button>
+            <el-tooltip effect="dark" content="添加任务" placement="top">
+              <span style="padding-left:5px">
+                <i
+                  class="el-icon-plus"
+                  style="color:blue"
+                  v-if="show==item.link_id"
+                  @click="showTaskForm(item.link_id,item.dept.id,item.content)"
+                ></i>
+              </span>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="修改环节" placement="top">
+              <span style="padding-left:5px">
+                <i
+                  class="el-icon-edit"
+                  style="color:red"
+                  v-if="show==item.link_id"
+                  @click="showLinkForm(item)"
+                ></i>
+              </span>
+            </el-tooltip>
           </div>
           <ul slot="description" style="width:400px;">
             <li>制作要求: {{item.content}}</li>
@@ -102,10 +126,14 @@
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择执行人">
-            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
+            <el-option
+              v-for="item of DeptUsers"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
-        
         <el-form-item label="任务时间" prop="datetime">
           <el-date-picker
             v-model="TaskForm.datetime"
@@ -118,10 +146,42 @@
         <el-form-item label="总工时" prop="total_hour">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
-        
+
         <el-form-item>
           <el-button @click="cancelTask">取消</el-button>
           <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!-- 环节修改 -->
+    <el-dialog title="修改环节" :visible.sync="isLinkDialogShow" width="490px" center :modal="false">
+      <el-form :model="updateLinkForm" label-width="100px">
+        <el-form-item
+          label="当前工种"
+          prop="dept"
+          :rules="[{ required: true, message: '请输入当前工种', trigger: 'blur' }]"
+        >
+          <el-cascader
+            v-model="updateLinkForm.dept"
+            placeholder="输入搜索工种"
+            :options="selectList"
+            :props="{ checkStrictly: true}"
+            filterable
+            style="width:100%"
+          ></el-cascader>
+        </el-form-item>
+        <el-form-item
+          label="制作内容"
+          prop="content"
+          :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
+        >
+          <el-input v-model="updateLinkForm.content" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="任务时间" prop="datetime">
+          <el-date-picker v-model="updateLinkForm.datetime" type="daterange" range-separator="至"></el-date-picker>
+        </el-form-item>
+        <el-form-item align="right">
+          <el-button type="primary" @click="updateLink">立即修改</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -130,7 +190,7 @@
 
 <script>
 import { addTask } from "@/api/task";
-import { addLinks } from "@/api/links";
+import { addLinks, getLink, updateLink } from "@/api/links";
 import { getDeptUsers } from "@/api/admin";
 import { getDept } from "@/api/admin";
 import { mapState } from "vuex";
@@ -141,7 +201,7 @@ export default {
   name: "links",
   data() {
     return {
-      DeptUsers:[],
+      DeptUsers: [],
       isCreateTaskShow: false,
       TaskForm: {},
       isDialogShow: false,
@@ -149,12 +209,19 @@ export default {
       createLoading: false,
       createTaskLoading: false,
       selectList: [],
-      FormList: [{}]
+      FormList: [{}],
+      show: null,
+      isLinkDialogShow: false,
+      updateLinkForm: {},
+      oneLinkForm: {},
+      dept: {},
+      content: null,
+      datetime: null
     };
   },
   props: ["LinkList", "project"],
   computed: {
-    ...mapState("admin", ["DeptList"])//DeptUsers是根据登录账号得来的
+    ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
     before(ind) {
@@ -173,26 +240,85 @@ export default {
     cancelTask() {
       this.isCreateTaskShow = false;
     },
-    showTaskForm(link_id, dept_id,content) {
+    showTaskForm(link_id, dept_id, content) {
       getDept({
-        id:dept_id
-      }).then(res=>{
-        this.DeptUsers = [...res.data.users]
+        id: dept_id
+      }).then(res => {
+        this.DeptUsers = [...res.data.users];
         console.log(this.DeptUsers);
-        
-      })
+      });
       this.isCreateTaskShow = true;
       this.TaskForm = Object.assign(
         {},
         {
           priority: 0,
-          grade:0,
+          grade: 0,
           asset: this.project.id,
           project: this.$route.params.id,
           link_id,
           content
         }
       );
+    },
+    //展示要修改的环节信息
+    showLinkForm(item) {
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
+      getLink({ link: item.link_id }).then(({ data }) => {
+        if (data.status === 0) {
+          this.oneLinkForm = data.msg;
+          //console.log(this.oneLinkForm);
+          this.content = data.msg.content;
+          this.dept = data.msg.dept;
+          this.datetime = [
+            new Date(dateFormat(data.msg.date_and_user.date_start)),
+            new Date(dateFormat(data.msg.date_and_user.date_end))
+          ];
+          this.isLinkDialogShow = true;
+          this.updateLinkForm = {
+            dept: this.dept.id,
+            content: this.content,
+            datetime: this.datetime
+          };
+          console.log(this.updateLinkForm)
+        }
+      });
+    },
+    
+    //更新修改的环节信息
+    updateLink() {
+      //console.log(this.updateLinkForm);
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      if(this.updateLinkForm.dept.length){
+        this.updateLinkForm.dept = this.updateLinkForm.dept[this.updateLinkForm.dept.length - 1]
+      }
+      const updateData =    
+          {
+            id: this.oneLinkForm.link_id,
+            content: this.updateLinkForm.content,
+            date_start: dataFormat(this.updateLinkForm.datetime[0]),
+            date_end: dataFormat(this.updateLinkForm.datetime[1]),
+            asset: this.project.id,
+            pid: this.oneLinkForm.pid,
+            dept: this.updateLinkForm.dept
+          } 
+      ;
+       
+      updateLink({
+        method: "put",
+        links: [updateData]
+        }).then(({ data }) => {
+        this.createTaskLoading = false;
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$emit("refresh");
+          this.isLinkDialogShow = false;
+          
+        }
+      });
     },
     addTasks() {
       this.$refs["TaskForm"].validate(valid => {
