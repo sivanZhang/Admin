@@ -51,13 +51,14 @@ export default {
   props: ["list"],
   data() {
     return {
-      projectList: [...this.list],
+      projectList: [],
       selectProjectIds: [],
       selectProjects: [],
       currentPlayId: -1
     };
   },
   created() {
+    this.projectList = [...this.$store.state.video.Selection]
     this.initInfo();
   },
   methods: {

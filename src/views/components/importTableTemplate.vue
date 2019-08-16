@@ -86,6 +86,7 @@
   </div>
 </template>
 <script>
+import { log } from 'util';
 export default {
   name: 'ImportTableTemplate',
   data() {
@@ -124,9 +125,11 @@ export default {
         this.dealDatas=data.datas;
         this.keysMap=data.keysMap;
         this.dealKeys.length=0;
+        console.log('this.dealKeys:',this.dealKeys);
         for(let key in this.keysMap){
             this.dealKeys.push(key)
         }
+        
         this.getTableHeader();
     },
     getAssemblingData(){
@@ -205,6 +208,8 @@ export default {
      */
     changeHandlerRadio(value){
       if(this.hasBindKey.indexOf(value)<0){
+        console.log(this.selectCurrentCol);
+        
         let label=this.tableCols[this.selectCurrentCol.index].label;
         this.tableCols[this.selectCurrentCol.index].label=label.split(",")[0]+","+this.keysMap[value];
         this.tableCols[this.selectCurrentCol.index].name=value;
