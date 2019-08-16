@@ -11,6 +11,7 @@
               :LinkList="LinkList"
               @refresh="getLinkList"
               @get-tasks="getTasks"
+              @refresh_assetList="getAssetList"
             ></links>
           </el-tab-pane>
           <el-tab-pane label="备注" name="second">
@@ -57,6 +58,9 @@ export default {
     handleTabClick(tab, event) {
       //this.getRemarkList();
       console.log(tab, event);
+    },
+    getAssetList(){
+      this.$emit("refresh_assetList");
     },
     getTasks() {
       this.$emit("get-tasks");

@@ -166,6 +166,7 @@
         :project="project"
         :RemarksData="RemarksData"
         @get-tasks="getTasks"
+        @refresh_assetList="getAssetList"
       />
     </Drawer>
    
@@ -250,6 +251,9 @@ export default {
   methods: {
     targetImport(){
       this.$router.push({name:'asset-import',params:{id:this.$route.params.id}})
+    },
+    getAssetList(){
+      this.$emit("refresh");
     },
     getTasks() {
       this.$emit("get-tasks");
