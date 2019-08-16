@@ -81,6 +81,7 @@
               v-model="ProjectForm.start"
               style="width: 100%;"
               :picker-options="pickerBeginDateBefore"
+              format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -93,6 +94,7 @@
               v-model="ProjectForm.end"
               style="width: 100%;"
               :picker-options="pickerBeginDateAfter"
+               format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>

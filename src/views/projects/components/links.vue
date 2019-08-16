@@ -9,8 +9,7 @@
           <div
             slot="title"
             style="font-size:14px;display:flex;justify-content:flex-start"
-            @mouseenter="show=item.link_id"
-            @mouseleave="show=null"
+            
           >
             {{item.dept.name}}
             <el-tooltip effect="dark" content="添加任务" placement="top">
@@ -18,7 +17,7 @@
                 <i
                   class="el-icon-plus"
                   style="color:blue"
-                  v-if="show==item.link_id"
+                  
                   @click="showTaskForm(item.link_id,item.dept.id,item.content)"
                 ></i>
               </span>
@@ -27,8 +26,7 @@
               <span style="padding-left:5px">
                 <i
                   class="el-icon-edit"
-                  style="color:red"
-                  v-if="show==item.link_id"
+                  style="color:red"  
                   @click="showLinkForm(item)"
                 ></i>
               </span>
@@ -82,6 +80,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 style="width:100%"
+                format="yyyy/MM/dd"
               ></el-date-picker>
             </el-form-item>
           </el-form>
@@ -141,6 +140,7 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            format="yyyy/MM/dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
@@ -178,7 +178,7 @@
           <el-input v-model="updateLinkForm.content" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
-          <el-date-picker v-model="updateLinkForm.datetime" type="daterange" range-separator="至"></el-date-picker>
+          <el-date-picker v-model="updateLinkForm.datetime" type="daterange" range-separator="至" format="yyyy/MM/dd"></el-date-picker>
         </el-form-item>
         <el-form-item align="right">
           <el-button type="primary" @click="updateLink">立即修改</el-button>
@@ -305,8 +305,7 @@ export default {
             pid: this.oneLinkForm.pid,
             dept: this.updateLinkForm.dept
           } 
-      ;
-       
+      ;    
       updateLink({
         method: "put",
         links: [updateData]
