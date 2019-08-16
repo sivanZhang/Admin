@@ -18,6 +18,7 @@
                 fixed="left"
                 label="操作"
                 width="100"
+                
                 align="center">
                 <template slot-scope="scope">
                     <el-button
@@ -45,7 +46,6 @@
                       placeholder="请输入内容"
                       v-on:blur="inputblur"
                     >
-
                     </el-input>
                     <span v-if="!scope.row.isEdit">{{scope.row[col.prop]}}</span>
                   </template>
@@ -119,9 +119,9 @@ export default {
         this.tableLoading=false;
     },
     initData(data){
+        this.tableData.length=0;
         this.tableLoading=true;
         this.tableLoadingText="数据组装中"
-        console.log(data);
         this.dealDatas=data.datas;
         this.keysMap=data.keysMap;
         this.dealKeys.length=0;
@@ -163,6 +163,7 @@ export default {
      * 组装表格头
      */
     getTableHeader(){
+        this.tableCols.length=0;
         this.tableLoadingText="数据组装表头中"
         if(this.dealDatas.length>0){
             this.tableLoading=true;
@@ -250,9 +251,10 @@ export default {
           },[ 
             h('el-checkbox',{
                 style:'display:inline-flex;margin-left:5px;',
+                class:'1111',
                 on:{
                     change: function($event, column){
-                        console.log(11111,column,$event)
+                        console.log($event,column)
                     },
                 }
             }),
@@ -304,7 +306,16 @@ export default {
         rows.splice(index, 1);
     },
     mergeCell(){
-      this.$message.error('开发中')
+      this.$message.error('开发中');
+      var inputs = document.getElementsByTagName("input");
+        var boxs = [];
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                console.log(inputs[i].id)
+                boxs.push(inputs[i])
+            }
+        }
+       console.log(boxs)
     },
     cancelCell(){
       this.$message.error('开发中')

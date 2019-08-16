@@ -315,6 +315,7 @@ export default {
         this.$message(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
+          this.$emit("refresh_assetList");
           this.isLinkDialogShow = false;
           
         }
@@ -392,6 +393,7 @@ export default {
           this.$message(data.msg);
           if (data.status === 0) {
             this.$emit("refresh");
+            this.$emit("refresh_assetList");
             this.isDialogShow = false;
             this.FormList = [{}];
           }
