@@ -34,3 +34,7 @@ export function updateLink(data){
         timeout: 10000,
     })
 }
+//删除制作环节
+export function delLink(data){
+    return AXIOS.post('/links/links/',data)
+}

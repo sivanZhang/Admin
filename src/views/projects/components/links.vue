@@ -1,47 +1,56 @@
 <template>
-  <div id="links">
-    <template v-if="!LinkList.length">
+  <div id="links" style="display:flex">
+    <div>
       <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
-    </template>
-    <template v-else>
-      <el-steps direction="vertical" :active="1">
-        <el-step v-for="item of LinkList" :key="item.link_id" status="process">
-          <div
-            slot="title"
-            style="font-size:14px;display:flex;justify-content:flex-start"
-            
+    </div>
+    <el-steps direction="vertical" :active="1" style="width:250px">
+      <el-step
+        v-for="(item,index) of LinkList"
+        :key="item.link_id"
+        status="process"
+        style="width:250px"
+      >
+        <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
+          {{item.dept.name}}
+          <el-tooltip effect="dark" content="添加任务" placement="top">
+            <span style="padding-left:5px">
+              <i
+                class="el-icon-plus"
+                style="color:blue"
+                @click="showTaskForm(item.link_id,item.dept.id,item.content)"
+              ></i>
+            </span>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="修改环节" placement="top">
+            <span style="padding-left:5px">
+              <i class="el-icon-edit" style="color:red" @click="showLinkForm(item)"></i>
+            </span>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="上移" placement="top">
+            <span style="padding-left:5px">
+              <i class="el-icon-top" @click="upmove(index,item)" v-if="item.pid"></i>
+            </span>
+          </el-tooltip>
+          <el-tooltip
+            effect="dark"
+            content="下移"
+            placement="top"
+            v-if="!(index === (LinkList.length - 1))"
           >
-            {{item.dept.name}}
-            <el-tooltip effect="dark" content="添加任务" placement="top">
-              <span style="padding-left:5px">
-                <i
-                  class="el-icon-plus"
-                  style="color:blue"
-                  
-                  @click="showTaskForm(item.link_id,item.dept.id,item.content)"
-                ></i>
-              </span>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="修改环节" placement="top">
-              <span style="padding-left:5px">
-                <i
-                  class="el-icon-edit"
-                  style="color:red"  
-                  @click="showLinkForm(item)"
-                ></i>
-              </span>
-            </el-tooltip>
-          </div>
-          <ul slot="description" style="width:400px;">
-            <li>制作要求: {{item.content}}</li>
-            <template>
-              <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
-              <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
-            </template>
-          </ul>
-        </el-step>
-      </el-steps>
-    </template>
+            <span style="padding-left:5px">
+              <i class="el-icon-bottom" @click="downmove(index,item)"></i>
+            </span>
+          </el-tooltip>
+        </div>
+        <ul slot="description" style="width:250px;">
+          <li>制作要求: {{item.content}}</li>
+          <template>
+            <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
+            <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
+          </template>
+        </ul>
+      </el-step>
+    </el-steps>
     <el-dialog title="添加环节" :visible.sync="isDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
@@ -178,7 +187,12 @@
           <el-input v-model="updateLinkForm.content" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
-          <el-date-picker v-model="updateLinkForm.datetime" type="daterange" range-separator="至" format="yyyy/MM/dd"></el-date-picker>
+          <el-date-picker
+            v-model="updateLinkForm.datetime"
+            type="daterange"
+            range-separator="至"
+            format="yyyy/MM/dd"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item align="right">
           <el-button type="primary" @click="updateLink">立即修改</el-button>
@@ -190,7 +204,7 @@
 
 <script>
 import { addTask } from "@/api/task";
-import { addLinks, getLink, updateLink } from "@/api/links";
+import { addLinks, getLink, updateLink, delLink } from "@/api/links";
 import { getDeptUsers } from "@/api/admin";
 import { getDept } from "@/api/admin";
 import { mapState } from "vuex";
@@ -229,6 +243,87 @@ export default {
     },
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
+    },
+    upmove(index, item) {
+      console.log(item);
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
+      const data = [
+        {
+          id: item.link_id,
+          content: item.content,
+          date_start: dateFormat(item.date_and_user.date_start),
+          date_end: dateFormat(item.date_and_user.date_end),
+          asset: this.project.id,
+          pid: this.LinkList[index - 1].pid,
+          dept: item.dept.id
+        },
+        {
+          id: this.LinkList[index - 1].link_id,
+          content: this.LinkList[index - 1].content,
+          date_start: dateFormat(
+            this.LinkList[index - 1].date_and_user.date_start
+          ),
+          date_end: dateFormat(this.LinkList[index - 1].date_and_user.date_end),
+          asset: this.project.id,
+          pid: item.link_id,
+          dept: this.LinkList[index - 1].dept.id
+        }
+      ];
+      console.log(data);
+      updateLink({
+        method: "put",
+        links: data
+      }).then(({ data }) => {
+        this.createTaskLoading = false;
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$emit("refresh");
+          this.$emit("refresh_assetList");
+          this.isLinkDialogShow = false;
+        }
+      });
+    },
+    downmove(index, item) {
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      };
+      const data = [
+        {
+          id: item.link_id,
+          content: item.content,
+          date_start: dateFormat(item.date_and_user.date_start),
+          date_end: dateFormat(item.date_and_user.date_end),
+          asset: this.project.id,
+          pid: this.LinkList[index + 1].link_id,
+          dept: item.dept.id
+        },
+        {
+          id: this.LinkList[index + 1].link_id,
+          content: this.LinkList[index + 1].content,
+          date_start: dateFormat(
+            this.LinkList[index + 1].date_and_user.date_start
+          ),
+          date_end: dateFormat(this.LinkList[index + 1].date_and_user.date_end),
+          asset: this.project.id,
+          pid: item.pid,
+          dept: this.LinkList[index + 1].dept.id
+        }
+      ];
+      // console.log(data);
+      updateLink({
+        method: "put",
+        links: data
+      }).then(({ data }) => {
+        this.createTaskLoading = false;
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$emit("refresh");
+          this.$emit("refresh_assetList");
+          this.isLinkDialogShow = false;
+        }
+      });
     },
     showLinksForm() {
       this.isDialogShow = true;
@@ -281,42 +376,41 @@ export default {
             content: this.content,
             datetime: this.datetime
           };
-          console.log(this.updateLinkForm)
+          console.log(this.updateLinkForm);
         }
       });
     },
-    
+
     //更新修改的环节信息
     updateLink() {
       //console.log(this.updateLinkForm);
       function dataFormat(params) {
         return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
       }
-      if(this.updateLinkForm.dept.length){
-        this.updateLinkForm.dept = this.updateLinkForm.dept[this.updateLinkForm.dept.length - 1]
+      if (this.updateLinkForm.dept.length) {
+        this.updateLinkForm.dept = this.updateLinkForm.dept[
+          this.updateLinkForm.dept.length - 1
+        ];
       }
-      const updateData =    
-          {
-            id: this.oneLinkForm.link_id,
-            content: this.updateLinkForm.content,
-            date_start: dataFormat(this.updateLinkForm.datetime[0]),
-            date_end: dataFormat(this.updateLinkForm.datetime[1]),
-            asset: this.project.id,
-            pid: this.oneLinkForm.pid,
-            dept: this.updateLinkForm.dept
-          } 
-      ;    
+      const updateData = {
+        id: this.oneLinkForm.link_id,
+        content: this.updateLinkForm.content,
+        date_start: dataFormat(this.updateLinkForm.datetime[0]),
+        date_end: dataFormat(this.updateLinkForm.datetime[1]),
+        asset: this.project.id,
+        pid: this.oneLinkForm.pid,
+        dept: this.updateLinkForm.dept
+      };
       updateLink({
         method: "put",
         links: [updateData]
-        }).then(({ data }) => {
+      }).then(({ data }) => {
         this.createTaskLoading = false;
         this.$message(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
           this.isLinkDialogShow = false;
-          
         }
       });
     },
