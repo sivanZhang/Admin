@@ -80,15 +80,13 @@ export default {
         this.$message.error("格式错误！请重新选择");
         return;
       }
+      _self.$refs.tableTemplate.openLoading("数据导入中");
       //异步等到解析文件后调用其他方法
       file2Xce(file).then(tabJson => {
-        if (tabJson && tabJson.length > 0) {
-          _self.testDataJSON = tabJson;
-          _self.importAsset();
-          _self.uploadDisabled = false;
-        } else {
-          this.$message.error("导入数据为空");
-        }
+        //这里可判断数据是否为空
+        _self.testDataJSON = tabJson;
+        _self.importAsset();
+        _self.uploadDisabled = false;
       });
       function file2Xce(file) {
         return new Promise(function(resolve, reject) {
@@ -143,13 +141,11 @@ export default {
     },
     //导入数据
     importAsset() {
-      let _self = this;
-      _self.$refs.tableTemplate.openLoading("数据导入中");
       let data = {
-        datas: _self.testDataJSON,
-        keysMap: _self.keysMap
+        datas: this.testDataJSON,
+        keysMap: this.keysMap
       };
-      _self.$refs.tableTemplate.initData(data);
+      this.$refs.tableTemplate.initData(data);
     }
   }
 };
