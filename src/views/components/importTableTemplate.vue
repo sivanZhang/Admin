@@ -125,10 +125,11 @@ export default {
         this.dealDatas=data.datas;
         this.keysMap=data.keysMap;
         this.dealKeys.length=0;
+        console.log('this.dealKeys:',this.dealKeys);
         for(let key in this.keysMap){
             this.dealKeys.push(key)
         }
-        console.log('this.dealKeys:',this.dealKeys);
+        
         this.getTableHeader();
     },
     getAssemblingData(){
@@ -198,8 +199,6 @@ export default {
           data.isEdit=false;
          this.tableData.push(data);
        } 
-       console.log('this.tableData:',this.tableData);
-       
        this.tableLoading=false;
 
      },

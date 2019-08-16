@@ -61,6 +61,7 @@ export default {
   },
   components: { ImportTableTemplate },
   methods: {
+    //点击隐藏的上传文件按钮
     openFile() {
       this.$refs.file_inp.click();
     },
@@ -79,24 +80,35 @@ export default {
         this.$message.error("格式错误！请重新选择");
         return;
       }
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var data = e.target.result;
-        var workbook = XLSX.read(data, { type: "binary" });
-        _self.testDataJSON = XLSX.utils.sheet_to_json(
-          workbook.Sheets[workbook.SheetNames[0]],
-          {
-            header:1,//二维数组展示
-            raw: false,
-            skipHeader: true
-          }
-        );
-        obj.value = null;
-        _self.testDataJSON.shift()//去掉工作表头的数据
-      };
-      reader.readAsBinaryString(file);
-      _self.importAsset();
-      _self.uploadDisabled = false;
+      //异步等到解析文件后调用其他方法
+      file2Xce(file).then(tabJson => {
+        if (tabJson && tabJson.length > 0) {
+          _self.testDataJSON = tabJson;
+          _self.importAsset();
+          _self.uploadDisabled = false;
+        } else {
+          this.$message.error("导入数据为空");
+        }
+      });
+      function file2Xce(file) {
+        return new Promise(function(resolve, reject) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            let data = e.target.result;
+            let wb = XLSX.read(data, {
+              type: "binary"
+            });
+            resolve(
+              XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+                header: 1, //二维数组展示
+                raw: false,
+                skipHeader: true
+              })
+            );
+          };
+          reader.readAsBinaryString(file);
+        });
+      }
     },
     changeHandlerRadio(value) {
       if (this.hasBindKey.indexOf(value) < 0) {
@@ -120,25 +132,24 @@ export default {
      * 组件中必须 @returnAssemblingData="returnAssemblingData"
      */
     returnAssemblingData(data) {
-      // _self.uploadDisabled= true
       console.log("组装好的数据-------", data);
       data = { ...data, project: this.$route.params.id };
       //提交jsons数据
-      HTTP.uploadAssets(data).then(({data}) => {
-        this.$message(`资产创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`)
+      HTTP.uploadAssets(data).then(({ data }) => {
+        this.$message(
+          `资产创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`
+        );
       });
     },
     //导入数据
     importAsset() {
-      //此处接入Ajax
       let _self = this;
       _self.$refs.tableTemplate.openLoading("数据导入中");
-      setTimeout(() => {
-        let data = {};
-        data.datas = _self.testDataJSON;
-        data.keysMap = _self.keysMap;
-        _self.$refs.tableTemplate.initData(data);
-      }, 1000);
+      let data = {
+        datas: _self.testDataJSON,
+        keysMap: _self.keysMap
+      };
+      _self.$refs.tableTemplate.initData(data);
     }
   }
 };
