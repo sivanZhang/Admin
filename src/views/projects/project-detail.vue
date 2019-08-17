@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="镜头" name="tab0">
-        <tab-lens  />
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="资产管理" name="tab1">
         <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" />
@@ -33,18 +33,47 @@ export default {
     return {
       activeName: "tab0",
       AssetList: [],
-      TaskList: []
+      allAssetList: [],
+      TaskList: [],
+      asset_type: 0,
     };
   },
+ watch:{
+   activeName:{
+     handler:function (newVal,oldVal){
+       if(newVal === "tab0"){
+         this.asset_type = 0;
+         this.getAssetList();
+       }
+       if(newVal === "tab1"){
+         this.asset_type = 1;
+         this.getAssetList();
+       }if(newVal === "tab2"){
+         this.asset_type = null;
+         this.getAssetList();
+       }
+     }
+   }
+ },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
     },
-    getAssetList() {
+    getAssetList() {  
       queryAssets({
-        project: this.$route.params.id
+        project: this.$route.params.id,
+        asset_type: this.asset_type
       }).then(({ data }) => {
         this.AssetList = [...data.msg];
+      });
+      
+    },
+    getAllAssetList(){
+      queryAssets({
+        project:this.$route.params.id
+      }).then(({ data }) => {
+        this.allAssetList = [...data.msg];
+        console.log(this.allAssetList);
       });
     },
     getTaskList(keywords) {
