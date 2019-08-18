@@ -59,7 +59,7 @@
         <el-menu class="el-menu-demo" mode="horizontal">
           <el-submenu index="2">
             <template slot="title">选择事件</template>
-            <el-menu-item index="2-2" @click="cancelMapping">取消映射</el-menu-item>
+            <el-menu-item index="2-2" @click="cancelMapping">取消绑定</el-menu-item>
             <el-submenu index="2-4">
               <template slot="title">
                 必须字段
@@ -89,7 +89,7 @@ export default {
       tableLoading: false,
       tableLoadingText: "",
       dealDatas: [], //原始数据
-      keysMap: [], //映射字段
+      keysMap: [], //绑定字段
       dealKeys: [], //原始keys
       tableCols: [], //表格头
       tableData: [], //表格数据
@@ -160,7 +160,7 @@ export default {
         for (let i = 0; i < firstData.length; i++) {
           this.letterIndex = 65 + i;
           let label = {
-            label: String.fromCharCode(65 + i) + ",未映射字段",
+            label: String.fromCharCode(65 + i) + ",未绑定字段",
             prop: "node" + i,
             name: "",
             type: "normal"
@@ -212,7 +212,7 @@ export default {
     cancelMapping() {
       let label = this.tableCols[this.selectCurrentCol.index].label;
       this.tableCols[this.selectCurrentCol.index].label =
-        label.split(",")[0] + ",未映射字段";
+        label.split(",")[0] + ",未绑定字段";
       this.tableCols[this.selectCurrentCol.index].name = "";
       this.hasBindKey[this.selectCurrentCol.index] = "";
       this.dialogVisible = false;

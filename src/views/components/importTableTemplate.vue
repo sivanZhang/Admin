@@ -58,8 +58,8 @@
     >
       <el-row type="flex" justify="space-between">
         <el-col>
-          <el-radio v-model="radio" :label="1">映射资产</el-radio>
-          <el-radio v-model="radio" :label="2">映射环节</el-radio>
+          <el-radio v-model="radio" :label="1">绑定资产</el-radio>
+          <el-radio v-model="radio" :label="2">绑定环节</el-radio>
         </el-col>
         <el-col>
           <template v-if="radio===1">
@@ -107,7 +107,7 @@
       </el-row>
       <div style="text-align:center;margin-top:20px">
         <el-button type="danger" @click="cancelMapping">清空字段</el-button>
-        <el-button type="primary">映射字段</el-button>
+        <el-button type="primary">绑定字段</el-button>
       </div>
     </el-dialog>
   </div>
@@ -124,7 +124,7 @@ export default {
       tableLoading: false,
       tableLoadingText: "",
       dealDatas: {}, //原始数据
-      keysMap: [], //映射字段,
+      keysMap: [], //绑定字段,
       allKeysMap: [],
       dealKeys: [], //原始keys
       tableCols: [], //表格头
@@ -162,7 +162,7 @@ export default {
     ...mapState("admin", ["DeptList"])
   },
   methods: {
-    //映射工种字段
+    //绑定工种字段
     linkChanged(value) {
       let _self = this;
       let lastLabel;
@@ -282,7 +282,7 @@ export default {
       this.tableLoadingText = "数据组装中";
       //原始数据= [[],[],[],[]]
       this.dealDatas = data.datas;
-      //映射字段= {}
+      //绑定字段= {}
       //this.keysMap = data.keysMap;
       this.allKeysMap = { ...data.requiredKeysMap, ...data.keysMap };
       this.keysMap = [
@@ -298,7 +298,7 @@ export default {
 
       //原始keys
       this.dealKeys = [];
-      //映射字段 的 key组成一个数组 push到 原始keys中
+      //绑定字段 的 key组成一个数组 push到 原始keys中
       for (let key in this.allKeysMap) {
         this.dealKeys.push(key);
       }
@@ -351,7 +351,7 @@ export default {
         for (let i = 0; i < firstData.length; i++) {
           this.letterIndex = 65 + i;
           let label = {
-            label: String.fromCharCode(65 + i) + ",未映射字段",
+            label: String.fromCharCode(65 + i) + ",未绑定字段",
             prop: "node" + i,
             name: "",
             type: "normal" //表示添加进来的列（不包含操作项）
@@ -405,7 +405,7 @@ export default {
     cancelMapping() {
       let label = this.tableCols[this.selectCurrentCol.index].label;
       this.tableCols[this.selectCurrentCol.index].label =
-        label.split(",")[0] + ",未映射字段";
+        label.split(",")[0] + ",未绑定字段";
       this.tableCols[this.selectCurrentCol.index].name = "";
       this.hasBindKey[this.selectCurrentCol.index] = "";
       this.dialogVisible = false;
