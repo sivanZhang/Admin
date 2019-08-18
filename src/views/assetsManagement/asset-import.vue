@@ -125,7 +125,7 @@ export default {
       HTTP.uploadAssets(data).then(({ data }) => {
         this.$notify({
           title: '提交状态',
-          message: `资产创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
+          message: `资产/镜头创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
           duration: 0,
           type:'info'
         });
