@@ -79,7 +79,7 @@ export default {
 <style lang="scss" scoped>
 .page-right {
   height: 100%;
-
+  
   // margin-left: 0.5%;
   .dropdow {
     position: absolute;

@@ -1,11 +1,11 @@
 <template>
-  <div id="links" style="display:flex">
+  <div id="links" style="display:flex;overflow:auto;">
     <div>
       <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
     </div>
-    <el-steps direction="vertical" :active="1" style="width:250px">
+    <el-steps direction="vertical" :active="1" style="width:250px" v-for="(todo,Index) of LinkList" :key="Index">
       <el-step
-        v-for="(item,index) of LinkList"
+        v-for="(item,index) of todo"
         :key="item.link_id"
         status="process"
         style="width:250px"
@@ -28,17 +28,17 @@
           </el-tooltip>
           <el-tooltip effect="dark" content="上移" placement="top">
             <span style="padding-left:5px">
-              <i class="el-icon-top" @click="upmove(index,item)" v-if="item.pid"></i>
+              <i class="el-icon-top" @click="upmove(Index,index,item)" v-if="item.pid"></i>
             </span>
           </el-tooltip>
           <el-tooltip
             effect="dark"
             content="下移"
             placement="top"
-            v-if="!(index === (LinkList.length - 1))"
+            v-if="!(index === (LinkList[Index].length - 1))"
           >
             <span style="padding-left:5px">
-              <i class="el-icon-bottom" @click="downmove(index,item)"></i>
+              <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
             </span>
           </el-tooltip>
         </div>
@@ -244,8 +244,8 @@ export default {
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
     },
-    upmove(index, item) {
-      console.log(item);
+    upmove(Index,index, item) {
+      //console.log(item);
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
       }
@@ -256,22 +256,22 @@ export default {
           date_start: dateFormat(item.date_and_user.date_start),
           date_end: dateFormat(item.date_and_user.date_end),
           asset: this.project.id,
-          pid: this.LinkList[index - 1].pid,
+          pid: this.LinkList[Index][index - 1].pid,
           dept: item.dept.id
         },
         {
-          id: this.LinkList[index - 1].link_id,
-          content: this.LinkList[index - 1].content,
+          id: this.LinkList[Index][index - 1].link_id,
+          content: this.LinkList[Index][index - 1].content,
           date_start: dateFormat(
-            this.LinkList[index - 1].date_and_user.date_start
+            this.LinkList[Index][index - 1].date_and_user.date_start
           ),
-          date_end: dateFormat(this.LinkList[index - 1].date_and_user.date_end),
+          date_end: dateFormat(this.LinkList[Index][index - 1].date_and_user.date_end),
           asset: this.project.id,
           pid: item.link_id,
-          dept: this.LinkList[index - 1].dept.id
+          dept: this.LinkList[Index][index - 1].dept.id
         }
       ];
-      console.log(data);
+      //console.log(data);
       updateLink({
         method: "put",
         links: data
@@ -285,7 +285,7 @@ export default {
         }
       });
     },
-    downmove(index, item) {
+    downmove(Index,index, item) {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
       };
@@ -296,19 +296,19 @@ export default {
           date_start: dateFormat(item.date_and_user.date_start),
           date_end: dateFormat(item.date_and_user.date_end),
           asset: this.project.id,
-          pid: this.LinkList[index + 1].link_id,
+          pid: this.LinkList[Index][index + 1].link_id,
           dept: item.dept.id
         },
         {
-          id: this.LinkList[index + 1].link_id,
-          content: this.LinkList[index + 1].content,
+          id: this.LinkList[Index][index + 1].link_id,
+          content: this.LinkList[Index][index + 1].content,
           date_start: dateFormat(
-            this.LinkList[index + 1].date_and_user.date_start
+            this.LinkList[Index][index + 1].date_and_user.date_start
           ),
-          date_end: dateFormat(this.LinkList[index + 1].date_and_user.date_end),
+          date_end: dateFormat(this.LinkList[Index][index + 1].date_and_user.date_end),
           asset: this.project.id,
           pid: item.pid,
-          dept: this.LinkList[index + 1].dept.id
+          dept: this.LinkList[Index][index + 1].dept.id
         }
       ];
       // console.log(data);
