@@ -3,7 +3,15 @@
     <div>
       <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
     </div>
-    <el-steps direction="vertical" :active="1" style="width:250px" v-for="(todo,Index) of LinkList" :key="Index">
+    <el-steps
+      direction="vertical"
+      :active="1"
+      style="width:250px;display:flex；justify-content:flex-start"
+      v-for="(todo,Index) of LinkList"
+      :key="Index"
+    >
+      <!-- <div>{{Index - 1>-1?Index - 1:""}}-----{{Index + 1>LinkList.length?"":Index + 1}}</div> -->
+
       <el-step
         v-for="(item,index) of todo"
         :key="item.link_id"
@@ -39,6 +47,22 @@
           >
             <span style="padding-left:5px">
               <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
+            </span>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="向前合并" placement="top" v-if="item.pid === 0&&Index -1>-1">
+            <span style="padding-left:5px">
+              <i class="el-icon-caret-left" @click="leftmove(Index)"></i>
+            </span>
+          </el-tooltip>
+
+          <el-tooltip effect="dark" content="向后合并" placement="top" v-if="item.pid === 0&&Index+1<LinkList.length">
+            <span style="padding-left:5px">
+              <i class="el-icon-caret-right"  @click="rightmove(Index)"></i>
+            </span>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="拆分" placement="top" v-if="item.pid >0">
+            <span style="padding-left:5px">
+              <svg-icon icon-class="unpack"  @click="unpack(item)"></svg-icon>
             </span>
           </el-tooltip>
         </div>
@@ -244,7 +268,7 @@ export default {
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
     },
-    upmove(Index,index, item) {
+    upmove(Index, index, item) {
       //console.log(item);
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
@@ -265,7 +289,9 @@ export default {
           date_start: dateFormat(
             this.LinkList[Index][index - 1].date_and_user.date_start
           ),
-          date_end: dateFormat(this.LinkList[Index][index - 1].date_and_user.date_end),
+          date_end: dateFormat(
+            this.LinkList[Index][index - 1].date_and_user.date_end
+          ),
           asset: this.project.id,
           pid: item.link_id,
           dept: this.LinkList[Index][index - 1].dept.id
@@ -285,10 +311,10 @@ export default {
         }
       });
     },
-    downmove(Index,index, item) {
+    downmove(Index, index, item) {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
-      };
+      }
       const data = [
         {
           id: item.link_id,
@@ -305,7 +331,9 @@ export default {
           date_start: dateFormat(
             this.LinkList[Index][index + 1].date_and_user.date_start
           ),
-          date_end: dateFormat(this.LinkList[Index][index + 1].date_and_user.date_end),
+          date_end: dateFormat(
+            this.LinkList[Index][index + 1].date_and_user.date_end
+          ),
           asset: this.project.id,
           pid: item.pid,
           dept: this.LinkList[Index][index + 1].dept.id
@@ -324,6 +352,89 @@ export default {
           this.isLinkDialogShow = false;
         }
       });
+    },
+    leftmove(Index) {
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
+      const data = [{
+          id: this.LinkList[Index][0].link_id,
+          content: this.LinkList[Index][0].content,
+          date_start: dateFormat(this.LinkList[Index][0].date_and_user.date_start),
+          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
+          asset: this.project.id,
+          pid: this.LinkList[Index-1][this.LinkList[Index-1].length-1].link_id,
+          dept: this.LinkList[Index][0].dept.id
+        }];
+      updateLink({
+        method: "put",
+        links: data
+      }).then(({ data }) => {
+        this.createTaskLoading = false;
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$emit("refresh");
+          this.$emit("refresh_assetList");
+          //this.isLinkDialogShow = false;
+        }
+      });
+     // console.log(this.LinkList[Index][0]);
+    },
+    rightmove(Index) {
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
+      const data = [{
+          id: this.LinkList[Index][0].link_id,
+          content: this.LinkList[Index][0].content,
+          date_start: dateFormat(this.LinkList[Index][0].date_and_user.date_start),
+          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
+          asset: this.project.id,
+          pid: this.LinkList[Index+1][this.LinkList[Index+1].length - 1].link_id,
+          dept: this.LinkList[Index][0].dept.id
+        }];
+        console.log(data);
+      updateLink({
+        method: "put",
+        links: data
+      }).then(({ data }) => {
+        this.createTaskLoading = false;
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$emit("refresh");
+          this.$emit("refresh_assetList");
+          //this.isLinkDialogShow = false;
+        }
+      });
+    },
+    unpack(item){
+      console.log(item);
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
+      const data = [{
+          id: item.link_id,
+          content: item.content,
+          date_start: dateFormat(item.date_and_user.date_start),
+          date_end: dateFormat(item.date_and_user.date_end),
+          asset: this.project.id,
+          pid: 0,
+          dept: item.dept.id
+        }];
+        console.log(data);
+      updateLink({
+        method: "put",
+        links: data
+      }).then(({ data }) => {
+        this.createTaskLoading = false;
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.$emit("refresh");
+          this.$emit("refresh_assetList");
+          //this.isLinkDialogShow = false;
+        }
+      });
+
     },
     showLinksForm() {
       this.isDialogShow = true;
