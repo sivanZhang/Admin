@@ -11,7 +11,7 @@
           :append-to-body="true"
         >
           <drawer-header :project="project" style="padding:10px" />
-          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData" @refresh="show"/>
+          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData" :taskList="taskList" @refresh="show"/>
         </Drawer>
         <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
           <div slot="title">
@@ -89,6 +89,7 @@
 import { mapState } from "vuex";
 import { getRemark } from "@/api/remark";
 import { queryAssets } from "@/api/assets";
+import {queryTask} from "@/api/task";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
@@ -107,7 +108,8 @@ export default {
       isDrawerShow: false,
       project: null,
       RemarksData: [],
-      TableData: []
+      TableData: [],
+      taskList:[]
     };
   },
   computed: {
@@ -137,6 +139,11 @@ export default {
       }).then(({ data }) => {
         this.TableData = [...data.msg];
       });
+      queryTask({
+        project:this.project.id
+      }).then(({data})=>{
+        this.taskList = [...data.msg]
+      })
     }
   },
   created() {

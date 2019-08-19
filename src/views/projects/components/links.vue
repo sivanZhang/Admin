@@ -1,17 +1,15 @@
 <template>
   <div id="links" style="display:flex;overflow:auto;">
     <div>
-      <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
-    </div>
-    <el-steps
+      <div style="padding-bottom:10px"><el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button></div>
+      <div style="display:flex;">
+        <el-steps
       direction="vertical"
       :active="1"
       style="width:250px;display:flex；justify-content:flex-start"
       v-for="(todo,Index) of LinkList"
       :key="Index"
     >
-      <!-- <div>{{Index - 1>-1?Index - 1:""}}-----{{Index + 1>LinkList.length?"":Index + 1}}</div> -->
-
       <el-step
         v-for="(item,index) of todo"
         :key="item.link_id"
@@ -90,6 +88,9 @@
         </ul>
       </el-step>
     </el-steps>
+      </div>
+    </div>
+    
     <el-dialog title="添加环节" :visible.sync="isDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
@@ -129,6 +130,7 @@
                 end-placeholder="结束日期"
                 style="width:100%"
                 format="yyyy/MM/dd"
+                :picker-options="picker"
               ></el-date-picker>
             </el-form-item>
           </el-form>
@@ -189,6 +191,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
+            :picker-options="picker"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
@@ -231,6 +234,7 @@
             type="daterange"
             range-separator="至"
             format="yyyy/MM/dd"
+            :picker-options="picker"
           ></el-date-picker>
         </el-form-item>
         <el-form-item align="right">
@@ -269,7 +273,13 @@ export default {
       oneLinkForm: {},
       dept: {},
       content: null,
-      datetime: null
+      datetime: null,
+      picker:{
+        disabledDate: time=>{
+          return time.getTime() < Date.now() - 8.64e7;
+          
+        }
+      }
     };
   },
   props: ["LinkList", "project"],

@@ -9,7 +9,6 @@
             <div  @mouseover="showEdit=true" @mouseleave="showEdit = false">
               <span v-if="!editing">{{project.name}}</span>
             <i class="el-icon-edit" style="color:blue" v-if="showEdit"  @click="edit"></i>
-            
             </div>
             <input
               type="text"
@@ -27,7 +26,28 @@
           <el-col :span="15" class="comment">{{project.code}}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="comment">项目状态</el-col>
+          <el-col :span="6" class="comment">Windows路径</el-col>
+          <el-col :span="15" class="comment">{{project.windows_path}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">Mac路径</el-col>
+          <el-col :span="15" class="comment">{{project.mac_path}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">Linux路径</el-col>
+          <el-col :span="15" class="comment">{{project.linux_path}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">项目预算</el-col>
+          <el-col :span="15" class="comment">¥{{project.budget|numberFormat}}万元</el-col>
+        </el-row>
+        
+        <el-row>
+          <el-col :span="6" class="comment">负责人</el-col>
+          <el-col :span="15" class="comment">{{project.charger_name}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">工作流</el-col>
           <el-col :span="15" class="comment">{{project.status|projectStatus}}</el-col>
         </el-row>
         <el-row>
@@ -114,7 +134,7 @@ export default {
 <style lang="scss" scoped>
 #info {
   .comment {
-    padding: 15px 10px;
+    padding: 5px 10px;
     font-size: 12px;
   }
   input {

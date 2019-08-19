@@ -20,14 +20,14 @@
 import { queryAssets } from "@/api/assets";
 import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
-import tabLens from "./components/tab-lens"
+
 import { queryTask } from "@/api/task";
 export default {
   name: "project-detail",
   components: {
     tabTask,
     tabAssets,
-    tabLens
+    
   },
   data() {
     return {
