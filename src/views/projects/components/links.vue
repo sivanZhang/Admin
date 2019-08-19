@@ -31,7 +31,7 @@
           </el-tooltip>
           <el-tooltip effect="dark" content="修改环节" placement="top">
             <span style="padding-left:5px">
-              <i class="el-icon-edit" style="color:red" @click="showLinkForm(item)"></i>
+              <i class="el-icon-edit" style="color:green" @click="showLinkForm(item)"></i>
             </span>
           </el-tooltip>
           <el-tooltip effect="dark" content="上移" placement="top">
@@ -49,20 +49,35 @@
               <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
             </span>
           </el-tooltip>
-          <el-tooltip effect="dark" content="向前合并" placement="top" v-if="item.pid === 0&&Index -1>-1">
+          <el-tooltip
+            effect="dark"
+            content="向前合并"
+            placement="top"
+            v-if="item.pid === 0&&Index -1>-1"
+          >
             <span style="padding-left:5px">
               <i class="el-icon-caret-left" @click="leftmove(Index)"></i>
             </span>
           </el-tooltip>
 
-          <el-tooltip effect="dark" content="向后合并" placement="top" v-if="item.pid === 0&&Index+1<LinkList.length">
+          <el-tooltip
+            effect="dark"
+            content="向后合并"
+            placement="top"
+            v-if="item.pid === 0&&Index+1<LinkList.length"
+          >
             <span style="padding-left:5px">
-              <i class="el-icon-caret-right"  @click="rightmove(Index)"></i>
+              <i class="el-icon-caret-right" @click="rightmove(Index)"></i>
             </span>
           </el-tooltip>
           <el-tooltip effect="dark" content="拆分" placement="top" v-if="item.pid >0">
             <span style="padding-left:5px">
-              <svg-icon icon-class="unpack"  @click="unpack(item)"></svg-icon>
+              <svg-icon icon-class="unpack" @click="unpack(item)"></svg-icon>
+            </span>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="删除环节" placement="top">
+            <span style="padding-left:5px">
+              <i class="el-icon-delete" style="color:red" @click="removeLink(item,Index,index)"></i>
             </span>
           </el-tooltip>
         </div>
@@ -262,12 +277,15 @@ export default {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
+    //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
     },
+    //创建环节时，后置
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
     },
+    //串行环节调整顺序（上移）
     upmove(Index, index, item) {
       //console.log(item);
       function dateFormat(date) {
@@ -303,7 +321,7 @@ export default {
         links: data
       }).then(({ data }) => {
         this.createTaskLoading = false;
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
@@ -311,6 +329,7 @@ export default {
         }
       });
     },
+    //串行环节顺序调整（下移）
     downmove(Index, index, item) {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
@@ -345,7 +364,7 @@ export default {
         links: data
       }).then(({ data }) => {
         this.createTaskLoading = false;
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
@@ -353,53 +372,65 @@ export default {
         }
       });
     },
+    //并行环节合并（向前合并）
     leftmove(Index) {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
       }
-      const data = [{
+      const data = [
+        {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
-          date_start: dateFormat(this.LinkList[Index][0].date_and_user.date_start),
+          date_start: dateFormat(
+            this.LinkList[Index][0].date_and_user.date_start
+          ),
           date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
           asset: this.project.id,
-          pid: this.LinkList[Index-1][this.LinkList[Index-1].length-1].link_id,
+          pid: this.LinkList[Index - 1][this.LinkList[Index - 1].length - 1]
+            .link_id,
           dept: this.LinkList[Index][0].dept.id
-        }];
+        }
+      ];
       updateLink({
         method: "put",
         links: data
       }).then(({ data }) => {
         this.createTaskLoading = false;
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
           //this.isLinkDialogShow = false;
         }
       });
-     // console.log(this.LinkList[Index][0]);
+      // console.log(this.LinkList[Index][0]);
     },
+    //并行环节合并（向后合并）
     rightmove(Index) {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
       }
-      const data = [{
+      const data = [
+        {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
-          date_start: dateFormat(this.LinkList[Index][0].date_and_user.date_start),
+          date_start: dateFormat(
+            this.LinkList[Index][0].date_and_user.date_start
+          ),
           date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
           asset: this.project.id,
-          pid: this.LinkList[Index+1][this.LinkList[Index+1].length - 1].link_id,
+          pid: this.LinkList[Index + 1][this.LinkList[Index + 1].length - 1]
+            .link_id,
           dept: this.LinkList[Index][0].dept.id
-        }];
-        console.log(data);
+        }
+      ];
+      console.log(data);
       updateLink({
         method: "put",
         links: data
       }).then(({ data }) => {
         this.createTaskLoading = false;
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
@@ -407,12 +438,14 @@ export default {
         }
       });
     },
-    unpack(item){
+    //串行环节拆分
+    unpack(item) {
       console.log(item);
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
       }
-      const data = [{
+      const data = [
+        {
           id: item.link_id,
           content: item.content,
           date_start: dateFormat(item.date_and_user.date_start),
@@ -420,21 +453,21 @@ export default {
           asset: this.project.id,
           pid: 0,
           dept: item.dept.id
-        }];
-        console.log(data);
+        }
+      ];
+      console.log(data);
       updateLink({
         method: "put",
         links: data
       }).then(({ data }) => {
         this.createTaskLoading = false;
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
           //this.isLinkDialogShow = false;
         }
       });
-
     },
     showLinksForm() {
       this.isDialogShow = true;
@@ -446,6 +479,7 @@ export default {
     cancelTask() {
       this.isCreateTaskShow = false;
     },
+    //展示任务列表
     showTaskForm(link_id, dept_id, content) {
       getDept({
         id: dept_id
@@ -491,7 +525,6 @@ export default {
         }
       });
     },
-
     //更新修改的环节信息
     updateLink() {
       //console.log(this.updateLinkForm);
@@ -517,7 +550,7 @@ export default {
         links: [updateData]
       }).then(({ data }) => {
         this.createTaskLoading = false;
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
           this.$emit("refresh_assetList");
@@ -525,6 +558,7 @@ export default {
         }
       });
     },
+    //给某一环节添加任务
     addTasks() {
       this.$refs["TaskForm"].validate(valid => {
         if (valid) {
@@ -545,7 +579,7 @@ export default {
           addTask(data)
             .then(({ data }) => {
               this.createTaskLoading = false;
-              this.$message(data.msg);
+              this.$message.success(data.msg);
               if (data.status === 0) {
                 this.cancelTask();
                 this.$emit("get-tasks");
@@ -560,6 +594,7 @@ export default {
         }
       });
     },
+    //给某一资产添加环节
     addLinks() {
       function dataFormat(params) {
         return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
@@ -594,7 +629,7 @@ export default {
       addLinks({ links: [...this.FormList] })
         .then(({ data }) => {
           this.createLoading = false;
-          this.$message(data.msg);
+          this.$message.success(data.msg);
           if (data.status === 0) {
             this.$emit("refresh");
             this.$emit("refresh_assetList");
@@ -606,6 +641,64 @@ export default {
           this.isDialogShow = false;
           this.createLoading = false;
         });
+    },
+    //环节删除
+    removeLink(item, Index, index) {
+      this.$confirm("删除环节后无法恢复，确认删除?", "注意", {
+        confirmButtonText: "删除",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          if (
+            this.LinkList[Index].length === 1 ||
+            (this.LinkList[Index].length > 0 && item.pid !== 0)
+          ) {
+            delLink({
+              id: item.link_id,
+              method: "delete"
+            }).then(({ data }) => {
+              this.$message.success(data.msg);
+              if (data.status === 0) {
+                this.$emit("refresh");
+                this.$emit("refresh_assetList");
+              }
+            });
+          }
+          else if (this.LinkList[Index].length > 0 && item.pid === 0) {
+            function dataFormat(params) {
+              return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+            }
+            const data = {
+              id: this.LinkList[Index][1].link_id,
+              content: this.LinkList[Index][1].content,
+              date_start: dataFormat(this.LinkList[Index][1].date_and_user.date_start),
+              date_end: dataFormat(this.LinkList[Index][1].date_and_user.date_end),
+              asset: this.project.id,
+              pid: 0,
+              dept: this.LinkList[Index][1].dept.id
+            };
+            updateLink({
+              method: "put",
+              links: [data]
+            }).then(({ data }) => {
+              this.createTaskLoading = false;
+              this.$emit("refresh");
+              this.$emit("refresh_assetList");
+            });
+            delLink({
+              id: item.link_id,
+              method: "delete"
+            }).then(({ data }) => {
+              this.$message.success(data.msg);
+              if (data.status === 0) {
+                this.$emit("refresh");
+                this.$emit("refresh_assetList");
+              }
+            });
+          }
+        })
+        
     },
     formatList() {
       function changeList(arr) {

@@ -201,7 +201,7 @@ export default {
       }).then(() => {
         //console.log(id);
         HTTP.deleteAssets({ id }).then(({ data }) => {
-          this.$message(data.msg);
+          this.$message.success(data.msg);
           if (data.status === 0) {
             this._getAssetList();
           }
@@ -222,7 +222,7 @@ export default {
           HTTP.postAssets(this.AssetForm)
             .then(({ data }) => {
               this.createLoading = false;
-              this.$message(data.msg);
+              this.$message.success(data.msg);
               if (data.status === 0) {
                 this._getAssetList();
               }

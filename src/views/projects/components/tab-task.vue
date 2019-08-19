@@ -274,7 +274,7 @@ export default {
             HTTP.putTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                this.$message(data.msg);
+                this.$message.success(data.msg);
                 if (data.status === 0) {
                   this.getTasks();
                   this.isDialogShow = false;
@@ -287,7 +287,7 @@ export default {
             HTTP.addTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                this.$message(data.msg);
+                this.$message.success(data.msg);
                 if (data.status === 0) {
                   this.getTasks();
                   this.isDialogShow = false;
@@ -320,7 +320,7 @@ export default {
       })
         .then(() => {
           HTTP.deleteTask(this.ActiveRow.id).then(({ data }) => {
-            this.$message(data.msg);
+            this.$message.success(data.msg);
             if (data.status === 0) {
               this.getTasks();
             }

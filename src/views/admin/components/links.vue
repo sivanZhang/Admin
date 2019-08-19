@@ -103,14 +103,14 @@ export default {
           console.log(msg);
           addWKTemplate(msg)
             .then(({ data }) => {
-              this.$message(data.msg);
+              this.$message.success(data.msg);
               if (data.status === 0) {
                 
                 this.$emit("refresh");
                 this.isDrawerShow = false;
                 this.dynamicValidateForm.domains.value = "";
               }else{
-                this.$message(data.msg);
+                this.$message.error(data.msg);
               }
             })
             .catch(() => {});

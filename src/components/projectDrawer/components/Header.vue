@@ -157,7 +157,7 @@ export default {
         id: this.project.id
       };
       putProjects(data).then(({ data }) => {
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.$store.dispatch("project/get_Projects");
         }

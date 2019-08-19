@@ -202,7 +202,7 @@ export default {
             end: this.ProjectForm.end.toLocaleDateString()
           };
           addProjects(Data).then(({ data }) => {
-            this.$message(data.msg);
+            this.$message.success(data.msg);
             if (data.status === 0) {
               this.$store.dispatch("project/get_Projects");
               this.$emit("update:isShow", false);
