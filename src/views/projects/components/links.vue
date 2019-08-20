@@ -1,96 +1,98 @@
 <template>
   <div id="links" style="display:flex;overflow:auto;">
     <div>
-      <div style="padding-bottom:10px"><el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button></div>
+      <div style="padding-bottom:10px">
+        <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
+      </div>
       <div style="display:flex;">
         <el-steps
-      direction="vertical"
-      :active="1"
-      style="width:250px;display:flex；justify-content:flex-start"
-      v-for="(todo,Index) of LinkList"
-      :key="Index"
-    >
-      <el-step
-        v-for="(item,index) of todo"
-        :key="item.link_id"
-        status="process"
-        style="width:250px"
-      >
-        <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
-          {{item.dept.name}}
-          <el-tooltip effect="dark" content="添加任务" placement="top">
-            <span style="padding-left:5px">
-              <i
-                class="el-icon-plus"
-                style="color:blue"
-                @click="showTaskForm(item.link_id,item.dept.id,item.content)"
-              ></i>
-            </span>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="修改环节" placement="top">
-            <span style="padding-left:5px">
-              <i class="el-icon-edit" style="color:green" @click="showLinkForm(item)"></i>
-            </span>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="上移" placement="top">
-            <span style="padding-left:5px">
-              <i class="el-icon-top" @click="upmove(Index,index,item)" v-if="item.pid"></i>
-            </span>
-          </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            content="下移"
-            placement="top"
-            v-if="!(index === (LinkList[Index].length - 1))"
+          direction="vertical"
+          :active="1"
+          style="width:250px;display:flex；justify-content:flex-start"
+          v-for="(todo,Index) of LinkList"
+          :key="Index"
+        >
+          <el-step
+            v-for="(item,index) of todo"
+            :key="item.link_id"
+            status="process"
+            style="width:250px"
           >
-            <span style="padding-left:5px">
-              <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
-            </span>
-          </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            content="向前合并"
-            placement="top"
-            v-if="item.pid === 0&&Index -1>-1"
-          >
-            <span style="padding-left:5px">
-              <i class="el-icon-caret-left" @click="leftmove(Index)"></i>
-            </span>
-          </el-tooltip>
+            <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
+              {{item.dept.name}}
+              <el-tooltip effect="dark" content="添加任务" placement="top">
+                <span style="padding-left:5px">
+                  <i
+                    class="el-icon-plus"
+                    style="color:blue"
+                    @click="showTaskForm(item.link_id,item.dept.id,item.content)"
+                  ></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="修改环节" placement="top">
+                <span style="padding-left:5px">
+                  <i class="el-icon-edit" style="color:green" @click="showLinkForm(item)"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="上移" placement="top">
+                <span style="padding-left:5px">
+                  <i class="el-icon-top" @click="upmove(Index,index,item)" v-if="item.pid"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip
+                effect="dark"
+                content="下移"
+                placement="top"
+                v-if="!(index === (LinkList[Index].length - 1))"
+              >
+                <span style="padding-left:5px">
+                  <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip
+                effect="dark"
+                content="向前合并"
+                placement="top"
+                v-if="item.pid === 0&&Index -1>-1"
+              >
+                <span style="padding-left:5px">
+                  <i class="el-icon-caret-left" @click="leftmove(Index)"></i>
+                </span>
+              </el-tooltip>
 
-          <el-tooltip
-            effect="dark"
-            content="向后合并"
-            placement="top"
-            v-if="item.pid === 0&&Index+1<LinkList.length"
-          >
-            <span style="padding-left:5px">
-              <i class="el-icon-caret-right" @click="rightmove(Index)"></i>
-            </span>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="拆分" placement="top" v-if="item.pid >0">
-            <span style="padding-left:5px">
-              <svg-icon icon-class="unpack" @click="unpack(item)"></svg-icon>
-            </span>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="删除环节" placement="top">
-            <span style="padding-left:5px">
-              <i class="el-icon-delete" style="color:red" @click="removeLink(item,Index,index)"></i>
-            </span>
-          </el-tooltip>
-        </div>
-        <ul slot="description" style="width:250px;">
-          <li>制作要求: {{item.content}}</li>
-          <template>
-            <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
-            <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
-          </template>
-        </ul>
-      </el-step>
-    </el-steps>
+              <el-tooltip
+                effect="dark"
+                content="向后合并"
+                placement="top"
+                v-if="item.pid === 0&&Index+1<LinkList.length"
+              >
+                <span style="padding-left:5px">
+                  <i class="el-icon-caret-right" @click="rightmove(Index)"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="拆分" placement="top" v-if="item.pid >0">
+                <span style="padding-left:5px">
+                  <svg-icon icon-class="unpack" @click="unpack(item)"></svg-icon>
+                </span>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="删除环节" placement="top">
+                <span style="padding-left:5px">
+                  <i class="el-icon-delete" style="color:red" @click="removeLink(item,Index,index)"></i>
+                </span>
+              </el-tooltip>
+            </div>
+            <ul slot="description" style="width:250px;">
+              <li>制作要求: {{item.content}}</li>
+              <template>
+                <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
+                <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
+              </template>
+            </ul>
+          </el-step>
+        </el-steps>
       </div>
     </div>
-    
+
     <el-dialog title="添加环节" :visible.sync="isDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
@@ -98,7 +100,7 @@
           <el-avatar>{{index+1}}</el-avatar>
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="18">
           <el-form :model="item" label-width="90px">
             <el-form-item
               label="环节内容"
@@ -135,6 +137,13 @@
             </el-form-item>
           </el-form>
           <el-divider />
+        </el-col>
+        <el-col :span="4" align="center">
+          <el-tooltip effect="dark" content="删除" placement="top">
+            <span>
+              <i class="el-icon-delete" style="color:red" @click="deleteLink(index)"></i>
+            </span>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row type="flex" justify="end">
@@ -274,10 +283,9 @@ export default {
       dept: {},
       content: null,
       datetime: null,
-      picker:{
-        disabledDate: time=>{
+      picker: {
+        disabledDate: time => {
           return time.getTime() < Date.now() - 8.64e7;
-          
         }
       }
     };
@@ -295,6 +303,10 @@ export default {
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
     },
+    //创建环节时，删除
+    deleteLink(index) {
+      if (index !== 0) this.FormList.splice(index, 1);
+    },
     //串行环节调整顺序（上移）
     upmove(Index, index, item) {
       //console.log(item);
@@ -305,8 +317,14 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start: dateFormat(item.date_and_user.date_start),
-          date_end: dateFormat(item.date_and_user.date_end),
+          date_start:
+            dateFormat(item.date_and_user.date_start) > 0
+              ? dateFormat(item.date_and_user.date_start)
+              : "",
+          date_end:
+            dateFormat(item.date_and_user.date_end) > 0
+              ? dateFormat(item.date_and_user.date_end)
+              : "",
           asset: this.project.id,
           pid: this.LinkList[Index][index - 1].pid,
           dept: item.dept.id
@@ -314,12 +332,21 @@ export default {
         {
           id: this.LinkList[Index][index - 1].link_id,
           content: this.LinkList[Index][index - 1].content,
-          date_start: dateFormat(
-            this.LinkList[Index][index - 1].date_and_user.date_start
-          ),
-          date_end: dateFormat(
-            this.LinkList[Index][index - 1].date_and_user.date_end
-          ),
+          date_start:
+            dateFormat(
+              this.LinkList[Index][index - 1].date_and_user.date_start
+            ) > 0
+              ? dateFormat(
+                  this.LinkList[Index][index - 1].date_and_user.date_start
+                )
+              : "",
+          date_end:
+            dateFormat(this.LinkList[Index][index - 1].date_and_user.date_end) >
+            0
+              ? dateFormat(
+                  this.LinkList[Index][index - 1].date_and_user.date_end
+                )
+              : "",
           asset: this.project.id,
           pid: item.link_id,
           dept: this.LinkList[Index][index - 1].dept.id
@@ -348,8 +375,14 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start: dateFormat(item.date_and_user.date_start),
-          date_end: dateFormat(item.date_and_user.date_end),
+          date_start:
+            dateFormat(item.date_and_user.date_start) > 0
+              ? dateFormat(item.date_and_user.date_start)
+              : "",
+          date_end:
+            dateFormat(item.date_and_user.date_end) > 0
+              ? dateFormat(item.date_and_user.date_end)
+              : "",
           asset: this.project.id,
           pid: this.LinkList[Index][index + 1].link_id,
           dept: item.dept.id
@@ -357,12 +390,21 @@ export default {
         {
           id: this.LinkList[Index][index + 1].link_id,
           content: this.LinkList[Index][index + 1].content,
-          date_start: dateFormat(
-            this.LinkList[Index][index + 1].date_and_user.date_start
-          ),
-          date_end: dateFormat(
-            this.LinkList[Index][index + 1].date_and_user.date_end
-          ),
+          date_start:
+            dateFormat(
+              this.LinkList[Index][index + 1].date_and_user.date_start
+            ) > 0
+              ? dateFormat(
+                  this.LinkList[Index][index + 1].date_and_user.date_start
+                )
+              : "",
+          date_end:
+            dateFormat(this.LinkList[Index][index + 1].date_and_user.date_end) >
+            0
+              ? dateFormat(
+                  this.LinkList[Index][index + 1].date_and_user.date_end
+                )
+              : "",
           asset: this.project.id,
           pid: item.pid,
           dept: this.LinkList[Index][index + 1].dept.id
@@ -393,8 +435,12 @@ export default {
           content: this.LinkList[Index][0].content,
           date_start: dateFormat(
             this.LinkList[Index][0].date_and_user.date_start
-          ),
-          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
+          )>0
+            ? dateFormat(this.LinkList[Index][0].date_and_user.date_start)
+            : "",
+          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end)>0
+            ? dateFormat(this.LinkList[Index][0].date_and_user.date_end)
+            : "",
           asset: this.project.id,
           pid: this.LinkList[Index - 1][this.LinkList[Index - 1].length - 1]
             .link_id,
@@ -424,10 +470,14 @@ export default {
         {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
-          date_start: dateFormat(
-            this.LinkList[Index][0].date_and_user.date_start
-          ),
-          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
+          date_start:
+            dateFormat(this.LinkList[Index][0].date_and_user.date_start) > 0
+              ? dateFormat(this.LinkList[Index][0].date_and_user.date_start)
+              : "",
+          date_end:
+            dateFormat(this.LinkList[Index][0].date_and_user.date_end) > 0
+              ? dateFormat(this.LinkList[Index][0].date_and_user.date_end)
+              : "",
           asset: this.project.id,
           pid: this.LinkList[Index + 1][this.LinkList[Index + 1].length - 1]
             .link_id,
@@ -458,8 +508,12 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start: dateFormat(item.date_and_user.date_start),
-          date_end: dateFormat(item.date_and_user.date_end),
+          date_start: dateFormat(item.date_and_user.date_start)>0
+            ? dateFormat(item.date_and_user.date_start)
+            : "",
+          date_end: dateFormat(item.date_and_user.date_end)>0
+            ? dateFormat(item.date_and_user.date_end)
+            : "",
           asset: this.project.id,
           pid: 0,
           dept: item.dept.id
@@ -484,10 +538,13 @@ export default {
     },
     cancel() {
       this.isDialogShow = false;
+      this.FormList = [{}]
     },
     //取消对话框
     cancelTask() {
       this.isCreateTaskShow = false;
+      this.TaskForm = {}
+
     },
     //展示任务列表
     showTaskForm(link_id, dept_id, content) {
@@ -522,8 +579,16 @@ export default {
           this.content = data.msg.content;
           this.dept = data.msg.dept;
           this.datetime = [
-            new Date(dateFormat(data.msg.date_and_user.date_start)),
-            new Date(dateFormat(data.msg.date_and_user.date_end))
+            new Date(
+              dateFormat(data.msg.date_and_user.date_start)
+                ? dateFormat(data.msg.date_and_user.date_start)
+                : ""
+            ),
+            new Date(
+              dateFormat(data.msg.date_and_user.date_end)
+                ? dateFormat(data.msg.date_and_user.date_end)
+                : ""
+            )
           ];
           this.isLinkDialogShow = true;
           this.updateLinkForm = {
@@ -549,8 +614,12 @@ export default {
       const updateData = {
         id: this.oneLinkForm.link_id,
         content: this.updateLinkForm.content,
-        date_start: dataFormat(this.updateLinkForm.datetime[0]),
-        date_end: dataFormat(this.updateLinkForm.datetime[1]),
+        date_start: dataFormat(this.updateLinkForm.datetime[0])
+          ? dateFormat(this.updateLinkForm.datetime[0])
+          : "",
+        date_end: dataFormat(this.updateLinkForm.datetime[1])
+          ? dateFormat(this.updateLinkForm.datetime[1])
+          : "",
         asset: this.project.id,
         pid: this.oneLinkForm.pid,
         dept: this.updateLinkForm.dept
@@ -578,8 +647,14 @@ export default {
           }
           let data = {
             ...this.TaskForm,
-            start_date: dataFormat(this.TaskForm.datetime[0]),
-            end_date: dataFormat(this.TaskForm.datetime[1]),
+            start_date:
+              dataFormat(this.TaskForm.datetime[0]) > 0
+                ? dateFormat(this.TaskForm.datetime[0])
+                : "",
+            end_date:
+              dataFormat(this.TaskForm.datetime[1]) > 0
+                ? dateFormat(this.TaskForm.datetime[1])
+                : "",
             project: this.$route.params.id
           };
           if (this.TaskForm.executorlist.length) {
@@ -621,8 +696,12 @@ export default {
         ) {
           this.FormList[index] = {
             ...this.FormList[index],
-            date_start: dataFormat(this.FormList[index].datetime[0]),
+            date_start: dataFormat(this.FormList[index].datetime[0])
+              ? dateFormat(this.FormList[index].datetime[0])
+              : "",
             date_end: dataFormat(this.FormList[index].datetime[1])
+              ? dateFormat(this.FormList[index].datetime[1])
+              : ""
           };
           delete this.FormList[index].datetime;
         }
@@ -658,57 +737,62 @@ export default {
         confirmButtonText: "删除",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
-          if (
-            this.LinkList[Index].length === 1 ||
-            (this.LinkList[Index].length > 0 && item.pid !== 0)
-          ) {
-            delLink({
-              id: item.link_id,
-              method: "delete"
-            }).then(({ data }) => {
-              this.$message.success(data.msg);
-              if (data.status === 0) {
-                this.$emit("refresh");
-                this.$emit("refresh_assetList");
-              }
-            });
-          }
-          else if (this.LinkList[Index].length > 0 && item.pid === 0) {
-            function dataFormat(params) {
-              return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-            }
-            const data = {
-              id: this.LinkList[Index][1].link_id,
-              content: this.LinkList[Index][1].content,
-              date_start: dataFormat(this.LinkList[Index][1].date_and_user.date_start),
-              date_end: dataFormat(this.LinkList[Index][1].date_and_user.date_end),
-              asset: this.project.id,
-              pid: 0,
-              dept: this.LinkList[Index][1].dept.id
-            };
-            updateLink({
-              method: "put",
-              links: [data]
-            }).then(({ data }) => {
-              this.createTaskLoading = false;
+      }).then(() => {
+        if (
+          this.LinkList[Index].length === 1 ||
+          (this.LinkList[Index].length > 0 && item.pid !== 0)
+        ) {
+          delLink({
+            id: item.link_id,
+            method: "delete"
+          }).then(({ data }) => {
+            this.$message.success(data.msg);
+            if (data.status === 0) {
               this.$emit("refresh");
               this.$emit("refresh_assetList");
-            });
-            delLink({
-              id: item.link_id,
-              method: "delete"
-            }).then(({ data }) => {
-              this.$message.success(data.msg);
-              if (data.status === 0) {
-                this.$emit("refresh");
-                this.$emit("refresh_assetList");
-              }
-            });
+            }
+          });
+        } else if (this.LinkList[Index].length > 0 && item.pid === 0) {
+          function dataFormat(params) {
+            return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
           }
-        })
-        
+          const data = {
+            id: this.LinkList[Index][1].link_id,
+            content: this.LinkList[Index][1].content,
+            date_start: dataFormat(
+              this.LinkList[Index][1].date_and_user.date_start > 0
+                ? this.LinkList[Index][1].date_and_user.date_start
+                : ""
+            ),
+            date_end: dataFormat(
+              this.LinkList[Index][1].date_and_user.date_end > 0
+                ? this.LinkList[Index][1].date_and_user.date_end
+                : ""
+            ),
+            asset: this.project.id,
+            pid: 0,
+            dept: this.LinkList[Index][1].dept.id
+          };
+          updateLink({
+            method: "put",
+            links: [data]
+          }).then(({ data }) => {
+            this.createTaskLoading = false;
+            this.$emit("refresh");
+            this.$emit("refresh_assetList");
+          });
+          delLink({
+            id: item.link_id,
+            method: "delete"
+          }).then(({ data }) => {
+            this.$message.success(data.msg);
+            if (data.status === 0) {
+              this.$emit("refresh");
+              this.$emit("refresh_assetList");
+            }
+          });
+        }
+      });
     },
     formatList() {
       function changeList(arr) {
