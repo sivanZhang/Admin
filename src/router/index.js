@@ -135,7 +135,7 @@ export const constantRoutes = [{
         component: Layout,
         redirect: '/task',
         meta: {
-            title: '我的任务',
+            title: '我的工作台',
             icon: 'task'
         },
         children: [{
@@ -147,7 +147,38 @@ export const constantRoutes = [{
                 title: '我的任务',
                 icon: 'task'
             }
-        }]
+        },
+        {
+            path: 'task',
+            name: 'task',
+            component: () =>
+                import ('@/views/task'),
+            meta: {
+                title: '我的审批',
+                icon: 'task'
+            }
+        },
+        {
+            path: 'overview-users',
+            name: 'overview-users',
+            component: () =>
+                import ('@/views/overview/users'),
+            meta: {
+                title: '我的工时',
+                icon: 'user'
+            },
+        },
+        {
+            path: 'overview-users',
+            name: 'overview-users',
+            component: () =>
+                import ('@/views/overview/users'),
+            meta: {
+                title: '我的信息',
+                icon: 'user'
+            },
+        }
+    ]
     },
     // {
     //     path: '/videoCheck',
