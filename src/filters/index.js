@@ -4,17 +4,47 @@ export function avatarFormat(text) {
 }
 //时间戳格式化为 yyyy/dd/mm
 export function dateFormat(date) {
-    if (date)
-        return new Date(date * 1000).toLocaleDateString();
-    else
-        return '-'
+    if (date) {
+        const TIME = new Date(date * 1000)
+
+        function add0(val) {
+            if (val < 10) {
+                return `0${val}`
+            } else {
+                return val
+            }
+        }
+        let [dd, mm] = [add0(TIME.getDate()),
+            add0(TIME.getMonth() + 1)
+        ]
+
+        return `${TIME.getFullYear()}/${mm}/${dd}`
+    } else {
+        return ''
+    }
 }
-//时间戳格式化为 yyyy/dd/mm hh:mm:ss
+//时间戳格式化为 yyyy/dd/mm hh:mm
 export function dateTimeFormat(date) {
-    if (date)
-        return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`;
-    else
-        return '-'
+    if (date) {
+        const TIME = new Date(date * 1000)
+
+        function add0(val) {
+            if (val < 10) {
+                return `0${val}`
+            } else {
+                return val
+            }
+        }
+        let [dd, mm, MM, hh] = [add0(TIME.getDate()),
+            add0(TIME.getMonth() + 1),
+            add0(TIME.getMinutes()),
+            add0(TIME.getHours())
+        ]
+
+        return `${TIME.getFullYear()}/${mm}/${dd} ${hh}:${MM}`
+    } else {
+        return ''
+    }
 }
 //项目工作流格式化
 export function projectStatus(code) {
@@ -38,7 +68,9 @@ export function projectStatus(code) {
 }
 //数字保留两位小数并且格式化
 export function numberFormat(num) {
-    return (+num).toLocaleString(undefined, { maximumFractionDigits: 2 })
+    return (+num).toLocaleString(undefined, {
+        maximumFractionDigits: 2
+    })
 }
 //资产优先级
 export function Priority(priority) {
@@ -113,7 +145,7 @@ export function WKLevel(data) {
     }
 }
 //任务状态
-export function taskStatus(data){
+export function taskStatus(data) {
     switch (data) {
         case 0:
             return '草稿'
