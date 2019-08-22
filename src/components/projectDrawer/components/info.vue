@@ -6,19 +6,21 @@
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
           <el-col :span="15" class="comment">
-            <div  @mouseover="showEdit=true" @mouseleave="showEdit = false">
+            <div @mouseover="showEdit=true" @mouseleave="showEdit = false">
               <span v-if="!editing">{{project.name}}</span>
-            <i class="el-icon-edit" style="color:blue" v-if="showEdit"  @click="edit"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit" @click="edit(0)"></i>
             </div>
-            <input
+           <div  v-if="editing">
+              <input
               type="text"
-              ref="input"
-              v-if="editing"
+              ref="input"        
               class="input"
               value="project.name"
               v-model="name"
-              @blur="save"
+              @blur="editing=false"
             />
+            <el-button @click="save(0)" type="primary">修改</el-button>
+           </div>
           </el-col>
         </el-row>
         <el-row>
@@ -27,24 +29,58 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Windows路径</el-col>
-          <el-col :span="15" class="comment">{{project.windows_path}}</el-col>
+          <el-col :span="15" class="comment">{{project.Windows}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Mac路径</el-col>
-          <el-col :span="15" class="comment">{{project.mac_path}}</el-col>
+          <el-col :span="15" class="comment">{{project.Mac}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Linux路径</el-col>
-          <el-col :span="15" class="comment">{{project.linux_path}}</el-col>
+          <el-col :span="15" class="comment">{{project.Linux}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">项目预算</el-col>
-          <el-col :span="15" class="comment">¥{{project.budget|numberFormat}}万元</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
+              <span v-if="!editing2">¥{{project.budget|numberFormat}}万元</span>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit2" @click="edit(1)"></i>
+            </div>
+            <div v-if="editing2">
+              ¥
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.budget"
+                v-model="budget"
+                @blur="editing2=false"
+              />万元
+              <el-button @click="save(1)" type="primary">修改</el-button>
+            </div>
+          </el-col>
         </el-row>
-        
+
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
-          <el-col :span="15" class="comment">{{project.charger_name}}</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit3=true" @mouseleave="showEdit3 = false">
+              <span v-if="!editing3">{{project.charger_name}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit3" @click="edit(2)"></i>
+            </div>
+            <div v-if="editing3">
+              <el-select v-model="charger" placeholder="请选择负责人" ref="selete">
+                <el-option
+                  v-for="item of UserList"
+                  :label="item.username"
+                  :value="item.id"
+                  :key="item.id"
+                   @blur="editing3=false"
+                ></el-option>
+              </el-select>
+              <el-button @click="save(2)" type="primary">修改</el-button>
+            </div>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">工作流</el-col>
@@ -94,36 +130,95 @@
 
 <script>
 import { putProjects } from "@/api/project";
+import {getUsersRole} from "@/api/admin";
+import { mapState } from "vuex";
 export default {
   props: ["project"],
   name: "info",
   data() {
     return {
       editing: false,
+      editing2: false,
+      editing3: false,
       name: null,
-      showEdit:false
+      budget: null,
+      charger: null,
+      showEdit: false,
+      showEdit2: false,
+      showEdit3: false
     };
   },
-
+  computed: {
+    ...mapState("admin", ["UserList"])
+  },
   methods: {
-    edit() {
-      this.showEdit = false;
-      this.editing = true;
-      this.$nextTick(() => {
-        this.$refs.input.focus();
-      });
+    edit(Type) {
+      if (Type === 0) {
+        this.showEdit = false;
+        this.editing = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 1) {
+        this.showEdit2 = false;
+        this.editing2 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 2) {
+        this.showEdit3 = false;
+        this.editing3 = true;
+        this.$nextTick(() => {
+          this.$refs.selete.focus();
+        });
+      }
     },
-    save() {
-      this.editing = false;
-      putProjects({
-        method: "put",
-        id: this.project.id,
-        name: this.name
-      }).then(({ data }) => {
+    save(Type, item) {
+      let data = null;
+      if (Type === 0) {
+        this.editing = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          name: this.name
+        };
+      }
+      if (Type === 1) {
+        this.editing2 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          budget: this.budget
+        };
+      }
+      if (Type === 2 ) {
+        this.editing3 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          charger: this.charger
+        };
+        
+      }
+
+      putProjects(data).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-          this.project.name = this.name;
-          this.name = null;
+          if (Type === 0) {
+            this.project.name = this.name;
+            this.name = null;
+          }
+          if (Type === 1) {
+            this.project.budget = this.budget;
+            this.budget = null;
+          }
+          if (Type === 2) {
+            
+            this.project.charger_name = username;
+            this.charger = null;
+          }
         }
       });
     }

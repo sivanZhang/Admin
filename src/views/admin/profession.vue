@@ -327,8 +327,8 @@ export default {
         dept: this.activeTemplate.id
       }).then(({ data }) => {
         this.LinkTemplateList = [...data.msg];
-        console.log("LinkTemplateList");
-        console.log(this.LinkTemplateList);
+        // console.log("LinkTemplateList");
+        // console.log(this.LinkTemplateList);
       });
     },
 

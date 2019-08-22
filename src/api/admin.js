@@ -36,6 +36,22 @@ export function addWKTemplate(params) {
         timeout: 10000,
     })
 }
+//给某工种修改模板 
+export function updateWKTemplate(params){
+    return AXIOS.post('/wktemplate/wktemplate_v2/',params,{
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [data => {
+            return JSON.stringify(data)
+        }],
+        timeout: 10000,
+    })
+}
+//给某工种删除模板
+export function deleteWKTemplate(params){
+    return AXIOS.post('/wktemplate/wktemplate_v2/',params)
+}
 //获取用户列表
 export function getUserList() {
     return AXIOS.get('/users/list/')
@@ -60,4 +76,8 @@ export function updateRole(data) {
 export function removeRole(data) {
     data = {...data, method: 'delete' }
     return AXIOS.post('/role/role/?delete', data)
+}
+//获取权限列表
+export function permissions(data){
+    return AXIOS.get('/role/permissions/',data)
 }
