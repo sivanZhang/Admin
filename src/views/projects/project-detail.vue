@@ -10,7 +10,7 @@
       <el-tab-pane label="任务" name="tab2">
         <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
       </el-tab-pane>
-      <el-tab-pane label="团队策划" name="tab3">团队策划</el-tab-pane>
+      <el-tab-pane label="项目设置" name="tab3">项目设置</el-tab-pane>
       <el-tab-pane label="控制面板" name="tab4">控制面板</el-tab-pane>
     </el-tabs>
   </div>
