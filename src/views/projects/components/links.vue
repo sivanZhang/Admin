@@ -244,6 +244,7 @@
             range-separator="至"
             format="yyyy/MM/dd"
             :picker-options="picker"
+            
           ></el-date-picker>
         </el-form-item>
         <el-form-item align="right">
@@ -318,13 +319,9 @@ export default {
           id: item.link_id,
           content: item.content,
           date_start:
-            dateFormat(item.date_and_user.date_start) > 0
-              ? dateFormat(item.date_and_user.date_start)
-              : "",
+            dateFormat(item.date_and_user.date_start) ,
           date_end:
-            dateFormat(item.date_and_user.date_end) > 0
-              ? dateFormat(item.date_and_user.date_end)
-              : "",
+            dateFormat(item.date_and_user.date_end) ,
           asset: this.project.id,
           pid: this.LinkList[Index][index - 1].pid,
           dept: item.dept.id
@@ -335,18 +332,9 @@ export default {
           date_start:
             dateFormat(
               this.LinkList[Index][index - 1].date_and_user.date_start
-            ) > 0
-              ? dateFormat(
-                  this.LinkList[Index][index - 1].date_and_user.date_start
-                )
-              : "",
+            ) ,
           date_end:
-            dateFormat(this.LinkList[Index][index - 1].date_and_user.date_end) >
-            0
-              ? dateFormat(
-                  this.LinkList[Index][index - 1].date_and_user.date_end
-                )
-              : "",
+            dateFormat(this.LinkList[Index][index - 1].date_and_user.date_end),
           asset: this.project.id,
           pid: item.link_id,
           dept: this.LinkList[Index][index - 1].dept.id
@@ -376,13 +364,10 @@ export default {
           id: item.link_id,
           content: item.content,
           date_start:
-            dateFormat(item.date_and_user.date_start) > 0
-              ? dateFormat(item.date_and_user.date_start)
-              : "",
+            dateFormat(item.date_and_user.date_start),
           date_end:
-            dateFormat(item.date_and_user.date_end) > 0
-              ? dateFormat(item.date_and_user.date_end)
-              : "",
+            dateFormat(item.date_and_user.date_end) 
+              ,
           asset: this.project.id,
           pid: this.LinkList[Index][index + 1].link_id,
           dept: item.dept.id
@@ -393,18 +378,9 @@ export default {
           date_start:
             dateFormat(
               this.LinkList[Index][index + 1].date_and_user.date_start
-            ) > 0
-              ? dateFormat(
-                  this.LinkList[Index][index + 1].date_and_user.date_start
-                )
-              : "",
+            ) ,
           date_end:
-            dateFormat(this.LinkList[Index][index + 1].date_and_user.date_end) >
-            0
-              ? dateFormat(
-                  this.LinkList[Index][index + 1].date_and_user.date_end
-                )
-              : "",
+            dateFormat(this.LinkList[Index][index + 1].date_and_user.date_end ),
           asset: this.project.id,
           pid: item.pid,
           dept: this.LinkList[Index][index + 1].dept.id
@@ -433,14 +409,10 @@ export default {
         {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
-          date_start: dateFormat(
-            this.LinkList[Index][0].date_and_user.date_start
-          )>0
-            ? dateFormat(this.LinkList[Index][0].date_and_user.date_start)
-            : "",
-          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end)>0
-            ? dateFormat(this.LinkList[Index][0].date_and_user.date_end)
-            : "",
+          date_start:
+            dateFormat(this.LinkList[Index][0].date_and_user.date_start) ,
+          date_end:
+            dateFormat(this.LinkList[Index][0].date_and_user.date_end) ,
           asset: this.project.id,
           pid: this.LinkList[Index - 1][this.LinkList[Index - 1].length - 1]
             .link_id,
@@ -471,13 +443,9 @@ export default {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
           date_start:
-            dateFormat(this.LinkList[Index][0].date_and_user.date_start) > 0
-              ? dateFormat(this.LinkList[Index][0].date_and_user.date_start)
-              : "",
+            dateFormat(this.LinkList[Index][0].date_and_user.date_start) ,
           date_end:
-            dateFormat(this.LinkList[Index][0].date_and_user.date_end) > 0
-              ? dateFormat(this.LinkList[Index][0].date_and_user.date_end)
-              : "",
+            dateFormat(this.LinkList[Index][0].date_and_user.date_end) ,
           asset: this.project.id,
           pid: this.LinkList[Index + 1][this.LinkList[Index + 1].length - 1]
             .link_id,
@@ -508,12 +476,10 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start: dateFormat(item.date_and_user.date_start)>0
-            ? dateFormat(item.date_and_user.date_start)
-            : "",
-          date_end: dateFormat(item.date_and_user.date_end)>0
-            ? dateFormat(item.date_and_user.date_end)
-            : "",
+          date_start:
+            dateFormat(item.date_and_user.date_start) ,
+          date_end:
+            dateFormat(item.date_and_user.date_end) ,
           asset: this.project.id,
           pid: 0,
           dept: item.dept.id
@@ -538,13 +504,12 @@ export default {
     },
     cancel() {
       this.isDialogShow = false;
-      this.FormList = [{}]
+      this.FormList = [{}];
     },
     //取消对话框
     cancelTask() {
       this.isCreateTaskShow = false;
-      this.TaskForm = {}
-
+      this.TaskForm = {};
     },
     //展示任务列表
     showTaskForm(link_id, dept_id, content) {
@@ -579,16 +544,8 @@ export default {
           this.content = data.msg.content;
           this.dept = data.msg.dept;
           this.datetime = [
-            new Date(
-              dateFormat(data.msg.date_and_user.date_start)
-                ? dateFormat(data.msg.date_and_user.date_start)
-                : ""
-            ),
-            new Date(
-              dateFormat(data.msg.date_and_user.date_end)
-                ? dateFormat(data.msg.date_and_user.date_end)
-                : ""
-            )
+            new Date(dateFormat(data.msg.date_and_user.date_start))>0?new Date(dateFormat(data.msg.date_and_user.date_start)):"",
+            new Date(dateFormat(data.msg.date_and_user.date_end))>0?new Date(dateFormat(data.msg.date_and_user.date_end)):""
           ];
           this.isLinkDialogShow = true;
           this.updateLinkForm = {
@@ -614,12 +571,8 @@ export default {
       const updateData = {
         id: this.oneLinkForm.link_id,
         content: this.updateLinkForm.content,
-        date_start: dataFormat(this.updateLinkForm.datetime[0])
-          ? dateFormat(this.updateLinkForm.datetime[0])
-          : "",
-        date_end: dataFormat(this.updateLinkForm.datetime[1])
-          ? dateFormat(this.updateLinkForm.datetime[1])
-          : "",
+        date_start: dataFormat(this.updateLinkForm.datetime[0]),
+        date_end: dataFormat(this.updateLinkForm.datetime[1]),
         asset: this.project.id,
         pid: this.oneLinkForm.pid,
         dept: this.updateLinkForm.dept
@@ -647,14 +600,8 @@ export default {
           }
           let data = {
             ...this.TaskForm,
-            start_date:
-              dataFormat(this.TaskForm.datetime[0]) > 0
-                ? dateFormat(this.TaskForm.datetime[0])
-                : "",
-            end_date:
-              dataFormat(this.TaskForm.datetime[1]) > 0
-                ? dateFormat(this.TaskForm.datetime[1])
-                : "",
+            start_date: dataFormat(this.TaskForm.datetime[0]),
+            end_date: dataFormat(this.TaskForm.datetime[1]),
             project: this.$route.params.id
           };
           if (this.TaskForm.executorlist.length) {
@@ -696,12 +643,8 @@ export default {
         ) {
           this.FormList[index] = {
             ...this.FormList[index],
-            date_start: dataFormat(this.FormList[index].datetime[0])
-              ? dateFormat(this.FormList[index].datetime[0])
-              : "",
+            date_start: dataFormat(this.FormList[index].datetime[0]),
             date_end: dataFormat(this.FormList[index].datetime[1])
-              ? dateFormat(this.FormList[index].datetime[1])
-              : ""
           };
           delete this.FormList[index].datetime;
         }
@@ -760,14 +703,10 @@ export default {
             id: this.LinkList[Index][1].link_id,
             content: this.LinkList[Index][1].content,
             date_start: dataFormat(
-              this.LinkList[Index][1].date_and_user.date_start > 0
-                ? this.LinkList[Index][1].date_and_user.date_start
-                : ""
+              this.LinkList[Index][1].date_and_user.date_start
             ),
             date_end: dataFormat(
-              this.LinkList[Index][1].date_and_user.date_end > 0
-                ? this.LinkList[Index][1].date_and_user.date_end
-                : ""
+              this.LinkList[Index][1].date_and_user.date_end
             ),
             asset: this.project.id,
             pid: 0,
