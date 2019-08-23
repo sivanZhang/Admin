@@ -128,7 +128,7 @@ export default {
 
     addJoinDept() {
       const add_depts_ids = this.$refs.tree
-        .getCheckedNodes(leafOnly)
+        .getCheckedNodes()
         .map(item => item.id)
         .join(",");
       console.log(add_depts_ids);
@@ -164,10 +164,7 @@ export default {
       });
     }
   },
-  created() {
-    this.getAssetList();
-    this.getTaskList();
-  }
+  
 };
 </script>
 
