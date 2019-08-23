@@ -12,7 +12,7 @@
           </div>
         </el-col>
         <el-col :span="12" style="text-align:right">
-          <el-button type="primary" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
+          <el-button type="primary" v-if="$store.state.login.userInfo.auth.manage_project" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
         </el-col>
         <el-col :span="24">
           <el-row class="list-title" :gutter="20">

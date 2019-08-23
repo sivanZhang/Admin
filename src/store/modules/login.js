@@ -13,7 +13,7 @@ import {
 import Cookies from 'js-cookie'
 const state = {
     token: getToken(),
-    userInfo: getUserInfo() ? JSON.parse(getUserInfo()) : null
+    userInfo: getUserInfo() ? JSON.parse(getUserInfo()) : null,
 }
 const mutations = {
     SET_TOKEN: (state, token) => {

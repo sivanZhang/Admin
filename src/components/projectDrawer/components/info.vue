@@ -8,7 +8,7 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit=true" @mouseleave="showEdit = false">
               <span v-if="!editing">{{project.name}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit" @click="edit(0)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit" @click="edit(0)"></i>
             </div>
            <div  v-if="editing">
               <input
@@ -44,7 +44,7 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
               <span v-if="!editing2">¥{{project.budget|numberFormat}}万元</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit2" @click="edit(1)"></i>
+              <i  class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit2" @click="edit(1)"></i>
             </div>
             <div v-if="editing2">
               ¥
@@ -66,7 +66,7 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit3=true" @mouseleave="showEdit3 = false">
               <span v-if="!editing3">{{project.charger_name}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit3" @click="edit(2)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit3" @click="edit(2)"></i>
             </div>
             <div v-if="editing3">
               <el-select v-model="charger" placeholder="请选择负责人" ref="selete">

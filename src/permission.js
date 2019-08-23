@@ -31,25 +31,35 @@ router.beforeEach(async(to, from, next) => {
             // 如果已经登录，跳转login页面会重定向到首页
             next({ path: '/' })
             NProgress.done() //加载进度条完成
-        } else { //如果跳转非login页
-            next()
-                /*const hasGetUserInfo = store.getters.name//获取状态机中取到的username
-                if (hasGetUserInfo) {//如果取到name 就正常跳转
-                    next()
-                }  else {//没有取到就获取用户信息
-                    try {
-                        // get user info
-                        await store.dispatch('login/getInfo')
+        } else {
+            /* const hasRoles = store.getters.roles && store.getters.roles.length > 0
+            if (hasRoles) {
+                next()
+            } else {
+                try {
+                    // get user info
+                    // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+                    const { roles } = await store.dispatch('user/getInfo')
 
-                        next()
-                    } catch (error) {
-                        // remove token and go to login page to re-login
-                        await store.dispatch('login/resetToken')
-                        Message.error(error || 'Has Error')
-                        next(`/login?redirect=${to.path}`)
-                        NProgress.done()
-                    }
-                } */
+                    // generate accessible routes map based on roles
+                    const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+
+                    // dynamically add accessible routes
+                    router.addRoutes(accessRoutes)
+
+                    // hack method to ensure that addRoutes is complete
+                    // set the replace: true, so the navigation will not leave a history record
+                    next({...to, replace: true })
+                } catch (error) {
+                    // remove token and go to login page to re-login
+                    await store.dispatch('user/resetToken')
+                    Message.error(error || 'Has Error')
+                    next(`/login?redirect=${to.path}`)
+                    NProgress.done()
+                }
+            } */
+            next()
+            NProgress.done()
         }
     } else { //没有token
 

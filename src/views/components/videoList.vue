@@ -126,6 +126,16 @@ export default {
         };
 
         this.selectProjects.push(item);
+      }else{
+
+      }
+      this.selectProjects.length=0;
+      for(let k=0;k<this.selectProjectIds.length;k++){
+        for(let i=0;i<this.projectList.length;i++){
+          if(this.projectList[i].id==this.selectProjectIds[k]){
+            this.selectProjects.push(this.projectList[i])
+          }
+        }
       }
     },
     addVideoList() {}
