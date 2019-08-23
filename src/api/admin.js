@@ -79,8 +79,8 @@ export function removeRole(data) {
     return AXIOS.post('/role/role/?delete', data)
 }
 //获取权限列表
-export function permissions(data){
-    return AXIOS.get('/role/permissions/',data)
+export function permissions(params){
+    return AXIOS.get('/role/permissions/',{params})
 }
 //获取某个角色的权限列表
 export function userPermissions(params){

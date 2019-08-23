@@ -12,15 +12,19 @@
             </el-row>
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
             <el-row v-for="(todo,index) of roleList" :key="index" class="role-list" align="center">
-              <div style="width:240px" @click="getRoleUserList(todo.id)"><span >{{todo.name}}</span></div>
+              <div style="width:240px;cursor:pointer" @click="getRoleUserList(todo.id)">
+                <span>{{todo.name}}</span>
+              </div>
             </el-row>
           </el-aside>
         </transition>
         <el-main>
           <div class="t-header">
             <el-row>
-              <el-col :span="6">拥有
-              <span style="font-weight:500">{{name}}</span>角色的用户有：</el-col>
+              <el-col :span="6">
+                拥有
+                <span style="font-weight:500">{{name}}</span>角色的用户有：
+              </el-col>
               <el-col :span="3">
                 <el-button type="primary" @click="isShowDialog = true">绑定用户</el-button>
               </el-col>
@@ -32,17 +36,21 @@
               <el-col :span="2" v-for="(item,index) of roleUserList" :key="index">{{item.username}}</el-col>
             </el-row>
           </div>
-         
+
           <div style="display:flex;">
             <div style="padding:5px 10px;width:50%">
               <h4>所有权限</h4>
-              <el-button
-                type="primary"
-                :disabled="this.addMultipleSelection.length === 0"
-                style="margin:5px 0px"
-                @click="addRolePermissions"
-                
-              >批量添加</el-button>
+              <div style="display:flex">
+                <el-button
+                  type="primary"
+                  :disabled="this.addMultipleSelection.length === 0"
+                  style="margin:5px 0px"
+                  @click="addRolePermissions"
+                >批量添加</el-button>
+                <div style="width:220px;padding-left:15px">
+                  <input class="input-remarks" placeholder="在此输入筛选条件..." v-model=" optionInput" />
+                </div>
+              </div>
               <el-table
                 :data="permissionsList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
                 border
@@ -55,11 +63,16 @@
                 :row-key="(row)=>{ return row.id}"
                 @selection-change="handleAddSelectionChange"
               >
-                <el-table-column type="selection" width="30" align="center"  :reserve-selection="true"></el-table-column>
-                <el-table-column prop="name" label="权限名称"></el-table-column>
-                <el-table-column prop="codename" label="权限说明"></el-table-column>
+                <el-table-column
+                  type="selection"
+                  width="30"
+                  align="center"
+                  :reserve-selection="true"
+                ></el-table-column>
+                <el-table-column prop="codename" label="权限名称"></el-table-column>
+                <el-table-column prop="name" label="权限说明"></el-table-column>
               </el-table>
-              <div class="block" style="text-align: right;width:50%" >
+              <div class="block" style="text-align: right;width:50%">
                 <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
@@ -88,57 +101,57 @@
                 highlight-current-row
                 row-class-name="hover"
                 width="100%"
-                
                 @selection-change="handleDelSelectionChange"
               >
                 <el-table-column type="selection" width="30" align="center"></el-table-column>
-                <el-table-column prop="name" label="权限名称"></el-table-column>
-                <el-table-column prop="codename" label="权限说明"></el-table-column>
+                <el-table-column prop="codename" label="权限名称"></el-table-column>
+                <el-table-column prop="name" label="权限说明"></el-table-column>
               </el-table>
             </div>
           </div>
         </el-main>
-         <el-dialog :visible.sync="isShowDialog" :title="name+'角色绑定用户'" width="480px" top="5vh">
-            <el-form
-              :model="roleAdd"
-              ref="roleAdd"
-              label-width="100px"
-              hide-required-asterisk
-              label-position="left"
-            >
-              <el-form-item label="用户名称" prop="rolename">
-                <el-select v-model="roleAdd.rolename" multiple placeholder="请选择用户">
-                  <el-option
-                    v-for="(item,index) of userList"
-                    :key="index"
-                    :label="item.username"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" align="right" @click="addUser">立即绑定</el-button>
-              </el-form-item>
-            </el-form>
-          </el-dialog>
-          <el-dialog :visible.sync="isShowDialog2" :title="name+'角色解绑用户'" width="480px" top="5vh">
-            <el-table
-                :data="roleUserList"
-                border
-                :stripe="true"
-                :row-style="{'font-size':'13px'}"
-                :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
-                highlight-current-row
-                row-class-name="hover"
-                width="100%"
-                
-                @selection-change="handleDelUserSelectionChange"
-              >
-                <el-table-column type="selection" width="40" align="center"></el-table-column>
-                <el-table-column prop="username" label="用户名"></el-table-column>
-              </el-table>
-              <div align="right"><el-button type="danger" style="margin:5px 0px" @click="delUser">立即解绑</el-button></div>
-          </el-dialog>
+        <el-dialog :visible.sync="isShowDialog" :title="name+'角色绑定用户'" width="480px" top="5vh">
+          <el-form
+            :model="roleAdd"
+            ref="roleAdd"
+            label-width="100px"
+            hide-required-asterisk
+            label-position="left"
+          >
+            <el-form-item label="用户名称" prop="rolename">
+              <el-select v-model="roleAdd.rolename" multiple placeholder="请选择用户">
+                <el-option
+                  v-for="(item,index) of UserList"
+                  :key="index"
+                  :label="item.username"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" align="right" @click="addUser">立即绑定</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <el-dialog :visible.sync="isShowDialog2" :title="name+'角色解绑用户'" width="480px" top="5vh">
+          <el-table
+            :data="roleUserList"
+            border
+            :stripe="true"
+            :row-style="{'font-size':'13px'}"
+            :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+            highlight-current-row
+            row-class-name="hover"
+            width="100%"
+            @selection-change="handleDelUserSelectionChange"
+          >
+            <el-table-column type="selection" width="40" align="center"></el-table-column>
+            <el-table-column prop="username" label="用户名"></el-table-column>
+          </el-table>
+          <div align="right">
+            <el-button type="danger" style="margin:5px 0px" @click="delUser">立即解绑</el-button>
+          </div>
+        </el-dialog>
       </el-container>
     </el-container>
   </div>
@@ -153,6 +166,7 @@ import {
   updateRole,
   getUserList
 } from "@/api/admin";
+import { mapState } from "vuex";
 export default {
   name: "roles",
   data() {
@@ -162,54 +176,55 @@ export default {
       userPermissionsList: null,
       roleList: null,
       roleAdd: {},
-      userList: null,
+      
       roleUserList: null,
       name: null,
       addMultipleSelection: [],
       delMultipleSelection: [],
-      delUserMultipleSelection:[],
+      delUserMultipleSelection: [],
       currentPage: 1,
       pageSize: 10,
       pageSizeList: [10, 20, 50, 100],
       roleid: null,
       isShowDialog: false,
-      isShowDialog2:false
+      isShowDialog2: false,
+      optionInput: ""
     };
   },
   components: {},
   created() {
-     permissions().then(({ data }) => {
+    this.getList();
+  },
+  watch: {
+    optionInput: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          console.log(this.optionInput);
+          permissions({
+            codename: newVal
+          }).then(({ data }) => {
         this.permissionsList = [...data.msg];
-       
       });
-      //角色列表
-      getRoles().then(({ data }) => {
-        this.roleList = [...data.msg];
-        
-      });
-      //用户列表
-      getUserList().then(({ data }) => {
-        this.userList = [...data];
-        
-      });
+        }else{
+          this.getList()
+        }
+      }
+    }
+  },
+  computed:{
+    ...mapState("admin", ["UserList"])
   },
   methods: {
     getList() {
       //权限列表
       permissions().then(({ data }) => {
         this.permissionsList = [...data.msg];
-       
       });
       //角色列表
       getRoles().then(({ data }) => {
         this.roleList = [...data.msg];
-        
       });
-      //用户列表
-      getUserList().then(({ data }) => {
-        this.userList = [...data];
-        
-      });
+      
     },
     getRoleUserList(id) {
       this.roleid = id;
@@ -230,7 +245,7 @@ export default {
     handleDelSelectionChange(val) {
       this.delMultipleSelection = val;
     },
-    handleDelUserSelectionChange(val){
+    handleDelUserSelectionChange(val) {
       this.delUserMultipleSelection = val;
     },
     //给角色增加权限
@@ -251,7 +266,6 @@ export default {
             //console.log(this.userPermissionsList);
           });
           this.$refs.addmultipleTable.clearSelection();
-          
         }
       });
     },
@@ -294,17 +308,17 @@ export default {
             this.name = data.msg.name;
             //console.log(this.roleUserList);
           });
-          this.roleAdd = {}
+          this.roleAdd = {};
         }
       });
     },
     //给角色删除用户
-    delUser(){
+    delUser() {
       const del_userids = this.delUserMultipleSelection
         .map(item => item.id)
         .join(",");
-        //console.log(del_userids)
-        updateRole({
+      //console.log(del_userids)
+      updateRole({
         id: this.roleid,
         method: "put",
         del_userids: del_userids
@@ -317,7 +331,7 @@ export default {
             this.name = data.msg.name;
             //console.log(this.roleUserList);
           });
-         this.$refs.delUsermultipleTable.clearSelection();
+          this.$refs.delUsermultipleTable.clearSelection();
         }
       });
     },
@@ -339,6 +353,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 #roles {
+  .input-remarks {
+    width: 200px;
+    height: 28px;
+    font-size: 12px;
+
+    border: none;
+    border-bottom: solid 1px rgb(221, 221, 221);
+  }
+  .input-remarks:focus {
+    outline: none;
+    border-bottom: solid 2px rgba(0, 119, 255, 0.884);
+  }
   .role-list {
     padding-bottom: 5px;
     width: 240px;
