@@ -64,6 +64,7 @@ export function getRoles() {
 export function getUsersRole(params) {
     return AXIOS.get('/role/role/', { params })
 }
+
 //添加角色
 export function addRole(data) {
     return AXIOS.post('/role/role/', data)
@@ -80,4 +81,8 @@ export function removeRole(data) {
 //获取权限列表
 export function permissions(data){
     return AXIOS.get('/role/permissions/',data)
+}
+//获取某个角色的权限列表
+export function userPermissions(params){
+    return AXIOS.get('/role/permissions/?01',{params})
 }

@@ -241,7 +241,7 @@ export default {
     //批量删除通知
     delNotices() {
       const ids = this.multipleSelection.map(item => item.id).join(",");
-      console.log(ids);
+      //console.log(ids);
       this.$confirm("确定删除？", "注意", {
         confirmButtonText: "删除",
 

@@ -1,14 +1,404 @@
 <template>
-  <div>
-    角色管理
+  <div id="roles">
+    <el-container>
+      <el-container>
+        <transition name="role">
+          <el-aside
+            width="240px"
+            style="border-right:1px solid #ddd;padding:0 5px;margin-right:20px"
+          >
+            <el-row type="flex" align="middle" class="nav-title">
+              <el-button @click="openRoleForm('add')" type="success">添加角色</el-button>
+            </el-row>
+            <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
+            <el-row v-for="(todo,index) of roleList" :key="index" class="role-list" align="center">
+              <div style="width:240px" @click="getRoleUserList(todo.id)"><span >{{todo.name}}</span></div>
+            </el-row>
+          </el-aside>
+        </transition>
+        <el-main>
+          <div class="t-header">
+            <el-row>
+              <el-col :span="6">拥有
+              <span style="font-weight:500">{{name}}</span>角色的用户有：</el-col>
+              <el-col :span="3">
+                <el-button type="primary" @click="isShowDialog = true">绑定用户</el-button>
+              </el-col>
+              <el-col :span="3">
+                <el-button type="danger" @click="isShowDialog2 = true">解绑用户</el-button>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="2" v-for="(item,index) of roleUserList" :key="index">{{item.username}}</el-col>
+            </el-row>
+          </div>
+         
+          <div style="display:flex;">
+            <div style="padding:5px 10px;width:50%">
+              <h4>所有权限</h4>
+              <el-button
+                type="primary"
+                :disabled="this.addMultipleSelection.length === 0"
+                style="margin:5px 0px"
+                @click="addRolePermissions"
+                
+              >批量添加</el-button>
+              <el-table
+                :data="permissionsList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+                border
+                :stripe="true"
+                :row-style="{'font-size':'13px'}"
+                :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+                highlight-current-row
+                row-class-name="hover"
+                width="100%"
+                :row-key="(row)=>{ return row.id}"
+                @selection-change="handleAddSelectionChange"
+              >
+                <el-table-column type="selection" width="30" align="center"  :reserve-selection="true"></el-table-column>
+                <el-table-column prop="name" label="权限名称"></el-table-column>
+                <el-table-column prop="codename" label="权限说明"></el-table-column>
+              </el-table>
+              <div class="block" style="text-align: right;width:50%" >
+                <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page="currentPage"
+                  :page-sizes="pageSizeList"
+                  :page-size="pageSize"
+                  layout="total, sizes, prev,next"
+                  :total="permissionsList.length"
+                ></el-pagination>
+              </div>
+            </div>
+            <div style="padding:5px 10px;width:50%">
+              <h4>当前角色所拥有的权限</h4>
+              <el-button
+                type="danger"
+                :disabled="this.delMultipleSelection.length === 0"
+                style="margin:5px 0px"
+                @click="delRolePermissions"
+              >批量删除</el-button>
+              <el-table
+                :data="userPermissionsList"
+                border
+                :stripe="true"
+                :row-style="{'font-size':'13px'}"
+                :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+                highlight-current-row
+                row-class-name="hover"
+                width="100%"
+                
+                @selection-change="handleDelSelectionChange"
+              >
+                <el-table-column type="selection" width="30" align="center"></el-table-column>
+                <el-table-column prop="name" label="权限名称"></el-table-column>
+                <el-table-column prop="codename" label="权限说明"></el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </el-main>
+         <el-dialog :visible.sync="isShowDialog" :title="name+'角色绑定用户'" width="480px" top="5vh">
+            <el-form
+              :model="roleAdd"
+              ref="roleAdd"
+              label-width="100px"
+              hide-required-asterisk
+              label-position="left"
+            >
+              <el-form-item label="用户名称" prop="rolename">
+                <el-select v-model="roleAdd.rolename" multiple placeholder="请选择用户">
+                  <el-option
+                    v-for="(item,index) of userList"
+                    :key="index"
+                    :label="item.username"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" align="right" @click="addUser">立即绑定</el-button>
+              </el-form-item>
+            </el-form>
+          </el-dialog>
+          <el-dialog :visible.sync="isShowDialog2" :title="name+'角色解绑用户'" width="480px" top="5vh">
+            <el-table
+                :data="roleUserList"
+                border
+                :stripe="true"
+                :row-style="{'font-size':'13px'}"
+                :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+                highlight-current-row
+                row-class-name="hover"
+                width="100%"
+                
+                @selection-change="handleDelUserSelectionChange"
+              >
+                <el-table-column type="selection" width="40" align="center"></el-table-column>
+                <el-table-column prop="username" label="用户名"></el-table-column>
+              </el-table>
+              <div align="right"><el-button type="danger" style="margin:5px 0px" @click="delUser">立即解绑</el-button></div>
+          </el-dialog>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
-  export default {
-    name: "roles",
-    created(){
-      
+import {
+  permissions,
+  getRoles,
+  getUsersRole,
+  userPermissions,
+  updateRole,
+  getUserList
+} from "@/api/admin";
+export default {
+  name: "roles",
+  data() {
+    return {
+      filterText: "",
+      permissionsList: null,
+      userPermissionsList: null,
+      roleList: null,
+      roleAdd: {},
+      userList: null,
+      roleUserList: null,
+      name: null,
+      addMultipleSelection: [],
+      delMultipleSelection: [],
+      delUserMultipleSelection:[],
+      currentPage: 1,
+      pageSize: 10,
+      pageSizeList: [10, 20, 50, 100],
+      roleid: null,
+      isShowDialog: false,
+      isShowDialog2:false
+    };
+  },
+  components: {},
+  created() {
+     permissions().then(({ data }) => {
+        this.permissionsList = [...data.msg];
+       
+      });
+      //角色列表
+      getRoles().then(({ data }) => {
+        this.roleList = [...data.msg];
+        
+      });
+      //用户列表
+      getUserList().then(({ data }) => {
+        this.userList = [...data];
+        
+      });
+  },
+  methods: {
+    getList() {
+      //权限列表
+      permissions().then(({ data }) => {
+        this.permissionsList = [...data.msg];
+       
+      });
+      //角色列表
+      getRoles().then(({ data }) => {
+        this.roleList = [...data.msg];
+        
+      });
+      //用户列表
+      getUserList().then(({ data }) => {
+        this.userList = [...data];
+        
+      });
+    },
+    getRoleUserList(id) {
+      this.roleid = id;
+      const roleid = id;
+      getUsersRole({ id: roleid }).then(({ data }) => {
+        this.roleUserList = [...data.users];
+        this.name = data.msg.name;
+        //console.log(this.roleUserList);
+      });
+      userPermissions({ roleid: roleid }).then(({ data }) => {
+        this.userPermissionsList = [...data.msg];
+        //console.log(this.userPermissionsList);
+      });
+    },
+    handleAddSelectionChange(val) {
+      this.addMultipleSelection = val;
+    },
+    handleDelSelectionChange(val) {
+      this.delMultipleSelection = val;
+    },
+    handleDelUserSelectionChange(val){
+      this.delUserMultipleSelection = val;
+    },
+    //给角色增加权限
+    addRolePermissions() {
+      const add_perm_ids = this.addMultipleSelection
+        .map(item => item.id)
+        .join(",");
+      updateRole({
+        id: this.roleid,
+        method: "put",
+        add_perm_ids: add_perm_ids
+      }).then(({ data }) => {
+        this.$message.success(data.msg);
+        this.addMultipleSelection = [];
+        if (data.status === 0) {
+          userPermissions({ roleid: this.roleid }).then(({ data }) => {
+            this.userPermissionsList = [...data.msg];
+            //console.log(this.userPermissionsList);
+          });
+          this.$refs.addmultipleTable.clearSelection();
+          
+        }
+      });
+    },
+    //给角色删除权限
+    delRolePermissions() {
+      const del_perm_ids = this.delMultipleSelection
+        .map(item => item.id)
+        .join(",");
+      //console.log(del_perm_ids);
+      updateRole({
+        id: this.roleid,
+        method: "put",
+        del_perm_ids: del_perm_ids
+      }).then(({ data }) => {
+        this.$message.success(data.msg);
+        if (data.status === 0) {
+          userPermissions({ roleid: this.roleid }).then(({ data }) => {
+            this.userPermissionsList = [...data.msg];
+            //console.log(this.userPermissionsList);
+          });
+          this.$refs.delmultipleTable.clearSelection();
+        }
+      });
+    },
+    //给角色绑定用户
+    addUser() {
+      //console.log(this.roleAdd)
+      const addrole = this.roleAdd.rolename.map(item => item).join(",");
+      // console.log(role)
+      updateRole({
+        id: this.roleid,
+        method: "put",
+        add_userids: addrole
+      }).then(({ data }) => {
+        this.$message.success(data.msg);
+        if (data.status === 0) {
+          this.isShowDialog = false;
+          getUsersRole({ id: this.roleid }).then(({ data }) => {
+            this.roleUserList = [...data.users];
+            this.name = data.msg.name;
+            //console.log(this.roleUserList);
+          });
+          this.roleAdd = {}
+        }
+      });
+    },
+    //给角色删除用户
+    delUser(){
+      const del_userids = this.delUserMultipleSelection
+        .map(item => item.id)
+        .join(",");
+        //console.log(del_userids)
+        updateRole({
+        id: this.roleid,
+        method: "put",
+        del_userids: del_userids
+      }).then(({ data }) => {
+        this.$message.success(data.msg);
+        if (data.status === 0) {
+          this.isShowDialog2 = false;
+          getUsersRole({ id: this.roleid }).then(({ data }) => {
+            this.roleUserList = [...data.users];
+            this.name = data.msg.name;
+            //console.log(this.roleUserList);
+          });
+         this.$refs.delUsermultipleTable.clearSelection();
+        }
+      });
+    },
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      //console.log(this.pagesize);
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      //console.log(this.currentPage);
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
     }
   }
+};
 </script>
+<style lang="scss" scoped>
+#roles {
+  .role-list {
+    padding-bottom: 5px;
+    width: 240px;
+  }
+  .role-list :hover {
+    background-color: hsl(222, 42%, 95%);
+  }
+  .nav-title {
+    padding: 8px 0;
+    .el-col {
+      color: #909399;
+    }
+  }
+  .search-group {
+    margin-bottom: 10px;
+  }
+  .t-header {
+    padding: 8px 12px;
+    background-color: #e4e7ed;
+  }
+  .el-main {
+    padding: 0;
+  }
+  .el-container {
+    min-height: calc(100vh - 50px);
+  }
+  .el-aside {
+    max-height: calc(100vh - 50px);
+    overflow-y: scroll;
+  }
+  .iconWarp {
+    display: none;
+    font-size: 12px;
+    & > * {
+      cursor: pointer;
+    }
+  }
+  .tag-nav {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      background-color: #ebeef5;
+    }
+  }
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .custom-tree-node {
+    &:hover {
+      .iconWarp {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+</style>
