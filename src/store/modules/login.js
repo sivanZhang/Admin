@@ -5,7 +5,8 @@ import {
     setToken,
     removeToken,
     getUserInfo,
-    setUserInfo
+    setUserInfo,
+    resetRoles
 } from '@/utils/auth'
 import {
     resetRouter
@@ -68,11 +69,15 @@ const actions = {
         })
       }, */
     logout({
+        state,
         commit,
-        state
+        rootState
     }) {
         return new Promise((resolve, reject) => {
             commit('SET_TOKEN', '')
+            resetRoles()
+            console.log('rootState.permission.addRoutes3333', rootState.permission.addRoutes);
+
             removeToken()
             resetRouter()
             resolve()

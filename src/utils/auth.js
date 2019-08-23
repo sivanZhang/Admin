@@ -3,7 +3,7 @@
  * @file 封装  cookie中操作token的方法，并且导出
  *  
  */
-
+import store from '@/store'
 import Cookies from 'js-cookie'
 
 const TokenKey = 'vue_admin_template_token'
@@ -30,4 +30,7 @@ export function setUserInfo(data) {
 //cookie中删除Toke
 export function removeUserInfo() {
     return Cookies.remove('UserInfo')
+}
+export function resetRoles() {
+    store.commit('permission/SET_ROUTES', [])
 }

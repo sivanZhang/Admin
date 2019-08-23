@@ -30,6 +30,127 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+export const asyncRoutes = [{
+        path: '/task',
+        component: Layout,
+        redirect: '/task',
+        meta: {
+            title: '我的工作台',
+            icon: 'task'
+        },
+        children: [{
+                path: 'task',
+                name: 'my-task',
+                component: () =>
+                    import ('@/views/task'),
+                meta: {
+                    title: '我的任务',
+                    icon: 'task'
+                }
+            },
+            {
+                path: 'approve',
+                name: 'my-approve',
+                component: () =>
+                    import ('@/views/task'),
+                meta: {
+                    title: '我的审批',
+                    icon: 'task',
+                    roles: 'manage_approve'
+                }
+            },
+            {
+                path: 'overview-users',
+                name: 'overview-users',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: {
+                    title: '我的工时',
+                    icon: 'user'
+                },
+            },
+            {
+                path: 'overview-users',
+                name: 'overview-users',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: {
+                    title: '我的信息',
+                    icon: 'user'
+                },
+            }
+        ]
+    },
+    {
+        path: '/videoCheck',
+        component: Layout,
+        redirect: '/videoCheck',
+        meta: {
+            title: '视频审核',
+            icon: 'task'
+        },
+        children: [{
+            path: 'my-audit',
+            name: 'my-audit',
+            component: () =>
+                import ('@/views/video/my-audit'),
+            meta: {
+                title: '我的审核',
+                icon: 'task'
+            }
+        }, {
+            path: 'videoCheck',
+            name: 'videoCheck',
+            component: () =>
+                import ('@/views/video/videoCheck'),
+            meta: {
+                title: '视频审核',
+                icon: 'task'
+            }
+        }]
+    },
+    {
+        path: '/admin',
+        component: Layout,
+        redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
+        meta: {
+            title: '用户设置',
+            icon: 'settings'
+        },
+        children: [{
+                path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
+                name: 'profession',
+                component: () =>
+                    import ('@/views/admin/userGroup'),
+                meta: {
+                    title: '用户',
+                    icon: 'group'
+                }
+            },
+            {
+                path: 'userGroup',
+                name: 'UserGroup',
+                component: () =>
+                    import ('@/views/admin/profession'),
+                meta: {
+                    title: '工种',
+                    icon: 'profession'
+                }
+            },
+            {
+                path: 'roles',
+                name: 'UserGqqqroup',
+                component: () =>
+                    import ('@/views/admin/roles'),
+                meta: {
+                    title: '角色管理',
+                    icon: 'role',
+                    roles: 'manage_role'
+                }
+            }
+        ]
+    },
+]
 export const constantRoutes = [{
         path: '/redirect',
         component: Layout,
@@ -129,129 +250,6 @@ export const constantRoutes = [{
                 hiddenSideBar: true
             }
         }]
-    },
-    {
-        path: '/task',
-        component: Layout,
-        redirect: '/task',
-        meta: {
-            title: '我的工作台',
-            icon: 'task'
-        },
-        children: [{
-            path: 'task',
-            name: 'task',
-            component: () =>
-                import ('@/views/task'),
-            meta: {
-                title: '我的任务',
-                icon: 'task'
-            }
-        },
-        {
-            path: 'task',
-            name: 'task',
-            component: () =>
-                import ('@/views/task'),
-            meta: {
-                title: '我的审批',
-                icon: 'task'
-            }
-        },
-        {
-            path: 'overview-users',
-            name: 'overview-users',
-            component: () =>
-                import ('@/views/overview/users'),
-            meta: {
-                title: '我的工时',
-                icon: 'user'
-            },
-        },
-        {
-            path: 'overview-users',
-            name: 'overview-users',
-            component: () =>
-                import ('@/views/overview/users'),
-            meta: {
-                title: '我的信息',
-                icon: 'user'
-            },
-        }
-    ]
-    },
-    // {
-    //     path: '/videoCheck',
-    //     component: () =>
-    //         import ('@/views/video/videoCheck'),
-    // },
-    {
-        path: '/videoCheck',
-        component: Layout,
-        redirect: '/videoCheck',
-        meta: {
-            title: '视频审核',
-            icon: 'task'
-        },
-        children: [{
-            path: 'my-audit',
-            name: 'my-audit',
-            component: () =>
-                import ('@/views/video/my-audit'),
-            meta: {
-                title: '我的审核',
-                icon: 'task'
-            }
-        }, {
-            path: 'videoCheck',
-            name: 'videoCheck',
-            component: () =>
-                import ('@/views/video/videoCheck'),
-            meta: {
-                title: '视频审核',
-                icon: 'task'
-            }
-        }]
-    },
-    {
-        path: '/admin',
-        component: Layout,
-        redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
-        meta: {
-            title: '用户设置',
-            icon: 'settings'
-        },
-        children: [{
-                path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
-                name: 'profession',
-                component: () =>
-                    import ('@/views/admin/userGroup'),
-                meta: {
-                    title: '用户',
-                    icon: 'group'
-                }
-            },
-            {
-                path: 'userGroup',
-                name: 'UserGroup',
-                component: () =>
-                    import ('@/views/admin/profession'),
-                meta: {
-                    title: '工种',
-                    icon: 'profession'
-                }
-            },
-            {
-                path: 'roles',
-                name: 'UserGqqqroup',
-                component: () =>
-                    import ('@/views/admin/roles'),
-                meta: {
-                    title: '角色管理',
-                    icon: 'role'
-                }
-            }
-        ]
     },
     {
         path: '/assetes',

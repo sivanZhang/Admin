@@ -6,13 +6,19 @@
 
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
+import {
+    Message
+} from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import {
+    getToken
+} from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
-NProgress.configure({ showSpinner: false }) // 进度条配置
+NProgress.configure({
+        showSpinner: false
+    }) // 进度条配置
 
 const whiteList = ['/login', '/forgot', '/signup', '/login-task'] // 不重定向的页面
 
@@ -29,36 +35,19 @@ router.beforeEach(async(to, from, next) => {
     if (hasToken) {
         if (to.path === '/login') {
             // 如果已经登录，跳转login页面会重定向到首页
-            next({ path: '/' })
+            next({
+                path: '/'
+            })
             NProgress.done() //加载进度条完成
         } else {
-            /* const hasRoles = store.getters.roles && store.getters.roles.length > 0
-            if (hasRoles) {
+            //如果状态机中有缓存的 动态路由
+            if (store.state.permission.addRoutes.length) {
                 next()
             } else {
-                try {
-                    // get user info
-                    // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-                    const { roles } = await store.dispatch('user/getInfo')
-
-                    // generate accessible routes map based on roles
-                    const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
-                    // dynamically add accessible routes
-                    router.addRoutes(accessRoutes)
-
-                    // hack method to ensure that addRoutes is complete
-                    // set the replace: true, so the navigation will not leave a history record
-                    next({...to, replace: true })
-                } catch (error) {
-                    // remove token and go to login page to re-login
-                    await store.dispatch('user/resetToken')
-                    Message.error(error || 'Has Error')
-                    next(`/login?redirect=${to.path}`)
-                    NProgress.done()
-                }
-            } */
-            next()
+                const accessRoutes = await store.dispatch('permission/generateRoutes')
+                router.addRoutes(accessRoutes)
+                next()
+            }
             NProgress.done()
         }
     } else { //没有token

@@ -5,9 +5,11 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param roles
  * @param route
  */
-function hasPermission(roles, route) {
-    if (route.meta && route.meta.roles) {
-        return roles.some(role => route.meta.roles.includes(role))
+function hasPermission(route, UserRoles) {
+    let arr = Object.keys(UserRoles)
+    if (route.meta && Object.keys(route.meta).includes('roles')) {
+        let BL = arr.some(roleName => roleName === route.meta.roles && UserRoles[roleName])
+        return BL
     } else {
         return true
     }
@@ -18,16 +20,14 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, UserRoles) {
     const res = []
-
     routes.forEach(route => {
-        const tmp = {...route }
-        if (hasPermission(roles, tmp)) {
-            if (tmp.children) {
-                tmp.children = filterAsyncRoutes(tmp.children, roles)
+        if (hasPermission(route, UserRoles)) {
+            if (route.children) {
+                route.children = filterAsyncRoutes(route.children, UserRoles)
             }
-            res.push(tmp)
+            res.push(route)
         }
     })
 
@@ -35,26 +35,25 @@ export function filterAsyncRoutes(routes, roles) {
 }
 
 const state = {
-    routes: [],
-    addRoutes: []
+    routes: [], //用来在侧边栏显示已经挂载的路由列表
+    addRoutes: [] //筛选出来有权限进入的动态路由
 }
 
 const mutations = {
     SET_ROUTES: (state, routes) => {
         state.addRoutes = routes
+        console.log(state.addRoutes, 'state.addRoutes');
+
         state.routes = constantRoutes.concat(routes)
     }
 }
 
 const actions = {
-    generateRoutes({ commit }, roles) {
+    generateRoutes({ state, commit, rootState }) {
+        let UserRoles = rootState.login.userInfo.auth
         return new Promise(resolve => {
-            let accessedRoutes
-            if (roles.includes('admin')) {
-                accessedRoutes = asyncRoutes || []
-            } else {
-                accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-            }
+            let accessedRoutes = filterAsyncRoutes(asyncRoutes, UserRoles)
+                //accessedRoutes有权限的路由
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)
         })
