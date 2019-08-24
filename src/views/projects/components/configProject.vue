@@ -52,7 +52,7 @@
           <el-col :span="15" class="comment">{{project.client.client_name}}</el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="工种管理" name="second">
+      <el-tab-pane label="参与工种" name="second">
         <div style="display:flex">
           <div style="width:50%;padding:5px ">
             <div style="display:flex">
@@ -92,7 +92,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="配置管理" name="third">配置管理</el-tab-pane>
+      <el-tab-pane label="状态配置" name="third">状态配置</el-tab-pane>
     </el-tabs>
   </div>
 </template>
