@@ -105,7 +105,7 @@
         </el-form-item>
 
         <el-form-item label="负责人" label-width="20%" prop="chargerid">
-          <el-select v-model="GroupForm.chargerid" placeholder="负责人" style="width:100%">
+          <el-select v-model="GroupForm.chargerid" placeholder="负责人" style="width:100%" filterable>
             <el-option
               v-for="(item,index) of UserList"
               :label="item.username"
@@ -128,7 +128,7 @@
     </el-dialog>
 
     <el-dialog :title="MemberEditState['title']" :visible.sync="isMemberEditShow" width="460px">
-      <el-select v-model="SelectMembers" multiple placeholder="请选择" style="width:100%">
+      <el-select v-model="SelectMembers" multiple placeholder="请选择" style="width:100%" filterable>
         <el-option
           v-for="(item,index) of AllMembers"
           :label="item.username"
