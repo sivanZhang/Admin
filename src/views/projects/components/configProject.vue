@@ -7,7 +7,19 @@
       @tab-click="handleClick"
     >
       <el-tab-pane label="项目详情" name="first">
-        <el-row>
+       <div style="width:50%">
+         <el-row>
+           <el-col :span="6" class="comment">缩略图</el-col>
+           <el-col :span="15" class="comment">
+             <el-image
+              class="mini-image"
+              :src="project.image?$store.state.BASE_URL+project.image:''"
+              fit="cover"
+              style="width:60%;height:60%"
+            ></el-image>
+           </el-col>
+         </el-row>
+          <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
           <el-col :span="15" class="comment">{{project.name}}</el-col>
         </el-row>
@@ -51,6 +63,7 @@
           <el-col :span="6" class="comment">客户信息</el-col>
           <el-col :span="15" class="comment">{{project.client.client_name}}</el-col>
         </el-row>
+       </div>
       </el-tab-pane>
       <el-tab-pane label="参与工种" name="second">
         <div style="display:flex">
