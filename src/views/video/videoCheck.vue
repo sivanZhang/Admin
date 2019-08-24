@@ -13,7 +13,7 @@
         </div>
         <div class="video-list">
           <!-- 视频列表 -->
-          <video-list :list="Selection" ref="videoList" @initSource="initSource"></video-list>
+          <video-list ref="videoList" @initSource="initSource"></video-list>
         </div>
       </el-col>
       <el-col :span="9" class="page-right">
@@ -86,7 +86,7 @@ export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },
   data() {
     return {
-      Active:{},
+      Active: {},
       approve_result: 0,
       imgList: [],
       zoomImgUrl: "",
@@ -101,10 +101,7 @@ export default {
   computed: {
     ...mapState("video", ["Selection"])
   },
-  created() {
-    console.log('Selection:',this.Selection);
-    
-  },
+  created() {},
   mounted() {
     let bH = document.body.offsetHeight;
     let videoInfoH = document.getElementById("videoInfo").offsetHeight;
@@ -113,40 +110,42 @@ export default {
     let videoPlayer = document.getElementsByClassName("video-player");
     this.pHeight = videoPlayer[0].offsetHeight;
     this.pWidth = videoPlayer[0].offsetWidth;
-    console.log(this.pWidth + ";" + this.pHeight);
-
     document.getElementById("videoComment").style.height =
       bH - (videoInfoH + videoTabsH + 20 + 20 + 94) + "px";
   },
   methods: {
     commitApprove() {
-      /* const data = {
-        asset_id:this.Active.asset.id,
-        project_id:this.Active.asset.project,
-        link_id:this.Active.asset.id,
-        approve_result:this.approve_result,
-        suggestion:this.markText
-      } */
+      const data = {
+        asset_id: this.Active.asset.id,
+        project_id: this.Active.asset.project,
+        link_id: this.Active.asset.id,
+        approve_result: this.approve_result,
+        suggestion: this.markText
+      };
       console.log(this.Active.asset);
-      
-      /* postApprove(data).then(res=>{
-        this.$message(res.data.msg)
-        if(res.data.status === 0 ){
-          this.imgList = []
+
+      postApprove(data).then(res => {
+        this.$message(res.data.msg);
+        if (res.data.status === 0) {
+          this.imgList = [];
         }
-      }) */
+      });
     },
-    initSource(projectList,index,projectLists) {
-        if (this.currentVideoIsEdit) {
-          this.$message.error('处于视频标注模式')
-        } else {
-          console.log('点击传回',[...arguments])
-          this.$refs.videoPlayer.initVideoUrl(projectList[0],this.pWidth,this.pHeight);
-          this.$refs.videoPlayer.initNextVideo(index,projectLists)
-          this.$refs.videoInfo.initInfo(projectList[0].id)
-          this.$refs.videoComment.initInfo(projectList[0].id)
-        }
-      },
+    initSource(projectList, index, projectLists) {
+      if (this.currentVideoIsEdit) {
+        this.$message.error("处于视频标注模式");
+      } else {
+        console.log("点击传回", [...arguments]);
+        this.$refs.videoPlayer.initVideoUrl(
+          projectList[0],
+          this.pWidth,
+          this.pHeight
+        );
+        this.$refs.videoPlayer.initNextVideo(index, projectLists);
+        this.$refs.videoInfo.initInfo(projectList[0].id);
+        this.$refs.videoComment.initInfo(projectList[0].id);
+      }
+    },
 
     getMarkImage(obj) {
       this.imgList.push(obj);

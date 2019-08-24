@@ -74,8 +74,6 @@
         required: false
 
       }
-
-
     },
     data() {
       return {
@@ -114,9 +112,7 @@
       }
     },
     created() {
-      console.log('chongxinjiaz');
       this.keyup();
-     
     },
     mounted() {
  
@@ -133,7 +129,7 @@
          let frameTime = 1 / 25;
          document.onkeydown = function (event) {
           let e = event || window.event || arguments.callee.caller.arguments[0];
-          console.log(e.keyCode,_self.videoPlayer)
+          // console.log(e.keyCode,_self.videoPlayer)
           if (_self.videoPlayerIsShow) {
 
            _self.playerControls.stateIcon = 'el-icon-video-play'
@@ -144,7 +140,7 @@
                 _self.videoPlayer.pause()
                 _self.videoPlayer.currentTime(Math.min(_self.videoPlayer.duration(), _self.videoPlayer.currentTime() + frameTime));
             }else if(e && e.keyCode === 32){
-              console.log(_self.videoPlayer.paused())
+              // console.log(_self.videoPlayer.paused())
               if (_self.videoPlayer.paused()) {
                   _self.videoPlayer.play()
                   _self.playerControls.stateIcon = 'el-icon-video-pause';

@@ -28,7 +28,7 @@
           <el-checkbox :label="index" :key="index" @change="changeCheckedProject($event,item)">
             <p class="pro-name">{{item.asset.name}}</p>
           </el-checkbox>
-          
+
           <div>
             <el-image :src="item.asset.image?$store.state.BASE_URL+item.asset.image:''" fit="cover">
               <div
@@ -48,7 +48,6 @@
 <script>
 export default {
   name: "VideoList",
-  props: ["list"],
   data() {
     return {
       projectList: [],
@@ -58,49 +57,19 @@ export default {
     };
   },
   created() {
-    this.projectList = [...this.$store.state.video.Selection]
     this.initInfo();
   },
   methods: {
     initInfo() {
-      this.projectList = this.list.map(item => {
-        return item;
-      });
-      console.log("0.0.0.0", this.projectList[1]);
+      this.projectList = [...this.$store.state.video.Selection];
       //读取AJAX获取数据
-      /* for(let i=0;i<5;i++){
-        if( i % 2 == 0){
-          let project={
-            id:i,
-            proName:"项目名称11"+i,
-            version:"00" + i,
-            time:"02:33",
-            url:'https://chiship.oss-cn-shanghai.aliyuncs.com/banner02.mp4',
-            videoImage:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-          };
-          this.projectList.push(project);
-        }else{
-          let project={
-              id:i,
-              proName:"项目名称11"+i,
-              version:"00" + i,
-              time:"12:33",
-              url:'https://chiship.oss-cn-shanghai.aliyuncs.com/banner03.mp4',
-              videoImage:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-            };
-            this.projectList.push(project);
-        }
-        
-      } */
     },
     getCurrentPlayId(id) {
       this.currentPlayId = id;
     },
     initSource(index) {
       let selectProject = this.selectProjects[index];
-      console.log("idididididid", selectProject.project);
       this.currentPlayId = selectProject.id;
-
       let projectList = new Array();
       projectList[0] = selectProject;
       if (index + 1 != this.selectProjects.length) {
@@ -109,33 +78,27 @@ export default {
         projectList[1] = null;
       }
       this.$emit("initSource", projectList, index, this.selectProjects);
-      //  this.$emit("initSources",index,this.selectProjects);
     },
-    checkedProject(data) {
-      console.log("监听点击", data);
-    },
+    /**
+     * 卡片选中状态切换 ，更新展示的播放列表
+     * @param {Boolean} e 点击卡片的多选按钮返回的状态表示是否选中
+     * @param {Object} item 点击卡片多选按钮时返回的资产对象
+     */
     changeCheckedProject(e, item) {
-      //加入虚拟数据  后期不要
+      item = {
+        ...item,
+        time: "02:33",
+        url:
+          "http://valipl.cp31.ott.cibntv.net/6773bee6f17377166953659fa/03000801005D51293E0548B003E880927FF708-FF1C-4506-9EA8-94EBD9F23F85.mp4?ccode=0502&duration=1434&expire=18000&psid=dd82b1e7ff73f966d71d2f202c4fdd0e&ups_client_netip=71c884ac&ups_ts=1566672415&ups_userid=&utid=ZV3oFbfN0UICAXHIhKzoKh0e&vid=XNDMxNjAwMDYyNA%3D%3D&vkey=A98b54a319d86db98fb2bebc35232a745",
+        videoImage:
+          "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+      };
       if (e) {
-        item = {
-          ...item,
-          time: "02:33",
-          url: "https://chiship.oss-cn-shanghai.aliyuncs.com/banner02.mp4",
-          videoImage:
-            "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-        };
-
         this.selectProjects.push(item);
-      }else{
-
-      }
-      this.selectProjects.length=0;
-      for(let k=0;k<this.selectProjectIds.length;k++){
-        for(let i=0;i<this.projectList.length;i++){
-          if(this.projectList[i].id==this.selectProjectIds[k]){
-            this.selectProjects.push(this.projectList[i])
-          }
-        }
+      } else {
+        this.selectProjects = this.selectProjects.filter(t => {
+          return t.task.id !== item.task.id;
+        });
       }
     },
     addVideoList() {}
