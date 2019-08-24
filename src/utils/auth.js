@@ -31,6 +31,3 @@ export function setUserInfo(data) {
 export function removeUserInfo() {
     return Cookies.remove('UserInfo')
 }
-export function resetRoles() {
-    store.commit('permission/SET_ROUTES', [])
-}

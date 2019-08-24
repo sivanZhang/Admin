@@ -1,36 +1,40 @@
-import { asyncRoutes, constantRoutes } from '@/router'
-
+import {
+    asyncRoutes,
+    constantRoutes,
+    notFoundRoutes
+} from '@/router'
+import router from '@/router'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
  * @param route
  */
 function hasPermission(route, UserRoles) {
-    let arr = Object.keys(UserRoles)
-    if (route.meta && Object.keys(route.meta).includes('roles')) {
-        let BL = arr.some(roleName => roleName === route.meta.roles && UserRoles[roleName])
-        return BL
+    if (route.meta && 'roles' in route.meta) {
+        return UserRoles[route.meta.roles]
     } else {
         return true
     }
 }
-
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
  * @param roles
  */
 export function filterAsyncRoutes(routes, UserRoles) {
-    const res = []
+    let res = []
     routes.forEach(route => {
         if (hasPermission(route, UserRoles)) {
-            if (route.children) {
-                route.children = filterAsyncRoutes(route.children, UserRoles)
+            const copy = JSON.parse(JSON.stringify(route))
+                //此处因为component 不能被深拷贝
+            copy.component = () =>
+                import (v.component)
+            if (copy.children) {
+                copy.children = filterAsyncRoutes(copy.children, UserRoles)
             }
-            res.push(route)
+            res.push(copy)
         }
     })
-
     return res
 }
 
@@ -40,21 +44,24 @@ const state = {
 }
 
 const mutations = {
-    SET_ROUTES: (state, routes) => {
-        state.addRoutes = routes
-        console.log(state.addRoutes, 'state.addRoutes');
-
-        state.routes = constantRoutes.concat(routes)
+    SET_ROUTES: (state, arr) => {
+        state.addRoutes = arr
+        state.routes = constantRoutes.concat(arr)
     }
 }
 
 const actions = {
-    generateRoutes({ state, commit, rootState }) {
+    generateRoutes({
+        state,
+        commit,
+        rootState
+    }) {
         let UserRoles = rootState.login.userInfo.auth
         return new Promise(resolve => {
             let accessedRoutes = filterAsyncRoutes(asyncRoutes, UserRoles)
                 //accessedRoutes有权限的路由
             commit('SET_ROUTES', accessedRoutes)
+            router.addRoutes(asyncRoutes)
             resolve(accessedRoutes)
         })
     }

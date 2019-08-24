@@ -5,7 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -31,57 +30,6 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const asyncRoutes = [{
-        path: '/task',
-        component: Layout,
-        redirect: '/task',
-        meta: {
-            title: '我的工作台',
-            icon: 'task'
-        },
-        children: [{
-                path: 'task',
-                name: 'my-task',
-                component: () =>
-                    import ('@/views/task'),
-                meta: {
-                    title: '我的任务',
-                    icon: 'task'
-                }
-            },
-            {
-                path: 'approve',
-                name: 'my-approve',
-                component: () =>
-                    import ('@/views/task'),
-                meta: {
-                    title: '我的审批',
-                    icon: 'task',
-                    roles: 'manage_approve'
-                }
-            },
-            {
-                path: 'overview-users',
-                name: 'overview-users',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: {
-                    title: '我的工时',
-                    icon: 'user'
-                },
-            },
-            {
-                path: 'overview-users',
-                name: 'overview-users',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: {
-                    title: '我的信息',
-                    icon: 'user'
-                },
-            }
-        ]
-    },
-    {
         path: '/videoCheck',
         component: Layout,
         redirect: '/videoCheck',
@@ -96,7 +44,8 @@ export const asyncRoutes = [{
                 import ('@/views/video/my-audit'),
             meta: {
                 title: '我的审核',
-                icon: 'task'
+                icon: 'task',
+                roles: 'manage_approve'
             }
         }, {
             path: 'videoCheck',
@@ -150,6 +99,11 @@ export const asyncRoutes = [{
             }
         ]
     },
+    {
+        path: '*',
+        redirect: '/404',
+        hidden: true
+    }
 ]
 export const constantRoutes = [{
         path: '/redirect',
@@ -176,12 +130,6 @@ export const constantRoutes = [{
         path: '/mytaskplug',
         component: () =>
             import ('@/views/myTask/myTaskPlug'),
-        hidden: true
-    },
-    {
-        path: '/404',
-        component: () =>
-            import ('@/views/404'),
         hidden: true
     },
     {
@@ -279,26 +227,63 @@ export const constantRoutes = [{
                 icon: 'assetlist'
             }
         }, ]
-    },
-    /* {
-        path: 'external-link',
+    }, {
+        path: '/task',
         component: Layout,
+        redirect: '/task',
+        meta: {
+            title: '我的工作台',
+            icon: 'task'
+        },
         children: [{
-            path: 'https://panjiachen.github.io/vue-element-admin-site/zh/guide/',
-            meta: {
-                title: '使用文档',
-                icon: 'link'
+                path: 'task',
+                name: 'my-task',
+                component: () =>
+                    import ('@/views/task'),
+                meta: {
+                    title: '我的任务',
+                    icon: 'task'
+                }
+            },
+            {
+                path: 'approve',
+                name: 'my-approve',
+                component: () =>
+                    import ('@/views/task'),
+                meta: {
+                    title: '我的审批',
+                    icon: 'task',
+                }
+            },
+            {
+                path: 'overview-users',
+                name: 'overview-users1',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: {
+                    title: '我的工时',
+                    icon: 'user'
+                },
+            },
+            {
+                path: 'overview-users',
+                name: 'overview-users2',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: {
+                    title: '我的信息',
+                    icon: 'user'
+                },
+            },
+            {
+                path: '/404',
+                component: () =>
+                    import ('@/views/404'),
+                hidden: true
             }
-        }]
-    }, */
-    // 404 page must be placed at the end !!!
-    {
-        path: '*',
-        redirect: '/404',
-        hidden: true
+        ]
     }
 ]
-
 const createRouter = () => new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({

@@ -52,10 +52,6 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
-  },
-  created(){
-    console.log('this.permission_route',this.permission_route);
-    
   }
 }
 </script>
