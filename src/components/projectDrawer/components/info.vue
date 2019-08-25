@@ -17,7 +17,7 @@
               class="input"
               value="project.name"
               v-model="name"
-              @blur="editing=false"
+              
             />
             <el-button @click="save(0)" type="primary">修改</el-button>
            </div>
@@ -54,7 +54,7 @@
                 class="input"
                 value="project.budget"
                 v-model="budget"
-                @blur="editing2=false"
+                
               />万元
               <el-button @click="save(1)" type="primary">修改</el-button>
             </div>
@@ -75,7 +75,7 @@
                   :label="item.username"
                   :value="item.id"
                   :key="item.id"
-                   @blur="editing3=false"
+                  
                 ></el-option>
               </el-select>
               <el-button @click="save(2)" type="primary">修改</el-button>

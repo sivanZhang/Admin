@@ -52,6 +52,7 @@
                 </div>
               </div>
               <el-table
+                ref="addmultipleTable"
                 :data="permissionsList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
                 border
                 :stripe="true"
@@ -176,7 +177,7 @@ export default {
       userPermissionsList: null,
       roleList: null,
       roleAdd: {},
-      
+
       roleUserList: null,
       name: null,
       addMultipleSelection: [],
@@ -203,15 +204,15 @@ export default {
           permissions({
             codename: newVal
           }).then(({ data }) => {
-        this.permissionsList = [...data.msg];
-      });
-        }else{
-          this.getList()
+            this.permissionsList = [...data.msg];
+          });
+        } else {
+          this.getList();
         }
       }
     }
   },
-  computed:{
+  computed: {
     ...mapState("admin", ["UserList"])
   },
   methods: {
@@ -224,7 +225,6 @@ export default {
       getRoles().then(({ data }) => {
         this.roleList = [...data.msg];
       });
-      
     },
     getRoleUserList(id) {
       this.roleid = id;
@@ -286,7 +286,7 @@ export default {
             this.userPermissionsList = [...data.msg];
             //console.log(this.userPermissionsList);
           });
-          this.$refs.delmultipleTable.clearSelection();
+          this.delmultipleTable.clearSelection();
         }
       });
     },
@@ -331,7 +331,7 @@ export default {
             this.name = data.msg.name;
             //console.log(this.roleUserList);
           });
-          this.$refs.delUsermultipleTable.clearSelection();
+          this.delUsermultipleTable.clearSelection();
         }
       });
     },
