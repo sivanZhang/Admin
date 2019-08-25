@@ -89,9 +89,9 @@ export default {
         ...item,
         time: "02:33",
         url:
-          "http://valipl.cp31.ott.cibntv.net/6773bee6f17377166953659fa/03000801005D51293E0548B003E880927FF708-FF1C-4506-9EA8-94EBD9F23F85.mp4?ccode=0502&duration=1434&expire=18000&psid=dd82b1e7ff73f966d71d2f202c4fdd0e&ups_client_netip=71c884ac&ups_ts=1566672415&ups_userid=&utid=ZV3oFbfN0UICAXHIhKzoKh0e&vid=XNDMxNjAwMDYyNA%3D%3D&vkey=A98b54a319d86db98fb2bebc35232a745",
+          "http://localhost:8080/test/sEzdz3fIXgqc1512572926.mp4",
         videoImage:
-          "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+          "http://localhost:8080/test/demo.jpg"
       };
       if (e) {
         this.selectProjects.push(item);
