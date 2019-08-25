@@ -8,7 +8,7 @@
       <el-button icon="el-icon-delete" type="danger" @click="delLinkWKForm(LinkTemplateList)">删除审批流程</el-button>
       <el-steps direction="vertical" :active="1" :space="180">
         <el-step v-for="(item,index) of LinkTemplateList" :key="index" status="process">
-          <div slot="title" style="font-size:14px">{{item.level|WKLevel}}</div>
+          <div slot="title" style="font-size:14px">{{index+1|WKLevel}}</div>
           <ul slot="description" style="width:200px;">
             <el-row style="font-size:16px;font-weight:400;padding-top:20px">
               <span>审批角色：{{item.entity_id.role_name}}</span>
@@ -216,9 +216,7 @@ export default {
         dept: this.deptId
       }).then(({ data }) => {
         this.updateList = [...data.msg];
-        
-      });
-      this.updateList.forEach((item, index) => {
+        this.updateList.forEach((item, index) => {
           this.updateForm.domains[index] = Object.assign(
             {},
             {
@@ -226,7 +224,9 @@ export default {
             }
           );
         });
-        console.log(this.updateForm);
+      });
+      
+        //console.log(this.updateForm);
       //获取角色列表
       getRoles().then(({ data }) => {
         this.rolesList = [...data.msg];
