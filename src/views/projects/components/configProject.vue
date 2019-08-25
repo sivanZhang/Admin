@@ -2,11 +2,11 @@
   <div id="config-project">
     <el-tabs
       tab-position="left"
-      style="height: 500px;overflow: auto;"
+      style="height: ;overflow: auto;"
       v-model="activeName"
       @tab-click="handleClick"
     >
-      <el-tab-pane label="项目详情" name="first" style="height: 500px;overflow: auto;">
+      <el-tab-pane label="项目详情" name="first" style="height: auto;overflow: auto;">
         <div style="width:50%">
           <el-row>
             <el-col :span="6" class="comment">缩略图</el-col>
@@ -65,7 +65,7 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="参与工种" name="second" style="height: 500px;overflow: auto;">
+      <el-tab-pane label="参与工种" name="second" style="height: auto;overflow: auto;">
         <div style="display:flex">
           <div style="width:50%;padding:5px ">
             <div style="display:flex">
@@ -105,7 +105,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="状态配置" name="third" @click="getStatus" style="height:500px;overflow:auto;">
+      <el-tab-pane label="状态配置" name="third" @click="getStatus" style="height:auto;overflow:auto;">
         <div style="display:flex">
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">状态列表</h4>
