@@ -116,9 +116,11 @@
               <el-row v-for="(item,index) of approvingStatus" :key="index" class="minstatus-name">
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:blue"></i>
+                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -127,9 +129,11 @@
               <el-row v-for="(item,index) of conductingStatus" :key="index" class="minstatus-name">
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:blue"></i>
+                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -138,9 +142,11 @@
               <el-row v-for="(item,index) of finishStatus" :key="index" class="minstatus-name">
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:blue"></i>
+                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -149,9 +155,11 @@
               <el-row v-for="(item,index) of notstartStatus" :key="index" class="minstatus-name">
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:blue"></i>
+                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -160,9 +168,11 @@
               <el-row v-for="(item,index) of pauseStatus" :key="index" class="minstatus-name">
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                 <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:blue"></i>
+                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
                   </span>
+                 </el-tooltip>
                 </el-col>
               </el-row>
             </div>
@@ -180,9 +190,11 @@
               >
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                   <span @click="delStatus(item.id)">
                     <i class="el-icon-minus" style="color:red"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -195,9 +207,11 @@
               >
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                   <span @click="delStatus(item.id)">
                     <i class="el-icon-minus" style="color:red"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -210,9 +224,11 @@
               >
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                   <span @click="delStatus(item.id)">
                     <i class="el-icon-minus" style="color:red"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -225,9 +241,11 @@
               >
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                   <span @click="delStatus(item.id)">
                     <i class="el-icon-minus" style="color:red"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
               <el-row>
@@ -240,9 +258,11 @@
               >
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                   <span @click="delStatus(item.id)">
                     <i class="el-icon-minus" style="color:red"></i>
                   </span>
+                  </el-tooltip>
                 </el-col>
               </el-row>
             </div>
@@ -433,12 +453,18 @@ export default {
   .maxstatus-name {
     width: 100%;
     background-color: #EEF1F6;
+    height: 30px;
     font-weight: 600;
-    border-bottom: 1px solid #E8EAEC;
+    font-display: center;
+    padding:5px;
+    border-bottom: 1px solid rgb(234, 232, 236);
   }
   .minstatus-name {
     border-bottom: 1px solid #E8EAEC;
+    height:25px;
     width: 100%;
+    padding:5px;
+    font-display: center;
     cursor: pointer;
   }
   .col {
