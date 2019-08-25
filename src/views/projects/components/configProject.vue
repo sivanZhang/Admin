@@ -118,7 +118,7 @@
                 <el-col :span="12" align="right" class="col">
                   <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
+                    <i class="el-icon-plus" ></i>
                   </span>
                   </el-tooltip>
                 </el-col>
@@ -131,7 +131,7 @@
                 <el-col :span="12" align="right" class="col">
                   <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
+                    <i class="el-icon-plus" ></i>
                   </span>
                   </el-tooltip>
                 </el-col>
@@ -144,7 +144,7 @@
                 <el-col :span="12" align="right" class="col">
                   <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
+                    <i class="el-icon-plus" ></i>
                   </span>
                   </el-tooltip>
                 </el-col>
@@ -157,7 +157,7 @@
                 <el-col :span="12" align="right" class="col">
                   <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
+                    <i class="el-icon-plus" ></i>
                   </span>
                   </el-tooltip>
                 </el-col>
@@ -170,7 +170,7 @@
                 <el-col :span="12" align="right" class="col">
                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
                   <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" style="color:rgb(168, 74, 245)"></i>
+                    <i class="el-icon-plus" ></i>
                   </span>
                  </el-tooltip>
                 </el-col>
