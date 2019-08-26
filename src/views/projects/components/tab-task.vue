@@ -46,7 +46,7 @@
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务"></el-table-column>
         <el-table-column label="制作环节">
-          <template slot-scope="scope">{{scope.row.link}}</template>
+          <template slot-scope="scope">{{scope.row.content}}</template>
         </el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
@@ -70,9 +70,9 @@
         <el-table-column prop="total_hour" label="预设时间（小时）" width="125px"></el-table-column>
       </el-table>
     </div>
-    
+
     <!-- 主任务创建 -->
-    <el-dialog title="主任务创建" :visible.sync="mainTaskShow" width="490px">
+    <el-dialog title="主任务创建" :visible.sync="mainTaskShow" width="490px" ref="mainTask" >
       <el-steps :active="active" finish-status="success">
         <el-step title="所属资产"></el-step>
         <el-step title="所属环节"></el-step>
@@ -80,10 +80,6 @@
       </el-steps>
       <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <div v-if="active == 0" style="padding-top:10px">
-          <el-form-item>
-            <el-radio v-model="optionAssetType" label="1">镜头资产</el-radio>
-            <el-radio v-model="optionAssetType" label="2">素材资产</el-radio>
-          </el-form-item>
           <el-form-item label="所属资产">
             <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
               <el-option
@@ -112,13 +108,7 @@
             <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
           </el-form-item>
           <el-form-item label="任务内容" prop="content">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model="TaskForm.content"
-              placeholder="请填写任务内容"
-              disabled
-            ></el-input>
+            <el-input type="textarea" :rows="3" v-model="TaskForm.content" placeholder="请填写任务内容"></el-input>
           </el-form-item>
           <el-form-item label="优先级" prop="priority">
             <!-- <el-input v-model="TaskForm.code"></el-input> -->
@@ -160,18 +150,19 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               format="yyyy/MM/dd"
+              :picker-options="picker"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="总工时" prop="total_hour">
             <el-input v-model="TaskForm['total_hour']"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button @click="cancel">取消</el-button>
-            <el-button :loading="buttonStates.createLoading" type="primary" @click="editTask">立即创建</el-button>
+            <el-button @click="cancel2">取消</el-button>
+            <el-button type="primary" @click="editMainTask">立即创建</el-button>
           </el-form-item>
         </div>
       </el-form>
-
+      <el-button style="margin-top: 12px;" @click="before" v-if="active !=0">上一步</el-button>
       <el-button style="margin-top: 12px;" @click="next" v-if="active !=2">下一步</el-button>
     </el-dialog>
     <!-- 子任务创建，任务修改 -->
@@ -228,7 +219,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
-            :picker-options="picker"
+            :picker-options="picker2"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
@@ -245,7 +236,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
   </div>
 </template>
 <script>
@@ -278,8 +268,12 @@ export default {
       optionAssetType: null,
       LinkList: null,
       multipleSelection: [],
-
       picker: {
+        disabledDate: time => {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
+      picker2: {
         disabledDate: time => {
           let beginDate = this.TaskForm.datetime[0];
           let endDate = this.TaskForm.datetime[1];
@@ -315,17 +309,6 @@ export default {
     }
   },
   watch: {
-    optionAssetType: {
-      handler: function(newVal, oleVal) {
-        if (newVal === "1") {
-          this.asset_type = 0;
-          this.getAssetList();
-        } else {
-          this.asset_type = 1;
-          this.getAssetList();
-        }
-      }
-    },
     active: {
       handler: function(newVal, oldVal) {
         if (newVal === 1 && this.TaskForm.asset) {
@@ -351,6 +334,20 @@ export default {
   methods: {
     mainTask() {
       this.mainTaskShow = true;
+      this.active = 0;
+      queryAssets({
+        project: this.$route.params.id,
+        asset_type: this.asset_type
+      }).then(({ data }) => {
+        this.AssetListTask = [...data.msg];
+      });
+      this.TaskForm = {
+        priority: 0,
+        grade: 0
+      };
+    },
+    before() {
+      if (this.active-- < 0) this.active = 0;
     },
     next() {
       if (this.active++ > 2) this.active = 0;
@@ -358,14 +355,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    getAssetList() {
-      queryAssets({
-        project: this.$route.params.id,
-        asset_type: this.asset_type
-      }).then(({ data }) => {
-        this.AssetListTask = [...data.msg];
-      });
-    },
+
     //行被点击后出发
     rowSelected(row) {
       this.ActiveRow = { ...row };
@@ -494,10 +484,46 @@ export default {
         }
       });
     },
+    //添加主任务
+    editMainTask() {
+      this.$refs["TaskRef"].validate(valid => {
+        if (valid) {
+          function changeDateFormat(dateVal) {
+            return new Date(dateVal).toLocaleDateString();
+            //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+          }
+          let data = {
+            ...this.TaskForm,
+            start_date: changeDateFormat(this.TaskForm.datetime[0]),
+            end_date: changeDateFormat(this.TaskForm.datetime[1]),
+            project: this.$route.params.id
+          };
+          if (this.TaskForm.executorlist.length) {
+            data["executorlist"] = data["executorlist"].join();
+          }
+          //若果是修改
+          HTTP.addTask(data).then(({ data }) => {
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.mainTaskShow = false;
+              this.active = 0;
+              this.getTasks();
+
+              console.log(this.mainTaskShow);
+            }
+          });
+        }
+      });
+    },
     //取消对话框
     cancel() {
       this.isDialogShow = false;
       this.$refs["TaskRef"].resetFields();
+    },
+    cancel2() {
+      this.mainTaskShow = false;
+      this.$refs["TaskRef"].resetFields();
+      this.active = 0;
     },
     //删除任务http请求
     deleteTask() {
