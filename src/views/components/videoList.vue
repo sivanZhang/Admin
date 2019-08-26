@@ -10,10 +10,10 @@
     </ul>-->
     <div id="videoSliderList">
       <el-button
-        :type="currentPlayId==item.asset.id?'success':'error'"
         v-for="(item,index) in selectProjects"
         :key="index"
-        @click="initSource(index)"
+        :type="currentPlayId==index?'success':''"
+        @click="initSource(index),getCurrentPlayId(index)"
         icon="el-icon-video-play"
         style="margin: 10px 2%;"
       >{{item.asset.name}} {{item.time}}</el-button>
@@ -22,14 +22,12 @@
     el-icon-video-play-->
     <!-- <el-button type="primary" style="margin:10px 0 0 10px;" @click="addVideoList">加入播放队列{{selectProjectIds}}</el-button> -->
     <el-checkbox-group v-model="selectProjectIds">
-      <ul class="list">
-        <li class="item" v-for="(item,index) in projectList" :key="index">
-          <!-- <input type="checkbox" v-model="selectProjectIds" style="margin:10px 0px 0px 5px;" :value="index"   @change="changeCheckedProject"/> -->
+      <div class="list">
+        <div class="item" v-for="(item,index) in projectList" :key="index">
           <el-checkbox :label="index" :key="index" @change="changeCheckedProject($event,item)">
             <p class="pro-name">{{item.asset.name}}</p>
           </el-checkbox>
-
-          <div>
+          <div style="margin-top:5px">
             <el-image :src="item.asset.image?$store.state.BASE_URL+item.asset.image:''" fit="cover">
               <div
                 slot="error"
@@ -38,10 +36,10 @@
                 <i class="el-icon-picture" style="color:#909399"></i>
               </div>
             </el-image>
-            <p>当前版本：{{item.asset.inner_version}}</p>
           </div>
-        </li>
-      </ul>
+          <div>当前版本：{{item.asset.inner_version}}</div>
+        </div>
+      </div>
     </el-checkbox-group>
   </div>
 </template>
@@ -69,8 +67,8 @@ export default {
     },
     initSource(index) {
       let selectProject = this.selectProjects[index];
-      this.currentPlayId = selectProject.id;
-      let projectList = new Array();
+      this.currentPlayId = selectProject.asset.asset;
+      let projectList =[];
       projectList[0] = selectProject;
       if (index + 1 != this.selectProjects.length) {
         projectList[1] = this.selectProjects[index + 1];
@@ -89,7 +87,7 @@ export default {
         ...item,
         time: "02:33",
         url:
-          "http://valipl.cp31.ott.cibntv.net/6773bee6f17377166953659fa/03000801005D51293E0548B003E880927FF708-FF1C-4506-9EA8-94EBD9F23F85.mp4?ccode=0502&duration=1434&expire=18000&psid=dd82b1e7ff73f966d71d2f202c4fdd0e&ups_client_netip=71c884ac&ups_ts=1566672415&ups_userid=&utid=ZV3oFbfN0UICAXHIhKzoKh0e&vid=XNDMxNjAwMDYyNA%3D%3D&vkey=A98b54a319d86db98fb2bebc35232a745",
+          "sEzdz3fIXgqc1512572926.mp4",
         videoImage:
           "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
       };
@@ -110,6 +108,7 @@ export default {
   display: block;
   white-space: nowrap;
   width: 100%;
+  height: 50px;
   overflow: auto;
   /* li {
     width: 20%;
@@ -136,14 +135,13 @@ export default {
   .list {
     list-style: none;
     padding: 10px;
-    margin: 0; /* 
-    overflow: hidden; */
-    // height: 100%;
+    margin: 0; 
+    overflow: hidden;
+    height: 100%;
     height: calc(100% - 90px);
+    display: flex;
     .item {
-      float: left;
       width: 19%;
-      height: 180px;
       border: 1px dotted #ddd;
       margin: 0 0.5%;
       background: #fff;

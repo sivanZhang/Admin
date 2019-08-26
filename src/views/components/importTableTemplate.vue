@@ -31,7 +31,7 @@
             :render-header="renderHeader"
             align="center"
           >
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-input
                 v-if="scope.row.isEdit"
                 size="small"
@@ -171,7 +171,6 @@ export default {
           lastLabel = item.label;
         }
       });
-
       let deptLabel;
       function changeList(arr) {
         for (const item of arr) {
@@ -305,6 +304,7 @@ export default {
 
       this.getTableHeader();
     },
+    //获取传递的数据
     getAssemblingData() {
       this.assemblingData.values = [];
       /**
@@ -312,6 +312,8 @@ export default {
        */
       let tempKeyIndexs = [];
       let bindKeys = [];
+      console.log(this.hasBindKey);
+      
       for (let i = 0; i < this.hasBindKey.length; i++) {
         if (this.hasBindKey[i]) {
           bindKeys.push(this.hasBindKey[i]);
@@ -359,6 +361,7 @@ export default {
           //表头数据添加
           this.tableCols.push(label);
         }
+        console.log('this.tableCols',this.tableCols);
         this.isShowOptionBar = true;
         //开始组装数据
         this.getTableData();
@@ -380,7 +383,8 @@ export default {
         data.isEdit = false;
         this.tableData.push(data);
       }
-
+      console.log('this.tableData',this.tableData);
+      
       this.tableLoading = false;
     },
     /**

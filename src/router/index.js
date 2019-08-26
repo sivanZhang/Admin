@@ -45,7 +45,7 @@ export const asyncRoutes = [{
             meta: {
                 title: '我的审核',
                 icon: 'task',
-                roles: 'manage_approve'
+                // roles: 'manage_approve'
             }
         }, {
             path: 'videoCheck',
@@ -256,7 +256,7 @@ export const constantRoutes = [{
                 }
             },
             {
-                path: 'overview-users',
+                path: 'overview-users1',
                 name: 'overview-users1',
                 component: () =>
                     import ('@/views/overview/users'),
@@ -266,7 +266,7 @@ export const constantRoutes = [{
                 },
             },
             {
-                path: 'overview-users',
+                path: 'overview-users2',
                 name: 'overview-users2',
                 component: () =>
                     import ('@/views/overview/users'),

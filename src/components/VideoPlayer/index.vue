@@ -221,7 +221,7 @@
                 }
                
                 _self.currentProject=_self.projectLists[_self.currentProjectIndex];
-                _self.$emit('getCurrentPlayId', _self.currentProject.id)
+                _self.$emit('getCurrentPlayId', _self.currentProject)
                 _self.videoUrl=_self.currentProject.url
                 _self.videoPlayer.src(_self.currentProject.url);
                 _self.videoPlayer.load(_self.currentProject.url);
@@ -234,7 +234,6 @@
       },
 
       playerPlay(){
-           console.log(this.videoPlayer);
            if(this.videoPlayer.paused()){
 
            }
@@ -331,7 +330,8 @@
           currentFrame:this.calcFrame(this.videoPlayer.currentTime()),
           currentName:this.currentProject.proName,
           imgUrl: drawImage,
-          currentPosition: this.videoPlayer.currentTime()
+          currentPosition: this.videoPlayer.currentTime(),
+          asset:this.currentProject.asset.asset
         }
         this.$emit('getCutImg', obj)
         this.videoPlayerIsShow = true

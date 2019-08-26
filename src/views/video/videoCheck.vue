@@ -42,7 +42,7 @@
                     <input class="mark-input" placeholder="添加备注..." v-model="markText" />
                   </div>
 
-                  <div class="btn-group" v-if="imgList.length > 0">
+                  <div class="btn-group">
                     <el-radio-group v-model="approve_result">
                       <el-radio :label="0">拒绝</el-radio>
                       <el-radio :label="1">同意</el-radio>
@@ -82,6 +82,7 @@ import VideoComment from "@/views/components/videoComment";
 import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
 import { postApprove } from "@/api/video";
+import AXIOS from "@/utils/request";
 export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },
   data() {
@@ -95,7 +96,8 @@ export default {
       markText: "",
       currentVideoIsEdit: false,
       pWidth: 0,
-      pHeight: 0
+      pHeight: 0,
+      submitList: []
     };
   },
   computed: {
@@ -106,7 +108,6 @@ export default {
     let bH = document.body.offsetHeight;
     let videoInfoH = document.getElementById("videoInfo").offsetHeight;
     let videoTabsH = document.getElementById("videoTabs").offsetHeight;
-
     let videoPlayer = document.getElementsByClassName("video-player");
     this.pHeight = videoPlayer[0].offsetHeight;
     this.pWidth = videoPlayer[0].offsetWidth;
@@ -114,39 +115,54 @@ export default {
       bH - (videoInfoH + videoTabsH + 20 + 20 + 94) + "px";
   },
   methods: {
-    commitApprove() {
-      const data = {
-        asset_id: this.Active.asset.id,
-        project_id: this.Active.asset.project,
-        link_id: this.Active.asset.id,
-        approve_result: this.approve_result,
-        suggestion: this.markText
-      };
-      console.log(this.Active.asset);
-
-      postApprove(data).then(res => {
-        this.$message(res.data.msg);
-        if (res.data.status === 0) {
-          this.imgList = [];
-        }
+    async commitApprove() {
+      let submitFn = [];
+      this.submitList.forEach((t, i, arr) => {
+        let data = {
+          asset_id: t.asset.asset,
+          project_id: t.project.id,
+          link_id: t.task.link,
+          approve_result: this.approve_result,
+          suggestion: this.markText
+        };
+        this.imgList.forEach(async k => {
+          if (k.asset === t.asset.asset) {
+            data.key = [];
+            data["key"].push({
+              image: k.imgUrl,
+              frame: k.currentFrame
+            });
+          }
+        });
+        postApprove(data).then(res => {
+          this.$message(t.asset.name + res.data.msg);
+          if (res.data.status == 0 || i === this.submitList.length) {
+            {
+              this.imgList = [];
+              this.approve_result = "";
+              this.markText = "";
+            }
+          }
+        });
       });
     },
+    //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
+      this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
         this.$message.error("处于视频标注模式");
       } else {
-        console.log("点击传回", [...arguments]);
         this.$refs.videoPlayer.initVideoUrl(
           projectList[0],
           this.pWidth,
           this.pHeight
         );
-        this.$refs.videoPlayer.initNextVideo(index, projectLists);
-        this.$refs.videoInfo.initInfo(projectList[0].id);
+        console.log(projectLists[index], "projectLists[index]");
+        this.$refs.videoPlayer.initNextVideo(index, projectList);
+        this.$refs.videoInfo.initInfo(projectLists[index]);
         this.$refs.videoComment.initInfo(projectList[0].id);
       }
     },
-
     getMarkImage(obj) {
       this.imgList.push(obj);
       let bH = document.body.offsetHeight;
@@ -158,6 +174,7 @@ export default {
         document.getElementById("videoComment").style.height =
           bH - (videoInfoH + videoTabsH + 20 + 20 + 53) + "px";
       }
+      console.log("this.imgList", this.imgList);
     },
     delMarkImage(data, index) {
       console.log(index);
@@ -186,15 +203,16 @@ export default {
       this.$refs.zoomImg.zoomImg(imgUrl);
     },
     handleTabClick(tab, event) {
-      console.log(tab, event);
+      // console.log(tab, event);
     },
+    //传递 获取视频是否属于编辑中
     getCurrentVideoMode(mode) {
       this.currentVideoIsEdit = !mode;
       console.log("currentVideoIsEdit", this.currentVideoIsEdit);
     },
-    getCurrentPlayId(id) {
-      console.log(id);
-      this.$refs.videoList.getCurrentPlayId(id);
+    getCurrentPlayId(resAsset) {
+      console.log("resAsset", resAsset);
+      /* this.$refs.videoList.getCurrentPlayId(id); */
     }
   }
 };
