@@ -20,7 +20,7 @@ export function dateFormat(date) {
 
         return `${TIME.getFullYear()}/${mm}/${dd}`
     } else {
-        return ''
+        return '-'
     }
 }
 //时间戳格式化为 yyyy/dd/mm hh:mm
@@ -43,7 +43,7 @@ export function dateTimeFormat(date) {
 
         return `${TIME.getFullYear()}/${mm}/${dd} ${hh}:${MM}`
     } else {
-        return ''
+        return '-'
     }
 }
 //项目工作流格式化

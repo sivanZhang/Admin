@@ -52,7 +52,7 @@
             <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="截止日期" align="left">
+        <el-table-column label="截止日期" align="left" width="95px">
           <template slot-scope="scope">
             <div
               v-for="(todo,index) of scope.row.link"
