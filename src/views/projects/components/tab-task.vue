@@ -3,7 +3,8 @@
     <div>
       <el-row>
         <el-col :span="15">
-          <el-button type="primary" icon="el-icon-plus" @click.native="openDialog(2)">创建</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建主任务</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click.native="openDialog(2)">创建子任务</el-button>
           <!-- <el-dropdown>
         <el-button type="primary"  @click.native="openDialog(2)">
           创建
@@ -37,12 +38,15 @@
         row-key="id"
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"
+        @selection-change="handleSelectionChange"
         border
       >
         <!-- default-expand-all -->
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务"></el-table-column>
         <el-table-column label="制作环节">
-          <template slot-scope="scope">{{scope.row.category|categoryFilter}}</template>
+          <template slot-scope="scope">{{scope.row.content}}</template>
         </el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
@@ -60,13 +64,108 @@
         <el-table-column label="开始日期">
           <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="end_date" label="截止日期">
+        <el-table-column prop="end_date" label="截止日期" width="95px">
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
+        <el-table-column prop="total_hour" label="预设时间（小时）" width="125px"></el-table-column>
       </el-table>
     </div>
 
+    <!-- 主任务创建 -->
+    <el-dialog title="主任务创建" :visible.sync="mainTaskShow" width="490px" ref="mainTask" >
+      <el-steps :active="active" finish-status="success">
+        <el-step title="所属资产"></el-step>
+        <el-step title="所属环节"></el-step>
+        <el-step title="任务详情"></el-step>
+      </el-steps>
+      <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
+        <div v-if="active == 0" style="padding-top:10px">
+          <el-form-item label="所属资产">
+            <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
+              <el-option
+                v-for="item of AssetListTask"
+                :label="item.name"
+                :value="item.id"
+                :key="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div v-if="active==1" style="padding-top:10px">
+          <el-form-item label="所属环节">
+            <el-select v-model="TaskForm.link_id" placeholder="请选择所属环节">
+              <el-option
+                v-for="item of LinkList"
+                :label="item[0].dept.name"
+                :value="item[0].link_id"
+                :key="item[0].link_id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div v-if="active==2" style="padding-top:10px">
+          <el-form-item label="任务名称" prop="name">
+            <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
+          </el-form-item>
+          <el-form-item label="任务内容" prop="content">
+            <el-input type="textarea" :rows="3" v-model="TaskForm.content" placeholder="请填写任务内容"></el-input>
+          </el-form-item>
+          <el-form-item label="优先级" prop="priority">
+            <!-- <el-input v-model="TaskForm.code"></el-input> -->
+            <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
+            <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
+            <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+          </el-form-item>
+          <el-form-item label="任务难度" prop="grade">
+            <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
+            <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
+            <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
+          </el-form-item>
+          <el-form-item label="任务状态" prop="status">
+            <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
+              <el-option
+                v-for="item of StatusList"
+                :label="item.label"
+                :value="item.value"
+                :key="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="任务执行人" prop="executorlist">
+            <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
+              <el-option
+                v-for="item of DeptUsers"
+                :label="item.username"
+                :value="item.id"
+                :key="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="任务时间" prop="datetime">
+            <el-date-picker
+              v-model="TaskForm.datetime"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              format="yyyy/MM/dd"
+              :picker-options="picker"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="总工时" prop="total_hour">
+            <el-input v-model="TaskForm['total_hour']"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="cancel2">取消</el-button>
+            <el-button type="primary" @click="editMainTask">立即创建</el-button>
+          </el-form-item>
+        </div>
+      </el-form>
+      <el-button style="margin-top: 12px;" @click="before" v-if="active !=0">上一步</el-button>
+      <el-button style="margin-top: 12px;" @click="next" v-if="active !=2">下一步</el-button>
+    </el-dialog>
+    <!-- 子任务创建，任务修改 -->
     <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="490px">
       <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <el-form-item label="任务名称" prop="name">
@@ -82,7 +181,6 @@
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
-          
           <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
           <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
           <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
@@ -99,10 +197,15 @@
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
           <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
-            <el-option v-for="item of DeptUsers" :label="item.username" :value="item.id" :key="item.id"></el-option>
+            <el-option
+              v-for="item of DeptUsers"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
-        
+
         <el-form-item label="所属资产">
           <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
             <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id"></el-option>
@@ -116,12 +219,13 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
+            :picker-options="picker2"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
-        
+
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button
@@ -141,6 +245,8 @@ import { Transform } from "stream";
 import myMixin from "./mixins";
 import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
+import { queryAssets } from "@/api/assets";
+import { getLinks, getLink } from "@/api/links";
 export default {
   mixins: [myMixin],
   name: "tab-task",
@@ -154,7 +260,28 @@ export default {
       },
       ActiveRow: {},
       DialogType: null,
-      dialogTitle: ""
+      dialogTitle: "",
+      mainTaskShow: false,
+      active: 0,
+      asset_type: null,
+      AssetListTask: null,
+      optionAssetType: null,
+      LinkList: null,
+      multipleSelection: [],
+      picker: {
+        disabledDate: time => {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
+      picker2: {
+        disabledDate: time => {
+          let beginDate = this.TaskForm.datetime[0];
+          let endDate = this.TaskForm.datetime[1];
+          if (beginDate || endDate) {
+            return time.getTime() < beginDate || time.getTime() > endDate;
+          }
+        }
+      }
     };
   },
   filters: {
@@ -181,10 +308,58 @@ export default {
       type: Array
     }
   },
+  watch: {
+    active: {
+      handler: function(newVal, oldVal) {
+        if (newVal === 1 && this.TaskForm.asset) {
+          getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
+            this.LinkList = [...data.msg];
+            //console.log(this.LinkList)
+          });
+        }
+        if (oldVal === 1 && this.TaskForm.link_id) {
+          getLink({ link: this.TaskForm.link_id }).then(({ data }) => {
+            this.TaskForm.content = data.msg.content;
+            getDeptUsers({
+              id: data.msg.dept.id
+            }).then(res => {
+              this.DeptUsers = [...res.data.users];
+            });
+            // console.log(this.TaskForm.content)
+          });
+        }
+      }
+    }
+  },
   methods: {
+    mainTask() {
+      this.mainTaskShow = true;
+      this.active = 0;
+      queryAssets({
+        project: this.$route.params.id,
+        asset_type: this.asset_type
+      }).then(({ data }) => {
+        this.AssetListTask = [...data.msg];
+      });
+      this.TaskForm = {
+        priority: 0,
+        grade: 0
+      };
+    },
+    before() {
+      if (this.active-- < 0) this.active = 0;
+    },
+    next() {
+      if (this.active++ > 2) this.active = 0;
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+
     //行被点击后出发
     rowSelected(row) {
       this.ActiveRow = { ...row };
+      console.log(this.ActiveRow);
     },
     //打开对话框
     openDialog(Type) {
@@ -192,14 +367,17 @@ export default {
       getDeptUsers({
         id: this.ActiveRow.dept
       }).then(res => {
-        this.DeptUsers = [...res.data.users]
+        this.DeptUsers = [...res.data.users];
       });
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
       switch (Type) {
         case 1:
           this.dialogTitle = "创建任务";
           this.TaskForm = {
             priority: 0,
-            grade:0
+            grade: 0
           };
           break;
         case 2:
@@ -210,10 +388,14 @@ export default {
           this.dialogTitle = `创建 ${this.ActiveRow.name} 的子任务`;
           this.TaskForm = {
             priority: 0,
-            grade:0,
+            grade: 0,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
-            link_id: this.ActiveRow.link
+            link_id: this.ActiveRow.link,
+            datetime: [
+              new Date(dateFormat(this.ActiveRow.start_date)),
+              new Date(dateFormat(this.ActiveRow.end_date))
+            ]
           };
           break;
         case 3:
@@ -237,13 +419,13 @@ export default {
             asset: this.ActiveRow.asset.id,
             method: "put"
           };
-          console.log(this.TaskForm,'~~~~~~~~~~~~');
-          
+          console.log(this.TaskForm, "~~~~~~~~~~~~");
+
           delete this.TaskForm.executor;
           delete this.TaskForm.creator;
           delete this.TaskForm.create_time;
           delete this.TaskForm.category;
-          delete this.TaskForm.project
+          delete this.TaskForm.project;
           delete this.TaskForm["sub_task"];
           delete this.TaskForm["link"];
           break;
@@ -302,10 +484,46 @@ export default {
         }
       });
     },
+    //添加主任务
+    editMainTask() {
+      this.$refs["TaskRef"].validate(valid => {
+        if (valid) {
+          function changeDateFormat(dateVal) {
+            return new Date(dateVal).toLocaleDateString();
+            //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+          }
+          let data = {
+            ...this.TaskForm,
+            start_date: changeDateFormat(this.TaskForm.datetime[0]),
+            end_date: changeDateFormat(this.TaskForm.datetime[1]),
+            project: this.$route.params.id
+          };
+          if (this.TaskForm.executorlist.length) {
+            data["executorlist"] = data["executorlist"].join();
+          }
+          //若果是修改
+          HTTP.addTask(data).then(({ data }) => {
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.mainTaskShow = false;
+              this.active = 0;
+              this.getTasks();
+
+              console.log(this.mainTaskShow);
+            }
+          });
+        }
+      });
+    },
     //取消对话框
     cancel() {
       this.isDialogShow = false;
       this.$refs["TaskRef"].resetFields();
+    },
+    cancel2() {
+      this.mainTaskShow = false;
+      this.$refs["TaskRef"].resetFields();
+      this.active = 0;
     },
     //删除任务http请求
     deleteTask() {

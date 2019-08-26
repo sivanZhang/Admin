@@ -89,7 +89,7 @@ export default {
         url:
           "sEzdz3fIXgqc1512572926.mp4",
         videoImage:
-          "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+          "http://localhost:8080/test/demo.jpg"
       };
       if (e) {
         this.selectProjects.push(item);
