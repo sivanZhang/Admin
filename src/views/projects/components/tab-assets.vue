@@ -42,7 +42,6 @@
       <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
       <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
-      <el-table-column prop="path" label="资产路径" align="left"></el-table-column>
       <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
       <el-table-column prop="status" label="状态" align="left"></el-table-column>
@@ -140,9 +139,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="资产类别" prop="category">
-          <el-input v-model="AssetForm.category"></el-input>
-        </el-form-item>
+        
         <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
         </el-form-item>-->
@@ -226,7 +223,7 @@ export default {
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],
         level: [{ required: true, message: "请输入难度等级", trigger: "blur" }],
-        path: [{ required: true, message: "请输入路径", trigger: "blur" }]
+        
       },
       buttonStates: {
         createLoading: false
@@ -245,6 +242,9 @@ export default {
   props: {
     AssetList: {
       type: Array
+    },
+    activeName:{
+      type:String
     }
   },
   methods: {
@@ -299,9 +299,18 @@ export default {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
-          this.AssetForm = Object.assign({}, this.AssetForm, {
-            project: this.$route.params.id
+          if(this.activeName==="tab0"){
+            this.AssetForm = Object.assign({}, this.AssetForm, {
+            project: this.$route.params.id,
+            asset_type:0
           });
+          }else{
+            this.AssetForm = Object.assign({}, this.AssetForm, {
+            project: this.$route.params.id,
+            asset_type:1
+          });
+          }
+          
           HTTP.postAssets(this.AssetForm)
             .then(({ data }) => {
               this.createLoading = false;

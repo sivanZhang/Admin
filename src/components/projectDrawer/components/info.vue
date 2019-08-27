@@ -112,6 +112,27 @@
           <el-col :span="15" class="comment">{{project.category>0?project.category:"未分类"}}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="6" class="comment">资产路径</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
+              <span v-if="!editing4"> {{project.path>0?project.path:"-"}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit4" @click="edit(3)"></i>
+            </div>
+           <div  v-if="editing4">
+              <input
+              type="text"
+              ref="input"        
+              class="input"
+              value="project.path"
+              v-model="path"
+              
+            />
+            <el-button @click="save(3)" type="primary">修改</el-button>
+           </div>
+           
+            </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="6" class="comment">创建人</el-col>
           <el-col :span="15" class="comment">{{project.creator_name}}</el-col>
         </el-row>
@@ -140,12 +161,15 @@ export default {
       editing: false,
       editing2: false,
       editing3: false,
+      editing4:false,
       name: null,
       budget: null,
       charger: null,
+      path:null,
       showEdit: false,
       showEdit2: false,
-      showEdit3: false
+      showEdit3: false,
+      showEdit4:false
     };
   },
   computed: {
@@ -170,6 +194,13 @@ export default {
       if (Type === 2) {
         this.showEdit3 = false;
         this.editing3 = true;
+        this.$nextTick(() => {
+          this.$refs.selete.focus();
+        });
+      }
+      if (Type === 3) {
+        this.showEdit4 = false;
+        this.editing4 = true;
         this.$nextTick(() => {
           this.$refs.selete.focus();
         });
@@ -199,6 +230,24 @@ export default {
           method: "put",
           id: this.project.id,
           charger: this.charger
+        };
+        
+      }
+      if (Type === 2 ) {
+        this.editing3 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          charger: this.charger
+        };
+        
+      }
+      if (Type === 3 ) {
+        this.editing4 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          path: this.path
         };
         
       }

@@ -4,7 +4,7 @@
       <el-row>
         <el-col :span="15">
           <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建主任务</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click.native="openDialog(2)">创建子任务</el-button>
+
           <!-- <el-dropdown>
         <el-button type="primary"  @click.native="openDialog(2)">
           创建
@@ -16,7 +16,7 @@
         </el-dropdown-menu>
           </el-dropdown>-->
           <el-button icon="el-icon-download" type="primary">导入</el-button>
-          <el-button icon="el-icon-edit" type="primary" @click.native="openDialog(3)">修改</el-button>
+
           <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
         </el-col>
         <el-col :span="9" style="text-align:right">
@@ -45,7 +45,7 @@
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
+        <el-table-column label="制作环节" prop="dept_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
@@ -66,6 +66,20 @@
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hour" label="预设时间（小时）" width="125px"></el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+          <el-tooltip effect="dark" content="添加子任务" placement="top">
+            <span>
+              <i type="primary" class="el-icon-plus" style="color:red" @click="openDialog(2,scope.row)"></i>
+            </span>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="修改任务" placement="top">
+            <span style="margin-left:15px">
+              <i class="el-icon-edit" type="primary" style="color:green" @click="openDialog(3,scope.row)"></i>
+            </span>
+          </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
@@ -352,20 +366,26 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      // console.log("多选");
+      // console.log(this.multipleSelection)
     },
 
     //行被点击后出发
     rowSelected(row) {
       this.ActiveRow = { ...row };
-      // console.log(this.ActiveRow);
+      console.log(this.ActiveRow);
     },
     //打开对话框
-    openDialog(Type) {
+    openDialog(Type, row) {
+      this.ActiveRow = {...row};
+      console.log(this.ActiveRow);
+
       this.DialogType = Type;
       getDeptUsers({
-        id: this.ActiveRow.dept
+        id: this.ActiveRow.link_dept
       }).then(res => {
         this.DeptUsers = [...res.data.users];
+        console.log(this.DeptUsers);
       });
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
@@ -388,7 +408,7 @@ export default {
             priority: 0,
             grade: 0,
             pid: this.ActiveRow.id,
-            asset: this.ActiveRow.asset.id,
+            asset: this.ActiveRow.asset,
 
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)),

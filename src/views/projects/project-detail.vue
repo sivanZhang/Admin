@@ -2,10 +2,10 @@
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="镜头" name="tab0">
-        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" />
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" :activeName="activeName"/>
       </el-tab-pane>
       <el-tab-pane label="资产管理" name="tab1">
-        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" />
+        <tab-assets @refresh="getAssetList()" :asset-list="AssetList" @get-tasks="getTaskList" :activeName="activeName"/>
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2">
         <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
