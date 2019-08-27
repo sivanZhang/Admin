@@ -31,3 +31,15 @@ export function uploadAssets(data) {
         timeout: 10000,
     })
 }
+//后端解析excel
+export function parseExcel(data) {
+    return AXIOS.post('/excel/excel/', data, {
+        transformRequest: [data => {
+            return data;
+        }],
+
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}

@@ -16,13 +16,13 @@ import {
 } from '@/utils/auth'
 // create an axios instance
 const AXIOS = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API,
-    timeout: 5000,
-    transformRequest: [data => {
-        return qs.stringify(data);
-    }],
-})
-AXIOS.defaults.headers['Access-Control-Allow-Origin'] = '*'
+        baseURL: process.env.VUE_APP_BASE_API,
+        timeout: 5000,
+        transformRequest: [data => {
+            return qs.stringify(data);
+        }],
+    })
+    /* AXIOS.defaults.headers['Access-Control-Allow-Origin'] = '*' */
 AXIOS.interceptors.request.use(
     config => {
         if (store.getters.token) {

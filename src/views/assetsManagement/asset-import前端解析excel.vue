@@ -1,13 +1,7 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <input
-        class="file_inp"
-        ref="file_inp"
-        accept=".xlsx"
-        type="file"
-        @change="importExcel"
-      />
+      <input class="file_inp" ref="file_inp" accept=".xlsx, .xls ,.csv" type="file" @change="importExcel($event.target)" />
       <el-button
         icon="el-icon-circle-plus"
         type="success"
@@ -72,21 +66,49 @@ export default {
       this.$refs.file_inp.click();
     },
     //导入excel 变异为数组
-    importExcel(e) {
-      if (!e.target.files) {
+    importExcel(obj) {
+      let _self = this;
+      if (!obj.files) {
         return;
       }
-      let file = e.target.files[0]
-      let Fdata = new FormData()
-      Fdata.append('file',file)
-      this.$refs.tableTemplate.openLoading("数据导入中");
-      HTTP.parseExcel(Fdata).then(({data})=>{
+      let file = obj.files[0],
+        types = file.name.split(".")[1],
+        fileType = ["xlsx", "xlc", "xlm", "xls", "xlt", "xlw", "csv"].some(
+          item => item === types
+        );
+      if (!fileType) {
+        this.$message.error("格式错误！请重新选择");
+        return;
+      }
+      _self.testDataJSON=[]
+      _self.$refs.tableTemplate.openLoading("数据导入中");
+      //异步等到解析文件后调用其他方法
+      file2Xce(file).then(tabJson => {
         //这里可判断数据是否为空
-        this.testDataJSON = [...data.msg];
-        this.importAsset();
-        this.uploadDisabled = false;
+        _self.testDataJSON = [...tabJson];
+        _self.importAsset();
+        _self.uploadDisabled = false;
         obj.value = null;//可以重新导入同一个表
-      })
+      });
+      function file2Xce(file) {
+        return new Promise(function(resolve, reject) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            let data = e.target.result;
+            let wb = XLSX.read(data, {
+              type: "binary"
+            });
+            resolve(
+              XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+                header: 1, //二维数组展示
+                raw: false,
+                skipHeader: true,
+              })
+            );
+          };
+          reader.readAsBinaryString(file);
+        });
+      }
     },
     //获得编辑后的数据
     getAsset() {
@@ -105,7 +127,7 @@ export default {
           title: '提交状态',
           message: `资产/镜头创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
           duration: 0,
-          type:'warning'
+          type:'info'
         });
       });
     },
