@@ -45,9 +45,7 @@
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column label="制作环节">
-          <template slot-scope="scope">{{scope.row.content}}</template>
-        </el-table-column>
+        <el-table-column label="制作环节" prop="link_content" show-overflow-tooltip></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
@@ -72,7 +70,7 @@
     </div>
 
     <!-- 主任务创建 -->
-    <el-dialog title="主任务创建" :visible.sync="mainTaskShow" width="490px" ref="mainTask" >
+    <el-dialog title="主任务创建" :visible.sync="mainTaskShow" width="490px" ref="mainTask">
       <el-steps :active="active" finish-status="success">
         <el-step title="所属资产"></el-step>
         <el-step title="所属环节"></el-step>
@@ -359,7 +357,7 @@ export default {
     //行被点击后出发
     rowSelected(row) {
       this.ActiveRow = { ...row };
-      console.log(this.ActiveRow);
+      // console.log(this.ActiveRow);
     },
     //打开对话框
     openDialog(Type) {
@@ -391,7 +389,7 @@ export default {
             grade: 0,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
-            link_id: this.ActiveRow.link,
+
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)),
               new Date(dateFormat(this.ActiveRow.end_date))
@@ -419,7 +417,7 @@ export default {
             asset: this.ActiveRow.asset.id,
             method: "put"
           };
-          console.log(this.TaskForm, "~~~~~~~~~~~~");
+          // console.log(this.TaskForm, "~~~~~~~~~~~~");
 
           delete this.TaskForm.executor;
           delete this.TaskForm.creator;
@@ -427,7 +425,7 @@ export default {
           delete this.TaskForm.category;
           delete this.TaskForm.project;
           delete this.TaskForm["sub_task"];
-          delete this.TaskForm["link"];
+
           break;
       }
       this.isDialogShow = true;
@@ -447,6 +445,7 @@ export default {
             end_date: changeDateFormat(this.TaskForm.datetime[1]),
             project: this.$route.params.id
           };
+          // console.log(data);
           if (this.TaskForm.executorlist.length) {
             data["executorlist"] = data["executorlist"].join();
           }
@@ -509,7 +508,7 @@ export default {
               this.active = 0;
               this.getTasks();
 
-              console.log(this.mainTaskShow);
+              // console.log(this.mainTaskShow);
             }
           });
         }
