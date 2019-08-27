@@ -14,7 +14,7 @@
       @select="taskSelect"
       @select-all="taskSelect"
     >
-      <el-table-column type="selection" width="50" align="center"></el-table-column>
+      <el-table-column type="selection" width="60" align="center"></el-table-column>
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
       <el-table-column prop="task.name" label="任务名称"></el-table-column>

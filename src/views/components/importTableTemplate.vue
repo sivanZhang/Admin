@@ -174,24 +174,22 @@ export default {
       let deptLabel;
       function changeList(arr) {
         for (const item of arr) {
-          if (item.value == _self.tempDept[_self.tempDept.length-1]){
-            deptLabel = item.label
-          }else if (item["children"] && item["children"].length) {
+          if (item.value == _self.tempDept[_self.tempDept.length - 1]) {
+            deptLabel = item.label;
+          } else if (item["children"] && item["children"].length) {
             changeList(item["children"]);
           }
-          
         }
       }
-      changeList(this.SelectDept)
+      changeList(this.SelectDept);
       //this.selectCurrentCol点击的列的信息   label是选中列的lable为了截取ABCD.....
       let label = this.tableCols[this.selectCurrentCol.index].label;
       this.tableCols[this.selectCurrentCol.index].label =
         //大写英文字母 + 传过来的中文字段
-        label.split(",")[0] + "," +'['+deptLabel+']'+lastLabel;
+        label.split(",")[0] + "," + "[" + deptLabel + "]" + lastLabel;
       this.tableCols[this.selectCurrentCol.index].name = value;
       //缓存已选择的 keys
       this.hasBindLinkKey[this.selectCurrentCol.index] = value;
-
       //添加到将要提交的links数组
 
       /* let tempKeyIndexs = [];
@@ -200,9 +198,10 @@ export default {
             tempKeyIndexs.push(i);
           }
         } */
-      let tempKeyIndexs = [];
+      let tempKeyIndexs = []; 
       _self.hasBindLinkKey.forEach((t, i) => {
-        t && tempKeyIndexs.push(i);
+        t && (tempKeyIndexs.push(i));
+        console.log('tempKeyIndexs',tempKeyIndexs);
       });
       _self.tableData.forEach((t, i) => {
         if (!_self.LinkList[i]) {
@@ -212,7 +211,7 @@ export default {
           let linkIndex;
           let bl;
           _self.LinkList[i].forEach((lt, li) => {
-            if (lt.dept === _self.tempDept[_self.tempDept.length-1]) {
+            if (lt.dept === _self.tempDept[_self.tempDept.length - 1]) {
               linkIndex = li;
               bl = true;
             } else {
@@ -225,13 +224,13 @@ export default {
               {},
               _self.LinkList[i][linkIndex],
               {
-                [value]: t["node" + j]
+                [value]: t["node" + e]
               }
             );
           } else {
             _self.LinkList[i].push({
-              dept: _self.tempDept[_self.tempDept.length-1],
-              [value]: t["node" + j]
+              dept: _self.tempDept[_self.tempDept.length - 1],
+              [value]: t["node" + e]
             });
           }
         });
@@ -312,8 +311,6 @@ export default {
        */
       let tempKeyIndexs = [];
       let bindKeys = [];
-      console.log(this.hasBindKey);
-      
       for (let i = 0; i < this.hasBindKey.length; i++) {
         if (this.hasBindKey[i]) {
           bindKeys.push(this.hasBindKey[i]);
@@ -325,7 +322,7 @@ export default {
         let value = [];
         let tableRowData = this.tableData[i];
         for (let j = 0; j < tempKeyIndexs.length; j++) {
-          value.push(tableRowData["node" + j]);
+          value.push(tableRowData["node" + tempKeyIndexs[j]]);
         }
         values.push(value);
       }
@@ -361,7 +358,7 @@ export default {
           //表头数据添加
           this.tableCols.push(label);
         }
-        console.log('this.tableCols',this.tableCols);
+        console.log("this.tableCols", this.tableCols);
         this.isShowOptionBar = true;
         //开始组装数据
         this.getTableData();
@@ -383,8 +380,8 @@ export default {
         data.isEdit = false;
         this.tableData.push(data);
       }
-      console.log('this.tableData',this.tableData);
-      
+      console.log("this.tableData", this.tableData);
+
       this.tableLoading = false;
     },
     /**
@@ -400,6 +397,7 @@ export default {
         this.tableCols[this.selectCurrentCol.index].name = value;
         //缓存已选择的 keys
         this.hasBindKey[this.selectCurrentCol.index] = value;
+        
         this.dialogVisible = false;
       } else {
         this.$message.error("改字段已有绑定过");
@@ -456,8 +454,7 @@ export default {
                     if (_self.tableCols[column.index]) {
                       _self.selectCurrentCol = column;
                       _self.dialogVisible = true;
-                      _self.selectLinkDetail= null,
-                      _self.selectKey = "";
+                      (_self.selectLinkDetail = null), (_self.selectKey = "");
                     }
                   }
                 }
@@ -474,8 +471,7 @@ export default {
                     if (_self.tableCols[column.index]) {
                       _self.selectCurrentCol = column;
                       _self.dialogVisible = true;
-                      _self.selectLinkDetail= null,
-                      _self.selectKey = "";
+                      (_self.selectLinkDetail = null), (_self.selectKey = "");
                     }
                   }
                 }

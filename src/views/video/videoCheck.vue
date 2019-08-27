@@ -49,7 +49,7 @@
                     </el-radio-group>
                     <div class="fr">
                       <el-button class="btn cancel-btn">取消</el-button>
-                      <el-button type="primary" class="btn add-btn" @click="commitApprove">提交</el-button>
+                      <el-button type="primary" class="btn add-btn" @click="commitApprove" v-loading="submitLoading">提交</el-button>
                     </div>
                   </div>
                 </div>
@@ -87,9 +87,9 @@ export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },
   data() {
     return {
-      Active: {},
+      submitLoading:false,//提交按钮是否显示加载状态
       approve_result: 0,
-      imgList: [],
+      imgList: [],//  视频截图列表
       zoomImgUrl: "",
       activeTab: "first",
       demoImg: demoImg,
@@ -115,7 +115,16 @@ export default {
       bH - (videoInfoH + videoTabsH + 20 + 20 + 94) + "px";
   },
   methods: {
-    async commitApprove() {
+    commitApprove() {
+      console.log('this.submitList',this.submitList);
+      
+      if (!this.submitList.length) {
+        this.$message.warning('请选择镜头')
+        return false
+      }else if(!this.markText){
+        this.$message.warning('请添加备注')
+        return false
+      }
       let submitFn = [];
       this.submitList.forEach((t, i, arr) => {
         let data = {
@@ -123,11 +132,11 @@ export default {
           project_id: t.project.id,
           link_id: t.task.link,
           approve_result: this.approve_result,
-          suggestion: this.markText
+          suggestion: this.markText,
+          key:[]
         };
-        this.imgList.forEach(async k => {
+        this.imgList.forEach(k => {
           if (k.asset === t.asset.asset) {
-            data.key = [];
             data["key"].push({
               image: k.imgUrl,
               frame: k.currentFrame
@@ -135,7 +144,7 @@ export default {
           }
         });
         postApprove(data).then(res => {
-          this.$message(t.asset.name + res.data.msg);
+          this.$message(t.asset.name +' '+ res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
             {
               this.imgList = [];
@@ -157,7 +166,6 @@ export default {
           this.pWidth,
           this.pHeight
         );
-        console.log(projectLists[index], "projectLists[index]");
         this.$refs.videoPlayer.initNextVideo(index, projectList);
         this.$refs.videoInfo.initInfo(projectLists[index]);
         this.$refs.videoComment.initInfo(projectList[0].id);
@@ -174,15 +182,12 @@ export default {
         document.getElementById("videoComment").style.height =
           bH - (videoInfoH + videoTabsH + 20 + 20 + 53) + "px";
       }
-      console.log("this.imgList", this.imgList);
     },
     delMarkImage(data, index) {
-      console.log(index);
       this.imgList.splice(index, 1);
       let bH = document.body.offsetHeight;
       let videoInfoH = document.getElementById("videoInfo").offsetHeight;
       let videoTabsH = document.getElementById("videoTabs").offsetHeight;
-      console.log(videoTabsH);
       if (this.imgList.length > 0) {
         if (bH - (videoInfoH + videoTabsH + 20 + 20 - 82) <= 0) {
           document.getElementById("videoComment").style.height = 0 + "px;";
@@ -208,10 +213,10 @@ export default {
     //传递 获取视频是否属于编辑中
     getCurrentVideoMode(mode) {
       this.currentVideoIsEdit = !mode;
-      console.log("currentVideoIsEdit", this.currentVideoIsEdit);
+      // console.log("currentVideoIsEdit", this.currentVideoIsEdit);
     },
     getCurrentPlayId(resAsset) {
-      console.log("resAsset", resAsset);
+      // console.log("resAsset", resAsset);
       /* this.$refs.videoList.getCurrentPlayId(id); */
     }
   }

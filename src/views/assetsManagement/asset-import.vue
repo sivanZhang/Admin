@@ -1,7 +1,7 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <input class="file_inp" ref="file_inp" type="file" @change="importExcel($event.target)" />
+      <input class="file_inp" ref="file_inp" accept=".xlsx, .xls ,.csv" type="file" @change="importExcel($event.target)" />
       <el-button
         icon="el-icon-circle-plus"
         type="success"
