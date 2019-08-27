@@ -45,7 +45,7 @@
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column label="制作环节" prop="link_content" show-overflow-tooltip></el-table-column>
+        <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
