@@ -378,7 +378,7 @@ export default {
     //打开对话框
     openDialog(Type, row) {
       this.ActiveRow = {...row};
-      console.log(this.ActiveRow);
+     // console.log(this.ActiveRow);
 
       this.DialogType = Type;
       getDeptUsers({
@@ -475,28 +475,29 @@ export default {
             HTTP.putTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                this.$message.success(data.msg);
+                this.$message.success("已修改");
+                this.isDialogShow = false;
                 if (data.status === 0) {
                   this.getTasks();
-                  this.isDialogShow = false;
+                  
                 }
               })
               .catch(err => {
                 this.buttonStates.createLoading = false;
               });
           } else {
+            console.log(data);
             HTTP.addTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                this.$message.success(data.msg);
+                this.$message.success("已完成");
+                
                 if (data.status === 0) {
                   this.getTasks();
                   this.isDialogShow = false;
                 }
               })
-              .catch(err => {
-                this.buttonStates.createLoading = false;
-              });
+              
           }
         } else {
           return false;

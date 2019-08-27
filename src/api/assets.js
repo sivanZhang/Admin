@@ -19,6 +19,10 @@ export function queryAssets(params) {
         params
     })
 }
+//修改资产
+export function editAssets(data){
+    return AXIOS.post('/assets/assets/?put',data)
+}
 //导入资产列表
 export function uploadAssets(data) {
     return AXIOS.post('/assets/batch/', data, {

@@ -152,6 +152,7 @@
 <script>
 import { putProjects } from "@/api/project";
 import {getUsersRole} from "@/api/admin";
+import {editAssets} from "@/api/assets"
 import { mapState } from "vuex";
 export default {
   props: ["project"],
@@ -233,15 +234,6 @@ export default {
         };
         
       }
-      if (Type === 2 ) {
-        this.editing3 = false;
-        data = {
-          method: "put",
-          id: this.project.id,
-          charger: this.charger
-        };
-        
-      }
       if (Type === 3 ) {
         this.editing4 = false;
         data = {
@@ -249,7 +241,13 @@ export default {
           id: this.project.id,
           path: this.path
         };
-        
+        editAssets(data).then(({data})=>{
+          this.$message.success(data.msg);
+          if(data.status===0){
+            this.project.path=this.path;
+            this.path=null
+          }
+        })
       }
 
       putProjects(data).then(({ data }) => {
