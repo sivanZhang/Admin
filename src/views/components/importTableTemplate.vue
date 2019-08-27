@@ -198,10 +198,10 @@ export default {
             tempKeyIndexs.push(i);
           }
         } */
-      let tempKeyIndexs = []; 
+      let tempKeyIndexs = [];
       _self.hasBindLinkKey.forEach((t, i) => {
-        t && (tempKeyIndexs.push(i));
-        console.log('tempKeyIndexs',tempKeyIndexs);
+        t && tempKeyIndexs.push(i);
+        console.log("tempKeyIndexs", tempKeyIndexs);
       });
       _self.tableData.forEach((t, i) => {
         if (!_self.LinkList[i]) {
@@ -326,10 +326,13 @@ export default {
         }
         values.push(value);
       }
-      bindKeys.push("links");
-      values.forEach((item, index) => {
-        item.push(this.LinkList[index]);
-      });
+      //如果有绑定环节     把传递的数据加Link字段  并且把环节数组对象放到每一列中
+      if (this.LinkList[0].length) {
+        bindKeys.push("links");
+        values.forEach((item, index) => {
+          item.push(this.LinkList[index]);
+        });
+      }
       this.assemblingData.keys = bindKeys;
       this.assemblingData.values = values;
       this.$emit("returnAssemblingData", this.assemblingData);
@@ -397,7 +400,7 @@ export default {
         this.tableCols[this.selectCurrentCol.index].name = value;
         //缓存已选择的 keys
         this.hasBindKey[this.selectCurrentCol.index] = value;
-        
+
         this.dialogVisible = false;
       } else {
         this.$message.error("改字段已有绑定过");
