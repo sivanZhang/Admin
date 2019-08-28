@@ -5,6 +5,7 @@
   "author": "Pan <panfree23@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "start": "webapck-devserver --hot",
     "dev": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
@@ -29,6 +30,7 @@
     "path-to-regexp": "3.0.0",
     "qs": "^6.7.0",
     "screenfull": "^4.2.0",
+    "true-case-path": "^2.2.1",
     "video-capture": "^1.0.2",
     "video.js": "^7.6.0",
     "vue": "2.6.10",

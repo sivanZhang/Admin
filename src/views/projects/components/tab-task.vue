@@ -355,7 +355,7 @@ export default {
       });
       this.TaskForm = {
         priority: 0,
-        grade: 0
+        grade: 1
       };
     },
     before() {
