@@ -142,6 +142,8 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
+            end_date:null,
+            time:Date.parse(new Date())
         };
     },
     methods: {
@@ -231,7 +233,8 @@ export default {
         },
         addRecord() {
             this.createLoading = true;
-            addTaskRecord(this.TaskRecord)
+            if(this.end_date>=this.time){
+                addTaskRecord(this.TaskRecord)
                 .then(res => {
                     if (res.data.status === 0) {
                         this.$message.success(res.data.msg);
@@ -245,10 +248,24 @@ export default {
                 .catch(err => {
                     this.createLoading = false;
                 });
-        },
+            }else{
+                this.$alert('此任务已超期，禁止提交执行记录。', '警告', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                      this.$message({
+                        type: 'info',
+                        message: `action: ${ action }`
+                      });
+                    }
+                  }); 
+                  this.createLoading = false;          
+        }
+    },
         //是否显示任务板右侧
         taskBoardRightShow(row) {
-            this.isDrawerShow = true
+            this.isDrawerShow = true;
+            this.end_date=row.end_date;
+            console.log(row);
             this.TaskRecord = Object.assign({}, {
                 task_id: row.id,
                 type: 0
@@ -285,10 +302,10 @@ export default {
             }).then(({
                 data
             }) => {
-                [...data.msg].forEach(item => {
-                        this.MyTaskList.push(item.task)
-                    })
-                    /* this.MyTaskList = [...data.msg]; */
+                // [...data.msg].forEach(item => {
+                //         this.MyTaskList.push(item.task)
+                //     })
+                    this.MyTaskList = [...data.msg]; 
                 this.resetTasks()
             });
 
@@ -300,21 +317,21 @@ export default {
             this.TimeOutArr = []
             this.PauseArr = []
             this.MyTaskList.forEach(item => {
-                switch (item.status) {
+                switch (item.task.status) {
                     case 0:
-                        this.DraftArr.push(item);
+                        this.DraftArr.push(item.task);
                         break;
                     case 1:
-                        this.InProgressArr.push(item);
+                        this.InProgressArr.push(item.task);
                         break;
                     case 2:
-                        this.FinishedArr.push(item);
+                        this.FinishedArr.push(item.task);
                         break;
                     case 3:
-                        this.TimeOutArr.push(item);
+                        this.TimeOutArr.push(item.task);
                         break;
                     case 4:
-                        this.PauseArr.push(item);
+                        this.PauseArr.push(item.task);
                         break;
                 }
             });

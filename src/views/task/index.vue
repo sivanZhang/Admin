@@ -302,9 +302,11 @@
           border
         >
           <el-table-column type="index" label="序号" align="center" width="80"></el-table-column>
-          <el-table-column prop="id" label="ID"></el-table-column>
-          <el-table-column prop="name" label="任务名称"></el-table-column>
-          <el-table-column prop="content" label="任务内容"></el-table-column>
+          <el-table-column prop="task.id" label="ID"></el-table-column>
+          <el-table-column prop="project.name" label="项目"></el-table-column>
+          <el-table-column prop="asset.name" label="镜头"></el-table-column>
+          <el-table-column prop="task.name" label="任务名称"></el-table-column>
+          <el-table-column prop="task.content" label="任务内容"></el-table-column>
           <el-table-column label="任务状态">
             <template slot-scope="scope">
               <!-- <div class="status">
@@ -313,7 +315,7 @@
               </div>
               -->
               <el-select
-                :value="scope.row.status"
+                :value="scope.row.task.status"
                 placeholder="请选择"
                 @change="statusChange($event,scope.row)"
                 class="my-select"
@@ -328,13 +330,17 @@
             </template>
           </el-table-column>
           <el-table-column label="优先级">
-            <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
+            <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
+          </el-table-column>
+          
+          <el-table-column label="创建日期">
+            <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
           </el-table-column>
           <el-table-column label="开始日期">
-            <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
+            <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
           </el-table-column>
           <el-table-column prop="end_date" label="截止日期">
-            <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+            <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
           </el-table-column>
           <el-table-column prop="total_hour" label="预设时间（小时）"></el-table-column>
         </el-table>

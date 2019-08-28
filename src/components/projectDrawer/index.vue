@@ -17,6 +17,12 @@
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
           </el-tab-pane>
+          <el-tab-pane label="参与工种" name="seventh">
+           <router-link :to="`/projects/project-detail/${project.id}`">
+            <el-button type="primary" icon="el-icon-edit">编辑参与工种</el-button>
+           </router-link> 
+              <el-col style="padding:10px" v-for="(item,index) of project.depts" :key="index">{{item.name}}</el-col>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>

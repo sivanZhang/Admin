@@ -8,7 +8,7 @@
             style="border-right:1px solid #ddd;padding:0 5px;margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
-              <el-button @click="openRoleForm('add')" type="success">添加角色</el-button>
+              <el-button @click="openRoleForm('add')" type="success" v-if="$store.state.login.userInfo.auth.manage_role">添加角色</el-button>
             </el-row>
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
             <el-row v-for="(todo,index) of roleList" :key="index" class="role-list" align="center">
@@ -26,10 +26,10 @@
                 <span style="font-weight:500">{{name}}</span>角色的用户有：
               </el-col>
               <el-col :span="3">
-                <el-button type="primary" @click="isShowDialog = true">绑定用户</el-button>
+                <el-button type="primary" @click="isShowDialog = true" v-if="$store.state.login.userInfo.auth.manage_role">绑定用户</el-button>
               </el-col>
               <el-col :span="3">
-                <el-button type="danger" @click="isShowDialog2 = true">解绑用户</el-button>
+                <el-button type="danger" @click="isShowDialog2 = true" v-if="$store.state.login.userInfo.auth.manage_role">解绑用户</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -46,6 +46,7 @@
                   :disabled="this.addMultipleSelection.length === 0"
                   style="margin:5px 0px"
                   @click="addRolePermissions"
+                  v-if="$store.state.login.userInfo.auth.manage_role"
                 >批量添加</el-button>
                 <div style="width:220px;padding-left:15px">
                   <input class="input-remarks" placeholder="在此输入筛选条件..." v-model=" optionInput" />
@@ -92,6 +93,7 @@
                 :disabled="this.delMultipleSelection.length === 0"
                 style="margin:5px 0px"
                 @click="delRolePermissions"
+                v-if="$store.state.login.userInfo.auth.manage_role"
               >批量删除</el-button>
               <el-table
                 :data="userPermissionsList"
@@ -120,7 +122,7 @@
             label-position="left"
           >
             <el-form-item label="用户名称" prop="rolename">
-              <el-select v-model="roleAdd.rolename" filterable  multiple placeholder="请选择用户">
+              <el-select v-model="roleAdd.rolename" filterable  multiple placeholder="请选择用户" >
                 <el-option
                   v-for="(item,index) of UserList"
                   :key="index"
@@ -130,7 +132,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" align="right" @click="addUser">立即绑定</el-button>
+              <el-button type="primary" align="right" @click="addUser" >立即绑定</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>

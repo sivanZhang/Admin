@@ -45,7 +45,7 @@
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务"></el-table-column>
-        <el-table-column label="制作环节" prop="dept_name" show-overflow-tooltip></el-table-column>
+        <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
@@ -477,11 +477,14 @@ export default {
             HTTP.putTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                this.$message.success("已修改");
-                this.isDialogShow = false;
+                
                 if (data.status === 0) {
                   this.getTasks();
-                  
+                  this.$message.success("已修改");
+                this.isDialogShow = false;
+                }else{
+                  this.$message.error(data.msg);
+                  this.buttonStates.createLoading = false;
                 }
               })
               .catch(err => {
@@ -492,11 +495,13 @@ export default {
             HTTP.addTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                this.$message.success("已完成");
-                
                 if (data.status === 0) {
                   this.getTasks();
                   this.isDialogShow = false;
+                  this.$message.success("已完成");
+                }else{
+                  this.$message.error(data.msg);
+                  this.buttonStates.createLoading = false;
                 }
               })
               
