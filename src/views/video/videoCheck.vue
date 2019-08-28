@@ -81,7 +81,7 @@ import VideoInfo from "@/views/components/videoInfo";
 import VideoComment from "@/views/components/videoComment";
 import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
-import { postApprove } from "@/api/video";
+import { postApprove,getApproveRemark } from "@/api/video";
 import AXIOS from "@/utils/request";
 export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },

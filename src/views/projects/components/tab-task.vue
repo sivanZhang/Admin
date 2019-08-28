@@ -93,7 +93,7 @@
       <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <div v-if="active == 0" style="padding-top:10px">
           <el-form-item label="所属资产">
-            <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
+            <el-select v-model="TaskForm.asset" filterable  placeholder="请选择所属资产">
               <el-option
                 v-for="item of AssetListTask"
                 :label="item.name"
@@ -105,7 +105,7 @@
         </div>
         <div v-if="active==1" style="padding-top:10px">
           <el-form-item label="所属环节">
-            <el-select v-model="TaskForm.link_id" placeholder="请选择所属环节">
+            <el-select v-model="TaskForm.link_id" filterable  placeholder="请选择所属环节">
               <el-option
                 v-for="item of LinkList"
                 :label="item[0].dept.name"
@@ -134,7 +134,7 @@
             <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
           </el-form-item>
           <el-form-item label="任务状态" prop="status">
-            <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
+            <el-select v-model="TaskForm.status" filterable  placeholder="请选择任务状态">
               <el-option
                 v-for="item of StatusList"
                 :label="item.label"
@@ -144,7 +144,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="任务执行人" prop="executorlist">
-            <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
+            <el-select v-model="TaskForm.executorlist" filterable  multiple placeholder="请选择任务执行人">
               <el-option
                 v-for="item of DeptUsers"
                 :label="item.username"
@@ -198,7 +198,7 @@
           <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
-          <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
+          <el-select v-model="TaskForm.status" filterable  placeholder="请选择任务状态">
             <el-option
               v-for="item of StatusList"
               :label="item.label"
@@ -208,7 +208,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择任务执行人">
+          <el-select v-model="TaskForm.executorlist" filterable  multiple placeholder="请选择任务执行人">
             <el-option
               v-for="item of DeptUsers"
               :label="item.username"
@@ -219,7 +219,7 @@
         </el-form-item>
 
         <el-form-item label="所属资产">
-          <el-select v-model="TaskForm.asset" placeholder="请选择所属资产">
+          <el-select v-model="TaskForm.asset" filterable  placeholder="请选择所属资产">
             <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>

@@ -173,7 +173,7 @@
           <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
-          <el-select v-model="TaskForm.status" placeholder="请选择任务状态">
+          <el-select v-model="TaskForm.status" filterable  placeholder="请选择任务状态">
             <el-option
               v-for="item of StatusList"
               :label="item.label"
@@ -183,7 +183,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" multiple placeholder="请选择执行人">
+          <el-select v-model="TaskForm.executorlist" filterable  multiple placeholder="请选择执行人">
             <el-option
               v-for="item of DeptUsers"
               :label="item.username"
