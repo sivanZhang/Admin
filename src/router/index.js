@@ -274,14 +274,32 @@ export const constantRoutes = [{
                     title: '我的信息',
                     icon: 'user'
                 },
-            },
-            {
-                path: '/404',
-                component: () =>
-                    import ('@/views/404'),
-                hidden: true
             }
         ]
+    },
+    {
+        path: '/settings',
+        component: Layout,
+        redirect: '/settings',
+        meta: {
+            title: '系统设置',
+            icon: 'task'
+        },
+        children: [{
+            path: 'settings',
+            name: 'settings',
+            component: () =>
+                import ('@/views/settings/settings'),
+            meta: {
+                title: '系统设置',
+                icon: 'task'
+            }
+        }, ]
+    }, {
+        path: '/404',
+        component: () =>
+            import ('@/views/404'),
+        hidden: true
     }
 ]
 const createRouter = () => new Router({

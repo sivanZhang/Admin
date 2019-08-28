@@ -83,6 +83,8 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item) {
+      console.log(item);
+      
       item = {
         ...item,
         time: "02:33",
@@ -95,7 +97,7 @@ export default {
         this.selectProjects.push(item);
       } else {
         this.selectProjects = this.selectProjects.filter(t => {
-          return t.task.id !== item.task.id;
+          return t.asset.asset !== item.asset.asset;
         });
       }
     },
