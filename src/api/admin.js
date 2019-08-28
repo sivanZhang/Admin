@@ -64,7 +64,10 @@ export function getRoles() {
 export function getUsersRole(params) {
     return AXIOS.get('/role/role/', { params })
 }
-
+//获取客户角色列表
+export function getClientList(params){
+    return AXIOS.get('/users/list/?client',{params})
+}
 //添加角色
 export function addRole(data) {
     return AXIOS.post('/role/role/', data)

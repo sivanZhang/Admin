@@ -95,7 +95,20 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">客户信息</el-col>
-          <el-col :span="15" class="comment">{{project.client.client_name}}</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit5=true" @mouseleave="showEdit5 = false">
+              <span v-if="!editing5"> {{project.client.client_name}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit5" @click="edit(4)"></i>
+            </div>
+           <div  v-if="editing5">
+              <el-select v-model="client" placeholder="请选择" ref="selete">
+                <el-option v-for="item of clientList" :key="item.id" :label="item.username" :value="item.id" >
+
+                </el-option>
+              </el-select>
+            <el-button @click="save(4)" type="primary">修改</el-button>
+           </div>
+            </el-col>
         </el-row>
       </div>
     </template>
@@ -150,7 +163,7 @@
 
 <script>
 import { putProjects } from "@/api/project";
-import {getUsersRole} from "@/api/admin";
+import {getClientList} from "@/api/admin";
 import {editAssets} from "@/api/assets"
 import { mapState } from "vuex";
 export default {
@@ -162,18 +175,25 @@ export default {
       editing2: false,
       editing3: false,
       editing4:false,
+      editing5:false,
       name: null,
       budget: null,
       charger: null,
       path:null,
+      client:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
-      showEdit4:false
+      showEdit4:false,
+      showEdit5:false,
+      clientList:null
     };
   },
   computed: {
     ...mapState("admin", ["UserList"])
+  },
+  created(){
+    
   },
   methods: {
     edit(Type) {
@@ -204,6 +224,17 @@ export default {
         this.$nextTick(() => {
           this.$refs.selete.focus();
         });
+      }
+      if (Type === 4) {
+        this.showEdit5 = false;
+        this.editing5 = true;
+        this.$nextTick(() => {
+          this.$refs.selete.focus();
+        });
+        getClientList().then(({data})=>{
+      this.clientList = data;
+      console.log(this.clientList)
+    })
       }
     },
     save(Type, item) {

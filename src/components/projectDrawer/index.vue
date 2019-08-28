@@ -18,10 +18,7 @@
             <info :project="project" />
           </el-tab-pane>
           <el-tab-pane label="参与工种" name="seventh">
-           <router-link :to="`/projects/project-detail/${project.id}`">
-            <el-button type="primary" icon="el-icon-edit">编辑参与工种</el-button>
-           </router-link> 
-              <el-col style="padding:10px" v-for="(item,index) of project.depts" :key="index">{{item.name}}</el-col>
+           <joinDept :project="project"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -34,6 +31,7 @@ import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 import assets from "@/components/projectDrawer/components/assets"
 import task from "@/components/projectDrawer/components/task"
+import joinDept from "@/components/projectDrawer/components/joinDept"
 export default {
   props: [
     "project",
@@ -48,7 +46,7 @@ export default {
     };
   },
   name: "projectDrawer",
-  components: { remarks, info, assets, task},
+  components: { remarks, info, assets, task,joinDept},
   // watch: {
   //   project: {
   //     handler: function(newVal, oldVal) {
