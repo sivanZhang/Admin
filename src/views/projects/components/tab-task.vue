@@ -395,7 +395,7 @@ export default {
           this.dialogTitle = "创建任务";
           this.TaskForm = {
             priority: 0,
-            grade: 0
+            grade: 1
           };
           break;
         case 2:
@@ -406,7 +406,7 @@ export default {
           this.dialogTitle = `创建 ${this.ActiveRow.name} 的子任务`;
           this.TaskForm = {
             priority: 0,
-            grade: 0,
+            grade: 1,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset,
 
@@ -428,6 +428,8 @@ export default {
           this.dialogTitle = "修改任务";
           this.TaskForm = {
             ...this.ActiveRow,
+            priority: 0,
+            grade: 1,
             datetime: [
               new Date(this.ActiveRow.start_date * 1000),
               new Date(this.ActiveRow.end_date * 1000)
