@@ -120,7 +120,7 @@
             label-position="left"
           >
             <el-form-item label="用户名称" prop="rolename">
-              <el-select v-model="roleAdd.rolename" multiple placeholder="请选择用户">
+              <el-select v-model="roleAdd.rolename" filterable  multiple placeholder="请选择用户">
                 <el-option
                   v-for="(item,index) of UserList"
                   :key="index"

@@ -63,7 +63,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="负责人" prop="region">
-        <el-select v-model="ProjectForm.chargerid" placeholder="请选择负责人">
+        <el-select v-model="ProjectForm.chargerid" filterable  placeholder="请选择负责人">
           <el-option
             v-for="item of UserList"
             :label="item.username"

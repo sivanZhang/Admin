@@ -33,7 +33,7 @@
       required: true, message: '审批角色不能为空', trigger: 'blur'
     }"
         >
-          <el-select v-model="domain.value" placeholder="请选择">
+          <el-select v-model="domain.value" filterable  placeholder="请选择">
             <el-option
               v-for="(item,index) in rolesList"
               :key="index"
@@ -61,7 +61,7 @@
           
           
         >
-          <el-select v-model="item.value" placeholder="请选择" @change="rolesListChange">
+          <el-select v-model="item.value" filterable  placeholder="请选择" @change="rolesListChange">
             <el-option
               v-for="(todo,index) in rolesList"
               :key="index"

@@ -21,3 +21,7 @@ export function getApprove(params = null) {
 export function postApprove(data) {
     return AXIOS.post('/approve/approve/', data)
 }
+//获取审核备注列表/approve/approve/
+export function getApproveRemark(params) {
+    return AXIOS.get('/approve/approve/', { params })
+}

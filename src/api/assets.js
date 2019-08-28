@@ -20,8 +20,8 @@ export function queryAssets(params) {
     })
 }
 //修改资产
-export function editAssets(data){
-    return AXIOS.post('/assets/assets/?put',data)
+export function editAssets(data) {
+    return AXIOS.post('/assets/assets/?put', data)
 }
 //导入资产列表
 export function uploadAssets(data) {
@@ -44,6 +44,7 @@ export function parseExcel(data) {
 
         headers: {
             'Content-Type': 'multipart/form-data'
-        }
+        },
+        timeout: 0
     })
 }

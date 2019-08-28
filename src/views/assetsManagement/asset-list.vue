@@ -108,7 +108,7 @@
           <el-input v-model="AssetForm['outer_version']"></el-input>
         </el-form-item>
         <el-form-item label="所属项目" prop="project">
-          <el-select v-model="AssetForm.project" placeholder="请选择所属项目">
+          <el-select filterable  v-model="AssetForm.project" placeholder="请选择所属项目">
             <el-option v-for="item of ProjectList" :key="item" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

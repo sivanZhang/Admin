@@ -69,13 +69,12 @@
               <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit3" @click="edit(2)"></i>
             </div>
             <div v-if="editing3">
-              <el-select v-model="charger" placeholder="请选择负责人" ref="selete">
+              <el-select v-model="charger" filterable placeholder="请选择负责人" ref="selete">
                 <el-option
                   v-for="item of UserList"
                   :label="item.username"
                   :value="item.id"
                   :key="item.id"
-                  
                 ></el-option>
               </el-select>
               <el-button @click="save(2)" type="primary">修改</el-button>
