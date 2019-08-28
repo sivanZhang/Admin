@@ -23,7 +23,7 @@
             </el-row>
             <el-row style="padding-top:10px">
               <el-col :span="4" align="right">工种：</el-col>
-              <el-col :span="20">{{loginMessage}}</el-col>
+              <el-col :span="20">{{loginMessage.dept}}</el-col>
             </el-row>
           </el-col>
         </el-row>
