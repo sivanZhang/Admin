@@ -77,7 +77,17 @@ export const asyncRoutes = [{
                     title: '我的信息',
                     icon: 'user'
                 },
-            }
+            },
+            {
+                path: '/check-video',
+                name: 'check-video',
+                component: () =>
+                    import ('@/views/video/videoCheck'),
+                meta: {
+                    title: '审核意见',
+                    icon: 'v2'
+                }
+            },
         ]
     }, {
         path: '/admin',
@@ -172,15 +182,6 @@ export const constantRoutes = [{
         path: '/signup',
         component: () =>
             import ('@/views/login/signup'),
-    }, {
-        path: '/check-video',
-        name: 'check-video',
-        component: () =>
-            import ('@/views/video/videoCheck'),
-        meta: {
-            title: '审核意见',
-            icon: 'v2'
-        },
     },
     {
         path: '/',
