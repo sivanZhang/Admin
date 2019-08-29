@@ -32,14 +32,16 @@
             align="center"
           >
             <template slot-scope="scope">
+              
               <el-input
-                v-if="scope.row.isEdit"
+                v-if="scope.row.isEdit  && index!=0"
                 size="small"
                 v-model="scope.row[col.prop]"
                 placeholder="请输入内容"
                 v-on:blur="inputblur"
               ></el-input>
-              <span v-if="!scope.row.isEdit">{{scope.row[col.prop]}}</span>
+              <span v-if="!scope.row.isEdit && index!=0">{{scope.row[col.prop]}}</span>
+              <el-image v-if="index==0" :src="$store.state.BASE_URL+scope.row[col.prop]"></el-image>
             </template>
           </el-table-column>
         </template>
