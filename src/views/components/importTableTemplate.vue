@@ -56,7 +56,6 @@
       :title="'字段绑定['+selectCurrentCol.label+']'"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose"
     >
       <el-row type="flex" justify="space-between">
         <el-col>
@@ -486,14 +485,6 @@ export default {
           ])
         ]
       );
-    },
-    //对话框关闭
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
     },
     deleteRow(index, rows) {
       rows.splice(index, 1);
