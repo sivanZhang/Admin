@@ -30,32 +30,62 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const asyncRoutes = [{
-        path: '/videoCheck',
+        path: '/task',
         component: Layout,
-        redirect: '/videoCheck',
+        redirect: '/task',
         meta: {
-            title: '镜头审核',
-            icon: 'v1'
+            title: '我的工作台',
+            icon: 'task'
         },
         children: [{
-            path: 'my-audit',
-            name: 'my-audit',
-            component: () =>
-                import ('@/views/video/my-audit'),
-            meta: {
-                title: '我的审核',
-                icon: 'v2',
-                roles: 'manage_approve'
+                path: 'task',
+                name: 'my-task',
+                component: () =>
+                    import ('@/views/task'),
+                meta: {
+                    title: '我的任务',
+                    icon: 'task'
+                }
+            },
+            {
+                path: 'approve',
+                name: 'approve',
+                component: () =>
+                    import ('@/views/video/my-audit'),
+                meta: {
+                    title: '我的审批',
+                    icon: 'v2',
+                    roles: 'manage_approve'
+                }
+            },
+            {
+                path: 'overview-users1',
+                name: 'overview-users1',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: {
+                    title: '我的工时',
+                    icon: 'user'
+                },
+            },
+            {
+                path: 'overview-users2',
+                name: 'overview-users2',
+                component: () =>
+                    import ('@/views/overview/users'),
+                meta: {
+                    title: '我的信息',
+                    icon: 'user'
+                },
             }
-        }]
-    },
-    {
+        ]
+    }, {
         path: '/admin',
         component: Layout,
         redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
         meta: {
-            title: '用户设置',
-            icon: 'usettings'
+            title: '系统设置',
+            icon: 'settings'
         },
         children: [{
                 path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
@@ -87,7 +117,17 @@ export const asyncRoutes = [{
                     icon: 'role',
                     roles: 'manage_role'
                 }
-            }
+            },
+            {
+                path: 'settings',
+                name: 'settings',
+                component: () =>
+                    import ('@/views/settings/settings'),
+                meta: {
+                    title: '系统设置',
+                    icon: 'settings'
+                }
+            },
         ]
     },
     {
@@ -224,74 +264,6 @@ export const constantRoutes = [{
             meta: {
                 title: '资产导入',
                 icon: 'assetlist'
-            }
-        }, ]
-    }, {
-        path: '/task',
-        component: Layout,
-        redirect: '/task',
-        meta: {
-            title: '我的工作台',
-            icon: 'task'
-        },
-        children: [{
-                path: 'task',
-                name: 'my-task',
-                component: () =>
-                    import ('@/views/task'),
-                meta: {
-                    title: '我的任务',
-                    icon: 'task'
-                }
-            },
-            {
-                path: 'approve',
-                name: 'my-approve',
-                component: () =>
-                    import ('@/views/task'),
-                meta: {
-                    title: '我的审批',
-                    icon: 'task',
-                }
-            },
-            {
-                path: 'overview-users1',
-                name: 'overview-users1',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: {
-                    title: '我的工时',
-                    icon: 'user'
-                },
-            },
-            {
-                path: 'overview-users2',
-                name: 'overview-users2',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: {
-                    title: '我的信息',
-                    icon: 'user'
-                },
-            }
-        ]
-    },
-    {
-        path: '/settings',
-        component: Layout,
-        redirect: '/settings',
-        meta: {
-            title: '系统设置',
-            icon: 'settings'
-        },
-        children: [{
-            path: 'settings',
-            name: 'settings',
-            component: () =>
-                import ('@/views/settings/settings'),
-            meta: {
-                title: '系统设置',
-                icon: 'settings'
             }
         }, ]
     }, {
