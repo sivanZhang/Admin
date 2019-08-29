@@ -34,8 +34,8 @@ export const asyncRoutes = [{
         component: Layout,
         redirect: '/videoCheck',
         meta: {
-            title: '视频审核',
-            icon: 'task'
+            title: '镜头审核',
+            icon: 'v1'
         },
         children: [{
             path: 'my-audit',
@@ -44,17 +44,8 @@ export const asyncRoutes = [{
                 import ('@/views/video/my-audit'),
             meta: {
                 title: '我的审核',
-                icon: 'task',
-                // roles: 'manage_approve'
-            }
-        }, {
-            path: 'videoCheck',
-            name: 'videoCheck',
-            component: () =>
-                import ('@/views/video/videoCheck'),
-            meta: {
-                title: '视频审核',
-                icon: 'task'
+                icon: 'v2',
+                roles: 'manage_approve'
             }
         }]
     },
@@ -64,7 +55,7 @@ export const asyncRoutes = [{
         redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
         meta: {
             title: '用户设置',
-            icon: 'settings'
+            icon: 'usettings'
         },
         children: [{
                 path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
@@ -141,9 +132,17 @@ export const constantRoutes = [{
         path: '/signup',
         component: () =>
             import ('@/views/login/signup'),
+    }, {
+        path: '/check-video',
+        name: 'check-video',
+        component: () =>
+            import ('@/views/video/videoCheck'),
+        meta: {
+            title: '审核意见',
+            icon: 'v2'
+        },
+        hidden: true
     },
-
-
     {
         path: '/',
         component: Layout,
@@ -283,7 +282,7 @@ export const constantRoutes = [{
         redirect: '/settings',
         meta: {
             title: '系统设置',
-            icon: 'task'
+            icon: 'settings'
         },
         children: [{
             path: 'settings',
@@ -292,7 +291,7 @@ export const constantRoutes = [{
                 import ('@/views/settings/settings'),
             meta: {
                 title: '系统设置',
-                icon: 'task'
+                icon: 'settings'
             }
         }, ]
     }, {

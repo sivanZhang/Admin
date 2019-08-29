@@ -86,9 +86,9 @@ export default {
        if (e && item.asset.path) {
         item = {
         ...item,
-        url:`${this.$store.state.BASE_URL}${item.asset.path}`,
-        videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
+        url:`${this.$store.state.BASE_URL}${item.asset.path}`
       };
+      //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
       } else if(e && !item.asset.path){
         e=false
