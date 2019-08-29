@@ -26,6 +26,7 @@
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
   </div>
+  
 </template>
 
 <script>
@@ -107,6 +108,7 @@ export default {
           duration: 0,
           type:'warning'
         });
+        this.$router.push({name:'project-detail',params:{id:this.$route.params.id}})
       });
     },
     //导入数据
