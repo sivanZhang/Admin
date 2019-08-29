@@ -23,44 +23,50 @@
         </div>
         <div id="videoTabs" class="video-tabs">
           <!-- 视频tab页（Notes、Versions） -->
-          <el-tabs v-model="activeTab" @tab-click="handleTabClick">
+          <!-- <el-tabs v-model="activeTab" @tab-click="handleTabClick">
             <el-tab-pane label="备注" name="first">
-              <div class="mark-cont">
-                <div class="mark-form">
-                  <ul class="img-list" v-if="imgList.length > 0">
-                    <li class="img-item" v-for="(item,index) in imgList" :key="index">
-                      <img :src="item.imgUrl" @click="zoomImg(item.imgUrl)" />
-                      <span class="name">{{item.currentName}}(第{{item.currentFrame}}帧)</span>
-                      <el-button
-                        class="btn del-btn"
-                        icon="el-icon-delete-solid"
-                        @click="delMarkImage(item,index)"
-                      ></el-button>
-                    </li>
-                  </ul>
-                  <div class="mark-text">
-                    <input class="mark-input" placeholder="添加备注..." v-model="markText" />
-                  </div>
-
-                  <div class="btn-group">
-                    <el-radio-group v-model="approve_result">
-                      <el-radio :label="0">拒绝</el-radio>
-                      <el-radio :label="1">同意</el-radio>
-                    </el-radio-group>
-                    <div class="fr">
-                      <el-button class="btn cancel-btn">取消</el-button>
-                      <el-button type="primary" class="btn add-btn" @click="commitApprove" v-loading="submitLoading">提交</el-button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </el-tab-pane>
+            </el-tab-pane> 
             <el-tab-pane label="任务" name="second">任务</el-tab-pane>
             <el-tab-pane label="版本" name="third">版本</el-tab-pane>
             <el-tab-pane label="链接" name="fourth">链接</el-tab-pane>
             <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
             <el-tab-pane label="信息" name="sixth">信息</el-tab-pane>
-          </el-tabs>
+          </el-tabs>-->
+
+          <div class="mark-cont">
+            <div class="mark-form">
+              <ul class="img-list" v-if="imgList.length > 0">
+                <li class="img-item" v-for="(item,index) in imgList" :key="index">
+                  <img :src="item.imgUrl" @click="zoomImg(item.imgUrl)" />
+                  <span class="name">{{item.currentName}}(第{{item.currentFrame}}帧)</span>
+                  <el-button
+                    class="btn del-btn"
+                    icon="el-icon-delete-solid"
+                    @click="delMarkImage(item,index)"
+                  ></el-button>
+                </li>
+              </ul>
+              <div class="mark-text">
+                <input class="mark-input" placeholder="添加备注..." v-model="markText" />
+              </div>
+
+              <div class="btn-group">
+                <el-radio-group v-model="approve_result">
+                  <el-radio :label="0">拒绝</el-radio>
+                  <el-radio :label="1">同意</el-radio>
+                </el-radio-group>
+                <div class="fr">
+                  <!-- <el-button class="btn cancel-btn">取消</el-button> -->
+                  <el-button
+                    type="primary"
+                    class="btn add-btn"
+                    @click="commitApprove"
+                    v-loading="submitLoading"
+                  >提交</el-button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="videoComment" class="video-comment">
           <!-- 视频标注列表 -->
@@ -81,15 +87,15 @@ import VideoInfo from "@/views/components/videoInfo";
 import VideoComment from "@/views/components/videoComment";
 import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
-import { postApprove,getApproveRemark } from "@/api/video";
+import { postApprove, getApproveRemark } from "@/api/video";
 import AXIOS from "@/utils/request";
 export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },
   data() {
     return {
-      submitLoading:false,//提交按钮是否显示加载状态
+      submitLoading: false, //提交按钮是否显示加载状态
       approve_result: 0,
-      imgList: [],//  视频截图列表
+      imgList: [], //  视频截图列表
       zoomImgUrl: "",
       activeTab: "first",
       demoImg: demoImg,
@@ -116,14 +122,14 @@ export default {
   },
   methods: {
     commitApprove() {
-      console.log('this.submitList',this.submitList);
-      
+      console.log("this.submitList", this.submitList);
+
       if (!this.submitList.length) {
-        this.$message.warning('请选择镜头')
-        return false
-      }else if(!this.markText){
-        this.$message.warning('请添加备注')
-        return false
+        this.$message.warning("请选择镜头");
+        return false;
+      } else if (!this.markText) {
+        this.$message.warning("请添加备注");
+        return false;
       }
       let submitFn = [];
       this.submitList.forEach((t, i, arr) => {
@@ -133,7 +139,7 @@ export default {
           link_id: t.task.link,
           approve_result: this.approve_result,
           suggestion: this.markText,
-          key:[]
+          key: []
         };
         this.imgList.forEach(k => {
           if (k.asset === t.asset.asset) {
@@ -144,7 +150,7 @@ export default {
           }
         });
         postApprove(data).then(res => {
-          this.$message(t.asset.name +' '+ res.data.msg);
+          this.$message(t.asset.name + " " + res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
             {
               this.imgList = [];
