@@ -49,6 +49,8 @@
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
+          <el-table-column prop="priority" label="优先级" :formatter="Priority"></el-table-column>
+        <el-table-column prop="grade" label="难度等级" :formatter="Grade"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">{{scope.row.status|projectStatus}}</template>
         </el-table-column>
@@ -580,7 +582,36 @@ export default {
       } else {
         this.$emit("get-tasks");
       }
+    },
+    //优先级格式化显示
+    Priority: function(row, column) {
+      switch (row.priority) {
+        case 0:
+          return "低级";
+          break;
+        case 1:
+          return "中级";
+          break;
+        case 2:
+          return "高级";
+          break;
+      }
+    },
+     //难度等级格式化显示
+    Grade: function(row, column) {
+      switch (row.grade) {
+        case 0:
+          return "简单";
+          break;
+        case 1:
+          return "标准";
+          break;
+        case 2:
+          return "困难";
+          break;
+      }
     }
+    
   },
   created() {
     this.getTasks();
