@@ -122,8 +122,6 @@ export default {
   },
   methods: {
     commitApprove() {
-      console.log("this.submitList", this.submitList);
-
       if (!this.submitList.length) {
         this.$message.warning("请选择镜头");
         return false;

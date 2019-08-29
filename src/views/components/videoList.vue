@@ -16,7 +16,7 @@
         @click="initSource(index),getCurrentPlayId(index)"
         icon="el-icon-video-play"
         style="margin: 10px 2%;"
-      >{{item.asset.name}} {{item.time}}</el-button>
+      >{{item.asset.name}}</el-button>
     </div>
     <!-- 
     el-icon-video-play-->
@@ -83,19 +83,17 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item) {
-      console.log(item);
-      
-      item = {
+       if (e && item.asset.path) {
+        item = {
         ...item,
-        time: "02:33",
-        url:
-          "sEzdz3fIXgqc1512572926.mp4",
-        videoImage:
-          "http://localhost:8080/test/demo.jpg"
+        url:`${this.$store.state.BASE_URL}${item.asset.path}`,
+        videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
       };
-      if (e) {
         this.selectProjects.push(item);
-      } else {
+      } else if(e && !item.asset.path){
+        e=false
+        this.$message.warning('镜头路径为空')
+      }else{
         this.selectProjects = this.selectProjects.filter(t => {
           return t.asset.asset !== item.asset.asset;
         });
