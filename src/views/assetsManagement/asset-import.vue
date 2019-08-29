@@ -98,7 +98,6 @@ export default {
      * 组件中必须 @returnAssemblingData="returnAssemblingData"
      */
     returnAssemblingData(data) {
-      console.log("组装好的数据:", data);
       data = { ...data, project: this.$route.params.id };
       //提交jsons数据
       HTTP.uploadAssets(data).then(({ data }) => {

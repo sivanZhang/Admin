@@ -142,26 +142,28 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
-            end_date:null,
-            time:Date.parse(new Date())
+            end_date: null,
+            time: Date.parse(new Date())
         };
     },
     methods: {
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
+            console.log(row);
+
             let loading = this.$loading({
                 fullscreen: true
             });
             putTaskRecord({
                 method: 'put',
-                id: row.id,
+                id: row.task.id,
                 status
             }).then(({
                 data
             }) => {
                 loading.close()
                 if (data.status === 0) {
-                    row.status = status
+                    row.task.status = status
                     this.$message.success(data.msg)
                     this.resetTasks()
                 } else {
@@ -233,38 +235,38 @@ export default {
         },
         addRecord() {
             this.createLoading = true;
-            if(this.end_date>=this.time){
+            if (this.end_date >= this.time) {
                 addTaskRecord(this.TaskRecord)
-                .then(res => {
-                    if (res.data.status === 0) {
-                        this.$message.success(res.data.msg);
-                        this.getMyTasks()
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                    this.isDialogShow = false
-                    this.createLoading = false;
-                })
-                .catch(err => {
-                    this.createLoading = false;
-                });
-            }else{
+                    .then(res => {
+                        if (res.data.status === 0) {
+                            this.$message.success(res.data.msg);
+                            this.getMyTasks()
+                        } else {
+                            this.$message.warning(res.data.msg);
+                        }
+                        this.isDialogShow = false
+                        this.createLoading = false;
+                    })
+                    .catch(err => {
+                        this.createLoading = false;
+                    });
+            } else {
                 this.$alert('此任务已超期，禁止提交执行记录。', '警告', {
                     confirmButtonText: '确定',
                     callback: action => {
-                      this.$message({
-                        type: 'info',
-                        message: `action: ${ action }`
-                      });
+                        this.$message({
+                            type: 'info',
+                            message: `action: ${ action }`
+                        });
                     }
-                  }); 
-                  this.createLoading = false;          
-        }
-    },
+                });
+                this.createLoading = false;
+            }
+        },
         //是否显示任务板右侧
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
-            this.end_date=row.end_date;
+            this.end_date = row.end_date;
             console.log(row);
             this.TaskRecord = Object.assign({}, {
                 task_id: row.id,
@@ -305,7 +307,7 @@ export default {
                 // [...data.msg].forEach(item => {
                 //         this.MyTaskList.push(item.task)
                 //     })
-                    this.MyTaskList = [...data.msg]; 
+                this.MyTaskList = [...data.msg];
                 this.resetTasks()
             });
 
