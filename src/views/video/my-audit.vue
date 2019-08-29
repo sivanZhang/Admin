@@ -104,7 +104,7 @@ export default {
     approve() {
       if (this.SelectionList.length) {
         this.$store.commit("video/SET_SELECTION", this.SelectionList);
-        this.$router.push("/videoCheck/videoCheck");
+        this.$router.push({name:'check-video'});
       } else {
         this.$message.warning("请选择审核的任务");
       }
