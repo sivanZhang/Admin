@@ -181,7 +181,6 @@ export const constantRoutes = [{
             title: '审核意见',
             icon: 'v2'
         },
-        hidden: true
     },
     {
         path: '/',
