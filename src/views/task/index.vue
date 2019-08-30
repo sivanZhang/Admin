@@ -309,11 +309,6 @@
           <el-table-column prop="task.content" label="任务内容"></el-table-column>
           <el-table-column label="任务状态">
             <template slot-scope="scope">
-              <!-- <div class="status">
-                {{scope.row.status|projectStatus}}
-                <icon class="el-icon-edit" />
-              </div>
-              -->
               <el-select
                 :value="scope.row.task.status"
                 placeholder="请选择"
@@ -361,4 +356,4 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped src="./task.scss"></style>
+<style lang="scss" src="./task.scss"></style>

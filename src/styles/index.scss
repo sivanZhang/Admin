@@ -14,6 +14,10 @@ body {
     min-width: 1200px;
 }
 
+.el-table th.gutter {
+    display: table-cell!important; //修复表头边框错位
+}
+
 .el-radio__label {
     font-size: 12px;
 }

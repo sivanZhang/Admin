@@ -115,13 +115,13 @@ export default {
       this.TaskRecord = Object.assign(
         {},
         {
-          task_id: row.id,
+          task_id: row.task.id,
           type: 0
         }
       );
       this.logsLoading = true;
       queryTaskRecord({
-        task_id: row.id
+        task_id: row.task.id
       })
         .then(({ data }) => {
           this.LogList = [...data.msg];

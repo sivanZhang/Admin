@@ -149,7 +149,7 @@ export default {
     methods: {
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
-            console.log(row);
+            console.log('row', row);
 
             let loading = this.$loading({
                 fullscreen: true
@@ -267,14 +267,13 @@ export default {
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
             this.end_date = row.end_date;
-            console.log(row);
             this.TaskRecord = Object.assign({}, {
-                task_id: row.id,
+                task_id: row.task.id,
                 type: 0
             });
             this.logsLoading = true
             queryTaskRecord({
-                task_id: row.id,
+                task_id: row.task.id,
             }).then(({
                 data
             }) => {
@@ -285,7 +284,7 @@ export default {
             })
             this.detailLoading = true
             queryTask({
-                id: row.id,
+                id: row.task.id,
             }).then(({
                 data
             }) => {
