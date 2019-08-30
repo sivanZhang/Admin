@@ -40,7 +40,7 @@
               class="mini-image"
               :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
-              style="width:100%;height:100%"
+              style="height:100%"
             >
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture" style="color:#909399"></i>

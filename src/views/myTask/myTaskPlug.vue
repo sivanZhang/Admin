@@ -23,7 +23,6 @@
         <el-table
           ref="assetTable"
           :data="MyTask.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-          style="width: 100%"
           border
           :stripe="true"
           :row-style="{'font-size':'13px'}"

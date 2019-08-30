@@ -83,3 +83,18 @@
 .el-range-editor.el-input__inner {
     display: inline-flex !important;
 }
+
+.el-table th.gutter {
+    display: table-cell!important; //修复表头边框错位
+}
+
+
+/* 
+
+.el-table__header-wrapper th:nth-last-of-type(2) {
+    border-right: none;
+}
+
+.el-table--border td:nth-last-of-type(1) {
+    border-right: none;
+} */

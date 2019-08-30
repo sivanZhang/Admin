@@ -1,5 +1,5 @@
 <template functional>
-  <el-table :data="props.loglist" style="width: 100%" borders v-loading="props.logsLoading">
+  <el-table :data="props.loglist" border v-loading="props.logsLoading">
     <el-table-column prop="title" label="标题"></el-table-column>
     <el-table-column prop="content" label="任务内容"></el-table-column>
     <el-table-column label="任务状态">

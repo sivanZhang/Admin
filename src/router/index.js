@@ -86,7 +86,8 @@ export const asyncRoutes = [{
                 meta: {
                     title: '审核意见',
                     icon: 'v2'
-                }
+                },
+                hidden: true
             },
         ]
     }, {
@@ -225,7 +226,6 @@ export const constantRoutes = [{
             hiddenSideBar: true
         },
         hidden: true,
-        alwaysShow: true,
         children: [{
             path: 'project-detail/:id',
             name: 'project-detail',
@@ -264,7 +264,8 @@ export const constantRoutes = [{
             meta: {
                 title: '资产导入',
                 icon: 'assetlist'
-            }
+            },
+            hidden: true
         }, ]
     }, {
         path: '/404',

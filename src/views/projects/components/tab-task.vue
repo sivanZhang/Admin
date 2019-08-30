@@ -33,7 +33,7 @@
       </el-row>
       <el-table
         :data="TaskList"
-        style="width: 100%;margin-top:20px"
+        style="margin-top:20px"
         highlight-current-row
         row-key="id"
         :tree-props="{ children: 'sub_task' }"

@@ -14,7 +14,6 @@
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
       highlight-current-row
-
       row-class-name="hover"
     >
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
@@ -139,7 +138,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        
+
         <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
         </el-form-item>-->
@@ -165,7 +164,6 @@
         @refresh_assetList="getAssetList"
       />
     </Drawer>
-   
   </div>
 </template>
 
@@ -181,7 +179,7 @@ import { getToken } from "@/utils/auth";
 export default {
   components: {
     /*  */
-    
+
     assetsDrawer,
     Header
   },
@@ -192,7 +190,7 @@ export default {
       RemarksData: [],
       value1: false,
       activeAsset: null,
-     
+
       isDrawerShow: false,
       SRC: "",
       AssetForm: {
@@ -222,8 +220,7 @@ export default {
         priority: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],
-        level: [{ required: true, message: "请输入难度等级", trigger: "blur" }],
-        
+        level: [{ required: true, message: "请输入难度等级", trigger: "blur" }]
       },
       buttonStates: {
         createLoading: false
@@ -243,15 +240,18 @@ export default {
     AssetList: {
       type: Array
     },
-    activeName:{
-      type:String
+    activeName: {
+      type: String
     }
   },
   methods: {
-    targetImport(){
-      this.$router.push({name:'asset-import',params:{id:this.$route.params.id}})
+    targetImport() {
+      this.$router.push({
+        name: "asset-import",
+        params: { id: this.$route.params.id }
+      });
     },
-    getAssetList(){
+    getAssetList() {
       this.$emit("refresh");
     },
     getTasks() {
@@ -271,7 +271,7 @@ export default {
         this.RemarksData = [...data.msg];
       });
     },
-    
+
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -299,18 +299,18 @@ export default {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
-          if(this.activeName==="tab0"){
+          if (this.activeName === "tab0") {
             this.AssetForm = Object.assign({}, this.AssetForm, {
-            project: this.$route.params.id,
-            asset_type:0
-          });
-          }else{
+              project: this.$route.params.id,
+              asset_type: 0
+            });
+          } else {
             this.AssetForm = Object.assign({}, this.AssetForm, {
-            project: this.$route.params.id,
-            asset_type:1
-          });
+              project: this.$route.params.id,
+              asset_type: 1
+            });
           }
-          
+
           HTTP.postAssets(this.AssetForm)
             .then(({ data }) => {
               this.createLoading = false;
@@ -334,7 +334,7 @@ export default {
         }
       });
     },
-   
+
     //监听图片上传成功
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
@@ -392,7 +392,7 @@ export default {
 .el-table--border th,
 .el-table--border td {
   /*zjw*/
-  border-right: 0px solid #dfe6ec;
+  border-right-width: 0px;
 }
 .hover {
   cursor: pointer;

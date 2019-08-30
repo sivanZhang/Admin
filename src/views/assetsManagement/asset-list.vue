@@ -6,7 +6,7 @@
     <el-table
       class="el-table"
       :data="TableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      style="width: 100%;border:1px solid #dfe6ec;border-bottom-width:0;"
+      style="border:1px solid #dfe6ec;border-bottom-width:0;"
       :stripe="true"
       :row-style="{'font-size':'14px'}"
       :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
