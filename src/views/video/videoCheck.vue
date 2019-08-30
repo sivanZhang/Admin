@@ -51,7 +51,7 @@
               </div>
 
               <div class="btn-group">
-                <el-radio-group v-model="approve_result">
+                <el-radio-group v-model.number="approve_result">
                   <el-radio :label="0">拒绝</el-radio>
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
@@ -147,7 +147,9 @@ export default {
             });
           }
         });
+        this.submitLoading = true
         postApprove(data).then(res => {
+          this.submitLoading = false
           this.$message(t.asset.name + " " + res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
             {
@@ -156,7 +158,9 @@ export default {
               this.markText = "";
             }
           }
-        });
+        }).catch(err=>{
+          this.submitLoading = false
+        })
       });
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
