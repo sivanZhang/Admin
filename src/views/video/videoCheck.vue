@@ -57,11 +57,7 @@
                 </el-radio-group>
                 <div class="fr">
                   <!-- <el-button class="btn cancel-btn">取消</el-button> -->
-                  <el-button
-                    type="primary"
-                    class="btn add-btn"
-                    @click="commitApprove"
-                  >提交</el-button>
+                  <el-button type="primary" class="btn add-btn" @click="commitApprove">提交</el-button>
                 </div>
               </div>
             </div>
@@ -69,7 +65,12 @@
         </div>
         <div id="videoComment" class="video-comment">
           <!-- 视频标注列表 -->
-          <video-comment ref="videoComment"></video-comment>
+          <approve-log
+            ref="approve"
+            :list="ApproveList"
+            @imageClick="showImage"
+            @changeSelect="changeSelect"
+          />
         </div>
       </el-col>
     </el-row>
@@ -88,10 +89,12 @@ import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
 import { postApprove, getApproveRemark } from "@/api/video";
 import AXIOS from "@/utils/request";
+import approveLog from "./components/approve-log";
 export default {
-  components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },
+  components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment,approveLog },
   data() {
     return {
+      ApproveList: [],
       approve_result: 0,
       imgList: [], //  视频截图列表
       zoomImgUrl: "",
@@ -119,6 +122,31 @@ export default {
       bH - (videoInfoH + videoTabsH + 20 + 20 + 94) + "px";
   },
   methods: {
+    changeSelect(val) {
+      let data;
+      switch (val) {
+        case 0:
+          data = {
+            asset_id: this.active.asset.asset,
+            approve_result:val
+          };
+          break;
+        case 1:
+          data = {
+            asset_id: this.active.asset.asset,
+            approve_result:val
+          };
+          break;
+        default:
+          data = {
+            asset_id: this.active.asset.asset,
+          };
+          break;
+      }
+      getApproveRemark(data).then(({ data }) => {
+        this.ApproveList = [...data.msg];
+      });
+    },
     commitApprove() {
       if (!this.submitList.length) {
         this.$message.warning("请选择镜头");
@@ -159,6 +187,22 @@ export default {
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
+      this.active = projectList[0]
+      console.log('this.active',this.active,this.$refs['approve'].select);
+      let params = {}
+      if(this.$refs['approve'].select==2){
+        params={
+            asset_id: this.active.asset.asset
+          }
+      }else{
+        params={
+            asset_id: this.active.asset.asset,
+            approve_result:this.$refs['approve'].select
+          }
+      }
+      getApproveRemark(params).then(({ data }) => {
+        this.ApproveList = [...data.msg];
+      });
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
         this.$message.error("处于视频标注模式");
@@ -170,7 +214,6 @@ export default {
         );
         this.$refs.videoPlayer.initNextVideo(index, projectList);
         this.$refs.videoInfo.initInfo(projectLists[index]);
-        this.$refs.videoComment.initInfo(projectList[0].id);
       }
     },
     getMarkImage(obj) {
@@ -204,6 +247,11 @@ export default {
           document.getElementById("videoComment").style.height =
             bH - (videoInfoH + videoTabsH + 20 + 20 - 110) + "px";
         }
+      }
+    },
+    showImage(url) {
+      if (url){
+        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL+url);
       }
     },
     zoomImg(imgUrl) {

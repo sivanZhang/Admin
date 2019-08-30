@@ -51,7 +51,7 @@
           <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
         </el-tab-pane>
         <el-tab-pane label="审批记录" lazy>
-          <approve-log :list="ApproveList" @imageClick="showImage"@changeSelect="changeSelect"/>
+          <approve-log :list="ApproveList" @imageClick="showImage" @changeSelect="changeSelect"/>
         </el-tab-pane>
         <el-tab-pane label="快捷审批" lazy>
           <el-row type="flex">
