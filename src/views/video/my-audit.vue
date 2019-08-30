@@ -47,18 +47,30 @@
         <el-tab-pane label="执行记录" lazy>
           <tabLog :loglist="LogList" :logsLoading="logsLoading" />
         </el-tab-pane>
-        <!-- <el-tab-pane label="执行任务" lazy>
-          <task-form
-            :task-record.sync="TaskRecord"
-            :createLoading="createLoading"
-            @addRecord="addRecord"
-            @cancel="cancel"
-          />
-        </el-tab-pane>-->
         <el-tab-pane label="任务详情" lazy>
           <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
         </el-tab-pane>
-        <el-tab-pane label="备注" lazy>222</el-tab-pane>
+        <el-tab-pane label="审批记录" lazy>
+          <approve-log :list="ApproveList" />
+        </el-tab-pane>
+        <el-tab-pane label="快捷审批" lazy>
+          <el-row type="flex">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 3, maxRows: 6}"
+              placeholder="请输入审批意见"
+              v-model="form_obj.suggestion"
+              clearable
+            ></el-input>
+          </el-row>
+          <el-radio-group v-model.number="form_obj.approve_result" style="margin: 15px 0">
+            <el-radio :label="0">拒绝</el-radio>
+            <el-radio :label="1">同意</el-radio>
+          </el-radio-group>
+          <div>
+            <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </Drawer>
   </div>
@@ -71,19 +83,24 @@ import {
   queryTaskRecord,
   queryTask
 } from "@/api/task";
-import { getApprove } from "@/api/video";
+import { getApprove, getApproveRemark, postApprove } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
+import approveLog from "./components/approve-log";
 import { log } from "util";
 export default {
   components: {
     taskForm,
     tabLog,
-    tabTaskDtail
+    tabTaskDtail,
+    approveLog
   },
   data() {
     return {
+      submitLoading: false,
+      form_obj: {},
+      ApproveList: [],
       AuditList: [],
       isDrawerShow: false,
       TaskRecord: {},
@@ -104,7 +121,7 @@ export default {
     approve() {
       if (this.SelectionList.length) {
         this.$store.commit("video/SET_SELECTION", this.SelectionList);
-        this.$router.push({name:'check-video'});
+        this.$router.push({ name: "check-video" });
       } else {
         this.$message.warning("请选择审核的任务");
       }
@@ -142,6 +159,32 @@ export default {
         })
         .catch(() => {
           this.detailLoading = false;
+        });
+      getApproveRemark({
+        asset_id: row.asset.asset
+      }).then(({ data }) => {
+        this.ApproveList = [...data.msg];
+      });
+      this.form_obj = Object.assign(
+        {},
+        {
+          asset_id: row.asset.asset,
+          link_id: row.task.link,
+          project_id: row.project.id,
+          suggestion: "",
+          approve_result: 0
+        }
+      );
+    },
+    submitApprove() {
+      this.submitLoading = true;
+      postApprove(this.form_obj)
+        .then(res => {
+          this.submitLoading = false;
+          this.$message(res.data.msg);
+        })
+        .catch(err => {
+          this.submitLoading = false;
         });
     },
     //http获取‘我的任务’

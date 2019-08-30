@@ -61,7 +61,6 @@
                     type="primary"
                     class="btn add-btn"
                     @click="commitApprove"
-                    v-loading="submitLoading"
                   >提交</el-button>
                 </div>
               </div>
@@ -93,7 +92,6 @@ export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment },
   data() {
     return {
-      submitLoading: false, //提交按钮是否显示加载状态
       approve_result: 0,
       imgList: [], //  视频截图列表
       zoomImgUrl: "",
@@ -147,9 +145,7 @@ export default {
             });
           }
         });
-        this.submitLoading = true
         postApprove(data).then(res => {
-          this.submitLoading = false
           this.$message(t.asset.name + " " + res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
             {
@@ -158,8 +154,6 @@ export default {
               this.markText = "";
             }
           }
-        }).catch(err=>{
-          this.submitLoading = false
         })
       });
     },

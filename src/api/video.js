@@ -19,9 +19,17 @@ export function getApprove(params = null) {
 }
 //提交审核
 export function postApprove(data) {
-    return AXIOS.post('/approve/approve/', data)
+    return AXIOS.post('/approve/approve/', data, {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }],
+        timeout: 10000,
+    })
 }
 //获取审核备注列表/approve/approve/
 export function getApproveRemark(params) {
-    return AXIOS.get('/approve/approve/approve_result/', { params })
+    return AXIOS.get('/approve/approve_result/', { params })
 }
