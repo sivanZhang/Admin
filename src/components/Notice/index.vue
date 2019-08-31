@@ -2,7 +2,7 @@
   <div>
     <svg-icon icon-class="notice" @click="show" />
     <el-badge :value="notice.length" class="item"></el-badge>
-    <Drawer
+    <Drawer scrollable
       closable
       height="500"
       v-model="value1"

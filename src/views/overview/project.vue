@@ -2,7 +2,7 @@
   <div id="project" style="margin:-20px">
     <div class="container">
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
-        <Drawer
+        <Drawer scrollable
           closable
           v-model="isDrawerShow"
           width="526"

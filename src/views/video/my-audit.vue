@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column prop="task.total_hour" label="预设时间（小时）"></el-table-column>
     </el-table>
-    <Drawer
+    <Drawer scrollable
       v-model="isDrawerShow"
       width="512px"
       inner

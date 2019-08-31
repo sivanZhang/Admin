@@ -77,7 +77,7 @@
         </el-main>
         <!-- 右击侧栏展示审批流程 -->
         <template v-if="isDrawerShow">
-          <Drawer
+          <Drawer scrollable
             :title="activeTemplate.name+'的审批流程'"
             v-model="isDrawerShow"
             width="512px"

@@ -223,7 +223,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="任务列表" lazy class="tab-task">
-        <Drawer
+        <Drawer scrollable
           v-model="isDrawerShow"
           width="512px"
           inner

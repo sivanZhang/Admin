@@ -148,7 +148,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <Drawer
+    <Drawer scrollable
       closable
       v-model="value1"
       width="526"

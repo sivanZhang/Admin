@@ -27,14 +27,14 @@
       <div class="item">
         <div class="item-title">镜头批注：</div>
         <div class="item-con">
-          <div class="image-list" v-for="(item,index) of t.image_path" :key="index">
+          <div class="image-list" v-for="(item,index) of t.images" :key="index">
             <el-image
-              :src="$store.state.BASE_URL+item"
+              :src="$store.state.BASE_URL+item.image_path"
               style="height:45px;width:80px"
               fit="cover"
               @click="shwoImage(item)"
             ></el-image>
-            第{{t.image_frame[index]}}帧
+            第{{t.image_frame}}帧
           </div>
         </div>
       </div>
