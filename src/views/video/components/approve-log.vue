@@ -4,7 +4,7 @@
       v-model="select"
       placeholder="请选择"
       style="width:120px;margin-bottom:10px;"
-      @change="selectChange"
+      @change="getApproveLog()"
     >
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
@@ -40,12 +40,21 @@
       </div>
     </div>
     <div v-show="!list.length">暂无数据</div>
+    <zoom-img ref="zoomImg" />
   </div>
 </template>
 <script>
+import ZoomImg from "@/components/ZoomImg";
+import { getApproveRemark } from "@/api/video";
 export default {
+  mame: "approve-logs",
+  components: {
+    ZoomImg
+  },
   data() {
     return {
+      list: [],
+      httpParams: {},
       options: [
         {
           label: "全部",
@@ -63,25 +72,32 @@ export default {
       select: 2
     };
   },
-  props: {
-    list: {
-      default: [],
-      type: Array
-    },
-    search: {
-      type: Object
-    }
-  },
   methods: {
     shwoImage(url) {
-      this.$emit("imageClick", url);
+      if (url) {
+        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL + url);
+      }
     },
-    selectChange(val) {
-      this.$emit("changeSelect", val);
+    getApproveLog(asset_id) {
+      if (asset_id && this.select === 2) {
+        this.httpParams = { asset_id };
+      } else if (!asset_id && this.select === 2) {
+        this.httpParams = { asset_id: this.httpParams["asset_id"] };
+      } else if (asset_id && this.select !== 2) {
+        this.httpParams = {
+          asset_id,
+          approve_result: this.select
+        };
+      } else if (!asset_id && this.select !== 2) {
+        this.httpParams = {
+          ...this.httpParams,
+          approve_result: this.select
+        };
+      }
+      getApproveRemark(this.httpParams).then(({ data }) => {
+        this.list = [...data.msg];
+      });
     }
-  },
-  created() {
-    this.select = 2;
   }
 };
 </script>

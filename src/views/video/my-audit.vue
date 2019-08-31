@@ -47,8 +47,8 @@
         <el-tab-pane label="任务详情" lazy>
           <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
         </el-tab-pane>
-        <el-tab-pane label="审批记录" lazy>
-          <approve-log :list="ApproveList" @imageClick="showImage" @changeSelect="changeSelect"/>
+        <el-tab-pane label="审批记录">
+          <approve-log ref="approvelogs"/>
         </el-tab-pane>
         <el-tab-pane label="快捷审批" lazy>
           <el-row type="flex">
@@ -77,7 +77,6 @@
         </el-tab-pane>
       </el-tabs>
     </Drawer>
-    <zoom-img ref="zoomImg" />
   </div>
 </template>
 <script>
@@ -88,27 +87,23 @@ import {
   queryTaskRecord,
   queryTask
 } from "@/api/task";
-import { getApprove, getApproveRemark, postApprove } from "@/api/video";
+import { getApprove, postApprove } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "./components/approve-log";
 import { log } from "util";
-import ZoomImg from "@/components/ZoomImg";
 export default {
   components: {
     taskForm,
     tabLog,
     tabTaskDtail,
     approveLog,
-    ZoomImg
   },
   data() {
     return {
-      active:{},
       submitLoading: false,
       form_obj: {},
-      ApproveList: [],
       AuditList: [],
       isDrawerShow: false,
       TaskRecord: {},
@@ -121,36 +116,6 @@ export default {
     };
   },
   methods: {
-    changeSelect(val) {
-      let data;
-      switch (val) {
-        case 0:
-          data = {
-            asset_id: this.active.asset.asset,
-            approve_result:val
-          };
-          break;
-        case 1:
-          data = {
-            asset_id: this.active.asset.asset,
-            approve_result:val
-          };
-          break;
-        default:
-          data = {
-            asset_id: this.active.asset.asset,
-          };
-          break;
-      }
-      getApproveRemark(data).then(({ data }) => {
-        this.ApproveList = [...data.msg];
-      });
-    },
-    showImage(url) {
-      if (url){
-        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL+url);
-      }
-    },
     //表格中选中任务
     taskSelect(selection) {
       this.SelectionList = [...selection];
@@ -167,7 +132,6 @@ export default {
     //是否显示任务板右侧
     taskBoardRightShow(row) {
       this.isDrawerShow = true;
-      this.active = row
       this.TaskRecord = Object.assign(
         {},
         {
@@ -199,11 +163,6 @@ export default {
         .catch(() => {
           this.detailLoading = false;
         });
-      getApproveRemark({
-        asset_id: row.asset.asset
-      }).then(({ data }) => {
-        this.ApproveList = [...data.msg];
-      });
       this.form_obj = Object.assign(
         {},
         {
@@ -213,7 +172,8 @@ export default {
           suggestion: "",
           approve_result: 0
         }
-      );
+      )
+      this.$refs['approvelogs'].getApproveLog(row.asset.asset)
     },
     submitApprove() {
       this.submitLoading = true;

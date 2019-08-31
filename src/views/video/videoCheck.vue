@@ -66,10 +66,7 @@
         <div id="videoComment" class="video-comment">
           <!-- 视频标注列表 -->
           <approve-log
-            ref="approve"
-            :list="ApproveList"
-            @imageClick="showImage"
-            @changeSelect="changeSelect"
+            ref="approvelogs"
           />
         </div>
       </el-col>
@@ -87,14 +84,13 @@ import VideoInfo from "@/views/components/videoInfo";
 import VideoComment from "@/views/components/videoComment";
 import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
-import { postApprove, getApproveRemark } from "@/api/video";
+import { postApprove } from "@/api/video";
 import AXIOS from "@/utils/request";
 import approveLog from "./components/approve-log";
 export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment,approveLog },
   data() {
     return {
-      ApproveList: [],
       approve_result: 0,
       imgList: [], //  视频截图列表
       zoomImgUrl: "",
@@ -122,31 +118,6 @@ export default {
       bH - (videoInfoH + videoTabsH + 20 + 20 + 94) + "px";
   },
   methods: {
-    changeSelect(val) {
-      let data;
-      switch (val) {
-        case 0:
-          data = {
-            asset_id: this.active.asset.asset,
-            approve_result:val
-          };
-          break;
-        case 1:
-          data = {
-            asset_id: this.active.asset.asset,
-            approve_result:val
-          };
-          break;
-        default:
-          data = {
-            asset_id: this.active.asset.asset,
-          };
-          break;
-      }
-      getApproveRemark(data).then(({ data }) => {
-        this.ApproveList = [...data.msg];
-      });
-    },
     commitApprove() {
       if (!this.submitList.length) {
         this.$message.warning("请选择镜头");
@@ -187,22 +158,7 @@ export default {
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
-      this.active = projectList[0]
-      console.log('this.active',this.active,this.$refs['approve'].select);
-      let params = {}
-      if(this.$refs['approve'].select==2){
-        params={
-            asset_id: this.active.asset.asset
-          }
-      }else{
-        params={
-            asset_id: this.active.asset.asset,
-            approve_result:this.$refs['approve'].select
-          }
-      }
-      getApproveRemark(params).then(({ data }) => {
-        this.ApproveList = [...data.msg];
-      });
+      this.$refs['approvelogs'].getApproveLog(projectList[0].asset.asset)
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
         this.$message.error("处于视频标注模式");
