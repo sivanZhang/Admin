@@ -181,7 +181,7 @@ export const constantRoutes = [{
                     import ('@/views/overview/users'),
                 meta: {
                     title: '用户概览',
-                    icon: 'user'
+                    icon: 'group'
                 },
             }
         ]
@@ -214,8 +214,7 @@ export const constantRoutes = [{
         redirect: '/task',
         meta: {
             title: '我的工作台',
-            icon: 'tree-table',
-            hiddenSideBar: true
+            icon: 'task'
         },
         children: [{
             path: 'task',
@@ -243,7 +242,7 @@ export const constantRoutes = [{
                 import ('@/views/overview/users'),
             meta: {
                 title: '我的工时',
-                icon: 'user'
+                icon: 'fs'
             },
         }]
     },
@@ -262,7 +261,7 @@ export const constantRoutes = [{
                 import ('@/views/overview/users'),
             meta: {
                 title: '我的信息',
-                icon: 'user'
+                icon: 'zl'
             },
         }, ]
     },
