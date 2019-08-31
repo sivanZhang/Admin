@@ -1,11 +1,18 @@
 <template>
   <div id="asset-list">
-    <div style="padding-bottom:15px;">
+    <el-col :span="19" style="padding-bottom:15px;">
       <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
       <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
-       <el-button icon="el-icon-delete" type="danger" @click="delMulAssets">批量删除</el-button>
-    </div>
-
+      <el-button icon="el-icon-delete" type="danger" @click="delMulAssets">批量删除</el-button>
+    </el-col>
+    <el-col :span="5">
+      <el-input
+        placeholder="输入关键字搜索"
+        style="width:200px;"
+        v-model="filterText"
+        class="input-with-select"
+      ></el-input>
+    </el-col>
     <el-table
       ref="assetTable"
       :data="AssetList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -18,7 +25,7 @@
       row-class-name="hover"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection"  ></el-table-column>
+      <el-table-column type="selection"></el-table-column>
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
@@ -151,7 +158,8 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <Drawer scrollable
+    <Drawer
+      scrollable
       closable
       v-model="value1"
       width="526"
@@ -234,7 +242,8 @@ export default {
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      multipleSelection:[]
+      multipleSelection: [],
+      filterText: ""
     };
   },
   computed: {
@@ -294,18 +303,23 @@ export default {
         });
       });
     },
-    
 
-//批量删除资产
-    delMulAssets(){
-       const ids = this.multipleSelection.map(item => item.id).join(",");
-      // console.log(ids);
-       HTTP.deleteAssets({ ids }).then(({ data }) => {
+    //批量删除资产
+    delMulAssets() {
+      this.$confirm("此操作将永久删除资产, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        const ids = this.multipleSelection.map(item => item.id).join(",");
+        // console.log(ids);
+        HTTP.deleteAssets({ ids }).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
             this.$emit("refresh");
           }
         });
+      });
     },
     showAssetForm() {
       this.isShow = true;
