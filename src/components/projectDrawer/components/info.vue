@@ -115,6 +115,7 @@
     <!-- 资产消息栏 -->
     <template v-if="project && project.entity_type === 5">
       <div>
+      
         <el-row>
           <el-col :span="6" class="comment">资产名称</el-col>
           <el-col :span="15" class="comment">{{project.name}}</el-col>
@@ -127,7 +128,7 @@
           <el-col :span="6" class="comment">资产路径</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
-              <span v-if="!editing4"> {{project.path>0?project.path:"-"}}</span>
+              <span v-if="!editing4"> {{project.path}}</span>
               <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit4" @click="edit(3)"></i>
             </div>
            <div  v-if="editing4">

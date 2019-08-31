@@ -266,7 +266,7 @@ export default {
         //是否显示任务板右侧
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
-            this.end_date = row.end_date;
+            this.end_date = row.task.end_date;
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
                 type: 0
