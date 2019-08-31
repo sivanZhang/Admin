@@ -100,12 +100,12 @@ export const asyncRoutes = [{
                 }
             },
             {
-                path: 'settings',
+                path: 'client',
                 name: 'settings',
                 component: () =>
-                    import ('@/views/settings/settings'),
+                    import ('@/views/settings/client'),
                 meta: {
-                    title: '系统设置',
+                    title: '客户部门绑定',
                     icon: 'settings'
                 }
             },
