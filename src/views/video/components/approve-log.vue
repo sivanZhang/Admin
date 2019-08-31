@@ -35,7 +35,7 @@
               fit="cover"
               @click="shwoImage(item)"
             ></el-image>
-            第{{t.image_frame}}帧
+            第{{item.image_frame}}帧
           </div>
         </div>
       </div>

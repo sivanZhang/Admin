@@ -38,16 +38,6 @@ export const asyncRoutes = [{
             icon: 'task'
         },
         children: [{
-                path: 'task',
-                name: 'my-task',
-                component: () =>
-                    import ('@/views/task'),
-                meta: {
-                    title: '我的任务',
-                    icon: 'task'
-                }
-            },
-            {
                 path: 'approve',
                 name: 'approve',
                 component: () =>
@@ -57,26 +47,6 @@ export const asyncRoutes = [{
                     icon: 'v2',
                     roles: 'manage_approve'
                 }
-            },
-            {
-                path: 'overview-users1',
-                name: 'overview-users1',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: {
-                    title: '我的工时',
-                    icon: 'user'
-                },
-            },
-            {
-                path: 'overview-users2',
-                name: 'overview-users2',
-                component: () =>
-                    import ('@/views/overview/users'),
-                meta: {
-                    title: '我的信息',
-                    icon: 'user'
-                },
             },
             {
                 path: '/check-video',
@@ -239,9 +209,68 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/task',
+        component: Layout,
+        redirect: '/task',
+        meta: {
+            title: '我的工作台',
+            icon: 'tree-table',
+            hiddenSideBar: true
+        },
+        children: [{
+            path: 'task',
+            name: 'my-task',
+            component: () =>
+                import ('@/views/task'),
+            meta: {
+                title: '我的任务',
+                icon: 'task'
+            }
+        }]
+    },
+    {
+        path: '/task',
+        component: Layout,
+        redirect: '/task',
+        meta: {
+            title: '我的工作台',
+            icon: 'task'
+        },
+        children: [{
+            path: 'overview-users1',
+            name: 'overview-users1',
+            component: () =>
+                import ('@/views/overview/users'),
+            meta: {
+                title: '我的工时',
+                icon: 'user'
+            },
+        }]
+    },
+    {
+        path: '/task',
+        component: Layout,
+        redirect: '/task',
+        meta: {
+            title: '我的工作台',
+            icon: 'task'
+        },
+        children: [{
+            path: 'overview-users2',
+            name: 'overview-users2',
+            component: () =>
+                import ('@/views/overview/users'),
+            meta: {
+                title: '我的信息',
+                icon: 'user'
+            },
+        }, ]
+    },
+    {
         path: '/assetes',
         component: Layout,
         alwaysShow: true,
+        hidden: true,
         redirect: '/assetes', //设置成父路由的路径后，点击面包屑不会跳转
         meta: {
             title: '资产管理',
