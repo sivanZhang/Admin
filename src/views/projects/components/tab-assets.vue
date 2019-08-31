@@ -1,102 +1,109 @@
 <template>
   <div id="asset-list">
-    <el-col :span="19" style="padding-bottom:15px;">
-      <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
-      <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
-      <el-button icon="el-icon-delete" type="danger" @click="delMulAssets">批量删除</el-button>
-    </el-col>
-    <el-col :span="5">
-      <el-input
-        placeholder="输入关键字搜索"
-        style="width:200px;"
-        v-model="filterText"
-        class="input-with-select"
-      ></el-input>
-    </el-col>
-    <el-table
-      ref="assetTable"
-      :data="AssetList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      style="width: 100%"
-      border
-      :stripe="true"
-      :row-style="{'font-size':'13px'}"
-      :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
-      highlight-current-row
-      row-class-name="hover"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
-      <el-table-column label="缩略图" align="center">
-        <template slot-scope="scope">
-          <el-image
-            :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 50px;height: 30px;"
-            @click.native="show(scope.row.id)"
+    <div>
+      <el-row>
+        <el-col :span="15" style="padding-bottom:15px;">
+          <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
+          <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
+          <el-button icon="el-icon-delete" type="danger" @click="delMulAssets" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
+        </el-col>
+        <el-col :span="9" align="right">
+          <el-input
+            placeholder="输入关键字搜索"
+            style="width:200px;"
+            v-model="filterText"
+            class="input-with-select"
           >
-            <div slot="placeholder" class="image-slot">
-              加载中
-              <span class="dot">...</span>
-            </div>
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
-          </el-image>
-        </template>
-      </el-table-column>
-      <el-table-column prop="changci" label="场次" align="center"></el-table-column>
-      <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
-      <el-table-column prop="name" label="镜头号" align="left"></el-table-column>
-      <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
-      <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
-      <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
-      <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
-      <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
-      <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
-      <el-table-column prop="asset_status" label="状态" align="left"></el-table-column>
-      <el-table-column label="当前环节" align="center" width="160px">
-        <el-table-column prop="link" label="工种" align="left">
+            <el-button @click="getAssetList(1)" slot="append" icon="el-icon-search" type="primary" />
+          </el-input>
+          <el-button @click="getAssetList()" icon="el-icon-refresh-left" type="primary">重置</el-button>
+        </el-col>
+      </el-row>
+      <el-table
+        ref="assetTable"
+        :data="AssetList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        style="width: 100%"
+        border
+        :stripe="true"
+        :row-style="{'font-size':'13px'}"
+        :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+        highlight-current-row
+        row-class-name="hover"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
+        <el-table-column label="缩略图" align="center">
           <template slot-scope="scope">
-            <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
+            <el-image
+              :src="$store.state.BASE_URL+scope.row.image"
+              style="width: 50px;height: 30px;"
+              @click.native="show(scope.row.id)"
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="截止日期" align="left" width="95px">
+        <el-table-column prop="changci" label="场次" align="center"></el-table-column>
+        <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
+        <el-table-column prop="name" label="镜头号" align="left"></el-table-column>
+        <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
+        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
+        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
+        <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
+        <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
+        <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
+        <el-table-column prop="asset_status" label="状态" align="left"></el-table-column>
+        <el-table-column label="当前环节" align="center" width="160px">
+          <el-table-column prop="link" label="工种" align="left">
+            <template slot-scope="scope">
+              <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="截止日期" align="left" width="95px">
+            <template slot-scope="scope">
+              <div
+                v-for="(todo,index) of scope.row.link"
+                :key="index"
+                style="position:top"
+              >{{todo.date_end|dateFormat}}</div>
+            </template>
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="计划截止日期" align="left" width="95px">
+          <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <div
-              v-for="(todo,index) of scope.row.link"
-              :key="index"
-              style="position:top"
-            >{{todo.date_end|dateFormat}}</div>
+            <el-tooltip content="删除资产" placement="top">
+              <el-button
+                @click="deleteAssets(scope.row.id)"
+                icon="el-icon-delete"
+                type="text"
+                style="color:red"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
-      </el-table-column>
-      <el-table-column label="计划截止日期" align="left" width="95px">
-        <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
-      </el-table-column>
-      <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <el-tooltip content="删除资产" placement="top">
-            <el-button
-              @click="deleteAssets(scope.row.id)"
-              icon="el-icon-delete"
-              type="text"
-              style="color:red"
-            />
-          </el-tooltip>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block" style="text-align: right">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="pageSizeList"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="AssetList.length"
-      ></el-pagination>
+      </el-table>
+      <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="AssetList.length"
+        ></el-pagination>
+      </div>
     </div>
 
     <el-dialog title="新建资产" :visible.sync="isShow" width="480px" top="5vh">
@@ -246,6 +253,7 @@ export default {
       filterText: ""
     };
   },
+ 
   computed: {
     ...mapState("project", ["ProjectList"])
   },
@@ -264,8 +272,12 @@ export default {
         params: { id: this.$route.params.id }
       });
     },
-    getAssetList() {
-      this.$emit("refresh");
+    getAssetList(type) {
+      if (type) {
+        this.$emit("refresh", this.filterText);
+      } else {
+        this.$emit("refresh");
+      }
     },
     getTasks() {
       this.$emit("get-tasks");

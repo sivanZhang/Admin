@@ -1,7 +1,7 @@
 <template>
   <div>
     <svg-icon icon-class="notice" @click="show" />
-    <el-badge :value="notice.length" class="item"></el-badge>
+    <el-badge :value="unreadCount" class="item" v-if="unreadCount"></el-badge>
     <Drawer scrollable
       closable
       height="500"
@@ -168,7 +168,7 @@ export default {
       multipleSelection: [],
       activeName: "third",
       loginMessage: this.$store.state.login.userInfo,
-      
+      unreadCount:null
     };
   },
 
@@ -198,6 +198,7 @@ export default {
     getNoticeDetail() {
       HTTP.noticeDetail(this.id).then(({ data }) => {
         this.notice = [...data.msg];
+        this.unreadCount=data.unread_count
         //   console.log("通知详情");
         //   console.log(this.notice);
       });

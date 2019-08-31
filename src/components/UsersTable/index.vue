@@ -1,6 +1,7 @@
-<template>
+<template >
   <div>
-    <el-table
+   <template v-if="UserList">
+     <el-table
       :data="UserList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
@@ -51,6 +52,7 @@
         :total="UserList.length"
       ></el-pagination>
     </div>
+   </template>
   </div>
 </template>
 

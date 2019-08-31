@@ -53,8 +53,8 @@ export function deleteWKTemplate(params){
     return AXIOS.post('/wktemplate/wktemplate_v2/',params)
 }
 //获取用户列表
-export function getUserList() {
-    return AXIOS.get('/users/list/')
+export function getUserList(params) {
+    return AXIOS.get('/users/list/',{params})
 }
 //角色列表
 export function getRoles() {
