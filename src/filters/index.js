@@ -23,7 +23,7 @@ export function dateFormat(date) {
         return '-'
     }
 }
-//时间戳格式化为 yyyy/dd/mm hh:mm
+//时间戳格式化为 yyyy/dd/mm hh:mm:SS
 export function dateTimeFormat(date) {
     if (date) {
         const TIME = new Date(date * 1000)
@@ -35,13 +35,14 @@ export function dateTimeFormat(date) {
                 return val
             }
         }
-        let [dd, mm, MM, hh] = [add0(TIME.getDate()),
+        let [dd, mm, MM, hh,ss] = [add0(TIME.getDate()),
             add0(TIME.getMonth() + 1),
             add0(TIME.getMinutes()),
-            add0(TIME.getHours())
+            add0(TIME.getHours()),
+            add0(TIME.getSeconds())
         ]
 
-        return `${TIME.getFullYear()}/${mm}/${dd} ${hh}:${MM}`
+        return `${TIME.getFullYear()}/${mm}/${dd} ${hh}:${MM}:${ss}`
     } else {
         return '-'
     }

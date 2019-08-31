@@ -33,7 +33,11 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属项目:</el-col>
-        <el-col :span="19">{{taskdetail.project|filterName}}</el-col>
+        <el-col :span="19">
+           <router-link :to="`/projects/project-detail/${taskdetail.project.id}`">
+          {{taskdetail.project|filterName}}
+           </router-link>
+          </el-col> 
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属资产:</el-col>
