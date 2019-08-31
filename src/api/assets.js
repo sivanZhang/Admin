@@ -3,6 +3,7 @@ import AXIOS from '@/utils/request'
 // export function getAssets() {
 //     return AXIOS.get('/assets/assets/')
 // }
+//删除资产
 export function deleteAssets(data) {
     return AXIOS.post('/assets/assets/?delete', {
         ...data,
