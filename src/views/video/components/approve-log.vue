@@ -8,7 +8,8 @@
     >
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
-    <div class="bd" v-for="(t,i) of list" :key="i">
+    <div v-loading="loading">
+      <div class="bd" v-for="(t,i) of list" :key="i">
       <el-row type="flex" justify="space-between">
         <el-col style="display:flex">
           <div class="item-title">审批人员：</div>
@@ -39,6 +40,7 @@
         </div>
       </div>
     </div>
+    </div>
     <div v-show="!list.length">暂无数据</div>
     <zoom-img ref="zoomImg" />
   </div>
@@ -53,6 +55,7 @@ export default {
   },
   data() {
     return {
+      loading:false,
       list: [],
       httpParams: {},
       options: [
@@ -94,7 +97,9 @@ export default {
           approve_result: this.select
         };
       }
+      this.loading = true
       getApproveRemark(this.httpParams).then(({ data }) => {
+        this.loading =false
         this.list = [...data.msg];
       });
     }
