@@ -19,13 +19,16 @@
           </el-tab-pane>
           <el-tab-pane label="链接" name="third"></el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
-          <el-tab-pane label="动态" name="sixth">动态</el-tab-pane>
+          <el-tab-pane label="审批记录" name="sixth">
+            <approve-log :list="ApproveList" @imageClick="showImage" @changeSelect="changeSelect"/>
+          </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
             <info :project="project" />
           </el-tab-pane>
         </el-tabs>
       </div>
     </div>
+    <zoom-img ref="zoomImg" />
   </div>
 </template>
 
@@ -34,6 +37,8 @@ import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
+import ZoomImg from "@/components/ZoomImg";
+import approveLog from "@/views/video/components/approve-log";
 export default {
   name: "assets-drawer",
   props: ["project", "RemarksData"],
@@ -43,35 +48,35 @@ export default {
       LinkList: []
     };
   },
-  
-  watch:{
-    project:{
-      handler:function(newVal,oldVal){
-        if(newVal.id){
+
+  watch: {
+    project: {
+      handler: function(newVal, oldVal) {
+        if (newVal.id) {
           this.getLinkList();
         }
       }
     }
   },
-  components: { remarks, info, links },
+  components: { remarks, info, links, approveLog,ZoomImg },
   methods: {
     handleTabClick(tab, event) {
       //this.getRemarkList();
       console.log(tab, event);
     },
-    getAssetList(){
+    getAssetList() {
       this.$emit("refresh_assetList");
     },
     getTasks() {
       this.$emit("get-tasks");
     },
-     getLinkList() {
+    getLinkList() {
       getLinks({
         asset: this.project.id
       }).then(res => {
         this.LinkList = [...res.data.msg];
       });
-    },
+    }
   }
 };
 </script>
@@ -79,7 +84,7 @@ export default {
 <style lang="scss" scoped>
 .page-right {
   height: 100%;
-  
+
   // margin-left: 0.5%;
   .dropdow {
     position: absolute;

@@ -10,8 +10,9 @@
     </el-select>
     <div class="bd" v-for="(t,i) of list" :key="i">
       <el-row type="flex" justify="space-between">
-        <el-col>
-          <label for>{{t.approve_user_id.name}}</label>
+        <el-col style="display:flex">
+          <div class="item-title">审批人员：</div>
+          {{t.approve_user_id.name}}
         </el-col>
         <el-col class="text-right">{{t.time|dateTimeFormat}}</el-col>
       </el-row>

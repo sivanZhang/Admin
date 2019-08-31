@@ -44,9 +44,6 @@
       draggable
     >
       <el-tabs>
-        <el-tab-pane label="执行记录" lazy>
-          <tabLog :loglist="LogList" :logsLoading="logsLoading" />
-        </el-tab-pane>
         <el-tab-pane label="任务详情" lazy>
           <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
         </el-tab-pane>
@@ -74,6 +71,9 @@
               @click="submitApprove"
             >提交</el-button>
           </div>
+        </el-tab-pane>
+        <el-tab-pane label="执行记录" lazy>
+          <tabLog :loglist="LogList" :logsLoading="logsLoading" />
         </el-tab-pane>
       </el-tabs>
     </Drawer>
