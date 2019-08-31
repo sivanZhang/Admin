@@ -3,6 +3,7 @@
     <div style="padding-bottom:15px;">
       <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
       <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
+       <el-button icon="el-icon-delete" type="danger" @click="delMulAssets">批量删除</el-button>
     </div>
 
     <el-table
@@ -15,7 +16,9 @@
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
       highlight-current-row
       row-class-name="hover"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection"  ></el-table-column>
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
@@ -230,7 +233,8 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       headers: {
         Authorization: `JWT ${getToken()}`
-      }
+      },
+      multipleSelection:[]
     };
   },
   computed: {
@@ -257,6 +261,9 @@ export default {
     getTasks() {
       this.$emit("get-tasks");
     },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     show(id) {
       //console.log(id);
       this.value1 = true;
@@ -271,14 +278,14 @@ export default {
         this.RemarksData = [...data.msg];
       });
     },
-
+    //删除单个资产
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        console.log(id);
+        //console.log(id);
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
@@ -286,6 +293,19 @@ export default {
           }
         });
       });
+    },
+    
+
+//批量删除资产
+    delMulAssets(){
+       const ids = this.multipleSelection.map(item => item.id).join(",");
+      // console.log(ids);
+       HTTP.deleteAssets({ ids }).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.$emit("refresh");
+          }
+        });
     },
     showAssetForm() {
       this.isShow = true;

@@ -110,10 +110,23 @@
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">状态列表</h4>
             <div class="box">
-              <el-row>
-                <div class="maxstatus-name">审核中：</div>
+               <el-row>
+                <div class="maxstatus-name">暂停：</div>
               </el-row>
-              <el-row v-for="(item,index) of approvingStatus" :key="index" class="minstatus-name">
+              <el-row v-for="(item,index) of pauseStatus" :key="index" class="minstatus-name">
+                <el-col :span="12">{{item.name}}</el-col>
+                <el-col :span="12" align="right" class="col">
+                 <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
+                  <span @click="addStatus(item.id)">
+                    <i class="el-icon-plus" ></i>
+                  </span>
+                 </el-tooltip>
+                </el-col>
+              </el-row>
+              <el-row>
+                <div class="maxstatus-name">未开始：</div>
+              </el-row>
+              <el-row v-for="(item,index) of notstartStatus" :key="index" class="minstatus-name">
                 <el-col :span="12">{{item.name}}</el-col>
                 <el-col :span="12" align="right" class="col">
                   <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
@@ -137,6 +150,20 @@
                 </el-col>
               </el-row>
               <el-row>
+                <div class="maxstatus-name">审核中：</div>
+              </el-row>
+              <el-row v-for="(item,index) of approvingStatus" :key="index" class="minstatus-name">
+                <el-col :span="12">{{item.name}}</el-col>
+                <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
+                  <span @click="addStatus(item.id)">
+                    <i class="el-icon-plus" ></i>
+                  </span>
+                  </el-tooltip>
+                </el-col>
+              </el-row>
+              
+              <el-row>
                 <div class="maxstatus-name">完成：</div>
               </el-row>
               <el-row v-for="(item,index) of finishStatus" :key="index" class="minstatus-name">
@@ -149,76 +176,18 @@
                   </el-tooltip>
                 </el-col>
               </el-row>
-              <el-row>
-                <div class="maxstatus-name">未开始：</div>
-              </el-row>
-              <el-row v-for="(item,index) of notstartStatus" :key="index" class="minstatus-name">
-                <el-col :span="12">{{item.name}}</el-col>
-                <el-col :span="12" align="right" class="col">
-                  <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
-                  <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" ></i>
-                  </span>
-                  </el-tooltip>
-                </el-col>
-              </el-row>
-              <el-row>
-                <div class="maxstatus-name">暂停：</div>
-              </el-row>
-              <el-row v-for="(item,index) of pauseStatus" :key="index" class="minstatus-name">
-                <el-col :span="12">{{item.name}}</el-col>
-                <el-col :span="12" align="right" class="col">
-                 <el-tooltip class="item" effect="dark" content="添加项目状态" placement="top">
-                  <span @click="addStatus(item.id)">
-                    <i class="el-icon-plus" ></i>
-                  </span>
-                 </el-tooltip>
-                </el-col>
-              </el-row>
+              
+             
             </div>
           </div>
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">当前项目拥有状态</h4>
             <div class="box">
-              <el-row>
-                <div class="maxstatus-name">审核中：</div>
+                <el-row>
+                <div class="maxstatus-name">暂停：</div>
               </el-row>
               <el-row
-                v-for="(item,index) of projectStatus.approving"
-                :key="index"
-                class="minstatus-name"
-              >
-                <el-col :span="12">{{item.name}}</el-col>
-                <el-col :span="12" align="right" class="col">
-                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
-                  <span @click="delStatus(item.id)">
-                    <i class="el-icon-minus" style="color:red"></i>
-                  </span>
-                  </el-tooltip>
-                </el-col>
-              </el-row>
-              <el-row>
-                <div class="maxstatus-name">进行中：</div>
-              </el-row>
-              <el-row
-                v-for="(item,index) of projectStatus.conducting"
-                :key="index"
-                class="minstatus-name"
-              >
-                <el-col :span="12">{{item.name}}</el-col>
-                <el-col :span="12" align="right" class="col">
-                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
-                  <span @click="delStatus(item.id)">
-                    <i class="el-icon-minus" style="color:red"></i>
-                  </span>
-                  </el-tooltip>
-                </el-col>
-              </el-row>
-              <el-row>
-                <div class="maxstatus-name">完成：</div>
-              </el-row>
-              <el-row
-                v-for="(item,index) of projectStatus.finish"
+                v-for="(item,index) of projectStatus.pause"
                 :key="index"
                 class="minstatus-name"
               >
@@ -249,10 +218,10 @@
                 </el-col>
               </el-row>
               <el-row>
-                <div class="maxstatus-name">暂停：</div>
+                <div class="maxstatus-name">进行中：</div>
               </el-row>
               <el-row
-                v-for="(item,index) of projectStatus.pause"
+                v-for="(item,index) of projectStatus.conducting"
                 :key="index"
                 class="minstatus-name"
               >
@@ -265,6 +234,43 @@
                   </el-tooltip>
                 </el-col>
               </el-row>
+              <el-row>
+                <div class="maxstatus-name">审核中：</div>
+              </el-row>
+              <el-row
+                v-for="(item,index) of projectStatus.approving"
+                :key="index"
+                class="minstatus-name"
+              >
+                <el-col :span="12">{{item.name}}</el-col>
+                <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
+                  <span @click="delStatus(item.id)">
+                    <i class="el-icon-minus" style="color:red"></i>
+                  </span>
+                  </el-tooltip>
+                </el-col>
+              </el-row>
+              
+              <el-row>
+                <div class="maxstatus-name">完成：</div>
+              </el-row>
+              <el-row
+                v-for="(item,index) of projectStatus.finish"
+                :key="index"
+                class="minstatus-name"
+              >
+                <el-col :span="12">{{item.name}}</el-col>
+                <el-col :span="12" align="right" class="col">
+                  <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
+                  <span @click="delStatus(item.id)">
+                    <i class="el-icon-minus" style="color:red"></i>
+                  </span>
+                  </el-tooltip>
+                </el-col>
+              </el-row>
+              
+            
             </div>
           </div>
         </div>

@@ -1,110 +1,123 @@
 <template>
-  <el-dialog title="新建项目" :visible.sync="isShow" width="480px" top="5vh" @closed="cancel()">
-    <el-form
-      :model="ProjectForm"
-      :rules="rules"
-      ref="projectForm"
-      label-width="100px"
-      class="demo-ProjectForm"
-      label-position="left"
-      hide-required-asterisk
-    >
-      <el-upload
-        accept="image/jpeg, image/gif, image/png"
-        ref="upload"
-        class="upload-demo"
-        action="/api/appfile/appfile/"
-        :headers="headers"
-        :on-success="handleSuccess"
-        drag
-        :show-file-list="false"
+  <div>
+    <el-dialog title="新建项目" :visible.sync="isShow" width="480px" top="5vh" @closed="cancel()">
+      <el-form
+        :model="ProjectForm"
+        :rules="rules"
+        ref="projectForm"
+        label-width="100px"
+        class="demo-ProjectForm"
+        label-position="left"
+        hide-required-asterisk
       >
-        <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
-        <template v-else>
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">
-            将文件拖到此处，或
-            <em>点击上传</em>
-          </div>
-        </template>
-      </el-upload>
+        <el-upload
+          accept="image/jpeg, image/gif, image/png"
+          ref="upload"
+          class="upload-demo"
+          action="/api/appfile/appfile/"
+          :headers="headers"
+          :on-success="handleSuccess"
+          drag
+          :show-file-list="false"
+        >
+          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+          <template v-else>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </template>
+        </el-upload>
 
-      <el-form-item label="颜色" prop="color">
-        <el-color-picker
-          v-model="ProjectForm.color"
-          :predefine="predefineColors"
-          color-format="hex"
-        ></el-color-picker>
-      </el-form-item>
-      <el-form-item label="项目名称" prop="name">
-        <el-input v-model.trim="ProjectForm.name"></el-input>
-      </el-form-item>
-      <el-form-item label="项目编码" prop="code">
-        <el-input v-model="ProjectForm.code"></el-input>
-      </el-form-item>
-      <el-form-item label="Windows路径" prop="windows_path">
-        <el-input v-model="ProjectForm.windows_path"></el-input>
-      </el-form-item>
-      <el-form-item label="Mac路径" prop="mac_path">
-        <el-input v-model="ProjectForm.mac_path"></el-input>
-      </el-form-item>
-      <el-form-item label="Linux路径" prop="linux_path">
-        <el-input v-model="ProjectForm.linux_path"></el-input>
-      </el-form-item>
-      <el-form-item label="项目预算" prop="budget">
-        <el-input v-model="ProjectForm.budget">
-          <span slot="append">万</span>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="工作流" prop="region">
-        <el-select v-model="ProjectForm.status" placeholder="请选择工作流">
-          <el-option label="草稿" :value="0"></el-option>
-          <el-option label="激活" :value="1"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="负责人" prop="region">
-        <el-select v-model="ProjectForm.chargerid" filterable  placeholder="请选择负责人">
-          <el-option
-            v-for="item of UserList"
-            :label="item.username"
-            :value="item.id"
-            :key="item.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="起止日期" required>
-        <el-col :span="11">
-          <el-form-item prop="start">
-            <el-date-picker
-              type="date"
-              placeholder="项目开始日期"
-              v-model="ProjectForm.start"
-              style="width: 100%;"
-              :picker-options="pickerBeginDateBefore"
-              format="yyyy/MM/dd"
-            ></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-form-item prop="end">
-            <el-date-picker
-              type="date"
-              placeholder="项目结束日期"
-              v-model="ProjectForm.end"
-              style="width: 100%;"
-              :picker-options="pickerBeginDateAfter"
-               format="yyyy/MM/dd"
-            ></el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item class="subbtn">
-        <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submitForm">立即创建</el-button>
-      </el-form-item>
-    </el-form>
-  </el-dialog>
+        <el-form-item label="颜色" prop="color">
+          <el-color-picker
+            v-model="ProjectForm.color"
+            :predefine="predefineColors"
+            color-format="hex"
+          ></el-color-picker>
+        </el-form-item>
+        <el-form-item label="项目名称" prop="name">
+          <el-input v-model.trim="ProjectForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="项目编码" prop="code">
+          <el-input v-model="ProjectForm.code"></el-input>
+        </el-form-item>
+        <el-form-item label="Windows路径" prop="windows_path">
+          <el-input v-model="ProjectForm.windows_path"></el-input>
+        </el-form-item>
+        <el-form-item label="Mac路径" prop="mac_path">
+          <el-input v-model="ProjectForm.mac_path"></el-input>
+        </el-form-item>
+        <el-form-item label="Linux路径" prop="linux_path">
+          <el-input v-model="ProjectForm.linux_path"></el-input>
+        </el-form-item>
+        <el-form-item label="项目预算" prop="budget">
+          <el-input v-model="ProjectForm.budget">
+            <span slot="append">万</span>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="工作流" prop="region">
+          <el-select v-model="ProjectForm.status" placeholder="请选择工作流">
+            <el-option label="草稿" :value="0"></el-option>
+            <el-option label="激活" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="负责人" prop="region">
+          <el-select v-model="ProjectForm.chargerid" filterable placeholder="请选择负责人">
+            <el-option
+              v-for="item of UserList"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="起止日期" required>
+          <el-col :span="11">
+            <el-form-item prop="start">
+              <el-date-picker
+                type="date"
+                placeholder="项目开始日期"
+                v-model="ProjectForm.start"
+                style="width: 100%;"
+                :picker-options="pickerBeginDateBefore"
+                format="yyyy/MM/dd"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-form-item prop="end">
+              <el-date-picker
+                type="date"
+                placeholder="项目结束日期"
+                v-model="ProjectForm.end"
+                style="width: 100%;"
+                :picker-options="pickerBeginDateAfter"
+                format="yyyy/MM/dd"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item class="subbtn">
+          <el-button @click="cancel">取消</el-button>
+          <el-button type="primary" @click="submitForm">立即创建</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="下一步" :visible.sync="isShowNext" width="480px" top="5vh" @closed="cancel()">
+      <h3>项目已创建成功，请选择下一步</h3>
+      <div style="padding-top:10px">
+        <router-link :to="`/projects/project-detail/${id}`">
+          <el-button type="primary" @click="cancel1()">查看项目</el-button>
+        </router-link>
+        <router-link :to="`/assetes/asset-import/${id}`">
+          <el-button type="primary" @click="cancel1()">导入Excel</el-button>
+        </router-link>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -174,7 +187,9 @@ export default {
             return time.getTime() < beginDateVal;
           }
         }
-      }
+      },
+      isShowNext: false,
+      id:null
     };
   },
   props: {
@@ -192,6 +207,9 @@ export default {
       //告诉父组件：不显示弹框
       this.$emit("update:isShow", false);
     },
+    cancel1(){
+      this.isShowNext=false
+    },
     //验证，并提交创建项目的表单
     submitForm() {
       this.$refs["projectForm"].validate(valid => {
@@ -204,6 +222,8 @@ export default {
           addProjects(Data).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
+              this.id=data.id;
+              this.isShowNext=true;
               this.$store.dispatch("project/get_Projects");
               this.$emit("update:isShow", false);
             }
@@ -223,7 +243,7 @@ export default {
   created() {
     !this.UserList && this.$store.dispatch("admin/get_UserList");
   },
- 
+
   watch: {
     isShow(val) {
       //弹框关闭后，form数据重置、验证重置
@@ -250,13 +270,11 @@ export default {
   padding: 10px 20px;
 }
 .el-form-item--mini .el-form-item__label {
-    line-height: 28px;
-    font-size: 12px;
+  line-height: 28px;
+  font-size: 12px;
 }
 </style>
 <style lang="scss" scoped>
-
-
 .line {
   text-align: center;
 }
