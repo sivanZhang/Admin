@@ -84,7 +84,7 @@ export const asyncRoutes = [{
                 component: () =>
                     import ('@/views/admin/profession'),
                 meta: {
-                    title: '工种',
+                    title: '部门及工种',
                     icon: 'profession'
                 }
             },
