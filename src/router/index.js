@@ -180,7 +180,7 @@ export const constantRoutes = [{
                 component: () =>
                     import ('@/views/overview/users'),
                 meta: {
-                    title: '用户概览',
+                    title: '实训项目',
                     icon: 'group'
                 },
             }
