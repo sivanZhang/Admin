@@ -115,8 +115,8 @@
         <h2>创建成功</h2>
       </el-col>
       <el-col align="center" style="padding-top:25px">
-        <h4>已创建新项目</h4>
-        <h4>前往项目以查看项目详情，或点击导入镜头进行资产导入</h4>
+        <h4 style="font-weight:100;">已创建新项目</h4>
+        <h4 style="font-weight:100;" >前往项目以查看项目详情，或点击导入镜头进行资产导入</h4>
       </el-col>
       </el-row>
       <el-row style="padding-top:20px">
