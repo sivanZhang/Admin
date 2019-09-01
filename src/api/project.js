@@ -23,3 +23,7 @@ export function projectDetail(params){
 export function projectProfession(data){
     return AXIOS.post('/projects/projects/?method=put',data)
 }
+//删除项目
+export function delOneProject(data){
+    return AXIOS.post('/projects/projects/?delete',data)
+}

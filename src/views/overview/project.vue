@@ -2,7 +2,8 @@
   <div id="project" style="margin:-20px">
     <div class="container">
       <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
-        <Drawer scrollable
+        <Drawer
+          scrollable
           closable
           v-model="isDrawerShow"
           width="526"
@@ -11,7 +12,13 @@
           :append-to-body="true"
         >
           <drawer-header :project="project" style="padding:10px" />
-          <project-drawer :project="project" :RemarksData="RemarksData" :assetsList="TableData" :taskList="taskList" @refresh="show"/>
+          <project-drawer
+            :project="project"
+            :RemarksData="RemarksData"
+            :assetsList="TableData"
+            :taskList="taskList"
+            @refresh="show"
+          />
         </Drawer>
         <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
           <div slot="title">
@@ -30,6 +37,7 @@
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
+                <el-dropdown-item @click.native="delProject(item)">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -60,10 +68,7 @@
               <el-col :span="12">
                 <p class="subtitle">项目预算</p>
                 <div style="display:flex;">
-                  <div>
-                    ¥{{item.budget|numberFormat}}万元
-                  </div>
-                  
+                  <div>¥{{item.budget|numberFormat}}万元</div>
                 </div>
               </el-col>
               <el-col :span="12">
@@ -93,6 +98,7 @@ import {queryTask} from "@/api/task";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
+import {delOneProject} from "@/api/project"
 export default {
   name: "project",
   components: {
@@ -144,7 +150,24 @@ export default {
       }).then(({data})=>{
         this.taskList = [...data.msg]
       })
-    }
+    },
+    delProject(item){
+      this.$confirm("删除项目后无法恢复，确认删除?", "注意", {
+        confirmButtonText: "删除",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+      delOneProject({
+        id:item.id,
+        method:"delete"
+      }).then(({data})=>{
+        
+        if(data.status===0)
+        this.$message.success(data.msg);
+        this.$store.dispatch("project/get_Projects");
+      })
+    })}
   },
   created() {
     this.$store.dispatch("project/get_Projects");
