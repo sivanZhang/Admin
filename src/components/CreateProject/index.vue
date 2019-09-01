@@ -106,7 +106,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog  :visible.sync="isShowNext" width="480px" top="5vh" @closed="cancel()">
+    <el-dialog  :visible.sync="isShowNext" width="480px" height="300px" top="5vh" @closed="cancel()">
       <el-row>
         <el-col align="center">
         <svg-icon icon-class="success" style="width:50px;height:50px"></svg-icon>
@@ -120,12 +120,11 @@
       </el-col>
       </el-row>
       <el-row style="padding-top:20px">
-        <el-col :span="18" align="right">
+        <el-col  align="center">
           <router-link :to="`/projects/project-detail/${id}`">
-          <el-button type="primary" @click="cancel1()">前往项目</el-button>
+          <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
         </router-link>
-        </el-col>
-       <el-col :span="6" align="right">
+        
           <router-link :to="`/assetes/asset-import/${id}`">
           <el-button type="primary" @click="cancel1()">导入镜头</el-button>
         </router-link>
