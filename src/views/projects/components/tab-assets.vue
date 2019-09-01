@@ -5,7 +5,7 @@
         <el-col :span="15" style="padding-bottom:15px;">
           <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
           <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
-          <el-button icon="el-icon-delete" type="danger" @click="delMulAssets" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
+          <el-button  type="danger" @click="delMulAssets()" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
         </el-col>
         <el-col :span="9" align="right">
           <el-input
@@ -30,8 +30,9 @@
         highlight-current-row
         row-class-name="hover"
         @selection-change="handleSelectionChange"
+       
       >
-        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
         <el-table-column label="缩略图" align="center">
           <template slot-scope="scope">
@@ -284,6 +285,7 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(this.multipleSelection.length);
     },
     show(id) {
       // console.log(id);

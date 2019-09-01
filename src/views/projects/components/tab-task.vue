@@ -500,7 +500,7 @@ export default {
           if (data.status === 0) {
             this.$emit("refresh");
             this.$emit("refresh_assetList");
-            this.isDialogShow = false;
+            this.isLinkDialogShow = false;
             this.FormList = [{}];
           }
         })
