@@ -286,7 +286,7 @@ export default {
       this.multipleSelection = val;
     },
     show(id) {
-      //console.log(id);
+      // console.log(id);
       this.value1 = true;
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };

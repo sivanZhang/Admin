@@ -44,12 +44,12 @@
         <!-- default-expand-all -->
         <el-table-column type="selection"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
-        <el-table-column prop="name" label="任务"></el-table-column>
+        <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="镜头号">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
-          <el-table-column prop="priority" label="优先级" :formatter="Priority"></el-table-column>
+        <el-table-column prop="priority" label="优先级" :formatter="Priority"></el-table-column>
         <el-table-column prop="grade" label="难度等级" :formatter="Grade"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">{{scope.row.status|projectStatus}}</template>
@@ -61,25 +61,38 @@
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
         <el-table-column prop="content" label="描述" show-overflow-tooltip></el-table-column>
-        <el-table-column label="开始日期">
+        <el-table-column label="创建日期" width="95px">
+          <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="开始日期" width="95px">
           <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="end_date" label="截止日期" width="95px">
+        <el-table-column label="截止日期" width="95px">
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hour" label="预设时间（小时）" width="125px"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-          <el-tooltip effect="dark" content="添加子任务" placement="top">
-            <span>
-              <i type="primary" class="el-icon-plus" style="color:red" @click="openDialog(2,scope.row)"></i>
-            </span>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="修改任务" placement="top">
-            <span style="margin-left:15px">
-              <i class="el-icon-edit" type="primary" style="color:green" @click="openDialog(3,scope.row)"></i>
-            </span>
-          </el-tooltip>
+            <el-tooltip effect="dark" content="添加子任务" placement="top">
+              <span>
+                <i
+                  type="primary"
+                  class="el-icon-plus"
+                  style="color:red"
+                  @click="openDialog(2,scope.row)"
+                ></i>
+              </span>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="修改任务" placement="top">
+              <span style="margin-left:15px">
+                <i
+                  class="el-icon-edit"
+                  type="primary"
+                  style="color:green"
+                  @click="openDialog(3,scope.row)"
+                ></i>
+              </span>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -95,7 +108,7 @@
       <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <div v-if="active == 0" style="padding-top:10px">
           <el-form-item label="所属资产">
-            <el-select v-model="TaskForm.asset" filterable  placeholder="请选择所属资产">
+            <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产">
               <el-option
                 v-for="item of AssetListTask"
                 :label="item.name"
@@ -105,9 +118,9 @@
             </el-select>
           </el-form-item>
         </div>
-        <div v-if="active==1" style="padding-top:10px">
+        <div v-if="active==1&&LinkList.length" style="padding-top:10px">
           <el-form-item label="所属环节">
-            <el-select v-model="TaskForm.link_id" filterable  placeholder="请选择所属环节">
+            <el-select v-model="TaskForm.link_id" filterable placeholder="请选择所属环节">
               <el-option
                 v-for="item of LinkList"
                 :label="item[0].dept.name"
@@ -116,6 +129,17 @@
               ></el-option>
             </el-select>
           </el-form-item>
+        </div>
+        <div v-if="active==1&&LinkList.length===0" style="padding-top:10px">
+          <el-row style="display:flex;justify-content:center">
+            <svg-icon icon-class="warn" style="width:40px;height:40px;"></svg-icon>
+          </el-row>
+          <el-row style="display:flex;justify-content:center;padding-top:10px">
+            <span>当前资产没有环节，请创建</span>
+          </el-row>
+          <el-row style="display:flex;justify-content:center;padding-top:10px">
+            <el-button type="primary" @click="addLink(TaskForm.asset)">创建环节</el-button>
+          </el-row>
         </div>
         <div v-if="active==2" style="padding-top:10px">
           <el-form-item label="任务名称" prop="name">
@@ -136,7 +160,7 @@
             <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
           </el-form-item>
           <el-form-item label="任务状态" prop="status">
-            <el-select v-model="TaskForm.status" filterable  placeholder="请选择任务状态">
+            <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
               <el-option
                 v-for="item of StatusList"
                 :label="item.label"
@@ -146,7 +170,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="任务执行人" prop="executorlist">
-            <el-select v-model="TaskForm.executorlist" filterable  multiple placeholder="请选择任务执行人">
+            <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择任务执行人">
               <el-option
                 v-for="item of DeptUsers"
                 :label="item.username"
@@ -177,7 +201,12 @@
         </div>
       </el-form>
       <el-button style="margin-top: 12px;" @click="before" v-if="active !=0">上一步</el-button>
-      <el-button style="margin-top: 12px;" @click="next" v-if="active !=2">下一步</el-button>
+      <el-button
+        style="margin-top: 12px;"
+        @click="next"
+        v-if="active !=2"
+        :disabled="active==1&&LinkList.length===0"
+      >下一步</el-button>
     </el-dialog>
     <!-- 子任务创建，任务修改 -->
     <el-dialog :title="dialogTitle" :visible.sync="isDialogShow" width="490px">
@@ -200,7 +229,7 @@
           <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
-          <el-select v-model="TaskForm.status" filterable  placeholder="请选择任务状态">
+          <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
             <el-option
               v-for="item of StatusList"
               :label="item.label"
@@ -210,7 +239,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" filterable  multiple placeholder="请选择任务执行人">
+          <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择任务执行人">
             <el-option
               v-for="item of DeptUsers"
               :label="item.username"
@@ -221,7 +250,7 @@
         </el-form-item>
 
         <el-form-item label="所属资产">
-          <el-select v-model="TaskForm.asset" filterable  placeholder="请选择所属资产">
+          <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产">
             <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -250,6 +279,65 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 创建主任务时，所选资产无环节时，创建环节 -->
+    <el-dialog title="添加环节" :visible.sync="isLinkDialogShow" width="512px" center :modal="false">
+      <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
+        <el-col :span="4">
+          <el-button type="text" icon="el-icon-plus" @click="before(index)">前置</el-button>
+          <el-avatar>{{index+1}}</el-avatar>
+          <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
+        </el-col>
+        <el-col :span="18">
+          <el-form :model="item" label-width="90px">
+            <el-form-item
+              label="环节内容"
+              prop="content"
+              :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
+            >
+              <el-input type="textarea" v-model="item.content" style="width:100%"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="当前工种"
+              prop="dept"
+              :rules="[{ required: true, message: '请输入当前工种', trigger: 'blur' }]"
+            >
+              <el-cascader
+                v-model="item.dept"
+                placeholder="输入搜索工种"
+                :options="selectList"
+                :props="{ checkStrictly: true}"
+                filterable
+                style="width:100%"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="时间" prop="datetime">
+              <el-date-picker
+                v-model="item.datetime"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                style="width:100%"
+                format="yyyy/MM/dd"
+                :picker-options="picker"
+              ></el-date-picker>
+            </el-form-item>
+          </el-form>
+          <el-divider />
+        </el-col>
+        <el-col :span="4" align="center">
+          <el-tooltip effect="dark" content="删除" placement="top">
+            <span>
+              <i class="el-icon-delete" style="color:red" @click="deleteLink(index)"></i>
+            </span>
+          </el-tooltip>
+        </el-col>
+      </el-row>
+      <el-row type="flex" justify="end">
+        <el-button @click="cancel">取消</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -260,7 +348,8 @@ import myMixin from "./mixins";
 import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
 import { queryAssets } from "@/api/assets";
-import { getLinks, getLink } from "@/api/links";
+import { getLinks, getLink, addLinks } from "@/api/links";
+import { type } from "os";
 export default {
   mixins: [myMixin],
   name: "tab-task",
@@ -269,6 +358,7 @@ export default {
       DeptUsers: [],
       keyword: "",
       isDialogShow: false,
+      isLinkDialogShow: false,
       buttonStates: {
         createLoading: false
       },
@@ -277,10 +367,14 @@ export default {
       dialogTitle: "",
       mainTaskShow: false,
       active: 0,
+      asset: null,
       asset_type: null,
       AssetListTask: null,
       optionAssetType: null,
       LinkList: null,
+      FormList: [{}],
+      selectList: [],
+      createLoading: false,
       multipleSelection: [],
       picker: {
         disabledDate: time => {
@@ -314,6 +408,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
+  },
   props: {
     AssetList: {
       type: Array
@@ -346,6 +443,89 @@ export default {
     }
   },
   methods: {
+    //创建环节时，前置
+    before(ind) {
+      this.FormList.splice(ind, 0, {});
+    },
+    //创建环节时，后置
+    after(ind) {
+      this.FormList.splice(ind + 1, 0, {});
+    },
+    //创建环节时，删除
+    deleteLink(index) {
+      if (index !== 0) this.FormList.splice(index, 1);
+    },
+    //资产环节为空时，可创建
+    addLink(asset) {
+      console.log(asset);
+      this.asset = asset;
+      this.isLinkDialogShow = true;
+    },
+    //给某一资产添加环节
+    addLinks() {
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      this.FormList.forEach((item, index) => {
+        this.FormList[index] = Object.assign({}, this.FormList[index], {
+          dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
+          asset: this.asset
+        });
+
+        if (
+          "datetime" in this.FormList[index] &&
+          this.FormList[index].datetime.length
+        ) {
+          this.FormList[index] = {
+            ...this.FormList[index],
+            date_start: dataFormat(this.FormList[index].datetime[0]),
+            date_end: dataFormat(this.FormList[index].datetime[1])
+          };
+          delete this.FormList[index].datetime;
+        }
+        if (index === 0) {
+          this.FormList[index].pid = 0;
+        } else {
+          this.FormList[index].pid = this.FormList[index - 1].dept;
+        }
+      });
+      this.createLoading = true;
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      addLinks({ links: [...this.FormList] })
+        .then(({ data }) => {
+          this.createLoading = false;
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.$emit("refresh");
+            this.$emit("refresh_assetList");
+            this.isDialogShow = false;
+            this.FormList = [{}];
+          }
+        })
+        .catch(err => {
+          this.isDialogShow = false;
+          this.createLoading = false;
+        });
+    },
+    formatList() {
+      function changeList(arr) {
+        for (const item of arr) {
+          if (item["children"] && item["children"].length) {
+            changeList(item["children"]);
+          } else {
+            item["children"] = null;
+          }
+        }
+      }
+      this.selectList = JSON.parse(
+        JSON.stringify(this.DeptList)
+          .replace(/name/g, "label")
+          .replace(/id/g, "value")
+      );
+      changeList(this.selectList);
+    },
     mainTask() {
       this.mainTaskShow = true;
       this.active = 0;
@@ -379,8 +559,8 @@ export default {
     },
     //打开对话框
     openDialog(Type, row) {
-      this.ActiveRow = {...row};
-     // console.log(this.ActiveRow);
+      this.ActiveRow = { ...row };
+      // console.log(this.ActiveRow);
 
       this.DialogType = Type;
       getDeptUsers({
@@ -479,12 +659,12 @@ export default {
             HTTP.putTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
-                
+
                 if (data.status === 0) {
                   this.getTasks();
                   this.$message.success("已修改");
-                this.isDialogShow = false;
-                }else{
+                  this.isDialogShow = false;
+                } else {
                   this.$message.error(data.msg);
                   this.buttonStates.createLoading = false;
                 }
@@ -494,19 +674,17 @@ export default {
               });
           } else {
             console.log(data);
-            HTTP.addTask(data)
-              .then(({ data }) => {
+            HTTP.addTask(data).then(({ data }) => {
+              this.buttonStates.createLoading = false;
+              if (data.status === 0) {
+                this.getTasks();
+                this.isDialogShow = false;
+                this.$message.success("已完成");
+              } else {
+                this.$message.error(data.msg);
                 this.buttonStates.createLoading = false;
-                if (data.status === 0) {
-                  this.getTasks();
-                  this.isDialogShow = false;
-                  this.$message.success("已完成");
-                }else{
-                  this.$message.error(data.msg);
-                  this.buttonStates.createLoading = false;
-                }
-              })
-              
+              }
+            });
           }
         } else {
           return false;
@@ -544,6 +722,7 @@ export default {
         }
       });
     },
+
     //取消对话框
     cancel() {
       this.isDialogShow = false;
@@ -597,7 +776,7 @@ export default {
           break;
       }
     },
-     //难度等级格式化显示
+    //难度等级格式化显示
     Grade: function(row, column) {
       switch (row.grade) {
         case 0:
@@ -611,10 +790,15 @@ export default {
           break;
       }
     }
-    
   },
-  created() {
+  async created() {
     this.getTasks();
+    if (!this.DeptList) {
+      await this.$store.dispatch("admin/get_DeptList");
+      this.formatList();
+    } else {
+      this.formatList();
+    }
   }
 };
 </script>
