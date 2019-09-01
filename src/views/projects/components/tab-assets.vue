@@ -30,7 +30,7 @@
         highlight-current-row
         row-class-name="hover"
         @selection-change="handleSelectionChange"
-       
+       :row-key="(row)=>{ return row.id}"
       >
         <el-table-column type="selection" :reserve-selection="true"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
