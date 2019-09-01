@@ -106,7 +106,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog  :visible.sync="isShowNext" width="480px" height="300px" top="5vh" @closed="cancel()">
+    <el-dialog  :visible.sync="isShowNext" width="480px"   top="5vh" @closed="cancel()">
       <el-row>
         <el-col align="center">
         <svg-icon icon-class="success" style="width:50px;height:50px"></svg-icon>
@@ -119,7 +119,7 @@
         <h4 style="font-weight:100;" >前往项目以查看项目详情，或点击导入镜头进行资产导入</h4>
       </el-col>
       </el-row>
-      <el-row style="padding-top:20px">
+      <el-row style="padding-top:20px;padding-bottom:30px;">
         <el-col  align="center">
           <router-link :to="`/projects/project-detail/${id}`">
           <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
