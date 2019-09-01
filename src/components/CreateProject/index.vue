@@ -106,16 +106,31 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="下一步" :visible.sync="isShowNext" width="480px" top="5vh" @closed="cancel()">
-      <h3>项目已创建成功，请选择下一步</h3>
-      <div style="padding-top:10px">
-        <router-link :to="`/projects/project-detail/${id}`">
-          <el-button type="primary" @click="cancel1()">查看项目</el-button>
+    <el-dialog  :visible.sync="isShowNext" width="480px" top="5vh" @closed="cancel()">
+      <el-row>
+        <el-col align="center">
+        <svg-icon icon-class="success" style="width:50px;height:50px"></svg-icon>
+      </el-col>
+      <el-col align="center" style="padding-top:10px">
+        <h2>创建成功</h2>
+      </el-col>
+      <el-col align="center" style="padding-top:25px">
+        <h4>已创建新项目</h4>
+        <h4>前往项目以查看项目详情，或点击导入镜头进行资产导入</h4>
+      </el-col>
+      </el-row>
+      <el-row style="padding-top:20px">
+        <el-col :span="18" align="right">
+          <router-link :to="`/projects/project-detail/${id}`">
+          <el-button type="primary" @click="cancel1()">前往项目</el-button>
         </router-link>
-        <router-link :to="`/assetes/asset-import/${id}`">
-          <el-button type="primary" @click="cancel1()">导入Excel</el-button>
+        </el-col>
+       <el-col :span="6" align="right">
+          <router-link :to="`/assetes/asset-import/${id}`">
+          <el-button type="primary" @click="cancel1()">导入镜头</el-button>
         </router-link>
-      </div>
+       </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
