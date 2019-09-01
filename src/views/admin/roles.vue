@@ -8,14 +8,40 @@
             style="border-right:1px solid #ddd;padding:0 5px;margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
-              <el-button @click="openRoleForm('add')" type="success" v-if="$store.state.login.userInfo.auth.manage_role">添加角色</el-button>
+              <el-button
+                @click="openRoleForm('add')"
+                type="success"
+                v-if="$store.state.login.userInfo.auth.manage_role"
+              >添加角色</el-button>
             </el-row>
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
             <el-row v-for="(todo,index) of roleList" :key="index" class="role-list" align="center">
-              <div style="width:240px;cursor:pointer" @click="getRoleUserList(todo.id)">
-                <span>{{todo.name}}</span>
+              <div @mouseenter="editShow=todo.id" @mouseleave="editShow=null">
+                <el-row>
+                  <el-col :span="18">
+                    <span style="cursor:pointer" @click="getRoleUserList(todo.id)">{{todo.name}}</span>
+                  </el-col>
+                  <el-col :span="6" align="center">
+                    <span style="cursor:pointer" v-if="editShow===todo.id" @click="editRole(todo)">
+                      <i class="el-icon-edit" style="color:green"></i>
+                    </span>
+                  </el-col>
+                </el-row>
               </div>
             </el-row>
+            <el-dialog title="修改角色名称" :visible.sync="editing" width="300px">
+              <el-row style="padding-bottom:15px">
+                <el-input v-model="editName" type="text"></el-input>
+              </el-row>
+              <el-row>
+                <el-col :span="12" align="left">
+                  <el-button @click="cancle">取消</el-button>
+                </el-col>
+                <el-col :span="12" align="right">
+                  <el-button type="primary" @click="editRoleName">修改</el-button>
+                </el-col>
+              </el-row>
+            </el-dialog>
           </el-aside>
         </transition>
         <el-main>
@@ -26,10 +52,18 @@
                 <span style="font-weight:500">{{name}}</span>角色的用户有：
               </el-col>
               <el-col :span="3">
-                <el-button type="primary" @click="isShowDialog = true" v-if="$store.state.login.userInfo.auth.manage_role">绑定用户</el-button>
+                <el-button
+                  type="primary"
+                  @click="isShowDialog = true"
+                  v-if="$store.state.login.userInfo.auth.manage_role"
+                >绑定用户</el-button>
               </el-col>
               <el-col :span="3">
-                <el-button type="danger" @click="isShowDialog2 = true" v-if="$store.state.login.userInfo.auth.manage_role">解绑用户</el-button>
+                <el-button
+                  type="danger"
+                  @click="isShowDialog2 = true"
+                  v-if="$store.state.login.userInfo.auth.manage_role"
+                >解绑用户</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -122,7 +156,7 @@
             label-position="left"
           >
             <el-form-item label="用户名称" prop="rolename">
-              <el-select v-model="roleAdd.rolename" filterable  multiple placeholder="请选择用户" >
+              <el-select v-model="roleAdd.rolename" filterable multiple placeholder="请选择用户">
                 <el-option
                   v-for="(item,index) of UserList"
                   :key="index"
@@ -132,7 +166,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" align="right" @click="addUser" >立即绑定</el-button>
+              <el-button type="primary" align="right" @click="addUser">立即绑定</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -179,7 +213,7 @@ export default {
       userPermissionsList: null,
       roleList: null,
       roleAdd: {},
-
+      editName: null,
       roleUserList: null,
       name: null,
       addMultipleSelection: [],
@@ -191,7 +225,10 @@ export default {
       roleid: null,
       isShowDialog: false,
       isShowDialog2: false,
-      optionInput: ""
+      optionInput: "",
+      editShow: null,
+      id: null,
+      editing: false
     };
   },
   components: {},
@@ -336,6 +373,33 @@ export default {
           this.delUsermultipleTable.clearSelection();
         }
       });
+    },
+    //修改角色名称
+    editRole(todo) {
+      this.id = todo.id;
+      this.editing = true;
+      this.editName = todo.name;
+    },
+    editRoleName() {
+      updateRole({
+        id: this.id,
+        name: this.editName,
+        method:"put"
+      }).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          this.editing = false;
+          //角色列表
+          getRoles().then(({ data }) => {
+            this.roleList = [...data.msg];
+          });
+        }
+      }).catch(err=>{
+        this.$message.error(err.msg)
+      });
+    },
+    cancle() {
+      this.editing = false;
     },
     //分页
     handleSizeChange(val) {

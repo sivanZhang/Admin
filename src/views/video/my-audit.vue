@@ -18,15 +18,24 @@
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
       <el-table-column prop="task.name" label="任务名称"></el-table-column>
-      <el-table-column prop="project.name" label="所属项目"></el-table-column>
+      <el-table-column  label="所属项目">
+        <template slot-scope="scope">
+            <router-link :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="asset.name" label="所属资产"></el-table-column>
       <el-table-column prop="task.content" label="任务内容"></el-table-column>
       <el-table-column label="任务状态">
         <template slot-scope="scope">{{scope.row.task.status|projectStatus}}</template>
       </el-table-column>
+      <el-table-column prop="asset.name" label="所属镜头"></el-table-column>
        <el-table-column prop="task.executor" label="任务执行人"></el-table-column>
       <el-table-column label="优先级">
         <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
+      </el-table-column>
+      <!-- 、工种、 -->
+      <el-table-column label="提交日期">
+        <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
       <el-table-column label="开始日期">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
