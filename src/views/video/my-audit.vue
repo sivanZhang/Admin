@@ -24,6 +24,7 @@
       <el-table-column label="任务状态">
         <template slot-scope="scope">{{scope.row.task.status|projectStatus}}</template>
       </el-table-column>
+       <el-table-column prop="task.executor" label="任务执行人"></el-table-column>
       <el-table-column label="优先级">
         <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
       </el-table-column>

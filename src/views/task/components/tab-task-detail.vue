@@ -49,14 +49,14 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="5">创建时间:</el-col>
-        <el-col :span="19">{{taskdetail.create_time|dateFormat}}</el-col>
+        <el-col :span="19">{{taskdetail.create_time|dateTimeFormat}}</el-col>
       </el-row>
       <el-row type="flex">
-        <el-col :span="5">开始时间:</el-col>
+        <el-col :span="5">开始日期:</el-col>
         <el-col :span="19">{{taskdetail.start_date|dateFormat}}</el-col>
       </el-row>
       <el-row type="flex">
-        <el-col :span="5">结束时间:</el-col>
+        <el-col :span="5">结束日期:</el-col>
         <el-col :span="19">{{taskdetail.end_date|dateFormat}}</el-col>
       </el-row>
       <el-row type="flex">
