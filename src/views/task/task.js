@@ -31,7 +31,7 @@ export default {
             isDrag: false,
             isDrawerShow: false,
             StatusList: [{
-                    label: '草稿',
+                    label: '未开始',
                     value: 0
                 },
                 {
@@ -359,7 +359,7 @@ export default {
                     num: this.MyTaskList.length
                 },
                 {
-                    title: '草稿',
+                    title: '未开始',
                     status:0,
                     num: this.DraftArr.length
                 },
@@ -382,6 +382,11 @@ export default {
                     title: '暂停',
                     status:4,
                     num: this.PauseArr.length
+                },
+                {
+                    title: '审核中',
+                    status:5,
+                    num: 0
                 }
             ]
         }

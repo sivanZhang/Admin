@@ -51,7 +51,7 @@ export function dateTimeFormat(date) {
 export function projectStatus(code) {
     switch (code) {
         case 0:
-            return '草稿'
+            return '未开始'
             break
         case 1:
             return '正在进行'
@@ -149,7 +149,7 @@ export function WKLevel(data) {
 export function taskStatus(data) {
     switch (data) {
         case 0:
-            return '草稿'
+            return '未开始'
             break
         case 1:
             return '已启动'
