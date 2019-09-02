@@ -333,7 +333,7 @@
           <el-table-column label="开始日期" header-align="center">
             <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column prop="end_date" label="截止日期" header-align="center">
+          <el-table-column  label="截止日期" header-align="center">
             <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
           </el-table-column>
           <el-table-column prop="total_hour" header-align="center" label="预设时间（小时）"></el-table-column>

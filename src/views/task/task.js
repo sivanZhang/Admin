@@ -143,7 +143,7 @@ export default {
             taskListProgressSel: [],
             checked: false,
             end_date: null,
-            time: Date.parse(new Date())
+            time: Date.parse(new Date())/1000
         };
     },
     methods: {
@@ -234,8 +234,9 @@ export default {
 
         },
         addRecord() {
+            
             this.createLoading = true;
-            if (this.end_date >= this.time) {
+            if (this.end_date > this.time) {
                 addTaskRecord(this.TaskRecord)
                     .then(res => {
                         if (res.data.status === 0) {
@@ -244,8 +245,9 @@ export default {
                         } else {
                             this.$message.warning(res.data.msg);
                         }
-                        this.isDialogShow = false
+                        this.isDialogShow = false;
                         this.createLoading = false;
+                        this.isDrawerShow = false;
                     })
                     .catch(err => {
                         this.createLoading = false;
@@ -254,13 +256,11 @@ export default {
                 this.$alert('此任务已超期，禁止提交执行记录。', '警告', {
                     confirmButtonText: '确定',
                     callback: action => {
-                        this.$message({
-                            type: 'info',
-                            message: `action: ${ action }`
-                        });
+                        
                     }
                 });
                 this.createLoading = false;
+                this.isDrawerShow = false;
             }
         },
         //是否显示任务板右侧
