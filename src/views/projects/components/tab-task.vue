@@ -123,9 +123,9 @@
             <el-select v-model="TaskForm.link_id" filterable placeholder="请选择所属环节">
               <el-option
                 v-for="item of LinkList"
-                :label="item[0].dept.name"
-                :value="item[0].link_id"
-                :key="item[0].link_id"
+                :label="item.dept.name"
+                :value="item.link_id"
+                :key="item.link_id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -371,7 +371,7 @@ export default {
       asset_type: null,
       AssetListTask: null,
       optionAssetType: null,
-      LinkList: null,
+      LinkList: [],
       FormList: [{}],
       selectList: [],
       createLoading: false,
@@ -424,8 +424,15 @@ export default {
       handler: function(newVal, oldVal) {
         if (newVal === 1 && this.TaskForm.asset) {
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
-            this.LinkList = [...data.msg];
-            //console.log(this.LinkList)
+            const linkData = [...data.msg];
+            linkData.forEach(item=>{
+              item.forEach(ct=>{
+                this.LinkList.push(ct);
+                
+              })
+            })
+            
+            
           });
         }
         if (oldVal === 1 && this.TaskForm.link_id) {
@@ -460,6 +467,7 @@ export default {
       console.log(asset);
       this.asset = asset;
       this.isLinkDialogShow = true;
+      this.mainTaskShow = false;
     },
     //给某一资产添加环节
     addLinks() {
@@ -502,6 +510,17 @@ export default {
             this.$emit("refresh_assetList");
             this.isLinkDialogShow = false;
             this.FormList = [{}];
+            this.mainTaskShow = true;
+            this.TaskForm.asset = this.asset;
+            getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
+            const linkData = [...data.msg];
+            linkData.forEach(item=>{
+              item.forEach(ct=>{
+                this.LinkList.push(ct); 
+              })
+            });
+          });
+          this.active = 1;
           }
         })
         .catch(err => {
