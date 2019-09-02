@@ -284,7 +284,7 @@ export default {
       dept: {},
       content: null,
       datetime: null,
-      time:this.TaskForm.datetime,
+     
       picker: {
         disabledDate: time => {
           return time.getTime() < Date.now() - 8.64e7;
@@ -293,15 +293,7 @@ export default {
     };
   },
   props: ["LinkList", "project"],
-  watch:{
-    time:{
-      handler:function(newVal,oldVal){
-        if(newVal){
-          console.log(newVal)
-        }
-      }
-    }
-  },
+ 
   computed: {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
