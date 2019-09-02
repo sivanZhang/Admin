@@ -39,7 +39,7 @@ export default {
             },
             TaskForm: {},
             StatusList: [{
-                    label: "草稿",
+                    label: "未开始",
                     value: 0
                 },
                 {

@@ -54,7 +54,7 @@
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
-                  <el-col tag="h4" :span="4">草稿</el-col>
+                  <el-col tag="h4" :span="4">未开始</el-col>
                   <el-col :span="20" style="text-align:right">
                     <span class="sort">排序方式</span>
                     <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
