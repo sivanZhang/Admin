@@ -204,7 +204,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
-          <el-input v-model="TaskForm['total_hour']"></el-input>
+          <el-input v-model="TaskForm.total_hour"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -284,6 +284,7 @@ export default {
       dept: {},
       content: null,
       datetime: null,
+      time:this.TaskForm.datetime,
       picker: {
         disabledDate: time => {
           return time.getTime() < Date.now() - 8.64e7;
@@ -292,6 +293,15 @@ export default {
     };
   },
   props: ["LinkList", "project"],
+  watch:{
+    time:{
+      handler:function(newVal,oldVal){
+        if(newVal){
+          console.log(newVal)
+        }
+      }
+    }
+  },
   computed: {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
@@ -511,7 +521,7 @@ export default {
       this.isCreateTaskShow = false;
       this.TaskForm = {};
     },
-    //展示任务列表
+    //展示添加任务表单
     showTaskForm(link_id, dept_id, content) {
       getDept({
         id: dept_id
