@@ -43,3 +43,7 @@ export function addTaskRecord(params) {
 export function putTaskRecord(data) {
     return AXIOS.post('/task/task/?status', data)
 }
+//根据状态查询任务
+export function getStatusTaskList(params){
+    return AXIOS.get('/task/task/?mytask',{params})
+}

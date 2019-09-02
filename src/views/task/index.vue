@@ -1,9 +1,16 @@
 <template>
   <div id="layout_main">
-    <top :arr="topArr" />
+    <div class="layout_main_top">
+    <div class="layout_main_top_left">
+      <div class="layout_task" v-for="(item,index) of topArr" :key="index">
+        <h3>{{item.num}}</h3>
+        <span @click="task(item.status)" class="layout_top_span">{{item.title}}</span>
+      </div>
+    </div>
+  </div>
     <el-divider></el-divider>
-    <el-tabs type="border-card">
-      <el-tab-pane label="任务板" lazy class="tab-task">
+    <el-tabs type="border-card" v-model="activeTab">
+      <el-tab-pane label="任务板" name="first" class="tab-task">
         <div>
           <!-- <div>
             <span class="svg-container" title="显示小型网格布局">
@@ -222,7 +229,7 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务列表" lazy class="tab-task">
+      <el-tab-pane label="任务列表" name="second" class="tab-task">
         <Drawer scrollable
           v-model="isDrawerShow"
           width="512px"
@@ -294,7 +301,7 @@
         </div>-->
 
         <el-table
-          :data="MyTaskList"
+          :data="MyTaskList1"
           highlight-current-row
           borders
           @row-click="taskBoardRightShow"
@@ -302,7 +309,11 @@
         >
           <el-table-column type="index" label="序号" align="center" width="80"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="center" width="80"></el-table-column>
-          <el-table-column prop="project.name" label="项目" header-align="center"></el-table-column>
+          <el-table-column  label="项目" header-align="center">
+             <template slot-scope="scope">
+               <router-link :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
+             </template> 
+          </el-table-column>
           <el-table-column prop="asset.name" label="镜头" header-align="center"></el-table-column>
           <el-table-column prop="task.name" header-align="center" label="任务名称"></el-table-column>
           <el-table-column prop="task.content" header-align="center" label="任务内容"></el-table-column>

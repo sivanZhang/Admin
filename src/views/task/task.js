@@ -6,20 +6,22 @@ import {
     queryTask
 } from "@/api/task";
 import draggable from "vuedraggable"
-import top from './components/top'
+
 import taskForm from './components/task-form'
 import tabLog from "./components/tab-log"
 import tabTaskDtail from "./components/tab-task-detail"
+import {getStatusTaskList} from "@/api/task"
 export default {
     components: {
         draggable,
-        top,
+        
         taskForm,
         tabLog,
         tabTaskDtail
     },
     data() {
         return {
+            activeTab:"second",
             TaskDetail: {
                 name: ''
             },
@@ -53,6 +55,7 @@ export default {
             TaskRecord: [],
             isDialogShow: false,
             MyTaskList: [],
+            MyTaskList1:[],
             DraftArr: [],
             InProgressArr: [],
             TimeOutArr: [],
@@ -147,6 +150,16 @@ export default {
         };
     },
     methods: {
+        //点击筛选任务
+        task(status){
+            getStatusTaskList({
+                mytask:null,
+                status:status
+            }).then(({data})=>{
+                this.MyTaskList1 = [...data.msg];
+                // console.log(this.MyTaskList1)
+            })
+        },
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
             console.log('row', row);
@@ -342,26 +355,32 @@ export default {
         topArr() {
             return [{
                     title: '所有任务',
+                    status:null,
                     num: this.MyTaskList.length
                 },
                 {
                     title: '草稿',
+                    status:0,
                     num: this.DraftArr.length
                 },
                 {
                     title: '进行中',
+                    status:1,
                     num: this.InProgressArr.length
                 },
                 {
                     title: '完成',
+                    status:2,
                     num: this.FinishedArr.length
                 },
                 {
                     title: '超时',
+                    status:3,
                     num: this.TimeOutArr.length
                 },
                 {
                     title: '暂停',
+                    status:4,
                     num: this.PauseArr.length
                 }
             ]
@@ -369,5 +388,6 @@ export default {
     },
     created() {
         this.getMyTasks();
+        this.task(1);
     },
 };
