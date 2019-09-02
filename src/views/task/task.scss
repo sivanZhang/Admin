@@ -53,4 +53,7 @@
     border-left: 1px solid #ddd;
   }
 }
+ .el-table th.gutter{
+  display: table-cell!important;
+  }
 }

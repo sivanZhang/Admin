@@ -306,18 +306,19 @@
           borders
           @row-click="taskBoardRightShow"
           border
+
         >
-          <el-table-column type="index" label="序号" align="center" width="80"></el-table-column>
-          <el-table-column prop="task.id" label="任务ID" header-align="center" width="80"></el-table-column>
-          <el-table-column  label="项目" header-align="center">
+          <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
+          <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
+          <el-table-column  label="项目" header-align="left">
              <template slot-scope="scope">
                <router-link :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
              </template> 
           </el-table-column>
-          <el-table-column prop="asset.name" label="镜头" header-align="center"></el-table-column>
-          <el-table-column prop="task.name" header-align="center" label="任务名称"></el-table-column>
-          <el-table-column prop="task.content" header-align="center" label="任务内容"></el-table-column>
-          <el-table-column label="任务状态" header-align="center">
+          <el-table-column prop="asset.name" label="镜头" header-align="left"></el-table-column>
+          <el-table-column prop="task.name" header-align="left" label="任务名称"></el-table-column>
+          <el-table-column prop="task.content" header-align="left" label="任务内容"></el-table-column>
+          <el-table-column label="任务状态" header-align="left">
             <template slot-scope="scope">
               <el-select
                 :value="scope.row.task.status"
@@ -334,20 +335,20 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="优先级" header-align="center">
+          <el-table-column label="优先级" header-align="left">
             <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
           </el-table-column>
           
-          <el-table-column label="创建日期" header-align="center">
+          <el-table-column label="创建日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
           </el-table-column>
-          <el-table-column label="开始日期" header-align="center">
+          <el-table-column label="开始日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column  label="截止日期" header-align="center">
+          <el-table-column  label="截止日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column prop="total_hour" header-align="center" label="预设时间（小时）"></el-table-column>
+          <el-table-column prop="total_hour" header-align="left" label="预设时间（小时）"></el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
