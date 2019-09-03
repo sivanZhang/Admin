@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg-icon icon-class="notice" @click="show" />
+    <svg-icon icon-class="notice" @click="show" style="cursor:pointer"/>
     <el-badge :value="unreadCount" class="item" v-if="unreadCount"></el-badge>
     <Drawer scrollable
       closable
@@ -29,9 +29,34 @@
         </el-row>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="分配" name="first">分配</el-tab-pane>
+        <el-tab-pane label="我的权限" name="first">  
+          <template v-if="userPermission">
+            <ul v-for="item of userPermission" :key="item.id">
+            <li>
+              {{item.name}}
+            </li>
+          </ul>
+          </template>
+          <template v-else>
+            <span>该用户未分配权限</span>
+          </template>
+        </el-tab-pane>
         <el-tab-pane label="版本" name="second">版本</el-tab-pane>
-        <el-tab-pane label="通知" name="third">
+        <el-tab-pane label="角色" name="third">
+         <template v-if="userRole">
+           <ul v-for="item of userRole" :key="item.id">
+           <li>
+             {{item.name}}
+           </li>
+         </ul>
+         </template>
+         <template v-else>
+           <span>
+             该用户未绑定角色
+           </span>
+         </template>
+        </el-tab-pane>
+        <el-tab-pane label="通知" name="fourth">
           <div>
             <div>
               <el-button
@@ -96,7 +121,7 @@
                   </el-form>
                 </template>
               </el-table-column>
-              <el-table-column type="selection"  width="28"></el-table-column>
+              <el-table-column type="selection"  style="width:16px;height:16px"></el-table-column>
 
               <el-table-column label="通知" width="200" show-overflow-tooltip>
                 <template slot-scope="scope">
@@ -144,7 +169,7 @@
             </el-table>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="个人资料" name="fourth">个人资料</el-tab-pane>
+        <el-tab-pane label="个人资料" name="fifth">个人资料</el-tab-pane>
       </el-tabs>
     </Drawer>
   </div>
@@ -152,7 +177,7 @@
 
 <script>
 import * as HTTP from "@/api/notice";
-
+import {getUserPermission, getUserRole} from "@/api/login"
 export default {
   name: "Notice",
   created() {
@@ -166,9 +191,12 @@ export default {
       notice: [],
       active: null,
       multipleSelection: [],
-      activeName: "third",
+      activeName: "fourth",
       loginMessage: this.$store.state.login.userInfo,
-      unreadCount:null
+      unreadCount:null,
+      userPermission:null,
+      userRole:null
+      
     };
   },
 
@@ -199,9 +227,25 @@ export default {
       HTTP.noticeDetail(this.id).then(({ data }) => {
         this.notice = [...data.msg];
         this.unreadCount=data.unread_count
-        //   console.log("通知详情");
-        //   console.log(this.notice);
       });
+       getUserPermission().then(({data})=>{
+         if(data.msg){
+           this.userPermission=null
+         }else{
+           this.userPermission = [...data];
+        
+         }
+         
+       });
+       getUserRole({userid:this.id}).then(({data})=>{
+         if(data.roles.length){
+            this.userRole = [...data.roles];
+         }else{
+           this.userRole =null;
+         }
+        
+       })
+      
     },
    
    

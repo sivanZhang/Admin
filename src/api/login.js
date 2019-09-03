@@ -21,3 +21,11 @@ export function postResetPassword(data) {
 export function postRegister(data) {
     return AXIOS.post('/users/register/', data)
 }
+//获取当前用户权限
+export function getUserPermission(params){
+    return AXIOS.get('/users/list/?permissions',{params})
+}
+//获取当前用户角色
+export function getUserRole(params){
+    return AXIOS.get('/users/role/',{params})
+}
