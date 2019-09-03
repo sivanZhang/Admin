@@ -31,29 +31,60 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="我的权限" name="first">  
           <template v-if="userPermission">
-            <ul v-for="item of userPermission" :key="item.id">
-            <li>
+            <el-row >
+              <el-col :span="2" align="center" class="col" >
+                {{"序号"}}
+              </el-col>
+            <el-col :span="11" class="col">
+              {{"权限名称"}}
+            </el-col>
+            <el-col :span="11" class="col">
+              {{"权限说明"}}
+            </el-col>
+          </el-row>
+            <el-row v-for="(item,index) of userPermission" :key="index">
+              <el-col :span="2" align="center" class="col">
+                {{index+1}}
+              </el-col>
+            <el-col :span="11" class="col">
+              {{item.codename}}
+            </el-col>
+            <el-col :span="11" class="col">
               {{item.name}}
-            </li>
-          </ul>
+            </el-col>
+          </el-row>
           </template>
           <template v-else>
-            <span>该用户未分配权限</span>
+            <div style="display:flex;justify-content:center;padding-top:20px">
+              <span>该用户未分配权限</span>
+            </div>
           </template>
         </el-tab-pane>
         <el-tab-pane label="版本" name="second">版本</el-tab-pane>
         <el-tab-pane label="角色" name="third">
          <template v-if="userRole">
-           <ul v-for="item of userRole" :key="item.id">
-           <li>
+            <el-row >
+             <el-col :span="4" align="center" class="col">
+               {{"序号"}}
+             </el-col>
+             
+           <el-col :span="20"  class="col">
+             {{"角色名称"}}
+           </el-col>
+         </el-row>
+           <el-row v-for="(item,index) of userRole" :key="index">
+             <el-col :span="4" align="center" class="col">
+               {{index+1}}
+             </el-col>
+           <el-col :span="20"  class="col">
              {{item.name}}
-           </li>
-         </ul>
+           </el-col>
+         </el-row>
          </template>
          <template v-else>
-           <span>
-             该用户未绑定角色
-           </span>
+           <div style="display:flex;justify-content:center;padding-top:20px">
+              <span>该用户未绑定角色</span>
+            </div>
          </template>
         </el-tab-pane>
         <el-tab-pane label="通知" name="fourth">
@@ -337,6 +368,9 @@ svg-icon {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+.col{
+  padding-bottom:10px
 }
 </style> 
 
