@@ -44,16 +44,21 @@
   height: 40px;
   border-right: 1px solid #ddd;
   text-align: center;
+  color: #909399;
+  cursor:pointer; 
   .layout_top_span {
-    color: #909399;
+    // color: #909399;
     font-size: small;
-    cursor:pointer;
   }
   &:first-child {
     border-left: 1px solid #ddd;
+  } 
+  .active{
+    color: rgb(79, 134, 206);
   }
 }
  .el-table th.gutter{
   display: table-cell!important;
   }
+ 
 }

@@ -2,9 +2,11 @@
   <div id="layout_main">
     <div class="layout_main_top">
     <div class="layout_main_top_left">
-      <div class="layout_task" v-for="(item,index) of topArr" :key="index">
-        <h3>{{item.num}}</h3>
-        <span @click="task(item.status)" class="layout_top_span">{{item.title}}</span>
+      <div class="layout_task" v-for="(item,index) of topArr" :key="index" >
+        <div @click="task(item.status)" :class="{active:changecolor==item.status}">
+           <h3>{{item.num}}</h3>
+           <span class="layout_top_span ">{{item.title}}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -305,8 +307,6 @@
           highlight-current-row
           borders
           @row-click="taskBoardRightShow"
-          border
-
         >
           <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>

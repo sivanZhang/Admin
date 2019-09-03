@@ -146,19 +146,21 @@ export default {
             taskListProgressSel: [],
             checked: false,
             end_date: null,
-            time: Date.parse(new Date())/1000
+            time: Date.parse(new Date())/1000,
+            changecolor:1
         };
     },
     methods: {
         //点击筛选任务
         task(status){
+            this.changecolor=status;
             getStatusTaskList({
                 mytask:null,
                 status:status
             }).then(({data})=>{
                 this.MyTaskList1 = [...data.msg];
-                // console.log(this.MyTaskList1)
             })
+            
         },
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
