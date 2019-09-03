@@ -43,7 +43,7 @@ export default {
                     value: 2
                 },
                 {
-                    label: '超期',
+                    label: '超时',
                     value: 3
                 },
                 {
