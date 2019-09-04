@@ -772,7 +772,10 @@ export default {
       })
         .then(() => {
           const ids = this.multipleSelection.map(item => item.id).join(",");
-          HTTP.deleteTask(ids).then(({ data }) => {
+          HTTP.deleteTask({
+            ids:ids,
+            method:"delete"
+          }).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
               this.getTasks();

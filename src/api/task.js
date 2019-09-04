@@ -16,8 +16,8 @@ export function queryTask(params = null) {
     return AXIOS.get('/task/task/', { params })
 }
 //删除任务
-export function deleteTask(id) {
-    return AXIOS.post('/task/task/?delete', { id, method: 'delete' })
+export function deleteTask(data) {
+    return AXIOS.post('/task/task/?delete', data)
 }
 //修改任务
 export function putTask(data) {
