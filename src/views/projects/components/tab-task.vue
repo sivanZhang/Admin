@@ -745,6 +745,8 @@ export default {
               this.getTasks();
 
               // console.log(this.mainTaskShow);
+            }else{
+              this.$message.error(data.msg);
             }
           });
         }

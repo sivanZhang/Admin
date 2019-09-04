@@ -33,8 +33,9 @@
                 <i class="el-icon-more"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown" style="margin-top:0px">
-                <el-dropdown-item>
-                  <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
+                <el-dropdown-item @click.native="showImg($store.state.BASE_URL+item.image)">
+               查看大图
+                  <!-- <router-link :to="`/projects/project-detail/${item.id}`">查看大图</router-link> -->
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
                 <el-dropdown-item @click.native="delProject(item)" v-if="$store.state.login.userInfo.auth.manage_project">删除</el-dropdown-item>
@@ -43,17 +44,18 @@
           </div>
           <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
           <div slot="header" class="box-card-header">
+            <router-link :to="`/projects/project-detail/${item.id}`">
             <el-image
-              @click="showImg($store.state.BASE_URL+item.image)"
               class="mini-image"
               :src="item.image?$store.state.BASE_URL+item.image:''"
               fit="cover"
               style="height:100%;width:100%;"
             >
-              <div slot="error" class="image-slot">
+                <div slot="error" class="image-slot">
                 <i class="el-icon-picture" style="color:#909399"></i>
               </div>
             </el-image>
+             </router-link>
           </div>
           <div style="padding: 15px;">
             <router-link :to="`/projects/project-detail/${item.id}`">

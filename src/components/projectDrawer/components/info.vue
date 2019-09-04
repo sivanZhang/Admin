@@ -185,18 +185,18 @@
     </template>
     <!-- 资产消息栏 -->
     <template v-if="project && project.entity_type === 5">
-      <div>
+      <div >
         <el-row>
           <el-col :span="6" class="comment">资产名称</el-col>
-          <el-col :span="15" class="comment">{{project.name}}</el-col>
+          <el-col :span="18" class="comment">{{project.name}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">资产类型</el-col>
-          <el-col :span="15" class="comment">{{project.category>0?project.category:"未分类"}}</el-col>
+          <el-col :span="18" class="comment">{{project.category>0?project.category:"未分类"}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">资产路径</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
               <span v-if="!editing4">{{project.path}}</span>
               <i
@@ -214,15 +214,19 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">创建人</el-col>
-          <el-col :span="15" class="comment">{{project.creator_name}}</el-col>
+          <el-col :span="18" class="comment">{{project.creator_name}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">优先级</el-col>
-          <el-col :span="15" class="comment">{{project.priority |Priority}}</el-col>
+          <el-col :span="18" class="comment">{{project.priority |Priority}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">难度等级</el-col>
-          <el-col :span="15" class="comment">{{project.level |Level}}</el-col>
+          <el-col :span="18" class="comment">{{project.level |Level}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">帧数</el-col>
+          <el-col :span="18" class="comment">{{project.frame}}</el-col>
         </el-row>
       </div>
     </template>
