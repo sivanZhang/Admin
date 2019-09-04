@@ -11,8 +11,9 @@
         border
         @cell-dblclick="dblhandleCurrentChange"
         style="width: 100%;height:100%"
+        
       >
-        <el-table-column v-if="isShowOptionBar" fixed="left" label="操作" width="100" align="center">
+        <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="deleteRow(scope.$index, tableData)"
@@ -30,6 +31,7 @@
             :label="col.label"
             :render-header="renderHeader"
             align="center"
+            width="130"
           >
             <template slot-scope="scope">
               

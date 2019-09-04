@@ -299,7 +299,6 @@ export default {
       activeName: "first",
       defaultProps: {
         children: "children",
-
         label: "name"
       },
       allMaxStatus: null,
