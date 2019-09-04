@@ -17,7 +17,7 @@
           </el-dropdown>-->
           <el-button icon="el-icon-download" type="primary">导入</el-button>
 
-          <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
+          <el-button type="danger" @click="deleteTask" icon="el-icon-delete" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
         </el-col>
         <el-col :span="9" style="text-align:right">
           <el-input
@@ -35,14 +35,15 @@
         :data="TaskList"
         style="margin-top:20px"
         highlight-current-row
-        row-key="id"
+        
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
         border
+        :row-key="(row)=>{ return row.id}"
       >
         <!-- default-expand-all -->
-        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
@@ -422,6 +423,9 @@ export default {
   watch: {
     active: {
       handler: function(newVal, oldVal) {
+        if(newVal === 0){
+          this.LinkList=[]
+        }
         if (newVal === 1 && this.TaskForm.asset) {
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
             const linkData = [...data.msg];
@@ -754,17 +758,15 @@ export default {
     },
     //删除任务http请求
     deleteTask() {
-      if (!Object.keys(this.ActiveRow).length) {
-        this.$message.error("请选择要删除的任务");
-        return false;
-      }
+      
       this.$confirm("删除任务后无法恢复，确认删除?", "注意", {
         confirmButtonText: "删除",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          HTTP.deleteTask(this.ActiveRow.id).then(({ data }) => {
+          const ids = this.multipleSelection.map(item => item.id).join(",");
+          HTTP.deleteTask(ids).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
               this.getTasks();
