@@ -267,7 +267,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
-            :picker-options="picker2"
+            :picker-options="picker"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour" oninput = "value=value.replace(/[^\d.]/g,'')">
@@ -386,15 +386,7 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
-      picker2: {
-        disabledDate: time => {
-          let beginDate = this.TaskForm.datetime[0];
-          let endDate = this.TaskForm.datetime[1];
-          if (beginDate || endDate) {
-            return time.getTime() < beginDate || time.getTime() > endDate;
-          }
-        }
-      }
+      
     };
   },
   filters: {
@@ -627,6 +619,9 @@ export default {
           };
           break;
         case 3:
+          function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
           if (!Object.keys(this.ActiveRow).length) {
             this.$message.error("请选择要修改的任务");
             return false;
@@ -641,8 +636,8 @@ export default {
             priority: 0,
             grade: 1,
             datetime: [
-              new Date(this.ActiveRow.start_date * 1000),
-              new Date(this.ActiveRow.end_date * 1000)
+              new Date(dateFormat(this.ActiveRow.start_date * 1000))>0?new Date(dateFormat(this.ActiveRow.start_date * 1000)):"",
+              new Date(dateFormat(this.ActiveRow.end_date * 1000))>0?new Date(dateFormat(this.ActiveRow.end_date * 1000)):""
             ],
             executorlist,
             manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
