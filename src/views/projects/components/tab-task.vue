@@ -17,7 +17,7 @@
           </el-dropdown>-->
           <el-button icon="el-icon-download" type="primary">导入</el-button>
 
-          <el-button type="danger" @click="deleteTask" icon="el-icon-delete">删除</el-button>
+          <el-button type="danger" @click="deleteTask" icon="el-icon-delete" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
         </el-col>
         <el-col :span="9" style="text-align:right">
           <el-input
