@@ -28,8 +28,8 @@ export function queryMyTask(params) {
     return AXIOS.get('/task/task/?inplugin', { params })
 }
 //根据id获取任务详情
-export function getTaskDetail(params){
-    return AXIOS.get('/task/task/?id=12',{params})
+export function getTaskDetail(params) {
+    return AXIOS.get('/task/task/?id=12', { params })
 }
 //查询任务执行记录
 export function queryTaskRecord(params) {
@@ -37,13 +37,17 @@ export function queryTaskRecord(params) {
 }
 //新建执行记录
 export function addTaskRecord(params) {
-    return AXIOS.post('/task/taskrecord/',params)
+    return AXIOS.post('/task/taskrecord/', params)
 }
 //修改执行记录
 export function putTaskRecord(data) {
     return AXIOS.post('/task/task/?status', data)
 }
 //根据状态查询任务
-export function getStatusTaskList(params){
-    return AXIOS.get('/task/task/?mytask',{params})
+export function getStatusTaskList(params) {
+    return AXIOS.get('/task/task/?mytask', { params })
+}
+//提交我完成的任务
+export function taskApprove(data) {
+    return AXIOS.post('/approve/approve_submit/', data)
 }

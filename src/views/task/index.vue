@@ -112,8 +112,6 @@
                   data-arr="InProgressArr"
                   class="board-column-content"
                 >
-                  <!-- ($event,1) -->
-
                   <el-card
                     @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
@@ -255,7 +253,12 @@
             <el-tab-pane label="任务详情" lazy>
               <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
             </el-tab-pane>
-            <el-tab-pane label="备注" lazy>222</el-tab-pane>
+            <el-tab-pane label="提交审核" lazy>
+              <tab-approve v-if="activeRow.task && activeRow.task.status!==0" :row="activeRow" @refresh="getMyTasks"/>
+              <div v-else>
+                请先完成任务
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </Drawer>
         <!-- <div class="task-list"></div> -->
@@ -365,6 +368,4 @@
 
 <script src="./task.js">
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" src="./task.scss"></style>

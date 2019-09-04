@@ -11,7 +11,7 @@
         border
         @cell-dblclick="dblhandleCurrentChange"
         style="width: 100%;height:100%"
-        
+        max-height="100%"
       >
         <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
           <template slot-scope="scope">
@@ -31,7 +31,7 @@
             :label="col.label"
             :render-header="renderHeader"
             align="center"
-            width="130"
+            min-width="130"
           >
             <template slot-scope="scope">
               
@@ -43,7 +43,7 @@
                 v-on:blur="inputblur"
               ></el-input>
               <span v-if="!scope.row.isEdit && index!=0">{{scope.row[col.prop]}}</span>
-              <el-image v-if="index==0" :src="$store.state.BASE_URL+scope.row[col.prop]"></el-image>
+              <el-image v-if="index==0" :src="$store.state.BASE_URL+scope.row[col.prop]" fit="cover" style="width:80px;height:45px"></el-image>
             </template>
           </el-table-column>
         </template>

@@ -6,22 +6,22 @@ import {
     queryTask
 } from "@/api/task";
 import draggable from "vuedraggable"
-
 import taskForm from './components/task-form'
 import tabLog from "./components/tab-log"
+import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
-import {getStatusTaskList} from "@/api/task"
+import { getStatusTaskList } from "@/api/task"
 export default {
     components: {
         draggable,
-        
+        tabApprove,
         taskForm,
         tabLog,
         tabTaskDtail
     },
     data() {
         return {
-            activeTab:"second",
+            activeTab: "second",
             TaskDetail: {
                 name: ''
             },
@@ -55,7 +55,7 @@ export default {
             TaskRecord: [],
             isDialogShow: false,
             MyTaskList: [],
-            MyTaskList1:[],
+            MyTaskList1: [],
             DraftArr: [],
             InProgressArr: [],
             TimeOutArr: [],
@@ -146,21 +146,22 @@ export default {
             taskListProgressSel: [],
             checked: false,
             end_date: null,
-            time: Date.parse(new Date())/1000,
-            changecolor:1
+            time: Date.parse(new Date()) / 1000,
+            changecolor: 1,
+            activeRow: {} //点击任务列表选中的列的数据
         };
     },
     methods: {
         //点击筛选任务
-        task(status){
-            this.changecolor=status;
+        task(status) {
+            this.changecolor = status;
             getStatusTaskList({
-                mytask:null,
-                status:status
-            }).then(({data})=>{
+                mytask: null,
+                status: status
+            }).then(({ data }) => {
                 this.MyTaskList1 = [...data.msg];
             })
-            
+
         },
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
@@ -249,7 +250,6 @@ export default {
 
         },
         addRecord() {
-            
             this.createLoading = true;
             if (this.end_date > this.time) {
                 addTaskRecord(this.TaskRecord)
@@ -271,7 +271,7 @@ export default {
                 this.$alert('此任务已超期，禁止提交执行记录。', '警告', {
                     confirmButtonText: '确定',
                     callback: action => {
-                        
+
                     }
                 });
                 this.createLoading = false;
@@ -282,6 +282,7 @@ export default {
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
             this.end_date = row.task.end_date;
+            this.activeRow = {...row }
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
                 type: 0
@@ -357,37 +358,37 @@ export default {
         topArr() {
             return [{
                     title: '所有任务',
-                    status:null,
+                    status: null,
                     num: this.MyTaskList.length
                 },
                 {
                     title: '未开始',
-                    status:0,
+                    status: 0,
                     num: this.DraftArr.length
                 },
                 {
                     title: '进行中',
-                    status:1,
+                    status: 1,
                     num: this.InProgressArr.length
                 },
                 {
                     title: '完成',
-                    status:2,
+                    status: 2,
                     num: this.FinishedArr.length
                 },
                 {
                     title: '超时',
-                    status:3,
+                    status: 3,
                     num: this.TimeOutArr.length
                 },
                 {
                     title: '暂停',
-                    status:4,
+                    status: 4,
                     num: this.PauseArr.length
                 },
                 {
                     title: '审核中',
-                    status:5,
+                    status: 5,
                     num: 0
                 }
             ]
