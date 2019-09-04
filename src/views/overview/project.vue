@@ -37,7 +37,7 @@
                   <router-link :to="`/projects/project-detail/${item.id}`">前往项目</router-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
-                <el-dropdown-item @click.native="delProject(item)">删除</el-dropdown-item>
+                <el-dropdown-item @click.native="delProject(item)" v-if="$store.state.login.userInfo.auth.manage_project">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>

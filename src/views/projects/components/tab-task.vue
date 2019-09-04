@@ -210,7 +210,7 @@
         style="margin-top: 12px;"
         @click="next"
         v-if="active !=2"
-        :disabled="active==1&&LinkList.length===0"
+        :disabled="(active==1&&LinkList.length===0)||active==0&&!this.TaskForm.asset||active==1&&!this.TaskForm.link_id"
       >下一步</el-button>
     </el-dialog>
     <!-- 子任务创建，任务修改 -->

@@ -16,7 +16,13 @@
       <el-table-column prop="sex" label="性别" align="center" width="50" />
       <el-table-column prop="email" label="邮箱" align="left" />
       <el-table-column prop="phone" label="电话" align="left" />
-      <el-table-column prop="dept" label="工种" align="left" />
+      <el-table-column prop="dept" label="工种" align="left" >
+        <template slot-scope="scope">
+          <div v-for="(item,index) of scope.row.dept" :key="index">
+            {{item.name}}
+            </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="role" label="职务/角色" align="left" />
       <el-table-column label="是否启用" align="center" width="100">
         <template slot-scope="scope">

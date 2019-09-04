@@ -1,8 +1,9 @@
 <template>
   <div>
-    <svg-icon icon-class="notice" @click="show" style="cursor:pointer"/>
+    <svg-icon icon-class="notice" @click="show" style="cursor:pointer" />
     <el-badge :value="unreadCount" class="item" v-if="unreadCount"></el-badge>
-    <Drawer scrollable
+    <Drawer
+      scrollable
       closable
       height="500"
       v-model="value1"
@@ -23,36 +24,35 @@
             </el-row>
             <el-row style="padding-top:10px">
               <el-col :span="4" align="right">工种：</el-col>
-              <el-col :span="20">{{loginMessage.dept}}</el-col>
+              <el-col :span="20">
+                <el-col
+                  v-for="(item,index) of loginMessage.dept"
+                  :key="index"
+                  style="cursor: pointer"
+                >
+                  <el-tooltip effect="dark" content="点击跳转工种详情" placement="top">
+                    <router-link :to="`/admin/userGroup`">{{item.name}}</router-link>
+                  </el-tooltip>
+                </el-col>
+              </el-col>
             </el-row>
+            <el-row></el-row>
           </el-col>
         </el-row>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="我的权限" name="first">  
+        <el-tab-pane label="我的权限" name="first">
           <template v-if="userPermission">
-            <el-row >
-              <el-col :span="2" align="center" class="col" >
-                {{"序号"}}
-              </el-col>
-            <el-col :span="11" class="col">
-              {{"权限名称"}}
-            </el-col>
-            <el-col :span="11" class="col">
-              {{"权限说明"}}
-            </el-col>
-          </el-row>
+            <el-row>
+              <el-col :span="2" align="center" class="col">{{"序号"}}</el-col>
+              <el-col :span="11" class="col">{{"权限名称"}}</el-col>
+              <el-col :span="11" class="col">{{"权限说明"}}</el-col>
+            </el-row>
             <el-row v-for="(item,index) of userPermission" :key="index">
-              <el-col :span="2" align="center" class="col">
-                {{index+1}}
-              </el-col>
-            <el-col :span="11" class="col">
-              {{item.codename}}
-            </el-col>
-            <el-col :span="11" class="col">
-              {{item.name}}
-            </el-col>
-          </el-row>
+              <el-col :span="2" align="center" class="col">{{index+1}}</el-col>
+              <el-col :span="11" class="col">{{item.codename}}</el-col>
+              <el-col :span="11" class="col">{{item.name}}</el-col>
+            </el-row>
           </template>
           <template v-else>
             <div style="display:flex;justify-content:center;padding-top:20px">
@@ -62,30 +62,26 @@
         </el-tab-pane>
         <el-tab-pane label="版本" name="second">版本</el-tab-pane>
         <el-tab-pane label="角色" name="third">
-         <template v-if="userRole">
-            <el-row >
-             <el-col :span="4" align="center" class="col">
-               {{"序号"}}
-             </el-col>
-             
-           <el-col :span="20"  class="col">
-             {{"角色名称"}}
-           </el-col>
-         </el-row>
-           <el-row v-for="(item,index) of userRole" :key="index">
-             <el-col :span="4" align="center" class="col">
-               {{index+1}}
-             </el-col>
-           <el-col :span="20"  class="col">
-             {{item.name}}
-           </el-col>
-         </el-row>
-         </template>
-         <template v-else>
-           <div style="display:flex;justify-content:center;padding-top:20px">
+          <template v-if="userRole">
+            <el-row>
+              <el-col :span="4" align="center" class="col">{{"序号"}}</el-col>
+
+              <el-col :span="20" class="col">{{"角色名称"}}</el-col>
+            </el-row>
+            <el-row v-for="(item,index) of userRole" :key="index">
+              <el-col :span="4" align="center" class="col">{{index+1}}</el-col>
+              <el-col :span="20" class="col">
+                <el-tooltip effect="dark" content="点击跳转角色详情" placement="top">
+                    <router-link :to="`/admin/roles`" v-if="$store.state.login.userInfo.auth.manage_role">{{item.name}}</router-link>
+                  </el-tooltip>
+              </el-col>
+            </el-row>
+          </template>
+          <template v-else>
+            <div style="display:flex;justify-content:center;padding-top:20px">
               <span>该用户未绑定角色</span>
             </div>
-         </template>
+          </template>
         </el-tab-pane>
         <el-tab-pane label="通知" name="fourth">
           <div>
@@ -152,7 +148,7 @@
                   </el-form>
                 </template>
               </el-table-column>
-              <el-table-column type="selection"  style="width:16px;height:16px"></el-table-column>
+              <el-table-column type="selection" style="width:16px;height:16px"></el-table-column>
 
               <el-table-column label="通知" width="200" show-overflow-tooltip>
                 <template slot-scope="scope">
@@ -208,7 +204,7 @@
 
 <script>
 import * as HTTP from "@/api/notice";
-import {getUserPermission, getUserRole} from "@/api/login"
+import { getUserPermission, getUserRole } from "@/api/login";
 export default {
   name: "Notice",
   created() {
@@ -224,10 +220,9 @@ export default {
       multipleSelection: [],
       activeName: "fourth",
       loginMessage: this.$store.state.login.userInfo,
-      unreadCount:null,
-      userPermission:null,
-      userRole:null
-      
+      unreadCount: null,
+      userPermission: null,
+      userRole: null
     };
   },
 
@@ -257,29 +252,24 @@ export default {
     getNoticeDetail() {
       HTTP.noticeDetail(this.id).then(({ data }) => {
         this.notice = [...data.msg];
-        this.unreadCount=data.unread_count
+        this.unreadCount = data.unread_count;
       });
-       getUserPermission().then(({data})=>{
-         if(data.msg){
-           this.userPermission=null
-         }else{
-           this.userPermission = [...data];
-        
-         }
-         
-       });
-       getUserRole({userid:this.id}).then(({data})=>{
-         if(data.roles.length){
-            this.userRole = [...data.roles];
-         }else{
-           this.userRole =null;
-         }
-        
-       })
-      
+      getUserPermission().then(({ data }) => {
+        if (data.msg) {
+          this.userPermission = null;
+        } else {
+          this.userPermission = [...data];
+        }
+      });
+      getUserRole({ userid: this.id }).then(({ data }) => {
+        if (data.roles.length) {
+          this.userRole = [...data.roles];
+        } else {
+          this.userRole = null;
+        }
+      });
     },
-   
-   
+
     //修改是否已读
     updateIsRead(row) {
       console.log(row);
@@ -369,8 +359,8 @@ svg-icon {
   margin-bottom: 0;
   width: 50%;
 }
-.col{
-  padding-bottom:10px
+.col {
+  padding-bottom: 10px;
 }
 </style> 
 

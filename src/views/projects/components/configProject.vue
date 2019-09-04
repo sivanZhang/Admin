@@ -61,7 +61,7 @@
           </el-row>
           <el-row>
             <el-col :span="6" class="comment">客户信息</el-col>
-            <el-col :span="15" class="comment">{{project.client.client_name}}</el-col>
+            <el-col :span="15" class="comment">{{client.client_name?client.client_name:"-"}}</el-col>
           </el-row>
         </div>
       </el-tab-pane>
@@ -315,7 +315,8 @@ export default {
         pause: null
       },
       show: true,
-      showid: null
+      showid: null,
+      client:this.project.client?this.project.client:""
     };
   },
   watch: {
