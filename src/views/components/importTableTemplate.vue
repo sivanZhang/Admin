@@ -5,13 +5,14 @@
       :element-loading-text="tableLoadingText"
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)"
+      style="height:calc(100vh - 168px)"
     >
       <el-table
         :data="tableData"
         border
         @cell-dblclick="dblhandleCurrentChange"
-        style="width: 100%;height:100%"
-        max-height="100%"
+        style="width: 100%;"
+        height="100%"
       >
         <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
           <template slot-scope="scope">
