@@ -423,6 +423,9 @@ export default {
   watch: {
     active: {
       handler: function(newVal, oldVal) {
+        if(newVal === 0){
+          this.LinkList=[]
+        }
         if (newVal === 1 && this.TaskForm.asset) {
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
             const linkData = [...data.msg];
