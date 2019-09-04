@@ -220,7 +220,7 @@ export default {
       delMultipleSelection: [],
       delUserMultipleSelection: [],
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 20,
       pageSizeList: [10, 20, 50, 100],
       roleid: null,
       isShowDialog: false,

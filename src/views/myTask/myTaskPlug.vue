@@ -89,7 +89,7 @@ export default {
       asset:{},
       project:{},
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 20,
       pageSizeList: [10, 20, 50, 100]
     };
   },
