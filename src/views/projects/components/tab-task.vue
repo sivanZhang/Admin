@@ -35,14 +35,15 @@
         :data="TaskList"
         style="margin-top:20px"
         highlight-current-row
-        row-key="id"
+        
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
         border
+        :row-key="(row)=>{ return row.id}"
       >
         <!-- default-expand-all -->
-        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true"></el-table-column>
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
@@ -754,17 +755,15 @@ export default {
     },
     //删除任务http请求
     deleteTask() {
-      if (!Object.keys(this.ActiveRow).length) {
-        this.$message.error("请选择要删除的任务");
-        return false;
-      }
+      
       this.$confirm("删除任务后无法恢复，确认删除?", "注意", {
         confirmButtonText: "删除",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          HTTP.deleteTask(this.ActiveRow.id).then(({ data }) => {
+          const ids = this.multipleSelection.map(item => item.id).join(",");
+          HTTP.deleteTask(ids).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
               this.getTasks();
