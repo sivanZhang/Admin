@@ -148,10 +148,10 @@
         </div>
         <div v-if="active==2" style="padding-top:10px">
           <el-form-item label="任务名称" prop="name">
-            <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
+            <el-input v-model="TaskForm.name" placeholder="请填写任务名称" @input="change($event)"></el-input>
           </el-form-item>
           <el-form-item label="任务内容" prop="content">
-            <el-input type="textarea" v-model="TaskForm.content"></el-input>
+            <el-input type="textarea" v-model="TaskForm.content" @input="change($event)"></el-input>
           </el-form-item>
           <el-form-item label="优先级" prop="priority">
             <!-- <el-input v-model="TaskForm.code"></el-input> -->
@@ -270,7 +270,7 @@
             :picker-options="picker2"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="总工时" prop="total_hour">
+        <el-form-item label="总工时" prop="total_hour" oninput = "value=value.replace(/[^\d.]/g,'')">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
 
@@ -455,6 +455,9 @@ export default {
     }
   },
   methods: {
+    change(){
+      this.$forceUpdate()
+    },
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});

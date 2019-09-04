@@ -51,9 +51,10 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="changci" label="场次" align="center"></el-table-column>
-        <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
-        <el-table-column prop="name" label="镜头号" align="left"></el-table-column>
+        <el-table-column prop="session" label="场次" align="center"></el-table-column>
+        <el-table-column prop="episode" label="集数" align="center"></el-table-column>
+        <el-table-column prop="name" label="镜头号" align="left" width="200px" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="frame" label="帧数" align="left"></el-table-column>
         <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
         <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
         <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
@@ -136,10 +137,10 @@
           </template>
         </el-upload>
         <el-form-item label="资产名称" prop="name">
-          <el-input v-model="AssetForm.name"></el-input>
+          <el-input v-model="AssetForm.name" @input="change($event)"></el-input>
         </el-form-item>
         <el-form-item label="存放路径" prop="path">
-          <el-input v-model="AssetForm.path"></el-input>
+          <el-input v-model="AssetForm.path" @input="change($event)"></el-input>
         </el-form-item>
         <el-form-item label="优先等级" prop="priority">
           <!-- <el-input v-model="AssetForm.code"></el-input> -->
@@ -267,6 +268,9 @@ export default {
     }
   },
   methods: {
+    change(){
+      this.$forceUpdate()
+    },
     targetImport() {
       this.$router.push({
         name: "asset-import",
