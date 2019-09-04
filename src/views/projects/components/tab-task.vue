@@ -17,7 +17,12 @@
           </el-dropdown>-->
           <el-button icon="el-icon-download" type="primary">导入</el-button>
 
-          <el-button type="danger" @click="deleteTask" icon="el-icon-delete" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
+          <el-button
+            type="danger"
+            @click="deleteTask"
+            icon="el-icon-delete"
+            :disabled="this.multipleSelection.length === 0"
+          >批量删除</el-button>
         </el-col>
         <el-col :span="9" style="text-align:right">
           <el-input
@@ -35,7 +40,6 @@
         :data="TaskList"
         style="margin-top:20px"
         highlight-current-row
-        
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
@@ -147,7 +151,7 @@
             <el-input v-model="TaskForm.name" placeholder="请填写任务名称"></el-input>
           </el-form-item>
           <el-form-item label="任务内容" prop="content">
-            <el-input type="textarea" :rows="3" v-model="TaskForm.content" placeholder="请填写任务内容"></el-input>
+            <el-input type="textarea" v-model="TaskForm.content"></el-input>
           </el-form-item>
           <el-form-item label="优先级" prop="priority">
             <!-- <el-input v-model="TaskForm.code"></el-input> -->
@@ -423,20 +427,17 @@ export default {
   watch: {
     active: {
       handler: function(newVal, oldVal) {
-        if(newVal === 0){
-          this.LinkList=[]
-        }
         if (newVal === 1 && this.TaskForm.asset) {
+          //console.log(this.TaskForm.asset);
+          
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
             const linkData = [...data.msg];
-            linkData.forEach(item=>{
-              item.forEach(ct=>{
-                this.LinkList.push(ct);
-                
-              })
-            })
-            
-            
+            this.LinkList = [];
+              linkData.forEach(item => {
+                item.forEach(ct => {
+                  this.LinkList.push(ct);
+                });
+              });
           });
         }
         if (oldVal === 1 && this.TaskForm.link_id) {
@@ -517,14 +518,15 @@ export default {
             this.mainTaskShow = true;
             this.TaskForm.asset = this.asset;
             getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
-            const linkData = [...data.msg];
-            linkData.forEach(item=>{
-              item.forEach(ct=>{
-                this.LinkList.push(ct); 
-              })
+              const linkData = [...data.msg];
+                this.LinkList = [];
+                linkData.forEach(item => {
+                  item.forEach(ct => {
+                    this.LinkList.push(ct);
+                  });
+                });  
             });
-          });
-          this.active = 1;
+            this.active = 1;
           }
         })
         .catch(err => {
@@ -758,7 +760,6 @@ export default {
     },
     //删除任务http请求
     deleteTask() {
-      
       this.$confirm("删除任务后无法恢复，确认删除?", "注意", {
         confirmButtonText: "删除",
         cancelButtonText: "取消",
