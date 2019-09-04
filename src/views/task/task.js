@@ -314,8 +314,9 @@ export default {
         },
         //http获取‘我的任务’
         async getMyTasks() {
-            await queryMyTask({
-                user: this.$store.state.login.userInfo.id
+            await getStatusTaskList({
+                mytask: null,
+                
             }).then(({
                 data
             }) => {

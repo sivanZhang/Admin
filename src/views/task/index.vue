@@ -5,7 +5,7 @@
       <div class="layout_task" v-for="(item,index) of topArr" :key="index" >
         <div @click="task(item.status)" :class="{active:changecolor==item.status}">
            <h3>{{item.num}}</h3>
-           <span class="layout_top_span ">{{item.title}}</span>
+           <span  class="layout_top_span ">{{item.title}}</span>
         </div>
       </div>
     </div>
@@ -253,9 +253,9 @@
             <el-tab-pane label="任务详情" lazy>
               <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
             </el-tab-pane>
-            <el-tab-pane label="提交审核" lazy>
-              <tab-approve v-if="activeRow.task && activeRow.task.status!==0" :row="activeRow" @refresh="getMyTasks"/>
-              <div v-else>
+            <el-tab-pane label="提交审核" lazy >
+              <tab-approve v-if="activeRow.task && activeRow.task.status ===2" :row="activeRow" @refresh="getMyTasks"/>
+              <div v-else style="display:flex;justify-content:center">
                 请先完成任务
               </div>
             </el-tab-pane>
@@ -313,14 +313,14 @@
         >
           <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
-          <el-table-column  label="项目" header-align="left">
+          <el-table-column  label="项目" header-align="left" show-overflow-tooltip>
              <template slot-scope="scope">
                <router-link :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
              </template> 
           </el-table-column>
-          <el-table-column prop="asset.name" label="镜头" header-align="left"></el-table-column>
-          <el-table-column prop="task.name" header-align="left" label="任务名称"></el-table-column>
-          <el-table-column prop="task.content" header-align="left" label="任务内容"></el-table-column>
+          <el-table-column prop="asset.name" label="镜头" header-align="left" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="task.content" header-align="left" label="任务内容" show-overflow-tooltip></el-table-column>
           <el-table-column label="任务状态" header-align="left">
             <template slot-scope="scope">
               <el-select

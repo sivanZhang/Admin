@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       formInline: {
-        link_id: this.row.task.link,
+        dept_id: this.row.task.dept.id,
         task_id: this.row.task.id,
         path: ""
       }
@@ -25,7 +25,7 @@ export default {
   methods: {
     //表单提交，提交审核
     submitForm() {
-      if (this.formInline.path) {
+      console.log(this.formInline);
         taskApprove(this.formInline).then(res => {
           if (res.data.status === 0) {
             //提交审核成功
@@ -35,10 +35,6 @@ export default {
             this.$message.warning(res.data.msg);
           }
         });
-      } else {
-        this.$message.warning("请输入路径");
-        return;
-      }
     }
   }
 };

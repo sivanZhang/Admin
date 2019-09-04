@@ -70,10 +70,11 @@
             </el-row>
             <el-row v-for="(item,index) of userRole" :key="index">
               <el-col :span="4" align="center" class="col">{{index+1}}</el-col>
-              <el-col :span="20" class="col">
-                <el-tooltip effect="dark" content="点击跳转角色详情" placement="top">
-                    <router-link :to="`/admin/roles`" v-if="$store.state.login.userInfo.auth.manage_role">{{item.name}}</router-link>
-                  </el-tooltip>
+              <el-col :span="20" class="col" style="cursor: pointer;">
+                <el-tooltip effect="dark" content="点击跳转角色详情" placement="top" v-if="$store.state.login.userInfo.auth.manage_role">
+                    <router-link :to="`/admin/roles`" :disabled="$store.state.login.userInfo.auth.manage_role">{{item.name}}</router-link>
+                  </el-tooltip>          
+                    <div v-else>{{item.name}}</div>                
               </el-col>
             </el-row>
           </template>

@@ -184,7 +184,10 @@ export default {
           link_id: row.task.link,
           project_id: row.project.id,
           suggestion: "",
-          approve_result: 0
+          approve_result: 0,
+          task_id:row.task.id
+        
+
         }
       )
       this.$refs['approvelogs'].getApproveLog(row.asset.asset)
