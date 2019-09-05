@@ -16,7 +16,7 @@
         @click="initSource(index),getCurrentPlayId(index)"
         icon="el-icon-video-play"
         style="margin: 10px 2%;"
-      >{{item.asset.name}}</el-button>
+      >{{item.task.name}}</el-button>
     </div>
     <!-- 
     el-icon-video-play-->
@@ -25,10 +25,10 @@
       <div class="list">
         <div class="item" v-for="(item,index) in projectList" :key="index">
           <el-checkbox :label="index" :key="index" @change="changeCheckedProject($event,item)">
-            <p class="pro-name">{{item.asset.name}}</p>
+            <p class="pro-name">{{item.task.name}}</p>
           </el-checkbox>
           <div style="margin-top:5px">
-            <el-image :src="item.asset.image?$store.state.BASE_URL+item.asset.image:''" fit="cover">
+            <el-image :src="item.project.image?$store.state.BASE_URL+item.project.image:''" fit="cover">
               <div
                 slot="error"
                 style="height: 100%;display: flex;justify-content: center;align-items: center;font-size: 56px;background: #dcdfe6;"
@@ -37,7 +37,6 @@
               </div>
             </el-image>
           </div>
-          <div>当前版本：{{item.asset.inner_version}}</div>
         </div>
       </div>
     </el-checkbox-group>
@@ -67,7 +66,7 @@ export default {
     },
     initSource(index) {
       let selectProject = this.selectProjects[index];
-      this.currentPlayId = selectProject.asset.asset;
+      this.currentPlayId = selectProject.task.id;
       let projectList =[];
       projectList[0] = selectProject;
       if (index + 1 != this.selectProjects.length) {
@@ -83,19 +82,19 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item) {
-       if (e && item.asset.path) {
+       if (e && item.path) {
         item = {
         ...item,
-        url:`${this.$store.state.BASE_URL}${item.asset.path}`
+        url:`${this.$store.state.BASE_URL}${item.path}`
       };
       //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
-      } else if(e && !item.asset.path){
+      } else if(e && !item.path){
         e=false
         this.$message.warning('镜头路径为空')
       }else{
         this.selectProjects = this.selectProjects.filter(t => {
-          return t.asset.asset !== item.asset.asset;
+          return t.task.id !== item.task.id;
         });
       }
     },
