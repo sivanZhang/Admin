@@ -292,11 +292,11 @@ import {
 
 export default {
   name: "config-project",
-  props: ["project"],
+  props: ["project","configTab"],
   components: {},
   data() {
     return {
-      activeName: "first",
+      activeName: this.configTab?this.configTab:"first",
       defaultProps: {
         children: "children",
         label: "name"

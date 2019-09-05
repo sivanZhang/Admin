@@ -21,7 +21,7 @@
         <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3">
-        <configProject :project="project" @refresh="getProjectDetail" />
+        <configProject :project="project" @refresh="getProjectDetail"  :configTab="configTab"/>
       </el-tab-pane>
       <el-tab-pane label="控制面板" name="tab4">控制面板</el-tab-pane>
     </el-tabs>
@@ -44,12 +44,14 @@ export default {
   },
   data() {
     return {
-      activeName: "tab0",
+      activeName: this.$route.query.tab?this.$route.query.tab:"tab0",
       AssetList: [],
       allAssetList: [],
       TaskList: [],
       asset_type: 0,
-      project: {}
+      project: {},
+      configTab:this.$route.query.tab2?this.$route.query.tab2:"tab0"
+     
     };
   },
   watch: {
@@ -125,6 +127,7 @@ export default {
     this.getAssetList();
     this.getTaskList();
     this.getProjectDetail();
+    
   }
 };
 </script>
