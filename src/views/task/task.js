@@ -10,14 +10,17 @@ import taskForm from './components/task-form'
 import tabLog from "./components/tab-log"
 import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
+import tabApproveDetail from "./components/tab-approve-detail"
 import { getStatusTaskList } from "@/api/task"
+import {getApproveRemark}from "@/api/video"
 export default {
     components: {
         draggable,
         tabApprove,
         taskForm,
         tabLog,
-        tabTaskDtail
+        tabTaskDtail,
+        tabApproveDetail
     },
     data() {
         return {
@@ -148,7 +151,8 @@ export default {
             end_date: null,
             time: Date.parse(new Date()) / 1000,
             changecolor: 1,
-            activeRow: {} //点击任务列表选中的列的数据
+            activeRow: {},//点击任务列表选中的列的数据
+            approveDetail:null 
         };
     },
     methods: {
@@ -278,16 +282,11 @@ export default {
                 this.isDrawerShow = false;
             }
         },
-        //收回任务板右侧
-        getRow(){
-            this.isDrawerShow = false;
-        },
         //是否显示任务板右侧
         taskBoardRightShow(row) {
-            // console.log(row);
             this.isDrawerShow = true;
             this.end_date = row.task.end_date;
-            this.activeRow = {...row };
+            this.activeRow = {...row }
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
                 type: 0
@@ -316,7 +315,12 @@ export default {
             }).catch(() => {
                 this.detailLoading = false
             })
-           
+            getApproveRemark({
+                task_id:row.task.id
+            }).then(({data})=>{
+                this.approveDetail=[...data.msg];
+            })
+            
         },
         //http获取‘我的任务’
         async getMyTasks() {
