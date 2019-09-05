@@ -612,8 +612,8 @@ export default {
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset,
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date)),
-              new Date(dateFormat(this.ActiveRow.end_date))
+             new Date(dateFormat(this.ActiveRow.start_date * 1000))>0?new Date(dateFormat(this.ActiveRow.start_date * 1000)):"",
+              new Date(dateFormat(this.ActiveRow.end_date * 1000))>0?new Date(dateFormat(this.ActiveRow.end_date * 1000)):""
             ]
           };
           break;
