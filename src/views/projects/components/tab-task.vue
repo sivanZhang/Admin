@@ -611,7 +611,6 @@ export default {
             grade: 1,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset,
-
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)),
               new Date(dateFormat(this.ActiveRow.end_date))
@@ -619,9 +618,7 @@ export default {
           };
           break;
         case 3:
-          function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+        
           if (!Object.keys(this.ActiveRow).length) {
             this.$message.error("请选择要修改的任务");
             return false;
