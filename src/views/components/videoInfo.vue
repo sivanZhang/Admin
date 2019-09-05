@@ -2,7 +2,7 @@
   <div>
     <div v-if="!isHasData">暂无数据</div>
     <div class="info-cont" v-if="isHasData">
-      <el-image class="image" :src="videoInfo.asset.image" fit="cover">
+      <el-image class="image" :src="videoInfo.task.image" fit="cover">
         <div
           slot="error"
           style="height: 100%;display: flex;justify-content: center;align-items: center;font-size: 56px;background: #dcdfe6;"
@@ -13,7 +13,7 @@
       <div class="desc">
         <p>
           <span>镜头名称</span>
-          <span>{{videoInfo.asset.name}}</span>
+          <span>{{videoInfo.task.name}}</span>
         </p>
         <p>
           <span>所属项目</span>
@@ -21,7 +21,7 @@
         </p>
         <p>
           <span>版本号</span>
-          <span>{{videoInfo.asset.inner_version}}</span>
+          <span>{{videoInfo.task.inner_version}}</span>
         </p>
       </div>
     </div>
@@ -66,8 +66,7 @@ export default {
         min-width: 75px;
         display: inline-block;
       }
-      span:last-child {
-      }
+      
     }
   }
 }

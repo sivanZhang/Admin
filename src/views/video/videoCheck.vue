@@ -66,7 +66,7 @@
         <div id="videoComment" class="video-comment">
           <!-- 视频标注列表 -->
           <approve-log
-            ref="approvelogs"
+            ref="approvelogs" 
           />
         </div>
       </el-col>
@@ -100,7 +100,8 @@ export default {
       currentVideoIsEdit: false,
       pWidth: 0,
       pHeight: 0,
-      submitList: []
+      submitList: [],
+      
     };
   },
   computed: {
@@ -129,15 +130,13 @@ export default {
       let submitFn = [];
       this.submitList.forEach((t, i, arr) => {
         let data = {
-          asset_id: t.asset.asset,
-          project_id: t.project.id,
-          link_id: t.task.link,
+          task_id: t.task.id,
           approve_result: this.approve_result,
           suggestion: this.markText,
           key: []
         };
         this.imgList.forEach(k => {
-          if (k.asset === t.asset.asset) {
+          if (k.task=== t.task.asset) {
             data["key"].push({
               image: k.imgUrl,
               frame: k.currentFrame
@@ -145,7 +144,7 @@ export default {
           }
         });
         postApprove(data).then(res => {
-          this.$message(t.asset.name + " " + res.data.msg);
+          this.$message.success(t.task.name + " " + res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
             {
               this.imgList = [];
@@ -158,7 +157,7 @@ export default {
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
-      this.$refs['approvelogs'].getApproveLog(projectList[0].asset.asset)
+      this.$refs['approvelogs'].getApproveLog(projectList[0].task.asset)
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
         this.$message.error("处于视频标注模式");
