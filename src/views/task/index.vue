@@ -254,7 +254,7 @@
               <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
             </el-tab-pane>
             <el-tab-pane label="提交审核" lazy >
-              <tab-approve v-if="activeRow.task && activeRow.task.status ===2" :row="activeRow" @refresh="getMyTasks"/>
+              <tab-approve v-if="activeRow.task && activeRow.task.status ===2" :row="activeRow" @refresh="getMyTasks" @getRow="getRow()"/>
               <div v-else style="display:flex;justify-content:center">
                 请先完成任务
               </div>

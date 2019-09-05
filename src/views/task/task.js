@@ -278,11 +278,16 @@ export default {
                 this.isDrawerShow = false;
             }
         },
+        //收回任务板右侧
+        getRow(){
+            this.isDrawerShow = false;
+        },
         //是否显示任务板右侧
         taskBoardRightShow(row) {
+            // console.log(row);
             this.isDrawerShow = true;
             this.end_date = row.task.end_date;
-            this.activeRow = {...row }
+            this.activeRow = {...row };
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
                 type: 0
@@ -311,6 +316,7 @@ export default {
             }).catch(() => {
                 this.detailLoading = false
             })
+           
         },
         //http获取‘我的任务’
         async getMyTasks() {
