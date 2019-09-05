@@ -31,7 +31,7 @@
                   style="cursor: pointer"
                 >
                   <el-tooltip effect="dark" content="点击跳转工种详情" placement="top">
-                    <router-link :to="`/admin/userGroup`">{{item.name}}</router-link>
+                    <router-link :to="{path:'/admin/userGroup',query:{id:item.id}}">{{item.name}}</router-link>
                   </el-tooltip>
                 </el-col>
               </el-col>

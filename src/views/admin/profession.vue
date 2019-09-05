@@ -491,6 +491,17 @@ export default {
 
       this.dialogFormVisible = true;
       this.$refs["GroupForm"].resetFields();
+    },
+    pageRouter(){
+      console.log(this.$route.query.id);
+      getDept({
+        id: this.$route.query.id
+      }).then(({ data }) => {
+        const msg=data.msg;
+        this.handleGroupClick(msg)
+      }).catch(err=>{
+        
+      })
     }
   },
   watch: {
@@ -500,6 +511,9 @@ export default {
   },
   created() {
     this.getDeptList();
+    if(this.$route.query.id){
+      this.pageRouter()
+    }
   },
 
   components: {
