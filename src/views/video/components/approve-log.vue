@@ -10,36 +10,36 @@
     </el-select>
     <div v-loading="loading">
       <div class="bd" v-for="(t,i) of list" :key="i">
-      <el-row type="flex" justify="space-between">
-        <el-col style="display:flex">
-          <div class="item-title">审批人员：</div>
-          {{t.approve_user_id.name}}
-        </el-col>
-        <el-col class="text-right">{{t.time|dateTimeFormat}}</el-col>
-      </el-row>
-      <div class="item">
-        <div class="item-title">审批意见：</div>
-        <div class="item-con">{{t.approve_suggestion}}</div>
-      </div>
-      <div class="item">
-        <div class="item-title">审批结果：</div>
-        <div class="item-con" style="color:#ed4014">{{t.approve_result?'通过':'未通过'}}</div>
-      </div>
-      <div class="item">
-        <div class="item-title">镜头批注：</div>
-        <div class="item-con">
-          <div class="image-list" v-for="(item,index) of t.images" :key="index">
-            <el-image
-              :src="$store.state.BASE_URL+item.image_path"
-              style="height:45px;width:80px"
-              fit="cover"
-              @click="shwoImage(item)"
-            ></el-image>
-            第{{item.image_frame}}帧
+        <el-row type="flex" justify="space-between">
+          <el-col style="display:flex">
+            <div class="item-title">审批人员：</div>
+            {{t.approve_user_id.name}}
+          </el-col>
+          <el-col class="text-right">{{t.time|dateTimeFormat}}</el-col>
+        </el-row>
+        <div class="item">
+          <div class="item-title">审批意见：</div>
+          <div class="item-con">{{t.approve_suggestion}}</div>
+        </div>
+        <div class="item">
+          <div class="item-title">审批结果：</div>
+          <div class="item-con" style="color:#ed4014">{{t.approve_result?'通过':'未通过'}}</div>
+        </div>
+        <div class="item">
+          <div class="item-title">镜头批注：</div>
+          <div class="item-con">
+            <div class="image-list" v-for="(item,index) of t.images" :key="index">
+              <el-image
+                :src="$store.state.BASE_URL+item.image_path"
+                style="height:45px;width:80px"
+                fit="cover"
+                @click="shwoImage(item)"
+              ></el-image>
+              第{{item.image_frame}}帧
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
     <div v-show="!list.length">暂无数据</div>
     <zoom-img ref="zoomImg" />
@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      loading:false,
+      loading: false,
       list: [],
       httpParams: {},
       options: [
@@ -81,27 +81,29 @@ export default {
         this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL + url);
       }
     },
-    getApproveLog(asset_id) {
-      if (asset_id && this.select === 2) {
-        this.httpParams = { asset_id };
-      } else if (!asset_id && this.select === 2) {
-        this.httpParams = { asset_id: this.httpParams["asset_id"] };
-      } else if (asset_id && this.select !== 2) {
+    getApproveLog(task_id) {
+      if (task_id && this.select === 2) {
+        this.httpParams = { task_id };
+      } else if (!task_id && this.select === 2) {
+        this.httpParams = { task_id: this.httpParams["task_id"] };
+      } else if (task_id && this.select !== 2) {
         this.httpParams = {
-          asset_id,
+          task_id,
           approve_result: this.select
         };
-      } else if (!asset_id && this.select !== 2) {
+      } else if (!task_id && this.select !== 2) {
         this.httpParams = {
           ...this.httpParams,
           approve_result: this.select
         };
       }
-      this.loading = true
+      this.loading = true;
       getApproveRemark(this.httpParams).then(({ data }) => {
-        this.loading =false
+        this.loading = false;
         this.list = [...data.msg];
-      });
+      }).catch((res=>{
+        this.loading = false;
+      }));
     }
   }
 };

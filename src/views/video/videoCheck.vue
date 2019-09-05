@@ -157,7 +157,7 @@ export default {
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
-      this.$refs['approvelogs'].getApproveLog(projectList[0].task.asset)
+      this.$refs['approvelogs'].getApproveLog(projectList[0].task.id)
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
         this.$message.error("处于视频标注模式");
@@ -268,14 +268,14 @@ export default {
         padding: 10px;
         background: #fff;
         margin-bottom: 10px;
-        min-height: 10%;
-        max-height: 68%;
+        min-height: 50%;
+        max-height: 100%;
         overflow: auto;
       }
       .video-comment {
         padding: 10px;
         background: #fff;
-        height: 65%;
+        height: 100%;
         overflow: auto;
       }
       .video-info,

@@ -325,13 +325,12 @@
        * 截图回调
        */
       getDrawImage(drawImage) {
-
         var obj = {
           currentFrame:this.calcFrame(this.videoPlayer.currentTime()),
           currentName:this.currentProject.proName,
           imgUrl: drawImage,
           currentPosition: this.videoPlayer.currentTime(),
-          asset:this.currentProject.asset.asset
+          task:this.currentProject.task.id
         }
         this.$emit('getCutImg', obj)
         this.videoPlayerIsShow = true

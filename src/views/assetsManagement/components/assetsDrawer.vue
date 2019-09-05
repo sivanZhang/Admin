@@ -37,6 +37,7 @@ import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
 import approveLog from "@/views/video/components/approve-log";
+import { constants } from 'crypto';
 export default {
   name: "assets-drawer",
   props: ["project", "RemarksData"],
@@ -52,7 +53,7 @@ export default {
       handler: function(newVal, oldVal) {
         if (newVal.id) {
           this.getLinkList();
-          this.$refs['approvelogs'].getApproveLog(newVal.id)
+          this.$refs['approvelogs'].getApproveLog(newVal.id)  
         }
       }
     }

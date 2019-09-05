@@ -187,7 +187,7 @@ export default {
 
         }
       )
-      this.$refs['approvelogs'].getApproveLog(row.asset.asset)
+      this.$refs['approvelogs'].getApproveLog(row.task.id);
     },
     submitApprove() {
       this.submitLoading = true;
