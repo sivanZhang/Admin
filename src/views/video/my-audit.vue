@@ -180,9 +180,6 @@ export default {
       this.form_obj = Object.assign(
         {},
         {
-          asset_id: row.asset.asset,
-          link_id: row.task.link,
-          project_id: row.project.id,
           suggestion: "",
           approve_result: 0,
           task_id:row.task.id
@@ -197,10 +194,13 @@ export default {
       postApprove(this.form_obj)
         .then(res => {
           this.submitLoading = false;
-          this.$message(res.data.msg);
+          this.getMyTasks();
+          this.isDrawerShow = false;
+          this.$message.success(res.data.msg);
         })
         .catch(err => {
           this.submitLoading = false;
+          this.$message.error(res.data.msg)
         });
     },
     //http获取‘我的任务’
