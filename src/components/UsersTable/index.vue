@@ -17,8 +17,8 @@
       <el-table-column prop="email" label="邮箱" align="left" />
       <el-table-column prop="phone" label="电话" align="left" />
       <el-table-column prop="dept" label="工种" align="left" >
-        <template slot-scope="scope">
-          <div v-for="(item,index) of scope.row.dept" :key="index">
+        <template slot-scope="scope"  >
+          <div style="float:left;padding:5px" v-for="(item,index) of scope.row.dept" :key="index">
             {{item.name}}
             </div>
         </template>

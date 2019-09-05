@@ -25,7 +25,7 @@
             <el-row style="padding-top:10px">
               <el-col :span="4" align="right">工种：</el-col>
               <el-col :span="20">
-                <el-col
+                <el-col :span="4"
                   v-for="(item,index) of loginMessage.dept"
                   :key="index"
                   style="cursor: pointer"
