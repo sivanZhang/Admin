@@ -26,16 +26,15 @@
           <div class="item-con" style="color:#ed4014">{{t.approve_result?'通过':'未通过'}}</div>
         </div>
         <div class="item">
-          <div class="item-title">镜头批注：</div>
           <div class="item-con">
             <div class="image-list" v-for="(item,index) of t.images" :key="index">
+              第{{item.image_frame}}帧
               <el-image
                 :src="$store.state.BASE_URL+item.image_path"
                 style="height:45px;width:80px"
                 fit="cover"
                 @click="shwoImage(item.image_path)"
               ></el-image>
-              第{{item.image_frame}}帧
             </div>
           </div>
         </div>
@@ -81,6 +80,7 @@ export default {
         this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL + url);
       }
     },
+    //父组件直接通过$refs[组件ref值].getApproveLog(task的id)即可请求列表，切换筛选时自动调用的
     getApproveLog(task_id) {
       if (task_id && this.select === 2) {
         this.httpParams = { task_id };
