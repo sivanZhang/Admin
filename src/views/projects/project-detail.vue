@@ -1,22 +1,18 @@
 <template>
   <div>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName">
       <el-tab-pane label="镜头" name="tab0">
         <tab-assets
-          @refresh="getAssetList"
-          :asset-list="AssetList"
           @get-tasks="getTaskList"
           :activeName="activeName"
           drawer-type="scene"
-          >
+        >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
         </tab-assets>
       </el-tab-pane>
       <el-tab-pane label="资产管理" name="tab1">
         <tab-assets
-          @refresh="getAssetList"
-          :asset-list="AssetList"
           @get-tasks="getTaskList"
           :activeName="activeName"
         />
@@ -25,9 +21,8 @@
         <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3">
-        <configProject :project="project" @refresh="getProjectDetail"  :configTab="configTab"/>
+        <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
-      <el-tab-pane label="控制面板" name="tab4">控制面板</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -48,29 +43,19 @@ export default {
   },
   data() {
     return {
-      activeName: this.$route.query.tab?this.$route.query.tab:"tab0",
+      total: 0,
+      activeName: this.$route.query.tab ? this.$route.query.tab : "tab0",
       AssetList: [],
-      allAssetList: [],
       TaskList: [],
       asset_type: 0,
       project: {},
-      configTab:this.$route.query.tab2?this.$route.query.tab2:"tab0"
-     
+      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "tab0"
     };
   },
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
-        if (newVal === "tab0") {
-          this.asset_type = 0;
-          this.getAssetList();
-        }
-        if (newVal === "tab1") {
-          this.asset_type = 1;
-          this.getAssetList();
-        }
         if (newVal === "tab2") {
-          this.asset_type = null;
           this.getAssetList();
         }
         if (newVal === "tab3") {
@@ -80,30 +65,15 @@ export default {
     }
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
-    getAssetList(keywords) {
-      let data = {
-        project: this.$route.params.id,
-        asset_type: this.asset_type
-      };
-      if (keywords) {
-        data = {
-          ...data,
-          name: keywords
+    getAssetList() {
+      let payload = {
+          project: this.$route.params.id,
         };
-      }
-      queryAssets(data).then(({ data }) => {
-        this.AssetList = [...data.msg];
-      });
-    },
-    getAllAssetList() {
-      queryAssets({
-        project: this.$route.params.id
-      }).then(({ data }) => {
-        this.allAssetList = [...data.msg];
-        console.log(this.allAssetList);
+      queryAssets(payload).then(({ data }) => {
+        if (data.status === 0) {
+          this.AssetList = [...data.msg];
+          this.total = data.page_count;
+        }
       });
     },
     getTaskList(keywords) {
@@ -131,7 +101,6 @@ export default {
     this.getAssetList();
     this.getTaskList();
     this.getProjectDetail();
-    
   }
 };
 </script>

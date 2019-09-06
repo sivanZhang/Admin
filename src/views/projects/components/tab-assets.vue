@@ -7,9 +7,13 @@
             <slot name="add">添加资产</slot>
           </el-button>
           <el-button icon="el-icon-upload2" type="primary" @click="targetImport">
-             <slot name="import">资产导入</slot>
+            <slot name="import">资产导入</slot>
           </el-button>
-          <el-button  type="danger" @click="delMulAssets()" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
+          <el-button
+            type="danger"
+            @click="delMulAssets()"
+            :disabled="this.multipleSelection.length === 0"
+          >批量删除</el-button>
         </el-col>
         <el-col :span="9" align="right">
           <el-input
@@ -18,14 +22,14 @@
             v-model="filterText"
             class="input-with-select"
           >
-            <el-button @click="getAssetList(1)" slot="append" icon="el-icon-search" type="primary" />
+            <el-button @click="getAssetList()" slot="append" icon="el-icon-search" type="primary" />
           </el-input>
-          <el-button @click="getAssetList(),filterText=''" type="primary">重置</el-button>
+          <el-button @click="getAssetList(1)" type="primary">重置</el-button>
         </el-col>
       </el-row>
       <el-table
         ref="assetTable"
-        :data="AssetList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        :data="AssetList"
         style="width: 100%"
         border
         :stripe="true"
@@ -34,7 +38,8 @@
         highlight-current-row
         row-class-name="hover"
         @selection-change="handleSelectionChange"
-       :row-key="(row)=>{ return row.id}"
+        :row-key="(row)=>{ return row.id}"
+        v-loading="tableLoading"
       >
         <el-table-column type="selection" :reserve-selection="true"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
@@ -101,13 +106,15 @@
       </el-table>
       <div class="block" style="text-align: right">
         <el-pagination
+          :hide-on-single-page="total<=15"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-sizes="pageSizeList"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="AssetList.length"
+          :page-count="pageCount"
+          :total="total"
         ></el-pagination>
       </div>
     </div>
@@ -181,7 +188,7 @@
       :mask-style="{backgroundColor: 'transparent'}"
     >
       <Header :project="project">
-          <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
+        <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
       </Header>
       <assetsDrawer
         :project="project"
@@ -197,26 +204,26 @@
 import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
 import Header from "@/components/projectDrawer/components/Header";
 import * as HTTP from "@/api/assets";
-
 import { getRemark } from "@/api/remark";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
 
 export default {
   components: {
-    /*  */
-
     assetsDrawer,
     Header
   },
   neme: "asset-list",
   data() {
     return {
+      pageCount: 0,
+      AssetList: [],
+      total: 0,
+      tableLoading: false, //表格加载状态
       project: null,
       RemarksData: [],
       value1: false,
       activeAsset: null,
-
       isDrawerShow: false,
       SRC: "",
       AssetForm: {
@@ -252,8 +259,8 @@ export default {
         createLoading: false
       },
       currentPage: 1,
-      pageSize: 20,
-      pageSizeList: [10, 20, 50, 100],
+      pageSize: 15,
+      pageSizeList: [15, 30, 50, 100],
       headers: {
         Authorization: `JWT ${getToken()}`
       },
@@ -261,37 +268,57 @@ export default {
       filterText: ""
     };
   },
- 
+
   computed: {
     ...mapState("project", ["ProjectList"])
   },
   props: {
-    AssetList: {
-      type: Array
-    },
     activeName: {
       type: String
     },
-    drawerType:{//侧边栏为资产还是镜头
-      default:''
+    drawerType: {
+      //侧边栏为资产还是镜头
+      default: ""
     }
   },
   methods: {
-    change(){
-      this.$forceUpdate()
+    change() {
+      this.$forceUpdate();
     },
+    //跳转批量上传页
     targetImport() {
       this.$router.push({
         name: "asset-import",
         params: { id: this.$route.params.id }
       });
     },
+    //获取资产或者镜头列表，type=1时表示重置
     getAssetList(type) {
-      if (type) {
-        this.$emit("refresh", this.filterText);
-      } else {
-        this.$emit("refresh");
+      if (type === 1) {
+        this.filterText = "";
       }
+      let payload = {
+        project: this.$route.params.id,
+        asset_type: this.drawerType === "scene" ? 0 : 1,
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+      if (this.filterText) {
+        payload = { ...payload, name: this.filterText };
+      }
+      this.tableLoading = true;
+      HTTP.queryAssets(payload)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.AssetList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
     },
     getTasks() {
       this.$emit("get-tasks");
@@ -301,7 +328,6 @@ export default {
       console.log(this.multipleSelection.length);
     },
     show(id) {
-      // console.log(id);
       this.value1 = true;
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
@@ -325,7 +351,7 @@ export default {
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.$emit("refresh");
+            this.getAssetList();
           }
         });
       });
@@ -343,7 +369,7 @@ export default {
         HTTP.deleteAssets({ ids }).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.$emit("refresh");
+            this.getAssetList();
           }
         });
       });
@@ -377,7 +403,7 @@ export default {
               this.createLoading = false;
               this.$message.success(data.msg);
               if (data.status === 0) {
-                this.$emit("refresh");
+                this.getAssetList();
                 this.AssetForm = Object.assign(
                   {},
                   {
@@ -405,11 +431,11 @@ export default {
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
-      //console.log(this.pagesize);
+      this.getAssetList();
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
-      //console.log(this.currentPage);
+      this.getAssetList();
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
@@ -445,7 +471,7 @@ export default {
     }
   },
   created() {
-    this.$emit("refresh");
+    this.getAssetList();
   }
 };
 </script>
