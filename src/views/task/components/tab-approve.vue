@@ -1,6 +1,6 @@
 <template>
   <el-form :model="formInline" label-position="left" label-width="100px">
-    <el-form-item label="路径" required>
+    <el-form-item label="路径">
       <el-input v-model="formInline.path" placeholder="要审核的路径"></el-input>
     </el-form-item>
     <el-form-item class="text-right">

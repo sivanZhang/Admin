@@ -7,7 +7,11 @@
           :asset-list="AssetList"
           @get-tasks="getTaskList"
           :activeName="activeName"
-        />
+          drawer-type="scene"
+          >
+          <span slot="add">添加镜头</span>
+          <span slot="import">镜头导入</span>
+        </tab-assets>
       </el-tab-pane>
       <el-tab-pane label="资产管理" name="tab1">
         <tab-assets

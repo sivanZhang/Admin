@@ -57,7 +57,7 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">未开始</el-col>
-                  <el-col :span="20" style="text-align:right">
+                  <!-- <el-col :span="20" style="text-align:right">
                     <span class="sort">排序方式</span>
                     <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
                       <el-option
@@ -67,7 +67,7 @@
                         :value="item.value"
                       ></el-option>
                     </el-select>
-                  </el-col>
+                  </el-col> -->
                 </el-row>
                 <draggable
                   v-model="DraftArr"
@@ -92,7 +92,7 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">进行中</el-col>
-                  <el-col :span="20" style="text-align:right">
+                  <!-- <el-col :span="20" style="text-align:right">
                     <span class="sort">排序方式</span>
                     <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
                       <el-option
@@ -102,7 +102,7 @@
                         :value="item.value"
                       ></el-option>
                     </el-select>
-                  </el-col>
+                  </el-col> -->
                 </el-row>
                 <draggable
                   v-model="InProgressArr"
@@ -127,7 +127,7 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">完成</el-col>
-                  <el-col :span="20" style="text-align:right">
+                  <!-- <el-col :span="20" style="text-align:right">
                     <span class="sort">排序方式</span>
                     <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
                       <el-option
@@ -137,7 +137,7 @@
                         :value="item.value"
                       ></el-option>
                     </el-select>
-                  </el-col>
+                  </el-col> -->
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -162,7 +162,7 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">超时</el-col>
-                  <el-col :span="20" style="text-align:right">
+                  <!-- <el-col :span="20" style="text-align:right">
                     <span class="sort">排序方式</span>
                     <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
                       <el-option
@@ -172,7 +172,7 @@
                         :value="item.value"
                       ></el-option>
                     </el-select>
-                  </el-col>
+                  </el-col> -->
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -196,7 +196,7 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">暂停</el-col>
-                  <el-col :span="20" style="text-align:right">
+                  <!-- <el-col :span="20" style="text-align:right">
                     <span class="sort">排序方式</span>
                     <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
                       <el-option
@@ -206,7 +206,7 @@
                         :value="item.value"
                       ></el-option>
                     </el-select>
-                  </el-col>
+                  </el-col> -->
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -239,6 +239,9 @@
           draggable
         >
           <el-tabs>
+            <el-tab-pane label="任务详情" lazy>
+              <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
+            </el-tab-pane>
             <el-tab-pane label="执行记录" lazy>
               <tabLog :loglist="LogList" :logsLoading="logsLoading" />
             </el-tab-pane>
@@ -249,9 +252,6 @@
                 @addRecord="addRecord"
                 @cancel="cancel"
               />
-            </el-tab-pane>
-            <el-tab-pane label="任务详情" lazy>
-              <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
             </el-tab-pane>
             <el-tab-pane label="提交审核" lazy >
               <tab-approve v-if="activeRow.task && activeRow.task.status ===2" :row="activeRow" @refresh="getMyTasks"/>

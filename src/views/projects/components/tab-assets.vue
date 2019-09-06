@@ -3,8 +3,12 @@
     <div>
       <el-row>
         <el-col :span="15" style="padding-bottom:15px;">
-          <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">添加资产</el-button>
-          <el-button icon="el-icon-plus" type="primary" @click="targetImport">批量导入</el-button>
+          <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">
+            <slot name="add">添加资产</slot>
+          </el-button>
+          <el-button icon="el-icon-upload2" type="primary" @click="targetImport">
+             <slot name="import">资产导入</slot>
+          </el-button>
           <el-button  type="danger" @click="delMulAssets()" :disabled="this.multipleSelection.length === 0">批量删除</el-button>
         </el-col>
         <el-col :span="9" align="right">
@@ -16,7 +20,7 @@
           >
             <el-button @click="getAssetList(1)" slot="append" icon="el-icon-search" type="primary" />
           </el-input>
-          <el-button @click="getAssetList()" icon="el-icon-refresh-left" type="primary">重置</el-button>
+          <el-button @click="getAssetList(),filterText=''" type="primary">重置</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -176,7 +180,9 @@
       :transfer="false"
       :mask-style="{backgroundColor: 'transparent'}"
     >
-      <Header :project="project"></Header>
+      <Header :project="project">
+          <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
+      </Header>
       <assetsDrawer
         :project="project"
         :RemarksData="RemarksData"
@@ -265,6 +271,9 @@ export default {
     },
     activeName: {
       type: String
+    },
+    drawerType:{//侧边栏为资产还是镜头
+      default:''
     }
   },
   methods: {

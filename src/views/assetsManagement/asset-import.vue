@@ -14,7 +14,7 @@
         @click="openFile"
         class="pan-btn green-btn"
         size="mini"
-      >导入资产</el-button>
+      >添加Excel</el-button>
       <el-button
         icon="el-icon-upload"
         type="success"

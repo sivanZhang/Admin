@@ -17,7 +17,7 @@ import {
 // create an axios instance
 const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BASE_API,
-        timeout: 5000,
+        timeout: 0,
         transformRequest: [data => {
             return qs.stringify(data);
         }],

@@ -93,7 +93,9 @@
           </el-col>
           <el-col :span="15">
             <el-row>
-              <el-col :span="6" class="project-name">资产类型</el-col>
+              <el-col :span="6" class="project-name">
+                <slot name="type">资产类型</slot>
+              </el-col>
               <el-col :span="18" class="project-name">{{project.category>0?project.category:"未分类"}}</el-col>
             </el-row>
             <el-row>

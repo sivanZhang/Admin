@@ -290,7 +290,7 @@ export const constantRoutes = [{
             component: () =>
                 import ('@/views/assetsManagement/asset-import'),
             meta: {
-                title: '资产导入',
+                title: '批量导入',
                 icon: 'assetlist'
             },
             hidden: true

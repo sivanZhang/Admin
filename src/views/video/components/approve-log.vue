@@ -33,7 +33,7 @@
                 :src="$store.state.BASE_URL+item.image_path"
                 style="height:45px;width:80px"
                 fit="cover"
-                @click="shwoImage(item)"
+                @click="shwoImage(item.image_path)"
               ></el-image>
               第{{item.image_frame}}帧
             </div>
