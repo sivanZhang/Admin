@@ -114,7 +114,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :page-count="pageCount"
           :total="total"
-          :hide-on-single-page="total<=15"
+          :hide-on-single-page="total<=20"
         ></el-pagination>
       </div>
     </div>
@@ -258,8 +258,8 @@ export default {
         createLoading: false
       },
       currentPage: 1,
-      pageSize: 15,
-      pageSizeList: [15, 30, 50, 100],
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
       headers: {
         Authorization: `JWT ${getToken()}`
       },

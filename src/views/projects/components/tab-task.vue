@@ -112,7 +112,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :page-count="pageCount"
           :total="total"
-          :hide-on-single-page="total<=15"
+          :hide-on-single-page="total<=20"
         ></el-pagination>
       </div>
     </div>
@@ -405,8 +405,8 @@ export default {
         }
       },
       currentPage: 1,
-      pageSize: 15,
-      pageSizeList: [15, 23, 50, 100]
+      pageSize: 20,
+      pageSizeList: [20,  50, 100]
     };
   },
   filters: {
@@ -815,7 +815,8 @@ export default {
           ...data,
           name: this.keyword
         };
-      }
+      };
+      this.tableLoading = true;
       HTTP.queryTask(data).then(({ data }) => {
           if (data.status === 0) {
            this.TaskList = [...data.msg];
@@ -831,11 +832,13 @@ export default {
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
+      this.getTasks();
       //console.log(this.pagesize);
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       //console.log(this.currentPage);
+      this.getTasks();
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
