@@ -33,7 +33,7 @@
               </template>
               <div v-else class="title">暂无数据</div>
             </el-col>
-            <el-col :span="8" v-if="MyProject?true:false">
+            <el-col :span="8" v-if="MyProject.length?true:false">
               <div v-for="(todo,index) of MyProject.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
@@ -42,7 +42,7 @@
               </router-link> -->
             </el-col>
             <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
-            <el-col :span="8" v-if="ProjectList?true:false">
+            <el-col :span="8" v-if="ProjectList.length?true:false">
               <div v-for="(item,index) of ProjectList.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
