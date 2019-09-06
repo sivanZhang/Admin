@@ -239,13 +239,13 @@
           draggable
         >
           <el-tabs>
-            <el-tab-pane label="任务详情" lazy>
+            <el-tab-pane label="任务详情" >
               <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
             </el-tab-pane>
-            <el-tab-pane label="执行记录" lazy>
+            <el-tab-pane label="执行记录" >
               <tabLog :loglist="LogList" :logsLoading="logsLoading" />
             </el-tab-pane>
-            <el-tab-pane label="执行任务" lazy>
+            <el-tab-pane label="执行任务" >
               <task-form
                 :task-record.sync="TaskRecord"
                 :createLoading="createLoading"
@@ -253,14 +253,16 @@
                 @cancel="cancel"
               />
             </el-tab-pane>
-            <el-tab-pane label="提交审核" lazy >
+            <el-tab-pane label="提交审核"  >
               <tab-approve v-if="activeRow.task && activeRow.task.status ===2" :row="activeRow" @refresh="getMyTasks"/>
               <div v-else style="display:flex;justify-content:center">
                 请先完成任务
               </div>
             </el-tab-pane>
-            <el-tab-pane label="审批记录" lazy>
-              <tab-approve-detail :list="approveDetail"></tab-approve-detail>
+            <el-tab-pane label="审批记录" >
+              <approve-log
+            ref="taskApprovelog" 
+          />
             </el-tab-pane>
           </el-tabs>
         </Drawer>

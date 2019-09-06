@@ -10,9 +10,8 @@ import taskForm from './components/task-form'
 import tabLog from "./components/tab-log"
 import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
-import tabApproveDetail from "./components/tab-approve-detail"
+import approveLog from "@/views/video/components/approve-log";
 import { getStatusTaskList } from "@/api/task"
-import {getApproveRemark}from "@/api/video"
 export default {
     components: {
         draggable,
@@ -20,7 +19,7 @@ export default {
         taskForm,
         tabLog,
         tabTaskDtail,
-        tabApproveDetail
+        approveLog
     },
     data() {
         return {
@@ -152,7 +151,6 @@ export default {
             time: Date.parse(new Date()) / 1000,
             changecolor: 1,
             activeRow: {},//点击任务列表选中的列的数据
-            approveDetail:null 
         };
     },
     methods: {
@@ -286,23 +284,24 @@ export default {
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
             this.end_date = row.task.end_date;
-            this.activeRow = {...row }
+            this.activeRow = {...row };
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
                 type: 0
             });
-            this.logsLoading = true
+            this.logsLoading = true;
+            this.$refs['taskApprovelog'].getApproveLog(row.task.id);
             queryTaskRecord({
                 task_id: row.task.id,
             }).then(({
                 data
             }) => {
-                this.LogList = [...data.msg]
-                this.logsLoading = false
+                this.LogList = [...data.msg];
+                this.logsLoading = false;
             }).catch(() => {
-                this.logsLoading = false
-            })
-            this.detailLoading = true
+                this.logsLoading = false;
+            });
+            this.detailLoading = true;
             queryTask({
                 id: row.task.id,
             }).then(({
@@ -311,15 +310,11 @@ export default {
                 this.TaskDetail = {
                     ...data.msg
                 }
-                this.detailLoading = false
+                this.detailLoading = false;
             }).catch(() => {
-                this.detailLoading = false
-            })
-            getApproveRemark({
-                task_id:row.task.id
-            }).then(({data})=>{
-                this.approveDetail=[...data.msg];
-            })
+                this.detailLoading = false;
+            });
+            
             
         },
         //http获取‘我的任务’
