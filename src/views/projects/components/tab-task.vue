@@ -31,13 +31,13 @@
             v-model="keyword"
             class="input-with-select"
           >
-            <el-button @click="getTasks(1)" slot="append" icon="el-icon-search" type="primary" />
+            <el-button @click="getTasks()" slot="append" icon="el-icon-search" type="primary" />
           </el-input>
-          <el-button @click="getTasks()" icon="el-icon-refresh-left" type="primary">重置</el-button>
+          <el-button @click="getTasks(1)" icon="el-icon-refresh-left" type="primary">重置</el-button>
         </el-col>
       </el-row>
       <el-table
-        :data="TaskList.length>0?TaskList.slice((currentPage-1)*pageSize,currentPage*pageSize):TaskList"
+        :data="TaskList"
         style="margin-top:20px"
         highlight-current-row
         :tree-props="{ children: 'sub_task' }"
@@ -45,6 +45,7 @@
         @selection-change="handleSelectionChange"
         border
         :row-key="(row)=>{ return row.id}"
+        v-loading="tableLoading"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true"></el-table-column>
@@ -109,7 +110,9 @@
           :page-sizes="pageSizeList"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="AssetList.length"
+          :page-count="pageCount"
+          :total="total"
+          :hide-on-single-page="total<=15"
         ></el-pagination>
       </div>
     </div>
@@ -281,7 +284,7 @@
             :picker-options="picker"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="总工时" prop="total_hour" oninput = "value=value.replace(/[^\d.]/g,'')">
+        <el-form-item label="总工时" prop="total_hour" oninput="value=value.replace(/[^\d.]/g,'')">
           <el-input v-model="TaskForm['total_hour']"></el-input>
         </el-form-item>
 
@@ -371,6 +374,10 @@ export default {
   name: "tab-task",
   data() {
     return {
+      tableLoading: false, //表格加载状态
+      total:0,
+      pageCount:0,
+      TaskList: null,
       DeptUsers: [],
       keyword: "",
       isDialogShow: false,
@@ -398,9 +405,8 @@ export default {
         }
       },
       currentPage: 1,
-      pageSize: 20,
-      pageSizeList: [10, 20, 50, 100],
-      
+      pageSize: 15,
+      pageSizeList: [15, 23, 50, 100]
     };
   },
   filters: {
@@ -425,9 +431,6 @@ export default {
   props: {
     AssetList: {
       type: Array
-    },
-    TaskList: {
-      type: Array
     }
   },
   watch: {
@@ -435,15 +438,15 @@ export default {
       handler: function(newVal, oldVal) {
         if (newVal === 1 && this.TaskForm.asset) {
           //console.log(this.TaskForm.asset);
-          
+
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
             const linkData = [...data.msg];
             this.LinkList = [];
-              linkData.forEach(item => {
-                item.forEach(ct => {
-                  this.LinkList.push(ct);
-                });
+            linkData.forEach(item => {
+              item.forEach(ct => {
+                this.LinkList.push(ct);
               });
+            });
           });
         }
         if (oldVal === 1 && this.TaskForm.link_id) {
@@ -454,15 +457,14 @@ export default {
             }).then(res => {
               this.DeptUsers = [...res.data.users];
             });
-            // console.log(this.TaskForm.content)
           });
         }
       }
     }
   },
   methods: {
-    change(){
-      this.$forceUpdate()
+    change() {
+      this.$forceUpdate();
     },
     //创建环节时，前置
     before(ind) {
@@ -528,12 +530,12 @@ export default {
             this.TaskForm.asset = this.asset;
             getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
               const linkData = [...data.msg];
-                this.LinkList = [];
-                linkData.forEach(item => {
-                  item.forEach(ct => {
-                    this.LinkList.push(ct);
-                  });
-                });  
+              this.LinkList = [];
+              linkData.forEach(item => {
+                item.forEach(ct => {
+                  this.LinkList.push(ct);
+                });
+              });
             });
             this.active = 1;
           }
@@ -626,13 +628,16 @@ export default {
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset,
             datetime: [
-               new Date(dateFormat(this.ActiveRow.start_date ))>0?new Date(dateFormat(this.ActiveRow.start_date )):"",
-              new Date(dateFormat(this.ActiveRow.end_date))>0?new Date(dateFormat(this.ActiveRow.end_date )):""
+              new Date(dateFormat(this.ActiveRow.start_date)) > 0
+                ? new Date(dateFormat(this.ActiveRow.start_date))
+                : "",
+              new Date(dateFormat(this.ActiveRow.end_date)) > 0
+                ? new Date(dateFormat(this.ActiveRow.end_date))
+                : ""
             ]
           };
           break;
         case 3:
-        
           if (!Object.keys(this.ActiveRow).length) {
             this.$message.error("请选择要修改的任务");
             return false;
@@ -647,8 +652,12 @@ export default {
             priority: 0,
             grade: 1,
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date ))>0?new Date(dateFormat(this.ActiveRow.start_date )):"",
-              new Date(dateFormat(this.ActiveRow.end_date))>0?new Date(dateFormat(this.ActiveRow.end_date )):""
+              new Date(dateFormat(this.ActiveRow.start_date)) > 0
+                ? new Date(dateFormat(this.ActiveRow.start_date))
+                : "",
+              new Date(dateFormat(this.ActiveRow.end_date)) > 0
+                ? new Date(dateFormat(this.ActiveRow.end_date))
+                : ""
             ],
             executorlist,
             manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
@@ -751,7 +760,7 @@ export default {
               this.getTasks();
 
               // console.log(this.mainTaskShow);
-            }else{
+            } else {
               this.$message.error(data.msg);
             }
           });
@@ -779,8 +788,8 @@ export default {
         .then(() => {
           const ids = this.multipleSelection.map(item => item.id).join(",");
           HTTP.deleteTask({
-            ids:ids,
-            method:"delete"
+            ids: ids,
+            method: "delete"
           }).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
@@ -792,13 +801,34 @@ export default {
     },
     //获取任务列表
     getTasks(type) {
-      if (type) {
-        this.$emit("get-tasks", this.keyword);
-      } else {
-        this.$emit("get-tasks");
+      if (type === 1) {
+        this.keyword = "";
       }
+
+      let data = {
+        project: this.$route.params.id,
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+      if (this.keyword) {
+        data = {
+          ...data,
+          name: this.keyword
+        };
+      }
+      HTTP.queryTask(data).then(({ data }) => {
+          if (data.status === 0) {
+           this.TaskList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
     },
-     //分页
+    //分页
     handleSizeChange(val) {
       this.pageSize = val;
       //console.log(this.pagesize);
@@ -841,7 +871,6 @@ export default {
     }
   },
   async created() {
-    // this.getTasks();
     if (!this.DeptList) {
       await this.$store.dispatch("admin/get_DeptList");
       this.formatList();

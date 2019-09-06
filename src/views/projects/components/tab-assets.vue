@@ -106,7 +106,6 @@
       </el-table>
       <div class="block" style="text-align: right">
         <el-pagination
-          :hide-on-single-page="total<=15"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
@@ -115,6 +114,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :page-count="pageCount"
           :total="total"
+          :hide-on-single-page="total<=15"
         ></el-pagination>
       </div>
     </div>
@@ -193,7 +193,6 @@
       <assetsDrawer
         :project="project"
         :RemarksData="RemarksData"
-        @get-tasks="getTasks"
         @refresh_assetList="getAssetList"
       />
     </Drawer>
@@ -319,9 +318,6 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
-    },
-    getTasks() {
-      this.$emit("get-tasks");
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
