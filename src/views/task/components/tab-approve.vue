@@ -22,18 +22,42 @@ export default {
       }
     };
   },
+  watch: {
+    row: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          let dept=newVal.task.dept;
+          let task = newVal.task;
+          this.formInline = {
+            dept_id: dept.id,
+            task_id: task.id,
+            path: ""
+          };
+        }
+      }
+    }
+  },
   methods: {
     //表单提交，提交审核
     submitForm() {
-      console.log(this.formInline);
+      // console.log("表单");
+      // console.log(this.formInline);
         taskApprove(this.formInline).then(res => {
           if (res.data.status === 0) {
             //提交审核成功
             this.$message.success(res.data.msg);
             this.$emit("refresh");
+            this.formInline.path="";
+            this.$emit("getRow");
+
           } else {
             this.$message.warning(res.data.msg);
+            this.formInline.path="";
+            this.$emit("getRow");
           }
+
+        }).catch(err=>{
+          
         });
     }
   }

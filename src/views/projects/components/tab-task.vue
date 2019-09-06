@@ -611,17 +611,14 @@ export default {
             grade: 1,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset,
-
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date)),
-              new Date(dateFormat(this.ActiveRow.end_date))
+               new Date(dateFormat(this.ActiveRow.start_date ))>0?new Date(dateFormat(this.ActiveRow.start_date )):"",
+              new Date(dateFormat(this.ActiveRow.end_date))>0?new Date(dateFormat(this.ActiveRow.end_date )):""
             ]
           };
           break;
         case 3:
-          function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+        
           if (!Object.keys(this.ActiveRow).length) {
             this.$message.error("请选择要修改的任务");
             return false;
@@ -636,8 +633,8 @@ export default {
             priority: 0,
             grade: 1,
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date * 1000))>0?new Date(dateFormat(this.ActiveRow.start_date * 1000)):"",
-              new Date(dateFormat(this.ActiveRow.end_date * 1000))>0?new Date(dateFormat(this.ActiveRow.end_date * 1000)):""
+              new Date(dateFormat(this.ActiveRow.start_date ))>0?new Date(dateFormat(this.ActiveRow.start_date )):"",
+              new Date(dateFormat(this.ActiveRow.end_date))>0?new Date(dateFormat(this.ActiveRow.end_date )):""
             ],
             executorlist,
             manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,

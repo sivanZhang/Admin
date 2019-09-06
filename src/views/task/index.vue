@@ -259,6 +259,9 @@
                 请先完成任务
               </div>
             </el-tab-pane>
+            <el-tab-pane label="审批记录" lazy>
+              <tab-approve-detail :list="approveDetail"></tab-approve-detail>
+            </el-tab-pane>
           </el-tabs>
         </Drawer>
         <!-- <div class="task-list"></div> -->
