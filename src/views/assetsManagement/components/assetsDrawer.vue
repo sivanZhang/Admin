@@ -10,7 +10,6 @@
               :project="project"
               :LinkList="LinkList"
               @refresh="getLinkList"
-              @get-tasks="getTasks"
               @refresh_assetList="getAssetList"
             ></links>
           </el-tab-pane>
@@ -66,9 +65,6 @@ export default {
     },
     getAssetList() {
       this.$emit("refresh_assetList");
-    },
-    getTasks() {
-      this.$emit("get-tasks");
     },
     getLinkList() {
       getLinks({

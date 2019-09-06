@@ -616,7 +616,6 @@ export default {
               this.$message.success(data.msg);
               if (data.status === 0) {
                 this.cancelTask();
-                this.$emit("get-tasks");
                 this.isDialogShow = false;
               }
             })
