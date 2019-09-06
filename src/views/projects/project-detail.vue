@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="镜头" name="tab0">
+      <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
           @refresh="getAssetList"
           :asset-list="AssetList"
@@ -13,7 +13,7 @@
           <span slot="import">镜头导入</span>
         </tab-assets>
       </el-tab-pane>
-      <el-tab-pane label="资产管理" name="tab1">
+      <el-tab-pane label="资产管理" name="tab1" lazy>
         <tab-assets
           @refresh="getAssetList"
           :asset-list="AssetList"
@@ -21,13 +21,13 @@
           :activeName="activeName"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2">
+      <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
       </el-tab-pane>
-      <el-tab-pane label="项目设置" name="tab3">
+      <el-tab-pane label="项目设置" name="tab3" lazy>
         <configProject :project="project" @refresh="getProjectDetail"  :configTab="configTab"/>
       </el-tab-pane>
-      <el-tab-pane label="控制面板" name="tab4">控制面板</el-tab-pane>
+      <el-tab-pane label="控制面板" name="tab4" lazy>控制面板</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -50,28 +50,33 @@ export default {
     return {
       activeName: this.$route.query.tab?this.$route.query.tab:"tab0",
       AssetList: [],
-      allAssetList: [],
+      // allAssetList: [],
       TaskList: [],
       asset_type: 0,
       project: {},
-      configTab:this.$route.query.tab2?this.$route.query.tab2:"tab0"
+      configTab:this.$route.query.tab2?this.$route.query.tab2:"first"
      
     };
   },
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
+        
         if (newVal === "tab0") {
+          this.AssetList = [];
           this.asset_type = 0;
           this.getAssetList();
         }
         if (newVal === "tab1") {
+          this.AssetList = [];
           this.asset_type = 1;
           this.getAssetList();
         }
         if (newVal === "tab2") {
+          this.AssetList = [];
           this.asset_type = null;
           this.getAssetList();
+          this.getTaskList();
         }
         if (newVal === "tab3") {
           this.getProjectDetail();
@@ -98,14 +103,14 @@ export default {
         this.AssetList = [...data.msg];
       });
     },
-    getAllAssetList() {
-      queryAssets({
-        project: this.$route.params.id
-      }).then(({ data }) => {
-        this.allAssetList = [...data.msg];
-        console.log(this.allAssetList);
-      });
-    },
+    // getAllAssetList() {
+    //   queryAssets({
+    //     project: this.$route.params.id
+    //   }).then(({ data }) => {
+    //     this.allAssetList = [...data.msg];
+    //     console.log(this.allAssetList);
+    //   });
+    // },
     getTaskList(keywords) {
       let data = {
         project: this.$route.params.id
@@ -129,8 +134,8 @@ export default {
   },
   created() {
     this.getAssetList();
-    this.getTaskList();
-    this.getProjectDetail();
+    // this.getTaskList();
+    // this.getProjectDetail();
     
   }
 };

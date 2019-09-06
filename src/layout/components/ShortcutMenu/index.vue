@@ -33,28 +33,28 @@
               </template>
               <div v-else class="title">暂无数据</div>
             </el-col>
-            <el-col :span="8" v-if="MyProject">
+            <el-col :span="8" v-if="MyProject?true:false">
               <div v-for="(todo,index) of MyProject.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(todo)">{{todo.name}}</div>
               </div>
-              <router-link v-if="MyProject && MyProject.length>10" to="/">
+              <!-- <router-link v-if="MyProject && MyProject.length>10" to="/">
                 <el-button type="text">查看更多..</el-button>
-              </router-link>
+              </router-link> -->
             </el-col>
             <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
-            <el-col :span="8" v-if="ProjectList">
+            <el-col :span="8" v-if="ProjectList?true:false">
               <div v-for="(item,index) of ProjectList.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
-              <router-link v-if="ProjectList && ProjectList.length>10" to="/">
+              <!-- <router-link v-if="ProjectList && ProjectList.length>10" to="/">
                 <el-button type="text">查看更多..</el-button>
-              </router-link>
+              </router-link> -->
             </el-col>
             <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
           </el-row>
         </el-col>
       </el-row>
-      <div slot="reference" :class="[{active:activeIndex==2},'main-menu']">
+      <div slot="reference" :class="[{active:activeIndex==2},'main-menu']" @click="getProject">
         项目
         <i class="el-icon-arrow-down el-icon--right" />
       </div>
@@ -76,16 +76,16 @@ export default {
     return {
       activeIndex: 0,
       isCreateShow: false,
-      MyProject: null
+      MyProject: []
     };
   },
   created() {
-    if (!this.MyProject) {
-      this.getMyTask();
-    }
-    if (!this.ProjectList) {
-      this.$store.dispatch("project/get_Projects");
-    }
+    // if (!this.MyProject) {
+    //   this.getMyTask();
+    // }
+    // if (!this.ProjectList) {
+    //   this.$store.dispatch("project/get_Projects");
+    // }
   },
   computed: {
     ...mapState({
@@ -94,6 +94,10 @@ export default {
     })
   },
   methods: {
+    getProject(){
+      this.getMyTask();
+      this.$store.dispatch("project/get_Projects");
+    },
     getMyTask() {
       getMyProject({
         mine: null

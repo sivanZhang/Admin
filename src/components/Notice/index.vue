@@ -149,7 +149,7 @@
                   </el-form>
                 </template>
               </el-table-column>
-              <el-table-column type="selection" style="width:16px;height:16px"></el-table-column>
+              <el-table-column type="selection" ></el-table-column>
 
               <el-table-column label="通知" width="200" show-overflow-tooltip>
                 <template slot-scope="scope">
@@ -157,7 +157,7 @@
 
                   <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
 
-                  <router-link :to="`${scope.row.url}`">{{scope.row.title}}</router-link>
+                  <router-link :to="{path:'scope.row.url'}">{{scope.row.title}}</router-link>
                 </template>
               </el-table-column>
               <el-table-column label="紧急程度" align="center" width="70">
@@ -209,7 +209,7 @@ import { getUserPermission, getUserRole } from "@/api/login";
 export default {
   name: "Notice",
   created() {
-    this.getNoticeDetail();
+    // this.getNoticeDetail();
   },
 
   data() {
@@ -245,6 +245,7 @@ export default {
     },
     show() {
       this.value1 = true;
+      this.getNoticeDetail();
     },
     handleChange(val) {
       console.log(val);
