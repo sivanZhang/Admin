@@ -48,7 +48,7 @@ export default {
       TaskList: [],
       asset_type: 0,
       project: {},
-      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "tab0"
+      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first"
     };
   },
   watch: {

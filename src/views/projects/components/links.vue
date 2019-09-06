@@ -755,7 +755,7 @@ export default {
   },
   async created() {
     if (!this.DeptList) {
-      this.$store.dispatch("admin/get_DeptList");
+     await this.$store.dispatch("admin/get_DeptList");
       this.formatList();
     } else {
       
