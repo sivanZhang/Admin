@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="镜头" name="tab0">
+      <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
           @get-tasks="getTaskList"
           :activeName="activeName"
@@ -11,13 +11,13 @@
           <span slot="import">镜头导入</span>
         </tab-assets>
       </el-tab-pane>
-      <el-tab-pane label="资产管理" name="tab1">
+      <el-tab-pane label="资产管理" name="tab1" lazy>
         <tab-assets
           @get-tasks="getTaskList"
           :activeName="activeName"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2">
+      <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task :asset-list="AssetList" :task-list="TaskList" @get-tasks="getTaskList" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3">
@@ -43,7 +43,6 @@ export default {
   },
   data() {
     return {
-      total: 0,
       activeName: this.$route.query.tab ? this.$route.query.tab : "tab0",
       AssetList: [],
       TaskList: [],
@@ -55,9 +54,6 @@ export default {
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
-        if (newVal === "tab2") {
-          this.getAssetList();
-        }
         if (newVal === "tab3") {
           this.getProjectDetail();
         }
@@ -72,7 +68,6 @@ export default {
       queryAssets(payload).then(({ data }) => {
         if (data.status === 0) {
           this.AssetList = [...data.msg];
-          this.total = data.page_count;
         }
       });
     },

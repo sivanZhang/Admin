@@ -233,7 +233,7 @@ export default {
   },
   components: {},
   created() {
-    this.getList();
+    // this.getList();
   },
   watch: {
     optionInput: {

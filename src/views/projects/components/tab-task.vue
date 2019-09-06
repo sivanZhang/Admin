@@ -51,7 +51,7 @@
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
-        <el-table-column label="镜头号">
+        <el-table-column label="镜头号" show-overflow-tooltip>
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
         <el-table-column prop="priority" label="优先级" :formatter="Priority"></el-table-column>
@@ -841,7 +841,7 @@ export default {
     }
   },
   async created() {
-    this.getTasks();
+    // this.getTasks();
     if (!this.DeptList) {
       await this.$store.dispatch("admin/get_DeptList");
       this.formatList();
