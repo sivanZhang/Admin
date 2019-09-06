@@ -37,7 +37,7 @@
         </el-col>
       </el-row>
       <el-table
-        :data="TaskList"
+        :data="TaskList.length>0?TaskList.slice((currentPage-1)*pageSize,currentPage*pageSize):TaskList"
         style="margin-top:20px"
         highlight-current-row
         :tree-props="{ children: 'sub_task' }"
@@ -101,6 +101,17 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="AssetList.length"
+        ></el-pagination>
+      </div>
     </div>
 
     <!-- 主任务创建 -->
@@ -386,6 +397,9 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [10, 20, 50, 100],
       
     };
   },
@@ -783,6 +797,19 @@ export default {
       } else {
         this.$emit("get-tasks");
       }
+    },
+     //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      //console.log(this.pagesize);
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      //console.log(this.currentPage);
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
     },
     //优先级格式化显示
     Priority: function(row, column) {

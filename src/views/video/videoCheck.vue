@@ -67,6 +67,7 @@
           <!-- 视频标注列表 -->
           <approve-log
             ref="approvelogs" 
+
           />
         </div>
       </el-col>
@@ -101,6 +102,7 @@ export default {
       pWidth: 0,
       pHeight: 0,
       submitList: [],
+      taskId:null
       
     };
   },
@@ -150,6 +152,7 @@ export default {
               this.imgList = [];
               this.approve_result = "";
               this.markText = "";
+              this.$refs['approvelogs'].getApproveLog(this.taskId);
             }
           }
         })
@@ -157,6 +160,7 @@ export default {
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
+      this.taskId = projectList[0].task.id;
       this.$refs['approvelogs'].getApproveLog(projectList[0].task.id)
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
