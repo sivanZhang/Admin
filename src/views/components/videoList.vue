@@ -21,14 +21,22 @@
     <!-- 
     el-icon-video-play-->
     <!-- <el-button type="primary" style="margin:10px 0 0 10px;" @click="addVideoList">加入播放队列{{selectProjectIds}}</el-button> -->
+    <label style="margin-left:15px">选中播放审核：</label>
     <el-checkbox-group v-model="selectProjectIds">
       <div class="list">
         <div class="item" v-for="(item,index) in projectList" :key="index">
-          <el-checkbox :label="index" :key="index" @change="changeCheckedProject($event,item)">
+          <el-checkbox
+            :label="index"
+            :key="index"
+            @change="changeCheckedProject($event,item,index)"
+          >
             <p class="pro-name">{{item.task.name}}</p>
           </el-checkbox>
           <div style="margin-top:5px">
-            <el-image :src="item.project.image?$store.state.BASE_URL+item.project.image:''" fit="cover">
+            <el-image
+              :src="item.project.image?$store.state.BASE_URL+item.project.image:''"
+              fit="cover"
+            >
               <div
                 slot="error"
                 style="height: 100%;display: flex;justify-content: center;align-items: center;font-size: 56px;background: #dcdfe6;"
@@ -67,7 +75,7 @@ export default {
     initSource(index) {
       let selectProject = this.selectProjects[index];
       this.currentPlayId = selectProject.task.id;
-      let projectList =[];
+      let projectList = [];
       projectList[0] = selectProject;
       if (index + 1 != this.selectProjects.length) {
         projectList[1] = this.selectProjects[index + 1];
@@ -81,18 +89,33 @@ export default {
      * @param {Boolean} e 点击卡片的多选按钮返回的状态表示是否选中
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
-    changeCheckedProject(e, item) {
-       if (e && item.path) {
+    changeCheckedProject(e, item, index) {
+      if (e && item.path) {
+        let url;
+        switch (index) {
+          case 0:
+            url = "47HK2MpfKwqx1510325093.mp4";
+            break;
+          case 0:
+            url = "banner02.mp4";
+            break;
+          case 0:
+            url = "47HK2MpfKwqx1510325093.mp4";
+            break;
+          default:
+            url = "sEzdz3fIXgqc1512572926.mp4";
+            break;
+        }
         item = {
-        ...item,
-        url:`${this.$store.state.BASE_URL}${item.path}`
-      };
-      //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
+          ...item,
+          url
+        };
+        //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
-      } else if(e && !item.path){
-        e=false
-        this.$message.warning('镜头路径为空')
-      }else{
+      } else if (e && !item.path) {
+        e = false;
+        this.$message.warning("镜头路径为空");
+      } else {
         this.selectProjects = this.selectProjects.filter(t => {
           return t.task.id !== item.task.id;
         });
@@ -134,7 +157,7 @@ export default {
   .list {
     list-style: none;
     padding: 10px;
-    margin: 0; 
+    margin: 0;
     overflow: hidden;
     height: 100%;
     height: calc(100% - 90px);
