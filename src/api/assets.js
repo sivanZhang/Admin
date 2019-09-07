@@ -32,8 +32,7 @@ export function uploadAssets(data) {
         },
         transformRequest: [params => {
             return JSON.stringify(params)
-        }],
-        timeout: 10000,
+        }]
     })
 }
 //后端解析excel
@@ -45,7 +44,6 @@ export function parseExcel(data) {
 
         headers: {
             'Content-Type': 'multipart/form-data'
-        },
-        timeout: 0
+        }
     })
 }

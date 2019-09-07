@@ -32,29 +32,27 @@ export function addWKTemplate(params) {
         },
         transformRequest: [params => {
             return JSON.stringify(params)
-        }],
-        timeout: 10000,
+        }]
     })
 }
 //给某工种修改模板 
-export function updateWKTemplate(params){
-    return AXIOS.post('/wktemplate/wktemplate_v2/',params,{
+export function updateWKTemplate(params) {
+    return AXIOS.post('/wktemplate/wktemplate_v2/', params, {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8'
         },
         transformRequest: [data => {
             return JSON.stringify(data)
         }],
-        timeout: 10000,
     })
 }
 //给某工种删除模板
-export function deleteWKTemplate(params){
-    return AXIOS.post('/wktemplate/wktemplate_v2/',params)
+export function deleteWKTemplate(params) {
+    return AXIOS.post('/wktemplate/wktemplate_v2/', params)
 }
 //获取用户列表
 export function getUserList(params) {
-    return AXIOS.get('/users/list/',{params})
+    return AXIOS.get('/users/list/', { params })
 }
 //角色列表
 export function getRoles() {
@@ -65,8 +63,8 @@ export function getUsersRole(params) {
     return AXIOS.get('/role/role/', { params })
 }
 //获取客户角色列表
-export function getClientList(params){
-    return AXIOS.get('/users/list/?client',{params})
+export function getClientList(params) {
+    return AXIOS.get('/users/list/?client', { params })
 }
 //添加角色
 export function addRole(data) {
@@ -82,10 +80,10 @@ export function removeRole(data) {
     return AXIOS.post('/role/role/?delete', data)
 }
 //获取权限列表
-export function permissions(params){
-    return AXIOS.get('/role/permissions/',{params})
+export function permissions(params) {
+    return AXIOS.get('/role/permissions/', { params })
 }
 //获取某个角色的权限列表
-export function userPermissions(params){
-    return AXIOS.get('/role/permissions/?01',{params})
+export function userPermissions(params) {
+    return AXIOS.get('/role/permissions/?01', { params })
 }

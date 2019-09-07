@@ -26,7 +26,6 @@ export function postApprove(data) {
         transformRequest: [params => {
             return JSON.stringify(params)
         }],
-        timeout: 10000,
     })
 }
 //获取审核备注列表/approve/approve/

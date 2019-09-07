@@ -44,7 +44,7 @@
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
         border
-        :row-key="(row)=>{ return row.id}"
+        :row-key="row=>row.id"
         v-loading="tableLoading"
       >
         <!-- default-expand-all -->
@@ -375,8 +375,8 @@ export default {
   data() {
     return {
       tableLoading: false, //表格加载状态
-      total:0,
-      pageCount:0,
+      total: 0,
+      pageCount: 0,
       TaskList: null,
       DeptUsers: [],
       keyword: "",
@@ -406,7 +406,7 @@ export default {
       },
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [20,  50, 100]
+      pageSizeList: [20, 50, 100]
     };
   },
   filters: {
@@ -815,11 +815,12 @@ export default {
           ...data,
           name: this.keyword
         };
-      };
+      }
       this.tableLoading = true;
-      HTTP.queryTask(data).then(({ data }) => {
+      HTTP.queryTask(data)
+        .then(({ data }) => {
           if (data.status === 0) {
-           this.TaskList = [...data.msg];
+            this.TaskList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
           }
