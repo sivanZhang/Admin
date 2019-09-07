@@ -8,7 +8,7 @@
     >
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
-    <div v-loading="loading">
+    <div v-loading="tableLoading">
       <div class="bd" v-for="(t,i) of list" :key="i">
         <el-row type="flex" justify="space-between">
           <el-col style="display:flex">
@@ -54,7 +54,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      tableLoading: false,
       list: [],
       httpParams: {},
       options: [
@@ -97,13 +97,17 @@ export default {
           approve_result: this.select
         };
       }
-      this.loading = true;
-      getApproveRemark(this.httpParams).then(({ data }) => {
-        this.loading = false;
-        this.list = [...data.msg];
-      }).catch((res=>{
-        this.loading = false;
-      }));
+      this.tableLoading = true;
+      getApproveRemark(this.httpParams)
+        .then(({ data }) => {
+          this.tableLoading = false;
+          if (data.status === 0) {
+            this.list = [...data.msg];
+          }
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
     }
   }
 };
