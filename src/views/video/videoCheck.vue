@@ -19,20 +19,8 @@
       <el-col :span="9" class="page-right">
         <div id="videoInfo" class="video-info">
           <!-- 视频基本信息 -->
-          <video-info ref="videoInfo"></video-info>
         </div>
         <div id="videoTabs" class="video-tabs">
-          <!-- 视频tab页（Notes、Versions） -->
-          <!-- <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-            <el-tab-pane label="备注" name="first">
-            </el-tab-pane> 
-            <el-tab-pane label="任务" name="second">任务</el-tab-pane>
-            <el-tab-pane label="版本" name="third">版本</el-tab-pane>
-            <el-tab-pane label="链接" name="fourth">链接</el-tab-pane>
-            <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
-            <el-tab-pane label="信息" name="sixth">信息</el-tab-pane>
-          </el-tabs>-->
-
           <div class="mark-cont">
             <div class="mark-form">
               <ul class="img-list" v-if="imgList.length > 0">
@@ -81,7 +69,6 @@ import VideoPlayer from "@/components/VideoPlayer";
 import VideoList from "@/views/components/videoList";
 import kscreenshot from "kscreenshot";
 import ZoomImg from "@/components/ZoomImg";
-import VideoInfo from "@/views/components/videoInfo";
 import VideoComment from "@/views/components/videoComment";
 import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
@@ -89,7 +76,7 @@ import { postApprove } from "@/api/video";
 import AXIOS from "@/utils/request";
 import approveLog from "./components/approve-log";
 export default {
-  components: { VideoPlayer, VideoList, ZoomImg, VideoInfo, VideoComment,approveLog },
+  components: { VideoPlayer, VideoList, ZoomImg, VideoComment,approveLog },
   data() {
     return {
       approve_result: 0,
@@ -172,7 +159,6 @@ export default {
           this.pHeight
         );
         this.$refs.videoPlayer.initNextVideo(index, projectList);
-        this.$refs.videoInfo.initInfo(projectLists[index]);
       }
     },
     getMarkImage(obj) {
