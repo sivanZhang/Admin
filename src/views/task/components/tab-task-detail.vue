@@ -63,6 +63,10 @@
         <el-col :span="5">预设时间:</el-col>
         <el-col :span="19">{{taskdetail.total_hour}}(小时)</el-col>
       </el-row>
+      <el-row type="flex">
+        <el-col :span="5">任务输出:</el-col>
+        <el-col :span="19">{{taskdetail.path}}(小时)</el-col>
+      </el-row>
     </el-card>
     <template v-if="taskdetail.sub_task.length">
       <task-ditail

@@ -62,7 +62,7 @@ export default {
            userName:"lijian"+i,
            publishTime:'7小时前',
            markText:'不脆不错',
-           markImage:'http://localhost:8080/test/demo.jpg',
+           markImage:'http://tl.chidict.com:8081/test/demo.jpg',
            desc:'新项目/初始版本'
          };
          this.videoComments.push(videoComment);

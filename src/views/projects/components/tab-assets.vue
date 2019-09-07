@@ -3,7 +3,7 @@
     <div>
       <el-row>
         <el-col :span="15" style="padding-bottom:15px;">
-          <el-button icon="el-icon-plus" type="primary" @click="showAssetForm">
+          <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
             <slot name="add">添加资产</slot>
           </el-button>
           <el-button icon="el-icon-upload2" type="primary" @click="targetImport">
@@ -93,6 +93,14 @@
         <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
+            <el-tooltip content="修改资产" placement="top">
+              <el-button
+                @click="showAssetForm(2,scope.row)"
+                icon="el-icon-edit"
+                type="text"
+                style="color:green"
+              />
+            </el-tooltip>
             <el-tooltip content="删除资产" placement="top">
               <el-button
                 @click="deleteAssets(scope.row.id)"
@@ -119,7 +127,7 @@
       </div>
     </div>
 
-    <el-dialog title="新建资产" :visible.sync="isShow" width="480px" top="5vh">
+    <el-dialog :title="dialogTitle" :visible.sync="isShow" width="480px" top="5vh">
       <el-form
         :model="AssetForm"
         :rules="rules"
@@ -137,6 +145,7 @@
           :on-success="handleSuccess"
           drag
           :show-file-list="false"
+          
         >
           <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
           <template v-else>
@@ -174,7 +183,7 @@
         </el-form-item>-->
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
-          <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">立即创建</el-button>
+          <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">{{DialogName===1?'立即创建':'立即修改'}}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -264,7 +273,9 @@ export default {
         Authorization: `JWT ${getToken()}`
       },
       multipleSelection: [],
-      filterText: ""
+      filterText: "",
+      dialogTitle:"",
+      DialogName:null
     };
   },
 
@@ -370,7 +381,24 @@ export default {
         });
       });
     },
-    showAssetForm() {
+    showAssetForm(Type,row) {
+      this.DialogName = Type;
+      if(Type === 1){
+        this.dialogTitle = "新建资产";
+      }
+      if(Type === 2){
+        this.dialogTitle = "修改资产";
+        this.SRC = this.$store.state.BASE_URL + row.image;
+        this.AssetForm={
+          image:row.image,
+          name:row.name,
+          path:row.path,
+          priority:row.priority,
+          level:row.level,
+          id:row.id
+        };
+
+      }
       this.isShow = true;
     },
     cancel() {
@@ -382,7 +410,8 @@ export default {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
-          if (this.activeName === "tab0") {
+          if(this.DialogName==1){
+             if (this.activeName === "tab0") {
             this.AssetForm = Object.assign({}, this.AssetForm, {
               project: this.$route.params.id,
               asset_type: 0
@@ -412,6 +441,24 @@ export default {
             .catch(err => {
               this.createLoading = false;
             });
+          }
+          if(this.DialogName ===2){
+           this.AssetForm = Object.assign({}, this.AssetForm, {
+              method:"put"
+            });
+            HTTP.editAssets(this.AssetForm).then(({data})=>{
+              if(data.status===0){
+                this.$message.success(data.msg);
+                this.getAssetList();
+                this.isShow=false;
+              }else{
+                this.$message.error(data.msg);
+              }
+            }).catch(err=>{
+              this.$message.error(err.msg)
+            })
+          }
+         
         } else {
           return false;
         }
