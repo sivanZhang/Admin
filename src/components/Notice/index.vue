@@ -151,16 +151,25 @@
               </el-table-column>
               <el-table-column type="selection" ></el-table-column>
 
-              <el-table-column label="通知" width="200" show-overflow-tooltip>
+              <el-table-column label="通知" width="160" show-overflow-tooltip>
                 <template slot-scope="scope">
                   <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
 
                   <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
 
-                  <router-link :to="{path:'scope.row.url'}">{{scope.row.title}}</router-link>
+                  <!-- <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link> -->
+                  <router-link
+                    :to="{path:scope.row.url}"
+                    v-if="scope.row.url==='/task/task'||scope.row.url==='/task/approve'"
+                  >{{scope.row.title}}</router-link>
+                  <span v-if="!scope.row.url">{{scope.row.title}}</span>
+                  <router-link
+                    :to="{path:scope.row.url,query:{tab:'tab2'}}"
+                    v-else
+                  >{{scope.row.title}}</router-link>
                 </template>
               </el-table-column>
-              <el-table-column label="紧急程度" align="center" width="70">
+              <el-table-column label="紧急程度" align="center" width="80">
                 <template slot-scope="scope">
                   <el-tooltip
                     v-if="scope.row.urgency_level == 0"
@@ -209,7 +218,7 @@ import { getUserPermission, getUserRole } from "@/api/login";
 export default {
   name: "Notice",
   created() {
-    // this.getNoticeDetail();
+    this.getNoticeDetail();
   },
 
   data() {
@@ -245,17 +254,6 @@ export default {
     },
     show() {
       this.value1 = true;
-      this.getNoticeDetail();
-    },
-    handleChange(val) {
-      console.log(val);
-    },
-    //获取当前用户收到的通知
-    getNoticeDetail() {
-      HTTP.noticeDetail(this.id).then(({ data }) => {
-        this.notice = [...data.msg];
-        this.unreadCount = data.unread_count;
-      });
       getUserPermission().then(({ data }) => {
         if (data.msg) {
           this.userPermission = null;
@@ -270,6 +268,17 @@ export default {
           this.userRole = null;
         }
       });
+    },
+    handleChange(val) {
+      console.log(val);
+    },
+    //获取当前用户收到的通知
+    getNoticeDetail() {
+      HTTP.noticeDetail(this.id).then(({ data }) => {
+        this.notice = [...data.msg];
+        this.unreadCount = data.unread_count;
+      });
+      
     },
 
     //修改是否已读
