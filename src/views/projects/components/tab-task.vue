@@ -52,7 +52,7 @@
         row-class-name="hover"
       >
         <!-- default-expand-all -->
-        <el-table-column type="selection" :reserve-selection="true" width="35px"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="任务ID" prop="id" width="100px"></el-table-column>
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>

@@ -41,7 +41,7 @@
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
       >
-        <el-table-column type="selection" :reserve-selection="true" align="center"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="55px" ></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
         <el-table-column label="缩略图" align="center">
           <template slot-scope="scope">
