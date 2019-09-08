@@ -365,7 +365,6 @@ export default {
           //表头数据添加
           this.tableCols.push(label);
         }
-        console.log("this.tableCols", this.tableCols);
         this.isShowOptionBar = true;
         //开始组装数据
         this.getTableData();

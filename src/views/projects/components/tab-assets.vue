@@ -41,8 +41,8 @@
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
       >
-        <el-table-column type="selection" :reserve-selection="true"></el-table-column>
-        <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" align="center"></el-table-column>
+        <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
         <el-table-column label="缩略图" align="center">
           <template slot-scope="scope">
             <el-image
@@ -62,7 +62,7 @@
         </el-table-column>
         <el-table-column prop="session" label="场次" align="center"></el-table-column>
         <el-table-column prop="episode" label="集数" align="center"></el-table-column>
-        <el-table-column prop="name" label="镜头号" align="left" width="200px" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip></el-table-column>
         <el-table-column prop="frame" label="帧数" align="left"></el-table-column>
         <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
         <el-table-column prop="content" label="制作内容" align="left"></el-table-column>
@@ -520,26 +520,18 @@ export default {
   created() {
     this.getAssetList();
   },
-  //每次路由从批量上传进入，会刷新
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (from.name === "asset-import") {
-        vm.getAssetList();
-      }
-    });
-  }
 };
 </script>
 <style lang="scss" >
-.el-table--border th,
-.el-table--border td {
-  /*zjw*/
-  border-right-width: 0px;
-}
 .hover {
   cursor: pointer;
 }
 #asset-list {
   min-height: calc(100vh - 159px);
+  & /deep/ .el-table--border th,
+  & /deep/ .el-table--border td {
+    /*zjw*/
+    border-right-width: 0px;
+  }
 }
 </style>

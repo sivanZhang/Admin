@@ -3,6 +3,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
+          ref="scene"
           :activeName="activeName"
           drawer-type="scene"
         >
@@ -80,6 +81,14 @@ export default {
   created() {
     this.getAssetList();
     this.getProjectDetail();
+  },
+  //每次路由从批量上传进入，会刷新
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (from.name == "asset-import") {
+        vm.$refs['scene'].getAssetList();
+      }
+    });
   }
 };
 </script>

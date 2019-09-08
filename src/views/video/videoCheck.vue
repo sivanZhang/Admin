@@ -99,13 +99,12 @@ export default {
   created() {},
   mounted() {
     let bH = document.body.offsetHeight;
-    let videoInfoH = document.getElementById("videoInfo").offsetHeight;
     let videoTabsH = document.getElementById("videoTabs").offsetHeight;
     let videoPlayer = document.getElementsByClassName("video-player");
     this.pHeight = videoPlayer[0].offsetHeight;
     this.pWidth = videoPlayer[0].offsetWidth;
     document.getElementById("videoComment").style.height =
-      bH - (videoInfoH + videoTabsH + 20 + 20 + 94) + "px";
+      bH - ( videoTabsH + 20 + 20 + 94+165) + "px";
   },
   methods: {
     commitApprove() {
@@ -164,33 +163,31 @@ export default {
     getMarkImage(obj) {
       this.imgList.push(obj);
       let bH = document.body.offsetHeight;
-      let videoInfoH = document.getElementById("videoInfo").offsetHeight;
       let videoTabsH = document.getElementById("videoTabs").offsetHeight;
-      if (bH - (videoInfoH + videoTabsH + 20 + 20 + 53) <= 0) {
+      if (bH - (165 + videoTabsH + 20 + 20 + 53) <= 0) {
         document.getElementById("videoComment").style.height = 0 + "px;";
       } else {
         document.getElementById("videoComment").style.height =
-          bH - (videoInfoH + videoTabsH + 20 + 20 + 53) + "px";
+          bH - (165 + videoTabsH + 20 + 20 + 53) + "px";
       }
     },
     delMarkImage(data, index) {
       this.imgList.splice(index, 1);
       let bH = document.body.offsetHeight;
-      let videoInfoH = document.getElementById("videoInfo").offsetHeight;
       let videoTabsH = document.getElementById("videoTabs").offsetHeight;
       if (this.imgList.length > 0) {
-        if (bH - (videoInfoH + videoTabsH + 20 + 20 - 82) <= 0) {
+        if (bH - (165 + videoTabsH + 20 + 20 - 82) <= 0) {
           document.getElementById("videoComment").style.height = 0 + "px;";
         } else {
           document.getElementById("videoComment").style.height =
-            bH - (videoInfoH + videoTabsH + 20 + 20 - 82) + "px";
+            bH - (165 + videoTabsH + 20 + 20 - 82) + "px";
         }
       } else {
-        if (bH - (videoInfoH + videoTabsH + 20 + 20 - 110) <= 0) {
+        if (bH - (165 + videoTabsH + 20 + 20 - 110) <= 0) {
           document.getElementById("videoComment").style.height = 0 + "px;";
         } else {
           document.getElementById("videoComment").style.height =
-            bH - (videoInfoH + videoTabsH + 20 + 20 - 110) + "px";
+            bH - (165 + videoTabsH + 20 + 20 - 110) + "px";
         }
       }
     },
@@ -248,12 +245,6 @@ export default {
     .page-right {
       height: 100%;
       // margin-left: 0.5%;
-      .video-info {
-        padding: 10px;
-        height: 165px;
-        margin-bottom: 10px;
-        background: #fff;
-      }
       .video-tabs {
         padding: 10px;
         background: #fff;

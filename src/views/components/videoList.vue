@@ -21,7 +21,7 @@
     <!-- 
     el-icon-video-play-->
     <!-- <el-button type="primary" style="margin:10px 0 0 10px;" @click="addVideoList">加入播放队列{{selectProjectIds}}</el-button> -->
-    <label style="margin-left:15px">选中播放审核：</label>
+    <el-divider content-position="left">选中播放审核：</el-divider>
     <el-checkbox-group v-model="selectProjectIds">
       <div class="list">
         <div class="item" v-for="(item,index) in projectList" :key="index">
