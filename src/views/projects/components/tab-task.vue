@@ -52,6 +52,7 @@
         <el-table-column label="任务ID" prop="id"></el-table-column>
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
+        <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
         <el-table-column label="镜头号" show-overflow-tooltip>
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
@@ -458,6 +459,8 @@ export default {
               this.DeptUsers = [...res.data.users];
             });
           });
+        }else{
+          return 
         }
       }
     }
@@ -596,7 +599,7 @@ export default {
     //打开对话框
     openDialog(Type, row) {
       this.ActiveRow = { ...row };
-      // console.log(this.ActiveRow);
+      console.log(this.ActiveRow);
 
       this.DialogType = Type;
       getDeptUsers({
@@ -646,6 +649,7 @@ export default {
           if (this.ActiveRow.executor.length) {
             executorlist = this.ActiveRow.executor.map(item => +item.id);
           }
+          this.$emit("getAssetList");
           this.dialogTitle = "修改任务";
           this.TaskForm = {
             ...this.ActiveRow,

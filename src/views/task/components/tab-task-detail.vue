@@ -63,10 +63,13 @@
         <el-col :span="5">预设时间:</el-col>
         <el-col :span="19">{{taskdetail.total_hour}}(小时)</el-col>
       </el-row>
-      <el-row type="flex">
+      <template v-if="path">
+        <el-row type="flex">
         <el-col :span="5">任务输出:</el-col>
-        <el-col :span="19">{{taskdetail.path}}(小时)</el-col>
+        <el-col :span="19">{{path}}</el-col>
       </el-row>
+      </template>
+      
     </el-card>
     <template v-if="taskdetail.sub_task.length">
       <task-ditail
@@ -85,7 +88,8 @@ export default {
     detailLoading: {
       type: Boolean,
       default: false
-    }
+    },
+    path:String
   },
   filters: {
     filterName(obj) {

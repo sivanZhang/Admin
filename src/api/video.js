@@ -32,3 +32,7 @@ export function postApprove(data) {
 export function getApproveRemark(params) {
     return AXIOS.get('/approve/approve_result/', { params })
 }
+//根据任务id查询审核信息
+export function getApproveDetail(params){
+    return AXIOS.get('/approve/approve/',{ params })
+}
