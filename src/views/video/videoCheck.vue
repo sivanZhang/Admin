@@ -75,6 +75,7 @@ import { mapState } from "vuex";
 import { postApprove } from "@/api/video";
 import AXIOS from "@/utils/request";
 import approveLog from "./components/approve-log";
+import { log } from 'util';
 export default {
   components: { VideoPlayer, VideoList, ZoomImg, VideoComment,approveLog },
   data() {
@@ -124,7 +125,7 @@ export default {
           key: []
         };
         this.imgList.forEach(k => {
-          if (k.task=== t.task.asset) {
+          if (k.task=== t.task.id) {
             data["key"].push({
               image: k.imgUrl,
               frame: k.currentFrame

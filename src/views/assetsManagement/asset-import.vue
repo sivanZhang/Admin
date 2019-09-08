@@ -37,8 +37,6 @@ export default {
       requiredKeysMap: {
         name: "镜头号",
         content: "制作内容",
-        date_start: "开始日期",
-        date_end: "结束日期"
       },
       keysMap: {
         //category: "资产类别",
