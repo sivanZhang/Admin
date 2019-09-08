@@ -44,16 +44,18 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="我的权限" name="first">
           <template v-if="userPermission">
-            <el-row>
-              <el-col :span="2" align="center" class="col">{{"序号"}}</el-col>
-              <el-col :span="11" class="col">{{"权限名称"}}</el-col>
-              <el-col :span="11" class="col">{{"权限说明"}}</el-col>
+           <div >
+              <el-row>
+              <el-col :span="4" align="center" class="col">{{"序号"}}</el-col>
+              <el-col :span="10" class="col">{{"权限名称"}}</el-col>
+              <el-col :span="10" class="col">{{"权限说明"}}</el-col>
             </el-row>
             <el-row v-for="(item,index) of userPermission" :key="index">
-              <el-col :span="2" align="center" class="col">{{index+1}}</el-col>
-              <el-col :span="11" class="col">{{item.codename}}</el-col>
-              <el-col :span="11" class="col">{{item.name}}</el-col>
+              <el-col :span="4" align="center" class="col">{{index+1}}</el-col>
+              <el-col :span="10" class="col">{{item.codename}}</el-col>
+              <el-col :span="10" class="col">{{item.name}}</el-col>
             </el-row>
+           </div>
           </template>
           <template v-else>
             <div style="display:flex;justify-content:center;padding-top:20px">

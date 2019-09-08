@@ -18,9 +18,11 @@
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
-      <el-table-column  label="所属项目" show-overflow-tooltip>
+      <el-table-column label="所属项目" show-overflow-tooltip>
         <template slot-scope="scope">
-            <router-link :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
+          <router-link
+            :to="`/projects/project-detail/${scope.row.project.id}`"
+          >{{scope.row.project.name}}</router-link>
         </template>
       </el-table-column>
       <el-table-column prop="asset.name" label="所属资产" show-overflow-tooltip></el-table-column>
@@ -34,13 +36,12 @@
         <template slot-scope="scope">{{scope.row.task.status|taskStatus}}</template>
       </el-table-column>
 
-       <el-table-column prop="task.executor" label="任务执行人"></el-table-column>
+      <el-table-column prop="task.executor" label="任务执行人"></el-table-column>
       <el-table-column label="优先级">
         <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
       </el-table-column>
       <!-- 、工种、 -->
-      
-      
+
       <el-table-column label="开始日期">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
@@ -49,7 +50,8 @@
       </el-table-column>
       <el-table-column prop="task.total_hour" label="预设时间（小时）"></el-table-column>
     </el-table>
-    <Drawer scrollable
+    <Drawer
+      scrollable
       v-model="isDrawerShow"
       width="512px"
       inner
@@ -59,10 +61,10 @@
     >
       <el-tabs>
         <el-tab-pane label="任务详情" lazy>
-          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" :path="path"/>
+          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" :path="path" />
         </el-tab-pane>
         <el-tab-pane label="审批记录">
-          <approve-log ref="approvelogs"/>
+          <approve-log ref="approvelogs" />
         </el-tab-pane>
         <el-tab-pane label="快捷审批" lazy>
           <el-row type="flex">
@@ -79,11 +81,7 @@
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
           <div>
-            <el-button
-              type="primary"
-              :loading="submitLoading"
-              @click="submitApprove"
-            >提交</el-button>
+            <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane label="执行记录" lazy>
@@ -112,7 +110,7 @@ export default {
     taskForm,
     tabLog,
     tabTaskDtail,
-    approveLog,
+    approveLog
   },
   data() {
     return {
@@ -127,7 +125,7 @@ export default {
       LogList: [],
       TaskDetail: {},
       SelectionList: [],
-      path:null
+      path: null
     };
   },
   methods: {
@@ -178,39 +176,39 @@ export default {
         .catch(() => {
           this.detailLoading = false;
         });
-        
-        getApproveDetail({task_id:[row.task.id]}).then(({data})=>{
-          this.path=[...data.msg].filter(item=> {if(item.task.id===row.task.id) return item})[0].path
-          if(!this.path){
-            this.path="-";
-          }
-         
-        })
+
+      getApproveDetail({ task_id: [row.task.id] }).then(({ data }) => {
+        this.path = [...data.msg].filter(item => {
+          if (item.task.id === row.task.id) return item;
+        })[0].path;
+        if (!this.path) {
+          this.path = "-";
+        }
+      });
       this.form_obj = Object.assign(
         {},
         {
           suggestion: "",
           approve_result: 0,
-          task_id:row.task.id
-        
-
+          task_id: row.task.id
         }
-      )
-      this.$refs['approvelogs'].getApproveLog(row.task.id);
+      );
+      this.$refs["approvelogs"].getApproveLog(row.task.id);
     },
     submitApprove() {
       this.submitLoading = true;
       postApprove(this.form_obj)
         .then(res => {
           this.submitLoading = false;
+          this.AuditList = [];
           this.getMyTasks();
           this.isDrawerShow = false;
           this.$message.success(res.data.msg);
         })
         .catch(err => {
           this.submitLoading = false;
-          this.$message.error(res.data.msg)
-        })
+          this.$message.error(res.data.msg);
+        });
     },
     //http获取‘我的任务’
     async getMyTasks() {
