@@ -73,7 +73,7 @@
             </el-row>
           </div>
 
-          <users-table :UserList="GroupUsers" :table-loading="tableLoading"></users-table>
+          <users-table :UserList="GroupUsers" :table-loading="tableLoading" @jump="jumpChange"></users-table>
         </el-main>
         <!-- 右击侧栏展示审批流程 -->
         <template v-if="isDrawerShow">
@@ -212,7 +212,8 @@ export default {
         addDeptLoading: false,
 
         memberEditLoading: false
-      }
+      },
+      
     };
   },
   computed: {
@@ -224,6 +225,17 @@ export default {
     ...mapState("admin", ["UserList", "DeptList"])
   },
   methods: {
+    jumpChange(val){
+      console.log(val); 
+      getDept({
+        id: val
+      }).then(({ data }) => {
+        const msg=data.msg;
+        this.handleGroupClick(msg);
+      }).catch(err=>{
+        
+      })
+    },
     //http获取“用户组”列表
     getDeptList() {
       this.$store.dispatch("admin/get_DeptList");
@@ -507,7 +519,8 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
-    }
+    },
+    
   },
   created() {
     this.getDeptList();
