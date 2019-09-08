@@ -59,7 +59,7 @@
     >
       <el-tabs>
         <el-tab-pane label="任务详情" lazy>
-          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
+          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" :path="path"/>
         </el-tab-pane>
         <el-tab-pane label="审批记录">
           <approve-log ref="approvelogs"/>
@@ -101,7 +101,7 @@ import {
   queryTaskRecord,
   queryTask
 } from "@/api/task";
-import { getApprove, postApprove } from "@/api/video";
+import { getApprove, postApprove, getApproveDetail } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
@@ -126,7 +126,8 @@ export default {
       createLoading: false,
       LogList: [],
       TaskDetail: {},
-      SelectionList: []
+      SelectionList: [],
+      path:null
     };
   },
   methods: {
@@ -177,6 +178,14 @@ export default {
         .catch(() => {
           this.detailLoading = false;
         });
+        
+        getApproveDetail({task_id:[row.task.id]}).then(({data})=>{
+          this.path=[...data.msg].filter(item=> {if(item.task.id===row.task.id) return item})[0].path
+          if(!this.path){
+            this.path="-";
+          }
+         
+        })
       this.form_obj = Object.assign(
         {},
         {
