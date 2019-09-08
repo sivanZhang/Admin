@@ -15,6 +15,7 @@
         @click="getAsset"
         class="pan-btn green-btn"
         size="mini"
+        :loading="uploadLoading"
         :disabled="uploadDisabled"
       >上传</el-button>
     </div>
@@ -31,6 +32,7 @@ export default {
   data() {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
+      uploadLoading:false,
       uploadDisabled: true,
       requiredKeysMap: {
         name: "镜头号",
@@ -122,6 +124,7 @@ export default {
       console.log("组装好的数据:", data);
       data = { ...data, project: this.$route.params.id };
       //提交jsons数据
+       this.uploadLoading = true;
       HTTP.uploadAssets(data).then(({ data }) => {
         this.$notify({
           title: '提交状态',
@@ -129,7 +132,10 @@ export default {
           duration: 0,
           type:'info'
         });
-      });
+      }).finally(() => {
+          this.uploadLoading = false;
+        });
+
     },
     //导入数据
     importAsset() {

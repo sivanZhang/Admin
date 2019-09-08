@@ -201,7 +201,7 @@ export default {
         .catch(err => {
           this.submitLoading = false;
           this.$message.error(res.data.msg)
-        });
+        })
     },
     //http获取‘我的任务’
     async getMyTasks() {
