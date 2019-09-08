@@ -65,6 +65,7 @@
         <el-table-column prop="name" label="镜头号" align="left" width="200px" show-overflow-tooltip></el-table-column>
         <el-table-column prop="frame" label="帧数" align="left"></el-table-column>
         <el-table-column prop="version_inner" label="版本号" align="left"></el-table-column>
+        <el-table-column prop="content" label="制作内容" align="left"></el-table-column>
         <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
         <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
         <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>

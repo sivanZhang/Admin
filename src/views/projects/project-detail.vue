@@ -16,7 +16,7 @@
         />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2">
-        <tab-task ref="tab-task" :asset-list="AssetList"/>
+        <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()"/>
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3">
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
