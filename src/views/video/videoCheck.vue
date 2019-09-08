@@ -209,8 +209,7 @@ export default {
       // console.log("currentVideoIsEdit", this.currentVideoIsEdit);
     },
     getCurrentPlayId(resAsset) {
-      // console.log("resAsset", resAsset);
-      /* this.$refs.videoList.getCurrentPlayId(id); */
+      this.$refs.videoList.getCurrentPlayId(resAsset.task.id);
     }
   }
 };

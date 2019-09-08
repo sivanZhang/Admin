@@ -12,8 +12,8 @@
       <el-button
         v-for="(item,index) in selectProjects"
         :key="index"
-        :type="currentPlayId==index?'success':''"
-        @click="initSource(index),getCurrentPlayId(index)"
+        :type="currentPlayId==item.task.id?'success':''"
+        @click="initSource(index),getCurrentPlayId(item.task.id)"
         icon="el-icon-video-play"
         style="margin: 10px 2%;"
       >{{item.task.name}}</el-button>
@@ -74,7 +74,7 @@ export default {
     },
     initSource(index) {
       let selectProject = this.selectProjects[index];
-      this.currentPlayId = selectProject.task.id;
+      /* this.currentPlayId = selectProject.task.id; */
       let projectList = [];
       projectList[0] = selectProject;
       if (index + 1 != this.selectProjects.length) {
@@ -90,7 +90,7 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item, index) {
-      if (e && item.path) {
+      if (e) {//&& item.path
         let url;
         switch (index) {
           case 0:
@@ -112,10 +112,10 @@ export default {
         };
         //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
-      } else if (e && !item.path) {
+      } /* else if (e && !item.path) {
         e = false;
         this.$message.warning("镜头路径为空");
-      } else {
+      } */ else {
         this.selectProjects = this.selectProjects.filter(t => {
           return t.task.id !== item.task.id;
         });

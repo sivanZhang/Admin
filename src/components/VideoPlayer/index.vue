@@ -229,9 +229,7 @@ export default {
         },
         function() {
           this.on("ended", function() {
-            console.log("播放完毕");
             _self.$message.error("正在切换下一个视频源");
-
             setTimeout(() => {
               if (_self.currentProjectIndex == _self.projectLists.length - 1) {
                 _self.currentProjectIndex = 0;
@@ -241,6 +239,8 @@ export default {
 
               _self.currentProject =
                 _self.projectLists[_self.currentProjectIndex];
+                console.log('_self.currentProject',_self.currentProject);
+                
               _self.$emit("getCurrentPlayId", _self.currentProject);
               _self.videoUrl = _self.currentProject.url;
               _self.videoPlayer.src(_self.currentProject.url);
