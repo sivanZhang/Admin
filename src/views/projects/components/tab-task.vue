@@ -43,17 +43,21 @@
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
-        
         :stripe="true"
         :row-style="{'font-size':'13px'}"
         :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
         :row-key="row=>row.id"
         v-loading="tableLoading"
         row-class-name="hover"
+        height="600px"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column label="任务ID" prop="id" width="100px"></el-table-column>
+        <el-table-column label="任务ID" prop="id" width="100px">
+          <template slot-scope="scope">
+            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
@@ -275,7 +279,13 @@
 
         <el-form-item label="所属资产" prop="asset">
           <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产">
-            <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id" :disabled="DialogType===2||!TaskForm.asset"></el-option>
+            <el-option
+              v-for="item of AssetList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+              :disabled="DialogType===2||!TaskForm.asset"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -362,6 +372,19 @@
         <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
       </el-row>
     </el-dialog>
+
+    <Drawer
+      title="审批记录"
+      scrollable
+      closable
+      v-model="showdrawer"
+      width="526"
+      inner
+      :transfer="false"
+      :mask-style="{backgroundColor: 'transparent'}"
+    >
+      <approve-log ref="approvelogs" />
+    </Drawer>
   </div>
 </template>
 <script>
@@ -374,11 +397,13 @@ import { getDeptUsers } from "@/api/admin";
 import { queryAssets } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import { type } from "os";
+import approveLog from "@/views/video/components/approve-log";
 export default {
   mixins: [myMixin],
   name: "tab-task",
   data() {
     return {
+      activeTab: "first",
       tableLoading: false, //表格加载状态
       total: 0,
       pageCount: 0,
@@ -411,7 +436,8 @@ export default {
       },
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [20, 50, 100]
+      pageSizeList: [20, 50, 100],
+      showdrawer: false
     };
   },
   filters: {
@@ -432,6 +458,9 @@ export default {
   },
   computed: {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
+  },
+  components:{
+    approveLog
   },
   props: {
     AssetList: {
@@ -463,13 +492,22 @@ export default {
               this.DeptUsers = [...res.data.users];
             });
           });
-        }else{
-          return 
+        } else {
+          return;
         }
       }
     }
   },
   methods: {
+    handleTabClick(tab, event) {
+      //this.getRemarkList();
+      console.log(tab, event);
+    },
+    showDrawer(item) {
+      this.showdrawer = true;
+      console.log(item);
+      this.$refs["approvelogs"].getApproveLog(item.id);
+    },
     change() {
       this.$forceUpdate();
     },
@@ -631,7 +669,7 @@ export default {
             return false;
           }
           this.dialogTitle = `创建 ${this.ActiveRow.name} 的子任务`;
-          
+
           this.TaskForm = {
             priority: 0,
             grade: 1,
