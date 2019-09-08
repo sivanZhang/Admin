@@ -53,8 +53,8 @@
             :rules="rules"
           >
             <el-form-item label="任务状态" prop="status">
-              <el-radio v-model="taskRecord.status" label="0">正在进行</el-radio>
-              <el-radio v-model="taskRecord.status" label="1">已完成</el-radio>
+              <el-radio v-model="taskRecord.status" label="0">进行中</el-radio>
+              <el-radio v-model="taskRecord.status" label="1">完成</el-radio>
             </el-form-item>
             <el-form-item label="标题" prop="title" >
               <el-input v-model="taskRecord.title" :disabled="taskRecord.status>0?true:false"></el-input>

@@ -254,7 +254,7 @@
               />
             </el-tab-pane>
             <el-tab-pane label="提交审核"  >
-              <tab-approve v-if="activeRow.task && activeRow.task.status ===2" :row="activeRow" @refresh="getMyTasks"/>
+              <tab-approve v-if="activeRow.task && activeRow.task.status === 4" :row="activeRow" @refresh="getMyTasks"/>
               <div v-else style="display:flex;justify-content:center">
                 请先完成任务
               </div>
@@ -327,8 +327,9 @@
           <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
           <el-table-column prop="task.content" header-align="left" label="任务内容" show-overflow-tooltip></el-table-column>
           <el-table-column label="任务状态" header-align="left">
-            <template slot-scope="scope">
-              <el-select
+            <template slot-scope="scope" >
+              <div v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6">
+                <el-select
                 :value="scope.row.task.status"
                 placeholder="请选择"
                 @change="statusChange($event,scope.row)"
@@ -341,7 +342,14 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
+              </div>
+              <div v-else>
+                {{scope.row.task.status|taskStatus}}
+              </div>
             </template>
+            
+             
+            
           </el-table-column>
           <el-table-column label="优先级" header-align="left">
             <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>

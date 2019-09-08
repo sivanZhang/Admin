@@ -45,18 +45,11 @@ export default {
                     value: 2
                 },
                 {
-                    label: '审核中',
-                    value: 3
-                },
-                {
                     label: '完成',
                     value: 4
                 },
                 
-                {
-                    label: '审核通过',
-                    value: 6
-                }
+                
             ],
             createLoading: false,
             TaskRecord: [],
