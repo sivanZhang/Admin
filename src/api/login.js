@@ -29,3 +29,13 @@ export function getUserPermission(params){
 export function getUserRole(params){
     return AXIOS.get('/users/role/',{params})
 }
+//用户修改
+export function updateUserInfo(data){
+    return AXIOS.post('/users/list?put',data)
+}
+//用户添加
+export function addUser(data){
+    return AXIOS.post('/users/list',data)
+}
+//批量导入
+

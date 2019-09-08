@@ -25,7 +25,8 @@
             <el-row style="padding-top:10px">
               <el-col :span="4" align="right">工种：</el-col>
               <el-col :span="20">
-                <el-col :span="4"
+                <el-col
+                  :span="4"
                   v-for="(item,index) of loginMessage.dept"
                   :key="index"
                   style="cursor: pointer"
@@ -71,10 +72,18 @@
             <el-row v-for="(item,index) of userRole" :key="index">
               <el-col :span="4" align="center" class="col">{{index+1}}</el-col>
               <el-col :span="20" class="col" style="cursor: pointer;">
-                <el-tooltip effect="dark" content="点击跳转角色详情" placement="top" v-if="$store.state.login.userInfo.auth.manage_role">
-                    <router-link :to="`/admin/roles`" :disabled="$store.state.login.userInfo.auth.manage_role">{{item.name}}</router-link>
-                  </el-tooltip>          
-                    <div v-else>{{item.name}}</div>                
+                <el-tooltip
+                  effect="dark"
+                  content="点击跳转角色详情"
+                  placement="top"
+                  v-if="$store.state.login.userInfo.auth.manage_role"
+                >
+                  <router-link
+                    :to="`/admin/roles`"
+                    :disabled="$store.state.login.userInfo.auth.manage_role"
+                  >{{item.name}}</router-link>
+                </el-tooltip>
+                <div v-else>{{item.name}}</div>
               </el-col>
             </el-row>
           </template>
@@ -85,128 +94,11 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="通知" name="fourth">
-          <div>
-            <div>
-              <el-button
-                type="danger"
-                @click="delNotices"
-                :disabled="this.multipleSelection.length === 0"
-              >批量删除</el-button>
-              <!--disabled值动态显示，默认为true,当选中复选框后值为false-->
-              <el-button
-                @click="updateIsReads"
-                type="primary"
-                :disabled="this.multipleSelection.length === 0"
-              >标记为已读</el-button>
-            </div>
-
-            <el-table
-              :data="notice"
-              style="width: 100%"
-              ref="multipleTable"
-              tooltip-effect="dark"
-              @selection-change="handleSelectionChange"
-              @row-click="updateIsRead"
-            >
-              <el-table-column type="expand" width="15">
-                <template slot-scope="props">
-                  <el-form label-position="left" inline class="demo-table-expand">
-                    <el-row>
-                      <el-form-item label="通知类别:">
-                        <span>{{ props.row.category }}</span>
-                      </el-form-item>
-                    </el-row>
-                    <el-row>
-                      <el-form-item label="通知内容:">
-                        <span>{{ props.row.content }}</span>
-                      </el-form-item>
-                    </el-row>
-                    <el-row>
-                      <el-form-item label="时间">
-                        <span>{{ props.row.date|dateFormat }}</span>
-                      </el-form-item>
-                    </el-row>
-                    <el-row>
-                      <el-form-item label="修改时间">
-                        <span>{{ props.row.modify_date|dateFormat }}</span>
-                      </el-form-item>
-                    </el-row>
-                    <el-row>
-                      <el-form-item label="是否已读">
-                        <span>{{ props.row.read |isRead }}</span>
-                      </el-form-item>
-                    </el-row>
-                    <el-row>
-                      <el-form-item label="紧急程度">
-                        <span>{{ props.row.urgency_level |urgencyLevel}}</span>
-                      </el-form-item>
-                    </el-row>
-                    <el-row>
-                      <el-form-item label="url">
-                        <span>{{ props.row.url }}</span>
-                      </el-form-item>
-                    </el-row>
-                  </el-form>
-                </template>
-              </el-table-column>
-              <el-table-column type="selection" ></el-table-column>
-
-              <el-table-column label="通知" width="160" show-overflow-tooltip>
-                <template slot-scope="scope">
-                  <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-
-                  <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-
-                  <!-- <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link> -->
-                  <router-link
-                    :to="{path:scope.row.url}"
-                    v-if="scope.row.url==='/task/task'||scope.row.url==='/task/approve'"
-                  >{{scope.row.title}}</router-link>
-                  <span v-if="!scope.row.url">{{scope.row.title}}</span>
-                  <router-link
-                    :to="{path:scope.row.url,query:{tab:'tab2'}}"
-                    v-else
-                  >{{scope.row.title}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column label="紧急程度" align="center" width="80">
-                <template slot-scope="scope">
-                  <el-tooltip
-                    v-if="scope.row.urgency_level == 0"
-                    class="item"
-                    effect="dark"
-                    content="一般"
-                    placement="top"
-                  >
-                    <svg-icon v-if="scope.row.urgency_level == 0" icon-class="urgency1"></svg-icon>
-                  </el-tooltip>
-                  <el-tooltip
-                    v-if="scope.row.urgency_level == 1"
-                    class="item"
-                    effect="dark"
-                    content="紧急"
-                    placement="top"
-                  >
-                    <svg-icon v-if="scope.row.urgency_level == 1" icon-class="urgency2"></svg-icon>
-                  </el-tooltip>
-                  <el-tooltip
-                    v-if="scope.row.urgency_level == 2"
-                    class="item"
-                    effect="dark"
-                    content="特急"
-                    placement="top"
-                  >
-                    <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
-                  </el-tooltip>
-                </template>
-              </el-table-column>
-              <el-table-column label="时间">
-                <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
-              </el-table-column>
-            </el-table>
-          </div>
+          <noticeDetail :notice="notice" @getNoticeDetail="getNoticeDetail"></noticeDetail>
         </el-tab-pane>
-        <el-tab-pane label="个人资料" name="fifth">个人资料</el-tab-pane>
+        <el-tab-pane label="个人资料" name="fifth">
+          <NoticeInfo :userInfo="userInfo"/>
+        </el-tab-pane>
       </el-tabs>
     </Drawer>
   </div>
@@ -215,12 +107,17 @@
 <script>
 import * as HTTP from "@/api/notice";
 import { getUserPermission, getUserRole } from "@/api/login";
+import noticeDetail from "./components/notice-detail"
+import NoticeInfo from "./components/user-info"
 export default {
   name: "Notice",
   created() {
     this.getNoticeDetail();
   },
-
+  components:{
+    noticeDetail,
+    NoticeInfo
+  },
   data() {
     return {
       value1: false,
@@ -232,7 +129,8 @@ export default {
       loginMessage: this.$store.state.login.userInfo,
       unreadCount: null,
       userPermission: null,
-      userRole: null
+      userRole: null,
+      userInfo: this.$store.state.login.userInfo
     };
   },
 
@@ -278,7 +176,6 @@ export default {
         this.notice = [...data.msg];
         this.unreadCount = data.unread_count;
       });
-      
     },
 
     //修改是否已读
@@ -357,18 +254,6 @@ svg-icon {
   width: 22px;
   height: 22px;
   vertical-align: 10px;
-}
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
 }
 .col {
   padding-bottom: 10px;
