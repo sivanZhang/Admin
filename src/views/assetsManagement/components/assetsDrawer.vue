@@ -18,10 +18,7 @@
           </el-tab-pane>
           <el-tab-pane label="链接" name="third"></el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
-          <el-tab-pane label="审批记录" name="sixth">
-            <approve-log  ref="approvelogs"/>
-          </el-tab-pane>
-          <el-tab-pane label="信息" name="seventh">
+          <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
           </el-tab-pane>
         </el-tabs>
@@ -35,7 +32,7 @@ import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
-import approveLog from "@/views/video/components/approve-log";
+
 import { constants } from 'crypto';
 export default {
   name: "assets-drawer",
@@ -47,17 +44,8 @@ export default {
     };
   },
 
-  watch: {
-    project: {
-      handler: function(newVal, oldVal) {
-        if (newVal.id) {
-          this.getLinkList();
-          this.$refs['approvelogs'].getApproveLog(newVal.id)  
-        }
-      }
-    }
-  },
-  components: { remarks, info, links, approveLog },
+ 
+  components: { remarks, info, links },
   methods: {
     handleTabClick(tab, event) {
       //this.getRemarkList();
