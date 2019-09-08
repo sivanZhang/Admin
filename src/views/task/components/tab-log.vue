@@ -3,7 +3,7 @@
     <el-table-column prop="title" label="标题"></el-table-column>
     <el-table-column prop="content" label="任务内容"></el-table-column>
     <el-table-column label="任务状态">
-      <template slot-scope="scope">{{scope.row.type|projectStatus}}</template>
+      <template slot-scope="scope">{{scope.row.type|taskStatus}}</template>
     </el-table-column>
     <el-table-column prop="schedule" label="完成进度"></el-table-column>
     <el-table-column prop="labor_hour" label="工时"></el-table-column>

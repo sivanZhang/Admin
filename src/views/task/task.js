@@ -33,25 +33,23 @@ export default {
             isDrag: false,
             isDrawerShow: false,
             StatusList: [{
-                    label: '未开始',
+                    label: '暂停',
                     value: 0
                 },
                 {
-                    label: '正在进行',
+                    label: '未开始',
                     value: 1
                 },
                 {
-                    label: '已完成',
+                    label: '进行中',
                     value: 2
                 },
                 {
-                    label: '超时',
-                    value: 3
-                },
-                {
-                    label: '暂停',
+                    label: '完成',
                     value: 4
-                }
+                },
+                
+                
             ],
             createLoading: false,
             TaskRecord: [],
@@ -63,6 +61,8 @@ export default {
             TimeOutArr: [],
             FinishedArr: [],
             PauseArr: [],
+            PassArr : [],
+            ApproveingArr:[],
             taskList: [{
                 value: "1",
                 label: "任何项目"
@@ -201,20 +201,26 @@ export default {
             }
             let status
             switch (e.to.dataset.arr) {
-                case 'DraftArr':
+                case 'PauseArr':
                     status = 0
                     break;
-                case 'InProgressArr':
+                case 'DraftArr':
                     status = 1
                     break;
-                case 'FinishedArr':
+                case 'InProgressArr':
                     status = 2
                     break;
-                case 'TimeOutArr':
+                case 'ApproveingArr':
                     status = 3
                     break;
-                case 'PauseArr':
+                case 'FinishedArr':
                     status = 4
+                    break;
+                case 'TimeOutArr':
+                    status = 5
+                    break;
+                case 'PassArr':
+                    status = 6
                     break;
             }
             let loading = this.$loading({
@@ -334,28 +340,41 @@ export default {
 
         },
         resetTasks() {
-            this.DraftArr = []
-            this.InProgressArr = []
-            this.FinishedArr = []
-            this.TimeOutArr = []
+            //暂停 0
             this.PauseArr = []
+            //未开始 1
+            this.DraftArr = []
+            //进行中 2
+            this.InProgressArr = []
+            //审核中 3
+            this.ApproveingArr = []
+            //完成 4
+            this.FinishedArr = []
+            //超时 5
+            this.TimeOutArr = []
+            //审核通过 6
+            this.PassArr = []
             this.MyTaskList.forEach(item => {
                 switch (item.task.status) {
                     case 0:
-                        this.DraftArr.push(item.task);
-                        break;
-                    case 1:
-                        this.InProgressArr.push(item.task);
-                        break;
-                    case 2:
-                        this.FinishedArr.push(item.task);
-                        break;
-                    case 3:
-                        this.TimeOutArr.push(item.task);
-                        break;
-                    case 4:
                         this.PauseArr.push(item.task);
                         break;
+                    case 1:
+                        this.DraftArr.push(item.task);
+                        break;
+                    case 2:
+                        this.InProgressArr.push(item.task);
+                        break;
+                    case 3:
+                        this.ApproveingArr.push(item.task);
+                        break;
+                    case 4:
+                        this.FinishedArr.push(item.task);
+                        break;
+                    case 5:
+                        this.TimeOutArr.push(item.task);
+                    case 6:
+                        this.PassArr.push(item.task);
                 }
             });
         }
@@ -368,40 +387,44 @@ export default {
                     num: this.MyTaskList.length
                 },
                 {
-                    title: '未开始',
+                    title: '暂停',
                     status: 0,
+                    num: this.PauseArr.length
+                },
+                {
+                    title: '未开始',
+                    status: 1,
                     num: this.DraftArr.length
                 },
                 {
                     title: '进行中',
-                    status: 1,
+                    status: 2,
                     num: this.InProgressArr.length
                 },
                 {
+                    title: '审核中',
+                    status: 3,
+                    num: this.ApproveingArr.length
+                },
+                {
                     title: '完成',
-                    status: 2,
+                    status: 4,
                     num: this.FinishedArr.length
                 },
                 {
                     title: '超时',
-                    status: 3,
-                    num: this.TimeOutArr.length
-                },
-                {
-                    title: '暂停',
-                    status: 4,
-                    num: this.PauseArr.length
-                },
-                {
-                    title: '审核中',
                     status: 5,
-                    num: 0
+                    num: this.TimeOutArr.length
+                },{
+                    title: '审核通过',
+                    status: 6,
+                    num: this.PassArr.length
                 }
             ]
         }
     },
     created() {
         this.getMyTasks();
-        this.task(1);
+        this.task(2);
     },
 };

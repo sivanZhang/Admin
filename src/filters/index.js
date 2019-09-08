@@ -73,6 +73,26 @@ export function numberFormat(num) {
         maximumFractionDigits: 2
     })
 }
+//资产状态
+export function assetStatus(status){
+    switch(status){
+        case 0:
+            return '暂停'
+            break
+        case 1:
+            return '未开始'
+            break
+        case 2:
+            return '进行中'
+            break
+        case 3:
+            return '审核中'
+            break
+        case 4:
+            return '完成'
+            break
+    }
+}
 //资产优先级
 export function Priority(priority) {
     switch (priority) {
@@ -149,16 +169,25 @@ export function WKLevel(data) {
 export function taskStatus(data) {
     switch (data) {
         case 0:
-            return '未开始'
+            return '暂停'
             break
         case 1:
-            return '已启动'
+            return '未开始'
             break
         case 2:
-            return '结束'
+            return '进行中'
             break
         case 3:
-            return '任务超时'
+            return '审核中'
+            break
+        case 4:
+            return '完成'
+             break
+        case 5:
+            return '超时'
+            break
+        case 6:
+            return '审核通过'
             break
 
     }

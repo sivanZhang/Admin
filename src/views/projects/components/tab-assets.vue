@@ -41,7 +41,7 @@
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
       >
-        <el-table-column type="selection" :reserve-selection="true" align="center"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="55px" ></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
         <el-table-column label="缩略图" align="center">
           <template slot-scope="scope">
@@ -71,7 +71,11 @@
         <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
-        <el-table-column prop="asset_status" label="状态" align="left"></el-table-column>
+        <el-table-column prop="status" label="状态" align="left">
+          <template slot-scope="scope">
+            {{scope.row.status|assetStatus}}
+          </template>
+        </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">

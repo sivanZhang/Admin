@@ -16,7 +16,7 @@ export function postAssets(data) {
 }
 //获取资产
 export function queryAssets(params) {
-    return AXIOS.get('/assets/assets/?01', {
+    return AXIOS.get('/assets/assets/', {
         params
     })
 }
