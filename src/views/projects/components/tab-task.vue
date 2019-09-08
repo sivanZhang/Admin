@@ -273,9 +273,9 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="所属资产">
+        <el-form-item label="所属资产" prop="asset">
           <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产">
-            <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+            <el-option v-for="item of AssetList" :label="item.name" :value="item.id" :key="item.id" :disabled="DialogType===2||!TaskForm.asset"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -487,7 +487,7 @@ export default {
     },
     //资产环节为空时，可创建
     addLink(asset) {
-      console.log(asset);
+      // console.log(asset);
       this.asset = asset;
       this.isLinkDialogShow = true;
       this.mainTaskShow = false;
@@ -603,14 +603,14 @@ export default {
     //打开对话框
     openDialog(Type, row) {
       this.ActiveRow = { ...row };
-      console.log(this.ActiveRow);
+      // console.log(this.ActiveRow);
 
       this.DialogType = Type;
       getDeptUsers({
         id: this.ActiveRow.link_dept
       }).then(res => {
         this.DeptUsers = [...res.data.users];
-        console.log(this.DeptUsers);
+        // console.log(this.DeptUsers);
       });
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
@@ -727,7 +727,7 @@ export default {
                 this.buttonStates.createLoading = false;
               });
           } else {
-            console.log(data);
+            // console.log(data);
             HTTP.addTask(data).then(({ data }) => {
               this.buttonStates.createLoading = false;
               if (data.status === 0) {

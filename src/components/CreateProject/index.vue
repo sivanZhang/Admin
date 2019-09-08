@@ -60,7 +60,7 @@
         <el-form-item label="工作流" prop="region">
           <el-select v-model="ProjectForm.status" placeholder="请选择工作流">
             <el-option label="未开始" :value="0"></el-option>
-            <el-option label="激活" :value="1"></el-option>
+            <el-option label="进行中" :value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="负责人" prop="region">
