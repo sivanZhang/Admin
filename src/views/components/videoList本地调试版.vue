@@ -90,14 +90,32 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item, index) {
-      if (e) {
+      if (e) {//&& item.path
+        let url;
+        switch (index) {
+          case 0:
+            url = "47HK2MpfKwqx1510325093.mp4";
+            break;
+          case 0:
+            url = "banner02.mp4";
+            break;
+          case 0:
+            url = "47HK2MpfKwqx1510325093.mp4";
+            break;
+          default:
+            url = "sEzdz3fIXgqc1512572926.mp4";
+            break;
+        }
         item = {
           ...item,
-          url: this.$store.state.BASE_URL+item.path
+          url
         };
         //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
-      } else {
+      } /* else if (e && !item.path) {
+        e = false;
+        this.$message.warning("镜头路径为空");
+      } */ else {
         this.selectProjects = this.selectProjects.filter(t => {
           return t.task.id !== item.task.id;
         });
@@ -114,6 +132,24 @@ export default {
   width: 100%;
   height: 50px;
   overflow: auto;
+  /* li {
+    width: 20%;
+    display: inline-block;
+    margin: 10px 2%;
+    .color-slider {
+      display: block;
+      width: 100%;
+      height: 25px;
+      background: red;
+      cursor: pointer;
+      text-align: center;
+      color: #fff;
+      line-height: 25px;
+    }
+    .on {
+      background: #67c23a;
+    }
+  } */
 }
 .video-cont {
   width: 100%;
