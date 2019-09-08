@@ -228,6 +228,14 @@
           <el-col :span="6" class="comment">帧数</el-col>
           <el-col :span="18" class="comment">{{project.frame}}</el-col>
         </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">内部版本</el-col>
+          <el-col :span="18" class="comment">{{project.inner_version}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">外部版本</el-col>
+          <el-col :span="18" class="comment">{{project.outer_version}}</el-col>
+        </el-row>
       </div>
     </template>
   </div>
