@@ -38,21 +38,27 @@ export default {
                 }]
             },
             TaskForm: {},
-            StatusList: [{
-                    label: "未开始",
-                    value: 0
-                },
+            StatusList: [
                 {
-                    label: "已启动",
+                    label: "未开始",
                     value: 1
                 },
                 {
-                    label: "结束",
+                    label: "进行中",
                     value: 2
+                }
+            ],
+            StatusList2: [{
+                    label: "暂停",
+                    value: 0
                 },
                 {
-                    label: "任务超时",
-                    value: 3
+                    label: "未开始",
+                    value: 1
+                },
+                {
+                    label: "进行中",
+                    value: 2
                 }
             ],
         }

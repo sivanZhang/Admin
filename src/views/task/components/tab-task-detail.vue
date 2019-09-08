@@ -25,7 +25,7 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="5">任务状态:</el-col>
-        <el-col :span="19">{{taskdetail.status|projectStatus}}</el-col>
+        <el-col :span="19">{{taskdetail.status|taskStatus}}</el-col>
       </el-row>
       <el-row type="flex">
         <el-col :span="5">优先等级:</el-col>

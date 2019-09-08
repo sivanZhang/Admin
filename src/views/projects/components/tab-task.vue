@@ -59,7 +59,7 @@
         <el-table-column prop="priority" label="优先级" :formatter="Priority"></el-table-column>
         <el-table-column prop="grade" label="难度等级" :formatter="Grade"></el-table-column>
         <el-table-column label="状态">
-          <template slot-scope="scope">{{scope.row.status|projectStatus}}</template>
+          <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
         </el-table-column>
         <el-table-column label="创建者">
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
@@ -251,7 +251,7 @@
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
             <el-option
-              v-for="item of StatusList"
+              v-for="item of StatusList2"
               :label="item.label"
               :value="item.value"
               :key="item.value"
