@@ -31,11 +31,11 @@ export function getUserRole(params){
 }
 //用户修改
 export function updateUserInfo(data){
-    return AXIOS.post('/users/list?put',data)
+    return AXIOS.post('/users/list/',data)
 }
 //用户添加
 export function addUser(data){
-    return AXIOS.post('/users/list',data)
+    return AXIOS.post('/users/list/',data)
 }
 //批量导入
 

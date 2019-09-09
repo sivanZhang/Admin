@@ -376,7 +376,7 @@ export default {
         });
       }
     },
-    save(Type, item) {
+    save(Type) {
       let data = null;
       if (Type === 0) {
         this.editing = false;
