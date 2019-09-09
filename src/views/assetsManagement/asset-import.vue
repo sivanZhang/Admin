@@ -54,7 +54,8 @@ export default {
         episode: "集数",
         links: "资产的制作环节",
         asset: "资产",
-        dept: "工种"
+        dept: "工种",
+        remark:"资产备注"
       },
       testDataJSON: []
     };

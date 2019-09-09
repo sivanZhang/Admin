@@ -19,7 +19,7 @@
           <el-tab-pane label="链接" name="third"></el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth"></el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
-            <info :project="project" />
+            <info :project="project" @refresh_assetList="getAssetList"/>
           </el-tab-pane>
         </el-tabs>
       </div>

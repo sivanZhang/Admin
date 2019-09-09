@@ -41,7 +41,7 @@
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
       >
-        <el-table-column type="selection" :reserve-selection="true" width="55px" ></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
         <el-table-column label="缩略图" align="center">
           <template slot-scope="scope">
@@ -64,17 +64,15 @@
         <el-table-column prop="episode" label="集数" align="center"></el-table-column>
         <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip></el-table-column>
         <el-table-column prop="frame" label="帧数" align="left"></el-table-column>
-        <el-table-column prop="inner_version" label="版本号" align="left"></el-table-column>
-        <el-table-column prop="content" label="制作内容" align="left"></el-table-column>
+        <el-table-column prop="inner_version" label="版本号" align="left" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
         <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
         <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
         <el-table-column prop="status" label="状态" align="left">
-          <template slot-scope="scope">
-            {{scope.row.status|assetStatus}}
-          </template>
+          <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px">
           <el-table-column prop="link" label="工种" align="left">
@@ -96,6 +94,7 @@
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
+        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-tooltip content="修改资产" placement="top">
@@ -181,7 +180,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-
+        <el-form-item label="资产备注" prop="remark">
+          <el-input type="textarea" v-model="AssetForm.remark"></el-input>
+        </el-form-item>
         <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
         </el-form-item>-->
@@ -348,12 +349,12 @@ export default {
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
       });
-      this.$refs.assetsDrawer.getLinkList(id)
+      this.$refs.assetsDrawer.getLinkList(id);
       const msg = {
         appid: id,
         apptype: 5
       };
-      
+
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
       });
@@ -394,7 +395,12 @@ export default {
     },
     showAssetForm(Type, row) {
       this.DialogName = Type;
+
       if (Type === 1) {
+        this.AssetForm = {
+          priority: 0
+        };
+        this.SRC = "";
         this.dialogTitle = "新建资产";
       }
       if (Type === 2) {
@@ -406,7 +412,8 @@ export default {
           path: row.path,
           priority: row.priority,
           level: row.level,
-          id: row.id
+          id: row.id,
+          remark: row.remark
         };
       }
       this.isShow = true;
@@ -414,6 +421,10 @@ export default {
     cancel() {
       this.isShow = false;
       this.$refs["assetForm"].resetFields();
+      this.AssetForm = {
+        priority: 0
+      };
+      this.SRC = "";
     },
     //新建资产
     addAsset() {
@@ -474,6 +485,7 @@ export default {
           return false;
         }
       });
+      this.DialogName = null;
     },
 
     //监听图片上传成功
@@ -526,7 +538,7 @@ export default {
   },
   created() {
     this.getAssetList();
-  },
+  }
 };
 </script>
 <style lang="scss" >

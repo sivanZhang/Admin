@@ -198,11 +198,11 @@
           <el-col :span="6" class="comment">资产路径</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
-              <span v-if="!editing4">{{project.path}}</span>
+              <span v-if="!editing4">{{project.path?project.path:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit4"
+                v-if="showEdit4"
                 @click="edit(3)"
               ></i>
             </div>
@@ -236,6 +236,25 @@
           <el-col :span="6" class="comment">外部版本</el-col>
           <el-col :span="18" class="comment">{{project.outer_version}}</el-col>
         </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">资产备注</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
+              <span v-if="!editing10">{{project.remark?project.remark:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit10"
+                @click="edit(9)"
+              ></i>
+            </div>
+            
+            <div v-if="editing10" style="display:flex">
+              <el-input type="textarea" ref="input"   v-model="remark" />
+              <el-button @click="save(9)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </template>
   </div>
@@ -262,6 +281,7 @@ export default {
       editing7:false,
       editing8:false,
       editing9:false,
+      editing10:false,
       name: null,
       budget: null,
       charger: null,
@@ -273,15 +293,17 @@ export default {
       windows:null,
       mac: null,
       linux:null,
+      remark:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
       showEdit4: false,
       showEdit5: false,
-      showEdit6:null,
-      showEdit7:null,
-      showEdit8:null,
-      showEdit9:null,
+      showEdit6:false,
+      showEdit7:false,
+      showEdit8:false,
+      showEdit9:false,
+      showEdit10:false,
       clientList: null
     };
   },
@@ -375,6 +397,14 @@ export default {
           this.$refs.input.focus();
         });
       }
+      if (Type === 9) {
+        this.showEdit10 = false;
+        this.editing10 = true;
+        
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
     },
     save(Type) {
       let data = null;
@@ -416,6 +446,7 @@ export default {
             this.path = null;
           }
         });
+        this.$emit("refresh_assetList");
       }
       if (Type === 4) {
         this.editing5 = false;
@@ -457,6 +488,22 @@ export default {
           linux_path: this.linux
         };
       }
+      if (Type === 9) {
+        this.editing10 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          remark: this.remark
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.remark = this.remark;
+            this.remark = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+      }
 
       putProjects(data).then(({ data }) => {
         if (data.status === 0) {
@@ -493,7 +540,10 @@ export default {
             this.project.Linux = this.linux;
             this.linux = null;
           }
+          
         }
+      }).catch(({data})=>{
+        thsi.$message.error(data.msg);
       });
     }
   }
