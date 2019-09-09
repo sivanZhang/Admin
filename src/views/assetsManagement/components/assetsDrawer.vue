@@ -13,7 +13,7 @@
               @refresh_assetList="getAssetList"
             ></links>
           </el-tab-pane>
-          <el-tab-pane label="备注" name="second">
+          <el-tab-pane label="评论" name="second">
             <remarks :project="project" :RemarksData="RemarksData" />
           </el-tab-pane>
           <el-tab-pane label="链接" name="third"></el-tab-pane>

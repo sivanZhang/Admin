@@ -94,7 +94,11 @@
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
-        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip >
+          <template slot-scope="scope">
+            <p v-html="scope.row.remark"></p>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-tooltip content="修改资产" placement="top">

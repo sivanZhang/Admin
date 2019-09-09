@@ -49,7 +49,7 @@
         :row-key="row=>row.id"
         v-loading="tableLoading"
         row-class-name="hover"
-        height="600px"
+        
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>

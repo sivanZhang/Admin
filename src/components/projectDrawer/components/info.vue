@@ -240,9 +240,8 @@
           <el-col :span="6" class="comment">备注</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
-              <span v-if="!editing10" v-html="project.remark">
-                
-              </span>
+              <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
+              <span v-else v-show="showEdit10">{{"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
@@ -495,10 +494,8 @@ export default {
         data = {
           method: "put",
           id: this.project.id,
-          remark: this.remark
+          remark: this.remark.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
         };
-        console.log(data.remark);
-        console.log(data.remark.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'));
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {

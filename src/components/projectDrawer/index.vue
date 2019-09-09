@@ -4,7 +4,7 @@
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-          <el-tab-pane label="备注" name="first">
+          <el-tab-pane label="评论" name="first">
             <remarks :project="project" :RemarksData="RemarksData"></remarks>
           </el-tab-pane>
           <el-tab-pane label="任务" name="second">
