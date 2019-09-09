@@ -1,12 +1,13 @@
 <template>
   <div id="project" style="margin:-20px">
     <div class="container">
-      <div class="cycle-task" v-for="(item,index) in ProjectList" :key="index">
-        <Drawer
+      <Drawer
           scrollable
           closable
+          draggable
+          inner
           v-model="isDrawerShow"
-          width="526"
+          width="526px"
           :transfer="false"
           :mask-style="{backgroundColor: 'transparent'}"
           :append-to-body="true"
@@ -20,12 +21,7 @@
             @refresh="show"
           />
         </Drawer>
-        <!-- <el-drawer :visible.sync="isDrawerShow" direction="rtl" size="512" :append-to-body="false" :modal="false" :modal-append-to-body="false">
-          <div slot="title">
-          </div>
-          <drawer-header :project="project" style="padding:10px"/>
-          <project-drawer :project="project" />
-        </el-drawer>-->
+      <div class="item-project" v-for="(item,index) in ProjectList" :key="index">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
           <div class="dropdow">
             <el-dropdown placement="bottom" trigger="click">
@@ -34,28 +30,31 @@
               </el-button>
               <el-dropdown-menu slot="dropdown" style="margin-top:0px">
                 <el-dropdown-item @click.native="showImg($store.state.BASE_URL+item.image)">
-               查看大图
+                  查看大图
                   <!-- <router-link :to="`/projects/project-detail/${item.id}`">查看大图</router-link> -->
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
-                <el-dropdown-item @click.native="delProject(item)" v-if="$store.state.login.userInfo.auth.manage_project">删除</el-dropdown-item>
+                <el-dropdown-item
+                  @click.native="delProject(item)"
+                  v-if="$store.state.login.userInfo.auth.manage_project"
+                >删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
           <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
           <div slot="header" class="box-card-header">
             <router-link :to="`/projects/project-detail/${item.id}`">
-            <el-image
-              class="mini-image"
-              :src="item.image?$store.state.BASE_URL+item.image:''"
-              fit="cover"
-              style="height:100%;width:100%;"
-            >
+              <el-image
+                class="mini-image"
+                :src="item.image?$store.state.BASE_URL+item.image:''"
+                fit="cover"
+                style="height:100%;width:100%;"
+              >
                 <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
-              </div>
-            </el-image>
-             </router-link>
+                  <i class="el-icon-picture" style="color:#909399"></i>
+                </div>
+              </el-image>
+            </router-link>
           </div>
           <div style="padding: 15px;">
             <router-link :to="`/projects/project-detail/${item.id}`">
@@ -96,11 +95,11 @@
 import { mapState } from "vuex";
 import { getRemark } from "@/api/remark";
 import { queryAssets } from "@/api/assets";
-import {queryTask} from "@/api/task";
+import { queryTask } from "@/api/task";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
-import {delOneProject} from "@/api/project"
+import { delOneProject } from "@/api/project";
 export default {
   name: "project",
   components: {
@@ -117,7 +116,7 @@ export default {
       project: null,
       RemarksData: [],
       TableData: [],
-      taskList:[]
+      taskList: []
     };
   },
   computed: {
@@ -148,28 +147,26 @@ export default {
         this.TableData = [...data.msg];
       });
       queryTask({
-        project:this.project.id
-      }).then(({data})=>{
-        this.taskList = [...data.msg]
-      })
+        project: this.project.id
+      }).then(({ data }) => {
+        this.taskList = [...data.msg];
+      });
     },
-    delProject(item){
+    delProject(item) {
       this.$confirm("删除项目后无法恢复，确认删除?", "注意", {
         confirmButtonText: "删除",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
-      delOneProject({
-        id:item.id,
-        method:"delete"
-      }).then(({data})=>{
-        
-        if(data.status===0)
-        this.$message.success(data.msg);
-        this.$store.dispatch("project/get_Projects");
-      })
-    })}
+      }).then(() => {
+        delOneProject({
+          id: item.id,
+          method: "delete"
+        }).then(({ data }) => {
+          if (data.status === 0) this.$message.success(data.msg);
+          this.$store.dispatch("project/get_Projects");
+        });
+      });
+    }
   },
   created() {
     this.$store.dispatch("project/get_Projects");
