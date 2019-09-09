@@ -33,11 +33,11 @@
         ></el-button>
       </el-col>
       <el-col :span="18" class="bar-item">
-        <span class="text">{{playerCurrentFrame}}帧</span>
+        <span class="text">{{playerCurrentFrame}}帧/{{playerFormatCurrentPostion}}</span>
         <div class="slider">
           <el-slider v-model="playerPercentage" :show-tooltip="false" @change="handleSliderChange"></el-slider>
         </div>
-        <span class="text">{{playerDurationFrame}}帧</span>
+        <span class="text">{{playerDurationFrame}}帧/{{playerFormatDuration}}</span>
       </el-col>
       <el-col :span="5" class="bar-item">
         <span style="color:#fff;">音量:{{playerVolume*10}}</span>
