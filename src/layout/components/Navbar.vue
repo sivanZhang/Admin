@@ -7,7 +7,6 @@
     <shortcut-menu/>
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <notice id="notice" class="right-menu-item"/>
       </template>
@@ -39,7 +38,6 @@ import Settings from './Settings'
   import Breadcrumb from "@/components/Breadcrumb";
   import Hamburger from "@/components/Hamburger";
   import Screenfull from "@/components/Screenfull";
-  import Search from "@/components/HeaderSearch";
   import ShortcutMenu from "./ShortcutMenu";
   import Notice from "@/components/Notice"
 
@@ -53,7 +51,6 @@ import Settings from './Settings'
       Breadcrumb,
       Hamburger,
       Screenfull,
-      Search,
       ShortcutMenu,
       Settings,
       Notice

@@ -106,7 +106,7 @@ export const asyncRoutes = [{
                     import ('@/views/settings/client'),
                 meta: {
                     title: '客户部门绑定',
-                    icon: 'settings'
+                    icon: 'bangding'
                 }
             },
         ]
@@ -181,7 +181,7 @@ export const constantRoutes = [{
                     import ('@/views/overview/users'),
                 meta: {
                     title: '实训项目',
-                    icon: 'group'
+                    icon: 'tree2'
                 },
             }
         ]

@@ -108,6 +108,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.el-divider{
+  margin: 20px 0 10px;
+}
 #videoSliderList {
   display: block;
   white-space: nowrap;

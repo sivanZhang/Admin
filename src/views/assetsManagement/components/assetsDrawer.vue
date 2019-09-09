@@ -3,7 +3,7 @@
     <div class="page-right">
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
-        <el-tabs v-model="activeTab" @tab-click="handleTabClick">
+        <el-tabs v-model="activeTab">
           <el-tab-pane label="制作环节" name="first">
             <links
               :link-list="LinkList"
@@ -17,7 +17,7 @@
             <remarks :project="project" :RemarksData="RemarksData" />
           </el-tab-pane>
           <el-tab-pane label="链接" name="third"></el-tab-pane>
-          <el-tab-pane label="相关版本" name="fifth">资产</el-tab-pane>
+          <el-tab-pane label="相关版本" name="fifth"></el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
           </el-tab-pane>
@@ -33,7 +33,7 @@ import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
 
-import { constants } from 'crypto';
+import { constants } from "crypto";
 export default {
   name: "assets-drawer",
   props: ["project", "RemarksData"],
@@ -42,21 +42,15 @@ export default {
       activeTab: "first",
       LinkList: []
     };
-  },
-
- 
-  components: { remarks, info, links },
+  },components: { remarks, info, links },
   methods: {
-    handleTabClick(tab, event) {
-      //this.getRemarkList();
-      console.log(tab, event);
-    },
     getAssetList() {
       this.$emit("refresh_assetList");
     },
-    getLinkList() {
+    getLinkList(id) {
+      let asset = id ||this.project.id
       getLinks({
-        asset: this.project.id
+        asset
       }).then(res => {
         this.LinkList = [...res.data.msg];
       });

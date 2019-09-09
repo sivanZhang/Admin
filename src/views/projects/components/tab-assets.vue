@@ -211,6 +211,7 @@
         :project="project"
         :RemarksData="RemarksData"
         @refresh_assetList="getAssetList"
+        ref="assetsDrawer"
       />
     </Drawer>
   </div>
@@ -347,10 +348,12 @@ export default {
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
       });
+      this.$refs.assetsDrawer.getLinkList(id)
       const msg = {
         appid: id,
         apptype: 5
       };
+      
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
       });

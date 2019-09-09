@@ -10,6 +10,7 @@
     </ul>-->
     <div id="videoSliderList">
       <el-button
+        size="mini"
         v-for="(item,index) in selectProjects"
         :key="index"
         :type="currentPlayId==item.task.id?'success':''"
@@ -126,6 +127,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.el-divider{
+  margin: 20px 0 10px;
+}
 #videoSliderList {
   display: block;
   white-space: nowrap;

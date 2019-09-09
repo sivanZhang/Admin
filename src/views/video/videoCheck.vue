@@ -34,10 +34,7 @@
                   ></el-button>
                 </li>
               </ul>
-              <div class="mark-text">
-                <input class="mark-input" placeholder="添加备注..." v-model="markText" />
-              </div>
-
+              <el-input placeholder="添加备注" v-model="markText" type="textarea"></el-input>
               <div class="btn-group">
                 <el-radio-group v-model.number="approve_result">
                   <el-radio :label="0">拒绝</el-radio>
@@ -220,6 +217,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #eee;
+  padding:10px 20px 0 20px;
   .page {
     width: 100%;
     height: 100%;
@@ -237,7 +235,7 @@ export default {
       }
       .video-list {
         width: 100%;
-        height: 33.9%;
+        height: 250px;/* 33.9 */
         margin-top: 1%;
         background: #fff;
       }
@@ -310,16 +308,6 @@ export default {
   width: 100%;
 
   .mark-form {
-    .mark-text {
-      .mark-input {
-        border: none;
-        outline: none;
-        width: 100%;
-        display: block;
-        line-height: 35px;
-        border-bottom: 1px solid #ddd;
-      }
-    }
     .img-list {
       list-style: none;
       padding: 0;
