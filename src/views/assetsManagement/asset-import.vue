@@ -37,25 +37,23 @@ export default {
       requiredKeysMap: {
         name: "镜头号",
         content: "制作内容",
+        date_start: "开始日期",
+        date_end: "结束日期"
       },
       keysMap: {
-        //category: "资产类别",
         image: "缩略图",
         path: "路径",
-        //creator: "创建者",
-        //team: "资产当前属于哪个部门",
         inner_version: "内部资产版本号",
         outer_version: "外部资产版本号",
         priority: "优先级（高中低）",
         level: "资产的难度等级（简单、标准、难）",
-        //project: "资产属于哪个项目",
         session: "场次",
         frame: "帧数",
         episode: "集数",
         links: "资产的制作环节",
         asset: "资产",
         dept: "工种",
-        remark:"备注"
+        remark: "备注"
       },
       testDataJSON: []
     };
