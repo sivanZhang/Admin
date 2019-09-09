@@ -241,7 +241,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
               <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
-              <span v-else v-show="showEdit10">{{"-"}}</span>
+              <span v-else >{{"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
