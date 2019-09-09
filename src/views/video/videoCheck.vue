@@ -235,7 +235,7 @@ export default {
       }
       .video-list {
         width: 100%;
-        height: 250px;/* 33.9 */
+        height: 33%;/* 33.9 */
         margin-top: 1%;
         background: #fff;
       }
