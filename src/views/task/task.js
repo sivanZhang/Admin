@@ -147,8 +147,8 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
-            end_date: null,
-            time: Date.parse(new Date()) / 1000,
+           
+           
             changecolor: 1,
             activeRow: {},//点击任务列表选中的列的数据
         };
@@ -259,7 +259,7 @@ export default {
         },
         addRecord() {
             this.createLoading = true;
-            if (this.end_date > this.time) {
+            
                 addTaskRecord(this.TaskRecord)
                     .then(res => {
                         if (res.data.status === 0) {
@@ -275,21 +275,12 @@ export default {
                     .catch(err => {
                         this.createLoading = false;
                     });
-            } else {
-                this.$alert('此任务已超期，禁止提交执行记录。', '警告', {
-                    confirmButtonText: '确定',
-                    callback: action => {
-
-                    }
-                });
-                this.createLoading = false;
-                this.isDrawerShow = false;
-            }
+            
         },
         //是否显示任务板右侧
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
-            this.end_date = row.task.end_date;
+            
             this.activeRow = {...row };
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,

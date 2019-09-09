@@ -5,7 +5,7 @@
       <input
         type="text"
         v-model="remarks"
-        placeholder="添加备注..."
+        placeholder="添加评论..."
         size="larger"
         @focus="buttons=!buttons"
       />
@@ -17,7 +17,7 @@
       v-show="buttons"
     >
       <el-button @click="buttons=!buttons" size="small">取消</el-button>
-      <el-button type="primary" @click="addRemarks" size="small">添加备注</el-button>
+      <el-button type="primary" @click="addRemarks" size="small">添加评论</el-button>
     </div>
     <!-- 备注展示与筛选 -->
     <div class="remark-cont">
