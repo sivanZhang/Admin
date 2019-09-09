@@ -13,9 +13,9 @@
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column prop="changci" label="场次" align="center"></el-table-column>
       <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
-      <el-table-column prop="name" label="资产名称" align="center"></el-table-column>
+      <el-table-column prop="name" label="名称" align="center"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
-      <el-table-column prop="path" label="资产路径" align="center"></el-table-column>
+      <el-table-column prop="path" label="路径" align="center"></el-table-column>
       <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
       <el-table-column label="缩略图" align="center">
@@ -51,7 +51,7 @@
         :total="TableData.length"
       ></el-pagination>
     </div>
-    <el-dialog title="新建资产" :visible.sync="isShow" width="480px" top="5vh">
+    <el-dialog title="新建" :visible.sync="isShow" width="480px" top="5vh">
       <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
         
           <el-upload
@@ -74,7 +74,7 @@
             </template>
           </el-upload>
         
-        <el-form-item label="资产名称" prop="name">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
         <el-form-item label="存放路径" prop="path">
@@ -162,7 +162,7 @@ export default {
         }
       ],
       rules: {
-        name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         priority: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],

@@ -159,7 +159,7 @@
             </div>
           </template>
         </el-upload>
-        <el-form-item label="资产名称" prop="name">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="AssetForm.name" @input="change($event)"></el-input>
         </el-form-item>
         <el-form-item label="存放路径" prop="path">
@@ -180,7 +180,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="资产备注" prop="remark">
+        <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="AssetForm.remark"></el-input>
         </el-form-item>
         <!-- <el-form-item label="所属团队" prop="team">
@@ -267,7 +267,7 @@ export default {
         }
       ],
       rules: {
-        name: [{ required: true, message: "请输入资产名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         priority: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],
@@ -401,7 +401,7 @@ export default {
           priority: 0
         };
         this.SRC = "";
-        this.dialogTitle = "新建资产";
+        this.dialogTitle = "新建";
       }
       if (Type === 2) {
         this.dialogTitle = "修改资产";
@@ -426,7 +426,7 @@ export default {
       };
       this.SRC = "";
     },
-    //新建资产
+    //新建
     addAsset() {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {

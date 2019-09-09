@@ -187,15 +187,15 @@
     <template v-if="project && project.entity_type === 5">
       <div >
         <el-row>
-          <el-col :span="6" class="comment">资产名称</el-col>
+          <el-col :span="6" class="comment">名称</el-col>
           <el-col :span="18" class="comment">{{project.name}}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="comment">资产类型</el-col>
+          <el-col :span="6" class="comment">类型</el-col>
           <el-col :span="18" class="comment">{{project.category>0?project.category:"未分类"}}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="comment">资产路径</el-col>
+          <el-col :span="6" class="comment">路径</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
               <span v-if="!editing4">{{project.path?project.path:"-"}}</span>
@@ -237,7 +237,7 @@
           <el-col :span="18" class="comment">{{project.outer_version}}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="comment">资产备注</el-col>
+          <el-col :span="6" class="comment">备注</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
               <span v-if="!editing10" v-html="project.remark">

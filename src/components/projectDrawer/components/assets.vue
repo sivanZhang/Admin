@@ -29,11 +29,11 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="资产名称" align="left"></el-table-column>
+      <el-table-column prop="name" label="名称" align="left"></el-table-column>
       <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
       <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
-      <el-table-column prop="path" label="资产路径" v-if="false" align="left"></el-table-column>
+      <el-table-column prop="path" label="路径" v-if="false" align="left"></el-table-column>
       <el-table-column prop="creator_name" label="创建人" v-if="false" align="left"></el-table-column>
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
       <el-table-column prop="status" label="状态" align="left"></el-table-column>

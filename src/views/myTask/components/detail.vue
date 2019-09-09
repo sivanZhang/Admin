@@ -11,7 +11,7 @@
       </el-col>
       <el-col :span="4">
         <div>项目名称：</div>
-        <div>资产名称：</div>
+        <div>名称：</div>
         <div>开始日期：</div>
         <div>结束日期：</div>
         <div>工时：</div>

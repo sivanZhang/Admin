@@ -55,7 +55,7 @@ export default {
         links: "资产的制作环节",
         asset: "资产",
         dept: "工种",
-        remark:"资产备注"
+        remark:"备注"
       },
       testDataJSON: []
     };
