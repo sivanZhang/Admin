@@ -33,11 +33,9 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属项目:</el-col>
-        <el-col :span="19">
-           <router-link :to="`/projects/project-detail/${taskdetail.project.id}`">
+        <el-col :span="19" @click="target(taskdetail.project)">
           {{taskdetail.project|filterName}}
-           </router-link>
-          </el-col> 
+        </el-col>
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属资产:</el-col>
@@ -65,13 +63,12 @@
       </el-row>
       <template v-if="path">
         <el-row type="flex">
-        <el-col :span="5">任务输出:</el-col>
-        <el-col :span="19">{{path}}</el-col>
-      </el-row>
+          <el-col :span="5">任务输出:</el-col>
+          <el-col :span="19">{{path}}</el-col>
+        </el-row>
       </template>
-      
     </el-card>
-    <template v-if="taskdetail.sub_task.length">
+    <template v-if="taskdetail.sub_task && taskdetail.sub_task.length">
       <task-ditail
         v-for="(item, index) in taskdetail.sub_task.length"
         :key="index"
@@ -89,7 +86,7 @@ export default {
       type: Boolean,
       default: false
     },
-    path:String
+    path: String
   },
   filters: {
     filterName(obj) {
@@ -102,6 +99,11 @@ export default {
             return item.name;
           })
           .join();
+      }
+    },
+    target({id}) {
+      if (id) {
+        this.$router.push({ name: "project-detail", params: { id } });
       }
     }
   }
