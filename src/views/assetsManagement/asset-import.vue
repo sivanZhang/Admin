@@ -37,8 +37,8 @@ export default {
       requiredKeysMap: {
         name: "镜头号",
         content: "制作内容",
-        date_start: "开始日期",
-        date_end: "结束日期"
+        start_date: "开始日期",
+        end_date: "结束日期"
       },
       keysMap: {
         image: "缩略图",
