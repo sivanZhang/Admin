@@ -35,7 +35,6 @@
             min-width="130"
           >
             <template slot-scope="scope">
-              
               <el-input
                 v-if="scope.row.isEdit  && index!=0"
                 size="small"
@@ -44,7 +43,12 @@
                 v-on:blur="inputblur"
               ></el-input>
               <span v-if="!scope.row.isEdit && index!=0">{{scope.row[col.prop]}}</span>
-              <el-image v-if="index==0" :src="$store.state.BASE_URL+scope.row[col.prop]" fit="cover" style="width:80px;height:45px"></el-image>
+              <el-image
+                v-if="index==0"
+                :src="$store.state.BASE_URL+scope.row[col.prop]"
+                fit="cover"
+                style="width:80px;height:45px"
+              ></el-image>
             </template>
           </el-table-column>
         </template>
@@ -290,7 +294,8 @@ export default {
       this.keysMap = [
         {
           label: "必填字段",
-          options: Object.keys(data.requiredKeysMap)
+          options: Object.keys(data.requiredKeysMap),
+          obj:{...data.requiredKeysMap}
         },
         {
           label: "非必填字段",
@@ -337,8 +342,16 @@ export default {
           item.push(this.LinkList[index]);
         });
       }
+
       this.assemblingData.keys = bindKeys;
       this.assemblingData.values = values;
+      //必填字段验证
+      for (const t of this.keysMap[0].options) {
+        if (!this.assemblingData.keys.includes(t)) {
+          this.$message.warning(this.keysMap[0].obj[t] + "是必填字段");
+          return false;
+        }
+      }
       this.$emit("returnAssemblingData", this.assemblingData);
     },
     /**
