@@ -43,10 +43,10 @@ export default {
       keysMap: {
         image: "缩略图",
         path: "路径",
-        inner_version: "内部资产版本号",
-        outer_version: "外部资产版本号",
+        inner_version: "内部版本号",
+        outer_version: "外部版本号",
         priority: "优先级（高中低）",
-        level: "资产的难度等级（简单、标准、难）",
+        level: "难度等级（简单、标准、难）",
         session: "场次",
         frame: "帧数",
         episode: "集数",

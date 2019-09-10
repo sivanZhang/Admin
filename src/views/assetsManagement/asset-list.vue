@@ -101,10 +101,10 @@
         <!-- <el-form-item label="所属团队" prop="team">
           <el-input v-model="AssetForm.category"></el-input>
         </el-form-item>-->
-        <el-form-item label="内部资产版本号" prop="inner_version">
+        <el-form-item label="内部版本号" prop="inner_version">
           <el-input v-model="AssetForm['inner_version']"></el-input>
         </el-form-item>
-        <el-form-item label="外部资产版本号" prop="outer_version">
+        <el-form-item label="外部版本号" prop="outer_version">
           <el-input v-model="AssetForm['outer_version']"></el-input>
         </el-form-item>
         <el-form-item label="所属项目" prop="project">
