@@ -48,7 +48,7 @@ export default {
                     label: '完成',
                     value: 4
                 },
-                
+               
                 
             ],
             createLoading: false,
@@ -167,7 +167,7 @@ export default {
         },
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
-            console.log('row', row);
+          //  console.log('row', row);
 
             let loading = this.$loading({
                 fullscreen: true
@@ -182,7 +182,19 @@ export default {
                 loading.close()
                 if (data.status === 0) {
                     row.task.status = status
-                    this.$message.success(data.msg)
+                    if(status === 0){
+                        status = "暂停";
+                    }
+                    if(status === 1){
+                        status = "未开始";
+                    }
+                    if(status === 2){
+                        status = "进行中";
+                    }
+                    if(status === 4){
+                        status = "完成";
+                    }
+                    this.$message.success("任务"+row.task.id+"状态已更改为："+status);
                     this.resetTasks()
                 } else {
                     this.$message.warning(data.msg)

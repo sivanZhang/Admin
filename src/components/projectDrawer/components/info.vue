@@ -229,7 +229,7 @@
           <el-col :span="6" class="comment">开始日期</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit11=true" @mouseleave="showEdit11 = false">
-              <span v-if="!editing11">{{project.start?project.start:"-"}}</span>
+              <span v-if="!editing11">{{project.start_date|dateFormat}}</span>
               <i class="el-icon-edit" style="color:blue" v-if="showEdit11" @click="edit(10)"></i>
             </div>
             <div v-if="editing11">
@@ -247,11 +247,17 @@
           <el-col :span="6" class="comment">结束日期</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit12=true" @mouseleave="showEdit12 = false">
-              <span v-if="!editing12">{{project.end?project.end:"-"}}</span>
+              <span v-if="!editing12">{{project.end_date|dateFormat}}</span>
               <i class="el-icon-edit" style="color:blue" v-if="showEdit12" @click="edit(11)"></i>
             </div>
             <div v-if="editing12">
-              <input type="text" ref="input" class="input" value="project.path" v-model="path" />
+              <!-- $store.state.login.userInfo -->
+              <el-date-picker
+                v-model="end_date"
+                type="date"
+                format="yyyy/MM/dd"
+                ref="end"
+              ></el-date-picker>
               <el-button @click="save(11)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -441,7 +447,7 @@ export default {
           this.$refs.input.focus();
         });
       }
-       if (Type === 19) {
+       if (Type === 10) {
         this.showEdit11 = false;
         this.editing11 = true;
 
@@ -449,8 +455,19 @@ export default {
           this.$refs.start.focus();
         });
       }
+       if (Type === 11) {
+        this.showEdit12 = false;
+        this.editing12 = true;
+
+        this.$nextTick(() => {
+          this.$refs.end.focus();
+        });
+      }
     },
     save(Type) {
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
       let data = null;
       if (Type === 0) {
         this.editing = false;
@@ -550,6 +567,42 @@ export default {
               .replace(/\n/g, "<br/>")
               .replace(/\s/g, "&nbsp;");
             this.remark = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+      }
+      if(Type === 10){
+        
+        this.editing10 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          start: dataFormat(this.start_date)
+            
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.start_date = this.start_date;
+            this.start_date = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+      }
+      if(Type === 11){
+        
+        this.editing12 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          end: dataFormat(this.end_date)
+            
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.end_date = this.end_date;
+            this.end_date = null;
           }
         });
         this.$emit("refresh_assetList");

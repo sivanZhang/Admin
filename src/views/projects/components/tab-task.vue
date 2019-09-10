@@ -555,14 +555,13 @@ export default {
         }
       });
       this.createLoading = true;
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
+     
       addLinks({ links: [...this.FormList] })
         .then(({ data }) => {
           this.createLoading = false;
-          this.$message.success(data.msg);
+         
           if (data.status === 0) {
+             this.$message.success(data.msg);
             this.$emit("refresh");
             this.$emit("refresh_assetList");
             this.isLinkDialogShow = false;
@@ -579,6 +578,8 @@ export default {
               });
             });
             this.active = 1;
+          }else{
+            this.$message.error(data.msg);
           }
         })
         .catch(err => {
