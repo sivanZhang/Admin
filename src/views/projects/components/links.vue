@@ -132,7 +132,6 @@
                 end-placeholder="结束日期"
                 style="width:100%"
                 format="yyyy/MM/dd"
-                :picker-options="picker"
               ></el-date-picker>
             </el-form-item>
           </el-form>
@@ -200,7 +199,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
-            :picker-options="picker"
+           
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
@@ -242,9 +241,7 @@
             v-model="updateLinkForm.datetime"
             type="daterange"
             range-separator="至"
-            format="yyyy/MM/dd"
-            :picker-options="picker"
-            
+            format="yyyy/MM/dd" 
           ></el-date-picker>
         </el-form-item>
         <el-form-item align="right">
@@ -284,12 +281,6 @@ export default {
       dept: {},
       content: null,
       datetime: null,
-     
-      picker: {
-        disabledDate: time => {
-          return time.getTime() < Date.now() - 8.64e7;
-        }
-      }
     };
   },
   props: ["LinkList", "project"],
