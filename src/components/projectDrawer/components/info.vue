@@ -583,7 +583,7 @@ export default {
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.project.start_date = this.start_date;
+            this.project.start_date = dataFormat(this.start_date);
             this.start_date = null;
           }
         });
@@ -601,7 +601,7 @@ export default {
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.project.end_date = this.end_date;
+            this.project.end_date = dataFormat(this.end_date);
             this.end_date = null;
           }
         });
