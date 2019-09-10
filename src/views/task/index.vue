@@ -324,6 +324,7 @@
              </template> 
           </el-table-column>
           <el-table-column prop="asset.name" label="镜头" header-align="left" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="task.dept.name" label="制作环节" header-align="left" show-overflow-tooltip></el-table-column>
           <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
           <el-table-column prop="task.content" header-align="left" label="任务内容" show-overflow-tooltip></el-table-column>
           <el-table-column label="任务状态" header-align="left">

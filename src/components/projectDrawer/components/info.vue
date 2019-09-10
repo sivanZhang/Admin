@@ -29,7 +29,7 @@
           <el-col :span="6" class="comment">Windows路径</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit7=true" @mouseleave="showEdit7 = false">
-              <span v-if="!editing7"> {{project.Windows?project.Windows:"-"}}</span>
+              <span v-if="!editing7">{{project.Windows?project.Windows:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
@@ -41,13 +41,13 @@
               <input type="text" ref="input" class="input" v-model="windows" />
               <el-button @click="save(6)" type="primary">修改</el-button>
             </div>
-           </el-col>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Mac路径</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit8=true" @mouseleave="showEdit8 = false">
-              <span v-if="!editing8"> {{project.Mac?project.Mac:"-"}}</span>
+              <span v-if="!editing8">{{project.Mac?project.Mac:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
@@ -56,7 +56,7 @@
               ></i>
             </div>
             <div v-if="editing8">
-              <input type="text" ref="input" class="input"  v-model="mac" />
+              <input type="text" ref="input" class="input" v-model="mac" />
               <el-button @click="save(7)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -65,7 +65,7 @@
           <el-col :span="6" class="comment">Linux路径</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit9=true" @mouseleave="showEdit9 = false">
-              <span v-if="!editing9"> {{project.Linux?project.Linux:"-"}}</span>
+              <span v-if="!editing9">{{project.Linux?project.Linux:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
@@ -74,7 +74,7 @@
               ></i>
             </div>
             <div v-if="editing9">
-              <input type="text" ref="input" class="input"  v-model="linux" />
+              <input type="text" ref="input" class="input" v-model="linux" />
               <el-button @click="save(8)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -112,7 +112,13 @@
               ></i>
             </div>
             <div v-if="editing3">
-              <el-select v-model="charger" filterable placeholder="请选择负责人" ref="selete" @change="userChange">
+              <el-select
+                v-model="charger"
+                filterable
+                placeholder="请选择负责人"
+                ref="selete"
+                @change="userChange"
+              >
                 <el-option
                   v-for="item of UserList"
                   :label="item.username"
@@ -185,7 +191,7 @@
     </template>
     <!-- 资产消息栏 -->
     <template v-if="project && project.entity_type === 5">
-      <div >
+      <div>
         <el-row>
           <el-col :span="6" class="comment">名称</el-col>
           <el-col :span="18" class="comment">{{project.name}}</el-col>
@@ -199,12 +205,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
               <span v-if="!editing4">{{project.path?project.path:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit4"
-                @click="edit(3)"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit4" @click="edit(3)"></i>
             </div>
             <div v-if="editing4">
               <input type="text" ref="input" class="input" value="project.path" v-model="path" />
@@ -225,8 +226,43 @@
           <el-col :span="18" class="comment">{{project.level |Level}}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="6" class="comment">开始日期</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit11=true" @mouseleave="showEdit11 = false">
+              <span v-if="!editing11">{{project.start?project.start:"-"}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit11" @click="edit(10)"></i>
+            </div>
+            <div v-if="editing11">
+              <el-date-picker
+                v-model="start_date"
+                type="date"
+                format="yyyy/MM/dd"
+                ref="start"
+              ></el-date-picker>
+              <el-button @click="save(10)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">结束日期</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit12=true" @mouseleave="showEdit12 = false">
+              <span v-if="!editing12">{{project.end?project.end:"-"}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit12" @click="edit(11)"></i>
+            </div>
+            <div v-if="editing12">
+              <input type="text" ref="input" class="input" value="project.path" v-model="path" />
+              <el-button @click="save(11)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="6" class="comment">帧数</el-col>
           <el-col :span="18" class="comment">{{project.frame}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">集数</el-col>
+          <el-col :span="18" class="comment">{{project.episode}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">内部版本</el-col>
@@ -241,17 +277,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
               <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
-              <span v-else >{{"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit10"
-                @click="edit(9)"
-              ></i>
+              <span v-else v-show="!project.remark">{{"-"}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit10" @click="edit(9)"></i>
             </div>
-            
+
             <div v-if="editing10" style="display:flex">
-              <el-input type="textarea" ref="input"   v-model="remark" />
+              <el-input type="textarea" ref="input" v-model="remark" />
               <el-button @click="save(9)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -266,8 +297,8 @@ import { putProjects } from "@/api/project";
 import { getClientList } from "@/api/admin";
 import { editAssets } from "@/api/assets";
 import { mapState } from "vuex";
-import { returnStatement } from '@babel/types';
-import { constants } from 'crypto';
+import { returnStatement } from "@babel/types";
+import { constants } from "crypto";
 export default {
   props: ["project"],
   name: "info",
@@ -278,52 +309,56 @@ export default {
       editing3: false,
       editing4: false,
       editing5: false,
-      editing6:false,
-      editing7:false,
-      editing8:false,
-      editing9:false,
-      editing10:false,
+      editing6: false,
+      editing7: false,
+      editing8: false,
+      editing9: false,
+      editing10: false,
+      editing11:false,
+      editing12:false,
       name: null,
       budget: null,
       charger: null,
-      charger_name:null,
+      charger_name: null,
       path: null,
       client: null,
-      client_name:null,
-      status:null,
-      windows:null,
+      client_name: null,
+      status: null,
+      windows: null,
       mac: null,
-      linux:null,
-      remark:null,
+      linux: null,
+      remark: null,
+      start_date:null,
+      end_date:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
       showEdit4: false,
       showEdit5: false,
-      showEdit6:false,
-      showEdit7:false,
-      showEdit8:false,
-      showEdit9:false,
-      showEdit10:false,
+      showEdit6: false,
+      showEdit7: false,
+      showEdit8: false,
+      showEdit9: false,
+      showEdit10: false,
+      showEdit11:false,
+      showEdit12:false,
       clientList: null
     };
   },
   computed: {
     ...mapState("admin", ["UserList"])
   },
-  created() {
-    
-  },
+  created() {},
   methods: {
-    userChange(val){
+    userChange(val) {
       //console.log(val);
-      this.charger_name=this.UserList.find(item=>{
+      this.charger_name = this.UserList.find(item => {
         return item.id === val;
       }).username;
       //console.log(this.charger_name);
     },
-    clientChange(val){
-      this.client_name=this.clientList.find(item=>{
+    clientChange(val) {
+      this.client_name = this.clientList.find(item => {
         return item.id === val;
       }).username;
       // console.log(this.client_name)
@@ -385,7 +420,7 @@ export default {
       if (Type === 7) {
         this.showEdit8 = false;
         this.editing8 = true;
-        
+
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -393,7 +428,7 @@ export default {
       if (Type === 8) {
         this.showEdit9 = false;
         this.editing9 = true;
-        
+
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -401,9 +436,17 @@ export default {
       if (Type === 9) {
         this.showEdit10 = false;
         this.editing10 = true;
-        
+
         this.$nextTick(() => {
           this.$refs.input.focus();
+        });
+      }
+       if (Type === 19) {
+        this.showEdit11 = false;
+        this.editing11 = true;
+
+        this.$nextTick(() => {
+          this.$refs.start.focus();
         });
       }
     },
@@ -494,58 +537,65 @@ export default {
         data = {
           method: "put",
           id: this.project.id,
-          remark: this.remark.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
+          remark: this.remark
+            .replace(/\r\n/g, "<br/>")
+            .replace(/\n/g, "<br/>")
+            .replace(/\s/g, "&nbsp;")
         };
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.project.remark = this.remark.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
+            this.project.remark = this.remark
+              .replace(/\r\n/g, "<br/>")
+              .replace(/\n/g, "<br/>")
+              .replace(/\s/g, "&nbsp;");
             this.remark = null;
           }
         });
         this.$emit("refresh_assetList");
       }
 
-      putProjects(data).then(({ data }) => {
-        if (data.status === 0) {
-          this.$message.success(data.msg);
-          if (Type === 0) {
-            this.project.name = this.name;
-            this.name = null;
+      putProjects(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            if (Type === 0) {
+              this.project.name = this.name;
+              this.name = null;
+            }
+            if (Type === 1) {
+              this.project.budget = this.budget;
+              this.budget = null;
+            }
+            if (Type === 2) {
+              this.project.charger_name = this.charger_name;
+              this.charger = null;
+            }
+            if (Type === 4) {
+              this.project.client.client_name = this.client_name;
+              this.client = null;
+            }
+            if (Type === 5) {
+              this.project.status = this.status;
+              this.status = null;
+            }
+            if (Type === 6) {
+              this.project.Windows = this.windows;
+              this.windows = null;
+            }
+            if (Type === 7) {
+              this.project.Mac = this.mac;
+              this.mac = null;
+            }
+            if (Type === 8) {
+              this.project.Linux = this.linux;
+              this.linux = null;
+            }
           }
-          if (Type === 1) {
-            this.project.budget = this.budget;
-            this.budget = null;
-          }
-          if (Type === 2) {
-            this.project.charger_name = this.charger_name;
-            this.charger = null;
-          }
-          if (Type === 4) {
-            this.project.client.client_name = this.client_name;
-            this.client = null;
-          }
-          if (Type === 5) {
-            this.project.status = this.status;
-            this.status = null;
-          }
-          if (Type === 6) {
-            this.project.Windows = this.windows;
-            this.windows = null;
-          }
-          if (Type === 7) {
-            this.project.Mac = this.mac;
-            this.mac = null;
-          }
-          if (Type === 8) {
-            this.project.Linux = this.linux;
-            this.linux = null;
-          }
-          
-        }
-      }).catch(({data})=>{
-        thsi.$message.error(data.msg);
-      });
+        })
+        .catch(({ data }) => {
+          thsi.$message.error(data.msg);
+        });
     }
   }
 };
