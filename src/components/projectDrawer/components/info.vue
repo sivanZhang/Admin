@@ -508,6 +508,7 @@ export default {
           }
         });
         this.$emit("refresh_assetList");
+        return;
       }
       if (Type === 4) {
         this.editing5 = false;
@@ -570,10 +571,11 @@ export default {
           }
         });
         this.$emit("refresh_assetList");
+        return;
       }
       if(Type === 10){
         
-        this.editing10 = false;
+        this.editing11 = false;
         data = {
           method: "put",
           id: this.project.id,
@@ -583,11 +585,12 @@ export default {
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.project.start_date = dataFormat(this.start_date);
+            this.project.start_date = this.start_date/1000;
             this.start_date = null;
           }
         });
         this.$emit("refresh_assetList");
+        return;
       }
       if(Type === 11){
         
@@ -601,11 +604,12 @@ export default {
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.project.end_date = dataFormat(this.end_date);
+            this.project.end_date = this.end_date/1000;
             this.end_date = null;
           }
         });
         this.$emit("refresh_assetList");
+        return;
       }
 
       putProjects(data)
