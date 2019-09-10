@@ -17,8 +17,7 @@
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
             style="width: 50px;height: 30px;"
-            @click.native="show(scope.row.id)"
-          >
+          ><!-- @click.native="show(scope.row.id)" -->
             <div slot="placeholder" class="image-slot">
               加载中
               <span class="dot">...</span>

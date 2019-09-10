@@ -407,7 +407,7 @@ export default {
       tableLoading: false, //表格加载状态
       total: 0,
       pageCount: 0,
-      TaskList: null,
+      TaskList: [],
       DeptUsers: [],
       keyword: "",
       isDialogShow: false,
