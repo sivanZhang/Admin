@@ -19,7 +19,7 @@
         <el-table-column prop="dept" label="工种" align="left">
           <template slot-scope="scope">
             <div style="float:left;padding:5px" v-for="(item,index) of scope.row.dept" :key="index">
-              <span @click="jump(item.id)">{{item.name}}</span>
+              <span @click="jump(item.id)" style="cursor: pointer">{{item.name}}</span>
             </div>
           </template>
         </el-table-column>

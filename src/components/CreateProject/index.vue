@@ -73,32 +73,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="起止日期" required>
-          <el-col :span="11">
-            <el-form-item prop="start">
-              <el-date-picker
-                type="date"
-                placeholder="项目开始日期"
-                v-model="ProjectForm.start"
-                style="width: 100%;"
-                :picker-options="pickerBeginDateBefore"
+        <el-form-item label="起止日期" required prop="datetime">
+          <el-date-picker
+                v-model="ProjectForm.datetime"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                style="width:100%"
                 format="yyyy/MM/dd"
+               
               ></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2">-</el-col>
-          <el-col :span="11">
-            <el-form-item prop="end">
-              <el-date-picker
-                type="date"
-                placeholder="项目结束日期"
-                v-model="ProjectForm.end"
-                style="width: 100%;"
-                :picker-options="pickerBeginDateAfter"
-                format="yyyy/MM/dd"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
         </el-form-item>
         <el-form-item class="subbtn">
           <el-button @click="cancel">取消</el-button>
@@ -181,27 +166,7 @@ export default {
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      pickerBeginDateBefore: {
-        disabledDate: time => {
-          let beginDateVal = this.ProjectForm.end;
-          if (beginDateVal) {
-            return time.getTime() > beginDateVal;
-          } else {
-            return (
-              time.getTime() <
-              new Date(new Date().toLocaleDateString()).getTime()
-            );
-          }
-        }
-      },
-      pickerBeginDateAfter: {
-        disabledDate: time => {
-          let beginDateVal = this.ProjectForm.start;
-          if (beginDateVal) {
-            return time.getTime() < beginDateVal;
-          }
-        }
-      },
+      
       isShowNext: false,
       id:null
     };
@@ -230,8 +195,8 @@ export default {
         if (valid) {
           const Data = {
             ...this.ProjectForm,
-            start: this.ProjectForm.start.toLocaleDateString(),
-            end: this.ProjectForm.end.toLocaleDateString()
+            start: this.ProjectForm.datetime[0].toLocaleDateString(),
+            end: this.ProjectForm.datetime[1].toLocaleDateString()
           };
           addProjects(Data).then(({ data }) => {
             this.$message.success(data.msg);

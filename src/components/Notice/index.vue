@@ -83,6 +83,7 @@
                   <router-link
                     :to="`/admin/roles`"
                     :disabled="$store.state.login.userInfo.auth.manage_role"
+                    style="cursor: pointer;"
                   >{{item.name}}</router-link>
                 </el-tooltip>
                 <div v-else>{{item.name}}</div>

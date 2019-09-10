@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column prop="asset.name" label="所属资产" show-overflow-tooltip></el-table-column>
       <el-table-column prop="user.username" label="提交人"></el-table-column>
-      <el-table-column prop="dept.name" label="工种"></el-table-column>
+      <el-table-column prop="task.dept.name" label="工种"></el-table-column>
       <el-table-column label="提交日期">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
