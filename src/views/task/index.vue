@@ -320,7 +320,7 @@
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
           <el-table-column  label="项目" header-align="left" show-overflow-tooltip>
              <template slot-scope="scope">
-               <router-link :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
+               <router-link style="cursor: pointer;" :to="`/projects/project-detail/${scope.row.project.id}`">{{scope.row.project.name}}</router-link>
              </template> 
           </el-table-column>
           <el-table-column prop="asset.name" label="镜头" header-align="left" show-overflow-tooltip></el-table-column>
