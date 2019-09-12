@@ -123,8 +123,8 @@ export default {
   },
 
   methods: {
-    activename(val){
-      this.activeName = val;
+    activename(){
+      this.activeName = "first";
     },
     handleClick(tab, event) {
       console.log(tab, event);
