@@ -4,84 +4,48 @@
       <el-col :span="10">
         <el-image
           class="mini-image"
-          :src="project.image?$store.state.BASE_URL+project.image:''"
+          :src="TaskDetail.project.image?$store.state.BASE_URL+TaskDetail.project.image:''"
           fit="cover"
           style="width: 170px;height: 120px;float: left;margin-right: 10px"
         ></el-image>
       </el-col>
       <el-col :span="4">
         <div>项目名称：</div>
-        <div>名称：</div>
-        <div>开始日期：</div>
-        <div>结束日期：</div>
-        <div>工时：</div>
-        <div>状态：</div>
+        <div>所属资产：</div>
+        
       </el-col>
       <el-col :span="10">
-        <div>{{project.name}}</div>
-        <div>{{asset.name?asset.name:"-"}}</div>
-        <div>{{detail.start_date|dateFormat}}</div>
-        <div>{{detail.end_date|dateFormat}}</div>
-        <div>{{detail.total_hour}}小时</div>
-        <div>{{detail.status|taskStatus}}</div>
+        <div>{{TaskDetail.project.name}}</div>
+        <div>{{TaskDetail.asset.name?TaskDetail.asset.name:"-"}}</div>
+        
       </el-col>
     </el-row>
-    <div style="padding-top:20px">
-      <el-row style="height:120px">
-        <el-col :span="4">
-          <span style="font-size:14px">制作内容：</span>
-        </el-col>
-        <el-col :span="20" style>{{detail.content}}</el-col>
-      </el-row>
-    </div>
-    <div style="padding-top:20px">
-      <el-row style="border:2px solid #999999;height:160px">
-        <el-col :span="4">
-          <span style="font-size:14px">任务反馈：</span>
-        </el-col>
-        <el-col :span="20" style></el-col>
-      </el-row>
-    </div>
     <div>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="任务执行记录" name="first">
-          <el-form
-            ref="taskRecord"
-            :model="taskRecord"
-            label-width="100px"
-            label-position="left"
-            :rules="rules"
-          >
-            <el-form-item label="任务状态" prop="status">
-              <el-radio v-model="taskRecord.status" label="0">进行中</el-radio>
-              <el-radio v-model="taskRecord.status" label="1">完成</el-radio>
-            </el-form-item>
-            <el-form-item label="标题" prop="title" >
-              <el-input v-model="taskRecord.title" :disabled="taskRecord.status>0?true:false"></el-input>
-            </el-form-item>
-            <el-form-item label="完成任务" prop="content" >
-              <el-input type="textarea" v-model="taskRecord.content" :disabled="taskRecord.status>0?true:false"></el-input>
-            </el-form-item>
-            <el-form-item label="工时" prop="labor_hour">
-              <el-input v-model="taskRecord.labor_hour" :disabled="taskRecord.status>0?true:false">
-                <span slot="append">小时</span>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="完成进度" prop="schedule" >
-              <el-slider v-model="taskRecord.schedule" :disabled="taskRecord.status>0?true:false"></el-slider>
-            </el-form-item>
-
-            <el-form-item label="完成情况说明" prop="comment">
-              <el-input
-                v-model="taskRecord.comment"
-                type="textarea"
-                :disabled="taskRecord.status>0?false:true"
-              ></el-input>
-            </el-form-item>
-            <el-form-item class="subbtn" align="right">
-              <el-button type="primary" @click="submitForm(taskRecord.status)">提交审批</el-button>
-            </el-form-item>
-          </el-form>
+        <el-tab-pane label="任务详情" name="first">
+          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
+        </el-tab-pane>
+        <el-tab-pane label="执行记录" name="second">
+          <tabLog :loglist="LogList" :logsLoading="logsLoading" />
+        </el-tab-pane>
+        <el-tab-pane label="执行任务" name="third">
+          <task-form
+            :task-record.sync="TaskRecord"
+            :createLoading="createLoading"
+            @addRecord="addRecord"
+            @cancel="cancel"
+          />
+        </el-tab-pane>
+        <el-tab-pane label="提交审核" name="fourth">
+          <tab-approve
+            v-if="activeRow.task && activeRow.task.status === 4"
+            :row="activeRow"
+            @refresh="getMyTasks"
+          />
+          <div v-else style="display:flex;justify-content:center">请先完成任务</div>
+        </el-tab-pane>
+        <el-tab-pane label="审批记录" name="fifth">
+          <approve-log ref="taskApprovelog" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -90,80 +54,82 @@
 
 <script>
 import { addTaskRecord } from "@/api/task";
+import taskForm from "@/views/task/components/task-form";
+import tabLog from "@/views/task/components/tab-log";
+import tabApprove from "@/views/task/components/tab-approve";
+import tabTaskDtail from "@/views/task/components/tab-task-detail";
+import approveLog from "@/views/video/components/approve-log";
 export default {
   name: "detail",
-  props: ["detail", "project", "asset"],
+  props: ["LogList", "detailLoading", "logsLoading", "TaskRecord", "activeRow","TaskDetail"],
   data() {
     return {
       activeName: "first",
-      taskRecord: {
-        status:"0"
-      },
 
       rules: {
         title: [
           {
-           
             message: "请输入任务执行记录的标题",
             trigger: "blur"
           }
         ],
         content: [
           {
-            
             message: "请输入任务执行记录的内容",
             trigger: "blur"
           }
         ],
-        labor_hour: [
-          {  message: "请输入任务执行的工时", trigger: "blur" }
-        ]
+        labor_hour: [{ message: "请输入任务执行的工时", trigger: "blur" }]
       },
       rules2: {
-        comment: [
-          {  message: "请输入任务完成情况说明", trigger: "blur" }
-        ]
+        comment: [{ message: "请输入任务完成情况说明", trigger: "blur" }]
       }
     };
   },
-  methods: {
-    submitForm(Type) {
-      if (Type === "0") {
-        this.$refs["taskRecord"].validate(valid => {
-          if (valid) {
-            const Data = {
-              ...this.taskRecord,
-              task_id: this.detail.id,
-              type:0 ,
-              
-            };
-            console.log(Data);
-            addTaskRecord(Data).then(({ data }) => {
-              if(data.status === 0)
-                this.$message(data.msg);
-            });
-          }
-        });
-      } else {
-        this.$refs["taskRecord"].validate(valid => {
-          if (valid) {
-            const Data2 = {
-              ...this.taskRecord,
-              task_id: this.detail.id,
-              type: 1
-            };
-            console.log(Data2);
-            addTaskRecord(Data2).then(({ data }) => {
-              if(data.status === 0)
-                this.$message(data.msg);
-            });
-          }
-        });
+  components: {
+    tabApprove,
+    taskForm,
+    tabLog,
+    tabTaskDtail,
+    approveLog
+  },
+  watch:{
+    activeName:{
+      handler:function(newVal,oldVal){
+        if(newVal === "fifth"){
+          this.$refs['taskApprovelog'].getApproveLog(TaskDetail.id);
+        }
       }
     }
   },
-  mounted(){
-    document.body.style.minWidth = 'auto'
+  methods: {
+    addRecord() {
+            this.createLoading = true;
+            
+                addTaskRecord(this.TaskRecord)
+                    .then(res => {
+                        if (res.data.status === 0) {
+                            this.$message.success(res.data.msg);
+                            this.getMyTasks()
+                        } else {
+                            this.$message.warning(res.data.msg);
+                        }
+                        this.$emit("activename",first);
+                        this.createLoading = false;
+                        
+                    })
+                    .catch(err => {
+                        this.createLoading = false;
+                        this.$emit("activename",first);
+                    });
+            
+        },
+        cancel() {
+            this.isDialogShow = false;
+        },
+  },
+  mounted() {
+    document.body.style.minWidth = "auto";
   }
 };
 </script>

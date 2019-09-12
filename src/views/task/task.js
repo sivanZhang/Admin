@@ -3,7 +3,8 @@ import {
     addTaskRecord,
     putTaskRecord,
     queryTaskRecord,
-    queryTask
+    queryTask,
+    getStatusTaskList
 } from "@/api/task";
 import draggable from "vuedraggable"
 import taskForm from './components/task-form'
@@ -11,7 +12,6 @@ import tabLog from "./components/tab-log"
 import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
 import approveLog from "@/views/video/components/approve-log";
-import { getStatusTaskList } from "@/api/task"
 export default {
     components: {
         draggable,
