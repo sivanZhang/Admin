@@ -12,12 +12,10 @@
       <el-col :span="4">
         <div>项目名称：</div>
         <div>所属资产：</div>
-        
       </el-col>
       <el-col :span="10">
         <div>{{TaskDetail.project.name}}</div>
         <div>{{TaskDetail.asset.name?TaskDetail.asset.name:"-"}}</div>
-        
       </el-col>
     </el-row>
     <div>
@@ -61,7 +59,14 @@ import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "@/views/video/components/approve-log";
 export default {
   name: "detail",
-  props: ["LogList", "detailLoading", "logsLoading", "TaskRecord", "activeRow","TaskDetail"],
+  props: [
+    "LogList",
+    "detailLoading",
+    "logsLoading",
+    "TaskRecord",
+    "activeRow",
+    "TaskDetail"
+  ],
   data() {
     return {
       activeName: "first",
@@ -93,40 +98,38 @@ export default {
     tabTaskDtail,
     approveLog
   },
-  watch:{
-    activeName:{
-      handler:function(newVal,oldVal){
-        if(newVal === "fifth"){
-          this.$refs['taskApprovelog'].getApproveLog(TaskDetail.id);
+  watch: {
+    activeName: {
+      handler: function(newVal, oldVal) {
+        if (newVal === "fifth") {
+          this.$refs["taskApprovelog"].getApproveLog(TaskDetail.id);
         }
       }
     }
   },
   methods: {
     addRecord() {
-            this.createLoading = true;
-            
-                addTaskRecord(this.TaskRecord)
-                    .then(res => {
-                        if (res.data.status === 0) {
-                            this.$message.success(res.data.msg);
-                            this.getMyTasks()
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                        this.$emit("activename",first);
-                        this.createLoading = false;
-                        
-                    })
-                    .catch(err => {
-                        this.createLoading = false;
-                        this.$emit("activename",first);
-                    });
-            
-        },
-        cancel() {
-            this.isDialogShow = false;
-        },
+      this.createLoading = true;
+
+      addTaskRecord(this.TaskRecord)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.$message.success(res.data.msg);
+            this.getMyTasks();
+          } else {
+            this.$message.warning(res.data.msg);
+          }
+          this.$emit("activename");
+          this.createLoading = false;
+        })
+        .catch(err => {
+          this.createLoading = false;
+          this.$emit("activename");
+        });
+    },
+    cancel() {
+      this.isDialogShow = false;
+    }
   },
   mounted() {
     document.body.style.minWidth = "auto";
