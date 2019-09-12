@@ -15,7 +15,7 @@
         height="100%"
         @selection-change="selected"
       >
-        <el-table-column v-if="tableData.length" type="selection" width="60" fixed align="center"></el-table-column>
+        <el-table-column v-if="tableData.length" type="selection" fixed align="center"></el-table-column>
         <!-- <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
           <template slot-scope="scope">
             <el-button
@@ -92,6 +92,7 @@
           </template>
           <template v-else>
             <el-cascader
+            style="margin-bottom:5px;"
               v-model="tempDept"
               placeholder="输入搜索工种"
               :options="SelectDept"
@@ -116,9 +117,10 @@
           </template>
         </el-col>
       </el-row>
-      <div style="text-align:center;margin-top:20px">
-        <el-button type="danger" @click="cancelMapping">清空字段</el-button>
-        <el-button type="primary">绑定字段</el-button>
+      <div style="margin-top:20px">
+        <el-button type="danger" @click="deleteCol">删除本列</el-button>
+        <el-button type="warning" @click="cancelMapping">清空字段</el-button>
+        <!-- <el-button type="primary">绑定字段</el-button> -->
       </div>
     </el-dialog>
   </div>
@@ -129,6 +131,7 @@ export default {
   name: "ImportTableTemplate",
   data() {
     return {
+      columnIndex:'',//点击后返回的列index
       isShowOptionBar: false,
       dialogVisible: false,
       assemblingData: {},
@@ -138,7 +141,7 @@ export default {
       keysMap: [], //绑定字段,
       allKeysMap: [],
       dealKeys: [], //原始keys
-      tableCols: [], //表格头
+      tableCols: [], //列
       tableData: [], //表格数据
       selectKey: null,
       selectCurrentCol: { label: "" }, //选中的当前列
@@ -174,9 +177,15 @@ export default {
     ...mapState("admin", ["DeptList"])
   },
   methods: {
-    selected(e, index) {
+    deleteCol(){
+      this.tableCols.splice(this.columnIndex,1)
+      this.cancelMapping()
+    },
+    //表格复选按钮选中的行对象保存
+    selected(e) {
       this.selection = [...e];
     },
+    //删除勾选的行对象
     deleteRow() {
       if(!this.selection.length){
         this.$message.warning('请勾选行')
@@ -416,8 +425,6 @@ export default {
         data.isEdit = false;
         this.tableData.push(data);
       }
-      console.log("this.tableData", this.tableData);
-
       this.tableLoading = false;
     },
     /**
@@ -436,7 +443,7 @@ export default {
 
         this.dialogVisible = false;
       } else {
-        this.$message.error("改字段已有绑定过");
+        this.$message.error("该字段已有绑定过");
       }
     },
     //取消绑定
@@ -470,15 +477,6 @@ export default {
           style: "cursor:pointer;"
         },
         [
-          /* h("el-checkbox", {
-            style: "display:inline-flex;margin-left:5px;",
-            class: "1111",
-            on: {
-              change: $event => {
-                console.log("选中：", _self.tableCols[column.index]);
-              }
-            }
-          }), */
           h("div", {}, [
             h(
               "p",
@@ -486,7 +484,7 @@ export default {
                 style: "height:17px;",
                 on: {
                   click: function() {
-                    console.log(_self.tableCols[column.index]);
+                    _self.columnIndex=column.index
                     if (_self.tableCols[column.index]) {
                       _self.selectCurrentCol = column;
                       _self.dialogVisible = true;
@@ -503,7 +501,7 @@ export default {
                 style: "height:30px;",
                 on: {
                   click: function() {
-                    console.log(_self.tableCols[column.index]);
+                    _self.columnIndex=column.index
                     if (_self.tableCols[column.index]) {
                       _self.selectCurrentCol = column;
                       _self.dialogVisible = true;
