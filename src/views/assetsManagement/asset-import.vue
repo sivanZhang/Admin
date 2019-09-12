@@ -3,12 +3,26 @@
     <div style="padding-bottom:15px;">
       <input class="file_inp" ref="file_inp" accept=".xlsx" type="file" @change="importExcel" />
       <el-button
+        icon="el-icon-delete-solid"
+        type="danger"
+        @click="deleteTableRow()"
+        class="pan-btn red-btn"
+        size="mini"
+      >删除已选</el-button>
+      <el-button
         icon="el-icon-circle-plus"
         type="success"
         @click="openFile"
         class="pan-btn green-btn"
         size="mini"
       >添加Excel</el-button>
+      <el-button
+        icon="el-icon-refresh-left"
+        type="success"
+        @click="importAsset(1)"
+        class="pan-btn green-btn"
+        size="mini"
+      >清空表格</el-button>
       <el-button
         icon="el-icon-upload"
         type="success"
@@ -18,6 +32,7 @@
         :loading="uploadLoading"
         :disabled="uploadDisabled"
       >上传</el-button>
+      
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
   </div>
@@ -49,6 +64,9 @@ export default {
         level: "难度等级（简单、标准、难）",
         session: "场次",
         frame: "帧数",
+        frame_range: "帧数范围",
+        report:"画面调整信息",
+        retime:"变速信息",
         episode: "集数",
         links: "资产的制作环节",
         asset: "资产",
@@ -64,6 +82,9 @@ export default {
     openFile() {
       this.$refs.file_inp.click();
     },
+    deleteTableRow(){
+      this.$refs.tableTemplate.deleteRow()
+    },
     //导入excel 变异为数组
     importExcel(e) {
       if (!e.target.files) {
@@ -78,7 +99,7 @@ export default {
         this.testDataJSON = [...data.msg];
         this.importAsset();
         this.uploadDisabled = false;
-        obj.value = null; //可以重新导入同一个表
+       e.target.value = null; //可以重新导入同一个表
       });
     },
     //获得编辑后的数据
@@ -110,8 +131,17 @@ export default {
           this.uploadLoading = false;
         });
     },
-    //导入数据
-    importAsset() {
+    //导入数据 type=1表示重置
+    importAsset(type) {
+      if (type === 1) {
+        this.$refs.tableTemplate.initData({
+          reset:true,
+          datas: [],
+          keysMap: {},
+          requiredKeysMap: {}
+        });
+        return;
+      }
       let data = {
         datas: this.testDataJSON,
         keysMap: this.keysMap,

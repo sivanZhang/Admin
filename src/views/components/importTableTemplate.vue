@@ -13,8 +13,10 @@
         @cell-dblclick="dblhandleCurrentChange"
         style="width: 100%;"
         height="100%"
+        @selection-change="selected"
       >
-        <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
+        <el-table-column v-if="tableData.length" type="selection" width="60" fixed align="center"></el-table-column>
+        <!-- <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="deleteRow(scope.$index, tableData)"
@@ -22,7 +24,7 @@
               size="small"
             >移除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <template v-for="(col ,index) in tableCols">
           <el-table-column
             v-if="col.type==='normal'"
@@ -53,6 +55,7 @@
           </el-table-column>
         </template>
       </el-table>
+      <div class="text-right">共{{tableData.length}}条数据</div>
       <!-- <el-row style="margin-top:15px">
         <el-button type="primary">添加到环节</el-button>
         <el-button type="success" @click="mergeCell()">合并单元格</el-button>
@@ -163,13 +166,26 @@ export default {
         }
       ],
       selectLinkDetail: null,
-      hasBindLinkKey: []
+      hasBindLinkKey: [],
+      selection: []
     };
   },
   computed: {
     ...mapState("admin", ["DeptList"])
   },
   methods: {
+    selected(e, index) {
+      this.selection = [...e];
+    },
+    deleteRow() {
+      if(!this.selection.length){
+        this.$message.warning('请勾选行')
+      }
+      this.tableData=this.tableData.filter((t, i) => {
+        return !this.selection.includes(t)
+      });
+      this.selection = []
+    },
     //绑定工种字段
     linkChanged(value) {
       let _self = this;
@@ -295,7 +311,7 @@ export default {
         {
           label: "必填字段",
           options: Object.keys(data.requiredKeysMap),
-          obj:{...data.requiredKeysMap}
+          obj: { ...data.requiredKeysMap }
         },
         {
           label: "非必填字段",
@@ -310,7 +326,7 @@ export default {
         this.dealKeys.push(key);
       }
 
-      this.getTableHeader();
+      this.getTableHeader(data.reset);
     },
     //获取传递的数据
     getAssemblingData() {
@@ -355,9 +371,9 @@ export default {
       this.$emit("returnAssemblingData", this.assemblingData);
     },
     /**
-     * 组装表格头
+     * 组装表格头  bl = 是否重置表格
      */
-    getTableHeader() {
+    getTableHeader(bl) {
       //表格头
       this.tableCols = [];
       //加载中文字
@@ -384,6 +400,7 @@ export default {
       } else {
         this.tableLoading = false;
         this.isShowOptionBar = false;
+        if (bl) return;
         this.$message.error("导入的数据是空数据");
       }
     },
@@ -501,9 +518,6 @@ export default {
         ]
       );
     },
-    deleteRow(index, rows) {
-      rows.splice(index, 1);
-    },
     mergeCell() {
       this.$message.error("开发中");
       var inputs = document.getElementsByTagName("input");
@@ -526,4 +540,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.text-right {
+  color: #2d8cf0;
+  text-align: right;
+  font-size: 16px;
+}
 </style>
