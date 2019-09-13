@@ -216,11 +216,11 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               format="yyyy/MM/dd"
-              
+              @change="changeTime()"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="总工时" prop="total_hour">
-            <el-input v-model="TaskForm['total_hour']"></el-input>
+            <el-input v-model="TaskForm.total_hour"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="cancel2">取消</el-button>
@@ -296,11 +296,11 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
-            
+            @change="changeTime()"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour" oninput="value=value.replace(/[^\d.]/g,'')">
-          <el-input v-model="TaskForm['total_hour']"></el-input>
+          <el-input v-model="TaskForm.total_hour"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -495,6 +495,17 @@ export default {
     }
   },
   methods: {
+    changeTime(val){
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      const totalHour = (this.TaskForm.datetime[1] - this.TaskForm.datetime[0])/(1000 * 3600 * 24);
+      this.TaskForm={
+        ...this.TaskForm,
+        total_hour: 8*totalHour
+      };
+      
+    },
     handleTabClick(tab, event) {
       //this.getRemarkList();
       console.log(tab, event);
