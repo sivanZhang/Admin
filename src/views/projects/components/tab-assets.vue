@@ -354,6 +354,8 @@ export default {
         this.project = { ...[...data.msg][0], id };
       });
       this.$refs.assetsDrawer.getLinkList(id);
+      // this.$refs.assetsDrawer.getAssetVersion(id);
+      this.$refs.assetsDrawer.getAssetTask(id);
       const msg = {
         appid: id,
         apptype: 5

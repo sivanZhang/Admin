@@ -16,10 +16,50 @@
           <el-tab-pane label="评论" name="second">
             <remarks :project="project" :RemarksData="RemarksData" />
           </el-tab-pane>
-          <el-tab-pane label="链接" name="third"></el-tab-pane>
-          <el-tab-pane label="相关版本" name="fifth"></el-tab-pane>
+          <el-tab-pane label="链接" name="third">
+            <el-table
+              ref="assetTable"
+              :data="assetTaskList"
+              style="width: 100%"
+              border
+              :stripe="true"
+              :row-style="{'font-size':'13px'}"
+              :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+              highlight-current-row
+              row-class-name="hover"
+            >
+              <el-table-column label="任务ID" prop="id" align="left"></el-table-column>
+              <el-table-column label="名称" prop="name" align="left"></el-table-column>
+              <el-table-column label="制作环节" prop="link_dept_name" align="left" show-overflow-tooltip></el-table-column>
+              <el-table-column label="制作内容" prop="content" align="left" show-overflow-tooltip></el-table-column>
+              <el-table-column label="创建时间" align="left" width="90px">
+                <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="开始时间" align="left" width="90px">
+                <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="结束时间" align="left" width="90px">
+                <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="操作" align="center">
+                <template slot-scope="scope">
+                  <el-tooltip content="打开任务" placement="top">
+                    <el-button
+                      @click="openTaskDetail(scope.row)"
+                      icon="el-icon-top-right"
+                      type="text"
+                      style="color:blue"
+                    />
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="相关版本" name="fifth">
+            <!-- {{assetVersion}} -->
+            </el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
-            <info :project="project" @refresh_assetList="getAssetList"/>
+            <info :project="project" @refresh_assetList="getAssetList" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -32,28 +72,50 @@ import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
-
-import { constants } from "crypto";
+import { getVersion } from "@/api/assets";
+import { getAssetTaskList } from "@/api/task";
 export default {
   name: "assets-drawer",
   props: ["project", "RemarksData"],
   data() {
     return {
       activeTab: "first",
-      LinkList: []
+      LinkList: [],
+      assetVersion: null,
+      assetTaskList: null
     };
-  },components: { remarks, info, links },
+  },
+  components: { remarks, info, links },
   methods: {
     getAssetList() {
       this.$emit("refresh_assetList");
     },
     getLinkList(id) {
-      let asset = id ||this.project.id
+      let asset = id || this.project.id;
       getLinks({
         asset
       }).then(res => {
         this.LinkList = [...res.data.msg];
       });
+    },
+    getAssetVersion(id) {
+      getVersion({
+        asset_id: id
+      }).then(({ data }) => {
+        this.assetVersion = [...data.msg];
+      });
+    },
+    getAssetTask(id) {
+      getAssetTaskList({
+        asset_id: id
+      }).then(({ data }) => {
+        this.assetTaskList = [...data.msg];
+      });
+    },
+    openTaskDetail(row){
+      const path = "/projects/project-detail/"+row.project.id+"/?tab=tab2";
+      //console.log(path);
+      this.$router.push(path);
     }
   }
 };

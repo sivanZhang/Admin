@@ -51,3 +51,7 @@ export function getStatusTaskList(params) {
 export function taskApprove(data) {
     return AXIOS.post('/approve/approve_submit/', data)
 }
+//根据资产ID查询任务列表
+export function getAssetTaskList(params){
+    return AXIOS.get('/task/task/',{params})
+}
