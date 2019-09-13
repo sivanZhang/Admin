@@ -354,6 +354,8 @@ export default {
         this.project = { ...[...data.msg][0], id };
       });
       this.$refs.assetsDrawer.getLinkList(id);
+      // this.$refs.assetsDrawer.getAssetVersion(id);
+      this.$refs.assetsDrawer.getAssetTask(id);
       const msg = {
         appid: id,
         apptype: 5
@@ -550,7 +552,7 @@ export default {
   cursor: pointer;
 }
 #asset-list {
-  min-height: calc(100vh - 199px);
+ min-height: calc(100vh - 199px);
   & /deep/ .el-table--border th,
   & /deep/ .el-table--border td {
     /*zjw*/
