@@ -8,7 +8,7 @@
     >任务审核</el-button>
     <el-table
       :data="AuditList"
-      style="margin-top:20px"
+      style="margin-top:20px;width:100%"
       highlight-current-row
       @row-click="taskBoardRightShow"
       @select="taskSelect"

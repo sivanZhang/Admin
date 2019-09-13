@@ -95,7 +95,7 @@
                 :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
                 highlight-current-row
                 row-class-name="hover"
-                width="100%"
+                style="width: 100%"
                 :row-key="(row)=>{ return row.id}"
                 @selection-change="handleAddSelectionChange"
               >
@@ -137,7 +137,7 @@
                 :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
                 highlight-current-row
                 row-class-name="hover"
-                width="100%"
+                style="width: 100%"
                 @selection-change="handleDelSelectionChange"
               >
                 <el-table-column type="selection" width="30" align="center"></el-table-column>
@@ -179,7 +179,7 @@
             :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
             highlight-current-row
             row-class-name="hover"
-            width="100%"
+            style="width: 100%"
             @selection-change="handleDelUserSelectionChange"
           >
             <el-table-column type="selection" width="40" align="center"></el-table-column>

@@ -14,7 +14,7 @@
         :data="tableData"
         border
         @cell-dblclick="dblhandleCurrentChange"
-        style="height:100%"
+        style="height:100%,width:100%"
       >
         <el-table-column v-if="isShowOptionBar" fixed="left" label="操作" width="100" align="center">
           <template slot-scope="scope">

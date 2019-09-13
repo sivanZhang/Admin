@@ -315,6 +315,7 @@
           highlight-current-row
           borders
           @row-click="taskBoardRightShow"
+          style="width: 100%;"
         >
           <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>

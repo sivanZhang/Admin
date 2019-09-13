@@ -38,6 +38,7 @@
           :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
           highlight-current-row
           row-class-name="hover"
+          style="width: 100%;"
         >
           <el-table-column prop="project.name" label="项目" align="center"></el-table-column>
           <el-table-column prop="task.name" label="任务" align="left"></el-table-column>

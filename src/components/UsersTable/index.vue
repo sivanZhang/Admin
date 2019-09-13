@@ -6,6 +6,7 @@
         :row-style="{'font-size':'13px'}"
         :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
         v-loading="tableLoading"
+        style="width: 100%"
       >
         <el-table-column label="头像" width="80" align="center">
           <template slot-scope="scope">
