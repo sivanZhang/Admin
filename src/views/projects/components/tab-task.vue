@@ -38,7 +38,7 @@
       </el-row>
       <el-table
         :data="TaskList"
-        style="margin-top:20px,width:100%"
+        style="margin-top:15px;width:100%"
         highlight-current-row
         :tree-props="{ children: 'sub_task' }"
         @current-change="rowSelected"

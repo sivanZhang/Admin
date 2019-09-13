@@ -3,16 +3,18 @@
     <router-link to="/task/task/">
       <div :class="[{active:activeIndex==1},'main-menu']">我的</div>
     </router-link>
-    <el-popover placement="bottom" width="900" trigger="click">
+    <el-popover placement="bottom" trigger="click">
       <el-row>
         <el-col :span="12">
-          <div>
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            <input placeholder="请输入内容" />
-          </div>
+          <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="input2"></el-input>
         </el-col>
         <el-col :span="12" style="text-align:right">
-          <el-button type="primary" v-if="$store.state.login.userInfo.auth.manage_project" @click="isCreateShow=true" icon="el-icon-plus">创建项目</el-button>
+          <el-button
+            type="primary"
+            v-if="$store.state.login.userInfo.auth.manage_project"
+            @click="isCreateShow=true"
+            icon="el-icon-plus"
+          >创建项目</el-button>
         </el-col>
         <el-col :span="24">
           <el-row class="list-title" :gutter="20">
@@ -31,7 +33,7 @@
                   </router-link>
                 </div>
               </template>
-              <div v-else class="title">暂无数据</div>
+              <div v-else>暂无数据</div>
             </el-col>
             <el-col :span="8" v-if="MyProject.length?true:false">
               <div v-for="(todo,index) of MyProject.filter((item,index)=>index<=9)" :key="index">
@@ -39,18 +41,22 @@
               </div>
               <!-- <router-link v-if="MyProject && MyProject.length>10" to="/">
                 <el-button type="text">查看更多..</el-button>
-              </router-link> -->
+              </router-link>-->
             </el-col>
-            <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
+            <el-col :span="8" v-else>
+              <div>暂无数据</div>
+            </el-col>
             <el-col :span="8" v-if="ProjectList?true:false">
               <div v-for="(item,index) of ProjectList.filter((item,index)=>index<=9)" :key="index">
                 <div class="title" @click="targetDetail(item)">{{item.name}}</div>
               </div>
               <!-- <router-link v-if="ProjectList && ProjectList.length>10" to="/">
                 <el-button type="text">查看更多..</el-button>
-              </router-link> -->
+              </router-link>-->
             </el-col>
-            <el-col :span="8" v-else><div class="title">暂无数据</div></el-col>
+            <el-col :span="8" v-else>
+              <div>暂无数据</div>
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -94,7 +100,7 @@ export default {
     })
   },
   methods: {
-    getProject(){
+    getProject() {
       this.getMyTask();
       this.$store.dispatch("project/get_Projects");
     },

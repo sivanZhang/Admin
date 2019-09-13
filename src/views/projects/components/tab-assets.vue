@@ -550,7 +550,7 @@ export default {
   cursor: pointer;
 }
 #asset-list {
-  min-height: calc(100vh - 159px);
+  min-height: calc(100vh - 199px);
   & /deep/ .el-table--border th,
   & /deep/ .el-table--border td {
     /*zjw*/

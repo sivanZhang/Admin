@@ -1,5 +1,6 @@
 <template>
   <div>
+    <label for="">项目名称: {{$route.query['p']}}</label>
     <el-tabs v-model="activeName">
       <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
