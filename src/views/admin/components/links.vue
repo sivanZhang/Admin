@@ -312,7 +312,7 @@ export default {
           } else {
             role_id = item.entity_id.role_id;
           }
-          this.updateForm.splice(index, 0, {
+          this.updateForm.splice(index, 1, {
             level: index + 1,
             role_id,
             type: this.updateList[index].type
