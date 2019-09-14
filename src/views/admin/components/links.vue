@@ -1,12 +1,7 @@
 <template>
   <div id="links">
     <template v-if="!LinkTemplateList.length">
-      <el-button
-        icon="el-icon-plus"
-        type="primary"
-        @click="showLinkWKForm"
-        v-if="DeptAuth"
-      >添加审批流程</el-button>
+      <el-button icon="el-icon-plus" type="primary" @click="showLinkWKForm" v-if="DeptAuth">添加审批流程</el-button>
     </template>
     <template v-else>
       <el-button icon="el-icon-edit" type="success" @click="editLinkWKForm" v-if="DeptAuth">修改审批流程</el-button>
@@ -36,6 +31,7 @@
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
         <el-col :span="18">
+          {{item}}
           <el-form :model="item" label-width="90px">
             <el-form-item
               label="审批类型"
@@ -110,7 +106,7 @@
               prop="type"
               :rules="[{ required: true, message: '请选择审批类型', trigger: 'blur' }]"
             >
-              <el-radio-group v-model="item.type" >
+              <el-radio-group v-model="item.type">
                 <el-radio :label="1">用户</el-radio>
                 <el-radio :label="0">角色</el-radio>
               </el-radio-group>
@@ -187,11 +183,13 @@ export default {
       rolesList: [],
       value: "",
       updateList: [{}],
-      updateForm: [{
-        level:null,
-        role_id:null,
-        type:null
-      }]
+      updateForm: [
+        {
+          level: null,
+          role_id: null,
+          type: null
+        }
+      ]
     };
   },
   props: ["LinkTemplateList", "deptId", "deptName", "DeptAuth"],
@@ -200,7 +198,6 @@ export default {
   },
 
   methods: {
-    
     //前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
@@ -241,7 +238,7 @@ export default {
     },
     cancel2() {
       this.isUpdateShow = false;
-      this.updateForm=[{}]
+      this.updateForm = [{}];
     },
     submitForm() {
       this.FormList.forEach((item, index) => {
@@ -311,11 +308,11 @@ export default {
         this.updateList.forEach((item, index) => {
           let role_id = null;
           if (item.type === 1) {
-            role_id = this.updateList[index].entity_id.user_id;
+            role_id = item.entity_id.user_id;
           } else {
-            role_id = this.updateList[index].entity_id.role_id;
+            role_id = item.entity_id.role_id;
           }
-          this.updateForm[index] = Object.assign({}, this.updateForm[index], {
+          this.updateForm.splice(index, 0, {
             level: index + 1,
             role_id,
             type: this.updateList[index].type
