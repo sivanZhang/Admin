@@ -36,8 +36,8 @@
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
             >
-              <el-option label="男" value="0">男</el-option>
-              <el-option label="女" value="1">女</el-option>
+              <el-option label="男" value="男">男</el-option>
+              <el-option label="女" value="女">女</el-option>
             </el-select>
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.sex}}</span>
           </template>
