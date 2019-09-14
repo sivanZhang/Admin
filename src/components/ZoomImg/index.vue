@@ -50,7 +50,6 @@ export default {
   box-shadow: 5px 5px 5px #aaaaaa;
   border: 1px solid #aaaaaa;
   .header {
-    width: 1000px;
     height: 30px;
     background: #ffffff;
     font-size: 22px;
