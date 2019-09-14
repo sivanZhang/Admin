@@ -13,9 +13,9 @@
             <el-button
               type="primary"
               @click="openDialog(1)"
-              v-if="$store.state.login.userInfo.auth.manage_role"
+              v-if="perssion"
             >添加用户</el-button>
-            <el-button icon="el-icon-upload2" type="success" @click="openDialog(2)">
+            <el-button icon="el-icon-upload2" type="success" @click="openDialog(2)" v-if="perssion">
               <slot name="import">用户导入</slot>
             </el-button>
           </el-col>
@@ -33,11 +33,10 @@
         </el-row>
       </el-header>
       <el-main style="padding: 0px">
-        <users-table :UserList="UserList"></users-table>
+        <users-table :UserList="UserList" :perssion="perssion" @refresh="getAllUserlist"></users-table>
       </el-main>
     </el-container>
     <el-dialog :visible.sync="dialogShow" :title="dialogName">
-      <!-- username	email	phone sex	password	isactive -->
       <el-form
         :loading="buttonStates.createLoading"
         :model="userForm"
@@ -79,7 +78,7 @@
 
 <script>
 import usersTable from "@/components/UsersTable";
-import { getUserList } from "@/api/admin";
+import { getUserList, getUserPerfession } from "@/api/admin";
 import { addUser } from "@/api/login";
 export default {
   name: "userGroup",
@@ -95,6 +94,7 @@ export default {
       UserList: null,
       dialogShow: false,
       dialogName: null,
+      perssion:null,
       userForm: {
         password: "123456",
         isactive: true
@@ -124,6 +124,10 @@ export default {
         this.UserList = [...data];
         //console.log(this.UserList)
       });
+      getUserPerfession().then(({data})=>{
+        this.perssion = data.auth.admin_management;
+        //console.log(this.perssion)
+      })
     },
     getNullDeptUser() {
       getUserList({ deptid: null }).then(({ data }) => {

@@ -7,16 +7,69 @@
         :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
         v-loading="tableLoading"
         style="width: 100%"
+        highlight-current-row
+        @row-click="handleCurrentChange"
       >
         <el-table-column label="头像" width="80" align="center">
           <template slot-scope="scope">
             <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="姓名" align="left" />
-        <el-table-column prop="sex" label="性别" align="center" width="50" />
-        <el-table-column prop="email" label="邮箱" align="left" />
-        <el-table-column prop="phone" label="电话" align="left" />
+        <el-table-column prop="username" label="姓名" align="left">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.username"
+              placeholder="请输入用户名"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.username}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.username}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sex" label="性别" align="center" width="80">
+          <template slot-scope="scope">
+            <el-select
+              v-model="scope.row.sex"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <el-option label="男" value="0">男</el-option>
+              <el-option label="女" value="1">女</el-option>
+            </el-select>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.sex}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="email" label="邮箱" align="left" width="180px">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.email"
+              placeholder="请输入邮箱"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.email}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.email}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" label="电话" align="left">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.phone"
+              placeholder="请输入电话"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.phone}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.phone}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="dept" label="工种" align="left">
           <template slot-scope="scope">
             <div style="float:left;padding:5px" v-for="(item,index) of scope.row.dept" :key="index">
@@ -28,26 +81,39 @@
         <el-table-column label="是否启用" align="center" width="100">
           <template slot-scope="scope">
             <!-- <el-checkbox v-model="scope.row.is_active" disabled></el-checkbox> -->
-            <i v-if="scope.row.is_active" class="el-icon-check"></i>
-            <i v-else class="el-icon-close"></i>
+            <div v-if="!editing||clickId !== scope.row.id">
+              <i v-if="scope.row.is_active" class="el-icon-check"></i>
+              <i v-else class="el-icon-close"></i>
+            </div>
+            <el-switch @change="showEditIcon" v-model="scope.row.is_active" v-if="editing&&clickId === scope.row.id"></el-switch>
           </template>
         </el-table-column>
-        <!--
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <el-tooltip content="用户权限" placement="top">
+
+        <el-table-column label="操作" align="center" v-if="perssion">
+          <template slot-scope="scope">
+            <!-- <el-tooltip content="用户权限" placement="top">
             <el-button icon="el-icon-user" type="text" style="color:deepskyblue" />
-          </el-tooltip>
-          <el-tooltip content="编辑用户" placement="top">
-            <el-button icon="el-icon-edit" type="text" style="color:lawngreen" />
-          </el-tooltip>
-          <el-tooltip content="删除用户" placement="top">
+            </el-tooltip>-->
+            <el-tooltip content="编辑用户" placement="top">
+              <el-button
+                v-if="!editing||clickId !== scope.row.id"
+                type="primary"
+                @click="editUser(scope.$index,scope.row)"
+              >修改</el-button>
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="danger"
+                
+                @click="saveEdit(scope.$index,scope.row)"
+              >保存</el-button>
+            </el-tooltip>
+            <!-- <el-tooltip content="删除用户" placement="top">
             <el-button icon="el-icon-delete" type="text" style="color:red"  />
-          </el-tooltip>
-        </template>
-      </el-table-column>
-        -->
+            </el-tooltip>-->
+          </template>
+        </el-table-column>
       </el-table>
+
       <div class="block" style="text-align: center;margin-top:10px">
         <el-pagination
           @size-change="handleSizeChange"
@@ -64,6 +130,7 @@
 </template>
 
 <script>
+import { editUserDetail } from "@/api/admin";
 export default {
   name: "UsersTable",
   props: {
@@ -73,19 +140,25 @@ export default {
     tableLoading: {
       type: Boolean,
       default: false
+    },
+    perssion: {
+      type: Boolean
     }
   },
   data() {
     return {
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [10, 20, 50, 100]
+      pageSizeList: [10, 20, 50, 100],
+      editing: false,
+      clickId: null,
+      iconShow: false
     };
   },
   methods: {
-    jump(id){
+    jump(id) {
       // console.log(id);
-      this.$emit("jump",id)
+      this.$emit("jump", id);
     },
     //分页
     handleSizeChange(val) {
@@ -95,6 +168,58 @@ export default {
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       //console.log(this.currentPage);
+    },
+    showEditIcon() {
+      this.iconShow = true;
+    },
+    editUser(index, row) {
+      if (this.iconShow === true) {
+        this.$confirm("当前修改未保存", "注意", {
+          // confirmButtonText: "确定",
+
+          // concelButtonText: "取消",
+
+          type: "warning"
+        });
+      } else {
+        this.editing = true;
+        this.clickId = row.id;
+      }
+      // console.log("edit");
+      // console.log(index);
+    },
+    handleCurrentChange(row, event, column) {
+      // console.log(row, event, column, event.currentTarget);
+    },
+    saveEdit(index, row) {
+      this.$confirm("确定保存当前修改？", "注意", {
+        confirmButtonText: "确定",
+
+        concelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+        this.iconShow = false;
+        // console.log("save");
+        // console.log(row);
+        editUserDetail({
+          method: "put",
+          userid: row.id,
+          username: row.username,
+          email: row.email,
+          pthone: row.phone,
+          isactive: row.is_active === true ? 1 : 0,
+          sex: row.sex
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.editing = false;
+            this.$emit("refresh");
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      });
     }
   }
 };
