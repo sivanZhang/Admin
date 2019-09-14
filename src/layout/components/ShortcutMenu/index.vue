@@ -6,7 +6,7 @@
     <el-popover placement="bottom" trigger="click">
       <el-row>
         <el-col :span="12">
-          <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="input2"></el-input>
+          <el-input placeholder="请输入内容" prefix-icon="el-icon-search" style="width:50%"></el-input>
         </el-col>
         <el-col :span="12" style="text-align:right">
           <el-button
