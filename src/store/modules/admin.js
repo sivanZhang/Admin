@@ -9,7 +9,8 @@ import {
 const state = {
     UserList: null,
     DeptList: null,
-    DeptUsers: null
+    DeptUsers: null,
+    DeptAuth:null
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
     },
     SET_DEPTUSERS: (state, arr) => {
         state.DeptUsers = [...arr]
+    },
+    SET_DEPTAUTH: (state, arr) => {
+        state.DeptAuth = arr
     },
 }
 
@@ -44,11 +48,13 @@ const actions = {
         return getDept().then(({
             data
         }) => {
-            commit('SET_DEPTLIST', data.msg)
+            commit('SET_DEPTLIST', data.msg);
+            commit('SET_DEPTAUTH',data.auth.manage_dept)
         }).catch(() => {
             commit('SET_DEPTLIST', null)
         })
     },
+    
     //获取已登录用户同部门的用户列表
     get_DeptUsers({
         state,

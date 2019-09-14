@@ -8,7 +8,7 @@
             style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
           >
             <el-row type="flex" align="middle" class="nav-title">
-              <el-button @click="openGroupForm('add')" type="success">添加工种</el-button>
+              <el-button @click="openGroupForm('add')" type="success" v-if="DeptAuth">添加工种</el-button>
             </el-row>
 
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
@@ -34,6 +34,7 @@
                     @click="openGroupForm('add',data)"
                     style="color:#409EFF"
                     title="添加子工种"
+                    v-if="DeptAuth"
                   ></i>
 
                   <i
@@ -41,6 +42,7 @@
                     @click="removeGroup(data)"
                     style="color:#F56C6C"
                     title="删除当前工种"
+                    v-if="DeptAuth"
                   ></i>
                 </span>
               </span>
@@ -51,12 +53,12 @@
         <el-main>
           <div class="t-header">
             <el-row type="flex" align="middle">
-              <el-col :span="12">
-                <el-button @click="openGroupForm('update')" type="primary">修改工种信息</el-button>
+              <el-col :span="12" >
+                <el-button @click="openGroupForm('update')" type="primary" v-if="DeptAuth">修改工种信息</el-button>
 
-                <el-button @click="openChangeMember(1)" type="primary">添加成员</el-button>
+                <el-button @click="openChangeMember(1)" type="primary" v-if="DeptAuth">添加成员</el-button>
 
-                <el-button @click="openChangeMember(0)" type="danger">删除成员</el-button>
+                <el-button @click="openChangeMember(0)" type="danger" v-if="DeptAuth">删除成员</el-button>
 
                 <el-button @click="show(ActiveGroup)" type="warning">审批流程</el-button>
               </el-col>
@@ -90,6 +92,7 @@
               :deptId="activeTemplate.id"
               :deptName="activeTemplate.name"
               @refresh="show(ActiveGroup)"
+              :DeptAuth="DeptAuth"
             ></links>
           </Drawer>
         </template>
@@ -222,7 +225,7 @@ export default {
         active: this.isActive && !this.error
       };
     },
-    ...mapState("admin", ["UserList", "DeptList"])
+    ...mapState("admin", ["UserList", "DeptList","DeptAuth"])
   },
   methods: {
     jumpChange(val){
@@ -239,6 +242,7 @@ export default {
     //http获取“用户组”列表
     getDeptList() {
       this.$store.dispatch("admin/get_DeptList");
+      
     },
     async changeMember() {
       if (!this.SelectMembers.length) {
@@ -333,7 +337,7 @@ export default {
     // 单击流程审批按钮触发事件
     show(ActiveGroup) {
       this.activeTemplate = ActiveGroup;
-      console.log(this.activeTemplate.id);
+     console.log(this.activeTemplate.id);
       this.isDrawerShow = true;
       getWKTemplate({
         dept: this.activeTemplate.id

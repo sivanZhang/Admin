@@ -546,7 +546,7 @@ export default {
             content: this.content,
             datetime: this.datetime
           };
-          console.log(this.updateLinkForm);
+          //console.log(this.updateLinkForm);
         }
       });
     },

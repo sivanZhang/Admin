@@ -54,6 +54,10 @@ export function deleteWKTemplate(params) {
 export function getUserList(params) {
     return AXIOS.get('/users/list/', { params })
 }
+//获取用户管理权限
+export function getUserPerfession(){
+    return AXIOS.get('/users/list/?auth')
+}
 //角色列表
 export function getRoles() {
     return AXIOS.get('/role/role/?list')
