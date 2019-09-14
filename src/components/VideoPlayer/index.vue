@@ -16,11 +16,12 @@
       @getDrawImage="getDrawImage"
       @getEditMode="getEditMode"
     ></image-draw>
-    <div id="videoPlayer" :style="{display:videoPlayerIsShow?'block':'none'}">
+    <div id="videoPlayer">
+      <!-- :style="{display:videoPlayerIsShow?'block':'none'}   没有列表时候不显示播放插件 -->
       <video id="myVideo" class="video-js">
         <source :src="videoUrl" type="video/mp4" />
       </video>
-      <!--<div :style="{display:videoPlayerNoVideoIsShow?'block':'none'}">暂无视频</div>-->
+      <!-- <div :style="{display:videoPlayerNoVideoIsShow?'block':'none'}">暂无视频</div> -->
     </div>
 
     <el-row id="playerToolbar" v-if="isLoadVideo">
@@ -33,13 +34,13 @@
         ></el-button>
       </el-col>
       <el-col :span="18" class="bar-item">
-        <span class="text">{{playerCurrentFrame}}帧/{{playerFormatCurrentPostion}}</span>
+        <span class="text">{{playerCurrentFrame}}帧 / {{playerFormatCurrentPostion}}</span>
         <div class="slider">
           <el-slider v-model="playerPercentage" :show-tooltip="false" @change="handleSliderChange"></el-slider>
         </div>
-        <span class="text">{{playerDurationFrame}}帧/{{playerFormatDuration}}</span>
+        <span class="text">{{playerDurationFrame}}帧 / {{playerFormatDuration}}</span>
       </el-col>
-      <el-col :span="5" class="bar-item">
+      <el-col :span="5" class="bar-item right">
         <span style="color:#fff;">音量:{{playerVolume*10}}</span>
         <el-button-group class="btn-group">
           <el-button class="btn-item" title="音量调小" @click="changeVolume('sub')">
@@ -59,14 +60,6 @@
 </template>
 
 <script>
-/* document.body.onkeydown = function (event) {
-      var e = window.event || event;
-      if(e.preventDefault){
-          e.preventDefault();
-      }else{
-          window.event.returnValue = false;
-      }
-  } */
 import VideoCapture from "video-capture";
 import kscreenshot from "kscreenshot";
 import { setInterval, clearInterval } from "timers";
@@ -122,54 +115,66 @@ export default {
       projectLists: new Array()
     };
   },
-  created() {
-    this.keyup();
-  },
+  created() {},
   mounted() {
     this.initVideo();
-
+    this.keyup();
     //this.videoPlayerNoVideoIsShow=false;
 
     this.width = document.getElementById("playerBox").offsetWidth;
     this.height = document.getElementById("playerBox").offsetHeight;
   },
   methods: {
+    cancelP() {
+      document.addEventListener(
+        "keydown",
+        function(e) {
+          e.returnValue = true;
+        },
+        false
+      );
+    },
     keyup() {
       var _self = this;
       let frameTime = 1 / 25;
-      document.onkeydown = function(event) {
-        let e = event || window.event || arguments.callee.caller.arguments[0];
-        // console.log(e.keyCode,_self.videoPlayer)
-        if (_self.videoPlayerIsShow) {
-          _self.playerControls.stateIcon = "el-icon-video-play";
-          if (e && e.keyCode === 37) {
-            //left arrow
-            _self.videoPlayer.pause();
-            _self.videoPlayer.currentTime(
-              Math.max(0, _self.videoPlayer.currentTime() - frameTime)
-            );
-          } else if (e && e.keyCode === 39) {
-            //right arrow
-            _self.videoPlayer.pause();
-            _self.videoPlayer.currentTime(
-              Math.min(
-                _self.videoPlayer.duration(),
-                _self.videoPlayer.currentTime() + frameTime
-              )
-            );
-          } else if (e && e.keyCode === 32) {
-            // console.log(_self.videoPlayer.paused())
-            if (_self.videoPlayer.paused()) {
-              _self.videoPlayer.play();
-              _self.playerControls.stateIcon = "el-icon-video-pause";
-              _self.playerStepInterval();
-            } else {
+      document.addEventListener(
+        "keydown",
+        function(event) {
+          let e = event || window.event || arguments.callee.caller.arguments[0];
+          // console.log(e.keyCode,_self.videoPlayer)
+          if (_self.videoPlayerIsShow) {
+            _self.playerControls.stateIcon = "el-icon-video-play";
+            if (e && e.keyCode === 37) {
+              //left arrow
               _self.videoPlayer.pause();
-              _self.playerControls.stateIcon = "el-icon-video-play";
+              _self.videoPlayer.currentTime(
+                Math.max(0, _self.videoPlayer.currentTime() - frameTime)
+              );
+            } else if (e && e.keyCode === 39) {
+              //right arrow
+              _self.videoPlayer.pause();
+              _self.videoPlayer.currentTime(
+                Math.min(
+                  _self.videoPlayer.duration(),
+                  _self.videoPlayer.currentTime() + frameTime
+                )
+              );
+            } else if (e && e.keyCode === 32) {
+              e.preventDefault();
+              // console.log(_self.videoPlayer.paused())
+              if (_self.videoPlayer.paused()) {
+                _self.videoPlayer.play();
+                _self.playerControls.stateIcon = "el-icon-video-pause";
+                _self.playerStepInterval();
+              } else {
+                _self.videoPlayer.pause();
+                _self.playerControls.stateIcon = "el-icon-video-play";
+              }
             }
           }
-        }
-      };
+        },
+        false
+      );
     },
     /**
      * 加载视频资源
@@ -239,7 +244,7 @@ export default {
 
               _self.currentProject =
                 _self.projectLists[_self.currentProjectIndex];
-              _self.$emit("getCurrentPlayId", _self.currentProject);//为了切换播放列表
+              _self.$emit("getCurrentPlayId", _self.currentProject); //为了切换播放列表
               _self.videoUrl = _self.currentProject.url;
               _self.videoPlayer.src(_self.currentProject.url);
               _self.videoPlayer.load(_self.currentProject.url);
@@ -451,30 +456,30 @@ export default {
 }
 
 #playerToolbar {
+  font-size: 13px;
   height: 38px;
   line-height: 38px;
   width: 100%;
-  background-color: #303133;
+  background-color: rgba($color: #000000, $alpha: 0.8);
   //position: absolute;
   bottom: 0;
   left: 0;
   z-index: 100;
-
   .bar-item {
-    text-align: center;
     height: 38px;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .text {
-      float: left;
-      width: 10%;
       color: #fff;
-      line-height: 38px;
-      text-align: center;
+      text-align: right;
     }
-
+    &.right {
+      justify-content: center;
+    }
     .slider {
-      float: left;
-      width: 80%;
+      margin: 0 6px;
+      width:70%;
       color: #fff;
     }
   }
@@ -485,15 +490,14 @@ export default {
     background: transparent;
     padding: 0;
     color: #fff;
-    margin-left: 6px;
+    margin-left: 8px;
+    img {
+      height: 24px;
+    }
   }
 
   .btn-play {
-    font-size: 30px;
-
-    i {
-      font-weight: bold;
-    }
+    font-size: 24px;
   }
 }
 </style>
