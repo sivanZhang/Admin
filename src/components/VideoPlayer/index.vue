@@ -478,8 +478,8 @@ export default {
       justify-content: center;
     }
     .slider {
-      margin: 0 6px;
-      width:70%;
+      margin: 0 5px;
+      width:68%;
       color: #fff;
     }
   }
@@ -490,7 +490,7 @@ export default {
     background: transparent;
     padding: 0;
     color: #fff;
-    margin-left: 8px;
+    margin-left: 7px;
     img {
       height: 24px;
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="videoCheck">
-    <el-row class="page">
+    <el-row class="page" :gutter="15">
       <el-col :span="15" class="page-left" style="height:850px;">
         <div class="video-player" style="height：550px;">
           <!-- 播放器 -->
@@ -17,9 +17,6 @@
         </div>
       </el-col>
       <el-col :span="9" class="page-right">
-        <div id="videoInfo" class="video-info">
-          <!-- 视频基本信息 -->
-        </div>
         <div id="videoTabs" class="video-tabs">
           <div class="mark-cont">
             <div class="mark-form">
@@ -41,20 +38,13 @@
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
                 <div class="fr">
-                  <!-- <el-button class="btn cancel-btn">取消</el-button> -->
                   <el-button type="primary" class="btn add-btn" @click="commitApprove">提交</el-button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="videoComment" class="video-comment">
-          <!-- 视频标注列表 -->
-          <approve-log
-            ref="approvelogs" 
-
-          />
-        </div>
+        <approve-log ref="approvelogs" id="videoComment" class="video-comment" />
       </el-col>
     </el-row>
     <zoom-img ref="zoomImg" />
@@ -66,29 +56,23 @@ import VideoPlayer from "@/components/VideoPlayer";
 import VideoList from "@/views/components/videoList";
 import kscreenshot from "kscreenshot";
 import ZoomImg from "@/components/ZoomImg";
-import VideoComment from "@/views/components/videoComment";
-import demoImg from "@/assets/demo.jpg";
 import { mapState } from "vuex";
 import { postApprove } from "@/api/video";
-import AXIOS from "@/utils/request";
 import approveLog from "./components/approve-log";
-import { log } from 'util';
 export default {
-  components: { VideoPlayer, VideoList, ZoomImg, VideoComment,approveLog },
+  components: { VideoPlayer, VideoList, ZoomImg, approveLog },
   data() {
     return {
       approve_result: 0,
       imgList: [], //  视频截图列表
       zoomImgUrl: "",
       activeTab: "first",
-      demoImg: demoImg,
       markText: "",
       currentVideoIsEdit: false,
       pWidth: 0,
       pHeight: 0,
       submitList: [],
-      taskId:null
-      
+      taskId: null
     };
   },
   computed: {
@@ -102,7 +86,7 @@ export default {
     this.pHeight = videoPlayer[0].offsetHeight;
     this.pWidth = videoPlayer[0].offsetWidth;
     document.getElementById("videoComment").style.height =
-      bH - ( videoTabsH + 20 + 20 + 94+165) + "px";
+      bH - (videoTabsH + 20 + 20 + 94 + 165) + "px";
   },
   methods: {
     commitApprove() {
@@ -122,7 +106,7 @@ export default {
           key: []
         };
         this.imgList.forEach(k => {
-          if (k.task=== t.task.id) {
+          if (k.task === t.task.id) {
             data["key"].push({
               image: k.imgUrl,
               frame: k.currentFrame
@@ -130,22 +114,20 @@ export default {
           }
         });
         postApprove(data).then(res => {
-          this.$message.success(t.task.name + " " + res.data.msg);
+          this.$message(t.task.name + " " + res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
-            {
-              this.imgList = [];
-              this.approve_result = "";
-              this.markText = "";
-              this.$refs['approvelogs'].getApproveLog(this.taskId);
-            }
+            this.imgList = [];
+            this.approve_result = "";
+            this.markText = "";
+            this.$refs["approvelogs"].getApproveLog(this.taskId);
           }
-        })
+        });
       });
     },
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
       this.taskId = projectList[0].task.id;
-      this.$refs['approvelogs'].getApproveLog(projectList[0].task.id)
+      this.$refs["approvelogs"].getApproveLog(projectList[0].task.id);
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {
         this.$message.error("处于视频标注模式");
@@ -190,8 +172,8 @@ export default {
       }
     },
     showImage(url) {
-      if (url){
-        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL+url);
+      if (url) {
+        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL + url);
       }
     },
     zoomImg(imgUrl) {
@@ -215,9 +197,8 @@ export default {
 <style lang="scss" scoped>
 #videoCheck {
   width: 100%;
-  height: 100%;
+  min-height: calc(100vh - 84px);
   background-color: #eee;
-  padding:10px 20px 0 20px;
   .page {
     width: 100%;
     height: 100%;
@@ -235,7 +216,6 @@ export default {
       }
       .video-list {
         width: 100%;
-        height: 33%;/* 33.9 */
         margin-top: 1%;
         background: #fff;
       }
