@@ -23,6 +23,56 @@
             icon="el-icon-delete"
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button>
+          <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
+            
+            <el-col :span="12">
+              <el-checkbox v-model="show_name">任务</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_link_dept_name">制作环节</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_content">制作内容</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_project_name">所属项目</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_project_image">缩略图</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_asset_name">镜头号</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_priority">优先级</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_grade">难度等级</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_status">状态</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_creator_name">创建者</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_executor">执行人</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_create_time">创建日期</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_start_date">开始日期</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_end_date">截止日期</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_total_hour">预设时间（小时）</el-checkbox>
+            </el-col>
+            
+            <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
+          </el-popover>
         </el-col>
         <el-col :span="9" style="text-align:right">
           <el-input
@@ -53,16 +103,16 @@
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column label="任务ID" prop="id" width="100px">
+        <el-table-column label="任务ID" prop="id" width="100px" >
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
-        <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
-        <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
-        <el-table-column label="所属项目" prop="project.name" show-overflow-tooltip></el-table-column>
-        <el-table-column label="缩略图" >
+        <el-table-column prop="name" label="任务" show-overflow-tooltip v-if="show_name"></el-table-column>
+        <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip v-if="show_link_dept_name"></el-table-column>
+        <el-table-column label="制作内容" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
+        <el-table-column label="所属项目" prop="project.name" show-overflow-tooltip v-if="show_project_name"></el-table-column>
+        <el-table-column label="缩略图" v-if="show_project_image" >
           <template slot-scope="scope">
           <el-image
               :src="$store.state.BASE_URL+scope.row.project.image"
@@ -78,31 +128,30 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="镜头号" show-overflow-tooltip>
+        <el-table-column label="镜头号" show-overflow-tooltip v-if="show_asset_name">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
-        <el-table-column prop="priority" label="优先级" :formatter="Priority"></el-table-column>
-        <el-table-column prop="grade" label="难度等级" :formatter="Grade"></el-table-column>
-        <el-table-column label="状态">
+        <el-table-column prop="priority" label="优先级" :formatter="Priority" v-if="show_priority"></el-table-column>
+        <el-table-column prop="grade" label="难度等级" :formatter="Grade" v-if="show_grade"></el-table-column>
+        <el-table-column label="状态" v-if="show_status">
           <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
         </el-table-column>
-        <el-table-column label="创建者">
+        <el-table-column label="创建者" v-if="show_creator_name">
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
         </el-table-column>
-        <el-table-column label="执行人" show-overflow-tooltip>
+        <el-table-column label="执行人" show-overflow-tooltip v-if="show_executor">
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
-        <el-table-column prop="content" label="描述" show-overflow-tooltip></el-table-column>
-        <el-table-column label="创建日期" width="95px">
+        <el-table-column label="创建日期" width="95px" v-if="show_create_time">
           <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="开始日期" width="95px">
+        <el-table-column label="开始日期" width="95px" v-if="show_start_date">
           <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="截止日期" width="95px">
+        <el-table-column label="截止日期" width="95px" v-if="show_end_date">
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hour" label="预设时间（小时）" width="125px"></el-table-column>
+        <el-table-column prop="total_hour" label="预设时间（小时）" width="125px" v-if="show_total_hour"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">
@@ -450,7 +499,22 @@ export default {
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 50, 100],
-      showdrawer: false
+      showdrawer: false,
+      show_name:true,
+      show_link_dept_name:true,
+      show_content:true,
+      show_project_name:true,
+      show_project_image:true,
+      show_asset_name:true,
+      show_priority:true,
+      show_grade:true,
+      show_status:true,
+      show_executor:true,
+      show_creator_name:true,
+      show_create_time:true,
+      show_start_date:true,
+      show_end_date:true,
+      show_total_hour:true
     };
   },
   filters: {
