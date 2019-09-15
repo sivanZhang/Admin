@@ -267,7 +267,12 @@
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left" v-if="show_priority">
+        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left" v-if="show_priority"
+        column-key="priority"
+        :filters="[{text:'正常',value: 0},{text:'优先',value: 1}]"
+        :filter-method="filterPriority"
+        filter-placement="bottom-end"
+        >
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.priority"
@@ -280,7 +285,12 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.priority|Priority}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left" v-if="show_level">
+        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left" v-if="show_level"
+        column-key="status"
+        :filters="[{text:'简单',value: 0},{text:'标准',value: 1},{text:'复杂',value: 2},{text:'高难度',value: 3}]"
+        :filter-method="filterLevel"
+        filter-placement="bottom-end"
+        >
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.level"
@@ -301,7 +311,12 @@
         <el-table-column prop="id" label="资产ID" v-if="show_id" align="left" ></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="show_creator_id" align="left"></el-table-column>
-        <el-table-column prop="status" label="状态" align="left" v-if="show_status">
+        <el-table-column prop="status" label="状态" align="left" v-if="show_status"
+        column-key="status"
+        :filters="[{text:'暂停',value: 0},{text:'未开始',value: 1},{text:'进行中',value: 2},{text:'审核中',value: 3},{text:'完成',value: 4}]"
+        :filter-method="filterStatus"
+        filter-placement="bottom-end"
+        >
           <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
@@ -880,6 +895,16 @@ export default {
       // this.AssetForm.image_id = response.id;
       this.ImgForm.image = response.msg;
       this.ImgForm.image_id = response.id;
+    },
+    filterStatus(value,row,column){
+     return row.status === value
+      
+    },
+    filterPriority(value,row,column){
+      return row.priority === value
+    },
+    filterLevel(value,row,column){
+      return row.level === value
     },
     //分页
     handleSizeChange(val) {
