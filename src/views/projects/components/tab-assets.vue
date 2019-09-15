@@ -40,6 +40,7 @@
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
+        
       >
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
@@ -49,6 +50,21 @@
               :src="$store.state.BASE_URL+scope.row.image"
               style="width: 50px;height: 30px;"
               @click.native="show(scope.row.id)"
+               v-if="!editing||clickId !== scope.row.id"
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+             <el-image
+              :src="$store.state.BASE_URL+scope.row.image"
+              style="width: 50px;height: 30px;"
+              @click.native="img(scope.row)"
+               v-if="editing&&clickId === scope.row.id"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -60,14 +76,114 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="session" label="场次" align="center"></el-table-column>
-        <el-table-column prop="episode" label="集数" align="center"></el-table-column>
-        <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="frame" label="帧数" align="left"></el-table-column>
+        <el-table-column prop="session" label="场次" align="center">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.session"
+              placeholder="请输入场次"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.session?scope.row.session:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.session?scope.row.session:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="episode" label="集数" align="center">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.episode"
+              placeholder="请输入集数"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.episode?scope.row.episode:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.episode?scope.row.episode:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.name"
+              placeholder="请输入镜头号"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.name?scope.row.name:"-"}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="frame" label="帧数" align="left">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.frame"
+              placeholder="请输入帧数"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.frame?scope.row.frame:"-"}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.frame?scope.row.frame:"-"}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="inner_version" label="版本号" align="left" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
-        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
+        <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.content"
+              placeholder="请输入帧数"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.content?scope.row.content:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.content?scope.row.content:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left">
+          <template slot-scope="scope">
+            <el-select
+              v-model="scope.row.priority"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <el-option label="正常" :value="0"></el-option>
+              <el-option label="优先" :value="1"></el-option>
+            </el-select>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.priority|Priority}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left">
+          <template slot-scope="scope">
+            <el-select
+              v-model="scope.row.level"
+              placeholder="请选择难度等级"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <el-option
+                v-for="item of LevelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.level|Level}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
@@ -94,29 +210,38 @@
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
-        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip >
+        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip>
           <template slot-scope="scope">
-            <p v-html="scope.row.remark"></p>
+            <el-input
+              size="small"
+              v-model="scope.row.remark"
+              placeholder="请输入备注"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <p v-html="scope.row.remark"></p>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            ><p v-html="scope.row.remark"></p></span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="200px">
           <template slot-scope="scope">
-            <el-tooltip content="修改资产" placement="top">
-              <el-button
-                @click="showAssetForm(2,scope.row)"
-                icon="el-icon-edit"
-                type="text"
-                style="color:green"
-              />
-            </el-tooltip>
-            <el-tooltip content="删除资产" placement="top">
-              <el-button
-                @click="deleteAssets(scope.row.id)"
-                icon="el-icon-delete"
-                type="text"
-                style="color:red"
-              />
-            </el-tooltip>
+            <el-button
+              @click="editOneAsset(scope.row)"
+              icon="el-icon-edit"
+              type="primary"
+              v-if="!editing||clickId !== scope.row.id"
+            >修改</el-button>
+            <el-button
+              v-if="editing&&clickId === scope.row.id"
+              type="success"
+              icon="el-icon-check"
+              @click="saveEdit(scope.$index,scope.row)"
+            >保存</el-button>
+
+            <el-button @click="deleteAssets(scope.row.id)" icon="el-icon-delete" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -200,6 +325,43 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
+      <el-form
+        :model="ImgForm"
+        ref="ImgForm"
+        label-width="100px"
+        hide-required-asterisk
+        label-position="left"
+      >
+        <el-upload
+          accept="image/jpeg, image/gif, image/png"
+          ref="upload"
+          class="upload-demo"
+          action="/api/appfile/appfile/"
+          :headers="headers"
+          :on-success="handleSuccess"
+          drag
+          :show-file-list="false"
+        >
+          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+          <template v-else>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </template>
+        </el-upload>
+        <el-form-item>
+          <el-button @click="cancel2">取消</el-button>
+          <el-button
+            :loading="buttonStates.createLoading"
+            type="primary"
+            @click="addImg"
+          >立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <Drawer
       scrollable
       closable
@@ -251,6 +413,7 @@ export default {
       AssetForm: {
         priority: 0
       },
+      ImgForm:{},
       isShow: false,
       LevelList: [
         {
@@ -289,7 +452,13 @@ export default {
       multipleSelection: [],
       filterText: "",
       dialogTitle: "",
-      DialogName: null
+      DialogName: null,
+      editing: false,
+      clickId: null,
+      iconShow: false,
+      dialogImg:false,
+      imagePath:null,
+      row:null
     };
   },
 
@@ -306,6 +475,75 @@ export default {
     }
   },
   methods: {
+    img(row){
+     this.dialogImg = true;
+     this.row = row,
+     this.SRC = this.$store.state.BASE_URL + row.image
+    },
+    addImg(){
+      // console.log(this.ImgForm)
+      this.imagePath = this.ImgForm.image;
+      this.SRC = this.$store.state.BASE_URL+this.imagePath;
+      this.row.image = this.imagePath;
+      this.dialogImg =false
+    },
+    handleCurrentChange(row, event, column) {
+      // console.log(row, event, column, event.currentTarget);
+    },
+    showEditIcon() {
+      this.iconShow = true;
+      this.rowClick = true;
+    },
+    editOneAsset(row) {
+      // console.log("edit");
+      // console.log(row);
+      if (this.iconShow === true) {
+        this.$confirm("当前修改未保存", "注意", {
+          // confirmButtonText: "确定",
+
+          // concelButtonText: "取消",
+
+          type: "warning"
+        });
+      } else {
+        this.editing = true;
+        this.clickId = row.id;
+      }
+      // console.log("edit");
+      // console.log(index);
+    },
+    saveEdit(index, row) {
+      this.$confirm("确定保存当前修改？", "注意", {
+        confirmButtonText: "确定",
+
+        concelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+        this.iconShow = false;
+        HTTP.editAssets({
+          id:row.id,
+          priority:row.priority,
+          level:row.level,
+          image:row.image,
+          session:row.session,
+          frame:row.frame,
+          episode:row.episode,
+          name:row.name,
+          method:"put",
+          remark:row.remark,
+          
+        }).then(({data})=>{
+          if(data.status === 0){
+            this.$message.success(data.msg);
+            this.getAssetList();
+            this.editing = false;
+          }else{
+            this.$message.error(data.msg);
+          }
+        })
+      });
+    },
     change() {
       this.$forceUpdate();
     },
@@ -432,6 +670,10 @@ export default {
       };
       this.SRC = "";
     },
+    cancel2(){
+      this.SRC = ""
+      this.dialogImg = false
+    },
     //新建
     addAsset() {
       this.$refs["assetForm"].validate(valid => {
@@ -497,8 +739,10 @@ export default {
     //监听图片上传成功
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
-      this.AssetForm.image = response.msg;
-      this.AssetForm.image_id = response.id;
+      // this.AssetForm.image = response.msg;
+      // this.AssetForm.image_id = response.id;
+      this.ImgForm.image = response.msg;
+      this.ImgForm.image_id = response.id
     },
     //分页
     handleSizeChange(val) {
@@ -552,7 +796,7 @@ export default {
   cursor: pointer;
 }
 #asset-list {
- min-height: calc(100vh - 199px);
+  min-height: calc(100vh - 199px);
   & /deep/ .el-table--border th,
   & /deep/ .el-table--border td {
     /*zjw*/
