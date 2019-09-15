@@ -485,6 +485,7 @@ export default {
       this.imagePath = this.ImgForm.image;
       this.SRC = this.$store.state.BASE_URL+this.imagePath;
       this.row.image = this.imagePath;
+      this.row.image_id = this.ImgForm.id;
       this.dialogImg =false
     },
     handleCurrentChange(row, event, column) {
@@ -513,19 +514,13 @@ export default {
       // console.log(index);
     },
     saveEdit(index, row) {
-      this.$confirm("确定保存当前修改？", "注意", {
-        confirmButtonText: "确定",
-
-        concelButtonText: "取消",
-
-        type: "warning"
-      }).then(() => {
+      
         this.iconShow = false;
         HTTP.editAssets({
           id:row.id,
           priority:row.priority,
           level:row.level,
-          image:row.image,
+          ...this.ImgForm,
           session:row.session,
           frame:row.frame,
           episode:row.episode,
@@ -542,7 +537,7 @@ export default {
             this.$message.error(data.msg);
           }
         })
-      });
+     
     },
     change() {
       this.$forceUpdate();
