@@ -85,7 +85,11 @@
               <i v-if="scope.row.is_active" class="el-icon-check"></i>
               <i v-else class="el-icon-close"></i>
             </div>
-            <el-switch @change="showEditIcon" v-model="scope.row.is_active" v-if="editing&&clickId === scope.row.id"></el-switch>
+            <el-switch
+              @change="showEditIcon"
+              v-model="scope.row.is_active"
+              v-if="editing&&clickId === scope.row.id"
+            ></el-switch>
           </template>
         </el-table-column>
 
@@ -94,19 +98,20 @@
             <!-- <el-tooltip content="用户权限" placement="top">
             <el-button icon="el-icon-user" type="text" style="color:deepskyblue" />
             </el-tooltip>-->
-            <el-tooltip content="编辑用户" placement="top">
-              <el-button
-                v-if="!editing||clickId !== scope.row.id"
-                type="primary"
-                @click="editUser(scope.$index,scope.row)"
-              >修改</el-button>
-              <el-button
-                v-if="editing&&clickId === scope.row.id"
-                type="danger"
-                
-                @click="saveEdit(scope.$index,scope.row)"
-              >保存</el-button>
-            </el-tooltip>
+
+            <el-button
+              v-if="!editing||clickId !== scope.row.id"
+              type="primary"
+              icon="el-icon-edit"
+              @click="editUser(scope.row)"
+            >修改</el-button>
+            <el-button
+              v-if="editing&&clickId === scope.row.id"
+              type="success"
+              icon="el-icon-check"
+              @click="saveEdit(scope.$index,scope.row)"
+            >保存</el-button>
+
             <!-- <el-tooltip content="删除用户" placement="top">
             <el-button icon="el-icon-delete" type="text" style="color:red"  />
             </el-tooltip>-->
@@ -172,7 +177,7 @@ export default {
     showEditIcon() {
       this.iconShow = true;
     },
-    editUser(index, row) {
+    editUser(row) {
       if (this.iconShow === true) {
         this.$confirm("当前修改未保存", "注意", {
           // confirmButtonText: "确定",
