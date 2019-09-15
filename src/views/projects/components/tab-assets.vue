@@ -14,6 +14,69 @@
             @click="delMulAssets()"
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button>
+          <el-popover placement="bottom" width="300" trigger="click">
+            <el-col :span="12">
+              <el-checkbox v-model="ind" >序号</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_image">缩略图</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_session">场次</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_episode">集数</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_name">镜头号</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_frame">帧数</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_frame_range">帧数范围</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_report">画面调整信息</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_retime">变速信息</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_inner_version">版本号</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_content">制作内容</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_priority">优先级</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_level">难度等级</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_id">资产ID</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_creator_name">创建人</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_creator_id">创建人ID</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_status">状态</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_link">当前环节</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_totle_date_end">计划截止日期</el-checkbox>
+            </el-col>
+             <el-col :span="12">
+              <el-checkbox v-model="show_total_hours">总工时</el-checkbox>
+            </el-col>
+            <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
+          </el-popover>
         </el-col>
         <el-col :span="9" align="right">
           <el-input
@@ -42,8 +105,8 @@
         v-loading="tableLoading"
       >
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
-        <el-table-column label="缩略图" align="center">
+        <el-table-column type="index" :index="indexMethod" label="序号" align="center" v-if="ind"></el-table-column>
+        <el-table-column label="缩略图" align="center" v-if="show_image">
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
@@ -75,7 +138,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="session" label="场次" align="center">
+        <el-table-column prop="session" label="场次" align="center" v-if="show_session">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -91,7 +154,7 @@
             >{{scope.row.session?scope.row.session:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="episode" label="集数" align="center">
+        <el-table-column prop="episode" label="集数" align="center" v-if="show_episode">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -107,7 +170,7 @@
             >{{scope.row.episode?scope.row.episode:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip>
+        <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip v-if="show_name">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -121,7 +184,7 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="frame" label="帧数" align="left">
+        <el-table-column prop="frame" label="帧数" align="left" v-if="show_frame">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -135,7 +198,7 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.frame?scope.row.frame:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="frame_range" label="帧数范围" align="left" width="120px">
+        <el-table-column prop="frame_range" label="帧数范围" align="left" width="120px" v-if="show_frame_range">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -151,13 +214,7 @@
             >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="report"
-          label="画面调整信息"
-          align="left"
-          width="120px"
-          show-overflow-tooltip
-        >
+        <el-table-column prop="report" label="画面调整信息" align="left" width="120px" v-if="show_report">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -173,13 +230,7 @@
             >{{scope.row.report?scope.row.report:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="retime"
-          label="变速信息"
-          align="left"
-          width="120px"
-          show-overflow-tooltip
-        >
+        <el-table-column prop="retime" label="变速信息" align="left" width="120px" v-if="show_retime">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -195,9 +246,8 @@
             >{{scope.row.retime?scope.row.retime:"-"}}</span>
           </template>
         </el-table-column>
-
-        <el-table-column prop="inner_version" label="版本号" align="left" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip>
+        <el-table-column prop="inner_version" label="版本号" align="left" show-overflow-tooltip v-if="show_inner_version"></el-table-column>
+        <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip v-if="show_content">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -213,7 +263,7 @@
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left">
+        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left" v-if="show_priority">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.priority"
@@ -226,7 +276,7 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.priority|Priority}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left">
+        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left" v-if="show_level">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.level"
@@ -244,13 +294,13 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.level|Level}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
-        <el-table-column prop="creator_name" label="创建人" align="left"></el-table-column>
-        <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="left"></el-table-column>
-        <el-table-column prop="status" label="状态" align="left">
+        <el-table-column prop="id" label="资产ID" v-if="show_id" align="left" ></el-table-column>
+        <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column>
+        <el-table-column prop="creator_id" label="创建人ID" v-if="show_creator_id" align="left"></el-table-column>
+        <el-table-column prop="status" label="状态" align="left" v-if="show_status">
           <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
-        <el-table-column label="当前环节" align="center" width="160px">
+        <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">
               <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
@@ -266,10 +316,10 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="计划截止日期" align="left" width="95px">
+        <el-table-column label="计划截止日期" align="left" width="95px" v-if="show_totle_date_end">
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
+        <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
         <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-input
@@ -286,7 +336,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" >
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="修改" placement="top">
               <el-button
@@ -526,7 +576,27 @@ export default {
       iconShow: false,
       dialogImg: false,
       imagePath: null,
-      row: null
+      row: null,
+      ind: true,
+      show_image: true,
+      show_session: true,
+      show_episode:true,
+      show_name:true,
+      show_frame:true,
+      show_frame_range:true,
+      show_report:true,
+      show_retime:true,
+      show_inner_version:true,
+      show_content:true,
+      show_priority:true,
+      show_level:true,
+      show_id:false,
+      show_creator_name:true,
+      show_creator_id:false,
+      show_status:true,
+      show_link:true,
+      show_totle_date_end:true,
+      show_total_hours:true
     };
   },
 
