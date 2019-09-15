@@ -11,10 +11,11 @@
           </el-button>
           <el-button
             type="danger"
+            icon="el-icon-delete"
             @click="delMulAssets()"
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button>
-          <el-popover placement="bottom" width="300" trigger="click">
+          <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
             <el-col :span="12">
               <el-checkbox v-model="ind" >序号</el-checkbox>
             </el-col>
@@ -74,6 +75,9 @@
             </el-col>
              <el-col :span="12">
               <el-checkbox v-model="show_total_hours">总工时</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_remark">备注</el-checkbox>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
@@ -320,7 +324,7 @@
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
-        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip>
+        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip v-if="show_remark">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -596,7 +600,8 @@ export default {
       show_status:true,
       show_link:true,
       show_totle_date_end:true,
-      show_total_hours:true
+      show_total_hours:true,
+      show_remark:true
     };
   },
 

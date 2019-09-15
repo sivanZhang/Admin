@@ -61,6 +61,23 @@
         <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作环节" prop="link_dept_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
+        <el-table-column label="所属项目" prop="project.name" show-overflow-tooltip></el-table-column>
+        <el-table-column label="缩略图" >
+          <template slot-scope="scope">
+          <el-image
+              :src="$store.state.BASE_URL+scope.row.project.image"
+              style="width: 50px;height: 30px;"
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="镜头号" show-overflow-tooltip>
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
