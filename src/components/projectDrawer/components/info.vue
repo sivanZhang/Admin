@@ -156,11 +156,40 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">开始日期</el-col>
-          <el-col :span="15" class="comment">{{project.date_start|dateFormat}}</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit13=true" @mouseleave="showEdit13 = false">
+              <span v-if="!editing13">{{project.date_start|dateFormat}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit13" @click="edit(12)"></i>
+            </div>
+            <div v-if="editing13">
+              <el-date-picker
+                v-model="date_start"
+                type="date"
+                format="yyyy/MM/dd"
+                ref="start"
+              ></el-date-picker>
+              <el-button @click="save(12)" type="primary">修改</el-button>
+            </div>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">结束日期</el-col>
-          <el-col :span="15" class="comment">{{project.date_end|dateFormat}}</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit14=true" @mouseleave="showEdit14 = false">
+              <span v-if="!editing14">{{project.date_end|dateFormat}}</span>
+              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit14" @click="edit(13)"></i>
+            </div>
+            <div v-if="editing14">
+              <!-- $store.state.login.userInfo -->
+              <el-date-picker
+                v-model="date_end"
+                type="date"
+                format="yyyy/MM/dd"
+                ref="end"
+              ></el-date-picker>
+              <el-button @click="save(13)" type="primary">修改</el-button>
+            </div>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">客户信息</el-col>
@@ -194,7 +223,21 @@
       <div>
         <el-row>
           <el-col :span="6" class="comment">名称</el-col>
-          <el-col :span="18" class="comment">{{project.name}}</el-col>
+          <el-col :span="18" class="comment">
+             <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false">
+              <span v-if="!editing15">{{project.name}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(14)"
+                v-if="showEdit15"
+              ></i>
+            </div>
+            <div v-if="editing15">
+              <input type="text" ref="input" class="input" value="project.name" v-model="assetName" />
+              <el-button @click="save(14)" type="primary">修改</el-button>
+            </div>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">类型</el-col>
@@ -219,11 +262,59 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">优先级</el-col>
-          <el-col :span="18" class="comment">{{project.priority |Priority}}</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit18=true" @mouseleave="showEdit18 = false">
+              <span v-if="!editing18">{{project.priority |Priority}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit18"
+                @click="edit(17)"
+              ></i>
+            </div>
+            <div v-if="editing18">
+              <el-select
+                v-model="priority"
+                filterable
+                placeholder="请选择优先级"
+                ref="selete"
+               
+              >
+                <el-option label="正常" :value="0"></el-option>
+                <el-option label="优先" :value="1"></el-option>
+              </el-select>
+              <el-button @click="save(17)" type="primary">修改</el-button>
+            </div>
+            </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">难度等级</el-col>
-          <el-col :span="18" class="comment">{{project.level |Level}}</el-col>
+          <el-col :span="18" class="comment">
+             <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
+              <span v-if="!editing19">{{project.level |Level}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit19"
+                @click="edit(18)"
+              ></i>
+            </div>
+            <div v-if="editing19">
+              <el-select
+                v-model="level"
+                filterable
+                placeholder="请选择难度等级"
+                ref="selete"
+               
+              >
+                <el-option label="简单" :value="0"></el-option>
+                <el-option label="标准" :value="1"></el-option>
+                <el-option label="复杂" :value="2"></el-option>
+                <el-option label="高难度" :value="3"></el-option>
+              </el-select>
+              <el-button @click="save(18)" type="primary">修改</el-button>
+            </div>
+            </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">开始日期</el-col>
@@ -264,19 +355,47 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">帧数</el-col>
-          <el-col :span="18" class="comment">{{project.frame}}</el-col>
+          <el-col :span="18" class="comment">
+             <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false">
+              <span v-if="!editing16">{{project.frame?project.frame:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(15)"
+                v-if="showEdit16"
+              ></i>
+            </div>
+            <div v-if="editing16">
+              <input type="text" ref="input" class="input" value="project.frame" v-model="frame" />
+              <el-button @click="save(15)" type="primary">修改</el-button>
+            </div>
+            </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">集数</el-col>
-          <el-col :span="18" class="comment">{{project.episode}}</el-col>
+          <el-col :span="18" class="comment">
+             <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false">
+              <span v-if="!editing17">{{project.episode?project.episode:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(16)"
+                v-if="showEdit17"
+              ></i>
+            </div>
+            <div v-if="editing17">
+              <input type="text" ref="input" class="input" value="project.episode" v-model="episode" />
+              <el-button @click="save(16)" type="primary">修改</el-button>
+            </div>
+            </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">内部版本</el-col>
-          <el-col :span="18" class="comment">{{project.inner_version}}</el-col>
+          <el-col :span="18" class="comment">{{project.inner_version?project.inner_version:"-"}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">外部版本</el-col>
-          <el-col :span="18" class="comment">{{project.outer_version}}</el-col>
+          <el-col :span="18" class="comment">{{project.outer_version?project.outer_version:"-"}}</el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">备注</el-col>
@@ -322,6 +441,13 @@ export default {
       editing10: false,
       editing11:false,
       editing12:false,
+      editing13:false,
+      editing14:false,
+      editing15:false,
+      editing16:false,
+      editing17:false,
+      editing18:false,
+      editing19:false,
       name: null,
       budget: null,
       charger: null,
@@ -336,6 +462,13 @@ export default {
       remark: null,
       start_date:null,
       end_date:null,
+      date_start:null,
+      date_end:null,
+      assetName:null,
+      frame:null,
+      episode:null,
+      priority:null,
+      level:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -348,6 +481,13 @@ export default {
       showEdit10: false,
       showEdit11:false,
       showEdit12:false,
+      showEdit13:false,
+      showEdit14:false,
+      showEdit15:false,
+      showEdit16:false,
+      showEdit17:false,
+      showEdit18:false,
+      showEdit19:false,
       clientList: null
     };
   },
@@ -461,6 +601,57 @@ export default {
 
         this.$nextTick(() => {
           this.$refs.end.focus();
+        });
+      }
+       if (Type === 12) {
+        this.showEdit13 = false;
+        this.editing13 = true;
+
+        this.$nextTick(() => {
+          this.$refs.start.focus();
+        });
+      }
+       if (Type === 13) {
+        this.showEdit14 = false;
+        this.editing14 = true;
+
+        this.$nextTick(() => {
+          this.$refs.end.focus();
+        });
+      }
+      if (Type === 14) {
+        this.showEdit15 = false;
+        this.editing15 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 15) {
+        this.showEdit16 = false;
+        this.editing16 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 16) {
+        this.showEdit17 = false;
+        this.editing17 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+       if (Type === 17) {
+        this.showEdit18 = false;
+        this.editing18 = true;
+        this.$nextTick(() => {
+          this.$refs.selete.focus();
+        });
+      }
+      if (Type === 18) {
+        this.showEdit19 = false;
+        this.editing19 = true;
+        this.$nextTick(() => {
+          this.$refs.selete.focus();
         });
       }
     },
@@ -611,7 +802,119 @@ export default {
         this.$emit("refresh_assetList");
         return;
       }
-
+      if(Type === 12){
+        
+        this.editing13 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          start: dataFormat(this.date_start)
+            
+        };
+        
+      }
+        if(Type === 13){
+        
+        this.editing14 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          end: dataFormat(this.date_end)
+            
+        };
+        
+      }
+      if(Type === 14){
+        
+        this.editing15 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          name: this.assetName
+            
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.name = this.assetName;
+            this.assetName = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+      if(Type === 15){
+        
+        this.editing16 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          frame: this.frame
+            
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.frame = this.frame;
+            this.frame = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+      if(Type === 16){
+        
+        this.editing17 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          episode: this.episode
+            
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.episode = this.episode;
+            this.episode = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+      if (Type === 17) {
+        this.editing18 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          priority: this.priority
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.priority = this.priority;
+            this.priority = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+        if (Type === 18) {
+        this.editing19 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          level: this.level
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.level = this.level;
+            this.level = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
       putProjects(data)
         .then(({ data }) => {
           if (data.status === 0) {
@@ -647,6 +950,14 @@ export default {
             if (Type === 8) {
               this.project.Linux = this.linux;
               this.linux = null;
+            }
+            if(Type === 12){
+              this.project.date_start = this.date_start/1000;
+              this.date_start = null
+            }
+            if(Type === 13){
+              this.project.date_end = this.date_end/1000;
+              this.date_end = null
             }
           }
         })
