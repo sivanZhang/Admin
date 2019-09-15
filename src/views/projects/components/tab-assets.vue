@@ -286,22 +286,34 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="200px">
+        <el-table-column label="操作" align="center" >
           <template slot-scope="scope">
-            <el-button
-              @click="editOneAsset(scope.row)"
-              icon="el-icon-edit"
-              type="primary"
-              v-if="!editing||clickId !== scope.row.id"
-            >修改</el-button>
-            <el-button
-              v-if="editing&&clickId === scope.row.id"
-              type="success"
-              icon="el-icon-check"
-              @click="saveEdit(scope.$index,scope.row)"
-            >保存</el-button>
-
-            <el-button @click="deleteAssets(scope.row.id)" icon="el-icon-delete" type="danger">删除</el-button>
+            <el-tooltip effect="dark" content="修改" placement="top">
+              <el-button
+                @click="editOneAsset(scope.row)"
+                icon="el-icon-edit"
+                type="text"
+                style="color:blue"
+                v-if="!editing||clickId !== scope.row.id"
+              />
+            </el-tooltip>
+            <el-tooltip effect="dark" content="确认" placement="top">
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="text"
+                icon="el-icon-check"
+                style="color:green"
+                @click="saveEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
+            <el-tooltip effect="dark" content="删除" placement="top">
+              <el-button
+                @click="deleteAssets(scope.row.id)"
+                icon="el-icon-delete"
+                style="color:red"
+                type="text"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
