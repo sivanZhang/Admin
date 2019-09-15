@@ -40,7 +40,6 @@
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
-        
       >
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center"></el-table-column>
@@ -50,7 +49,7 @@
               :src="$store.state.BASE_URL+scope.row.image"
               style="width: 50px;height: 30px;"
               @click.native="show(scope.row.id)"
-               v-if="!editing||clickId !== scope.row.id"
+              v-if="!editing||clickId !== scope.row.id"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -60,11 +59,11 @@
                 <i class="el-icon-picture" style="color:#909399"></i>
               </div>
             </el-image>
-             <el-image
+            <el-image
               :src="$store.state.BASE_URL+scope.row.image"
               style="width: 50px;height: 30px;"
               @click.native="img(scope.row)"
-               v-if="editing&&clickId === scope.row.id"
+              v-if="editing&&clickId === scope.row.id"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -136,6 +135,67 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.frame?scope.row.frame:"-"}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="frame_range" label="帧数范围" align="left" width="120px">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.frame_range"
+              placeholder="请输入帧数范围"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="report"
+          label="画面调整信息"
+          align="left"
+          width="120px"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.report"
+              placeholder="请输入画面调整信息"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.report?scope.row.report:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.report?scope.row.report:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="retime"
+          label="变速信息"
+          align="left"
+          width="120px"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.retime"
+              placeholder="请输入变速信息"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.retime?scope.row.retime:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.retime?scope.row.retime:"-"}}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="inner_version" label="版本号" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -221,9 +281,9 @@
             >
               <p v-html="scope.row.remark"></p>
             </el-input>
-            <span
-              v-if="!editing||clickId !== scope.row.id"
-            ><p v-html="scope.row.remark"></p></span>
+            <span v-if="!editing||clickId !== scope.row.id">
+              <p v-html="scope.row.remark"></p>
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="200px">
@@ -354,11 +414,7 @@
         </el-upload>
         <el-form-item>
           <el-button @click="cancel2">取消</el-button>
-          <el-button
-            :loading="buttonStates.createLoading"
-            type="primary"
-            @click="addImg"
-          >立即添加</el-button>
+          <el-button :loading="buttonStates.createLoading" type="primary" @click="addImg">立即添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -413,7 +469,7 @@ export default {
       AssetForm: {
         priority: 0
       },
-      ImgForm:{},
+      ImgForm: {},
       isShow: false,
       LevelList: [
         {
@@ -456,9 +512,9 @@ export default {
       editing: false,
       clickId: null,
       iconShow: false,
-      dialogImg:false,
-      imagePath:null,
-      row:null
+      dialogImg: false,
+      imagePath: null,
+      row: null
     };
   },
 
@@ -475,18 +531,17 @@ export default {
     }
   },
   methods: {
-    img(row){
-     this.dialogImg = true;
-     this.row = row,
-     this.SRC = this.$store.state.BASE_URL + row.image
+    img(row) {
+      this.dialogImg = true;
+      (this.row = row), (this.SRC = this.$store.state.BASE_URL + row.image);
     },
-    addImg(){
+    addImg() {
       // console.log(this.ImgForm)
       this.imagePath = this.ImgForm.image;
-      this.SRC = this.$store.state.BASE_URL+this.imagePath;
+      this.SRC = this.$store.state.BASE_URL + this.imagePath;
       this.row.image = this.imagePath;
       this.row.image_id = this.ImgForm.id;
-      this.dialogImg =false
+      this.dialogImg = false;
     },
     handleCurrentChange(row, event, column) {
       // console.log(row, event, column, event.currentTarget);
@@ -514,30 +569,30 @@ export default {
       // console.log(index);
     },
     saveEdit(index, row) {
-      
-        this.iconShow = false;
-        HTTP.editAssets({
-          id:row.id,
-          priority:row.priority,
-          level:row.level,
-          ...this.ImgForm,
-          session:row.session,
-          frame:row.frame,
-          episode:row.episode,
-          name:row.name,
-          method:"put",
-          remark:row.remark,
-          
-        }).then(({data})=>{
-          if(data.status === 0){
-            this.$message.success(data.msg);
-            this.getAssetList();
-            this.editing = false;
-          }else{
-            this.$message.error(data.msg);
-          }
-        })
-     
+      this.iconShow = false;
+      HTTP.editAssets({
+        id: row.id,
+        priority: row.priority,
+        level: row.level,
+        ...this.ImgForm,
+        session: row.session,
+        frame: row.frame,
+        episode: row.episode,
+        name: row.name,
+        method: "put",
+        remark: row.remark,
+        report: row.report,
+        retime: row.retime,
+        frame_range: row.frame_range
+      }).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          this.getAssetList();
+          this.editing = false;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
     },
     change() {
       this.$forceUpdate();
@@ -665,9 +720,9 @@ export default {
       };
       this.SRC = "";
     },
-    cancel2(){
-      this.SRC = ""
-      this.dialogImg = false
+    cancel2() {
+      this.SRC = "";
+      this.dialogImg = false;
     },
     //新建
     addAsset() {
@@ -737,7 +792,7 @@ export default {
       // this.AssetForm.image = response.msg;
       // this.AssetForm.image_id = response.id;
       this.ImgForm.image = response.msg;
-      this.ImgForm.image_id = response.id
+      this.ImgForm.image_id = response.id;
     },
     //分页
     handleSizeChange(val) {

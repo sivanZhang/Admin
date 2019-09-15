@@ -397,6 +397,62 @@
           <el-col :span="6" class="comment">外部版本</el-col>
           <el-col :span="18" class="comment">{{project.outer_version?project.outer_version:"-"}}</el-col>
         </el-row>
+        
+        <el-row>
+          <el-col :span="6" class="comment">画面调整信息</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false">
+              <span v-if="!editing20">{{project.report?project.report:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit20"
+                @click="edit(19)"
+              ></i>
+            </div>
+            <div v-if="editing20">
+              <input type="text" ref="input" class="input" value="project.report" v-model="report" />
+              <el-button @click="save(19)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        
+        <el-row>
+          <el-col :span="6" class="comment">变速信息</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false">
+              <span v-if="!editing21">{{project.retime?project.retime:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit21"
+                @click="edit(20)"
+              ></i>
+            </div>
+            <div v-if="editing21">
+              <input type="text" ref="input" class="input" value="project.retime" v-model="retime" />
+              <el-button @click="save(20)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">帧数范围</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false">
+              <span v-if="!editing22">{{project.frame_range?project.frame_range:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit22"
+                @click="edit(21)"
+              ></i>
+            </div>
+            <div v-if="editing22">
+              <input type="text" ref="input" class="input" value="project.frame_range" v-model="frame_range" />
+              <el-button @click="save(21)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="6" class="comment">备注</el-col>
           <el-col :span="18" class="comment">
@@ -448,6 +504,9 @@ export default {
       editing17:false,
       editing18:false,
       editing19:false,
+      editing20:false,
+      editing21:false,
+      editing22:false,
       name: null,
       budget: null,
       charger: null,
@@ -469,6 +528,9 @@ export default {
       episode:null,
       priority:null,
       level:null,
+      report :null,
+      retime:null,
+      frame_range:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -488,6 +550,9 @@ export default {
       showEdit17:false,
       showEdit18:false,
       showEdit19:false,
+      showEdit20:false,
+      showEdit21:false,
+      showEdit22:false,
       clientList: null
     };
   },
@@ -652,6 +717,27 @@ export default {
         this.editing19 = true;
         this.$nextTick(() => {
           this.$refs.selete.focus();
+        });
+      }
+      if (Type === 19) {
+        this.showEdit20 = false;
+        this.editing20 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 20) {
+        this.showEdit21 = false;
+        this.editing21 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 21) {
+        this.showEdit22 = false;
+        this.editing22 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
         });
       }
     },
@@ -910,6 +996,57 @@ export default {
           if (data.status === 0) {
             this.project.level = this.level;
             this.level = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+      if (Type === 19) {
+        this.editing20 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          report: this.report
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.report = this.report;
+            this.report = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+      if (Type === 20) {
+        this.editing21 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          retime: this.retime
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.retime = this.retime;
+            this.retime = null;
+          }
+        });
+        this.$emit("refresh_assetList");
+        return;
+      }
+      if (Type === 21) {
+        this.editing22 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          frame_range: this.frame_range
+        };
+        editAssets(data).then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.project.frame_range = this.frame_range;
+            this.frame_range = null;
           }
         });
         this.$emit("refresh_assetList");
