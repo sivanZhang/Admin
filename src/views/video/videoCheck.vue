@@ -75,10 +75,6 @@ export default {
       taskId: null
     };
   },
-  computed: {
-    ...mapState("video", ["Selection"])
-  },
-  created() {},
   mounted() {
     let bH = document.body.offsetHeight;
     let videoTabsH = document.getElementById("videoTabs").offsetHeight;

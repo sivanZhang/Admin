@@ -31,6 +31,7 @@
           title="播放/暂停"
           :icon="playerControls.stateIcon"
           @click="playerPlay"
+          type="text"
         ></el-button>
       </el-col>
       <el-col :span="18" class="bar-item">
@@ -160,6 +161,8 @@ export default {
                 )
               );
             } else if (e && e.keyCode === 32) {
+              console.log(e);
+              
               e.preventDefault();
               // console.log(_self.videoPlayer.paused())
               if (_self.videoPlayer.paused()) {
@@ -456,15 +459,10 @@ export default {
 }
 
 #playerToolbar {
-  font-size: 13px;
-  height: 38px;
-  line-height: 38px;
+  font-size: 12px;
   width: 100%;
-  background-color: rgba($color: #000000, $alpha: 0.8);
-  //position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: 100;
+  background-color: #000;
+  z-index: 1000;
   .bar-item {
     height: 38px;
     display: flex;
@@ -478,7 +476,7 @@ export default {
       justify-content: center;
     }
     .slider {
-      margin: 0 5px;
+      margin: 0 10px;
       width:68%;
       color: #fff;
     }
@@ -490,7 +488,7 @@ export default {
     background: transparent;
     padding: 0;
     color: #fff;
-    margin-left: 7px;
+    margin-left: 8px;
     img {
       height: 24px;
     }
