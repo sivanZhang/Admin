@@ -997,10 +997,6 @@ export default {
 }
 #asset-list {
   min-height: calc(100vh - 199px);
-  & /deep/ .el-table--border th,
-  & /deep/ .el-table--border td {
-    /*zjw*/
-    border-right-width: 0px;
-  }
+  position: relative;
 }
 </style>

@@ -1,5 +1,10 @@
 <template>
   <div class="import-table-template">
+    <div class="text-right">
+      共
+      <span>{{tableData.length}}</span> 条数据
+    </div>
+    {{hasBindLinkKey}}{{hasBindKey}}{{tableData}}{{tableCols}}
     <div
       v-loading="tableLoading"
       :element-loading-text="tableLoadingText"
@@ -15,27 +20,22 @@
         height="100%"
         @selection-change="selected"
       >
-        <el-table-column v-if="tableData.length" type="selection" fixed align="center"></el-table-column>
-        <!-- <el-table-column v-if="isShowOptionBar" fixed label="操作" width="100" align="center">
-          <template slot-scope="scope">
-            <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData)"
-              type="danger"
-              size="small"
-            >移除</el-button>
-          </template>
-        </el-table-column>-->
+        <el-table-column v-if="tableData.length" type="selection" fixed width="50" align="center"></el-table-column>
         <template v-for="(col ,index) in tableCols">
           <el-table-column
-            v-if="col.type==='normal'"
             :index="index"
             v-bind:key="index"
             :prop="col.prop"
             :label="col.label"
-            :render-header="renderHeader"
             align="center"
             min-width="130"
           >
+            <template slot="header" slot-scope="scope">
+              <div @click="handelClickHeader(scope)" style="cursor:pointer;">
+                <p style="height:15px;">{{scope.column.label.split(",")[0]}}</p>
+                <p style="height:30px">{{scope.column.label.split(",")[1]}}</p>
+              </div>
+            </template>
             <template slot-scope="scope">
               <el-input
                 v-if="scope.row.isEdit  && index!=0"
@@ -55,12 +55,6 @@
           </el-table-column>
         </template>
       </el-table>
-      <div class="text-right">共{{tableData.length}}条数据</div>
-      <!-- <el-row style="margin-top:15px">
-        <el-button type="primary">添加到环节</el-button>
-        <el-button type="success" @click="mergeCell()">合并单元格</el-button>
-        <el-button type="danger" @click="cancelCell()">取消合并</el-button>
-      </el-row>-->
     </div>
     <el-dialog
       :title="'字段绑定['+selectCurrentCol.label+']'"
@@ -92,7 +86,7 @@
           </template>
           <template v-else>
             <el-cascader
-            style="margin-bottom:5px;"
+              style="margin-bottom:5px;"
               v-model="tempDept"
               placeholder="输入搜索工种"
               :options="SelectDept"
@@ -107,7 +101,7 @@
                 @change="linkChanged"
               >
                 <el-option
-                  v-for="(item,index) in linkDetails"
+                  v-for="(item,index) in LinkKeys"
                   :key="index"
                   :label="item.label"
                   :value="item.value"
@@ -118,9 +112,8 @@
         </el-col>
       </el-row>
       <div style="margin-top:20px">
-        <el-button type="danger" @click="deleteCol">删除本列</el-button>
+        <el-button type="danger" @click="deleteCol" :loading="isDeleteCol">删除本列</el-button>
         <el-button type="warning" @click="cancelMapping">清空字段</el-button>
-        <!-- <el-button type="primary">绑定字段</el-button> -->
       </div>
     </el-dialog>
   </div>
@@ -131,26 +124,26 @@ export default {
   name: "ImportTableTemplate",
   data() {
     return {
-      columnIndex:'',//点击后返回的列index
+      isDeleteCol: false, //删除列的加载状态
       isShowOptionBar: false,
-      dialogVisible: false,
+      dialogVisible: false, //弹出框控制
       assemblingData: {},
       tableLoading: false,
       tableLoadingText: "",
       dealDatas: {}, //原始数据
-      keysMap: [], //绑定字段,
-      allKeysMap: [],
+      keysMap: [], //绑定字段所需要的数据
+      allKeysMap: [], //用来缓存的字段
       dealKeys: [], //原始keys
-      tableCols: [], //列
-      tableData: [], //表格数据
+      tableCols: [], //列[{...}]
+      tableData: [], //表格数据 [{},{},{}]
       selectKey: null,
       selectCurrentCol: { label: "" }, //选中的当前列
       hasBindKey: [], //已经绑定key
-      LinkList: [[]], //提交时绑定links字段的数组
+      LinkList: [[]], //提交时绑定links字段的数组 一个数组代表一列数据的link
       SelectDept: [], //工种数组
       tempDept: null, //选中的dept
       radio: 1,
-      linkDetails: [
+      LinkKeys: [
         {
           label: "制作内容",
           value: "content"
@@ -177,29 +170,44 @@ export default {
     ...mapState("admin", ["DeptList"])
   },
   methods: {
-    deleteCol(){
-      this.tableCols.splice(this.columnIndex,1)
-      this.cancelMapping()
+    //点击表格头
+    handelClickHeader({ column, $index }) {
+      if (this.tableCols[column.index]) {
+        this.selectCurrentCol = column;
+        this.dialogVisible = true;
+        this.selectLinkDetail = null;
+        this.selectKey = "";
+      }
     },
-    //表格复选按钮选中的行对象保存
+    //删除列
+    deleteCol() {
+      this.isDeleteCol = true;
+      //所有数据删除一遍
+      this.tableCols.splice(this.selectCurrentCol.index, 1);
+      this.hasBindLinkKey.splice(this.selectCurrentCol.index, 1);
+      this.hasBindKey.splice(this.selectCurrentCol.index, 1);
+      this.isDeleteCol = false;
+      this.dialogVisible = false;
+    },
+    //缓存勾选中的行
     selected(e) {
       this.selection = [...e];
     },
-    //删除勾选的行对象
+    //删除勾选的行
     deleteRow() {
-      if(!this.selection.length){
-        this.$message.warning('请勾选行')
+      if (!this.selection.length) {
+        this.$message.warning("请勾选行");
       }
-      this.tableData=this.tableData.filter((t, i) => {
-        return !this.selection.includes(t)
+      this.tableData = this.tableData.filter((t, i) => {
+        return !this.selection.includes(t);
       });
-      this.selection = []
+      this.selection = [];
     },
     //绑定工种字段
     linkChanged(value) {
       let _self = this;
       let lastLabel;
-      this.linkDetails.forEach(item => {
+      this.LinkKeys.forEach(item => {
         if (item.value === value) {
           lastLabel = item.label;
         }
@@ -215,67 +223,21 @@ export default {
         }
       }
       changeList(this.SelectDept);
-      //this.selectCurrentCol点击的列的信息   label是选中列的lable为了截取ABCD.....
-      let label = this.tableCols[this.selectCurrentCol.index].label;
+      //this.selectCurrentCol点击的列的信息
+
+      
+      let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
       this.tableCols[this.selectCurrentCol.index].label =
         //大写英文字母 + 传过来的中文字段
         label.split(",")[0] + "," + "[" + deptLabel + "]" + lastLabel;
       this.tableCols[this.selectCurrentCol.index].name = value;
       //缓存已选择的 keys
       this.hasBindLinkKey[this.selectCurrentCol.index] = value;
-      //添加到将要提交的links数组
-
-      /* let tempKeyIndexs = [];
-        for (let i = 0; i < this.hasBindKey.length; i++) {
-          if (this.hasBindLinkKey[i]) {
-            tempKeyIndexs.push(i);
-          }
-        } */
-      let tempKeyIndexs = [];
-      _self.hasBindLinkKey.forEach((t, i) => {
-        t && tempKeyIndexs.push(i);
-        console.log("tempKeyIndexs", tempKeyIndexs);
-      });
-      _self.tableData.forEach((t, i) => {
-        if (!_self.LinkList[i]) {
-          _self.LinkList[i] = [];
-        }
-        tempKeyIndexs.forEach((e, j) => {
-          let linkIndex;
-          let bl;
-          _self.LinkList[i].forEach((lt, li) => {
-            if (lt.dept === _self.tempDept[_self.tempDept.length - 1]) {
-              linkIndex = li;
-              bl = true;
-            } else {
-              bl = false;
-            }
-          });
-
-          if (bl) {
-            _self.LinkList[i][linkIndex] = Object.assign(
-              {},
-              _self.LinkList[i][linkIndex],
-              {
-                [value]: t["node" + e]
-              }
-            );
-          } else {
-            _self.LinkList[i].push({
-              dept: _self.tempDept[_self.tempDept.length - 1],
-              [value]: t["node" + e]
-            });
-          }
-        });
-      });
+      this.hasBindKey[this.selectCurrentCol.index] = null;
       if (this.tempDept) {
+        //如果已经选择过工种
         this.dialogVisible = false;
       }
-      /* if (this.hasBindLinkKey.indexOf(value) < 0) {
-        
-      } else {
-        this.$message.error("该字段已有绑定过");
-      } */
     },
     //获取工种列表
     async formatList() {
@@ -308,13 +270,14 @@ export default {
     //导入后初始化
     initData(data) {
       //表格数据 = 空
+      this.hasBindKey = [];
+      this.hasBindLinkKey = [];
       this.tableData = [];
       this.tableLoading = true;
       this.tableLoadingText = "数据组装中";
       //原始数据= [[],[],[],[]]
       this.dealDatas = data.datas;
       //绑定字段= {}
-      //this.keysMap = data.keysMap;
       this.allKeysMap = { ...data.requiredKeysMap, ...data.keysMap };
       this.keysMap = [
         {
@@ -334,7 +297,6 @@ export default {
       for (let key in this.allKeysMap) {
         this.dealKeys.push(key);
       }
-
       this.getTableHeader(data.reset);
     },
     //获取传递的数据
@@ -360,6 +322,42 @@ export default {
         }
         values.push(value);
       }
+
+      let tempLinkKeyIndexs = []; // 每一项是绑定了link字段的index
+      this.hasBindLinkKey.forEach((t, i) => {
+        t && tempLinkKeyIndexs.push(i);
+      });
+      this.tableData.forEach((t, i) => {
+        if (!this.LinkList[i]) {
+          this.LinkList.splice(i, 0, []);
+        } //如果没有数组创建数组
+        tempLinkKeyIndexs.forEach((e, j) => {
+          let linkIndex;
+          let bl;
+          this.LinkList[i].forEach((lt, k) => {
+            if (lt.dept === this.tempDept[this.tempDept.length - 1]) {
+              // this.tempDept[this.tempDept.length - 1 当前选中的dept
+              linkIndex = k;
+              bl = true; 
+            } else {
+              bl = false;
+            }
+          });
+
+          if (bl) {
+            //如果已经创建了该环节的数据
+            this.LinkList[i][linkIndex] = {
+              ...this.LinkList[i][linkIndex],
+              [this.hasBindLinkKey[e]]: t["node" + e]
+            };
+          } else {
+            this.LinkList[i].push({
+              dept: this.tempDept[this.tempDept.length - 1],
+              [this.hasBindLinkKey[e]]: t["node" + e]
+            });
+          }
+        });
+      });
       //如果有绑定环节     把传递的数据加Link字段  并且把环节数组对象放到每一列中
       if (this.LinkList[0].length) {
         bindKeys.push("links");
@@ -383,7 +381,6 @@ export default {
      * 组装表格头  bl = 是否重置表格
      */
     getTableHeader(bl) {
-      //表格头
       this.tableCols = [];
       //加载中文字
       this.tableLoadingText = "数据组装表头中";
@@ -397,10 +394,9 @@ export default {
           let label = {
             label: String.fromCharCode(65 + i) + ",未绑定字段",
             prop: "node" + i,
-            name: "",
-            type: "normal" //表示添加进来的列（不包含操作项）
+            name: ""
           };
-          //表头数据添加
+          //列数据
           this.tableCols.push(label);
         }
         this.isShowOptionBar = true;
@@ -416,15 +412,14 @@ export default {
     //转化成el tabale用的数据格式
     getTableData() {
       this.tableLoadingText = "数据组装数据中";
-      for (let i = 0; i < this.dealDatas.length; i++) {
+      this.dealDatas.forEach((t, i) => {
         let data = {};
-        //普通数据
-        for (let j = 0; j < this.dealDatas[i].length; j++) {
-          data["node" + j] = this.dealDatas[i][j];
-        }
-        data.isEdit = false;
+        t.forEach((ct, ci) => {
+          data["node" + ci] = t[ci];
+        });
+        data["isEdit"] = false;
         this.tableData.push(data);
-      }
+      });
       this.tableLoading = false;
     },
     /**
@@ -432,15 +427,15 @@ export default {
      */
     changeHandlerRadio(value) {
       if (this.hasBindKey.indexOf(value) < 0) {
-        //this.selectCurrentCol点击的列的信息   label是选中列的lable为了截取ABCD.....
-        let label = this.tableCols[this.selectCurrentCol.index].label;
+        //this.selectCurrentCol点击的列的信息
+        let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
         this.tableCols[this.selectCurrentCol.index].label =
           //大写英文字母 + 传过来的中文字段
           label.split(",")[0] + "," + this.allKeysMap[value];
         this.tableCols[this.selectCurrentCol.index].name = value;
         //缓存已选择的 keys
         this.hasBindKey[this.selectCurrentCol.index] = value;
-
+        this.hasBindLinkKey[this.selectCurrentCol.index] = null;
         this.dialogVisible = false;
       } else {
         this.$message.error("该字段已有绑定过");
@@ -452,7 +447,8 @@ export default {
       this.tableCols[this.selectCurrentCol.index].label =
         label.split(",")[0] + ",未绑定字段";
       this.tableCols[this.selectCurrentCol.index].name = "";
-      this.hasBindKey[this.selectCurrentCol.index] = "";
+      this.hasBindKey[this.selectCurrentCol.index] = null;
+      this.hasBindLinkKey[this.selectCurrentCol.index] = null;
       this.dialogVisible = false;
     },
     dblhandleCurrentChange(row, column, cell, event) {
@@ -463,73 +459,6 @@ export default {
       tableD.forEach(function(item) {
         item.isEdit = false;
       });
-    },
-    /**
-     * 格式化表头
-     */
-    renderHeader(h, { column, $index }) {
-      let _self = this;
-      let a = column.label.split(",")[0];
-      let b = column.label.split(",")[1];
-      return h(
-        "div",
-        {
-          style: "cursor:pointer;"
-        },
-        [
-          h("div", {}, [
-            h(
-              "p",
-              {
-                style: "height:17px;",
-                on: {
-                  click: function() {
-                    _self.columnIndex=column.index
-                    if (_self.tableCols[column.index]) {
-                      _self.selectCurrentCol = column;
-                      _self.dialogVisible = true;
-                      (_self.selectLinkDetail = null), (_self.selectKey = "");
-                    }
-                  }
-                }
-              },
-              a
-            ),
-            h(
-              "p",
-              {
-                style: "height:30px;",
-                on: {
-                  click: function() {
-                    _self.columnIndex=column.index
-                    if (_self.tableCols[column.index]) {
-                      _self.selectCurrentCol = column;
-                      _self.dialogVisible = true;
-                      (_self.selectLinkDetail = null), (_self.selectKey = "");
-                    }
-                  }
-                }
-              },
-              b
-            )
-          ])
-        ]
-      );
-    },
-    mergeCell() {
-      this.$message.error("开发中");
-      var inputs = document.getElementsByTagName("input");
-      var boxs = [];
-      for (let i = 0; i < inputs.length; i++) {
-        if (inputs[i].type == "checkbox") {
-          console.log(inputs[i].id);
-          boxs.push(inputs[i]);
-        }
-      }
-      console.log(boxs);
-    },
-    cancelCell() {
-      this.$message.error("开发中");
     }
   },
   created() {
@@ -538,9 +467,21 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.import-table-template {
+  position: relative;
+}
 .text-right {
-  color: #2d8cf0;
+  span {
+    color: #ed4014;
+    font-size: 18px;
+  }
+  width: 100%;
+  position: absolute;
+  right: 0;
+  top: -40px;
   text-align: right;
   font-size: 16px;
+  font-weight: 600;
+  z-index: -1;
 }
 </style>
