@@ -9,7 +9,7 @@
     <el-table-column prop="labor_hour" label="工时"></el-table-column>
     <el-table-column prop="executor_date" label="日期" width="90px">
       <template slot-scope="scope">
-        {{scope.row.executor_date|dateFormat}}
+        {{scope.row.executor_date|dateTimeFormat}}
       </template>
     </el-table-column>
   </el-table>

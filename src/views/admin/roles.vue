@@ -56,6 +56,7 @@
                   type="primary"
                   @click="isShowDialog = true"
                   v-if="$store.state.login.userInfo.auth.manage_role"
+                  :disabled="!name"
                 >绑定用户</el-button>
               </el-col>
               <el-col :span="3">
@@ -63,11 +64,12 @@
                   type="danger"
                   @click="isShowDialog2 = true"
                   v-if="$store.state.login.userInfo.auth.manage_role"
+                  :disabled="!name"
                 >解绑用户</el-button>
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="2" v-for="(item,index) of roleUserList" :key="index">{{item.username}}</el-col>
+              <el-col :span="3" v-for="(item,index) of roleUserList" :key="index">{{item.username}}</el-col>
             </el-row>
           </div>
 
