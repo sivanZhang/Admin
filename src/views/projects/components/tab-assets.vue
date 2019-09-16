@@ -17,7 +17,7 @@
           >批量删除</el-button>
           <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
             <el-col :span="12">
-              <el-checkbox v-model="ind" >序号</el-checkbox>
+              <el-checkbox v-model="ind">序号</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_image">缩略图</el-checkbox>
@@ -73,13 +73,25 @@
             <el-col :span="12">
               <el-checkbox v-model="show_totle_date_end">计划截止日期</el-checkbox>
             </el-col>
-             <el-col :span="12">
+            <el-col :span="12">
               <el-checkbox v-model="show_total_hours">总工时</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_remark">备注</el-checkbox>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
+          </el-popover>
+          <el-popover placement="bottom" width="150" trigger="click" style="margin-left:15px">
+            <el-row style="padding-bottom:5px">状态</el-row>
+              <el-radio-group v-model="statusRadio" @change="getAssetList">
+              <el-radio :label="0" >暂停</el-radio>
+              <el-radio :label="1">未开始</el-radio>
+              <el-radio :label="2">进行中</el-radio>
+              <el-radio :label="3">审核中</el-radio>
+              <el-radio :label="4">完成</el-radio>
+            </el-radio-group>
+            <el-col align="right"><el-button @click="getAssetList(2)" type="primary">重置</el-button></el-col>
+            <el-button slot="reference" type="primary" size="mini">筛选</el-button>
           </el-popover>
         </el-col>
         <el-col :span="9" align="right">
@@ -174,7 +186,14 @@
             >{{scope.row.episode?scope.row.episode:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="镜头号" align="left" width="120px" show-overflow-tooltip v-if="show_name">
+        <el-table-column
+          prop="name"
+          label="镜头号"
+          align="left"
+          width="120px"
+          show-overflow-tooltip
+          v-if="show_name"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -202,7 +221,13 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.frame?scope.row.frame:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="frame_range" label="帧数范围" align="left" width="120px" v-if="show_frame_range">
+        <el-table-column
+          prop="frame_range"
+          label="帧数范围"
+          align="left"
+          width="120px"
+          v-if="show_frame_range"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -250,8 +275,20 @@
             >{{scope.row.retime?scope.row.retime:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="inner_version" label="版本号" align="left" show-overflow-tooltip v-if="show_inner_version"></el-table-column>
-        <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip v-if="show_content">
+        <el-table-column
+          prop="inner_version"
+          label="版本号"
+          align="left"
+          show-overflow-tooltip
+          v-if="show_inner_version"
+        ></el-table-column>
+        <el-table-column
+          prop="content"
+          label="制作内容"
+          align="left"
+          show-overflow-tooltip
+          v-if="show_content"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -267,11 +304,12 @@
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left" v-if="show_priority"
-        column-key="priority"
-        :filters="[{text:'正常',value: 0},{text:'优先',value: 1}]"
-        :filter-method="filterPriority"
-        filter-placement="bottom-end"
+        <el-table-column
+          prop="priority"
+          label="优先级"
+          :formatter="Priority"
+          align="left"
+          v-if="show_priority"
         >
           <template slot-scope="scope">
             <el-select
@@ -285,11 +323,12 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.priority|Priority}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="level" label="难度等级" :formatter="Level" align="left" v-if="show_level"
-        column-key="status"
-        :filters="[{text:'简单',value: 0},{text:'标准',value: 1},{text:'复杂',value: 2},{text:'高难度',value: 3}]"
-        :filter-method="filterLevel"
-        filter-placement="bottom-end"
+        <el-table-column
+          prop="level"
+          label="难度等级"
+          :formatter="Level"
+          align="left"
+          v-if="show_level"
         >
           <template slot-scope="scope">
             <el-select
@@ -308,15 +347,10 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.level|Level}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="资产ID" v-if="show_id" align="left" ></el-table-column>
+        <el-table-column prop="id" label="资产ID" v-if="show_id" align="left"></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="show_creator_id" align="left"></el-table-column>
-        <el-table-column prop="status" label="状态" align="left" v-if="show_status"
-        column-key="status"
-        :filters="[{text:'暂停',value: 0},{text:'未开始',value: 1},{text:'进行中',value: 2},{text:'审核中',value: 3},{text:'完成',value: 4}]"
-        :filter-method="filterStatus"
-        filter-placement="bottom-end"
-        >
+        <el-table-column prop="status" label="状态" align="left" v-if="show_status">
           <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
@@ -339,7 +373,13 @@
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
-        <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip v-if="show_remark">
+        <el-table-column
+          prop="remark"
+          label="备注"
+          align="left"
+          show-overflow-tooltip
+          v-if="show_remark"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -599,24 +639,25 @@ export default {
       ind: true,
       show_image: true,
       show_session: true,
-      show_episode:true,
-      show_name:true,
-      show_frame:true,
-      show_frame_range:true,
-      show_report:true,
-      show_retime:true,
-      show_inner_version:true,
-      show_content:true,
-      show_priority:true,
-      show_level:true,
-      show_id:false,
-      show_creator_name:true,
-      show_creator_id:false,
-      show_status:true,
-      show_link:true,
-      show_totle_date_end:true,
-      show_total_hours:true,
-      show_remark:true
+      show_episode: true,
+      show_name: true,
+      show_frame: true,
+      show_frame_range: true,
+      show_report: true,
+      show_retime: true,
+      show_inner_version: true,
+      show_content: true,
+      show_priority: true,
+      show_level: true,
+      show_id: false,
+      show_creator_name: true,
+      show_creator_id: false,
+      show_status: true,
+      show_link: true,
+      show_totle_date_end: true,
+      show_total_hours: true,
+      show_remark: true,
+      statusRadio:null
     };
   },
 
@@ -633,6 +674,7 @@ export default {
     }
   },
   methods: {
+    
     img(row) {
       this.dialogImg = true;
       (this.row = row), (this.SRC = this.$store.state.BASE_URL + row.image);
@@ -711,6 +753,9 @@ export default {
       if (type === 1) {
         this.filterText = "";
       }
+      if(type === 2){
+        this.statusRadio = -1;
+      }
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
@@ -719,6 +764,9 @@ export default {
       };
       if (this.filterText) {
         payload = { ...payload, name: this.filterText };
+      }
+      if(this.statusRadio>=0){
+        payload={...payload,status: this.statusRadio};
       }
       this.tableLoading = true;
       HTTP.queryAssets(payload)
@@ -895,16 +943,6 @@ export default {
       // this.AssetForm.image_id = response.id;
       this.ImgForm.image = response.msg;
       this.ImgForm.image_id = response.id;
-    },
-    filterStatus(value,row,column){
-     return row.status === value
-      
-    },
-    filterPriority(value,row,column){
-      return row.priority === value
-    },
-    filterLevel(value,row,column){
-      return row.level === value
     },
     //分页
     handleSizeChange(val) {
