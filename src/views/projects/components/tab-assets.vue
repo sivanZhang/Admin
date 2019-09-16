@@ -546,8 +546,9 @@
       width="526"
       inner
       :transfer="false"
-      :mask-style="{backgroundColor: 'transparent'}"
+      :mask="false"
     >
+      <Affix :offset-top="20">
       <Header :project="project">
         <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
       </Header>
@@ -557,6 +558,7 @@
         @refresh_assetList="getAssetList"
         ref="assetsDrawer"
       />
+      </Affix>
     </Drawer>
   </div>
 </template>
