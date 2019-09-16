@@ -90,7 +90,7 @@
               <el-radio :label="3">审核中</el-radio>
               <el-radio :label="4">完成</el-radio>
             </el-radio-group>
-            <el-col align="right"><el-button @click="getAssetList(2)" type="primary">重置</el-button></el-col>
+            <el-col align="right"><el-button @click="getAssetList(-1)" type="primary">重置</el-button></el-col>
             <el-button slot="reference" type="primary" size="mini">筛选</el-button>
           </el-popover>
         </el-col>
@@ -753,7 +753,7 @@ export default {
       if (type === 1) {
         this.filterText = "";
       }
-      if(type === 2){
+      if(type === -1){
         this.statusRadio = -1;
       }
       let payload = {
