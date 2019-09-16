@@ -4,7 +4,6 @@
       共
       <span>{{tableData.length}}</span> 条数据
     </div>
-    {{hasBindLinkKey}}{{hasBindKey}}{{tableData}}{{tableCols}}
     <div
       v-loading="tableLoading"
       :element-loading-text="tableLoadingText"
