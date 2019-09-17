@@ -81,16 +81,53 @@
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
-          <el-popover placement="bottom" width="150" trigger="click" style="margin-left:15px">
+          <el-popover placement="bottom" width="200" trigger="click" style="margin-left:15px">
             <el-row style="padding-bottom:5px">状态</el-row>
-              <el-radio-group v-model="statusRadio" @change="getAssetList">
-              <el-radio :label="0" >暂停</el-radio>
-              <el-radio :label="1">未开始</el-radio>
-              <el-radio :label="2">进行中</el-radio>
-              <el-radio :label="3">审核中</el-radio>
-              <el-radio :label="4">完成</el-radio>
+            <el-radio-group v-model="statusRadio" @change="getAssetList">
+              <el-col :span="12">
+                <el-radio :label="0">暂停</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="1">未开始</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="2">进行中</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="3">审核中</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="4">完成</el-radio>
+              </el-col>
             </el-radio-group>
-            <el-col align="right"><el-button @click="getAssetList(-1)" type="primary">重置</el-button></el-col>
+            <el-row style="padding-bottom:5px">优先级别</el-row>
+            <el-radio-group v-model="priorityRadio" @change="getAssetList">
+              <el-col :span="12">
+                <el-radio :label="0">正常</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="1">优先</el-radio>
+              </el-col>
+            </el-radio-group>
+            <el-row style="padding-bottom:5px">难度等级</el-row>
+            <el-radio-group v-model="levelRadio" @change="getAssetList">
+              <el-col :span="12">
+                <el-radio :label="0">简单</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="1">标准</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="2">复杂</el-radio>
+              </el-col>
+              <el-col :span="12">
+                <el-radio :label="3">高难度</el-radio>
+              </el-col>
+            </el-radio-group>
+
+            <el-col align="right">
+              <el-button @click="getAssetList(-1)" type="primary" style="margin-top:20px">重置</el-button>
+            </el-col>
             <el-button slot="reference" type="primary" size="mini">筛选</el-button>
           </el-popover>
         </el-col>
@@ -103,7 +140,7 @@
           >
             <el-button @click="getAssetList()" slot="append" icon="el-icon-search" type="primary" />
           </el-input>
-          <el-button @click="getAssetList(1)" type="primary">重置</el-button>
+          <el-button @click="getAssetList(1)" type="primary" >重置</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -369,7 +406,13 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="计划截止日期" align="left" width="95px" v-if="show_totle_date_end">
+        <el-table-column
+          label="计划截止日期"
+          align="left"
+          width="95px"
+          v-if="show_totle_date_end"
+          class-name="date"
+        >
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
@@ -539,25 +582,17 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <Drawer
-      scrollable
-      closable
-      v-model="value1"
-      width="526"
-      inner
-      :transfer="false"
-      :mask="false"
-    >
+    <Drawer scrollable closable v-model="value1" width="526" inner :transfer="false" :mask="false">
       <Affix :offset-top="20">
-      <Header :project="project">
-        <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
-      </Header>
-      <assetsDrawer
-        :project="project"
-        :RemarksData="RemarksData"
-        @refresh_assetList="getAssetList"
-        ref="assetsDrawer"
-      />
+        <Header :project="project">
+          <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
+        </Header>
+        <assetsDrawer
+          :project="project"
+          :RemarksData="RemarksData"
+          @refresh_assetList="getAssetList"
+          ref="assetsDrawer"
+        />
       </Affix>
     </Drawer>
   </div>
@@ -659,7 +694,9 @@ export default {
       show_totle_date_end: true,
       show_total_hours: true,
       show_remark: true,
-      statusRadio:null
+      statusRadio: null,
+      priorityRadio: null,
+      levelRadio: null
     };
   },
 
@@ -676,7 +713,6 @@ export default {
     }
   },
   methods: {
-    
     img(row) {
       this.dialogImg = true;
       (this.row = row), (this.SRC = this.$store.state.BASE_URL + row.image);
@@ -755,20 +791,29 @@ export default {
       if (type === 1) {
         this.filterText = "";
       }
-      if(type === -1){
+      if (type === -1) {
         this.statusRadio = -1;
+        this.priorityRadio = -1;
+        this.levelRadio = -1;
       }
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
-        page: this.currentPage
+        page: this.currentPage,
+        sort: "date"
       };
       if (this.filterText) {
         payload = { ...payload, name: this.filterText };
       }
-      if(this.statusRadio>=0){
-        payload={...payload,status: this.statusRadio};
+      if (this.statusRadio >= 0) {
+        payload = { ...payload, status: this.statusRadio };
+      }
+      if (this.priorityRadio >= 0) {
+        payload = { ...payload, priority: this.priorityRadio };
+      }
+      if (this.levelRadio >= 0) {
+        payload = { ...payload, level: this.levelRadio };
       }
       this.tableLoading = true;
       HTTP.queryAssets(payload)

@@ -65,6 +65,7 @@ export default {
     getAssetList() {
       let payload = {
           project: this.$route.params.id,
+          sort:"date"
         };
       queryAssets(payload).then(({ data }) => {
         if (data.status === 0) {
