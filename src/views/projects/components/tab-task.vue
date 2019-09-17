@@ -589,11 +589,11 @@ export default {
     },
     handleTabClick(tab, event) {
       //this.getRemarkList();
-      console.log(tab, event);
+    //  console.log(tab, event);
     },
     showDrawer(item) {
       this.showdrawer = true;
-      console.log(item);
+     // console.log(item);
       this.$refs["approvelogs"].getApproveLog(item.id);
     },
     change() {

@@ -47,6 +47,7 @@
 <script>
 import ZoomImg from "@/components/ZoomImg";
 import { getApproveRemark } from "@/api/video";
+import { getAssetsApprove } from "@/api/assets";
 export default {
   mame: "approve-logs",
   components: {
@@ -71,7 +72,8 @@ export default {
           value: 1
         }
       ],
-      select: 2
+      select: 2,
+      
     };
   },
   methods: {
@@ -99,6 +101,21 @@ export default {
       }
       this.tableLoading = true;
       getApproveRemark(this.httpParams)
+        .then(({ data }) => {
+          this.tableLoading = false;
+          if (data.status === 0) {
+            this.list = [...data.msg];
+          }
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
+    },
+    getAssetAppooveList(asset_id){
+      this.tableLoading = true;
+      getAssetsApprove({
+        asset_id:asset_id
+      })
         .then(({ data }) => {
           this.tableLoading = false;
           if (data.status === 0) {

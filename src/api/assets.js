@@ -51,3 +51,7 @@ export function parseExcel(data) {
 export function getVersion(params){
     return AXIOS.get('/assets/version/',{params})
 }
+//查询资产对应任务的审批结果
+export function getAssetsApprove(params){
+    return AXIOS.get('/approve/approve_result/?01',{params})
+}

@@ -81,7 +81,10 @@
               
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="信息" name="sixth">
+          <el-tab-pane label="审批记录" name="sixth">
+            <approve-log ref="approvelogs" />
+          </el-tab-pane>
+          <el-tab-pane label="信息" name="seventh">
             <info :project="project" @refresh_assetList="getAssetList" />
           </el-tab-pane>
         </el-tabs>
@@ -97,6 +100,7 @@ import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
 import { getVersion } from "@/api/assets";
 import { getAssetTaskList } from "@/api/task";
+import approveLog from "@/views/video/components/approve-log";
 export default {
   name: "assets-drawer",
   props: ["project", "RemarksData"],
@@ -114,10 +118,13 @@ export default {
         if (newVal === "fifth") {
           this.getAssetVersion();
         }
+        if(newVal === "sixth"){
+          this.getAssetApproveLog();
+        }
       }
     }
   },
-  components: { remarks, info, links },
+  components: { remarks, info, links,approveLog },
   methods: {
     getAssetList() {
       this.$emit("refresh_assetList");
@@ -136,6 +143,9 @@ export default {
       }).then(({ data }) => {
         this.assetVersion = [...data.msg];
       });
+    },
+    getAssetApproveLog(){
+      this.$refs["approvelogs"].getAssetAppooveList(project.id);
     },
     getAssetTask(id) {
       getAssetTaskList({
