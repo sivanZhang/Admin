@@ -16,7 +16,7 @@
           <el-tab-pane label="评论" name="second">
             <remarks :project="project" :RemarksData="RemarksData" />
           </el-tab-pane>
-          <el-tab-pane label="链接" name="third">
+          <el-tab-pane label="相关任务" name="third">
             <el-table
               ref="assetTable"
               :data="assetTaskList"
@@ -30,7 +30,12 @@
             >
               <el-table-column label="任务ID" prop="id" align="left"></el-table-column>
               <el-table-column label="名称" prop="name" align="left"></el-table-column>
-              <el-table-column label="制作环节" prop="link_dept_name" align="left" show-overflow-tooltip></el-table-column>
+              <el-table-column
+                label="制作环节"
+                prop="link_dept_name"
+                align="left"
+                show-overflow-tooltip
+              ></el-table-column>
               <el-table-column label="制作内容" prop="content" align="left" show-overflow-tooltip></el-table-column>
               <el-table-column label="创建时间" align="left" width="90px">
                 <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
@@ -56,8 +61,26 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="相关版本" name="fifth">
-            <!-- {{assetVersion}} -->
-            </el-tab-pane>
+            <el-table
+              :data="assetVersion"
+              style="width: 100%"
+              border
+              :stripe="true"
+              :row-style="{'font-size':'13px'}"
+              :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+              highlight-current-row
+              row-class-name="hover"
+            >
+            <el-table-column prop="current_version" label="版本号" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="path" label="审核路径"></el-table-column>
+              <el-table-column prop="date" label="更新时间">
+                <template slot-scope="scope">
+                  {{scope.row.date|dateTimeFormat}}
+                </template>
+              </el-table-column>
+              
+            </el-table>
+          </el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" @refresh_assetList="getAssetList" />
           </el-tab-pane>
@@ -85,6 +108,15 @@ export default {
       assetTaskList: null
     };
   },
+  watch: {
+    activeTab: {
+      handler: function(newVal, oldVal) {
+        if (newVal === "fifth") {
+          this.getAssetVersion();
+        }
+      }
+    }
+  },
   components: { remarks, info, links },
   methods: {
     getAssetList() {
@@ -100,7 +132,7 @@ export default {
     },
     getAssetVersion(id) {
       getVersion({
-        asset_id: id
+        asset_id: this.project.id
       }).then(({ data }) => {
         this.assetVersion = [...data.msg];
       });
@@ -112,8 +144,8 @@ export default {
         this.assetTaskList = [...data.msg];
       });
     },
-    openTaskDetail(row){
-      const path = "/projects/project-detail/"+row.project.id+"/?tab=tab2";
+    openTaskDetail(row) {
+      const path = "/projects/project-detail/" + row.project.id + "/?tab=tab2";
       //console.log(path);
       this.$router.push(path);
     }

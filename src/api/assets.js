@@ -47,3 +47,7 @@ export function parseExcel(data) {
         }
     })
 }
+//查询对应资产的版本记录
+export function getVersion(params){
+    return AXIOS.get('/assets/version/',{params})
+}
