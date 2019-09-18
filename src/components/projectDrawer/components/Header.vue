@@ -73,13 +73,16 @@
           <el-col :span="3">
             <svg-icon icon-class="asset" style="width:40px;height:40px"></svg-icon>
           </el-col>
-          <el-col :span="21">
+          <el-col :span="18">
             <el-row>
               <span class="project-name">{{project.name}}</span>
             </el-row>
             <el-row>
               <div class="project-type">{{'资产'}}</div>
             </el-row>
+          </el-col>
+          <el-col :span="3">
+               <el-button style="width:42px" type="primary" icon="el-icon-close" @click="close" size="mini" ></el-button>
           </el-col>
         </div>
         <div class="header-body">
@@ -147,6 +150,9 @@ export default {
     }
   },
   methods: {
+    close(){
+       this.$emit("DrawerClose")
+    },
     //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
