@@ -15,7 +15,7 @@
               @click="openDialog(1)"
               v-if="perssion"
             >添加用户</el-button>
-            <el-button icon="el-icon-upload2" type="success" @click="openDialog(2)" v-if="perssion">
+            <el-button icon="el-icon-upload2" type="success" @click="openDialog(2)" v-if="perssion" :disabled="true">
               <slot name="import">用户导入</slot>
             </el-button>
           </el-col>
@@ -36,7 +36,7 @@
         <users-table :UserList="UserList" :perssion="perssion" @refresh="getAllUserlist"></users-table>
       </el-main>
     </el-container>
-    <el-dialog :visible.sync="dialogShow" :title="dialogName">
+    <el-dialog :visible.sync="dialogShow" :title="dialogName" width="400px">
       <el-form
         :loading="buttonStates.createLoading"
         :model="userForm"

@@ -69,36 +69,7 @@
             <el-col :span="12">
               <el-checkbox v-model="show_total_hour">预设时间（小时）</el-checkbox>
             </el-col>
-
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
-          </el-popover>
-          <el-popover placement="bottom" width="200" trigger="click" style="margin-left:15px">
-            <el-row style="padding:5px">状态</el-row>
-            <el-radio-group v-model="statusRadio" @change="getTasks">
-              <el-col :span="12"><el-radio :label="0">暂停</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="1">未开始</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="2">进行中</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="3">审核中</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="4">完成</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="5">超时</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="6">审核通过</el-radio></el-col>
-            </el-radio-group>
-            <el-row style="padding:5px">任务等级</el-row>
-            <el-radio-group v-model="priorityRadio" @change="getTasks">
-              <el-col :span="12"><el-radio :label="0">低级</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="1">中级</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="2">高级</el-radio></el-col>
-            </el-radio-group>
-            <el-row style="padding:5px">难度等级</el-row>
-            <el-radio-group v-model="gradeRadio" @change="getTasks">
-              <el-col :span="12"><el-radio :label="0">简单</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="1">标准</el-radio></el-col>
-              <el-col :span="12"><el-radio :label="2">难</el-radio></el-col>
-            </el-radio-group>
-            <el-col align="right">
-              <el-button @click="getTasks(-1)" type="primary" style="margin-top:20px">重置</el-button>
-            </el-col>
-            <el-button slot="reference" type="primary" size="mini">筛选</el-button>
           </el-popover>
         </el-col>
         <el-col :span="9" style="text-align:right">
@@ -107,6 +78,7 @@
             style="width:200px;"
             v-model="keyword"
             class="input-with-select"
+            @keyup.enter.native="getTasks()"
           >
             <el-button @click="getTasks()" slot="append" icon="el-icon-search" type="primary" />
           </el-input>
@@ -126,6 +98,7 @@
         :row-key="row=>row.id"
         v-loading="tableLoading"
         row-class-name="hover"
+        @filter-change="filterHandler"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
@@ -167,9 +140,32 @@
         <el-table-column label="镜头号" show-overflow-tooltip v-if="show_asset_name">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
-        <el-table-column prop="priority" label="优先级" :formatter="Priority" v-if="show_priority"></el-table-column>
-        <el-table-column prop="grade" label="难度等级" :formatter="Grade" v-if="show_grade"></el-table-column>
-        <el-table-column label="状态" v-if="show_status">
+        <el-table-column
+          prop="priority"
+          label="任务等级"
+          :formatter="Priority"
+          v-if="show_priority"
+          width="90px"
+          column-key="priority"
+          :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}, {text: '高难度', value: '3'}]"
+        ></el-table-column>
+        <el-table-column
+          prop="grade"
+          label="难度等级"
+          :formatter="Grade"
+          v-if="show_grade"
+          width="90px"
+          column-key="grade"
+          :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
+        ></el-table-column>
+        <el-table-column
+          label="状态"
+          prop="status"
+          v-if="show_status"
+          align="left"
+          column-key="status"
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
+        >
           <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
         </el-table-column>
         <el-table-column label="创建者" v-if="show_creator_name">
@@ -187,7 +183,7 @@
         <el-table-column label="截止日期" width="95px" v-if="show_end_date">
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hour" label="预设时间（小时）" width="125px" v-if="show_total_hour"></el-table-column>
+        <el-table-column prop="total_hour" label="预设时间（小时）" width="130px" v-if="show_total_hour"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">
@@ -550,9 +546,9 @@ export default {
       show_start_date: true,
       show_end_date: true,
       show_total_hour: true,
-      statusRadio: null,
-      priorityRadio: null,
-      gradeRadio: null
+      filterStatus: [],
+      filterPriority: [],
+      filterGrade: []
     };
   },
   filters: {
@@ -826,8 +822,6 @@ export default {
           this.dialogTitle = "修改任务";
           this.TaskForm = {
             ...this.ActiveRow,
-            priority: 0,
-            grade: 1,
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)) > 0
                 ? new Date(dateFormat(this.ActiveRow.start_date))
@@ -976,15 +970,63 @@ export default {
         })
         .catch(() => {});
     },
+    filterHandler(val) {
+      if (val.status) {
+        this.filterStatus = [];
+        this.filterStatus = [...val.status];
+        this.filterStatus.forEach((item,index)=>{
+          item=Number(item);
+          this.filterStatus[index]=item;
+        })
+      }
+      if (val.grade) {
+        this.filterGrade = [];
+        this.filterGrade = [...val.grade];
+        this.filterGrade.forEach((item,index)=>{
+          item=Number(item);
+          this.filterGrade[index] = item;
+        })
+      }
+      if (val.priority) {
+        this.filterPriority = [];
+        this.filterPriority = [...val.priority];
+        this.filterPriority.forEach((item,index)=>{
+          item = Number(item);
+          this.filterPriority[index] = item;
+        })
+      }
+      let data = {
+        project: this.$route.params.id,
+        pagenum: this.pageSize,
+        page: this.currentPage,
+        sort: "date"
+      };
+      if (this.filterStatus) {
+        data = { ...data, status: "["+String(this.filterStatus)+"]"  };
+      }
+      if (this.filterGrade) {
+        data = { ...data, grade: "["+String(this.filterGrade)+"]"  };
+      }
+      if (this.filterPriority) {
+        data = { ...data, priority: "["+String(this.filterPriority)+"]" };
+      }
+      HTTP.queryTask(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.TaskList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
+    },
     //获取任务列表
     getTasks(type) {
       if (type === 1) {
         this.keyword = "";
-      }
-      if (type === -1) {
-        this.statusRadio = -1;
-        this.priorityRadio = -1;
-        this.gradeRadio = -1;
       }
       let data = {
         project: this.$route.params.id,
@@ -997,15 +1039,6 @@ export default {
           ...data,
           name: this.keyword
         };
-      }
-      if (this.statusRadio >= 0) {
-        data = { ...data, status: this.statusRadio };
-      }
-      if (this.priorityRadio >= 0) {
-        data = { ...data, priority: this.priorityRadio };
-      }
-      if (this.gradeRadio >= 0) {
-        data = { ...data, grade: this.gradeRadio };
       }
       this.tableLoading = true;
       HTTP.queryTask(data)
