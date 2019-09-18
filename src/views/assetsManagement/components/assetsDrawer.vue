@@ -113,12 +113,10 @@ export default {
     };
   },
   watch: {
-    activeTab: {
+    project: {
       handler: function(newVal, oldVal) {
-        if (newVal === "fifth") {
+        if (newVal ) {
           this.getAssetVersion();
-        }
-        if(newVal === "sixth"){
           this.getAssetApproveLog();
         }
       }
@@ -145,7 +143,7 @@ export default {
       });
     },
     getAssetApproveLog(){
-      this.$refs["approvelogs"].getAssetAppooveList(project.id);
+      this.$refs["approvelogs"].getAssetAppooveList(this.project.id);
     },
     getAssetTask(id) {
       getAssetTaskList({
