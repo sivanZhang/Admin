@@ -142,7 +142,7 @@
                 style="width: 100%"
                 @selection-change="handleDelSelectionChange"
               >
-                <el-table-column type="selection" width="30" align="center"></el-table-column>
+                <el-table-column type="selection"  align="center"></el-table-column>
                 <el-table-column prop="codename" label="权限名称"></el-table-column>
                 <el-table-column prop="name" label="权限说明"></el-table-column>
               </el-table>
@@ -184,7 +184,7 @@
             style="width: 100%"
             @selection-change="handleDelUserSelectionChange"
           >
-            <el-table-column type="selection" width="40" align="center"></el-table-column>
+            <el-table-column type="selection"  align="center"></el-table-column>
             <el-table-column prop="username" label="用户名"></el-table-column>
           </el-table>
           <div align="right">

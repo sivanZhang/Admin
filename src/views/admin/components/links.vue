@@ -31,7 +31,6 @@
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
         <el-col :span="18">
-          {{item}}
           <el-form :model="item" label-width="90px">
             <el-form-item
               label="审批类型"
