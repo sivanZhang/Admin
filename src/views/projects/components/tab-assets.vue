@@ -582,9 +582,9 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <Drawer scrollable closable v-model="value1" width="526" inner :transfer="false" :mask="false">
-      <Affix :offset-top="20">
-        <Header :project="project">
+    <Drawer scrollable :closable="false" v-model="value1" width="526" inner :transfer="false" :mask="false">
+      <Affix>
+        <Header :project="project" @DrawerClose="drawerClose">
           <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
         </Header>
         <assetsDrawer
@@ -850,6 +850,9 @@ export default {
         this.RemarksData = [...data.msg];
       });
     },
+    drawerClose() {
+        this.value1 = false;
+      },
     //删除单个资产
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
