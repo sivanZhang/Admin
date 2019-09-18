@@ -1055,7 +1055,10 @@ export default {
   cursor: pointer;
 }
 #asset-list {
-  min-height: calc(100vh - 199px);
-  position: relative;
+ & /deep/ .el-table--border th,
+  & /deep/ .el-table--border td {
+    /*zjw*/
+    border-right-width: 0px;
+  }
 }
 </style>
