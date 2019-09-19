@@ -107,24 +107,10 @@
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="任务" show-overflow-tooltip v-if="show_name"></el-table-column>
-        <el-table-column
-          label="制作环节"
-          prop="link_dept_name"
-          show-overflow-tooltip
-          v-if="show_link_dept_name"
-        ></el-table-column>
-        <el-table-column label="制作内容" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
-        <el-table-column
-          label="所属项目"
-          prop="project.name"
-          show-overflow-tooltip
-          v-if="show_project_name"
-        ></el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
           <template slot-scope="scope">
             <el-image
-              :src="$store.state.BASE_URL+scope.row.project.image"
+              :src="$store.state.BASE_URL+scope.row.asset.image"
               style="width: 50px;height: 30px;"
             >
               <div slot="placeholder" class="image-slot">
@@ -137,6 +123,16 @@
             </el-image>
           </template>
         </el-table-column>
+        <el-table-column prop="name" label="任务" show-overflow-tooltip v-if="show_name"></el-table-column>
+        <el-table-column
+          label="制作环节"
+          prop="link_dept_name"
+          show-overflow-tooltip
+          v-if="show_link_dept_name"
+        ></el-table-column>
+        <el-table-column label="制作内容" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
+        
+        
         <el-table-column label="镜头号" show-overflow-tooltip v-if="show_asset_name">
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
