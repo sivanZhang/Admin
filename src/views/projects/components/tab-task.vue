@@ -3,7 +3,7 @@
     <div>
       <el-row>
         <el-col :span="15">
-          <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建主任务</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建任务</el-button>
 
           <!-- <el-dropdown>
         <el-button type="primary"  @click.native="openDialog(2)">
@@ -411,7 +411,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <!-- 创建主任务时，所选资产无环节时，创建环节 -->
+    <!-- 创建任务时，所选资产无环节时，创建环节 -->
     <el-dialog title="添加环节" :visible.sync="isLinkDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
