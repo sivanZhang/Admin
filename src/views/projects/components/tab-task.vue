@@ -1001,13 +1001,13 @@ export default {
         page: this.currentPage,
         sort: "date"
       };
-      if (this.filterStatus) {
+      if (this.filterStatus.length) {
         data = { ...data, status: "["+String(this.filterStatus)+"]"  };
       }
-      if (this.filterGrade) {
+      if (this.filterGrade.length) {
         data = { ...data, grade: "["+String(this.filterGrade)+"]"  };
       }
-      if (this.filterPriority) {
+      if (this.filterPriority.length) {
         data = { ...data, priority: "["+String(this.filterPriority)+"]" };
       }
       HTTP.queryTask(data)
