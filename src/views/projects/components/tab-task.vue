@@ -353,7 +353,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="总工时" prop="total_hour">
-            <el-input v-model="TaskForm.total_hour"></el-input>
+            <el-input v-model="TaskForm.total_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="cancel2">取消</el-button>
@@ -513,9 +513,11 @@
       width="526"
       inner
       :transfer="false"
-      :mask-style="{backgroundColor: 'transparent'}"
+      :mask="false"
     >
+    <Affix>
       <approve-log ref="approvelogs" />
+    </Affix>
     </Drawer>
   </div>
 </template>

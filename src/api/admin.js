@@ -95,3 +95,7 @@ export function permissions(params) {
 export function userPermissions(params) {
     return AXIOS.get('/role/permissions/?01', { params })
 }
+//删除用户
+export function deleteUser(data) {
+    return AXIOS.post('/users/list/?delete', data)
+}

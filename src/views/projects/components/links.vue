@@ -203,7 +203,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
-          <el-input v-model="TaskForm.total_hour"></el-input>
+          <el-input v-model="TaskForm.total_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
         </el-form-item>
 
         <el-form-item>
