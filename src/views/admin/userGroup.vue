@@ -158,10 +158,10 @@ export default {
         type: "warning"
       }).then(() => {
         const ids = this.multipleSelection.map(item => item.id).join(",");
-          deleteUser({ ids:ids,method:"delete "}).then(({ data }) => {
+          deleteUser({ ids:ids,method:"delete"}).then(({ data }) => {
            console.log(data.msg)
            if (data.status === 0){
-             this.$emit("refresh");
+             this.getAllUserlist();
              this.$message.success(data.msg);
            } else {
             this.$message.error(data.msg);
