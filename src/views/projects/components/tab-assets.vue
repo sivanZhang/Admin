@@ -1020,6 +1020,7 @@ export default {
     },
     cancelSort() {
       this.visible = false;
+      this.FormList = [{}]
     },
     img(row) {
       this.dialogImg = true;
