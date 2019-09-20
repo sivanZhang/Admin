@@ -130,20 +130,20 @@ export default {
       this.uploadLoading = true;
       uploadUsers(data)
         .then(({ data }) => {
-          console.log(data,'data');
-          
-          if (data.msg) {
-            this.$message.warning(data.msg);
-          } else {
+          console.log(data, "data");
+
+          if (data.status === 0) {
             this.$notify({
               title: "提交状态",
-              message: `用户创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
+              message: data.msg.join(),
               duration: 0,
               type: "warning"
             });
             this.$router.push({
               name: "profession"
             });
+          } else {
+            this.$message.warning(data.msg);
           }
         })
         .finally(() => {
