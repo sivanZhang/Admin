@@ -4,7 +4,11 @@
       共
       <span>{{tableData.length}}</span> 条数据
     </div>
-    {{tableData}}{{tableCols}}
+    <template>
+      <div v-for="i in tableData">
+          {{i}}
+      </div>
+    </template>
     <div
       v-loading="tableLoading"
       :element-loading-text="tableLoadingText"
@@ -44,9 +48,9 @@
                 placeholder="请输入内容"
                 v-on:blur="inputblur"
               ></el-input>
-              <span v-if="!scope.row.isEdit && index!=0">{{scope.row[col.prop]}}</span>
+              <span v-if="!scope.row.isEdit && !isImage(scope.row[col.prop])">{{scope.row[col.prop]}}</span>
               <el-image
-                v-if="index==0"
+                v-if="isImage(scope.row[col.prop])"
                 :src="$store.state.BASE_URL+scope.row[col.prop]"
                 fit="cover"
                 style="width:80px;height:45px"
@@ -171,6 +175,9 @@ export default {
   },
   methods: {
     //点击表格头
+    isImage(str){
+      return /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(str)
+    },
     handelClickHeader({ column, $index }) {
       if (this.tableCols[column.index]) {
         this.selectCurrentCol = column;
@@ -183,6 +190,9 @@ export default {
     deleteCol() {
       this.isDeleteCol = true;
       //所有数据删除一遍
+      this.tableData.forEach(t=>{
+        delete t[this.selectCurrentCol.property]
+      })
       this.tableCols.splice(this.selectCurrentCol.index, 1);
       this.hasBindLinkKey.splice(this.selectCurrentCol.index, 1);
       this.hasBindKey.splice(this.selectCurrentCol.index, 1);
@@ -224,8 +234,6 @@ export default {
       }
       changeList(this.SelectDept);
       //this.selectCurrentCol点击的列的信息
-
-      
       let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
       this.tableCols[this.selectCurrentCol.index].label =
         //大写英文字母 + 传过来的中文字段
@@ -313,6 +321,8 @@ export default {
           tempKeyIndexs.push(i);
         }
       }
+      console.log('tempKeyIndexs',tempKeyIndexs);
+      
       let values = [];
       for (let i = 0; i < this.tableData.length; i++) {
         let value = [];
@@ -322,7 +332,6 @@ export default {
         }
         values.push(value);
       }
-
       let tempLinkKeyIndexs = []; // 每一项是绑定了link字段的index
       this.hasBindLinkKey.forEach((t, i) => {
         t && tempLinkKeyIndexs.push(i);
