@@ -90,8 +90,56 @@
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
-          <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
-
+          <el-popover
+            v-model="visible"
+            placement="bottom"
+            width="400"
+            trigger="click"
+            style="margin-left:15px"
+          >
+            <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
+              <el-col :span="4">
+                <el-button type="text" icon="el-icon-plus" @click="before(index)">前置</el-button>
+                <el-avatar>{{index+1}}</el-avatar>
+                <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
+              </el-col>
+              <el-col :span="18">
+                <el-form :model="item">
+                  <el-form-item
+                    label="列名"
+                    prop="columnName"
+                    :rules="[{ required: true, message: '请输入列名', trigger: 'blur' }]"
+                  >
+                    <el-select v-model="item.column" placeholder="请选择">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="排序方式" prop="order">
+                    <el-radio-group v-model="item.order">
+                      <el-radio :label="0">正序</el-radio>
+                      <el-radio :label="1">逆序</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-form>
+                <el-divider />
+              </el-col>
+              <el-col :span="4" align="center">
+                <el-tooltip effect="dark" content="删除" placement="top">
+                  <span>
+                    <i class="el-icon-delete" style="color:red" @click="deleteLink(index)"></i>
+                  </span>
+                </el-tooltip>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="end">
+              <el-button @click="cancelSort">取消</el-button>
+              <el-button type="primary" @click="sortMul()">立即排序</el-button>
+            </el-row>
             <el-button slot="reference" type="primary" icon="el-icon-sort" size="mini">多列排序</el-button>
           </el-popover>
         </el-col>
@@ -158,7 +206,13 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="session" label="场次" align="center" v-if="show_session" sortable="custom">
+        <el-table-column
+          prop="session"
+          label="场次"
+          align="center"
+          v-if="show_session"
+          sortable="custom"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -174,7 +228,13 @@
             >{{scope.row.session?scope.row.session:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="episode" label="集数" align="center" v-if="show_episode" sortable="custom">
+        <el-table-column
+          prop="episode"
+          label="集数"
+          align="center"
+          v-if="show_episode"
+          sortable="custom"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -182,7 +242,6 @@
               placeholder="请输入集数"
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
-              
             >
               <span>{{scope.row.episode?scope.row.episode:"-"}}</span>
             </el-input>
@@ -421,11 +480,10 @@
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
               placeholder="选择开始日期"
-              
             />
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.start_date|dateFormat}}</span>
           </template>
-        </el-table-column>  
+        </el-table-column>
         <el-table-column
           label="结束日期"
           align="left"
@@ -442,7 +500,6 @@
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
               placeholder="选择结束日期"
-              
             />
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.end_date|dateFormat}}</span>
           </template>
@@ -625,7 +682,15 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <Drawer scrollable :closable="false" v-model="value1" width="526" inner :transfer="false" :mask="false">
+    <Drawer
+      scrollable
+      :closable="false"
+      v-model="value1"
+      width="526"
+      inner
+      :transfer="false"
+      :mask="false"
+    >
       <Affix>
         <Header :project="project" @DrawerClose="drawerClose">
           <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
@@ -737,16 +802,67 @@ export default {
       show_totle_date_end: true,
       show_total_hours: true,
       show_remark: true,
-      show_create_date:true,
-      show_start_date:true,
-      show_end_date:true,
-      start_date:null,
-      end_date:null,
-      filterStatus : [],
-      filterPriority:[],
-      filterLevel:[],
-      sort:null
-
+      show_create_date: true,
+      show_start_date: true,
+      show_end_date: true,
+      start_date: null,
+      end_date: null,
+      filterStatus: [],
+      filterPriority: [],
+      filterLevel: [],
+      sort: null,
+      FormList: [{}],
+      options: [
+        {
+          value: "session",
+          label: "场次"
+        },
+        {
+          value: "episode",
+          label: "集数"
+        },
+        {
+          value: "name",
+          label: "镜头号"
+        },
+        {
+          value: "frame",
+          label: "帧数"
+        },
+        {
+          value: "inner_version",
+          label: "版本号"
+        },
+        {
+          value: "priority",
+          label: "优先级"
+        },
+        {
+          value: "level",
+          label: "难度等级"
+        },
+        {
+          value: "status",
+          label: "状态"
+        },
+        {
+          value: "date",
+          label: "创建日期"
+        },
+        {
+          value: "start_date",
+          label: "结束日期"
+        },
+        {
+          value: "end_date",
+          label: "结束日期"
+        },
+        {
+          value: "total_end_date",
+          label: "计划截止日期"
+        }
+      ],
+      visible: false
     };
   },
 
@@ -763,13 +879,72 @@ export default {
     }
   },
   methods: {
-    sortFilter( {column, prop, order}){
+    sortMul() {
+      this.visible = false;
+
+      let hash = {};
+
+      this.FormList = this.FormList.reduce(function(arr, current) {
+        hash[current.id] ? "" : (hash[current.id] = true && arr.push(current));
+
+        return arr;
+      }, []);
+
+      console.log(this.FormList);
+      this.FormList.forEach((item, index) => {
+        if (item.order === 1) {
+          this.FormList[index] = Object.assign({}, this.FormList[index], {
+            column: "-" + item.column
+          });
+        } else {
+          this.FormList[index] = Object.assign({}, this.FormList[index], {
+            column: item.column
+          });
+        }
+      });
+      // console.log(this.FormList);
+      let sort = this.FormList.map(item => item.column).join(",");
+      //console.log(sort);
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
         page: this.currentPage,
-        sort: order==="descending"?"-"+prop:prop
+        sort: sort
+      };
+      HTTP.queryAssets(payload)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.AssetList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
+      this.FormList = [{}];
+    },
+    //创建环节时，前置
+    before(ind) {
+      this.FormList.splice(ind, 0, {});
+    },
+    //创建环节时，后置
+    after(ind) {
+      this.FormList.splice(ind + 1, 0, {});
+    },
+    //创建环节时，删除
+    deleteLink(index) {
+      if (index !== 0) this.FormList.splice(index, 1);
+    },
+    sortFilter({ column, prop, order }) {
+      let payload = {
+        project: this.$route.params.id,
+        asset_type: this.drawerType === "scene" ? 0 : 1,
+        pagenum: this.pageSize,
+        page: this.currentPage,
+        sort: order === "descending" ? "-" + prop : prop
       };
       HTTP.queryAssets(payload)
         .then(({ data }) => {
@@ -785,47 +960,49 @@ export default {
         });
     },
     filterHandler(val) {
-      if(val.status){
+      if (val.status) {
         this.filterStatus = [];
         this.filterStatus = [...val.status];
-        this.filterStatus.forEach((item,index)=>{
+        this.filterStatus.forEach((item, index) => {
           item = Number(item);
-          console.log("item",item);
-          this.filterStatus[index]=item;})
-       //console.log(this.filterStatus);
-     
+          console.log("item", item);
+          this.filterStatus[index] = item;
+        });
+        //console.log(this.filterStatus);
       }
-      if(val.priority){
+      if (val.priority) {
         this.filterPriority = [...val.priority];
-        this.filterPriority.forEach((item,index)=>{
-          item=Number(item);
-          this.filterPriority[index]=item;
-        })
+        this.filterPriority.forEach((item, index) => {
+          item = Number(item);
+          this.filterPriority[index] = item;
+        });
         //console.log(this.filterPriority)
       }
-      if(val.level){
+      if (val.level) {
         this.filterLevel = [...val.level];
-        this.filterLevel.forEach((item,index)=>{
-          item=Number(item);
-          this.filterLevel[index]=item
-        })
+        this.filterLevel.forEach((item, index) => {
+          item = Number(item);
+          this.filterLevel[index] = item;
+        });
         //console.log(this.filterLevel)
       }
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
-        page: this.currentPage,
-       
+        page: this.currentPage
       };
       if (this.filterStatus.length) {
-        payload = { ...payload, status:"["+ String(this.filterStatus)+"]" };
+        payload = { ...payload, status: "[" + String(this.filterStatus) + "]" };
       }
-      if(this.filterPriority.length){
-        payload={...payload,priority:"["+String(this.filterPriority)+"]"};
+      if (this.filterPriority.length) {
+        payload = {
+          ...payload,
+          priority: "[" + String(this.filterPriority) + "]"
+        };
       }
-      if(this.filterLevel.length){
-        payload={...payload,level:"["+String(this.filterLevel)+"]"};
+      if (this.filterLevel.length) {
+        payload = { ...payload, level: "[" + String(this.filterLevel) + "]" };
       }
       this.tableLoading = true;
       HTTP.queryAssets(payload)
@@ -840,6 +1017,9 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
+    },
+    cancelSort() {
+      this.visible = false;
     },
     img(row) {
       this.dialogImg = true;
@@ -877,17 +1057,23 @@ export default {
       } else {
         this.editing = true;
         this.clickId = row.id;
-        this.start_date = new Date(dateFormat(row.start_date))>0?new Date(dateFormat(row.start_date)):"";
-        this.end_date = new Date(dateFormat(row.end_date))>0?new Date(dateFormat(row.end_date)):"";
+        this.start_date =
+          new Date(dateFormat(row.start_date)) > 0
+            ? new Date(dateFormat(row.start_date))
+            : "";
+        this.end_date =
+          new Date(dateFormat(row.end_date)) > 0
+            ? new Date(dateFormat(row.end_date))
+            : "";
       }
       // console.log("edit");
       // console.log(index);
     },
     saveEdit(index, row) {
       function DateFormat(dateVal) {
-            return new Date(dateVal).toLocaleDateString();
-            //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-          }
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
       this.iconShow = false;
       HTTP.editAssets({
         id: row.id,
@@ -904,7 +1090,7 @@ export default {
         retime: row.retime,
         frame_range: row.frame_range,
         start: DateFormat(this.start_date),
-        end:DateFormat(this.end_date)
+        end: DateFormat(this.end_date)
       }).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
@@ -934,8 +1120,7 @@ export default {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
-        page: this.currentPage,
-        
+        page: this.currentPage
       };
       if (this.filterText) {
         payload = { ...payload, name: this.filterText };
@@ -976,8 +1161,8 @@ export default {
       });
     },
     drawerClose() {
-        this.value1 = false;
-      },
+      this.value1 = false;
+    },
     //删除单个资产
     deleteAssets(id) {
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
@@ -1171,7 +1356,7 @@ export default {
   cursor: pointer;
 }
 #asset-list {
- & /deep/ .el-table--border th,
+  & /deep/ .el-table--border th,
   & /deep/ .el-table--border td {
     /*zjw*/
     border-right-width: 0px;
