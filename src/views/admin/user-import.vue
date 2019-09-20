@@ -1,14 +1,21 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <input class="file_inp" ref="file_inp" accept=".xlsx, .xls ,.csv" type="file" @change="importExcel($event.target)" />
+      <input
+        class="file_inp"
+        ref="file_inp"
+        accept=".xlsx, .xls, .csv"
+        type="file"
+        @change="importExcel($event.target)"
+      />
       <el-button
         icon="el-icon-circle-plus"
         type="success"
         @click="openFile"
         class="pan-btn green-btn"
         size="mini"
-      >导入资产</el-button>
+      >添加Excel</el-button>
+      <!-- openFile -->
       <el-button
         icon="el-icon-upload"
         type="success"
@@ -18,46 +25,44 @@
         :loading="uploadLoading"
         :disabled="uploadDisabled"
       >上传</el-button>
+      <el-button
+        icon="el-icon-refresh-left"
+        type="success"
+        @click="importAsset(1)"
+        class="pan-btn green-btn"
+        size="mini"
+      >清空表格</el-button>
+      <el-button
+        icon="el-icon-delete-solid"
+        type="danger"
+        @click="deleteTableRow()"
+        class="pan-btn red-btn"
+        v-show="$refs.tableTemplate?$refs.tableTemplate.tableData.length : false"
+        size="mini"
+      >删除已选</el-button>
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
   </div>
 </template>
 
 <script>
-import * as HTTP from "@/api/assets";
+import { uploadUsers } from "@/api/admin";
 import XLSX from "xlsx";
-import ImportTableTemplate from "@/views/components/importTableTemplate";
+import ImportTableTemplate from "@/views/components/importUserTable";
 export default {
   neme: "asset-import",
   data() {
-    const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
-      uploadLoading:false,
+      uploadLoading: false,
       uploadDisabled: true,
       requiredKeysMap: {
-        name: "镜头号",
-        content: "制作内容",
-        date_start: "开始日期",
-        date_end: "结束日期",
+        name: "用户名",
+        email: "邮箱",
+        phone: "手机号码",
+        dept: "部门",
+        isactive: "是否使用"
       },
-      keysMap: {
-        //category: "资产类别",
-        image: "缩略图",
-        path: "路径",
-        //creator: "创建者",
-        //team: "资产当前属于哪个部门",
-        inner_version: "内部版本号",
-        outer_version: "外部版本号",
-        priority: "优先级（高中低）",
-        level: "难度等级（简单、标准、难）",
-        //project: "资产属于哪个项目",
-        session: "场次",
-        frame: "帧数",
-        episode: "集数",
-        links: "资产的制作环节",
-        asset: "资产",
-        dept: "工种"
-      },
+      keysMap: {},
       testDataJSON: []
     };
   },
@@ -82,7 +87,7 @@ export default {
         this.$message.error("格式错误！请重新选择");
         return;
       }
-      _self.testDataJSON=[]
+      _self.testDataJSON = [];
       _self.$refs.tableTemplate.openLoading("数据导入中");
       //异步等到解析文件后调用其他方法
       file2Xce(file).then(tabJson => {
@@ -90,7 +95,7 @@ export default {
         _self.testDataJSON = [...tabJson];
         _self.importAsset();
         _self.uploadDisabled = false;
-        obj.value = null;//可以重新导入同一个表
+        obj.value = null; //可以重新导入同一个表
       });
       function file2Xce(file) {
         return new Promise(function(resolve, reject) {
@@ -104,7 +109,7 @@ export default {
               XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
                 header: 1, //二维数组展示
                 raw: false,
-                skipHeader: true,
+                skipHeader: true
               })
             );
           };
@@ -121,28 +126,49 @@ export default {
      * 组件中必须 @returnAssemblingData="returnAssemblingData"
      */
     returnAssemblingData(data) {
-      console.log("组装好的数据:", data);
-      data = { ...data, project: this.$route.params.id };
       //提交jsons数据
-       this.uploadLoading = true;
-      HTTP.uploadAssets(data).then(({ data }) => {
-        this.$notify({
-          title: '提交状态',
-          message: `资产/镜头创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
-          duration: 0,
-          type:'info'
-        });
-      }).finally(() => {
+      this.uploadLoading = true;
+      uploadUsers(data)
+        .then(({ data }) => {
+          console.log(data,'data');
+          
+          if (data.msg) {
+            this.$message.warning(data.msg);
+          } else {
+            this.$notify({
+              title: "提交状态",
+              message: `用户创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
+              duration: 0,
+              type: "warning"
+            });
+            this.$router.push({
+              name: "profession"
+            });
+          }
+        })
+        .finally(() => {
           this.uploadLoading = false;
         });
-
     },
-    //导入数据
-    importAsset() {
+    deleteTableRow() {
+      this.$refs.tableTemplate.deleteRow();
+    },
+    //导入数据 type=1表示重置
+    importAsset(type) {
+      if (type === 1) {
+        this.$refs.tableTemplate.initData({
+          reset: true,
+          datas: [],
+          keysMap: {},
+          requiredKeysMap: {}
+        });
+        return;
+      }
       let data = {
+        reset: false,
         datas: this.testDataJSON,
         keysMap: this.keysMap,
-        requiredKeysMap:this.requiredKeysMap
+        requiredKeysMap: this.requiredKeysMap
       };
       this.$refs.tableTemplate.initData(data);
     }

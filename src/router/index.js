@@ -209,6 +209,28 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/import',
+        component: Layout,
+        redirect: '/import',
+        meta: {
+            title: '批量上传',
+            icon: 'tree-table',
+            hiddenSideBar: true
+        },
+        hidden: true,
+        children: [{
+            path: 'import-users',
+            name: 'import-users',
+            component: () =>
+                import ('@/views/admin/user-import'),
+            meta: {
+                title: '用户上传',
+                icon: 'tree',
+                hiddenSideBar: true
+            }
+        }]
+    },
+    {
         path: '/task',
         component: Layout,
         redirect: '/task',

@@ -113,7 +113,7 @@ export default {
       });
     },
     targetDetail(item) {
-      this.$router.push({ name: "project-detail", params: { id: item.id } });
+      this.$router.push({ name: "project-detail", params: { id: item.id },query:{p:item.name} });
       this.$store.commit("app/CACHEPRPJECT", item);
     }
   },

@@ -4,22 +4,21 @@
       <el-header style="padding:0px;margin: 0px">
         <el-row>
           <el-col :span="5">
-            <el-radio-group v-model="radio" style="padding-top:8px">
+            <el-radio-group v-model="radio">
               <el-radio-button :label="1">所有用户</el-radio-button>
               <el-radio-button :label="2">未分组</el-radio-button>
             </el-radio-group>
           </el-col>
-          <el-col :span="5" align="top" style="padding-top:8px">
+          <el-col :span="5"><!-- v-if="perssion" -->
             <el-button
               type="primary"
               @click="openDialog(1)"
-              v-if="perssion"
             >添加用户</el-button>
-            <el-button icon="el-icon-upload2" type="success" @click="openDialog(2)" v-if="perssion" :disabled="true">
+            <el-button icon="el-icon-upload2" type="success" @click="$router.push({name:'import-users'})">
               <slot name="import">用户导入</slot>
             </el-button>
           </el-col>
-          <el-col :span="14" align="top">
+          <el-col :span="4">
             <span>
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </span>

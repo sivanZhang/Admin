@@ -4,7 +4,6 @@
       共
       <span>{{tableData.length}}</span> 条数据
     </div>
-    {{tableData}}{{tableCols}}
     <div
       v-loading="tableLoading"
       :element-loading-text="tableLoadingText"
@@ -44,13 +43,7 @@
                 placeholder="请输入内容"
                 v-on:blur="inputblur"
               ></el-input>
-              <span v-if="!scope.row.isEdit && index!=0">{{scope.row[col.prop]}}</span>
-              <el-image
-                v-if="index==0"
-                :src="$store.state.BASE_URL+scope.row[col.prop]"
-                fit="cover"
-                style="width:80px;height:45px"
-              ></el-image>
+              <span v-if="!scope.row.isEdit">{{scope.row[col.prop]}}</span>
             </template>
           </el-table-column>
         </template>
@@ -63,52 +56,16 @@
     >
       <el-row type="flex" justify="space-between">
         <el-col>
-          <el-radio v-model="radio" :label="1">绑定资产</el-radio>
-          <el-radio v-model="radio" :label="2">绑定环节</el-radio>
-        </el-col>
-        <el-col>
-          <template v-if="radio===1">
-            <el-select
-              v-model="selectKey"
-              placeholder="请选择"
-              filterable
-              @change="changeHandlerRadio"
-            >
-              <el-option-group v-for="group in keysMap" :key="group.label" :label="group.label">
-                <el-option
-                  v-for="(item,index) in group.options"
-                  :key="index"
-                  :label="allKeysMap[item]"
-                  :value="item"
-                ></el-option>
-              </el-option-group>
-            </el-select>
-          </template>
-          <template v-else>
-            <el-cascader
-              style="margin-bottom:5px;"
-              v-model="tempDept"
-              placeholder="输入搜索工种"
-              :options="SelectDept"
-              :props="{ checkStrictly: true}"
-              filterable
-            ></el-cascader>
-            <div>
-              <el-select
-                v-model="selectLinkDetail"
-                placeholder="请选择"
-                filterable
-                @change="linkChanged"
-              >
-                <el-option
-                  v-for="(item,index) in LinkKeys"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </div>
-          </template>
+          <el-select v-model="selectKey" placeholder="请选择" filterable @change="changeHandlerRadio">
+            <el-option-group v-for="group in keysMap" :key="group.label" :label="group.label">
+              <el-option
+                v-for="(item,index) in group.options"
+                :key="index"
+                :label="allKeysMap[item]"
+                :value="item"
+              ></el-option>
+            </el-option-group>
+          </el-select>
         </el-col>
       </el-row>
       <div style="margin-top:20px">
@@ -225,7 +182,6 @@ export default {
       changeList(this.SelectDept);
       //this.selectCurrentCol点击的列的信息
 
-      
       let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
       this.tableCols[this.selectCurrentCol.index].label =
         //大写英文字母 + 传过来的中文字段
@@ -338,7 +294,7 @@ export default {
             if (lt.dept === this.tempDept[this.tempDept.length - 1]) {
               // this.tempDept[this.tempDept.length - 1 当前选中的dept
               linkIndex = k;
-              bl = true; 
+              bl = true;
             } else {
               bl = false;
             }

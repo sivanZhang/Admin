@@ -5,7 +5,7 @@
       <el-button
         icon="el-icon-circle-plus"
         type="success"
-        @click="openF"
+        @click="openFile"
         class="pan-btn green-btn"
         size="mini"
       >添加Excel</el-button>
@@ -77,38 +77,6 @@ export default {
   components: { ImportTableTemplate },
   methods: {
     //点击隐藏的上传文件按钮
-    openF() {
-      this.testDataJSON = [
-        [
-          `images/excel/20190916072142/image1.png`,
-          111,
-          "xxxxxxxx",
-          "LP-11111-v",
-          'vvvvvvv11111111',
-          "qqqqqqqqqqq",
-          "战吼萨破的了"
-        ],
-        [
-          `images/excel/20190916072142/image2.png`,
-          222,
-          "wwwwwwwwww",
-          "LP-22222-v",
-          'vvvvvvv222222',
-          "vvvvvvvvvvvv",
-          "口红口刘迫切是"
-        ],[
-          `images/excel/20190916072142/image3.png`,
-          333,
-          "hhhhhhhhhh",
-          "LP-33333-v",
-          'vvvvvvv33333',
-          "uuuuuuuuuuuuuq",
-          "其味无穷多撒多所阿萨请问"
-        ],
-      ];
-      this.importAsset();
-      this.uploadDisabled = false;
-    },
     openFile() {
       this.$refs.file_inp.click();
     },
@@ -143,9 +111,6 @@ export default {
     returnAssemblingData(data) {
       data = { ...data, project: this.$route.params.id };
       //提交jsons数据
-
-      console.log(data);
-      return;
       this.uploadLoading = true;
       HTTP.uploadAssets(data)
         .then(({ data }) => {
