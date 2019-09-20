@@ -76,7 +76,6 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 export default {
   name: "ImportTableTemplate",
   data() {
@@ -96,35 +95,8 @@ export default {
       selectKey: null,
       selectCurrentCol: { label: "" }, //选中的当前列
       hasBindKey: [], //已经绑定key
-      LinkList: [[]], //提交时绑定links字段的数组 一个数组代表一列数据的link
-      SelectDept: [], //工种数组
-      tempDept: null, //选中的dept
-      radio: 1,
-      LinkKeys: [
-        {
-          label: "制作内容",
-          value: "content"
-        },
-        {
-          label: "开始时间",
-          value: "date_start"
-        },
-        {
-          label: "结束时间",
-          value: "date_end"
-        },
-        {
-          label: "执行人",
-          value: "executors"
-        }
-      ],
-      selectLinkDetail: null,
-      hasBindLinkKey: [],
       selection: []
     };
-  },
-  computed: {
-    ...mapState("admin", ["DeptList"])
   },
   methods: {
     //点击表格头
@@ -132,16 +104,16 @@ export default {
       if (this.tableCols[column.index]) {
         this.selectCurrentCol = column;
         this.dialogVisible = true;
-        this.selectLinkDetail = null;
         this.selectKey = "";
       }
     },
     //删除列
     deleteCol() {
       this.isDeleteCol = true;
-      //所有数据删除一遍
+      this.dealDatas.forEach(t => {
+        t.splice(this.selectCurrentCol.index, 1);
+      });
       this.tableCols.splice(this.selectCurrentCol.index, 1);
-      this.hasBindLinkKey.splice(this.selectCurrentCol.index, 1);
       this.hasBindKey.splice(this.selectCurrentCol.index, 1);
       this.isDeleteCol = false;
       this.dialogVisible = false;
@@ -160,62 +132,6 @@ export default {
       });
       this.selection = [];
     },
-    //绑定工种字段
-    linkChanged(value) {
-      let _self = this;
-      let lastLabel;
-      this.LinkKeys.forEach(item => {
-        if (item.value === value) {
-          lastLabel = item.label;
-        }
-      });
-      let deptLabel;
-      function changeList(arr) {
-        for (const item of arr) {
-          if (item.value == _self.tempDept[_self.tempDept.length - 1]) {
-            deptLabel = item.label;
-          } else if (item["children"] && item["children"].length) {
-            changeList(item["children"]);
-          }
-        }
-      }
-      changeList(this.SelectDept);
-      //this.selectCurrentCol点击的列的信息
-
-      let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
-      this.tableCols[this.selectCurrentCol.index].label =
-        //大写英文字母 + 传过来的中文字段
-        label.split(",")[0] + "," + "[" + deptLabel + "]" + lastLabel;
-      this.tableCols[this.selectCurrentCol.index].name = value;
-      //缓存已选择的 keys
-      this.hasBindLinkKey[this.selectCurrentCol.index] = value;
-      this.hasBindKey[this.selectCurrentCol.index] = null;
-      if (this.tempDept) {
-        //如果已经选择过工种
-        this.dialogVisible = false;
-      }
-    },
-    //获取工种列表
-    async formatList() {
-      if (!this.DeptList) {
-        await this.$store.dispatch("admin/get_DeptList");
-      }
-      function changeList(arr) {
-        for (const item of arr) {
-          if (item["children"] && item["children"].length) {
-            changeList(item["children"]);
-          } else {
-            item["children"] = null;
-          }
-        }
-      }
-      this.SelectDept = JSON.parse(
-        JSON.stringify(this.DeptList)
-          .replace(/name/g, "label")
-          .replace(/id/g, "value")
-      );
-      changeList(this.SelectDept);
-    },
     openLoading(msg) {
       this.tableLoading = true;
       this.tableLoadingText = msg;
@@ -227,7 +143,6 @@ export default {
     initData(data) {
       //表格数据 = 空
       this.hasBindKey = [];
-      this.hasBindLinkKey = [];
       this.tableData = [];
       this.tableLoading = true;
       this.tableLoadingText = "数据组装中";
@@ -270,63 +185,19 @@ export default {
         }
       }
       let values = [];
-      for (let i = 0; i < this.tableData.length; i++) {
+      for (let i = 0; i < this.dealDatas.length; i++) {
         let value = [];
-        let tableRowData = this.tableData[i];
+        let tableRowData = this.dealDatas[i];
         for (let j = 0; j < tempKeyIndexs.length; j++) {
-          value.push(tableRowData["node" + tempKeyIndexs[j]]);
+          value.push(tableRowData[tempKeyIndexs[j]]);
         }
         values.push(value);
       }
-
-      let tempLinkKeyIndexs = []; // 每一项是绑定了link字段的index
-      this.hasBindLinkKey.forEach((t, i) => {
-        t && tempLinkKeyIndexs.push(i);
-      });
-      this.tableData.forEach((t, i) => {
-        if (!this.LinkList[i]) {
-          this.LinkList.splice(i, 0, []);
-        } //如果没有数组创建数组
-        tempLinkKeyIndexs.forEach((e, j) => {
-          let linkIndex;
-          let bl;
-          this.LinkList[i].forEach((lt, k) => {
-            if (lt.dept === this.tempDept[this.tempDept.length - 1]) {
-              // this.tempDept[this.tempDept.length - 1 当前选中的dept
-              linkIndex = k;
-              bl = true;
-            } else {
-              bl = false;
-            }
-          });
-
-          if (bl) {
-            //如果已经创建了该环节的数据
-            this.LinkList[i][linkIndex] = {
-              ...this.LinkList[i][linkIndex],
-              [this.hasBindLinkKey[e]]: t["node" + e]
-            };
-          } else {
-            this.LinkList[i].push({
-              dept: this.tempDept[this.tempDept.length - 1],
-              [this.hasBindLinkKey[e]]: t["node" + e]
-            });
-          }
-        });
-      });
-      //如果有绑定环节     把传递的数据加Link字段  并且把环节数组对象放到每一列中
-      if (this.LinkList[0].length) {
-        bindKeys.push("links");
-        values.forEach((item, index) => {
-          item.push(this.LinkList[index]);
-        });
-      }
-
       this.assemblingData.keys = bindKeys;
       this.assemblingData.values = values;
       //必填字段验证
       for (const t of this.keysMap[0].options) {
-        if (!this.assemblingData.keys.includes(t)) {
+        if (!bindKeys.includes(t)) {
           this.$message.warning(this.keysMap[0].obj[t] + "是必填字段");
           return false;
         }
@@ -391,7 +262,6 @@ export default {
         this.tableCols[this.selectCurrentCol.index].name = value;
         //缓存已选择的 keys
         this.hasBindKey[this.selectCurrentCol.index] = value;
-        this.hasBindLinkKey[this.selectCurrentCol.index] = null;
         this.dialogVisible = false;
       } else {
         this.$message.error("该字段已有绑定过");
@@ -416,9 +286,6 @@ export default {
         item.isEdit = false;
       });
     }
-  },
-  created() {
-    this.formatList();
   }
 };
 </script>

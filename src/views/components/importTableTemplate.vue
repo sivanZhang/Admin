@@ -6,9 +6,7 @@
     </div>
     {{hasBindKey}}
     <template>
-      <div v-for="i in dealDatas">
-          {{i}}
-      </div>
+      <div v-for="i in dealDatas">{{i}}</div>
     </template>
     <div
       v-loading="tableLoading"
@@ -49,7 +47,9 @@
                 placeholder="请输入内容"
                 v-on:blur="inputblur"
               ></el-input>
-              <span v-if="!scope.row.isEdit && !isImage(scope.row[col.prop])">{{scope.row[col.prop]}}</span>
+              <span
+                v-if="!scope.row.isEdit && !isImage(scope.row[col.prop])"
+              >{{scope.row[col.prop]}}</span>
               <el-image
                 v-if="isImage(scope.row[col.prop])"
                 :src="$store.state.BASE_URL+scope.row[col.prop]"
@@ -176,8 +176,8 @@ export default {
   },
   methods: {
     //点击表格头
-    isImage(str){
-      return /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(str)
+    isImage(str) {
+      return /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(str);
     },
     handelClickHeader({ column, $index }) {
       if (this.tableCols[column.index]) {
@@ -190,9 +190,9 @@ export default {
     //删除列
     deleteCol() {
       this.isDeleteCol = true;
-       this.dealDatas.forEach(t=>{
-         t.splice(this.selectCurrentCol.index, 1);
-       })
+      this.dealDatas.forEach(t => {
+        t.splice(this.selectCurrentCol.index, 1);
+      });
       this.tableCols.splice(this.selectCurrentCol.index, 1);
       this.hasBindLinkKey.splice(this.selectCurrentCol.index, 1);
       this.hasBindKey.splice(this.selectCurrentCol.index, 1);
@@ -345,7 +345,7 @@ export default {
             if (lt.dept === this.tempDept[this.tempDept.length - 1]) {
               // this.tempDept[this.tempDept.length - 1 当前选中的dept
               linkIndex = k;
-              bl = true; 
+              bl = true;
             } else {
               bl = false;
             }
