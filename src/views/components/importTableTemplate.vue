@@ -4,8 +4,9 @@
       共
       <span>{{tableData.length}}</span> 条数据
     </div>
+    {{hasBindKey}}
     <template>
-      <div v-for="i in tableData">
+      <div v-for="i in dealDatas">
           {{i}}
       </div>
     </template>
@@ -134,7 +135,7 @@ export default {
       assemblingData: {},
       tableLoading: false,
       tableLoadingText: "",
-      dealDatas: {}, //原始数据
+      dealDatas: [], //原始数据
       keysMap: [], //绑定字段所需要的数据
       allKeysMap: [], //用来缓存的字段
       dealKeys: [], //原始keys
@@ -189,10 +190,9 @@ export default {
     //删除列
     deleteCol() {
       this.isDeleteCol = true;
-      //所有数据删除一遍
-      this.tableData.forEach(t=>{
-        delete t[this.selectCurrentCol.property]
-      })
+       this.dealDatas.forEach(t=>{
+         t.splice(this.selectCurrentCol.index, 1);
+       })
       this.tableCols.splice(this.selectCurrentCol.index, 1);
       this.hasBindLinkKey.splice(this.selectCurrentCol.index, 1);
       this.hasBindKey.splice(this.selectCurrentCol.index, 1);
@@ -321,14 +321,12 @@ export default {
           tempKeyIndexs.push(i);
         }
       }
-      console.log('tempKeyIndexs',tempKeyIndexs);
-      
       let values = [];
-      for (let i = 0; i < this.tableData.length; i++) {
+      for (let i = 0; i < this.dealDatas.length; i++) {
         let value = [];
-        let tableRowData = this.tableData[i];
+        let tableRowData = this.dealDatas[i];
         for (let j = 0; j < tempKeyIndexs.length; j++) {
-          value.push(tableRowData["node" + tempKeyIndexs[j]]);
+          value.push(tableRowData[tempKeyIndexs[j]]);
         }
         values.push(value);
       }
@@ -336,7 +334,7 @@ export default {
       this.hasBindLinkKey.forEach((t, i) => {
         t && tempLinkKeyIndexs.push(i);
       });
-      this.tableData.forEach((t, i) => {
+      this.dealDatas.forEach((t, i) => {
         if (!this.LinkList[i]) {
           this.LinkList.splice(i, 0, []);
         } //如果没有数组创建数组
@@ -357,12 +355,12 @@ export default {
             //如果已经创建了该环节的数据
             this.LinkList[i][linkIndex] = {
               ...this.LinkList[i][linkIndex],
-              [this.hasBindLinkKey[e]]: t["node" + e]
+              [this.hasBindLinkKey[e]]: t[e]
             };
           } else {
             this.LinkList[i].push({
               dept: this.tempDept[this.tempDept.length - 1],
-              [this.hasBindLinkKey[e]]: t["node" + e]
+              [this.hasBindLinkKey[e]]: t[e]
             });
           }
         });
@@ -379,7 +377,7 @@ export default {
       this.assemblingData.values = values;
       //必填字段验证
       for (const t of this.keysMap[0].options) {
-        if (!this.assemblingData.keys.includes(t)) {
+        if (!bindKeys.includes(t)) {
           this.$message.warning(this.keysMap[0].obj[t] + "是必填字段");
           return false;
         }
