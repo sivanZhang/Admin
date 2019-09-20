@@ -90,6 +90,10 @@
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
+          <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
+
+            <el-button slot="reference" type="primary" icon="el-icon-sort" size="mini">多列排序</el-button>
+          </el-popover>
         </el-col>
         <el-col :span="9" align="right">
           <el-input
@@ -452,7 +456,7 @@
           class-name="date"
           sortable="custom"
         >
-          <template slot-scope="scope">{{scope.row.total_end_date|dateFormat}}</template>
+          <template slot-scope="scope">{{scope.row.total_date_end|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
         <el-table-column
