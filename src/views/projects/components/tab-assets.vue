@@ -74,6 +74,12 @@
               <el-checkbox v-model="show_create_date">创建日期</el-checkbox>
             </el-col>
             <el-col :span="12">
+              <el-checkbox v-model="show_start_date">开始日期</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_end_date">结束日期</el-checkbox>
+            </el-col>
+            <el-col :span="12">
               <el-checkbox v-model="show_totle_date_end">计划截止日期</el-checkbox>
             </el-col>
             <el-col :span="12">
@@ -396,15 +402,57 @@
           <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column
-          label="计划截止日期"
+          label="开始日期"
           align="left"
           width="160px"
-          v-if="show_totle_date_end"
+          v-if="show_start_date"
+          prop="start_date"
+          class-name="date"
+          sortable="custom"
+        >
+          <template slot-scope="scope">
+            <el-date-picker
+              v-model="start_date"
+              type="date"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+              placeholder="选择开始日期"
+              
+            />
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.start_date|dateFormat}}</span>
+          </template>
+        </el-table-column>  
+        <el-table-column
+          label="结束日期"
+          align="left"
+          width="160px"
+          v-if="show_end_date"
           prop="end_date"
           class-name="date"
           sortable="custom"
         >
-          <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
+          <template slot-scope="scope">
+            <el-date-picker
+              v-model="end_date"
+              type="date"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+              placeholder="选择结束日期"
+              
+            />
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.end_date|dateFormat}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="计划截止日期"
+          align="left"
+          width="160px"
+          v-if="show_totle_date_end"
+          prop="total_end_date"
+          class-name="date"
+          sortable="custom"
+        >
+          <template slot-scope="scope">{{scope.row.total_end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
         <el-table-column
@@ -686,6 +734,10 @@ export default {
       show_total_hours: true,
       show_remark: true,
       show_create_date:true,
+      show_start_date:true,
+      show_end_date:true,
+      start_date:null,
+      end_date:null,
       filterStatus : [],
       filterPriority:[],
       filterLevel:[],
@@ -708,25 +760,6 @@ export default {
   },
   methods: {
     sortFilter( {column, prop, order}){
-      // console.log(column.label);
-      // console.log(prop);
-      // console.log(order);
-      // if(order === "descending"){
-      //   if(this.sort){
-      //     this.sort =this.sort + ","+"-"+prop
-      //   }else{
-      //     this.sort = "-"+prop
-      //   }
-      // }
-      // if(order === "ascending"){
-      //   if(this.sort){
-      //     this.sort = this.sort+"," + prop
-      //   }else{
-      //     this.sort = prop
-      //   }
-        
-      // }
-      // console.log(this.sort)
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
@@ -824,6 +857,9 @@ export default {
       this.rowClick = true;
     },
     editOneAsset(row) {
+      function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
       // console.log("edit");
       // console.log(row);
       if (this.iconShow === true) {
@@ -837,11 +873,17 @@ export default {
       } else {
         this.editing = true;
         this.clickId = row.id;
+        this.start_date = new Date(dateFormat(row.start_date))>0?new Date(dateFormat(row.start_date)):"";
+        this.end_date = new Date(dateFormat(row.end_date))>0?new Date(dateFormat(row.end_date)):"";
       }
       // console.log("edit");
       // console.log(index);
     },
     saveEdit(index, row) {
+      function DateFormat(dateVal) {
+            return new Date(dateVal).toLocaleDateString();
+            //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+          }
       this.iconShow = false;
       HTTP.editAssets({
         id: row.id,
@@ -856,7 +898,9 @@ export default {
         remark: row.remark,
         report: row.report,
         retime: row.retime,
-        frame_range: row.frame_range
+        frame_range: row.frame_range,
+        start: DateFormat(this.start_date),
+        end:DateFormat(this.end_date)
       }).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
