@@ -123,21 +123,10 @@
                 </draggable>
               </div>
             </el-col>
-            <el-col>
+            <!-- <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">完成</el-col>
-                  <!-- <el-col :span="20" style="text-align:right">
-                    <span class="sort">排序方式</span>
-                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                    </el-select>
-                  </el-col> -->
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -157,7 +146,7 @@
                   >{{item.name}}</el-card>
                 </draggable>
               </div>
-            </el-col>
+            </el-col> -->
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
@@ -254,9 +243,9 @@
               />
             </el-tab-pane>
             <el-tab-pane label="提交审核"  >
-              <tab-approve v-if="activeRow.task && activeRow.task.status === 4" :row="activeRow" @refresh="getMyTasks"/>
+              <tab-approve v-if="activeRow.task && activeRow.task.status === 2" :row="activeRow" @refresh="getMyTasks"/>
               <div v-else style="display:flex;justify-content:center">
-                请先完成任务
+                任务状态不是进行中
               </div>
             </el-tab-pane>
             <el-tab-pane label="审批记录" >
@@ -328,7 +317,7 @@
           <el-table-column prop="task.dept.name" label="制作环节" header-align="left" show-overflow-tooltip></el-table-column>
           <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
           <el-table-column prop="task.content" header-align="left" label="任务内容" show-overflow-tooltip></el-table-column>
-          <el-table-column label="任务状态" header-align="left">
+          <el-table-column label="任务状态" header-align="left" width="120px">
             <template slot-scope="scope" >
               <div v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6">
                 <el-select

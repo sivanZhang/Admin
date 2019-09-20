@@ -110,10 +110,13 @@ export function permissions(params) {
 }
 //获取某个角色的权限列表
 export function userPermissions(params) {
-    return AXIOS.get('/role/permissions/?01', {
-        params
-    })
+    return AXIOS.get('/role/permissions/?01', { params })
 }
+//删除用户
+export function deleteUser(data) {
+    return AXIOS.post('/users/list/?delete', data)
+}
+
 //用户批量导入
 export function uploadUsers(data) {
     return AXIOS.post('/users/batch/', data, {

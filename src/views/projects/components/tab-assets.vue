@@ -71,6 +71,9 @@
               <el-checkbox v-model="show_link">当前环节</el-checkbox>
             </el-col>
             <el-col :span="12">
+              <el-checkbox v-model="show_create_date">创建日期</el-checkbox>
+            </el-col>
+            <el-col :span="12">
               <el-checkbox v-model="show_totle_date_end">计划截止日期</el-checkbox>
             </el-col>
             <el-col :span="12">
@@ -109,6 +112,7 @@
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
         @filter-change="filterHandler"
+        @sort-change="sortFilter"
       >
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column type="index" :index="indexMethod" label="序号" align="center" v-if="ind"></el-table-column>
@@ -144,7 +148,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="session" label="场次" align="center" v-if="show_session">
+        <el-table-column prop="session" label="场次" align="center" v-if="show_session" sortable="custom">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -160,7 +164,7 @@
             >{{scope.row.session?scope.row.session:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="episode" label="集数" align="center" v-if="show_episode">
+        <el-table-column prop="episode" label="集数" align="center" v-if="show_episode" sortable="custom">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -168,6 +172,7 @@
               placeholder="请输入集数"
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
+              
             >
               <span>{{scope.row.episode?scope.row.episode:"-"}}</span>
             </el-input>
@@ -183,6 +188,7 @@
           width="120px"
           show-overflow-tooltip
           v-if="show_name"
+          sortable="custom"
         >
           <template slot-scope="scope">
             <el-input
@@ -197,7 +203,7 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="frame" label="帧数" align="left" v-if="show_frame">
+        <el-table-column prop="frame" label="帧数" align="left" v-if="show_frame" sortable="custom">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -269,8 +275,10 @@
           prop="inner_version"
           label="版本号"
           align="left"
+          width="90px"
           show-overflow-tooltip
           v-if="show_inner_version"
+          sortable="custom"
         ></el-table-column>
         <el-table-column
           prop="content"
@@ -283,7 +291,7 @@
             <el-input
               size="small"
               v-model="scope.row.content"
-              placeholder="请输入帧数"
+              placeholder="请输入制作内容"
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
             >
@@ -299,7 +307,9 @@
           label="优先级"
           :formatter="Priority"
           align="left"
+          width="100px"
           v-if="show_priority"
+          sortable="custom"
           column-key="priority"
           :filters="[{text: '正常', value: '0'}, {text: '优先', value: '1'}]"
         >
@@ -321,7 +331,8 @@
           :formatter="Level"
           align="left"
           v-if="show_level"
-          width="90px"
+          width="120px"
+          sortable="custom"
           column-key="level"
           :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '复杂', value: '2'}, {text: '高难度', value: '3'}]"
         >
@@ -349,7 +360,9 @@
           prop="status"
           label="状态"
           align="left"
+          width="90px"
           v-if="show_status"
+          sortable="custom"
           column-key="status"
           :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
         >
@@ -372,11 +385,24 @@
           </el-table-column>
         </el-table-column>
         <el-table-column
+          label="创建日期"
+          align="left"
+          width="160px"
+          v-if="show_create_date"
+          prop="date"
+          class-name="date"
+          sortable="custom"
+        >
+          <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column
           label="计划截止日期"
           align="left"
-          width="95px"
+          width="160px"
           v-if="show_totle_date_end"
+          prop="end_date"
           class-name="date"
+          sortable="custom"
         >
           <template slot-scope="scope">{{scope.row.totle_date_end|dateFormat}}</template>
         </el-table-column>
@@ -659,9 +685,11 @@ export default {
       show_totle_date_end: true,
       show_total_hours: true,
       show_remark: true,
+      show_create_date:true,
       filterStatus : [],
       filterPriority:[],
-      filterLevel:[]
+      filterLevel:[],
+      sort:null
 
     };
   },
@@ -679,6 +707,46 @@ export default {
     }
   },
   methods: {
+    sortFilter( {column, prop, order}){
+      // console.log(column.label);
+      // console.log(prop);
+      // console.log(order);
+      // if(order === "descending"){
+      //   if(this.sort){
+      //     this.sort =this.sort + ","+"-"+prop
+      //   }else{
+      //     this.sort = "-"+prop
+      //   }
+      // }
+      // if(order === "ascending"){
+      //   if(this.sort){
+      //     this.sort = this.sort+"," + prop
+      //   }else{
+      //     this.sort = prop
+      //   }
+        
+      // }
+      // console.log(this.sort)
+      let payload = {
+        project: this.$route.params.id,
+        asset_type: this.drawerType === "scene" ? 0 : 1,
+        pagenum: this.pageSize,
+        page: this.currentPage,
+        sort: order==="descending"?"-"+prop:prop
+      };
+      HTTP.queryAssets(payload)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.AssetList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
+    },
     filterHandler(val) {
       if(val.status){
         this.filterStatus = [];
@@ -711,7 +779,7 @@ export default {
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
         page: this.currentPage,
-        sort: "date"
+       
       };
       if (this.filterStatus.length) {
         payload = { ...payload, status:"["+ String(this.filterStatus)+"]" };
@@ -819,7 +887,7 @@ export default {
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
         page: this.currentPage,
-        sort: "date"
+        
       };
       if (this.filterText) {
         payload = { ...payload, name: this.filterText };

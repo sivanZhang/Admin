@@ -44,10 +44,7 @@ export default {
                     label: '进行中',
                     value: 2
                 },
-                {
-                    label: '完成',
-                    value: 4
-                },
+                
                
                 
             ],
@@ -61,7 +58,7 @@ export default {
             TimeOutArr: [],
             FinishedArr: [],
             PauseArr: [],
-            PassArr : [],
+            // PassArr : [],
             ApproveingArr:[],
             taskList: [{
                 value: "1",
@@ -191,9 +188,7 @@ export default {
                     if(status === 2){
                         status = "进行中";
                     }
-                    if(status === 4){
-                        status = "完成";
-                    }
+                    
                     this.$message.success("任务"+row.task.id+"状态已更改为："+status);
                     this.resetTasks()
                 } else {
@@ -231,9 +226,9 @@ export default {
                 case 'TimeOutArr':
                     status = 5
                     break;
-                case 'PassArr':
-                    status = 6
-                    break;
+                // case 'PassArr':
+                //     status = 6
+                //     break;
             }
             let loading = this.$loading({
                 fullscreen: true
@@ -356,7 +351,7 @@ export default {
             //超时 5
             this.TimeOutArr = []
             //审核通过 6
-            this.PassArr = []
+            // this.PassArr = []
             this.MyTaskList.forEach(item => {
                 switch (item.task.status) {
                     case 0:
@@ -376,8 +371,8 @@ export default {
                         break;
                     case 5:
                         this.TimeOutArr.push(item.task);
-                    case 6:
-                        this.PassArr.push(item.task);
+                    // case 6:
+                    //     this.PassArr.push(item.task);
                 }
             });
         }
@@ -418,11 +413,12 @@ export default {
                     title: '超时',
                     status: 5,
                     num: this.TimeOutArr.length
-                },{
-                    title: '审核通过',
-                    status: 6,
-                    num: this.PassArr.length
-                }
+                },
+                // {
+                //     title: '审核通过',
+                //     status: 6,
+                //     num: this.PassArr.length
+                // }
             ]
         }
     },

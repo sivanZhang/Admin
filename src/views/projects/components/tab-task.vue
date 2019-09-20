@@ -3,7 +3,7 @@
     <div>
       <el-row>
         <el-col :span="15">
-          <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建主任务</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建任务</el-button>
 
           <!-- <el-dropdown>
         <el-button type="primary"  @click.native="openDialog(2)">
@@ -99,32 +99,19 @@
         v-loading="tableLoading"
         row-class-name="hover"
         @filter-change="filterHandler"
+        @sort-change="sortFilter"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column label="任务ID" prop="id" width="100px">
+        <el-table-column label="任务ID" prop="id" width="100px" sortable="custom">
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="任务" show-overflow-tooltip v-if="show_name"></el-table-column>
-        <el-table-column
-          label="制作环节"
-          prop="link_dept_name"
-          show-overflow-tooltip
-          v-if="show_link_dept_name"
-        ></el-table-column>
-        <el-table-column label="制作内容" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
-        <el-table-column
-          label="所属项目"
-          prop="project.name"
-          show-overflow-tooltip
-          v-if="show_project_name"
-        ></el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
           <template slot-scope="scope">
             <el-image
-              :src="$store.state.BASE_URL+scope.row.project.image"
+              :src="$store.state.BASE_URL+scope.row.asset.image"
               style="width: 50px;height: 30px;"
             >
               <div slot="placeholder" class="image-slot">
@@ -137,7 +124,33 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="镜头号" show-overflow-tooltip v-if="show_asset_name">
+        <el-table-column
+          prop="name"
+          label="任务"
+          show-overflow-tooltip
+          v-if="show_name"
+          sortable="custom"
+        ></el-table-column>
+        <el-table-column
+          label="制作环节"
+          prop="dept"
+          sortable="custom"
+          show-overflow-tooltip
+          v-if="show_link_dept_name"
+          width="100px"
+        >
+          <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
+        </el-table-column>
+        <el-table-column label="制作内容" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
+
+        <el-table-column
+          label="镜头号"
+          show-overflow-tooltip
+          v-if="show_asset_name"
+          prop="asset"
+          sortable="custom"
+          width="90pxs"
+        >
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
         <el-table-column
@@ -145,7 +158,8 @@
           label="任务等级"
           :formatter="Priority"
           v-if="show_priority"
-          width="90px"
+          width="120px"
+          sortable="custom"
           column-key="priority"
           :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}, {text: '高难度', value: '3'}]"
         ></el-table-column>
@@ -154,7 +168,8 @@
           label="难度等级"
           :formatter="Grade"
           v-if="show_grade"
-          width="90px"
+          width="120px"
+          sortable="custom"
           column-key="grade"
           :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
         ></el-table-column>
@@ -162,25 +177,45 @@
           label="状态"
           prop="status"
           v-if="show_status"
+          width="90px"
           align="left"
+          sortable="custom"
           column-key="status"
           :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
         >
           <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
         </el-table-column>
-        <el-table-column label="创建者" v-if="show_creator_name">
+        <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
         </el-table-column>
         <el-table-column label="执行人" show-overflow-tooltip v-if="show_executor">
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
-        <el-table-column label="创建日期" width="95px" v-if="show_create_time">
+        <el-table-column
+          label="创建日期"
+          width="100px"
+          v-if="show_create_time"
+          prop="date"
+          sortable="custom"
+        >
           <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="开始日期" width="95px" v-if="show_start_date">
+        <el-table-column
+          label="开始日期"
+          width="100px"
+          v-if="show_start_date"
+          prop="start_date"
+          sortable="custom"
+        >
           <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="截止日期" width="95px" v-if="show_end_date">
+        <el-table-column
+          label="截止日期"
+          width="100px"
+          v-if="show_end_date"
+          prop="end_date"
+          sortable="custom"
+        >
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hour" label="预设时间（小时）" width="130px" v-if="show_total_hour"></el-table-column>
@@ -318,7 +353,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="总工时" prop="total_hour">
-            <el-input v-model="TaskForm.total_hour"></el-input>
+            <el-input v-model="TaskForm.total_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="cancel2">取消</el-button>
@@ -411,7 +446,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <!-- 创建主任务时，所选资产无环节时，创建环节 -->
+    <!-- 创建任务时，所选资产无环节时，创建环节 -->
     <el-dialog title="添加环节" :visible.sync="isLinkDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
@@ -478,9 +513,11 @@
       width="526"
       inner
       :transfer="false"
-      :mask-style="{backgroundColor: 'transparent'}"
+      :mask="false"
     >
+    <Affix>
       <approve-log ref="approvelogs" />
+    </Affix>
     </Drawer>
   </div>
 </template>
@@ -548,7 +585,10 @@ export default {
       show_total_hour: true,
       filterStatus: [],
       filterPriority: [],
-      filterGrade: []
+      filterGrade: [],
+      sort: null,
+      propName:null,
+      sortFunction: null
     };
   },
   filters: {
@@ -610,6 +650,27 @@ export default {
     }
   },
   methods: {
+    sortFilter({ column, prop, order }) {   
+      let data = {
+        project: this.$route.params.id,
+        pagenum: this.pageSize,
+        page: this.currentPage,
+        sort: order === "descending" ? "-" + prop : prop
+      };
+      //order === "descending" ? "-" + prop : prop
+      HTTP.queryTask(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.TaskList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
+    },
     changeTime(val) {
       function dataFormat(params) {
         return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
@@ -974,41 +1035,41 @@ export default {
       if (val.status) {
         this.filterStatus = [];
         this.filterStatus = [...val.status];
-        this.filterStatus.forEach((item,index)=>{
-          item=Number(item);
-          this.filterStatus[index]=item;
-        })
+        this.filterStatus.forEach((item, index) => {
+          item = Number(item);
+          this.filterStatus[index] = item;
+        });
       }
       if (val.grade) {
         this.filterGrade = [];
         this.filterGrade = [...val.grade];
-        this.filterGrade.forEach((item,index)=>{
-          item=Number(item);
+        this.filterGrade.forEach((item, index) => {
+          item = Number(item);
           this.filterGrade[index] = item;
-        })
+        });
       }
       if (val.priority) {
         this.filterPriority = [];
         this.filterPriority = [...val.priority];
-        this.filterPriority.forEach((item,index)=>{
+        this.filterPriority.forEach((item, index) => {
           item = Number(item);
           this.filterPriority[index] = item;
-        })
+        });
       }
       let data = {
         project: this.$route.params.id,
         pagenum: this.pageSize,
         page: this.currentPage,
-        sort: "date"
+        
       };
       if (this.filterStatus.length) {
-        data = { ...data, status: "["+String(this.filterStatus)+"]"  };
+        data = { ...data, status: "[" + String(this.filterStatus) + "]" };
       }
       if (this.filterGrade.length) {
-        data = { ...data, grade: "["+String(this.filterGrade)+"]"  };
+        data = { ...data, grade: "[" + String(this.filterGrade) + "]" };
       }
       if (this.filterPriority.length) {
-        data = { ...data, priority: "["+String(this.filterPriority)+"]" };
+        data = { ...data, priority: "[" + String(this.filterPriority) + "]" };
       }
       HTTP.queryTask(data)
         .then(({ data }) => {

@@ -9,7 +9,7 @@
               <el-radio-button :label="2">未分组</el-radio-button>
             </el-radio-group>
           </el-col>
-          <el-col :span="5"><!-- v-if="perssion" -->
+          <el-col :span="10" align="top" style="padding-top:8px"><!-- v-if="perssion" -->
             <el-button
               type="primary"
               @click="openDialog(1)"
@@ -17,8 +17,14 @@
             <el-button icon="el-icon-upload2" type="success" @click="$router.push({name:'import-users'})">
               <slot name="import">用户导入</slot>
             </el-button>
+           <el-button
+            type="danger"
+            icon="el-icon-delete"
+            @click="delMulUsers()"
+            :disabled="this.multipleSelection.length === 0"
+          >批量删除</el-button> 
           </el-col>
-          <el-col :span="4">
+          <el-col :span="9" align="top">
             <span>
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </span>
@@ -32,7 +38,7 @@
         </el-row>
       </el-header>
       <el-main style="padding: 0px">
-        <users-table :UserList="UserList" :perssion="perssion" @refresh="getAllUserlist"></users-table>
+        <users-table :UserList="UserList" :perssion="perssion" @refresh="getAllUserlist" @selection="handleSelectionChange"></users-table>
       </el-main>
     </el-container>
     <el-dialog :visible.sync="dialogShow" :title="dialogName" width="400px">
@@ -77,7 +83,7 @@
 
 <script>
 import usersTable from "@/components/UsersTable";
-import { getUserList, getUserPerfession } from "@/api/admin";
+import { getUserList, getUserPerfession, deleteUser } from "@/api/admin";
 import { addUser } from "@/api/login";
 export default {
   name: "userGroup",
@@ -106,7 +112,8 @@ export default {
       },
       buttonStates: {
         createLoading: false
-      }
+      },
+      multipleSelection: []
     };
   },
 
@@ -121,7 +128,7 @@ export default {
     getAllUserlist() {
       getUserList().then(({ data }) => {
         this.UserList = [...data];
-        //console.log(this.UserList)
+        // console.log(this.UserList)
       });
       getUserPerfession().then(({data})=>{
         this.perssion = data.auth.admin_management;
@@ -142,6 +149,25 @@ export default {
           name: "user-import"
         });
       }
+    },
+   //批量删除用户
+    delMulUsers(){
+      this.$confirm("此操作将永久删除用户,是否继续?","提示",{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        const ids = this.multipleSelection.map(item => item.id).join(",");
+          deleteUser({ ids:ids,method:"delete "}).then(({ data }) => {
+           console.log(data.msg)
+           if (data.status === 0){
+             this.$emit("refresh");
+             this.$message.success(data.msg);
+           } else {
+            this.$message.error(data.msg);
+          }
+         });
+      })
     },
     addUser() {
       this.$refs["userForm"].validate(valid => {
@@ -182,7 +208,10 @@ export default {
         password: "123456",
         isactive: true
       };
-    }
+    },
+     handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
   },
 
   watch: {

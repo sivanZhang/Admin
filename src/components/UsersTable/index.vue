@@ -9,7 +9,9 @@
         style="width: 100%"
         highlight-current-row
         @row-click="handleCurrentChange"
+        @selection-change="handleSelectionChange"
       >
+       <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="头像" width="80" align="center">
           <template slot-scope="scope">
             <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
@@ -93,24 +95,35 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" align="center" v-if="perssion">
-          <template slot-scope="scope">
+        <el-table-column label="操作" align="center"  show-overflow v-if="perssion">
+          <template slot-scope="scope" >
             <!-- <el-tooltip content="用户权限" placement="top">
             <el-button icon="el-icon-user" type="text" style="color:deepskyblue" />
             </el-tooltip>-->
-
+           <el-tooltip effect="dark" content="修改" placement="top">        
             <el-button
               v-if="!editing||clickId !== scope.row.id"
               type="primary"
               icon="el-icon-edit"
               @click="editUser(scope.row)"
-            >修改</el-button>
+            />
+            </el-tooltip>
+             <el-tooltip effect="dark" content="保存" placement="top">
             <el-button
               v-if="editing&&clickId === scope.row.id"
               type="success"
               icon="el-icon-check"
               @click="saveEdit(scope.$index,scope.row)"
-            >保存</el-button>
+            />
+             </el-tooltip>
+            <el-tooltip effect="dark" content="删除" placement="top">
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              @click="deleteUser(scope.row.id)"
+            />
+             </el-tooltip>
+
 
             <!-- <el-tooltip content="删除用户" placement="top">
             <el-button icon="el-icon-delete" type="text" style="color:red"  />
@@ -135,7 +148,7 @@
 </template>
 
 <script>
-import { editUserDetail } from "@/api/admin";
+import { editUserDetail , deleteUser} from "@/api/admin";
 export default {
   name: "UsersTable",
   props: {
@@ -157,7 +170,8 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       editing: false,
       clickId: null,
-      iconShow: false
+      iconShow: false,
+      multipleSelection: []
     };
   },
   methods: {
@@ -192,6 +206,29 @@ export default {
       }
       // console.log("edit");
       // console.log(index);
+    },
+    //删除单个用户
+    deleteUser(id) {
+       this.$confirm("此操作将永久删除该用户，是否继续?","提示",{
+         confirmButtonText: "确认",
+         cancelButtonText: "取消",
+         type: "warning"
+       }).then(() => {
+         console.log(id)
+        deleteUser({ ids:id,method:"delete "}).then(({ data }) => {
+           console.log(data.msg)
+           if (data.status === 0){
+             this.$emit("refresh");
+             this.$message.success(data.msg);
+           } else {
+            this.$message.error(data.msg);
+          }
+         });
+       });
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val;
+      this.$emit("selection",val)  
     },
     handleCurrentChange(row, event, column) {
       // console.log(row, event, column, event.currentTarget);
