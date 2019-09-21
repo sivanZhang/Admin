@@ -2,7 +2,7 @@
   <div id="asset-list">
     <div>
       <el-row>
-        <el-col :span="15" style="padding-bottom:15px;">
+        <el-col :span="14" style="padding-bottom:15px;">
           <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
             <slot name="add">添加资产</slot>
           </el-button>
@@ -147,17 +147,69 @@
             <el-button slot="reference" type="primary" icon="el-icon-sort" size="mini">多列排序</el-button>
           </el-popover>
         </el-col>
-        <el-col :span="9" align="right">
-          <el-input
-            placeholder="输入关键字搜索"
-            style="width:200px;"
-            v-model="filterText"
-            class="input-with-select"
-            @keyup.enter.native="getAssetList()"
-          >
-            <el-button @click="getAssetList()" slot="append" icon="el-icon-search" type="primary" />
-          </el-input>
-          <el-button @click="getAssetList(1)" type="primary">重置</el-button>
+        <el-col :span="10" align="right">
+          <div style="display:flex;margin-left:125px">
+            <div style="width:130px;margin-top:1px">
+              <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
+                <el-option
+                  v-for="item in columnSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </div>
+            
+              <el-input
+                v-if="colShow"
+                placeholder="输入关键字搜索"
+                style="width:200px;"
+                v-model="filterText"
+                class="input-with-select"
+                @keyup.enter.native="getAssetList()"
+              >
+                <el-button
+                  @click="getAssetList()"
+                  slot="append"
+                  icon="el-icon-search"
+                  type="primary"
+                />
+              </el-input>
+              <el-select
+                v-show="chooseSel"
+                v-model="colSel2"
+                placeholder="请选择"
+                style="width:130px;margin-top:1px"
+                multiple
+                filterable
+                @keyup.enter.native="getAssetList()"
+              >
+                <el-option
+                  v-for="item in columnSelect2"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <el-button
+                v-show="chooseSel"
+                @click="getAssetList()"
+                slot="append"
+                icon="el-icon-search"
+                type="primary"
+                style="margin-top:-1px"
+              />
+              <el-date-picker
+                v-if="timeSel"
+                v-model="timeSelection"
+                type="date"
+                placeholder="选择日期"
+                @change="getAssetList()"
+                style="width:130px"
+              ></el-date-picker>
+              <el-button @click="getAssetList(1)" type="primary">重置</el-button>
+            
+          </div>
         </el-col>
       </el-row>
       <el-table
@@ -211,6 +263,28 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="name"
+          label="镜头号"
+          align="left"
+          width="120px"
+          show-overflow-tooltip
+          v-if="show_name"
+          sortable="custom"
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.name"
+              placeholder="请输入镜头号"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.name?scope.row.name:"-"}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="session"
           label="场次"
           align="center"
@@ -254,28 +328,7 @@
             >{{scope.row.episode?scope.row.episode:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          label="镜头号"
-          align="left"
-          width="120px"
-          show-overflow-tooltip
-          v-if="show_name"
-          sortable="custom"
-        >
-          <template slot-scope="scope">
-            <el-input
-              size="small"
-              v-model="scope.row.name"
-              placeholder="请输入镜头号"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
-            >
-              <span>{{scope.row.name?scope.row.name:"-"}}</span>
-            </el-input>
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
-          </template>
-        </el-table-column>
+
         <el-table-column prop="frame" label="帧数" align="left" v-if="show_frame" sortable="custom">
           <template slot-scope="scope">
             <el-input
@@ -855,7 +908,7 @@ export default {
         },
         {
           value: "start_date",
-          label: "结束日期"
+          label: "开始日期"
         },
         {
           value: "end_date",
@@ -866,10 +919,166 @@ export default {
           label: "计划截止日期"
         }
       ],
-      visible: false
+      visible: false,
+      columnSelect: [
+        {
+          value: "name",
+          label: "镜头号"
+        },
+        {
+          value: "session",
+          label: "场次"
+        },
+        {
+          value: "episode",
+          label: "集数"
+        },
+        {
+          value: "frame",
+          label: "帧数"
+        },
+        {
+          value: "frame_range",
+          label: "帧数范围"
+        },
+        {
+          value: "report",
+          label: "画面调整信息"
+        },
+        {
+          value: "retime",
+          label: "变速信息"
+        },
+        {
+          value: "inner_version",
+          label: "版本号"
+        },
+        {
+          value: "content",
+          label: "制作内容"
+        },
+        {
+          value: "priority",
+          label: "优先级"
+        },
+        {
+          value: "level",
+          label: "难度等级"
+        },
+        {
+          value: "creator",
+          label: "创建人"
+        },
+        {
+          value: "status",
+          label: "状态"
+        },
+        {
+          value: "start",
+          label: "开始日期"
+        },
+        {
+          value: "end",
+          label: "结束日期"
+        },
+        {
+          value: "remark",
+          label: "备注"
+        }
+      ],
+      colSel: "name",
+      colShow: true,
+      chooseSel: false,
+      columnSelect2: [],
+      colSel2: [],
+      timeSel: false,
+      timeSelection: ""
     };
   },
-
+  watch: {
+    colSel: {
+      handler: function(newVal, oldVal) {
+        //console.log(newVal);
+        if (newVal === "status") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          // console.log(this.colShow, this.chooseSel);
+          this.colSel2 = [1];
+          this.columnSelect2 = [
+            {
+              value: 0,
+              label: "暂停"
+            },
+            {
+              value: 1,
+              label: "未开始"
+            },
+            {
+              value: 2,
+              label: "进行中"
+            },
+            {
+              value: 3,
+              label: "审核中"
+            },
+            {
+              value: 4,
+              label: "完成"
+            }
+          ];
+        } else if (newVal === "level") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          this.colSel2 = [1];
+          this.columnSelect2 = [
+            {
+              value: 0,
+              label: "简单"
+            },
+            {
+              value: 1,
+              label: "标准"
+            },
+            {
+              value: 2,
+              label: "复杂"
+            },
+            {
+              value: 3,
+              label: "高难度"
+            }
+          ];
+        } else if (newVal === "priority") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          this.colSel2 = [0];
+          this.columnSelect2 = [
+            {
+              value: 0,
+              label: "正常"
+            },
+            {
+              value: 1,
+              label: "优先"
+            }
+          ];
+        } else if (newVal == "start" || newVal == "end") {
+          this.colShow = false;
+          this.chooseSel = false;
+          this.timeSel = true;
+        } else {
+          this.colShow = true;
+          this.timeSel = false;
+          this.chooseSel = false;
+          this.colSel2 = [];
+          this.columnSelect2 = [];
+        }
+      }
+    }
+  },
   computed: {
     ...mapState("project", ["ProjectList"])
   },
@@ -1118,6 +1327,10 @@ export default {
     },
     //获取资产或者镜头列表，type=1时表示重置
     getAssetList(type) {
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
       if (type === 1) {
         this.filterText = "";
       }
@@ -1127,9 +1340,62 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-      if (this.filterText) {
+      if (this.colSel == "name" && this.filterText) {
         payload = { ...payload, name: this.filterText };
       }
+      if (this.colSel == "inner_version" && this.filterText) {
+        payload = { ...payload, inner_version: this.filterText };
+      }
+      if (this.colSel == "session" && this.filterText) {
+        payload = { ...payload, session: this.filterText };
+      }
+      if (this.colSel == "frame" && this.filterText) {
+        payload = { ...payload, frame: this.filterText };
+      }
+      if (this.colSel == "episode" && this.filterText) {
+        payload = { ...payload, episode: this.filterText };
+      }
+      if (this.colSel == "content" && this.filterText) {
+        payload = { ...payload, content: this.filterText };
+      }
+      if (this.colSel == "remark" && this.filterText) {
+        payload = { ...payload, remark: this.filterText };
+      }
+      if (this.colSel == "report" && this.filterText) {
+        payload = { ...payload, report: this.filterText };
+      }
+      if (this.colSel == "retime" && this.filterText) {
+        payload = { ...payload, retime: this.filterText };
+      }
+      if (this.colSel == "frame_range" && this.filterText) {
+        payload = { ...payload, frame_range: this.filterText };
+      }
+      if (this.colSel == "creator" && this.filterText) {
+        payload = { ...payload, creator: this.filterText };
+      }
+      if (this.colSel == "start" && this.timeSelection) {
+        payload = { ...payload, start: DateFormat(this.timeSelection) };
+      }
+      if (this.colSel == "end" && this.timeSelection) {
+        payload = { ...payload, end: DateFormat(this.timeSelection) };
+      }
+      if (this.colSel2.length > 0) {
+        this.colSel2.forEach((item, index) => {
+          item = Number(item);
+          //console.log("item", item);
+          this.filterStatus[index] = item;
+        });
+        if (this.colSel == "status") {
+          payload = { ...payload, status: "[" + String(this.colSel2) + "]" };
+        }
+        if (this.colSel == "level") {
+          payload = { ...payload, level: "[" + String(this.colSel2) + "]" };
+        }
+        if (this.colSel == "priority") {
+          payload = { ...payload, priority: "[" + String(this.colSel2) + "]" };
+        }
+      }
+
       this.tableLoading = true;
       HTTP.queryAssets(payload)
         .then(({ data }) => {
