@@ -4,10 +4,6 @@
       共
       <span>{{tableData.length}}</span> 条数据
     </div>
-    {{hasBindKey}}
-    <template>
-      <div v-for="i in dealDatas">{{i}}</div>
-    </template>
     <div
       v-loading="tableLoading"
       :element-loading-text="tableLoadingText"
