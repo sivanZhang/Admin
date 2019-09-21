@@ -76,10 +76,14 @@
       </el-tab-pane>
      
     </el-tabs>
+    <el-button type="primary" @click="handelClick">
+      触发
+    </el-button>
   </div>
 </template>
 
 <script>
+import {QWebChannel} from './plugin/qwebchannel.js'
 import {
     queryMyTask,
     addTaskRecord,
@@ -124,6 +128,16 @@ export default {
   },
 
   methods: {
+    handelClick(){
+      new QWebChannel(qt.webChannelTransport, function (channel) {
+            window.app_manager = channel.objects.app_manager;
+            console.log(app_manager);
+            app_manager.text =  "33333333";
+            app_manager.textChanged.connect(function(message) {
+                document.getElementById("output").innerHTML = "Received message: " + message;
+            });
+        });
+    },
     activename(){
       this.activeName = "first";
     },
