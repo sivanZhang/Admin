@@ -8,17 +8,17 @@
         <el-col :span="20">
           <el-row style="font-size:20px">{{loginMessage.msg}}</el-row>
           <el-row style="padding-top:10px">
-            <el-col :span="4" align="right">邮箱：</el-col>
-            <el-col :span="20">{{loginMessage.email}}</el-col>
+            <el-col :span="3" align="left">邮箱：</el-col>
+            <el-col :span="21">{{loginMessage.email}}</el-col>
           </el-row>
           <el-row style="padding-top:10px">
-            <el-col :span="4" align="right">工种：</el-col>
-            <el-col :span="20">
+            <el-col :span="3" align="left">工种：</el-col>
+            <el-col :span="21">
               <el-col
                   :span="5"
                   v-for="(item,index) of loginMessage.dept"
                   :key="index"
-                  align="center"
+                  align="left"
                 >               
                  {{item.name}}             
                 </el-col>

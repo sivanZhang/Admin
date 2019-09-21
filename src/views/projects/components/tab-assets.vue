@@ -119,7 +119,11 @@
                       ></el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="排序方式" prop="order">
+                  <el-form-item
+                    label="排序方式"
+                    prop="order"
+                    :rules="[{required:true,message:'请选择排序方式',trigger:'blur'}]"
+                  >
                     <el-radio-group v-model="item.order">
                       <el-radio :label="0">正序</el-radio>
                       <el-radio :label="1">逆序</el-radio>
@@ -1020,7 +1024,7 @@ export default {
     },
     cancelSort() {
       this.visible = false;
-      this.FormList = [{}]
+      this.FormList = [{}];
     },
     img(row) {
       this.dialogImg = true;

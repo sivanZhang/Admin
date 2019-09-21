@@ -36,11 +36,12 @@
         </el-tab-pane>
         <el-tab-pane label="提交审核" name="fourth">
           <tab-approve
-            v-if="activeRow.task && activeRow.task.status === 4"
+            v-if="activeRow.task && activeRow.task.status === 2"
             :row="activeRow"
             @refresh="getMyTasks"
           />
-          <div v-else style="display:flex;justify-content:center">请先完成任务</div>
+          <div v-if="activeRow.task && activeRow.task.status === 3" style="display:flex;justify-content:center">任务正在审核中</div>
+          <div v-else style="display:flex;justify-content:center">任务状态未在进行中</div>
         </el-tab-pane>
         <el-tab-pane label="审批记录" name="fifth">
           <approve-log ref="taskApprovelog" />
