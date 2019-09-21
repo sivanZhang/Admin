@@ -1333,6 +1333,8 @@ export default {
       }
       if (type === 1) {
         this.filterText = "";
+        this.colSel2=[];
+        this.timeSelection = ''
       }
       let payload = {
         project: this.$route.params.id,
@@ -1380,11 +1382,6 @@ export default {
         payload = { ...payload, end: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
-        this.colSel2.forEach((item, index) => {
-          item = Number(item);
-          //console.log("item", item);
-          this.filterStatus[index] = item;
-        });
         if (this.colSel == "status") {
           payload = { ...payload, status: "[" + String(this.colSel2) + "]" };
         }

@@ -2,7 +2,7 @@
   <div id="task">
     <div>
       <el-row>
-        <el-col :span="15">
+        <el-col :span="14">
           <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建任务</el-button>
 
           <!-- <el-dropdown>
@@ -72,17 +72,62 @@
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
         </el-col>
-        <el-col :span="9" style="text-align:right">
-          <el-input
-            placeholder="输入关键字搜索"
-            style="width:200px;"
-            v-model="keyword"
-            class="input-with-select"
-            @keyup.enter.native="getTasks()"
-          >
-            <el-button @click="getTasks()" slot="append" icon="el-icon-search" type="primary" />
-          </el-input>
-          <el-button @click="getTasks(1)" icon="el-icon-refresh-left" type="primary">重置</el-button>
+        <el-col :span="10" style="text-align:right">
+          <div style="display:flex;margin-left:125px">
+            <div style="width:130px">
+              <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
+                <el-option
+                  v-for="item in columnSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </div>
+            <el-input
+              v-if="colShow"
+              placeholder="输入关键字搜索"
+              style="width:200px;"
+              v-model="keyword"
+              class="input-with-select"
+              @keyup.enter.native="getTasks()"
+            >
+              <el-button @click="getTasks()" slot="append" icon="el-icon-search" type="primary" />
+            </el-input>
+            <el-select
+              v-show="chooseSel"
+              v-model="colSel2"
+              placeholder="请选择"
+              style="width:130px;margin-top:1px"
+              multiple
+              filterable
+              @keyup.enter.native="getTasks()"
+            >
+              <el-option
+                v-for="item in columnSelect2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <el-button
+              v-show="chooseSel"
+              @click="getTasks()"
+              slot="append"
+              icon="el-icon-search"
+              type="primary"
+              style="margin-top:-1px"
+            />
+            <el-date-picker
+              v-if="timeSel"
+              v-model="timeSelection"
+              type="date"
+              placeholder="选择日期"
+              @change="getTasks()"
+              style="width:130px"
+            ></el-date-picker>
+            <el-button @click="getTasks(1)" icon="el-icon-refresh-left" type="primary">重置</el-button>
+          </div>
         </el-col>
       </el-row>
       <el-table
@@ -515,9 +560,9 @@
       :transfer="false"
       :mask="false"
     >
-    <Affix>
-      <approve-log ref="approvelogs" />
-    </Affix>
+      <Affix>
+        <approve-log ref="approvelogs" />
+      </Affix>
     </Drawer>
   </div>
 </template>
@@ -587,8 +632,57 @@ export default {
       filterPriority: [],
       filterGrade: [],
       sort: null,
-      propName:null,
-      sortFunction: null
+      propName: null,
+      sortFunction: null,
+      columnSelect: [
+        {
+          value: "name",
+          label: "任务"
+        },
+        {
+          value: "dept",
+          label: "制作环节"
+        },
+        {
+          value: "content",
+          label: "任务内容"
+        },
+        {
+          value: "priority",
+          label: "任务等级"
+        },
+        {
+          value: "grade",
+          label: "任务难度"
+        },
+        {
+          value: "user",
+          label: "创建人"
+        },
+        {
+          value: "status",
+          label: "状态"
+        },
+        {
+          value: "start_date",
+          label: "开始日期"
+        },
+        {
+          value: "end_date",
+          label: "结束日期"
+        },
+        {
+          value: "total_hour",
+          label: "总工时"
+        }
+      ],
+      colSel: "name",
+      colShow: true,
+      chooseSel: false,
+      columnSelect2: [],
+      colSel2: [],
+      timeSel: false,
+      timeSelection: ""
     };
   },
   filters: {
@@ -647,10 +741,104 @@ export default {
           return;
         }
       }
+    },
+    colSel: {
+      handler: function(newVal, oldVal) {
+        //console.log(newVal);
+        if (newVal === "status") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          // console.log(this.colShow, this.chooseSel);
+          this.colSel2 = [1];
+          this.columnSelect2 = [
+            {
+              value: 0,
+              label: "暂停"
+            },
+            {
+              value: 1,
+              label: "未开始"
+            },
+            {
+              value: 2,
+              label: "进行中"
+            },
+            {
+              value: 3,
+              label: "审核中"
+            },
+            {
+              value: 4,
+              label: "完成"
+            },
+            {
+              value: 5,
+              label: "超时"
+            },
+            {
+              value: 6,
+              label: "审核通过"
+            }
+          ];
+        } else if (newVal === "grade") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          this.colSel2 = [1];
+          this.columnSelect2 = [
+            {
+              value: 0,
+              label: "简单"
+            },
+            {
+              value: 1,
+              label: "标准"
+            },
+            {
+              value: 2,
+              label: "困难"
+            }
+          ];
+        } else if (newVal === "priority") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          this.colSel2 = [0];
+          this.columnSelect2 = [
+            {
+              value: 0,
+              label: "低级"
+            },
+            {
+              value: 1,
+              label: "中级"
+            },
+            {
+              value: 2,
+              label: "高级"
+            },
+            {
+              value: 3,
+              label: "高难度"
+            }
+          ];
+        } else if (newVal == "start_date" || newVal == "end_date") {
+          this.colShow = false;
+          this.chooseSel = false;
+          this.timeSel = true;
+        } else {
+          this.colShow = true;
+          this.timeSel = false;
+          this.chooseSel = false;
+          this.colSel2 = [];
+          this.columnSelect2 = [];
+        }
+      }
     }
   },
   methods: {
-    sortFilter({ column, prop, order }) {   
+    sortFilter({ column, prop, order }) {
       let data = {
         project: this.$route.params.id,
         pagenum: this.pageSize,
@@ -1059,8 +1247,7 @@ export default {
       let data = {
         project: this.$route.params.id,
         pagenum: this.pageSize,
-        page: this.currentPage,
-        
+        page: this.currentPage
       };
       if (this.filterStatus.length) {
         data = { ...data, status: "[" + String(this.filterStatus) + "]" };
@@ -1086,21 +1273,53 @@ export default {
     },
     //获取任务列表
     getTasks(type) {
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
       if (type === 1) {
         this.keyword = "";
+        this.colSel2 = [];
+        this.timeSelection =''
       }
       let data = {
         project: this.$route.params.id,
         pagenum: this.pageSize,
         page: this.currentPage,
-        sort: "date"
       };
-      if (this.keyword) {
-        data = {
-          ...data,
-          name: this.keyword
-        };
+      if (this.colSel == "name" && this.keyword) {
+        data = { ...data, name: this.keyword };
       }
+      if (this.colSel == "dept" && this.keyword) {
+        data = { ...data, dept: this.keyword };
+      }
+      if (this.colSel == "content" && this.keyword) {
+        data = { ...data, content: this.keyword };
+      }
+      if (this.colSel == "user" && this.keyword) {
+        data = { ...data, user: this.keyword };
+      }
+      if (this.colSel == "total_hour" && this.keyword) {
+        data = { ...data, content: this.keyword };
+      }
+      if (this.colSel == "start_date" && this.timeSelection) {
+        payload = { ...payload, start_date: DateFormat(this.timeSelection) };
+      }
+      if (this.colSel == "end_date" && this.timeSelection) {
+        payload = { ...payload, end_date: DateFormat(this.timeSelection) };
+      }
+      if (this.colSel2.length > 0) {
+        if (this.colSel == "priority") {
+          data = { ...data, priority: "[" + String(this.colSel2) + "]" };
+        }
+        if (this.colSel == "status") {
+          data = { ...data, status: "[" + String(this.colSel2) + "]" };
+        }
+        if (this.colSel == "grade") {
+          data = { ...data, grade: "[" + String(this.colSel2) + "]" };
+        }
+      }
+
       this.tableLoading = true;
       HTTP.queryTask(data)
         .then(({ data }) => {
