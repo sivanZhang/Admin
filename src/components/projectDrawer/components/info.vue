@@ -959,7 +959,7 @@ export default {
               this.project.date_end = this.date_end / 1000;
               this.date_end = null;
             }
-            if (Type === 23) {
+            if (Type === 22) {
               this.project.school = this.school;
               this.school = null;
             }
