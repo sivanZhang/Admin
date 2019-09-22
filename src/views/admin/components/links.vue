@@ -282,17 +282,17 @@ export default {
         rule: this.updateForm,
         method: "put"
       };
-      // updateWKTemplate(msg)
-      //   .then(({ data }) => {
-      //     this.$message.success(data.msg);
-      //     if (data.status === 0) {
-      //       this.$emit("refresh");
-      //       this.isUpdateShow = false;
-      //     } else {
-      //       this.$message.error(data.msg);
-      //     }
-      //   })
-      //   .catch(() => {});
+      updateWKTemplate(msg)
+        .then(({ data }) => {
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.$emit("refresh");
+            this.isUpdateShow = false;
+          } else {
+            this.$message.error(data.msg);
+          }
+        })
+        .catch(() => {});
     },
     removeDomain(item) {
       var index = this.dynamicValidateForm.domains.indexOf(item);
