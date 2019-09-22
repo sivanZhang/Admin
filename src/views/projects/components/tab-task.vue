@@ -314,7 +314,7 @@
       <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <div v-if="active == 0" style="padding-top:10px">
           <el-form-item label="所属资产">
-            <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产">
+            <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产" @change="changeAsset()">
               <el-option
                 v-for="item of AssetListTask"
                 :label="item.name"
@@ -837,6 +837,13 @@ export default {
     }
   },
   methods: {
+    changeAsset(val){
+     // console.log(this.TaskForm.asset);
+       const data = this.AssetListTask.filter(item=>{
+           return item.id === this.TaskForm.asset
+      });
+      this.TaskForm.name = data[0].name;
+    },
     sortFilter({ column, prop, order }) {
       let data = {
         project: this.$route.params.id,
@@ -896,7 +903,6 @@ export default {
     },
     //资产环节为空时，可创建
     addLink(asset) {
-      // console.log(asset);
       this.asset = asset;
       this.isLinkDialogShow = true;
       this.mainTaskShow = false;
