@@ -392,10 +392,4 @@ function QObject(name, data, webChannel) {
         object[name] = data.enums[name];
     }
 }
-
-//required for use with nodejs
-if (typeof module === 'object') {
-    module.exports = {
-        QWebChannel: QWebChannel
-    };
-}
+export default QWebChannel
