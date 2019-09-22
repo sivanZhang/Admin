@@ -19,6 +19,10 @@
     font-size: 12px;
 }
 
+.el-table__body tr.current-row>td {
+    background-color: #90caf9!important;
+}
+
 .el-upload__input {
     display: none;
 }

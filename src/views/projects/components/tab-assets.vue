@@ -159,56 +159,55 @@
                 ></el-option>
               </el-select>
             </div>
-            
-              <el-input
-                v-if="colShow"
-                placeholder="输入关键字搜索"
-                style="width:200px;"
-                v-model="filterText"
-                class="input-with-select"
-                @keyup.enter.native="getAssetList()"
-              >
-                <el-button
-                  @click="getAssetList()"
-                  slot="append"
-                  icon="el-icon-search"
-                  type="primary"
-                />
-              </el-input>
-              <el-select
-                v-show="chooseSel"
-                v-model="colSel2"
-                placeholder="请选择"
-                style="width:130px;margin-top:1px"
-                multiple
-                filterable
-                @keyup.enter.native="getAssetList()"
-              >
-                <el-option
-                  v-for="item in columnSelect2"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+
+            <el-input
+              v-if="colShow"
+              placeholder="输入关键字搜索"
+              style="width:200px;"
+              v-model="filterText"
+              class="input-with-select"
+              @keyup.enter.native="getAssetList()"
+            >
               <el-button
-                v-show="chooseSel"
                 @click="getAssetList()"
                 slot="append"
                 icon="el-icon-search"
                 type="primary"
-                style="margin-top:-1px"
               />
-              <el-date-picker
-                v-if="timeSel"
-                v-model="timeSelection"
-                type="date"
-                placeholder="选择日期"
-                @change="getAssetList()"
-                style="width:130px"
-              ></el-date-picker>
-              <el-button @click="getAssetList(1)" type="primary">重置</el-button>
-            
+            </el-input>
+            <el-select
+              v-show="chooseSel"
+              v-model="colSel2"
+              placeholder="请选择"
+              style="width:130px;margin-top:1px"
+              multiple
+              filterable
+              @keyup.enter.native="getAssetList()"
+            >
+              <el-option
+                v-for="item in columnSelect2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <el-button
+              v-show="chooseSel"
+              @click="getAssetList()"
+              slot="append"
+              icon="el-icon-search"
+              type="primary"
+              style="margin-top:-1px"
+            />
+            <el-date-picker
+              v-if="timeSel"
+              v-model="timeSelection"
+              type="date"
+              placeholder="选择日期"
+              @change="getAssetList()"
+              style="width:130px"
+            ></el-date-picker>
+            <el-button @click="getAssetList(1)" type="primary">重置</el-button>
           </div>
         </el-col>
       </el-row>
@@ -235,7 +234,7 @@
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
               style="width: 50px;height: 30px;"
-              @click.native="show(scope.row.id)"
+              @click.native="img(scope.row)"
               v-if="!editing||clickId !== scope.row.id"
             >
               <div slot="placeholder" class="image-slot">
@@ -281,7 +280,7 @@
             >
               <span>{{scope.row.name?scope.row.name:"-"}}</span>
             </el-input>
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
+            <span v-if="!editing||clickId !== scope.row.id" style="color:#2d8cf0"  @click="show(scope.row.id)">{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -741,24 +740,22 @@
     </el-dialog>
     <Drawer
       scrollable
-      :closable="false"
+      closable
       v-model="value1"
       width="526"
-      inner
       :transfer="false"
       :mask="false"
+      :inner="ot"
     >
-      <Affix>
-        <Header :project="project" @DrawerClose="drawerClose">
-          <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
-        </Header>
-        <assetsDrawer
-          :project="project"
-          :RemarksData="RemarksData"
-          @refresh_assetList="getAssetList"
-          ref="assetsDrawer"
-        />
-      </Affix>
+      <Header :project="project">
+        <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
+      </Header>
+      <assetsDrawer
+        :project="project"
+        :RemarksData="RemarksData"
+        @refresh_assetList="getAssetList"
+        ref="assetsDrawer"
+      />
     </Drawer>
   </div>
 </template>
@@ -779,6 +776,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      ot: true,
       pageCount: 0,
       AssetList: [],
       total: 0,
@@ -1092,6 +1090,17 @@ export default {
     }
   },
   methods: {
+    handleScroll() {
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      if (scrollTop > 170) {
+        this.ot = false;
+      } else {
+        this.ot = true;
+      }
+    },
     sortMul() {
       this.visible = false;
 
@@ -1333,8 +1342,8 @@ export default {
       }
       if (type === 1) {
         this.filterText = "";
-        this.colSel2=[];
-        this.timeSelection = ''
+        this.colSel2 = [];
+        this.timeSelection = "";
       }
       let payload = {
         project: this.$route.params.id,
@@ -1616,6 +1625,12 @@ export default {
   },
   created() {
     this.getAssetList();
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>
@@ -1624,10 +1639,10 @@ export default {
   cursor: pointer;
 }
 #asset-list {
-  & /deep/ .el-table--border th,
+  min-height: calc(100vh - 199px);
+  /* & /deep/ .el-table--border th,
   & /deep/ .el-table--border td {
-    /*zjw*/
     border-right-width: 0px;
-  }
+  } */
 }
 </style>

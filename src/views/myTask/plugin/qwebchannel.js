@@ -1,42 +1,42 @@
 /****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** You may use this file under the terms of the BSD license as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2016 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+ ** This file is part of the examples of the Qt Toolkit.
+ **
+ ** $QT_BEGIN_LICENSE:BSD$
+ ** You may use this file under the terms of the BSD license as follows:
+ **
+ ** "Redistribution and use in source and binary forms, with or without
+ ** modification, are permitted provided that the following conditions are
+ ** met:
+ **   * Redistributions of source code must retain the above copyright
+ **     notice, this list of conditions and the following disclaimer.
+ **   * Redistributions in binary form must reproduce the above copyright
+ **     notice, this list of conditions and the following disclaimer in
+ **     the documentation and/or other materials provided with the
+ **     distribution.
+ **   * Neither the name of The Qt Company Ltd nor the names of its
+ **     contributors may be used to endorse or promote products derived
+ **     from this software without specific prior written permission.
+ **
+ **
+ ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ ** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ ** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ ** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ ** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ ** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ ** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+ **
+ ** $QT_END_LICENSE$
+ **
+ ****************************************************************************/
 "use strict";
 
 var QWebChannelMessageTypes = {
@@ -52,27 +52,24 @@ var QWebChannelMessageTypes = {
     response: 10,
 };
 
-var QWebChannel = function(transport, initCallback)
-{
+export var QWebChannel = function(transport, initCallback) {
     if (typeof transport !== "object" || typeof transport.send !== "function") {
         console.error("The QWebChannel expects a transport object with a send function and onmessage callback property." +
-                      " Given is: transport: " + typeof(transport) + ", transport.send: " + typeof(transport.send));
+            " Given is: transport: " + typeof(transport) + ", transport.send: " + typeof(transport.send));
         return;
     }
 
     var channel = this;
     this.transport = transport;
 
-    this.send = function(data)
-    {
+    this.send = function(data) {
         if (typeof(data) !== "string") {
             data = JSON.stringify(data);
         }
         channel.transport.send(data);
     }
 
-    this.transport.onmessage = function(message)
-    {
+    this.transport.onmessage = function(message) {
         var data = message.data;
         if (typeof data === "string") {
             data = JSON.parse(data);
@@ -95,8 +92,7 @@ var QWebChannel = function(transport, initCallback)
 
     this.execCallbacks = {};
     this.execId = 0;
-    this.exec = function(data, callback)
-    {
+    this.exec = function(data, callback) {
         if (!callback) {
             // if no callback is given, send directly
             channel.send(data);
@@ -117,8 +113,7 @@ var QWebChannel = function(transport, initCallback)
 
     this.objects = {};
 
-    this.handleSignal = function(message)
-    {
+    this.handleSignal = function(message) {
         var object = channel.objects[message.object];
         if (object) {
             object.signalEmitted(message.signal, message.args);
@@ -127,8 +122,7 @@ var QWebChannel = function(transport, initCallback)
         }
     }
 
-    this.handleResponse = function(message)
-    {
+    this.handleResponse = function(message) {
         if (!message.hasOwnProperty("id")) {
             console.error("Invalid response message received: ", JSON.stringify(message));
             return;
@@ -137,8 +131,7 @@ var QWebChannel = function(transport, initCallback)
         delete channel.execCallbacks[message.id];
     }
 
-    this.handlePropertyUpdate = function(message)
-    {
+    this.handlePropertyUpdate = function(message) {
         for (var i in message.data) {
             var data = message.data[i];
             var object = channel.objects[data.object];
@@ -148,15 +141,14 @@ var QWebChannel = function(transport, initCallback)
                 console.warn("Unhandled property update: " + data.object + "::" + data.signal);
             }
         }
-        channel.exec({type: QWebChannelMessageTypes.idle});
+        channel.exec({ type: QWebChannelMessageTypes.idle });
     }
 
-    this.debug = function(message)
-    {
-        channel.send({type: QWebChannelMessageTypes.debug, data: message});
+    this.debug = function(message) {
+        channel.send({ type: QWebChannelMessageTypes.debug, data: message });
     };
 
-    channel.exec({type: QWebChannelMessageTypes.init}, function(data) {
+    channel.exec({ type: QWebChannelMessageTypes.init }, function(data) {
         for (var objectName in data) {
             var object = new QObject(objectName, data[objectName], channel);
         }
@@ -167,12 +159,11 @@ var QWebChannel = function(transport, initCallback)
         if (initCallback) {
             initCallback(channel);
         }
-        channel.exec({type: QWebChannelMessageTypes.idle});
+        channel.exec({ type: QWebChannelMessageTypes.idle });
     });
 };
 
-function QObject(name, data, webChannel)
-{
+function QObject(name, data, webChannel) {
     this.__id__ = name;
     webChannel.objects[name] = this;
 
@@ -186,8 +177,7 @@ function QObject(name, data, webChannel)
 
     // ----------------------------------------------------------------------
 
-    this.unwrapQObject = function(response)
-    {
+    this.unwrapQObject = function(response) {
         if (response instanceof Array) {
             // support list of objects
             var ret = new Array(response.length);
@@ -196,9 +186,9 @@ function QObject(name, data, webChannel)
             }
             return ret;
         }
-        if (!response
-            || !response["__QObject*__"]
-            || response.id === undefined) {
+        if (!response ||
+            !response["__QObject*__"] ||
+            response.id === undefined) {
             return response;
         }
 
@@ -211,7 +201,7 @@ function QObject(name, data, webChannel)
             return;
         }
 
-        var qObject = new QObject( objectId, response.data, webChannel );
+        var qObject = new QObject(objectId, response.data, webChannel);
         qObject.destroyed.connect(function() {
             if (webChannel.objects[objectId] === qObject) {
                 delete webChannel.objects[objectId];
@@ -233,15 +223,13 @@ function QObject(name, data, webChannel)
         return qObject;
     }
 
-    this.unwrapProperties = function()
-    {
+    this.unwrapProperties = function() {
         for (var propertyIdx in object.__propertyCache__) {
             object.__propertyCache__[propertyIdx] = object.unwrapQObject(object.__propertyCache__[propertyIdx]);
         }
     }
 
-    function addSignal(signalData, isPropertyNotifySignal)
-    {
+    function addSignal(signalData, isPropertyNotifySignal) {
         var signalName = signalData[0];
         var signalIndex = signalData[1];
         object[signalName] = {
@@ -291,8 +279,7 @@ function QObject(name, data, webChannel)
     /**
      * Invokes all callbacks for the given signalname. Also works for property notify callbacks.
      */
-    function invokeSignalCallbacks(signalName, signalArgs)
-    {
+    function invokeSignalCallbacks(signalName, signalArgs) {
         var connections = object.__objectSignals__[signalName];
         if (connections) {
             connections.forEach(function(callback) {
@@ -301,8 +288,7 @@ function QObject(name, data, webChannel)
         }
     }
 
-    this.propertyUpdate = function(signals, propertyMap)
-    {
+    this.propertyUpdate = function(signals, propertyMap) {
         // update property cache
         for (var propertyIndex in propertyMap) {
             var propertyValue = propertyMap[propertyIndex];
@@ -316,13 +302,11 @@ function QObject(name, data, webChannel)
         }
     }
 
-    this.signalEmitted = function(signalName, signalArgs)
-    {
+    this.signalEmitted = function(signalName, signalArgs) {
         invokeSignalCallbacks(signalName, signalArgs);
     }
 
-    function addMethod(methodData)
-    {
+    function addMethod(methodData) {
         var methodName = methodData[0];
         var methodIdx = methodData[1];
         object[methodName] = function() {
@@ -351,8 +335,7 @@ function QObject(name, data, webChannel)
         };
     }
 
-    function bindGetterSetter(propertyInfo)
-    {
+    function bindGetterSetter(propertyInfo) {
         var propertyIndex = propertyInfo[0];
         var propertyName = propertyInfo[1];
         var notifySignalData = propertyInfo[2];
@@ -371,7 +354,7 @@ function QObject(name, data, webChannel)
 
         Object.defineProperty(object, propertyName, {
             configurable: true,
-            get: function () {
+            get: function() {
                 var propertyValue = object.__propertyCache__[propertyIndex];
                 if (propertyValue === undefined) {
                     // This shouldn't happen

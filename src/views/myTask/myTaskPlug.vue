@@ -15,13 +15,11 @@
             <el-col :span="3" align="left">工种：</el-col>
             <el-col :span="21">
               <el-col
-                  :span="5"
-                  v-for="(item,index) of loginMessage.dept"
-                  :key="index"
-                  align="left"
-                >               
-                 {{item.name}}             
-                </el-col>
+                :span="5"
+                v-for="(item,index) of loginMessage.dept"
+                :key="index"
+                align="left"
+              >{{item.name}}</el-col>
             </el-col>
           </el-row>
         </el-col>
@@ -64,35 +62,34 @@
             </template>
           </el-table-column>
         </el-table>
-      
       </el-tab-pane>
-      <el-tab-pane label="任务详情" name="second" disabled >
-        <detail :TaskDetail="TaskDetail"  :LogList="LogList"
-      :detailLoading="detailLoading"
-      :logsLoading="logsLoading"
-      :TaskRecord="TaskRecord"
-      :activeRow="activeRow"
-      @activename="activename"/>
+      <el-tab-pane label="任务详情" name="second" disabled>
+        <detail
+          :TaskDetail="TaskDetail"
+          :LogList="LogList"
+          :detailLoading="detailLoading"
+          :logsLoading="logsLoading"
+          :TaskRecord="TaskRecord"
+          :activeRow="activeRow"
+          @activename="activename"
+        />
       </el-tab-pane>
-     
     </el-tabs>
-    <el-button type="primary" @click="handelClick">
-      触发
-    </el-button>
+    <el-button type="primary" @click="handelClick">触发</el-button>
   </div>
 </template>
 
 <script>
-import {QWebChannel} from './plugin/qwebchannel.js'
+import { QWebChannel } from "./plugin/qwebchannel.js";
 import {
-    queryMyTask,
-    addTaskRecord,
-    putTaskRecord,
-    queryTaskRecord,
-    queryTask,
-    getStatusTaskList
+  queryMyTask,
+  addTaskRecord,
+  putTaskRecord,
+  queryTaskRecord,
+  queryTask,
+  getStatusTaskList
 } from "@/api/task";
-import detail from "./components/detail"
+import detail from "./components/detail";
 import approveLog from "@/views/video/components/approve-log";
 export default {
   name: "myTaskPlug",
@@ -103,12 +100,12 @@ export default {
       activeName: "first",
       loginMessage: this.$store.state.login.userInfo,
       MyTask: null,
-      asset:{},
-      project:{},
+      asset: {},
+      project: {},
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [10, 20, 50, 100],
-       TaskDetail: {
+      TaskDetail: {
         name: ""
       },
       LogList: [],
@@ -128,17 +125,18 @@ export default {
   },
 
   methods: {
-    handelClick(){
-      new QWebChannel(qt.webChannelTransport, function (channel) {
-            window.app_manager = channel.objects.app_manager;
-            console.log(app_manager);
-            app_manager.text =  "33333333";
-            app_manager.textChanged.connect(function(message) {
-                document.getElementById("output").innerHTML = "Received message: " + message;
-            });
+    handelClick() {
+      new QWebChannel(qt.webChannelTransport, function(channel) {
+        window.app_manager = channel.objects.app_manager;
+        console.log(app_manager);
+        app_manager.text = "33333333";
+        app_manager.textChanged.connect(function(message) {
+          document.getElementById("output").innerHTML =
+            "Received message: " + message;
         });
+      });
     },
-    activename(){
+    activename() {
       this.activeName = "first";
     },
     handleClick(tab, event) {
@@ -157,47 +155,49 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     },
-    openTaskDetail(row) { 
-      this.activeRow = {...row };
-            this.TaskRecord = Object.assign({}, {
-                task_id: row.task.id,
-                type: 0
-            });
-            this.logsLoading = true;
-            
-            queryTaskRecord({
-                task_id: row.task.id,
-            }).then(({
-                data
-            }) => {
-                this.LogList = [...data.msg];
-                this.logsLoading = false;
-            }).catch(() => {
-                this.logsLoading = false;
-            });
-            this.detailLoading = true;
-            queryTask({
-                id: row.task.id,
-            }).then(({
-                data
-            }) => {
-                this.TaskDetail = {
-                    ...data.msg
-                }
-                this.detailLoading = false;
-            }).catch(() => {
-                this.detailLoading = false;
-            });
-            this.activeName="second"
+    openTaskDetail(row) {
+      this.activeRow = { ...row };
+      this.TaskRecord = Object.assign(
+        {},
+        {
+          task_id: row.task.id,
+          type: 0
+        }
+      );
+      this.logsLoading = true;
 
+      queryTaskRecord({
+        task_id: row.task.id
+      })
+        .then(({ data }) => {
+          this.LogList = [...data.msg];
+          this.logsLoading = false;
+        })
+        .catch(() => {
+          this.logsLoading = false;
+        });
+      this.detailLoading = true;
+      queryTask({
+        id: row.task.id
+      })
+        .then(({ data }) => {
+          this.TaskDetail = {
+            ...data.msg
+          };
+          this.detailLoading = false;
+        })
+        .catch(() => {
+          this.detailLoading = false;
+        });
+      this.activeName = "second";
     }
   },
-  components:{
+  components: {
     detail,
-    approveLog,
+    approveLog
   },
-  mounted(){
-    document.body.style.minWidth = 'auto'
+  mounted() {
+    document.body.style.minWidth = "auto";
   }
 };
 </script>

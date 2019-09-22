@@ -150,7 +150,7 @@
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="任务ID" prop="id" width="100px" sortable="custom">
           <template slot-scope="scope">
-            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+            <span @click="showDrawer(scope.row)" style="color:#2d8cf0">{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
@@ -556,13 +556,11 @@
       closable
       v-model="showdrawer"
       width="526"
-      inner
+      :inner="ot"
       :transfer="false"
       :mask="false"
     >
-      <Affix>
-        <approve-log ref="approvelogs" />
-      </Affix>
+      <approve-log ref="approvelogs" />
     </Drawer>
   </div>
 </template>
@@ -582,6 +580,7 @@ export default {
   name: "tab-task",
   data() {
     return {
+      ot:true,
       activeTab: "first",
       tableLoading: false, //表格加载状态
       total: 0,
@@ -838,6 +837,17 @@ export default {
     }
   },
   methods: {
+    handleScroll() {
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      if (scrollTop > 170) {
+        this.ot = false;
+      } else {
+        this.ot = true;
+      }
+    },
     sortFilter({ column, prop, order }) {
       let data = {
         project: this.$route.params.id,
@@ -1385,6 +1395,11 @@ export default {
     } else {
       this.formatList();
     }
+  },mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>

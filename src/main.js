@@ -28,9 +28,8 @@ Vue.use(ElementUI, {
 })
 Vue.config.productionTip = false
 
-import { Drawer,Affix } from 'iview';
+import { Drawer } from 'iview';
 Vue.component('Drawer', Drawer);
-Vue.component('Affix', Affix);
 new Vue({
     el: '#app',
     router,
