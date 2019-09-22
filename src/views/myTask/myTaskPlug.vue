@@ -80,7 +80,7 @@
 </template>
 
 <script>
-const QWebChannel = require('./plugin/qwebchannel.js');
+import QWebChannel from "./plugin/qwebchannel.js";
 import {
   queryMyTask,
   addTaskRecord,

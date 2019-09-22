@@ -393,9 +393,4 @@ function QObject(name, data, webChannel) {
     }
 }
 
-//required for use with nodejs
-if (typeof module === 'object') {
-    module.exports = {
-        QWebChannel: QWebChannel
-    };
-}
+export default QWebChannel
