@@ -1,5 +1,5 @@
 <template>
-  <div id="task">
+  <div id="task" ref="drawer-parent">
     <div>
       <el-row>
         <el-col :span="14">
@@ -556,7 +556,7 @@
       closable
       v-model="showdrawer"
       width="526"
-      :inner="ot"
+      :inner="isInner"
       :transfer="false"
       :mask="false"
     >
@@ -575,12 +575,12 @@ import { queryAssets } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import { type } from "os";
 import approveLog from "@/views/video/components/approve-log";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
-  mixins: [myMixin],
+  mixins: [myMixin,thumbtackMixin],
   name: "tab-task",
   data() {
     return {
-      ot:true,
       activeTab: "first",
       tableLoading: false, //表格加载状态
       total: 0,
@@ -837,17 +837,6 @@ export default {
     }
   },
   methods: {
-    handleScroll() {
-      let scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      if (scrollTop > 170) {
-        this.ot = false;
-      } else {
-        this.ot = true;
-      }
-    },
     sortFilter({ column, prop, order }) {
       let data = {
         project: this.$route.params.id,
@@ -1395,11 +1384,6 @@ export default {
     } else {
       this.formatList();
     }
-  },mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>

@@ -12,7 +12,9 @@ import tabLog from "./components/tab-log"
 import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
 import approveLog from "@/views/video/components/approve-log";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
+    mixins: [thumbtackMixin],
     components: {
         draggable,
         tabApprove,
@@ -44,9 +46,9 @@ export default {
                     label: '进行中',
                     value: 2
                 },
-                
-               
-                
+
+
+
             ],
             createLoading: false,
             TaskRecord: [],
@@ -59,7 +61,7 @@ export default {
             FinishedArr: [],
             PauseArr: [],
             // PassArr : [],
-            ApproveingArr:[],
+            ApproveingArr: [],
             taskList: [{
                 value: "1",
                 label: "任何项目"
@@ -144,10 +146,10 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
-           
-           
+
+
             changecolor: 1,
-            activeRow: {},//点击任务列表选中的列的数据
+            activeRow: {}, //点击任务列表选中的列的数据
         };
     },
     methods: {
@@ -164,7 +166,7 @@ export default {
         },
         //表格中的快捷下拉切换任务状态
         statusChange(status, row) {
-          //  console.log('row', row);
+            //  console.log('row', row);
 
             let loading = this.$loading({
                 fullscreen: true
@@ -179,17 +181,17 @@ export default {
                 loading.close()
                 if (data.status === 0) {
                     row.task.status = status
-                    if(status === 0){
+                    if (status === 0) {
                         status = "暂停";
                     }
-                    if(status === 1){
+                    if (status === 1) {
                         status = "未开始";
                     }
-                    if(status === 2){
+                    if (status === 2) {
                         status = "进行中";
                     }
-                    
-                    this.$message.success("任务"+row.task.id+"状态已更改为："+status);
+
+                    this.$message.success("任务" + row.task.id + "状态已更改为：" + status);
                     this.resetTasks()
                 } else {
                     this.$message.warning(data.msg)
@@ -226,9 +228,9 @@ export default {
                 case 'TimeOutArr':
                     status = 5
                     break;
-                // case 'PassArr':
-                //     status = 6
-                //     break;
+                    // case 'PassArr':
+                    //     status = 6
+                    //     break;
             }
             let loading = this.$loading({
                 fullscreen: true
@@ -266,28 +268,28 @@ export default {
         },
         addRecord() {
             this.createLoading = true;
-            
-                addTaskRecord(this.TaskRecord)
-                    .then(res => {
-                        if (res.data.status === 0) {
-                            this.$message.success(res.data.msg);
-                            this.getMyTasks()
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                        this.isDialogShow = false;
-                        this.createLoading = false;
-                        this.isDrawerShow = false;
-                    })
-                    .catch(err => {
-                        this.createLoading = false;
-                    });
-            
+
+            addTaskRecord(this.TaskRecord)
+                .then(res => {
+                    if (res.data.status === 0) {
+                        this.$message.success(res.data.msg);
+                        this.getMyTasks()
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                    this.isDialogShow = false;
+                    this.createLoading = false;
+                    this.isDrawerShow = false;
+                })
+                .catch(err => {
+                    this.createLoading = false;
+                });
+
         },
         //是否显示任务板右侧
         taskBoardRightShow(row) {
             this.isDrawerShow = true;
-            
+
             this.activeRow = {...row };
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
@@ -318,14 +320,14 @@ export default {
             }).catch(() => {
                 this.detailLoading = false;
             });
-            
-            
+
+
         },
         //http获取‘我的任务’
         async getMyTasks() {
             await getStatusTaskList({
                 mytask: null,
-                
+
             }).then(({
                 data
             }) => {
@@ -340,18 +342,18 @@ export default {
         resetTasks() {
             //暂停 0
             this.PauseArr = []
-            //未开始 1
+                //未开始 1
             this.DraftArr = []
-            //进行中 2
+                //进行中 2
             this.InProgressArr = []
-            //审核中 3
+                //审核中 3
             this.ApproveingArr = []
-            //完成 4
+                //完成 4
             this.FinishedArr = []
-            //超时 5
+                //超时 5
             this.TimeOutArr = []
-            //审核通过 6
-            // this.PassArr = []
+                //审核通过 6
+                // this.PassArr = []
             this.MyTaskList.forEach(item => {
                 switch (item.task.status) {
                     case 0:
@@ -371,8 +373,8 @@ export default {
                         break;
                     case 5:
                         this.TimeOutArr.push(item.task);
-                    // case 6:
-                    //     this.PassArr.push(item.task);
+                        // case 6:
+                        //     this.PassArr.push(item.task);
                 }
             });
         }

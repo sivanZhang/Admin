@@ -218,11 +218,12 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务列表" name="second" class="tab-task">
-        <Drawer scrollable
+      <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
+        <Drawer
+          scrollable
           v-model="isDrawerShow"
           width="512px"
-          inner
+          :inner="isInner"
           :mask-style="{backgroundColor: 'transparent'}"
           :transfer="false"
           draggable
@@ -304,8 +305,7 @@
           highlight-current-row
           borders
           @row-click="taskBoardRightShow"
-          style="width: 100%;"
-        >
+          style="width: 100%;">
           <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
           <el-table-column  label="项目" header-align="left" show-overflow-tooltip>

@@ -1,5 +1,5 @@
 <template>
-  <div id="my-audit">
+  <div id="my-audit" ref="drawer-parent">
     <el-button
       icon="el-icon-video-camera-solid"
       type="success"
@@ -12,8 +12,7 @@
       highlight-current-row
       @row-click="taskBoardRightShow"
       @select="taskSelect"
-      @select-all="taskSelect"
-    >
+      @select-all="taskSelect">
       <el-table-column type="selection" width="60" align="center"></el-table-column>
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
@@ -54,7 +53,7 @@
       scrollable
       v-model="isDrawerShow"
       width="512px"
-      inner
+      :inner="isInner"
       :mask-style="{backgroundColor: 'transparent'}"
       :transfer="false"
       draggable
@@ -104,8 +103,9 @@ import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "./components/approve-log";
-import { log } from "util";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
+  mixins: [thumbtackMixin],
   components: {
     taskForm,
     tabLog,

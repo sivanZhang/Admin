@@ -1,5 +1,5 @@
 <template>
-  <div id="asset-list">
+  <div id="asset-list" ref="drawer-parent">
     <div>
       <el-row>
         <el-col :span="14" style="padding-bottom:15px;">
@@ -280,7 +280,11 @@
             >
               <span>{{scope.row.name?scope.row.name:"-"}}</span>
             </el-input>
-            <span v-if="!editing||clickId !== scope.row.id" style="color:#2d8cf0"  @click="show(scope.row.id)">{{scope.row.name?scope.row.name:"-"}}</span>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+              style="color:#2d8cf0"
+              @click="show(scope.row.id)"
+            >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -745,7 +749,7 @@
       width="526"
       :transfer="false"
       :mask="false"
-      :inner="ot"
+      :inner="isInner"
     >
       <Header :project="project">
         <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
@@ -767,8 +771,9 @@ import * as HTTP from "@/api/assets";
 import { getRemark } from "@/api/remark";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
-
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
+  mixins:[thumbtackMixin],
   components: {
     assetsDrawer,
     Header
@@ -776,7 +781,6 @@ export default {
   neme: "asset-list",
   data() {
     return {
-      ot: true,
       pageCount: 0,
       AssetList: [],
       total: 0,
@@ -1090,17 +1094,6 @@ export default {
     }
   },
   methods: {
-    handleScroll() {
-      let scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      if (scrollTop > 170) {
-        this.ot = false;
-      } else {
-        this.ot = true;
-      }
-    },
     sortMul() {
       this.visible = false;
 
@@ -1626,12 +1619,6 @@ export default {
   created() {
     this.getAssetList();
   },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
-  }
 };
 </script>
 <style lang="scss" >
