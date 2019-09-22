@@ -1099,7 +1099,7 @@ export default {
           }
         })
         .catch(({ data }) => {
-          thsi.$message.error(data.msg);
+          this.$message.error(data.msg);
         });
     }
   }

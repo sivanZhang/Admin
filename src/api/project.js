@@ -17,7 +17,7 @@ export function getMyProject(params){
 }
 //获取项目详情
 export function projectDetail(params){
-    return AXIOS.get('/projects/projects/?id=7',{params})
+    return AXIOS.get('/projects/projects/',{params})
 }
 //添加/删除项目参与的工种
 export function projectProfession(data){

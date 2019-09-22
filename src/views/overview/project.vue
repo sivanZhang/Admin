@@ -2,88 +2,155 @@
   <div id="project" style="margin:-20px">
     <div class="container">
       <Drawer
-          scrollable
-          closable
-          draggable
-          inner
-          v-model="isDrawerShow"
-          width="526px"
-          :transfer="false"
-          :mask-style="{backgroundColor: 'transparent'}"
-          :append-to-body="true"
-        >
-          <drawer-header :project="project" style="padding:10px" />
-          <project-drawer
-            :project="project"
-            :RemarksData="RemarksData"
-            :assetsList="TableData"
-            :taskList="taskList"
-            @refresh="show"
-          />
-        </Drawer>
-      <div class="item-project" v-for="(item,index) in ProjectList" :key="index">
-        <el-card shadow="hover" :body-style="{ padding: '0px' }">
-          <div class="dropdow">
-            <el-dropdown placement="bottom" trigger="click">
-              <el-button type="text" style="color:#333">
-                <i class="el-icon-more"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown" style="margin-top:0px">
-                <el-dropdown-item @click.native="showImg($store.state.BASE_URL+item.image)">
-                  查看大图
-                  <!-- <router-link :to="`/projects/project-detail/${item.id}`">查看大图</router-link> -->
-                </el-dropdown-item>
-                <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
-                <el-dropdown-item
-                  @click.native="delProject(item)"
-                  v-if="$store.state.login.userInfo.auth.manage_project"
-                >删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
-          <div slot="header" class="box-card-header">
-            <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
-              <el-image
-                class="mini-image"
-                :src="item.image?$store.state.BASE_URL+item.image:''"
-                fit="cover"
-                style="height:100%;width:100%;"
-              >
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture" style="color:#909399"></i>
-                </div>
-              </el-image>
-            </router-link>
-          </div>
-          <div style="padding: 15px;">
-            <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
-              <mallki class-name="mallki-text" :text="item.name" />
-            </router-link>
-            <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
-            <el-row @click.native="show(item)">
-              <el-col :span="12">
-                <p class="subtitle">工作流</p>
-                <div>{{item.status|projectStatus}}</div>
-              </el-col>
-              <el-col :span="12">
-                <p class="subtitle">项目预算</p>
-                <div style="display:flex;">
-                  <div>¥{{item.budget|numberFormat}}万元</div>
-                </div>
-              </el-col>
-              <el-col :span="12">
-                <p class="subtitle">开始日期</p>
-                <div>{{item.date_start|dateFormat}}</div>
-              </el-col>
-              <el-col :span="12">
-                <p class="subtitle">截止日期</p>
-                <div>{{item.date_end |dateFormat}}</div>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card>
-      </div>
+        scrollable
+        closable
+        draggable
+        inner
+        v-model="isDrawerShow"
+        width="526px"
+        :transfer="false"
+        :mask-style="{backgroundColor: 'transparent'}"
+        :append-to-body="true"
+      >
+        <drawer-header :project="project" style="padding:10px" />
+        <project-drawer
+          :project="project"
+          :RemarksData="RemarksData"
+          :assetsList="TableData"
+          :taskList="taskList"
+          @refresh="show"
+        />
+      </Drawer>
+      <template v-if="!trainingProject">
+        <div class="item-project" v-for="(item,index) in ProjectList" :key="index">
+          <el-card shadow="hover" :body-style="{ padding: '0px' }">
+            <div class="dropdow">
+              <el-dropdown placement="bottom" trigger="click">
+                <el-button type="text" style="color:#333">
+                  <i class="el-icon-more"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown" style="margin-top:0px">
+                  <el-dropdown-item @click.native="showImg($store.state.BASE_URL+item.image)">
+                    查看大图
+                    <!-- <router-link :to="`/projects/project-detail/${item.id}`">查看大图</router-link> -->
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
+                  <el-dropdown-item
+                    @click.native="delProject(item)"
+                    v-if="$store.state.login.userInfo.auth.manage_project"
+                  >删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+            <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
+            <div slot="header" class="box-card-header">
+              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
+                <el-image
+                  class="mini-image"
+                  :src="item.image?$store.state.BASE_URL+item.image:''"
+                  fit="cover"
+                  style="height:100%;width:100%;"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture" style="color:#909399"></i>
+                  </div>
+                </el-image>
+              </router-link>
+            </div>
+            <div style="padding: 15px;">
+              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
+                <mallki class-name="mallki-text" :text="item.name" />
+              </router-link>
+              <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
+              <el-row @click.native="show(item)">
+                <el-col :span="12">
+                  <p class="subtitle">工作流</p>
+                  <div>{{item.status|projectStatus}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <p class="subtitle">项目预算</p>
+                  <div style="display:flex;">
+                    <div>¥{{item.budget|numberFormat}}万元</div>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <p class="subtitle">开始日期</p>
+                  <div>{{item.date_start|dateFormat}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <p class="subtitle">截止日期</p>
+                  <div>{{item.date_end |dateFormat}}</div>
+                </el-col>
+              </el-row>
+            </div>
+          </el-card>
+        </div>
+      </template>
+      <template v-else>
+        <div class="item-project" v-for="(item,index) in trainingProject" :key="index">
+          <el-card shadow="hover" :body-style="{ padding: '0px' }">
+            <div class="dropdow">
+              <el-dropdown placement="bottom" trigger="click">
+                <el-button type="text" style="color:#333">
+                  <i class="el-icon-more"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown" style="margin-top:0px">
+                  <el-dropdown-item @click.native="showImg($store.state.BASE_URL+item.image)">
+                    查看大图
+                    <!-- <router-link :to="`/projects/project-detail/${item.id}`">查看大图</router-link> -->
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="show(item)">在侧边栏中打开</el-dropdown-item>
+                  <el-dropdown-item
+                    @click.native="delProject(item)"
+                    v-if="$store.state.login.userInfo.auth.manage_project"
+                  >删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+            <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
+            <div slot="header" class="box-card-header">
+              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
+                <el-image
+                  class="mini-image"
+                  :src="item.image?$store.state.BASE_URL+item.image:''"
+                  fit="cover"
+                  style="height:100%;width:100%;"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture" style="color:#909399"></i>
+                  </div>
+                </el-image>
+              </router-link>
+            </div>
+            <div style="padding: 15px;">
+              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name,type:item.pro_type}}">
+                <mallki class-name="mallki-text" :text="item.name" />
+              </router-link>
+              <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
+              <el-row @click.native="show(item)">
+                <el-col :span="12">
+                  <p class="subtitle">工作流</p>
+                  <div>{{item.status|projectStatus}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <p class="subtitle">项目预算</p>
+                  <div style="display:flex;">
+                    <div>¥{{item.budget|numberFormat}}万元</div>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <p class="subtitle">开始日期</p>
+                  <div>{{item.date_start|dateFormat}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <p class="subtitle">截止日期</p>
+                  <div>{{item.date_end |dateFormat}}</div>
+                </el-col>
+              </el-row>
+            </div>
+          </el-card>
+        </div>
+      </template>
     </div>
     <el-dialog :visible.sync="isShowImg" width="768px" top="80px" :show-close="false">
       <img :src="src" style="width:100%" />
@@ -107,7 +174,6 @@ export default {
     projectDrawer,
     DrawerHeader
   },
-
   data() {
     return {
       isShowImg: false,
@@ -119,6 +185,7 @@ export default {
       taskList: []
     };
   },
+  props: ["trainingProject"],
   computed: {
     ...mapState("project", ["ProjectList"])
   },
@@ -133,6 +200,7 @@ export default {
     },
     show(item) {
       this.project = item;
+      //console.log(this.project);
       this.isDrawerShow = true;
       const msg = {
         appid: this.project.id,

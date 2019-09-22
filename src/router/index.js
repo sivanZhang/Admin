@@ -178,7 +178,7 @@ export const constantRoutes = [{
                 path: 'overview-users',
                 name: 'overview-users',
                 component: () =>
-                    import ('@/views/overview/users'),
+                    import ('@/views/training/training-project'),
                 meta: {
                     title: '实训项目',
                     icon: 'tree2'

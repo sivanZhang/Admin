@@ -33,6 +33,7 @@ import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
 import { projectDetail } from "@/api/project";
+import {getTrainingProject} from "@/api/training"
 export default {
   name: "project-detail",
   components: {
@@ -52,6 +53,7 @@ export default {
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
+       // console.log(newVal);
         if (newVal === "tab2") {
           this.$refs['tab-task'].getTasks();
         }
@@ -74,10 +76,19 @@ export default {
       });
     },
     getProjectDetail() {
-      projectDetail({ id: this.$route.params.id }).then(({ data }) => {
+      console.log(this.$route.query.type);
+      if(this.$route.query.type == '0'){
+        getTrainingProject({id: this.$route.params.id}).then(({ data }) => {
         this.project = data.msg;
         //console.log(this.project);
       });
+      }else{
+         projectDetail({ id: this.$route.params.id }).then(({ data }) => {
+        this.project = data.msg;
+        //console.log(this.project);
+      });
+      }
+     
     }
   },
   created() {
