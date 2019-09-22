@@ -27,17 +27,6 @@ const actions = {
         }).catch(() => {
             commit('SET_PROJECTS', null)
         })
-    },
-    get_Projects({
-        commit
-    }, params) {
-        getProjects().then(({
-            data
-        }) => {
-            commit('SET_PROJECTS', data.msg)
-        }).catch(() => {
-            commit('SET_PROJECTS', null)
-        })
     }
 }
 

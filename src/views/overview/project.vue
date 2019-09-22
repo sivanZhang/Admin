@@ -231,6 +231,7 @@ export default {
           method: "delete"
         }).then(({ data }) => {
           if (data.status === 0) this.$message.success(data.msg);
+          if(item.pro_type === 0) this.$store.dispatch("trainingStatus/get_TrainProject");
           this.$store.dispatch("project/get_Projects");
         });
       });

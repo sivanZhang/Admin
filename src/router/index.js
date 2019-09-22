@@ -175,8 +175,8 @@ export const constantRoutes = [{
                 },
             },
             {
-                path: 'overview-users',
-                name: 'overview-users',
+                path: 'overview-training',
+                name: 'overview-training',
                 component: () =>
                     import ('@/views/training/training-project'),
                 meta: {

@@ -29,7 +29,12 @@
             </div>
           </template>
         </el-upload>
-
+        <el-form-item label="类型">
+          <el-radio-group v-model="radio">
+            <el-radio :label="0">实训项目</el-radio>
+            <el-radio :label="1">项目</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="颜色" prop="color">
           <el-color-picker
             v-model="ProjectForm.color"
@@ -43,6 +48,11 @@
         <el-form-item label="项目编码" prop="code">
           <el-input v-model="ProjectForm.code"></el-input>
         </el-form-item>
+        <template v-if="radio === 0">
+          <el-form-item label="所属学校" prop="school">
+            <el-input v-model="ProjectForm.school"></el-input>
+          </el-form-item>
+        </template>
         <el-form-item label="Windows路径" prop="windows_path">
           <el-input v-model="ProjectForm.windows_path"></el-input>
         </el-form-item>
@@ -75,15 +85,14 @@
         </el-form-item>
         <el-form-item label="起止日期" required prop="datetime">
           <el-date-picker
-                v-model="ProjectForm.datetime"
-                type="daterange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                style="width:100%"
-                format="yyyy/MM/dd"
-               
-              ></el-date-picker>
+            v-model="ProjectForm.datetime"
+            type="daterange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width:100%"
+            format="yyyy/MM/dd"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item class="subbtn">
           <el-button @click="cancel">取消</el-button>
@@ -91,29 +100,29 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog  :visible.sync="isShowNext" width="480px"   top="5vh" @closed="cancel()">
+    <el-dialog :visible.sync="isShowNext" width="480px" top="5vh" @closed="cancel()">
       <el-row>
         <el-col align="center">
-        <svg-icon icon-class="success" style="width:50px;height:50px"></svg-icon>
-      </el-col>
-      <el-col align="center" style="padding-top:10px">
-        <h2>创建成功</h2>
-      </el-col>
-      <el-col align="center" style="padding-top:25px">
-        <h4 style="font-weight:100;">已创建新项目</h4>
-        <h4 style="font-weight:100;" >前往项目以查看项目详情，或点击导入镜头进行资产导入</h4>
-      </el-col>
+          <svg-icon icon-class="success" style="width:50px;height:50px"></svg-icon>
+        </el-col>
+        <el-col align="center" style="padding-top:10px">
+          <h2>创建成功</h2>
+        </el-col>
+        <el-col align="center" style="padding-top:25px">
+          <h4 style="font-weight:100;">已创建新项目</h4>
+          <h4 style="font-weight:100;">前往项目以查看项目详情，或点击导入镜头进行资产导入</h4>
+        </el-col>
       </el-row>
       <el-row style="padding-top:20px;padding-bottom:30px;">
-        <el-col  align="center">
+        <el-col align="center">
           <router-link :to="`/projects/project-detail/${id}`">
-          <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
-        </router-link>
-        
+            <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
+          </router-link>
+
           <router-link :to="`/assetes/asset-import/${id}`">
-          <el-button type="primary" @click="cancel1()">导入镜头</el-button>
-        </router-link>
-       </el-col>
+            <el-button type="primary" @click="cancel1()">导入镜头</el-button>
+          </router-link>
+        </el-col>
       </el-row>
     </el-dialog>
   </div>
@@ -166,9 +175,10 @@ export default {
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      
+
       isShowNext: false,
-      id:null
+      id: null,
+      radio:null
     };
   },
   props: {
@@ -186,24 +196,32 @@ export default {
       //告诉父组件：不显示弹框
       this.$emit("update:isShow", false);
     },
-    cancel1(){
-      this.isShowNext=false
+    cancel1() {
+      this.isShowNext = false;
     },
     //验证，并提交创建项目的表单
     submitForm() {
       this.$refs["projectForm"].validate(valid => {
         if (valid) {
-          const Data = {
+         // console.log(this.ProjectForm)
+          let Data = {
             ...this.ProjectForm,
             start: this.ProjectForm.datetime[0].toLocaleDateString(),
             end: this.ProjectForm.datetime[1].toLocaleDateString()
           };
+          if(this.radio === 0){
+            Data = {...Data,training:null}
+          }
           addProjects(Data).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
-              this.id=data.id;
-              this.isShowNext=true;
-              this.$store.dispatch("project/get_Projects");
+              this.id = data.id;
+              this.isShowNext = true;
+              if(this.radio === 0){
+                this.$store.dispatch("trainingStatus/get_TrainProject");
+              }else{
+                this.$store.dispatch("project/get_Projects");
+              }
               this.$emit("update:isShow", false);
             }
           });
@@ -217,10 +235,12 @@ export default {
       this.SRC = this.$store.state.BASE_URL + response.msg;
       this.ProjectForm["image"] = response.msg;
       this.ProjectForm.image_id = response.id;
-    }
+    },
+    
   },
   created() {
     !this.UserList && this.$store.dispatch("admin/get_UserList");
+    
   },
 
   watch: {
