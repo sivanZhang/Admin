@@ -385,7 +385,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
+          
+          <el-form-item label="环节时间" prop="executorlist">
+              <!-- <el-input  v-model="link.datetime" :disabled="true"> </el-input> -->
+          </el-form-item>
           <el-form-item label="任务时间" prop="datetime">
             <el-date-picker
               v-model="TaskForm.datetime"
@@ -506,7 +509,7 @@
               prop="content"
               :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
-              <el-input type="textarea" v-model="item.content" style="width:100%"></el-input>
+              <el-input type="textarea" v-model="Assetcontent" style="width:100%"></el-input>
             </el-form-item>
             <el-form-item
               label="当前工种"
@@ -633,6 +636,7 @@ export default {
       sort: null,
       propName: null,
       sortFunction: null,
+      Assetcontent:null,
       columnSelect: [
         {
           value: "name",
@@ -906,6 +910,11 @@ export default {
       this.asset = asset;
       this.isLinkDialogShow = true;
       this.mainTaskShow = false;
+      const data = this.AssetListTask.filter(item=>{
+           return item.id === this.asset
+      });
+      // console.log(this.AssetListTask)
+      this.Assetcontent = data[0].content
     },
     //给某一资产添加环节
     addLinks() {

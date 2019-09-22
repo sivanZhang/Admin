@@ -230,7 +230,7 @@
         >
           <el-tabs>
             <el-tab-pane label="任务详情" >
-              <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" />
+              <tabTaskDtail :taskdetail="TaskDetail" :link="Link" :asset="Asset" :detailLoading="detailLoading" />
             </el-tab-pane>
             <el-tab-pane label="执行记录" >
               <tabLog :loglist="LogList" :logsLoading="logsLoading" />

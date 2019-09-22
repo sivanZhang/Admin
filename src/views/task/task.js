@@ -146,8 +146,8 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
-
-
+            Asset:'',
+            Link:'',
             changecolor: 1,
             activeRow: {}, //点击任务列表选中的列的数据
         };
@@ -316,6 +316,8 @@ export default {
                 this.TaskDetail = {
                     ...data.msg
                 }
+                this.Asset=this.TaskDetail.asset;
+                this.Link=this.TaskDetail.link_dept_name;
                 this.detailLoading = false;
             }).catch(() => {
                 this.detailLoading = false;
