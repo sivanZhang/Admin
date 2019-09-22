@@ -199,7 +199,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             format="yyyy/MM/dd"
-           
+            @change="changeTime()"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
@@ -289,6 +289,19 @@ export default {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
+    //总工时默认值
+    changeTime(val){
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      const totalHour =
+        (this.TaskForm.datetime[1] - this.TaskForm.datetime[0]) /
+        (1000 * 3600 * 24);
+      this.TaskForm = {
+        ...this.TaskForm,
+        total_hour: 8 * totalHour
+      };
+    },
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});

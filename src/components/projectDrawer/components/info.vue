@@ -289,9 +289,9 @@
                 class="input"
                 value="project.name"
                 v-model="assetName"
-                @keyup.enter="save(14)"
+                @keyup.enter="save2(14)"
               />
-              <el-button @click="save(14)" type="primary">修改</el-button>
+              <el-button @click="save2(14)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -313,9 +313,9 @@
                 class="input"
                 value="project.path"
                 v-model="path"
-                @keyup.enter="save(3)"
+                @keyup.enter="save2(3)"
               />
-              <el-button @click="save(3)" type="primary">修改</el-button>
+              <el-button @click="save2(3)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -336,12 +336,12 @@
                 filterable
                 placeholder="请选择优先级"
                 ref="selete"
-                @change="save(17)"
+                @change="save2(17)"
               >
                 <el-option label="正常" :value="0"></el-option>
                 <el-option label="优先" :value="1"></el-option>
               </el-select>
-              <el-button @click="save(17)" type="primary">修改</el-button>
+              <el-button @click="save2(17)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -358,14 +358,14 @@
                 filterable
                 placeholder="请选择难度等级"
                 ref="selete"
-                @change="save(18)"
+                @change="save2(18)"
               >
                 <el-option label="简单" :value="0"></el-option>
                 <el-option label="标准" :value="1"></el-option>
                 <el-option label="复杂" :value="2"></el-option>
                 <el-option label="高难度" :value="3"></el-option>
               </el-select>
-              <el-button @click="save(18)" type="primary">修改</el-button>
+              <el-button @click="save2(18)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -382,9 +382,9 @@
                 type="date"
                 format="yyyy/MM/dd"
                 ref="start"
-                @change="save(10)"
+                @change="save2(10)"
               ></el-date-picker>
-              <el-button @click="save(10)" type="primary">修改</el-button>
+              <el-button @click="save2(10)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -402,9 +402,9 @@
                 type="date"
                 format="yyyy/MM/dd"
                 ref="end"
-                @change="save(11)"
+                @change="save2(11)"
               ></el-date-picker>
-              <el-button @click="save(11)" type="primary">修改</el-button>
+              <el-button @click="save2(11)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -422,9 +422,9 @@
                 class="input"
                 value="project.frame"
                 v-model="frame"
-                @keyup.enter="save(15)"
+                @keyup.enter="save2(15)"
               />
-              <el-button @click="save(15)" type="primary">修改</el-button>
+              <el-button @click="save2(15)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -442,9 +442,9 @@
                 class="input"
                 value="project.episode"
                 v-model="episode"
-                @keyup.enter="save(16)"
+                @keyup.enter="save2(16)"
               />
-              <el-button @click="save(16)" type="primary">修改</el-button>
+              <el-button @click="save2(16)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -471,9 +471,9 @@
                 class="input"
                 value="project.report"
                 v-model="report"
-                @keyup.enter="save(19)"
+                @keyup.enter="save2(19)"
               />
-              <el-button @click="save(19)" type="primary">修改</el-button>
+              <el-button @click="save2(19)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -492,9 +492,9 @@
                 class="input"
                 value="project.retime"
                 v-model="retime"
-                @keyup.enter="save(20)"
+                @keyup.enter="save2(20)"
               />
-              <el-button @click="save(20)" type="primary">修改</el-button>
+              <el-button @click="save2(20)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -512,9 +512,9 @@
                 class="input"
                 value="project.frame_range"
                 v-model="frame_range"
-                @keyup.enter="save(21)"
+                @keyup.enter="save2(21)"
               />
-              <el-button @click="save(21)" type="primary">修改</el-button>
+              <el-button @click="save2(21)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -528,8 +528,8 @@
             </div>
 
             <div v-if="editing10" style="display:flex">
-              <el-input type="textarea" ref="input" v-model="remark" @keyup.enter="save(9)" />
-              <el-button @click="save(9)" type="primary">修改</el-button>
+              <el-input type="textarea" ref="input" v-model="remark" @keyup.enter="save2(9)" />
+              <el-button @click="save2(9)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -847,14 +847,7 @@ export default {
           charger: this.charger
         };
       }
-      if (Type === 3) {
-        this.editing4 = false;
-        data = {
-          method: "put",
-          id: this.project.id,
-          path: this.path
-        };
-      }
+
       if (Type === 4) {
         this.editing5 = false;
         data = {
@@ -895,6 +888,100 @@ export default {
           linux_path: this.linux
         };
       }
+
+      if (Type === 12) {
+        this.editing13 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          start: dataFormat(this.date_start)
+        };
+      }
+      if (Type === 13) {
+        this.editing14 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          end: dataFormat(this.date_end)
+        };
+      }
+
+      if (Type === 22) {
+        this.editing23 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          school: this.school
+        };
+      }
+
+      putProjects(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            if (Type === 0) {
+              this.project.name = this.name;
+              this.name = null;
+            }
+            if (Type === 1) {
+              this.project.budget = this.budget;
+              this.budget = null;
+            }
+            if (Type === 2) {
+              this.project.charger_name = this.charger_name;
+              this.charger = null;
+            }
+            if (Type === 4) {
+              this.project.client.client_name = this.client_name;
+              this.client = null;
+            }
+            if (Type === 5) {
+              this.project.status = this.status;
+              this.status = null;
+            }
+            if (Type === 6) {
+              this.project.Windows = this.windows;
+              this.windows = null;
+            }
+            if (Type === 7) {
+              this.project.Mac = this.mac;
+              this.mac = null;
+            }
+            if (Type === 8) {
+              this.project.Linux = this.linux;
+              this.linux = null;
+            }
+            if (Type === 12) {
+              this.project.date_start = this.date_start / 1000;
+              this.date_start = null;
+            }
+            if (Type === 13) {
+              this.project.date_end = this.date_end / 1000;
+              this.date_end = null;
+            }
+            if (Type === 23) {
+              this.project.school = this.school;
+              this.school = null;
+            }
+          }
+        })
+        .catch(({ data }) => {
+          this.$message.error(data.msg);
+        });
+    },
+    save2(Type) {
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      let data = null;
+      if (Type === 3) {
+        this.editing4 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          path: this.path
+        };
+      }
       if (Type === 9) {
         this.editing10 = false;
         data = {
@@ -911,7 +998,8 @@ export default {
         data = {
           method: "put",
           id: this.project.id,
-          start: dataFormat(this.start_date)
+          start: dataFormat(this.start_date),
+          end: dataFormat(this.project.end_date * 1000)
         };
       }
       if (Type === 11) {
@@ -919,23 +1007,8 @@ export default {
         data = {
           method: "put",
           id: this.project.id,
+          start: dataFormat(this.project.start_date * 1000),
           end: dataFormat(this.end_date)
-        };
-      }
-      if (Type === 12) {
-        this.editing13 = false;
-        data = {
-          method: "put",
-          id: this.project.id,
-          start: dataFormat(this.date_start)
-        };
-      }
-      if (Type === 13) {
-        this.editing14 = false;
-        data = {
-          method: "put",
-          id: this.project.id,
-          end: dataFormat(this.date_end)
         };
       }
       if (Type === 14) {
@@ -1002,140 +1075,65 @@ export default {
           frame_range: this.frame_range
         };
       }
-      if (Type === 22) {
-        this.editing23 = false;
-        data = {
-          method: "put",
-          id: this.project.id,
-          school: this.school
-        };
-      }
-      if (
-        Type === 3 ||
-        Type === 9 ||
-        Type === 10 ||
-        Type === 11 ||
-        Type === 14 ||
-        Type === 15 ||
-        Type === 16 ||
-        Type === 17 ||
-        Type === 18 ||
-        Type === 19 ||
-        Type === 20 ||
-        Type === 21
-      ) {
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            if (Type === 3) {
-              this.project.path = this.path;
-              this.path = null;
-            }
-            if (Type === 9) {
-              this.project.remark = this.remark
-                .replace(/\r\n/g, "<br/>")
-                .replace(/\n/g, "<br/>")
-                .replace(/\s/g, "&nbsp;");
-              this.remark = null;
-            }
-            if (Type === 10) {
-              this.project.start_date = this.start_date / 1000;
-              this.start_date = null;
-            }
-            if (Type === 11) {
-              this.project.end_date = this.end_date / 1000;
-              this.end_date = null;
-            }
-            if (Type === 14) {
-              this.project.name = this.assetName;
-              this.assetName = null;
-            }
-            if (Type === 15) {
-              this.project.frame = this.frame;
-              this.frame = null;
-            }
-            if (Type === 16) {
-              this.project.episode = this.episode;
-              this.episode = null;
-            }
-            if (Type === 17) {
-              this.project.priority = this.priority;
-              this.priority = null;
-            }
-            if (Type === 18) {
-              this.project.level = this.level;
-              this.level = null;
-            }
-            if (Type === 19) {
-              this.project.report = this.report;
-              this.report = null;
-            }
-            if (Type === 20) {
-              this.project.retime = this.retime;
-              this.retime = null;
-            }
-            if (Type === 21) {
-              this.project.frame_range = this.frame_range;
-              this.frame_range = null;
-            }
+
+      editAssets(data).then(({ data }) => {
+        this.$message.success(data.msg);
+        if (data.status === 0) {
+          if (Type === 3) {
+            this.project.path = this.path;
+            this.path = null;
           }
-        });
+          if (Type === 9) {
+            this.project.remark = this.remark
+              .replace(/\r\n/g, "<br/>")
+              .replace(/\n/g, "<br/>")
+              .replace(/\s/g, "&nbsp;");
+            this.remark = null;
+          }
+          if (Type === 10) {
+            this.project.start_date = this.start_date / 1000;
+            this.start_date = null;
+          }
+          if (Type === 11) {
+            this.project.end_date = this.end_date / 1000;
+            this.end_date = null;
+          }
+          if (Type === 14) {
+            this.project.name = this.assetName;
+            this.assetName = null;
+          }
+          if (Type === 15) {
+            this.project.frame = this.frame;
+            this.frame = null;
+          }
+          if (Type === 16) {
+            this.project.episode = this.episode;
+            this.episode = null;
+          }
+          if (Type === 17) {
+            this.project.priority = this.priority;
+            this.priority = null;
+          }
+          if (Type === 18) {
+            this.project.level = this.level;
+            this.level = null;
+          }
+          if (Type === 19) {
+            this.project.report = this.report;
+            this.report = null;
+          }
+          if (Type === 20) {
+            this.project.retime = this.retime;
+            this.retime = null;
+          }
+          if (Type === 21) {
+            this.project.frame_range = this.frame_range;
+            this.frame_range = null;
+          }
+        }
         this.$emit("refresh_assetList");
-        return;
-      }
-      putProjects(data)
-        .then(({ data }) => {
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-            if (Type === 0) {
-              this.project.name = this.name;
-              this.name = null;
-            }
-            if (Type === 1) {
-              this.project.budget = this.budget;
-              this.budget = null;
-            }
-            if (Type === 2) {
-              this.project.charger_name = this.charger_name;
-              this.charger = null;
-            }
-            if (Type === 4) {
-              this.project.client.client_name = this.client_name;
-              this.client = null;
-            }
-            if (Type === 5) {
-              this.project.status = this.status;
-              this.status = null;
-            }
-            if (Type === 6) {
-              this.project.Windows = this.windows;
-              this.windows = null;
-            }
-            if (Type === 7) {
-              this.project.Mac = this.mac;
-              this.mac = null;
-            }
-            if (Type === 8) {
-              this.project.Linux = this.linux;
-              this.linux = null;
-            }
-            if (Type === 12) {
-              this.project.date_start = this.date_start / 1000;
-              this.date_start = null;
-            }
-            if (Type === 13) {
-              this.project.date_end = this.date_end / 1000;
-              this.date_end = null;
-            }
-            if (Type === 23) {
-              this.project.school = this.school;
-              this.school = null;
-            }
-          }
-        })
-        .catch(({ data }) => {
-          this.$message.error(data.msg);
-        });
+      });
+      
     }
   }
 };
