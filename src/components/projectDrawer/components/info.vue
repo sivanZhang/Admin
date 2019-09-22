@@ -16,7 +16,14 @@
               ></i>
             </div>
             <div v-if="editing">
-              <input type="text" ref="input" class="input" value="project.name" v-model="name" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.name"
+                v-model="name"
+                @keyup.enter="save(0)"
+              />
               <el-button @click="save(0)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -38,7 +45,7 @@
               ></i>
             </div>
             <div v-if="editing7">
-              <input type="text" ref="input" class="input" v-model="windows" />
+              <input type="text" ref="input" class="input" v-model="windows" @keyup.enter="save(6)" />
               <el-button @click="save(6)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -56,7 +63,7 @@
               ></i>
             </div>
             <div v-if="editing8">
-              <input type="text" ref="input" class="input" v-model="mac" />
+              <input type="text" ref="input" class="input" v-model="mac" @keyup.enter="save(7)" />
               <el-button @click="save(7)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -74,7 +81,7 @@
               ></i>
             </div>
             <div v-if="editing9">
-              <input type="text" ref="input" class="input" v-model="linux" />
+              <input type="text" ref="input" class="input" v-model="linux" @keyup.enter="save(8)" />
               <el-button @click="save(8)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -93,12 +100,18 @@
             </div>
             <div v-if="editing2">
               ¥
-              <input type="text" ref="input" class="input" value="project.budget" v-model="budget" />万元
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.budget"
+                v-model="budget"
+                @keyup.enter="save(1)"
+              />万元
               <el-button @click="save(1)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="15" class="comment">
@@ -143,7 +156,7 @@
               ></i>
             </div>
             <div v-if="editing6">
-              <el-select v-model="status" placeholder="请选择工作流" ref="selete">
+              <el-select v-model="status" placeholder="请选择工作流" ref="selete" @change="save(5)">
                 <el-option label="未开始" :value="0"></el-option>
                 <el-option label="正在进行" :value="1"></el-option>
                 <el-option label="已完成" :value="2"></el-option>
@@ -159,7 +172,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit13=true" @mouseleave="showEdit13 = false">
               <span v-if="!editing13">{{project.date_start|dateFormat}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit13" @click="edit(12)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit13"
+                @click="edit(12)"
+              ></i>
             </div>
             <div v-if="editing13">
               <el-date-picker
@@ -167,6 +185,7 @@
                 type="date"
                 format="yyyy/MM/dd"
                 ref="start"
+                @change="save(12)"
               ></el-date-picker>
               <el-button @click="save(12)" type="primary">修改</el-button>
             </div>
@@ -177,7 +196,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit14=true" @mouseleave="showEdit14 = false">
               <span v-if="!editing14">{{project.date_end|dateFormat}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="$store.state.login.userInfo.auth.manage_project&&showEdit14" @click="edit(13)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit14"
+                @click="edit(13)"
+              ></i>
             </div>
             <div v-if="editing14">
               <!-- $store.state.login.userInfo -->
@@ -186,36 +210,66 @@
                 type="date"
                 format="yyyy/MM/dd"
                 ref="end"
+                @change="save(13)"
               ></el-date-picker>
               <el-button @click="save(13)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="6" class="comment">客户信息</el-col>
-          <el-col :span="15" class="comment">
-            <div @mouseover="showEdit5=true" @mouseleave="showEdit5 = false">
-              <span v-if="!editing5">{{project.client.client_name?project.client.client_name:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit5"
-                @click="edit(4)"
-              ></i>
-            </div>
-            <div v-if="editing5">
-              <el-select v-model="client" placeholder="请选择" ref="selete" @change="clientChange">
-                <el-option
-                  v-for="item of clientList"
-                  :key="item.id"
-                  :label="item.username"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-              <el-button @click="save(4)" type="primary">修改</el-button>
-            </div>
-          </el-col>
-        </el-row>
+        <template v-if="project.pro_type === 1">
+          <el-row>
+            <el-col :span="6" class="comment">客户信息</el-col>
+            <el-col :span="15" class="comment">
+              <div @mouseover="showEdit5=true" @mouseleave="showEdit5 = false">
+                <span v-if="!editing5">{{project.client.client_name?project.client.client_name:"-"}}</span>
+                <i
+                  class="el-icon-edit"
+                  style="color:blue"
+                  v-if="$store.state.login.userInfo.auth.manage_project&&showEdit5"
+                  @click="edit(4)"
+                ></i>
+              </div>
+              <div v-if="editing5">
+                <el-select v-model="client" placeholder="请选择" ref="selete" @change="clientChange">
+                  <el-option
+                    v-for="item of clientList"
+                    :key="item.id"
+                    :label="item.username"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+                <el-button @click="save(4)" type="primary">修改</el-button>
+              </div>
+            </el-col>
+          </el-row>
+        </template>
+        <template v-else>
+          <el-row>
+            <el-col :span="6" class="comment">所属学校</el-col>
+            <el-col :span="15" class="comment">
+              <div @mouseover="showEdit23=true" @mouseleave="showEdit23 = false">
+                <span v-if="!editing23">{{project.school?project.school:"-"}}</span>
+                <i
+                  class="el-icon-edit"
+                  style="color:blue"
+                  v-if="$store.state.login.userInfo.auth.manage_project&&showEdit23"
+                  @click="edit(22)"
+                ></i>
+              </div>
+              <div v-if="editing23">
+                <input
+                  type="text"
+                  ref="input"
+                  class="input"
+                  value="project.school"
+                  v-model="school"
+                  @keyup.enter="save(22)"
+                />
+                <el-button @click="save(22)" type="primary">修改</el-button>
+              </div>
+            </el-col>
+          </el-row>
+        </template>
       </div>
     </template>
     <!-- 资产消息栏 -->
@@ -224,17 +278,19 @@
         <el-row>
           <el-col :span="6" class="comment">名称</el-col>
           <el-col :span="18" class="comment">
-             <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false">
+            <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false">
               <span v-if="!editing15">{{project.name}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                @click="edit(14)"
-                v-if="showEdit15"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(14)" v-if="showEdit15"></i>
             </div>
             <div v-if="editing15">
-              <input type="text" ref="input" class="input" value="project.name" v-model="assetName" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.name"
+                v-model="assetName"
+                @keyup.enter="save(14)"
+              />
               <el-button @click="save(14)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -251,7 +307,14 @@
               <i class="el-icon-edit" style="color:blue" v-if="showEdit4" @click="edit(3)"></i>
             </div>
             <div v-if="editing4">
-              <input type="text" ref="input" class="input" value="project.path" v-model="path" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.path"
+                v-model="path"
+                @keyup.enter="save(3)"
+              />
               <el-button @click="save(3)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -265,12 +328,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit18=true" @mouseleave="showEdit18 = false">
               <span v-if="!editing18">{{project.priority |Priority}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit18"
-                @click="edit(17)"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit18" @click="edit(17)"></i>
             </div>
             <div v-if="editing18">
               <el-select
@@ -278,26 +336,21 @@
                 filterable
                 placeholder="请选择优先级"
                 ref="selete"
-               
+                @change="save(17)"
               >
                 <el-option label="正常" :value="0"></el-option>
                 <el-option label="优先" :value="1"></el-option>
               </el-select>
               <el-button @click="save(17)" type="primary">修改</el-button>
             </div>
-            </el-col>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">难度等级</el-col>
           <el-col :span="18" class="comment">
-             <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
+            <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
               <span v-if="!editing19">{{project.level |Level}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit19"
-                @click="edit(18)"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit19" @click="edit(18)"></i>
             </div>
             <div v-if="editing19">
               <el-select
@@ -305,7 +358,7 @@
                 filterable
                 placeholder="请选择难度等级"
                 ref="selete"
-               
+                @change="save(18)"
               >
                 <el-option label="简单" :value="0"></el-option>
                 <el-option label="标准" :value="1"></el-option>
@@ -314,7 +367,7 @@
               </el-select>
               <el-button @click="save(18)" type="primary">修改</el-button>
             </div>
-            </el-col>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">开始日期</el-col>
@@ -329,6 +382,7 @@
                 type="date"
                 format="yyyy/MM/dd"
                 ref="start"
+                @change="save(10)"
               ></el-date-picker>
               <el-button @click="save(10)" type="primary">修改</el-button>
             </div>
@@ -348,6 +402,7 @@
                 type="date"
                 format="yyyy/MM/dd"
                 ref="end"
+                @change="save(11)"
               ></el-date-picker>
               <el-button @click="save(11)" type="primary">修改</el-button>
             </div>
@@ -356,38 +411,42 @@
         <el-row>
           <el-col :span="6" class="comment">帧数</el-col>
           <el-col :span="18" class="comment">
-             <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false">
+            <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false">
               <span v-if="!editing16">{{project.frame?project.frame:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                @click="edit(15)"
-                v-if="showEdit16"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(15)" v-if="showEdit16"></i>
             </div>
             <div v-if="editing16">
-              <input type="text" ref="input" class="input" value="project.frame" v-model="frame" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.frame"
+                v-model="frame"
+                @keyup.enter="save(15)"
+              />
               <el-button @click="save(15)" type="primary">修改</el-button>
             </div>
-            </el-col>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">集数</el-col>
           <el-col :span="18" class="comment">
-             <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false">
+            <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false">
               <span v-if="!editing17">{{project.episode?project.episode:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                @click="edit(16)"
-                v-if="showEdit17"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(16)" v-if="showEdit17"></i>
             </div>
             <div v-if="editing17">
-              <input type="text" ref="input" class="input" value="project.episode" v-model="episode" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.episode"
+                v-model="episode"
+                @keyup.enter="save(16)"
+              />
               <el-button @click="save(16)" type="primary">修改</el-button>
             </div>
-            </el-col>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">内部版本</el-col>
@@ -397,40 +456,44 @@
           <el-col :span="6" class="comment">外部版本</el-col>
           <el-col :span="18" class="comment">{{project.outer_version?project.outer_version:"-"}}</el-col>
         </el-row>
-        
+
         <el-row>
           <el-col :span="6" class="comment">画面调整信息</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false">
               <span v-if="!editing20">{{project.report?project.report:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit20"
-                @click="edit(19)"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit20" @click="edit(19)"></i>
             </div>
             <div v-if="editing20">
-              <input type="text" ref="input" class="input" value="project.report" v-model="report" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.report"
+                v-model="report"
+                @keyup.enter="save(19)"
+              />
               <el-button @click="save(19)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
-        
+
         <el-row>
           <el-col :span="6" class="comment">变速信息</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false">
               <span v-if="!editing21">{{project.retime?project.retime:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit21"
-                @click="edit(20)"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit21" @click="edit(20)"></i>
             </div>
             <div v-if="editing21">
-              <input type="text" ref="input" class="input" value="project.retime" v-model="retime" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.retime"
+                v-model="retime"
+                @keyup.enter="save(20)"
+              />
               <el-button @click="save(20)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -440,15 +503,17 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false">
               <span v-if="!editing22">{{project.frame_range?project.frame_range:"-"}}</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="showEdit22"
-                @click="edit(21)"
-              ></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit22" @click="edit(21)"></i>
             </div>
             <div v-if="editing22">
-              <input type="text" ref="input" class="input" value="project.frame_range" v-model="frame_range" />
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.frame_range"
+                v-model="frame_range"
+                @keyup.enter="save(21)"
+              />
               <el-button @click="save(21)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -463,7 +528,7 @@
             </div>
 
             <div v-if="editing10" style="display:flex">
-              <el-input type="textarea" ref="input" v-model="remark" />
+              <el-input type="textarea" ref="input" v-model="remark" @keyup.enter="save(9)" />
               <el-button @click="save(9)" type="primary">修改</el-button>
             </div>
           </el-col>
@@ -495,18 +560,19 @@ export default {
       editing8: false,
       editing9: false,
       editing10: false,
-      editing11:false,
-      editing12:false,
-      editing13:false,
-      editing14:false,
-      editing15:false,
-      editing16:false,
-      editing17:false,
-      editing18:false,
-      editing19:false,
-      editing20:false,
-      editing21:false,
-      editing22:false,
+      editing11: false,
+      editing12: false,
+      editing13: false,
+      editing14: false,
+      editing15: false,
+      editing16: false,
+      editing17: false,
+      editing18: false,
+      editing19: false,
+      editing20: false,
+      editing21: false,
+      editing22: false,
+      editing23: false,
       name: null,
       budget: null,
       charger: null,
@@ -519,18 +585,19 @@ export default {
       mac: null,
       linux: null,
       remark: null,
-      start_date:null,
-      end_date:null,
-      date_start:null,
-      date_end:null,
-      assetName:null,
-      frame:null,
-      episode:null,
-      priority:null,
-      level:null,
-      report :null,
-      retime:null,
-      frame_range:null,
+      start_date: null,
+      end_date: null,
+      date_start: null,
+      date_end: null,
+      assetName: null,
+      frame: null,
+      episode: null,
+      priority: null,
+      level: null,
+      report: null,
+      retime: null,
+      frame_range: null,
+      school: null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -541,18 +608,19 @@ export default {
       showEdit8: false,
       showEdit9: false,
       showEdit10: false,
-      showEdit11:false,
-      showEdit12:false,
-      showEdit13:false,
-      showEdit14:false,
-      showEdit15:false,
-      showEdit16:false,
-      showEdit17:false,
-      showEdit18:false,
-      showEdit19:false,
-      showEdit20:false,
-      showEdit21:false,
-      showEdit22:false,
+      showEdit11: false,
+      showEdit12: false,
+      showEdit13: false,
+      showEdit14: false,
+      showEdit15: false,
+      showEdit16: false,
+      showEdit17: false,
+      showEdit18: false,
+      showEdit19: false,
+      showEdit20: false,
+      showEdit21: false,
+      showEdit22: false,
+      showEdit23: false,
       clientList: null
     };
   },
@@ -567,12 +635,14 @@ export default {
         return item.id === val;
       }).username;
       //console.log(this.charger_name);
+      this.save(2);
     },
     clientChange(val) {
       this.client_name = this.clientList.find(item => {
         return item.id === val;
       }).username;
       // console.log(this.client_name)
+      this.save(4);
     },
     edit(Type) {
       if (Type === 0) {
@@ -652,7 +722,7 @@ export default {
           this.$refs.input.focus();
         });
       }
-       if (Type === 10) {
+      if (Type === 10) {
         this.showEdit11 = false;
         this.editing11 = true;
 
@@ -660,7 +730,7 @@ export default {
           this.$refs.start.focus();
         });
       }
-       if (Type === 11) {
+      if (Type === 11) {
         this.showEdit12 = false;
         this.editing12 = true;
 
@@ -668,7 +738,7 @@ export default {
           this.$refs.end.focus();
         });
       }
-       if (Type === 12) {
+      if (Type === 12) {
         this.showEdit13 = false;
         this.editing13 = true;
 
@@ -676,7 +746,7 @@ export default {
           this.$refs.start.focus();
         });
       }
-       if (Type === 13) {
+      if (Type === 13) {
         this.showEdit14 = false;
         this.editing14 = true;
 
@@ -705,7 +775,7 @@ export default {
           this.$refs.input.focus();
         });
       }
-       if (Type === 17) {
+      if (Type === 17) {
         this.showEdit18 = false;
         this.editing18 = true;
         this.$nextTick(() => {
@@ -736,6 +806,13 @@ export default {
       if (Type === 21) {
         this.showEdit22 = false;
         this.editing22 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 22) {
+        this.showEdit23 = false;
+        this.editing23 = true;
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -777,15 +854,6 @@ export default {
           id: this.project.id,
           path: this.path
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.path = this.path;
-            this.path = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
       if (Type === 4) {
         this.editing5 = false;
@@ -837,135 +905,62 @@ export default {
             .replace(/\n/g, "<br/>")
             .replace(/\s/g, "&nbsp;")
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.remark = this.remark
-              .replace(/\r\n/g, "<br/>")
-              .replace(/\n/g, "<br/>")
-              .replace(/\s/g, "&nbsp;");
-            this.remark = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
-      if(Type === 10){
-        
+      if (Type === 10) {
         this.editing11 = false;
         data = {
           method: "put",
           id: this.project.id,
           start: dataFormat(this.start_date)
-            
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.start_date = this.start_date/1000;
-            this.start_date = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
-      if(Type === 11){
-        
+      if (Type === 11) {
         this.editing12 = false;
         data = {
           method: "put",
           id: this.project.id,
           end: dataFormat(this.end_date)
-            
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.end_date = this.end_date/1000;
-            this.end_date = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
-      if(Type === 12){
-        
+      if (Type === 12) {
         this.editing13 = false;
         data = {
           method: "put",
           id: this.project.id,
           start: dataFormat(this.date_start)
-            
         };
-        
       }
-        if(Type === 13){
-        
+      if (Type === 13) {
         this.editing14 = false;
         data = {
           method: "put",
           id: this.project.id,
           end: dataFormat(this.date_end)
-            
         };
-        
       }
-      if(Type === 14){
-        
+      if (Type === 14) {
         this.editing15 = false;
         data = {
           method: "put",
           id: this.project.id,
           name: this.assetName
-            
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.name = this.assetName;
-            this.assetName = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
-      if(Type === 15){
-        
+      if (Type === 15) {
         this.editing16 = false;
         data = {
           method: "put",
           id: this.project.id,
           frame: this.frame
-            
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.frame = this.frame;
-            this.frame = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
-      if(Type === 16){
-        
+      if (Type === 16) {
         this.editing17 = false;
         data = {
           method: "put",
           id: this.project.id,
           episode: this.episode
-            
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.episode = this.episode;
-            this.episode = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
       if (Type === 17) {
         this.editing18 = false;
@@ -974,32 +969,14 @@ export default {
           id: this.project.id,
           priority: this.priority
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.priority = this.priority;
-            this.priority = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
-        if (Type === 18) {
+      if (Type === 18) {
         this.editing19 = false;
         data = {
           method: "put",
           id: this.project.id,
           level: this.level
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.level = this.level;
-            this.level = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
       if (Type === 19) {
         this.editing20 = false;
@@ -1008,15 +985,6 @@ export default {
           id: this.project.id,
           report: this.report
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.report = this.report;
-            this.report = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
       if (Type === 20) {
         this.editing21 = false;
@@ -1025,15 +993,6 @@ export default {
           id: this.project.id,
           retime: this.retime
         };
-        editAssets(data).then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.project.retime = this.retime;
-            this.retime = null;
-          }
-        });
-        this.$emit("refresh_assetList");
-        return;
       }
       if (Type === 21) {
         this.editing22 = false;
@@ -1042,11 +1001,83 @@ export default {
           id: this.project.id,
           frame_range: this.frame_range
         };
+      }
+      if (Type === 22) {
+        this.editing23 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          school: this.school
+        };
+      }
+      if (
+        Type === 3 ||
+        Type === 9 ||
+        Type === 10 ||
+        Type === 11 ||
+        Type === 14 ||
+        Type === 15 ||
+        Type === 16 ||
+        Type === 17 ||
+        Type === 18 ||
+        Type === 19 ||
+        Type === 20 ||
+        Type === 21
+      ) {
         editAssets(data).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.project.frame_range = this.frame_range;
-            this.frame_range = null;
+            if (Type === 3) {
+              this.project.path = this.path;
+              this.path = null;
+            }
+            if (Type === 9) {
+              this.project.remark = this.remark
+                .replace(/\r\n/g, "<br/>")
+                .replace(/\n/g, "<br/>")
+                .replace(/\s/g, "&nbsp;");
+              this.remark = null;
+            }
+            if (Type === 10) {
+              this.project.start_date = this.start_date / 1000;
+              this.start_date = null;
+            }
+            if (Type === 11) {
+              this.project.end_date = this.end_date / 1000;
+              this.end_date = null;
+            }
+            if (Type === 14) {
+              this.project.name = this.assetName;
+              this.assetName = null;
+            }
+            if (Type === 15) {
+              this.project.frame = this.frame;
+              this.frame = null;
+            }
+            if (Type === 16) {
+              this.project.episode = this.episode;
+              this.episode = null;
+            }
+            if (Type === 17) {
+              this.project.priority = this.priority;
+              this.priority = null;
+            }
+            if (Type === 18) {
+              this.project.level = this.level;
+              this.level = null;
+            }
+            if (Type === 19) {
+              this.project.report = this.report;
+              this.report = null;
+            }
+            if (Type === 20) {
+              this.project.retime = this.retime;
+              this.retime = null;
+            }
+            if (Type === 21) {
+              this.project.frame_range = this.frame_range;
+              this.frame_range = null;
+            }
           }
         });
         this.$emit("refresh_assetList");
@@ -1088,13 +1119,17 @@ export default {
               this.project.Linux = this.linux;
               this.linux = null;
             }
-            if(Type === 12){
-              this.project.date_start = this.date_start/1000;
-              this.date_start = null
+            if (Type === 12) {
+              this.project.date_start = this.date_start / 1000;
+              this.date_start = null;
             }
-            if(Type === 13){
-              this.project.date_end = this.date_end/1000;
-              this.date_end = null
+            if (Type === 13) {
+              this.project.date_end = this.date_end / 1000;
+              this.date_end = null;
+            }
+            if (Type === 23) {
+              this.project.school = this.school;
+              this.school = null;
             }
           }
         })
