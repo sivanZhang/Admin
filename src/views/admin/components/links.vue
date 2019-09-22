@@ -211,9 +211,17 @@ export default {
     },
     editBefore(index) {
       this.updateForm.splice(index, 0, {});
+      //this.updateForm[index].level = index +1;
+      this.updateForm.forEach((item,index)=>{
+        item.level = index +1
+      })
     },
     editAfter(index) {
+      console.log(index)
       this.updateForm.splice(index + 1, 0, {});
+      this.updateForm.forEach((item,index)=>{
+        item.level = index +1
+      })
     },
     editDeleteLink(index) {
       if (index !== 0) this.updateForm.splice(index, 1);
@@ -267,24 +275,24 @@ export default {
         .catch(() => {});
     },
     update() {
-      console.log(this.updateForm);
+     console.log(this.updateForm);
       // console.log(this.updateForm)
       const msg = {
         id: this.updateList[0].id,
         rule: this.updateForm,
         method: "put"
       };
-      updateWKTemplate(msg)
-        .then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.$emit("refresh");
-            this.isUpdateShow = false;
-          } else {
-            this.$message.error(data.msg);
-          }
-        })
-        .catch(() => {});
+      // updateWKTemplate(msg)
+      //   .then(({ data }) => {
+      //     this.$message.success(data.msg);
+      //     if (data.status === 0) {
+      //       this.$emit("refresh");
+      //       this.isUpdateShow = false;
+      //     } else {
+      //       this.$message.error(data.msg);
+      //     }
+      //   })
+      //   .catch(() => {});
     },
     removeDomain(item) {
       var index = this.dynamicValidateForm.domains.indexOf(item);
