@@ -9,7 +9,7 @@
               <el-radio-button :label="2">未分组</el-radio-button>
             </el-radio-group>
           </el-col>
-          <el-col :span="10" align="top" style="padding-top:8px"><!-- v-if="perssion" -->
+          <el-col :span="10" align="top" style="padding-top:8px" v-if="perssion">
             <el-button
               type="primary"
               @click="openDialog(1)"

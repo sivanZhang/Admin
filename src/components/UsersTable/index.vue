@@ -6,6 +6,7 @@
         :row-style="{'font-size':'13px'}"
         :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
         v-loading="tableLoading"
+        row-key="id"
         style="width: 100%"
         highlight-current-row
         @row-click="handleCurrentChange"
