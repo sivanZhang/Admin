@@ -153,7 +153,7 @@ export default {
       });
     },
     openTaskDetail(row) {
-      const path = "/projects/project-detail/" + row.project.id + "/?tab=tab2";
+      const path = "/projects/project-detail/" + row.project.id + "/?tab=tab2&p="+row.project.name;
       //console.log(path);
       this.$router.push(path);
     }

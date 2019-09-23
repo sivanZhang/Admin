@@ -1393,6 +1393,7 @@ export default {
     }
   },
   async created() {
+    this.getTasks();
     if (!this.DeptList) {
       await this.$store.dispatch("admin/get_DeptList");
       this.formatList();
