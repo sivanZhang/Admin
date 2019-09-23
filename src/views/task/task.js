@@ -11,7 +11,7 @@ import taskForm from './components/task-form'
 import tabLog from "./components/tab-log"
 import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
-import approveLog from "@/views/video/components/approve-log";
+import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
     mixins: [thumbtackMixin],
@@ -146,8 +146,8 @@ export default {
             taskListProgramSel: [],
             taskListProgressSel: [],
             checked: false,
-            Asset:'',
-            Link:'',
+            Asset: '',
+            Link: '',
             changecolor: 1,
             activeRow: {}, //点击任务列表选中的列的数据
         };
@@ -316,8 +316,8 @@ export default {
                 this.TaskDetail = {
                     ...data.msg
                 }
-                this.Asset=this.TaskDetail.asset;
-                this.Link=this.TaskDetail.link_dept_name;
+                this.Asset = this.TaskDetail.asset;
+                this.Link = this.TaskDetail.link_dept_name;
                 this.detailLoading = false;
             }).catch(() => {
                 this.detailLoading = false;

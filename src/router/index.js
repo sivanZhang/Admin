@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
-
-/* Layout */
 import Layout from '@/layout'
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -16,7 +13,6 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
@@ -24,11 +20,6 @@ import Layout from '@/layout'
   }
  */
 
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
 export const asyncRoutes = [{
         path: '/task',
         component: Layout,
@@ -52,10 +43,10 @@ export const asyncRoutes = [{
                 path: '/check-video',
                 name: 'check-video',
                 component: () =>
-                    import ('@/views/video/videoCheck'),
+                    import ('@/views/video/video-check'),
                 meta: {
                     title: '审核意见',
-                    icon: 'v2'
+                    activeMenu: '/task/approve'
                 },
                 hidden: true
             },
@@ -69,7 +60,7 @@ export const asyncRoutes = [{
             icon: 'settings'
         },
         children: [{
-                path: 'profession', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
+                path: 'profession', //直接写字符串会生成/admin/profession   如果前面带/就是绝对路径了，会生成 /profession
                 name: 'profession',
                 component: () =>
                     import ('@/views/admin/userGroup'),
@@ -117,6 +108,12 @@ export const asyncRoutes = [{
         hidden: true
     }
 ]
+
+/**
+ * constantRoutes
+ * a base page that does not have permission requirements
+ * all roles can be accessed
+ */
 export const constantRoutes = [{
         path: '/redirect',
         component: Layout,
@@ -292,13 +289,13 @@ export const constantRoutes = [{
         component: Layout,
         alwaysShow: true,
         hidden: true,
-        redirect: '/assetes', //设置成父路由的路径后，点击面包屑不会跳转
+        redirect: '/assetes',
         meta: {
             title: '资产管理',
             icon: 'assets'
         },
         children: [{
-            path: 'asset-list', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
+            path: 'asset-list',
             name: 'asset-list',
             component: () =>
                 import ('@/views/assetsManagement/asset-list'),
@@ -307,7 +304,7 @@ export const constantRoutes = [{
                 icon: 'assetlist'
             }
         }, {
-            path: 'asset-import/:id', //直接写字符串会生成/settings/userGroup路径   如果前面带/就是绝对路径了，会生成 /userGroup路径
+            path: 'asset-import/:id',
             name: 'asset-import',
             component: () =>
                 import ('@/views/assetsManagement/asset-import'),

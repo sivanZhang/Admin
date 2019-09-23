@@ -57,7 +57,7 @@ import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabApprove from "@/views/task/components/tab-approve";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
-import approveLog from "@/views/video/components/approve-log";
+import approveLog from "@/views/components/approve-log";
 export default {
   name: "detail",
   props: [

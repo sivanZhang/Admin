@@ -2,14 +2,14 @@
   <div id="userGroup">
     <el-container>
       <el-header style="padding:0px;margin: 0px">
-        <el-row>
+        <el-row type="flex" align="middle">
           <el-col :span="5">
             <el-radio-group v-model="radio">
               <el-radio-button :label="1">所有用户</el-radio-button>
               <el-radio-button :label="2">未分组</el-radio-button>
             </el-radio-group>
           </el-col>
-          <el-col :span="10" align="top" style="padding-top:8px" v-if="perssion">
+          <el-col :span="10" v-if="perssion">
             <el-button
               type="primary"
               @click="openDialog(1)"
@@ -24,7 +24,7 @@
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button> 
           </el-col>
-          <el-col :span="9" align="top">
+          <el-col :span="9">
             <span>
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </span>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import usersTable from "@/components/UsersTable";
+import usersTable from "@/views/components/UsersTable";
 import { getUserList, getUserPerfession, deleteUser } from "@/api/admin";
 import { addUser } from "@/api/login";
 export default {

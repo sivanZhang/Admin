@@ -90,7 +90,7 @@ import {
   getStatusTaskList
 } from "@/api/task";
 import detail from "./components/detail";
-import approveLog from "@/views/video/components/approve-log";
+import approveLog from "@/views/components/approve-log";
 export default {
   name: "myTaskPlug",
   data() {

@@ -1,5 +1,5 @@
 <template>
-  <div id="videoCheck">
+  <div id="video-check">
     <el-row class="page" :gutter="15">
       <el-col :span="15" class="page-left" style="height:850px;">
         <div class="video-player" style="height：550px;">
@@ -67,7 +67,7 @@ import kscreenshot from "kscreenshot";
 import ZoomImg from "@/components/ZoomImg";
 import { mapState } from "vuex";
 import { postApprove } from "@/api/video";
-import approveLog from "./components/approve-log";
+import approveLog from "@/views/components/approve-log";
 export default {
   components: { VideoPlayer, VideoList, ZoomImg, approveLog },
   data() {
@@ -212,7 +212,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#videoCheck {
+#video-check {
   width: 100%;
   min-height: calc(100vh - 84px);
   background-color: #eee;

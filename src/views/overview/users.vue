@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import usersTable from "@/components/UsersTable";
+import usersTable from "@/views/components/UsersTable";
 import { mapState } from "vuex";
 export default {
   name: "users",

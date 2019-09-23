@@ -88,7 +88,7 @@
             <el-col :span="12">
               <el-checkbox v-model="show_remark">备注</el-checkbox>
             </el-col>
-            <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
+            <el-button slot="reference" type="primary" icon="el-icon-setting">展示列</el-button>
           </el-popover>
           <el-popover
             v-model="visible"
@@ -144,7 +144,7 @@
               <el-button @click="cancelSort">取消</el-button>
               <el-button type="primary" @click="sortMul()">立即排序</el-button>
             </el-row>
-            <el-button slot="reference" type="primary" icon="el-icon-sort" size="mini">多列排序</el-button>
+            <el-button slot="reference" type="primary" icon="el-icon-sort">多列排序</el-button>
           </el-popover>
         </el-col>
         <el-col :span="10" align="right">
@@ -214,21 +214,17 @@
       <el-table
         ref="assetTable"
         :data="AssetList"
-        style="width: 100%"
-        border
-        :stripe="true"
-        :row-style="{'font-size':'13px'}"
-        :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         highlight-current-row
-        row-class-name="hover"
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
         v-loading="tableLoading"
         @filter-change="filterHandler"
         @sort-change="sortFilter"
+        :border="false"
       >
-        <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column type="index" :index="indexMethod" label="序号" align="center" v-if="ind"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+        <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
         <el-table-column label="缩略图" align="center" v-if="show_image">
           <template slot-scope="scope">
             <el-image
@@ -236,6 +232,7 @@
               style="width: 50px;height: 30px;"
               @click.native="img(scope.row)"
               v-if="!editing||clickId !== scope.row.id"
+              class="hover"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -281,8 +278,8 @@
               <span>{{scope.row.name?scope.row.name:"-"}}</span>
             </el-input>
             <span
+              class="hover"
               v-if="!editing||clickId !== scope.row.id"
-              style="color:#2d8cf0"
               @click="show(scope.row.id)"
             >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
@@ -773,7 +770,7 @@ import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
-  mixins:[thumbtackMixin],
+  mixins: [thumbtackMixin],
   components: {
     assetsDrawer,
     Header
@@ -1239,7 +1236,8 @@ export default {
     },
     img(row) {
       this.dialogImg = true;
-      (this.row = row), (this.SRC = this.$store.state.BASE_URL + row.image);
+      this.row = row;
+      this.SRC = this.$store.state.BASE_URL + row.image;
     },
     addImg() {
       // console.log(this.ImgForm)
@@ -1618,18 +1616,19 @@ export default {
   },
   created() {
     this.getAssetList();
-  },
+  }
 };
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
 .hover {
   cursor: pointer;
+  color:#2d8cf0;
 }
 #asset-list {
   min-height: calc(100vh - 199px);
-  /* & /deep/ .el-table--border th,
+  & /deep/ .el-table--border th,
   & /deep/ .el-table--border td {
     border-right-width: 0px;
-  } */
+  }
 }
 </style>

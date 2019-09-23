@@ -150,7 +150,7 @@
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="任务ID" prop="id" width="100px" sortable="custom">
           <template slot-scope="scope">
-            <span @click="showDrawer(scope.row)" style="color:#2d8cf0">{{scope.row.id}}</span>
+            <span class="hover" @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
@@ -577,7 +577,7 @@ import { getDeptUsers } from "@/api/admin";
 import { queryAssets } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import { type } from "os";
-import approveLog from "@/views/video/components/approve-log";
+import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
   mixins: [myMixin,thumbtackMixin],
@@ -1404,6 +1404,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.hover{
+  cursor: pointer;
+  color:#2d8cf0;
+}
 #task {
   min-height: calc(100vh - 199px);
 }

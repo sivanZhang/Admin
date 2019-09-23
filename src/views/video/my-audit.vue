@@ -111,7 +111,7 @@ import { getApprove, postApprove, getApproveDetail } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
-import approveLog from "./components/approve-log";
+import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
   mixins: [thumbtackMixin],

@@ -100,7 +100,7 @@ import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
 import { getVersion } from "@/api/assets";
 import { getAssetTaskList } from "@/api/task";
-import approveLog from "@/views/video/components/approve-log";
+import approveLog from "@/views/components/approve-log";
 export default {
   name: "assets-drawer",
   props: ["project", "RemarksData"],

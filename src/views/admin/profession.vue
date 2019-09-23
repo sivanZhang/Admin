@@ -163,7 +163,7 @@ import {
   getRoles
 } from "@/api/admin";
 
-import usersTable from "@/components/UsersTable";
+import usersTable from "@/views/components/UsersTable";
 import links from "./components/links";
 import { mapState } from "vuex";
 
