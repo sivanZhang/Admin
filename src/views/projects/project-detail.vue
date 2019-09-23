@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label for="">项目名称: {{$route.query['p']}}</label>
+    <label for="">项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
       <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
@@ -32,7 +32,7 @@ import { queryAssets } from "@/api/assets";
 import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
-import { projectDetail } from "@/api/project";
+import { getProjects } from "@/api/project";
 import {getTrainingProject} from "@/api/training"
 export default {
   name: "project-detail",
@@ -80,12 +80,10 @@ export default {
       if(this.$route.query.type == '0'){
         getTrainingProject({id: this.$route.params.id}).then(({ data }) => {
         this.project = data.msg;
-        //console.log(this.project);
       });
       }else{
-         projectDetail({ id: this.$route.params.id }).then(({ data }) => {
+         getProjects({ id: this.$route.params.id }).then(({ data }) => {
         this.project = data.msg;
-        //console.log(this.project);
       });
       }
      

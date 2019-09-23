@@ -1,6 +1,6 @@
 <template>
   <div class="menu-group">
-    <router-link to="/task/task/">
+    <router-link :to="{name:'my-task'}">
       <div :class="[{active:activeIndex==1},'main-menu']">我的</div>
     </router-link>
     <el-popover placement="bottom" trigger="click">
@@ -113,7 +113,7 @@ export default {
       });
     },
     targetDetail(item) {
-      this.$router.push({ name: "project-detail", params: { id: item.id },query:{p:item.name} });
+      this.$router.push({ name: "project-detail", params: { id: item.id }});
       this.$store.commit("app/CACHEPRPJECT", item);
     }
   },

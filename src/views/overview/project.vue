@@ -44,7 +44,7 @@
             </div>
             <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
             <div slot="header" class="box-card-header">
-              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
+              <router-link :to="{name:'project-detail',params:{id:item.id}}">
                 <el-image
                   class="mini-image"
                   :src="item.image?$store.state.BASE_URL+item.image:''"
@@ -58,7 +58,7 @@
               </router-link>
             </div>
             <div style="padding: 15px;">
-              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
+              <router-link :to="{name:'project-detail',params:{id:item.id}}">
                 <mallki class-name="mallki-text" :text="item.name" />
               </router-link>
               <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
@@ -109,7 +109,7 @@
             </div>
             <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
             <div slot="header" class="box-card-header">
-              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name}}">
+              <router-link :to="{name:'project-detail',params:{id:item.id},}">
                 <el-image
                   class="mini-image"
                   :src="item.image?$store.state.BASE_URL+item.image:''"
@@ -123,7 +123,9 @@
               </router-link>
             </div>
             <div style="padding: 15px;">
-              <router-link :to="{name:'project-detail',params:{id:item.id},query:{p:item.name,type:item.pro_type}}">
+              <router-link
+                :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}"
+              >
                 <mallki class-name="mallki-text" :text="item.name" />
               </router-link>
               <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
@@ -231,7 +233,8 @@ export default {
           method: "delete"
         }).then(({ data }) => {
           if (data.status === 0) this.$message.success(data.msg);
-          if(item.pro_type === 0) this.$store.dispatch("trainingStatus/get_TrainProject");
+          if (item.pro_type === 0)
+            this.$store.dispatch("trainingStatus/get_TrainProject");
           this.$store.dispatch("project/get_Projects");
         });
       });
