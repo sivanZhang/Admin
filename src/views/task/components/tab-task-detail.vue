@@ -39,11 +39,11 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属资产:</el-col>
-        <el-col :span="19">{{asset.name}}</el-col>
+        <el-col :span="19">{{taskdetail.asset|filterName}}</el-col>
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属环节:</el-col>
-        <el-col :span="19">{{link}}</el-col>
+        <el-col :span="19">{{taskdetail.link_dept_name}}</el-col>
       </el-row>
       <el-row type="flex">
         <el-col :span="5">创建时间:</el-col>
@@ -81,9 +81,9 @@
 export default {
   name: "task-ditail",
   props: {
-    asset: {
-      name:String
-    },
+    // asset: {
+    //   name:String
+    // },
     link:String,
     taskdetail: Object,
     detailLoading: {
