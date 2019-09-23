@@ -19,7 +19,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="邮箱"
           name="username"
           type="text"
           tabindex="1"
@@ -36,7 +36,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -81,14 +81,14 @@ export default {
           {
             required: true,
             trigger: "blur",
-            message: "Please enter the user name"
+            message: "请输入登录邮箱"
           }
         ],
         password: [
           {
             required: true,
             trigger: "blur",
-            message: "Please enter the password"
+            message: "请输入密码"
           }
         ]
       },
