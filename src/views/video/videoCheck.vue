@@ -37,7 +37,16 @@
                   <el-radio :label="0">拒绝</el-radio>
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
+                <template v-if="scoreShow">
+                    <el-row type="flex" align="middle" style="margin-top:10px">
+                      <el-col :span="5">审核评分</el-col>
+                      <el-col :span="19" align="left">
+                        <el-input-number v-model="score" :min="0" :max="100" :step="10"></el-input-number>
+                      </el-col>
+                    </el-row>
+                  </template>
                 <div class="fr">
+                  
                   <el-button type="primary" class="btn add-btn" @click="commitApprove">提交</el-button>
                 </div>
               </div>
@@ -64,6 +73,7 @@ export default {
   data() {
     return {
       approve_result: 0,
+      score:null,
       imgList: [], //  视频截图列表
       zoomImgUrl: "",
       activeTab: "first",
@@ -72,7 +82,8 @@ export default {
       pWidth: 0,
       pHeight: 0,
       submitList: [],
-      taskId: null
+      taskId: null,
+      scoreShow: false
     };
   },
   mounted() {
@@ -101,6 +112,9 @@ export default {
           suggestion: this.markText,
           key: []
         };
+        if(this.scoreShow === true){
+          data = {...data,score:this.score}
+        }
         this.imgList.forEach(k => {
           if (k.task === t.task.id) {
             data["key"].push({
@@ -109,6 +123,8 @@ export default {
             });
           }
         });
+        console.log("......");
+        console.log(data)
         postApprove(data).then(res => {
           this.$message(t.task.name + " " + res.data.msg);
           if (res.data.status == 0 || i === this.submitList.length) {
@@ -123,6 +139,11 @@ export default {
     //点击播放列表回传  projectLists播放列表   index 当前点击的item 下标
     initSource(projectList, index, projectLists) {
       this.taskId = projectList[0].task.id;
+      if (projectList[0].project.pro_type === 0) {
+        this.scoreShow = true;
+      }else{
+        this.scoreShow = false;
+      }
       this.$refs["approvelogs"].getApproveLog(projectList[0].task.id);
       this.submitList = [...projectLists];
       if (this.currentVideoIsEdit) {

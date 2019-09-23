@@ -12,7 +12,8 @@
       highlight-current-row
       @row-click="taskBoardRightShow"
       @select="taskSelect"
-      @select-all="taskSelect">
+      @select-all="taskSelect"
+    >
       <el-table-column type="selection" width="60" align="center"></el-table-column>
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
@@ -79,7 +80,15 @@
             <el-radio :label="0">拒绝</el-radio>
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
-          <div>
+          <template v-if="pro_type === 0">
+            <el-row type="flex" align="middle">
+              <el-col :span="5">审核评分</el-col>
+              <el-col :span="19" align="left">
+                <el-input-number v-model="form_obj.score" :min="0" :max="100" :step="10"></el-input-number>
+              </el-col>
+            </el-row>
+          </template>
+          <div style="margin-top:10px">
             <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
         </el-tab-pane>
@@ -125,13 +134,16 @@ export default {
       LogList: [],
       TaskDetail: {},
       SelectionList: [],
-      path: null
+      path: null,
+      pro_type: null
     };
   },
   methods: {
     //表格中选中任务
     taskSelect(selection) {
       this.SelectionList = [...selection];
+      // console.log("shenhe");
+      // console.log(this.SelectionList);
     },
     //审批
     approve() {
@@ -171,6 +183,7 @@ export default {
           this.TaskDetail = {
             ...data.msg
           };
+          this.pro_type = data.msg.project.pro_type;
           this.detailLoading = false;
         })
         .catch(() => {

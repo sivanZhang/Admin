@@ -21,6 +21,12 @@
           <div class="item-title">审批意见：</div>
           <div class="item-con">{{t.approve_suggestion}}</div>
         </div>
+        <template v-if="t.pro_type === 0">
+          <div class="item">
+          <div class="item-title">审批成绩</div>
+          <div class="item-con">{{t.score}}</div>
+        </div>
+        </template>
         <div class="item">
           <div class="item-title">审批结果：</div>
           <div class="item-con" style="color:#ed4014">{{t.approve_result?'通过':'未通过'}}</div>
