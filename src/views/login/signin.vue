@@ -81,14 +81,14 @@ export default {
           {
             required: true,
             trigger: "blur",
-            message: "Please enter the user name"
+            message: "请输入登录邮箱"
           }
         ],
         password: [
           {
             required: true,
             trigger: "blur",
-            message: "Please enter the password"
+            message: "请输入密码"
           }
         ]
       },
