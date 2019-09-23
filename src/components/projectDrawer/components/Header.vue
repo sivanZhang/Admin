@@ -88,7 +88,7 @@
               class="mini-image"
               :src="project.image?$store.state.BASE_URL+project.image:''"
               fit="cover"
-              style="width: 150px;height: 100px;float: left;margin-right: 10px"
+              style="width: 160px;height: 90px;float: left;margin-right: 10px"
             ></el-image>
           </el-col>
           <el-col :span="15">

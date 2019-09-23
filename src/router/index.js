@@ -54,7 +54,7 @@ export const asyncRoutes = [{
     }, {
         path: '/admin',
         component: Layout,
-        redirect: '/admin', //设置成父路由的路径后，点击面包屑不会跳转
+        redirect: '/admin', //点击2级面包屑对应哪个路由
         meta: {
             title: '系统设置',
             icon: 'settings'
@@ -94,7 +94,7 @@ export const asyncRoutes = [{
                 path: 'client',
                 name: 'settings',
                 component: () =>
-                    import ('@/views/settings/client'),
+                    import ('@/views/admin/client'),
                 meta: {
                     title: '客户部门绑定',
                     icon: 'bangding'
@@ -162,7 +162,7 @@ export const constantRoutes = [{
             icon: 'gailan'
         },
         children: [{
-                path: 'overview-project',
+                path: '/overview/project',
                 name: 'overview-project',
                 component: () =>
                     import ('@/views/overview/project'),
@@ -172,7 +172,7 @@ export const constantRoutes = [{
                 },
             },
             {
-                path: 'overview-training',
+                path: '/overview/training',
                 name: 'overview-training',
                 component: () =>
                     import ('@/views/training/training-project'),

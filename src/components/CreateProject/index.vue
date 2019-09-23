@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="create-project">
     <el-dialog title="新建项目" :visible.sync="isShow" width="480px" top="5vh" @closed="cancel()">
       <el-form
         :model="ProjectForm"
@@ -94,10 +94,10 @@
             format="yyyy/MM/dd"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item class="subbtn">
+        <div style="text-align:right">
           <el-button @click="cancel">取消</el-button>
           <el-button type="primary" @click="submitForm">立即创建</el-button>
-        </el-form-item>
+        </div>
       </el-form>
     </el-dialog>
     <el-dialog :visible.sync="isShowNext" width="480px" top="5vh" @closed="cancel()">
@@ -178,7 +178,7 @@ export default {
 
       isShowNext: false,
       id: null,
-      radio:null
+      radio: null
     };
   },
   props: {
@@ -203,23 +203,23 @@ export default {
     submitForm() {
       this.$refs["projectForm"].validate(valid => {
         if (valid) {
-         // console.log(this.ProjectForm)
+          // console.log(this.ProjectForm)
           let Data = {
             ...this.ProjectForm,
             start: this.ProjectForm.datetime[0].toLocaleDateString(),
             end: this.ProjectForm.datetime[1].toLocaleDateString()
           };
-          if(this.radio === 0){
-            Data = {...Data,training:null}
+          if (this.radio === 0) {
+            Data = { ...Data, training: null };
           }
           addProjects(Data).then(({ data }) => {
             this.$message.success(data.msg);
             if (data.status === 0) {
               this.id = data.id;
               this.isShowNext = true;
-              if(this.radio === 0){
+              if (this.radio === 0) {
                 this.$store.dispatch("trainingStatus/get_TrainProject");
-              }else{
+              } else {
                 this.$store.dispatch("project/get_Projects");
               }
               this.$emit("update:isShow", false);
@@ -235,12 +235,10 @@ export default {
       this.SRC = this.$store.state.BASE_URL + response.msg;
       this.ProjectForm["image"] = response.msg;
       this.ProjectForm.image_id = response.id;
-    },
-    
+    }
   },
   created() {
     !this.UserList && this.$store.dispatch("admin/get_UserList");
-    
   },
 
   watch: {
@@ -292,7 +290,7 @@ export default {
   color: #8c939d;
   width: 178px;
   height: 178px;
-  line-height: 178px;
+  line-height: 247px;
   text-align: center;
 }
 .avatar {
@@ -308,19 +306,8 @@ label {
   .el-upload {
     .el-upload-dragger {
       width: 440px;
-      height: 220px;
+      height: 247px;
     }
-  }
-}
-.el-dialog__body {
-  padding-top: 0px; /*zhangjiwei*/
-}
-.subbtn {
-  text-align: center;
-}
-.subbtn {
-  .el-form-item__content {
-    margin-left: 0px !important;
   }
 }
 </style>
