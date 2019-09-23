@@ -116,7 +116,7 @@ export default {
   white-space: nowrap;
   width: 100%;
   height: 50px;
-  overflow: auto;
+  overflow: scroll;
 }
 .video-cont {
   width: 100%;
@@ -125,7 +125,7 @@ export default {
     list-style: none;
     padding: 10px;
     margin: 0;
-    overflow: hidden;
+    overflow: scroll;
     height: 100%;
     height: calc(100% - 90px);
     display: flex;
