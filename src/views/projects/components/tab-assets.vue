@@ -2,7 +2,7 @@
   <div id="asset-list" ref="drawer-parent">
     <div>
       <el-row>
-        <el-col :span="14" style="padding-bottom:15px;">
+        <el-col :span="13" style="padding-bottom:15px;">
           <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
             <slot name="add">添加资产</slot>
           </el-button>
@@ -147,7 +147,7 @@
             <el-button slot="reference" type="primary" icon="el-icon-sort">多列排序</el-button>
           </el-popover>
         </el-col>
-        <el-col :span="10" align="right">
+        <el-col :span="11" align="right">
           <div style="display:flex;margin-left:125px">
             <div style="width:130px;margin-top:1px">
               <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
@@ -207,7 +207,132 @@
               @change="getAssetList()"
               style="width:130px"
             ></el-date-picker>
-            <el-button @click="getAssetList(1)" type="primary">重置</el-button>
+            <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
+              <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
+                <el-form :model="sortSelForm" label-width="80px">
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="镜头号">
+                        <el-input v-model="sortSelForm.name"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="场次">
+                        <el-input v-model="sortSelForm.session"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="集数">
+                        <el-input v-model="sortSelForm.episode"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="版本号">
+                        <el-input v-model="sortSelForm.inner_version"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="帧数">
+                        <el-input v-model="sortSelForm.frame"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="帧数范围">
+                        <el-input v-model="sortSelForm.frame_range"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="变速信息">
+                        <el-input v-model="sortSelForm.retime"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="画面调整">
+                        <el-input v-model="sortSelForm.report"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="制作内容">
+                        <el-input v-model="sortSelForm.content"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="创建人">
+                        <el-input v-model="sortSelForm.creator"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="难度等级">
+                        <el-select v-model="sortSelForm.level" multiple placeholder="请选择">
+                          <el-option label="简单" value="0"></el-option>
+                          <el-option label="标准" value="1"></el-option>
+                          <el-option label="复杂" value="2"></el-option>
+                          <el-option label="高难度" value="3"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="优先级">
+                        <el-select v-model="sortSelForm.priority" multiple placeholder="请选择">
+                          <el-option label="正常" value="0"></el-option>
+                          <el-option label="优先" value="1"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="状态">
+                        <el-select v-model="sortSelForm.status" multiple placeholder="请选择">
+                          <el-option label="暂停" value="0"></el-option>
+                          <el-option label="未开始" value="1"></el-option>
+                          <el-option label="进行中" value="2"></el-option>
+                          <el-option label="审核中" value="3"></el-option>
+                          <el-option label="完成" value="4"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="备注">
+                        <el-input v-model="sortSelForm.remark"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="开始日期">
+                        <el-date-picker v-model="sortSelForm.start" type="date" placeholder="选择日期"></el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="结束日期">
+                        <el-date-picker v-model="sortSelForm.end" type="date" placeholder="选择日期"></el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-button type="primary"  @click="MulSel()">筛选</el-button>
+                  </el-row>
+                </el-form>
+                <el-button
+                  slot="reference"
+                  type="primary"
+                  style="margin-left: 15px"
+                 
+                >筛选</el-button>
+              </el-popover>
+            </el-tooltip>
+            <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
           </div>
         </el-col>
       </el-row>
@@ -991,7 +1116,10 @@ export default {
       columnSelect2: [],
       colSel2: [],
       timeSel: false,
-      timeSelection: ""
+      timeSelection: "",
+      visible2: false,
+      sortSelForm: {
+      }
     };
   },
   watch: {
@@ -1091,6 +1219,41 @@ export default {
     }
   },
   methods: {
+    //创建环节时，前置
+    before(ind) {
+      this.FormList.splice(ind, 0, {});
+    },
+    //创建环节时，后置
+    after(ind) {
+      this.FormList.splice(ind + 1, 0, {});
+    },
+    //创建环节时，删除
+    deleteLink(index) {
+      if (index !== 0) this.FormList.splice(index, 1);
+    },
+    // 单条件排序
+    sortFilter({ column, prop, order }) {
+      let payload = {
+        project: this.$route.params.id,
+        asset_type: this.drawerType === "scene" ? 0 : 1,
+        pagenum: this.pageSize,
+        page: this.currentPage,
+        sort: order === "descending" ? "-" + prop : prop
+      };
+      HTTP.queryAssets(payload)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.AssetList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
+    },
+    //多条件排序
     sortMul() {
       this.visible = false;
 
@@ -1102,7 +1265,7 @@ export default {
         return arr;
       }, []);
 
-      console.log(this.FormList);
+      //console.log(this.FormList);
       this.FormList.forEach((item, index) => {
         if (item.order === 1) {
           this.FormList[index] = Object.assign({}, this.FormList[index], {
@@ -1138,46 +1301,14 @@ export default {
         });
       this.FormList = [{}];
     },
-    //创建环节时，前置
-    before(ind) {
-      this.FormList.splice(ind, 0, {});
-    },
-    //创建环节时，后置
-    after(ind) {
-      this.FormList.splice(ind + 1, 0, {});
-    },
-    //创建环节时，删除
-    deleteLink(index) {
-      if (index !== 0) this.FormList.splice(index, 1);
-    },
-    sortFilter({ column, prop, order }) {
-      let payload = {
-        project: this.$route.params.id,
-        asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: this.pageSize,
-        page: this.currentPage,
-        sort: order === "descending" ? "-" + prop : prop
-      };
-      HTTP.queryAssets(payload)
-        .then(({ data }) => {
-          if (data.status === 0) {
-            this.AssetList = [...data.msg];
-            this.total = data.count;
-            this.pageCount = data.page_count;
-          }
-          this.tableLoading = false;
-        })
-        .catch(err => {
-          this.tableLoading = false;
-        });
-    },
+    //单条件筛选（状态、优先级、难度等级）
     filterHandler(val) {
       if (val.status) {
         this.filterStatus = [];
         this.filterStatus = [...val.status];
         this.filterStatus.forEach((item, index) => {
           item = Number(item);
-          console.log("item", item);
+        //  console.log("item", item);
           this.filterStatus[index] = item;
         });
         //console.log(this.filterStatus);
@@ -1230,6 +1361,60 @@ export default {
           this.tableLoading = false;
         });
     },
+    //多条件筛选
+    MulSel() {
+      function dateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
+      if (!this.sortSelForm.level.length) {
+        delete this.sortSelForm.level;
+      }else{
+        this.sortSelForm.level = "[" + String(this.sortSelForm.level) + "]"
+      }
+      if (!this.sortSelForm.priority.length) {
+        delete this.sortSelForm.priority;
+      }else{
+        this.sortSelForm.priority = "[" + String(this.sortSelForm.priority) + "]"
+      }
+      if (!this.sortSelForm.status.length) {
+        delete this.sortSelForm.status;
+      }else{
+        this.sortSelForm.status = "[" +String(this.sortSelForm.status) + "]"
+      }
+      if(this.sortSelForm.start){
+        this.sortSelForm.start = dateFormat(this.sortSelForm.start)
+      }
+      if(this.sortSelForm.end){
+        this.sortSelForm.end = dateFormat(this.sortSelForm.end)
+      }
+      this.sortSelForm = {
+        ...this.sortSelForm,
+        project: this.$route.params.id,
+        asset_type: this.drawerType === "scene" ? 0 : 1,
+        pagenum: this.pageSize,
+        page: this.currentPage
+      }
+     // console.log(this.sortSelForm)
+      this.tableLoading = true;
+      HTTP.queryAssets(this.sortSelForm)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.AssetList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+            this.sortSelForm = [];
+            this.visible2 = false
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.sortSelForm = [];
+          this.visible2 = false
+          this.tableLoading = false;
+        });
+    },
+    //清空排序
     cancelSort() {
       this.visible = false;
       this.FormList = [{}];
@@ -1250,10 +1435,12 @@ export default {
     handleCurrentChange(row, event, column) {
       // console.log(row, event, column, event.currentTarget);
     },
+    //是否显示行内修改框
     showEditIcon() {
       this.iconShow = true;
       this.rowClick = true;
     },
+    //修改资产
     editOneAsset(row) {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
@@ -1283,6 +1470,7 @@ export default {
       // console.log("edit");
       // console.log(index);
     },
+    //行内修改资产保存
     saveEdit(index, row) {
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
@@ -1325,7 +1513,7 @@ export default {
         params: { id: this.$route.params.id }
       });
     },
-    //获取资产或者镜头列表，type=1时表示重置
+    //获取资产或者镜头列表，type=1时表示重置（包括单条件筛选）
     getAssetList(type) {
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
@@ -1411,6 +1599,7 @@ export default {
       this.multipleSelection = val;
       //console.log(this.multipleSelection.length);
     },
+    //展示侧栏
     show(id) {
       this.value1 = true;
       HTTP.queryAssets({ id }).then(({ data }) => {
@@ -1428,6 +1617,7 @@ export default {
         this.RemarksData = [...data.msg];
       });
     },
+    //侧栏关闭
     drawerClose() {
       this.value1 = false;
     },
@@ -1465,6 +1655,7 @@ export default {
         });
       });
     },
+    //展示要修改的资产表单（不用了）
     showAssetForm(Type, row) {
       this.DialogName = Type;
 
@@ -1622,7 +1813,7 @@ export default {
 <style lang="scss" scoped>
 .hover {
   cursor: pointer;
-  color:#2d8cf0;
+  color: #2d8cf0;
 }
 #asset-list {
   min-height: calc(100vh - 199px);
