@@ -209,118 +209,118 @@
             ></el-date-picker>
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
-                <el-form :model="sortSelForm" label-width="80px">
+                <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="镜头号">
+                      <el-form-item label="镜头号" prop="name">
                         <el-input v-model="sortSelForm.name"></el-input>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="场次">
+                      <el-form-item label="场次" prop="session">
                         <el-input v-model="sortSelForm.session"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="集数">
+                      <el-form-item label="集数" prop="episode">
                         <el-input v-model="sortSelForm.episode"></el-input>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="版本号">
+                      <el-form-item label="版本号" prop="inner_version">
                         <el-input v-model="sortSelForm.inner_version"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="帧数">
+                      <el-form-item label="帧数" prop="frame">
                         <el-input v-model="sortSelForm.frame"></el-input>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="帧数范围">
+                      <el-form-item label="帧数范围" prop="frame_range">
                         <el-input v-model="sortSelForm.frame_range"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="变速信息">
+                      <el-form-item label="变速信息" prop="retime">
                         <el-input v-model="sortSelForm.retime"></el-input>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="画面调整">
+                      <el-form-item label="画面调整" prop="report">
                         <el-input v-model="sortSelForm.report"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="制作内容">
+                      <el-form-item label="制作内容" prop="content">
                         <el-input v-model="sortSelForm.content"></el-input>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="创建人">
+                      <el-form-item label="创建人" prop="creator">
                         <el-input v-model="sortSelForm.creator"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="难度等级">
+                      <el-form-item label="难度等级" prop="level">
                         <el-select v-model="sortSelForm.level" multiple placeholder="请选择">
-                          <el-option label="简单" value="0"></el-option>
-                          <el-option label="标准" value="1"></el-option>
-                          <el-option label="复杂" value="2"></el-option>
-                          <el-option label="高难度" value="3"></el-option>
+                          <el-option label="简单" :value="0"></el-option>
+                          <el-option label="标准" :value="1"></el-option>
+                          <el-option label="复杂" :value="2"></el-option>
+                          <el-option label="高难度" :value="3"></el-option>
                         </el-select>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="优先级">
+                      <el-form-item label="优先级" prop="priority">
                         <el-select v-model="sortSelForm.priority" multiple placeholder="请选择">
-                          <el-option label="正常" value="0"></el-option>
-                          <el-option label="优先" value="1"></el-option>
+                          <el-option label="正常" :value="0"></el-option>
+                          <el-option label="优先" :value="1"></el-option>
                         </el-select>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="状态">
+                      <el-form-item label="状态" prop="status">
                         <el-select v-model="sortSelForm.status" multiple placeholder="请选择">
-                          <el-option label="暂停" value="0"></el-option>
-                          <el-option label="未开始" value="1"></el-option>
-                          <el-option label="进行中" value="2"></el-option>
-                          <el-option label="审核中" value="3"></el-option>
-                          <el-option label="完成" value="4"></el-option>
+                          <el-option label="暂停" :value="0"></el-option>
+                          <el-option label="未开始" :value="1"></el-option>
+                          <el-option label="进行中" :value="2"></el-option>
+                          <el-option label="审核中" :value="3"></el-option>
+                          <el-option label="完成" :value="4"></el-option>
                         </el-select>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="备注">
+                      <el-form-item label="备注" prop="remark">
                         <el-input v-model="sortSelForm.remark"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="开始日期">
+                      <el-form-item label="开始日期" prop="start">
                         <el-date-picker v-model="sortSelForm.start" type="date" placeholder="选择日期"></el-date-picker>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item label="结束日期">
+                      <el-form-item label="结束日期" prop="end">
                         <el-date-picker v-model="sortSelForm.end" type="date" placeholder="选择日期"></el-date-picker>
                       </el-form-item>
                     </el-col>
                   </el-row>
-                  <el-row>
+                  <el-row align="right">
                     <el-button type="primary"  @click="MulSel()">筛选</el-button>
                   </el-row>
                 </el-form>
@@ -1118,8 +1118,7 @@ export default {
       timeSel: false,
       timeSelection: "",
       visible2: false,
-      sortSelForm: {
-      }
+      sortSelForm: {}
     };
   },
   watch: {
@@ -1363,21 +1362,22 @@ export default {
     },
     //多条件筛选
     MulSel() {
+      this.visible2 = false
       function dateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
-      if (!this.sortSelForm.level.length) {
+      if (this.sortSelForm.level&&!this.sortSelForm.level.length) {
         delete this.sortSelForm.level;
       }else{
         this.sortSelForm.level = "[" + String(this.sortSelForm.level) + "]"
       }
-      if (!this.sortSelForm.priority.length) {
+      if (this.sortSelForm.priority&&!this.sortSelForm.priority.length) {
         delete this.sortSelForm.priority;
       }else{
         this.sortSelForm.priority = "[" + String(this.sortSelForm.priority) + "]"
       }
-      if (!this.sortSelForm.status.length) {
+      if (this.sortSelForm.status&&!this.sortSelForm.status.length) {
         delete this.sortSelForm.status;
       }else{
         this.sortSelForm.status = "[" +String(this.sortSelForm.status) + "]"
@@ -1388,29 +1388,29 @@ export default {
       if(this.sortSelForm.end){
         this.sortSelForm.end = dateFormat(this.sortSelForm.end)
       }
-      this.sortSelForm = {
+      let data = {
         ...this.sortSelForm,
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: this.pageSize,
         page: this.currentPage
-      }
-     // console.log(this.sortSelForm)
+      };
+     
       this.tableLoading = true;
-      HTTP.queryAssets(this.sortSelForm)
+      HTTP.queryAssets({...data})
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
-            this.sortSelForm = [];
-            this.visible2 = false
+            this.sortSelForm = {};
+            
           }
           this.tableLoading = false;
         })
         .catch(err => {
-          this.sortSelForm = [];
-          this.visible2 = false
+          this.sortSelForm = {};
+         // this.visible2 = false
           this.tableLoading = false;
         });
     },

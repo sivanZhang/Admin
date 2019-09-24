@@ -126,8 +126,99 @@
               @change="getTasks()"
               style="width:130px"
             ></el-date-picker>
-            
-            <el-button @click="getTasks(1)" icon="el-icon-refresh-left" type="primary">重置</el-button>
+            <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
+              <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
+                <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="任务" prop="name">
+                        <el-input v-model="sortSelForm.name"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="制作环节" prop="dept">
+                        <el-input v-model="sortSelForm.dept"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="任务内容" prop="content">
+                        <el-input v-model="sortSelForm.content"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="创建人" prop="user">
+                        <el-input v-model="sortSelForm.user"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="任务等级" prop="priority">
+                        <el-select v-model="sortSelForm.priority" multiple placeholder="请选择">
+                          <el-option label="低级" :value="0"></el-option>
+                          <el-option label="中级" :value="1"></el-option>
+                          <el-option label="高级" :value="2"></el-option>
+                          <el-option label="高难度" :value="3"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="任务难度" prop="grade">
+                        <el-select v-model="sortSelForm.grade" multiple placeholder="请选择">
+                          <el-option label="简单" :value="0"></el-option>
+                          <el-option label="标准" :value="1"></el-option>
+                          <el-option label="困难" :value="2"></el-option>  
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="状态" prop="status">
+                        <el-select v-model="sortSelForm.status" multiple placeholder="请选择">
+                          <el-option label="暂停" :value="0"></el-option>
+                          <el-option label="未开始" :value="1"></el-option>
+                          <el-option label="进行中" :value="2"></el-option>
+                          <el-option label="审核中" :value="3"></el-option>
+                          <el-option label="完成" :value="4"></el-option>
+                          <el-option label="超时" :value="5"></el-option>
+                          <el-option label="审核通过" :value="6"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="总工时" prop="total_hour">
+                        <el-input v-model="sortSelForm.total_hour"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item label="开始日期" prop="start_date">
+                        <el-date-picker v-model="sortSelForm.start_date" type="date" placeholder="选择日期"></el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="结束日期" prop="end_date">
+                        <el-date-picker v-model="sortSelForm.end_date" type="date" placeholder="选择日期"></el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row align="right">
+                    <el-button type="primary"  @click="MulSel()">筛选</el-button>
+                  </el-row>
+                </el-form>
+                <el-button
+                  slot="reference"
+                  type="primary"
+                  style="margin-left: 15px"
+                 
+                >筛选</el-button>
+              </el-popover>
+            </el-tooltip>
+            <el-button @click="getTasks(1)" icon="el-icon-refresh-left"  style="margin-left: 15px" type="primary">重置</el-button>
           </div>
         </el-col>
       </el-row>
@@ -687,7 +778,9 @@ export default {
       columnSelect2: [],
       colSel2: [],
       timeSel: false,
-      timeSelection: ""
+      timeSelection: "",
+      visible2: false,
+      sortSelForm: {}
     };
   },
   filters: {
@@ -843,6 +936,60 @@ export default {
     }
   },
   methods: {
+    //多条件筛选
+    MulSel() {
+      this.visible2 = false
+      function dateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
+      if (this.sortSelForm.grade&&!this.sortSelForm.grade.length) {
+        delete this.sortSelForm.grade;
+      }else{
+        this.sortSelForm.grade = "[" + String(this.sortSelForm.grade) + "]"
+      }
+      if (this.sortSelForm.priority&&!this.sortSelForm.priority.length) {
+        delete this.sortSelForm.priority;
+      }else{
+        this.sortSelForm.priority = "[" + String(this.sortSelForm.priority) + "]"
+      }
+      if (this.sortSelForm.status&&!this.sortSelForm.status.length) {
+        delete this.sortSelForm.status;
+      }else{
+        this.sortSelForm.status = "[" +String(this.sortSelForm.status) + "]"
+      }
+      if(this.sortSelForm.start_date){
+        this.sortSelForm.start_date = dateFormat(this.sortSelForm.start)
+      }
+      if(this.sortSelForm.end_date){
+        this.sortSelForm.end_date = dateFormat(this.sortSelForm.end)
+      }
+      let data = {
+        ...this.sortSelForm,
+        project: this.$route.params.id,
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+     
+      this.tableLoading = true;
+      HTTP.queryTask(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.TaskList = [...data.msg];
+            this.total = data.count;
+            this.pageCount = data.page_count;
+            this.visible2 = false;
+            this.sortSelForm = {}
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+          this.visible2 = false;
+          this.sortSelForm = {}
+        });
+      
+    },
     changeAsset(val){
      // console.log(this.TaskForm.asset);
        const data = this.AssetListTask.filter(item=>{
