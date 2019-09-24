@@ -2,7 +2,7 @@
   <div id="task" ref="drawer-parent">
     <div>
       <el-row>
-        <el-col :span="14">
+        <el-col :span="13">
           <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建任务</el-button>
 
           <!-- <el-dropdown>
@@ -72,7 +72,7 @@
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
         </el-col>
-        <el-col :span="10" style="text-align:right">
+        <el-col :span="11" style="text-align:right">
           <div style="display:flex;margin-left:125px">
             <div style="width:130px">
               <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
@@ -169,7 +169,7 @@
                         <el-select v-model="sortSelForm.grade" multiple placeholder="请选择">
                           <el-option label="简单" :value="0"></el-option>
                           <el-option label="标准" :value="1"></el-option>
-                          <el-option label="困难" :value="2"></el-option>  
+                          <el-option label="困难" :value="2"></el-option>
                         </el-select>
                       </el-form-item>
                     </el-col>
@@ -197,28 +197,31 @@
                   <el-row>
                     <el-col :span="12">
                       <el-form-item label="开始日期" prop="start_date">
-                        <el-date-picker v-model="sortSelForm.start_date" type="date" placeholder="选择日期"></el-date-picker>
+                        <el-date-picker
+                          v-model="sortSelForm.start_date"
+                          type="date"
+                          placeholder="选择日期"
+                        ></el-date-picker>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
                       <el-form-item label="结束日期" prop="end_date">
-                        <el-date-picker v-model="sortSelForm.end_date" type="date" placeholder="选择日期"></el-date-picker>
+                        <el-date-picker
+                          v-model="sortSelForm.end_date"
+                          type="date"
+                          placeholder="选择日期"
+                        ></el-date-picker>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row align="right">
-                    <el-button type="primary"  @click="MulSel()">筛选</el-button>
+                    <el-button type="primary" @click="MulSel()">筛选</el-button>
                   </el-row>
                 </el-form>
-                <el-button
-                  slot="reference"
-                  type="primary"
-                  style="margin-left: 15px"
-                 
-                >筛选</el-button>
+                <el-button slot="reference" type="primary" style="margin-left: 15px">筛选</el-button>
               </el-popover>
             </el-tooltip>
-            <el-button @click="getTasks(1)" icon="el-icon-refresh-left"  style="margin-left: 15px" type="primary">重置</el-button>
+            <el-button @click="getTasks(1)" style="margin-left: 15px" type="primary">重置</el-button>
           </div>
         </el-col>
       </el-row>
@@ -406,7 +409,12 @@
       <el-form :model="TaskForm" :rules="rules" ref="TaskRef" label-width="100px">
         <div v-if="active == 0" style="padding-top:10px">
           <el-form-item label="所属资产">
-            <el-select v-model="TaskForm.asset" filterable placeholder="请选择所属资产" @change="changeAsset()">
+            <el-select
+              v-model="TaskForm.asset"
+              filterable
+              placeholder="请选择所属资产"
+              @change="changeAsset()"
+            >
               <el-option
                 v-for="item of AssetListTask"
                 :label="item.name"
@@ -477,9 +485,9 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          
+
           <el-form-item label="环节时间" prop="executorlist">
-              <!-- <el-input  v-model="link.datetime" :disabled="true"> </el-input> -->
+            <!-- <el-input  v-model="link.datetime" :disabled="true"> </el-input> -->
           </el-form-item>
           <el-form-item label="任务时间" prop="datetime">
             <el-date-picker
@@ -601,7 +609,12 @@
               prop="content"
               :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
-              <el-input type="textarea" v-model="item.content" style="width:100%" @input="change($event)"></el-input>
+              <el-input
+                type="textarea"
+                v-model="item.content"
+                style="width:100%"
+                @input="change($event)"
+              ></el-input>
             </el-form-item>
             <el-form-item
               label="当前工种"
@@ -672,7 +685,7 @@ import { type } from "os";
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
-  mixins: [myMixin,thumbtackMixin],
+  mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
   data() {
     return {
@@ -728,8 +741,8 @@ export default {
       sort: null,
       propName: null,
       sortFunction: null,
-      Assetcontent:null,
-      datacontent:null,
+      Assetcontent: null,
+      datacontent: null,
       columnSelect: [
         {
           value: "name",
@@ -938,31 +951,38 @@ export default {
   methods: {
     //多条件筛选
     MulSel() {
-      this.visible2 = false
+      this.visible2 = false;
       function dateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
-      if (this.sortSelForm.grade&&!this.sortSelForm.grade.length) {
-        delete this.sortSelForm.grade;
-      }else{
-        this.sortSelForm.grade = "[" + String(this.sortSelForm.grade) + "]"
+      if (this.sortSelForm.grade) {
+        if (this.sortSelForm.grade.length === 0) {
+          delete this.sortSelForm.grade;
+        } else {
+          this.sortSelForm.grade = "[" + String(this.sortSelForm.grade) + "]";
+        }
       }
-      if (this.sortSelForm.priority&&!this.sortSelForm.priority.length) {
-        delete this.sortSelForm.priority;
-      }else{
-        this.sortSelForm.priority = "[" + String(this.sortSelForm.priority) + "]"
+      if (this.sortSelForm.priority) {
+        if (this.sortSelForm.priority.length === 0) {
+          delete this.sortSelForm.priority;
+        } else {
+          this.sortSelForm.priority =
+            "[" + String(this.sortSelForm.priority) + "]";
+        }
       }
-      if (this.sortSelForm.status&&!this.sortSelForm.status.length) {
-        delete this.sortSelForm.status;
-      }else{
-        this.sortSelForm.status = "[" +String(this.sortSelForm.status) + "]"
+      if (this.sortSelForm.status) {
+        if (this.sortSelForm.status.length === 0) {
+          delete this.sortSelForm.status;
+        } else {
+          this.sortSelForm.status = "[" + String(this.sortSelForm.status) + "]";
+        }
       }
-      if(this.sortSelForm.start_date){
-        this.sortSelForm.start_date = dateFormat(this.sortSelForm.start)
+      if (this.sortSelForm.start_date) {
+        this.sortSelForm.start_date = dateFormat(this.sortSelForm.start);
       }
-      if(this.sortSelForm.end_date){
-        this.sortSelForm.end_date = dateFormat(this.sortSelForm.end)
+      if (this.sortSelForm.end_date) {
+        this.sortSelForm.end_date = dateFormat(this.sortSelForm.end);
       }
       let data = {
         ...this.sortSelForm,
@@ -970,7 +990,7 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-     
+
       this.tableLoading = true;
       HTTP.queryTask(data)
         .then(({ data }) => {
@@ -979,21 +999,20 @@ export default {
             this.total = data.count;
             this.pageCount = data.page_count;
             this.visible2 = false;
-            this.sortSelForm = {}
+            this.sortSelForm = {};
           }
           this.tableLoading = false;
         })
         .catch(err => {
           this.tableLoading = false;
           this.visible2 = false;
-          this.sortSelForm = {}
+          this.sortSelForm = {};
         });
-      
     },
-    changeAsset(val){
-     // console.log(this.TaskForm.asset);
-       const data = this.AssetListTask.filter(item=>{
-           return item.id === this.TaskForm.asset
+    changeAsset(val) {
+      // console.log(this.TaskForm.asset);
+      const data = this.AssetListTask.filter(item => {
+        return item.id === this.TaskForm.asset;
       });
       this.TaskForm.name = data[0].name;
     },
@@ -1050,7 +1069,7 @@ export default {
     //创建环节时，后置
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
-      this.FormList[ind + 1].content=this.datacontent[0].content;
+      this.FormList[ind + 1].content = this.datacontent[0].content;
     },
     //创建环节时，删除
     deleteLink(index) {
@@ -1061,11 +1080,10 @@ export default {
       this.asset = asset;
       this.isLinkDialogShow = true;
       this.mainTaskShow = false;
-      this.datacontent = this.AssetListTask.filter(item=>{
-           return item.id === this.asset
+      this.datacontent = this.AssetListTask.filter(item => {
+        return item.id === this.asset;
       });
-      this.FormList[0].content=this.datacontent[0].content
-    
+      this.FormList[0].content = this.datacontent[0].content;
     },
     //给某一资产添加环节
     addLinks() {
@@ -1445,12 +1463,12 @@ export default {
       if (type === 1) {
         this.keyword = "";
         this.colSel2 = [];
-        this.timeSelection =''
+        this.timeSelection = "";
       }
       let data = {
         project: this.$route.params.id,
         pagenum: this.pageSize,
-        page: this.currentPage,
+        page: this.currentPage
       };
       if (this.colSel == "name" && this.keyword) {
         data = { ...data, name: this.keyword };
@@ -1556,9 +1574,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hover{
+.hover {
   cursor: pointer;
-  color:#2d8cf0;
+  color: #2d8cf0;
 }
 #task {
   min-height: calc(100vh - 199px);

@@ -321,15 +321,10 @@
                     </el-col>
                   </el-row>
                   <el-row align="right">
-                    <el-button type="primary"  @click="MulSel()">筛选</el-button>
+                    <el-button type="primary" @click="MulSel()">筛选</el-button>
                   </el-row>
                 </el-form>
-                <el-button
-                  slot="reference"
-                  type="primary"
-                  style="margin-left: 15px"
-                 
-                >筛选</el-button>
+                <el-button slot="reference" type="primary" style="margin-left: 15px">筛选</el-button>
               </el-popover>
             </el-tooltip>
             <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
@@ -1307,7 +1302,7 @@ export default {
         this.filterStatus = [...val.status];
         this.filterStatus.forEach((item, index) => {
           item = Number(item);
-        //  console.log("item", item);
+          //  console.log("item", item);
           this.filterStatus[index] = item;
         });
         //console.log(this.filterStatus);
@@ -1362,31 +1357,38 @@ export default {
     },
     //多条件筛选
     MulSel() {
-      this.visible2 = false
+      this.visible2 = false;
       function dateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
-      if (this.sortSelForm.level&&!this.sortSelForm.level.length) {
-        delete this.sortSelForm.level;
-      }else{
-        this.sortSelForm.level = "[" + String(this.sortSelForm.level) + "]"
+      if (this.sortSelForm.level) {
+        if (this.sortSelForm.level.length === 0) {
+          delete this.sortSelForm.level;
+        } else {
+          this.sortSelForm.level = "[" + String(this.sortSelForm.level) + "]";
+        }
       }
-      if (this.sortSelForm.priority&&!this.sortSelForm.priority.length) {
-        delete this.sortSelForm.priority;
-      }else{
-        this.sortSelForm.priority = "[" + String(this.sortSelForm.priority) + "]"
+      if (this.sortSelForm.priority) {
+        if (this.sortSelForm.priority.length === 0) {
+          delete this.sortSelForm.priority;
+        } else {
+          this.sortSelForm.priority =
+            "[" + String(this.sortSelForm.priority) + "]";
+        }
       }
-      if (this.sortSelForm.status&&!this.sortSelForm.status.length) {
-        delete this.sortSelForm.status;
-      }else{
-        this.sortSelForm.status = "[" +String(this.sortSelForm.status) + "]"
+      if (this.sortSelForm.status) {
+        if (this.sortSelForm.status.length === 0) {
+          delete this.sortSelForm.status;
+        } else {
+          this.sortSelForm.status = "[" + String(this.sortSelForm.status) + "]";
+        }
       }
-      if(this.sortSelForm.start){
-        this.sortSelForm.start = dateFormat(this.sortSelForm.start)
+      if (this.sortSelForm.start) {
+        this.sortSelForm.start = dateFormat(this.sortSelForm.start);
       }
-      if(this.sortSelForm.end){
-        this.sortSelForm.end = dateFormat(this.sortSelForm.end)
+      if (this.sortSelForm.end) {
+        this.sortSelForm.end = dateFormat(this.sortSelForm.end);
       }
       let data = {
         ...this.sortSelForm,
@@ -1395,22 +1397,21 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-     
+
       this.tableLoading = true;
-      HTTP.queryAssets({...data})
+      HTTP.queryAssets({ ...data })
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
             this.sortSelForm = {};
-            
           }
           this.tableLoading = false;
         })
         .catch(err => {
           this.sortSelForm = {};
-         // this.visible2 = false
+          // this.visible2 = false
           this.tableLoading = false;
         });
     },
