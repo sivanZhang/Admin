@@ -510,7 +510,7 @@
               prop="content"
               :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
-              <el-input type="textarea" v-model="Assetcontent" style="width:100%"></el-input>
+              <el-input type="textarea" v-model="item.content" style="width:100%" @input="change($event)"></el-input>
             </el-form-item>
             <el-form-item
               label="当前工种"
@@ -638,6 +638,7 @@ export default {
       propName: null,
       sortFunction: null,
       Assetcontent:null,
+      datacontent:null,
       columnSelect: [
         {
           value: "name",
@@ -897,10 +898,12 @@ export default {
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
+      //  this.FormList[ind - 1].content=this.datacontent[0].content;
     },
     //创建环节时，后置
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
+      this.FormList[ind + 1].content=this.datacontent[0].content;
     },
     //创建环节时，删除
     deleteLink(index) {
@@ -911,11 +914,11 @@ export default {
       this.asset = asset;
       this.isLinkDialogShow = true;
       this.mainTaskShow = false;
-      const data = this.AssetListTask.filter(item=>{
+      this.datacontent = this.AssetListTask.filter(item=>{
            return item.id === this.asset
       });
-      // console.log(this.AssetListTask)
-      this.Assetcontent = data[0].content
+      this.FormList[0].content=this.datacontent[0].content
+    
     },
     //给某一资产添加环节
     addLinks() {
