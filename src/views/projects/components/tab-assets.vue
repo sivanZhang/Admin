@@ -903,7 +903,7 @@ export default {
     return {
       titImg:null,
       dialogImgMax:false,
-      SRC3:null,
+      SRC3:"",
       pageCount: 0,
       AssetList: [],
       total: 0,
