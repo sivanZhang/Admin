@@ -350,7 +350,7 @@
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
               style="width: 50px;height: 30px;"
-              @click.native="img(scope.row)"
+              @click.native="imgMax(scope.row)"
               v-if="!editing||clickId !== scope.row.id"
               class="hover"
             >
@@ -859,6 +859,9 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog :title="titImg" :visible.sync="dialogImgMax" width="480px" top="5vh">
+      <el-image v-if="SRC3" style="width: 100%; height: 100%" :src="SRC3"></el-image>
+    </el-dialog>
     <Drawer
       scrollable
       closable
@@ -898,6 +901,8 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      titImg:null,
+      dialogImgMax:false,
       pageCount: 0,
       AssetList: [],
       total: 0,
@@ -1425,6 +1430,11 @@ export default {
       this.row = row;
       this.SRC = this.$store.state.BASE_URL + row.image;
     },
+    imgMax(row){
+      this.dialogImgMax = true;
+      this.titImg = row.name;
+      this.SRC3 = this.$store.state.BASE_URL + row.image;   
+    },
     addImg() {
       // console.log(this.ImgForm)
       this.imagePath = this.ImgForm.image;
@@ -1759,8 +1769,8 @@ export default {
     //监听图片上传成功
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
-      // this.AssetForm.image = response.msg;
-      // this.AssetForm.image_id = response.id;
+      this.AssetForm.image = response.msg;
+      this.AssetForm.image_id = response.id;
       this.ImgForm.image = response.msg;
       this.ImgForm.image_id = response.id;
     },
