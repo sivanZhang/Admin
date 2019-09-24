@@ -25,7 +25,7 @@
                   <i
                     class="el-icon-plus"
                     style="color:blue"
-                    @click="showTaskForm(item.link_id,item.dept.id,item.content)"
+                    @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
                   ></i>
                 </span>
               </el-tooltip>
@@ -107,7 +107,7 @@
               prop="content"
               :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
-              <el-input type="textarea" v-model="item.content" style="width:100%"></el-input>
+              <el-input type="textarea" v-model="item.content" style="width:100%" @input="change($event)"></el-input>
             </el-form-item>
             <el-form-item
               label="当前工种"
@@ -154,10 +154,10 @@
     <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="490px" :modal="false">
       <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="100px">
         <el-form-item label="任务名称" prop="name">
-          <el-input v-model="TaskForm.name"></el-input>
+          <el-input v-model="TaskForm.name" @input="change($event)"></el-input>
         </el-form-item>
         <el-form-item label="任务内容" prop="content">
-          <el-input type="textarea" :rows="3" v-model="TaskForm.content"></el-input>
+          <el-input type="textarea" :rows="3" v-model="TaskForm.content" @input="change($event)"></el-input>
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
@@ -190,6 +190,19 @@
               :key="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="环节时间" >
+          <el-row style="padding-left:10px;font-size: 12px;">
+          <el-col  :span=5 >
+          {{linkstart|dateFormat}}
+          </el-col>
+          <el-col :span=2  >
+            <span >至</span>
+          </el-col>
+          <el-col :span=17 >
+            {{linkend|dateFormat}}
+          </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
           <el-date-picker
@@ -281,9 +294,12 @@ export default {
       dept: {},
       content: null,
       datetime: null,
+      datacontent: null,
+      linkstart:null,
+      linkend:null,
     };
   },
-  props: ["LinkList", "project"],
+  props: ["LinkList", "project","assetTaskList"],
  
   computed: {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
@@ -305,10 +321,12 @@ export default {
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
+      this.FormList[ind].content=this.datacontent[0].content;
     },
     //创建环节时，后置
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
+      this.FormList[ind + 1].content=this.datacontent[0].content;
     },
     //创建环节时，删除
     deleteLink(index) {
@@ -505,8 +523,24 @@ export default {
         }
       });
     },
+    change() {
+      this.$forceUpdate();
+    },
     showLinksForm() {
       this.isDialogShow = true;
+      this.TaskForm = Object.assign(
+        {},
+        {
+          priority: 0,
+          grade: 0,
+          asset: this.project.id,
+          project: this.$route.params.id,
+        }
+      );
+     this.datacontent = this.assetTaskList.filter(item=>{
+        return item.asset.id === this.TaskForm.asset
+      });
+      this.FormList[0].content=this.datacontent[0].content
     },
     cancel() {
       this.isDialogShow = false;
@@ -518,12 +552,12 @@ export default {
       this.TaskForm = {};
     },
     //展示添加任务表单
-    showTaskForm(link_id, dept_id, content) {
+    showTaskForm(link_id, dept_id, content, date_and_user) {
       getDept({
         id: dept_id
       }).then(res => {
         this.DeptUsers = [...res.data.users];
-        console.log(this.DeptUsers);
+        //console.log(this.DeptUsers);
       });
       this.isCreateTaskShow = true;
       this.TaskForm = Object.assign(
@@ -537,6 +571,14 @@ export default {
           content
         }
       );
+      const linkdatastart = date_and_user.date_start;
+      const linkdataend = date_and_user.date_end;
+     this.linkstart = linkdatastart;
+     this.linkend = linkdataend;
+      const data = this.assetTaskList.filter(item=>{
+           return item.asset.id === this.TaskForm.asset
+      });
+      this.TaskForm.name = data[0].asset.name;
     },
     //展示要修改的环节信息
     showLinkForm(item) {

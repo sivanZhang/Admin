@@ -11,6 +11,7 @@
               :LinkList="LinkList"
               @refresh="getLinkList"
               @refresh_assetList="getAssetList"
+              :assetTaskList="assetTaskList"
             ></links>
           </el-tab-pane>
           <el-tab-pane label="评论" name="second">
