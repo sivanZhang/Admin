@@ -2,7 +2,7 @@
   <div id="statistics">
     <label for>项目进度统计</label>
     <el-row type="flex" justify="center">
-      <el-progress type="circle" :percentage="projectProgress"></el-progress>
+      <el-progress type="circle" :percentage="projectProgress" :color="colors" stroke-width="25" width="200"></el-progress>
     </el-row>
     <el-divider />
     <chart ref="asset-chart" id="asset-chart" />
@@ -23,8 +23,15 @@ export default {
       project_id: this.$route.params.id
     };
     return {
-      projectProgress: 50,
-      HttpParams
+      projectProgress: 0,
+      HttpParams,
+      colors: [
+          {color: '#f56c6c', percentage: 20},
+          {color: '#e6a23c', percentage: 40},
+          {color: '#6f7ad3', percentage: 60},
+          {color: '#1989fa', percentage: 80},
+          {color: '#5cb87a', percentage: 100}
+        ]
     };
   },
   methods: {

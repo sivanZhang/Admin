@@ -21,7 +21,7 @@ export default {
     },
     height: {
       type: String,
-      default: "340px"
+      default: "320px"
     },
     id:{
       type: String,
@@ -65,21 +65,16 @@ export default {
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
-          left: "center",
-          bottom: "10",
-          data: keys
+          data: keys,
+          bottom:'0'
         },
         series: [
           {
             name: title,
             type: "pie",
-            roseType: "radius",
-            radius: [15, 95],
-            center: ["50%", "38%"],
             data: chartData,
-            animationEasing: "cubicInOut",
-            animationDuration: 2600
-          }
+            radius:[0,100],
+          },
         ]
       }
       this.$nextTick(()=>{
