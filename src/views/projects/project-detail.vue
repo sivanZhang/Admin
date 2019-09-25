@@ -25,6 +25,9 @@
       <el-tab-pane label="项目设置" name="tab3">
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
+      <el-tab-pane label="数据统计" name="tab4" lazy>
+        <statistics/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -36,12 +39,14 @@ import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
 import { getProjects } from "@/api/project";
 import {getTrainingProject} from "@/api/training"
+import statistics from "./components/statistics";
 export default {
   name: "project-detail",
   components: {
     tabTask,
     tabAssets,
-    configProject
+    configProject,
+    statistics
   },
   data() {
     return {
