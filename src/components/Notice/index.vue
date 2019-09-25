@@ -47,11 +47,19 @@
                     <el-step title="下班 18:00" icon="el-icon-user-solid"></el-step>
                   </el-steps>
                 </el-col>
-                <el-col :span="16" align="center" style="padding-top:45px">  
-                    <el-button type="primary"  circle style="width:150px;height:150px" @click="clock()" :disabled="clockClose">
-                      <el-row style="padding-bottom:20px"><h2>打卡</h2></el-row>
-                      <el-row>{{date}}</el-row>
-                    </el-button>
+                <el-col :span="16" align="center" style="padding-top:45px">
+                  <el-button
+                    type="primary"
+                    circle
+                    style="width:150px;height:150px"
+                    @click="clock()"
+                    :disabled="clockClose"
+                  >
+                    <el-row style="padding-bottom:20px">
+                      <h2>打卡</h2>
+                    </el-row>
+                    <el-row>{{date}}</el-row>
+                  </el-button>
                 </el-col>
               </el-row>
               <el-button slot="reference" type="text">
@@ -123,25 +131,23 @@
           <NoticeInfo :userInfo="userInfo" />
         </el-tab-pane>
         <el-tab-pane label="打卡记录" name="sixth">
-          <el-table :data="clockRed" ref="clockRed" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-        highlight-current-row>
-          <el-table-column prop="user_name" label="用户名"></el-table-column>
-          <el-table-column prop="date" label="打卡日期">
-           <template slot-scope="scope">
-             {{scope.row.date|dateFormat}}
-           </template>
-          </el-table-column>
-          <el-table-column prop="come" label="上班时间">
-           <template slot-scope="scope">
-             {{scope.row.come|dateHMSFormat}}
-           </template>
-          </el-table-column>
-          <el-table-column prop="leave" label="下班时间">
-           <template slot-scope="scope">
-             {{scope.row.leave|dateHMSFormat}}
-           </template>
-          </el-table-column>
-        </el-table>
+          <el-table
+            :data="clockRed"
+            ref="clockRed"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            highlight-current-row
+          >
+            <el-table-column prop="user_name" label="用户名"></el-table-column>
+            <el-table-column prop="date" label="打卡日期">
+              <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
+            </el-table-column>
+            <el-table-column prop="come" label="上班时间">
+              <template slot-scope="scope">{{scope.row.come|dateHMSFormat}}</template>
+            </el-table-column>
+            <el-table-column prop="leave" label="下班时间">
+              <template slot-scope="scope">{{scope.row.leave|dateHMSFormat}}</template>
+            </el-table-column>
+          </el-table>
         </el-tab-pane>
       </el-tabs>
     </Drawer>
@@ -157,7 +163,7 @@ export default {
   name: "Notice",
   created() {
     this.getNoticeDetail();
-    this.clockRecord()
+    this.clockRecord();
   },
   components: {
     noticeDetail,
@@ -176,27 +182,27 @@ export default {
       userPermission: null,
       userRole: null,
       userInfo: this.$store.state.login.userInfo,
-      date: new Date().toLocaleTimeString(),
-      clockRed:null,
-      active:1,
-      clockClose:false,
+      date: new Date().toLocaleDateString(),
+      clockRed: null,
+      active: 1,
+      clockClose: false,
       dateHour: new Date().getHours()
     };
   },
-  watch:{
-    date:{
-      handler:
-        function (newVal,oldVal) {
-          if(newVal){
-            if(this.dateHour >9 && this.dateHour <18){
-              this.clockClose = true;
-            }
-            //console.log(this.dateHour)
-            //this.clockClose = true
-           // console.log(newVal)
+  watch: {
+    date: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          if (this.dateHour > 9 && this.dateHour < 18) {
+            this.clockClose = true;
+          } else {
+            this.clockClose = false;
           }
+          //console.log(this.dateHour)
+          //this.clockClose = true
+          // console.log(newVal)
         }
-      
+      }
     }
   },
   mounted: function() {
@@ -214,41 +220,52 @@ export default {
   },
   methods: {
     //打卡
-    clock(){
-       if (this.active++ > 2) this.active = 0;
-       let data = null;
-      if(this.dateHour <9){
-        data = {status: 0}
+    clock() {
+      if (this.active++ > 2) this.active = 0;
+      let data = {};
+      //console.log(this.dateHour);
+      if (this.dateHour < 9) {
+        data = { status: 0 };
       }
-      if(this.dateHour >18){
-        data = {status: 1}
+      if (this.dateHour >= 18) {
+        data = { status: 1 };
+        this.clockClose = true;
+        this.active = 2
       }
-      HTTP.clockIn(data).then(({data})=>{
-        if(data.status === 0){
-          this.$message.success(data.msg);
-          
-          this.clockRecord()
-        }else{
-          this.$message.error(data.msg)
-        }
-      }).catch(res=>{
+      HTTP.clockIn(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
 
-      })
+            this.clockRecord();
+          } else {
+            this.$message.error(data.msg);
+          }
+        })
+        .catch(res => {});
     },
     //打卡记录
-    clockRecord(){
-      HTTP.getClockRecord({user_id: this.id}).then(({data})=>{
-        if(data.status === 0)
+    clockRecord() {
+      function dateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+      }
+      HTTP.getClockRecord({ user_id: this.id }).then(({ data }) => {
+        if (data.status === 0) {
           this.clockRed = [...data.msg];
-          //console.log(this.clockRed);
-          if(this.clockRed[0].come){
-            this.active = 2
-          }
-         // console.log(this.clockRed)
-      })
+          // this.clockRed.forEach(item => {
+          //   if (dateFormat(item.date * 1000) === this.date) {
+          //   }else{
+          //     if(this.dateHour <9){
+          //       this.clockClose = false;
+          //       this.active = 1;
+          //     }
+          //   }
+          // });
+        }
+      });
     },
     handleClick(tab, event) {
-    //  console.log(tab, event);
+      //  console.log(tab, event);
     },
     toggleSelection(rows) {
       if (rows) {
@@ -280,7 +297,7 @@ export default {
       });
     },
     handleChange(val) {
-     // console.log(val);
+      // console.log(val);
     },
     //获取当前用户收到的通知
     getNoticeDetail() {
@@ -292,7 +309,7 @@ export default {
 
     //修改是否已读
     updateIsRead(row) {
-     // console.log(row);
+      // console.log(row);
       if (row.read === 0) {
         row.read = 1;
       }
