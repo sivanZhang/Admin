@@ -58,11 +58,12 @@ export default {
       requiredKeysMap: {
         name: "用户名",
         email: "邮箱",
+      },
+      keysMap: {
         phone: "手机号码",
         dept: "部门",
         isactive: "是否使用"
       },
-      keysMap: {},
       testDataJSON: []
     };
   },
