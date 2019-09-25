@@ -487,7 +487,13 @@
           </el-form-item>
 
           <el-form-item label="环节时间" prop="executorlist">
-            <!-- <el-input  v-model="link.datetime" :disabled="true"> </el-input> -->
+            <el-row style="padding-left:10px;font-size: 12px;">
+              <el-col :span="5">{{linkstart|dateFormat}}</el-col>
+              <el-col :span="2">
+                <span>至</span>
+              </el-col>
+              <el-col :span="17">{{linkend|dateFormat}}</el-col>
+            </el-row>
           </el-form-item>
           <el-form-item label="任务时间" prop="datetime">
             <el-date-picker
@@ -793,7 +799,9 @@ export default {
       timeSel: false,
       timeSelection: "",
       visible2: false,
-      sortSelForm: {}
+      sortSelForm: {},
+      linkstart:null,
+      linkend:null,
     };
   },
   filters: {
@@ -831,12 +839,15 @@ export default {
 
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
             const linkData = [...data.msg];
-            this.LinkList = [];
+            this.LinkList = []; 
             linkData.forEach(item => {
               item.forEach(ct => {
                 this.LinkList.push(ct);
               });
             });
+            const linktime = this.LinkList[0].date_and_user;
+            this.linkstart = linktime.date_start;
+            this.linkend = linktime.date_end;
           });
         }
         if (oldVal === 1 && this.TaskForm.link_id) {
@@ -1010,7 +1021,6 @@ export default {
         });
     },
     changeAsset(val) {
-      // console.log(this.TaskForm.asset);
       const data = this.AssetListTask.filter(item => {
         return item.id === this.TaskForm.asset;
       });
