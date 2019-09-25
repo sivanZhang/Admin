@@ -19,3 +19,12 @@ export function getNotices(params){
 export function putNotice(params){
     return AXIOS.post('/notice/notice/?put', params)
 }
+
+//打卡
+export function clockIn(data){
+    return AXIOS.post('/attendance/attendance/',data)
+}
+//查询打卡记录
+export function getClockRecord(params){
+    return AXIOS.get('/attendance/attendance/',{params})
+}

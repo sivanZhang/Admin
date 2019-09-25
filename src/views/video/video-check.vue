@@ -39,7 +39,7 @@
                 </el-radio-group>
                 <template v-if="scoreShow">
                     <el-row type="flex" align="middle" style="margin-top:10px">
-                      <el-col :span="5">审核评分</el-col>
+                      <el-col :span="5">评分</el-col>
                       <el-col :span="19" align="left">
                         <el-input-number v-model="score" :min="0" :max="100" :step="10"></el-input-number>
                       </el-col>

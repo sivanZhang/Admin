@@ -12,36 +12,52 @@
       <div class="bd" v-for="(t,i) of list" :key="i">
         <el-row type="flex" justify="space-between">
           <el-col style="display:flex">
-            <div class="item-title">审批人员：</div>
-            {{t.approve_user_id.name}}
+            <div class="item">
+              <div class="item-con" style="color:#ed4014">
+                 <template v-if="t.approve_result === '通过'">
+                  <i class="el-icon-check" style="color:green;font-size:15px"></i>
+                </template>
+                <template v-else>
+                  <i class="el-icon-close" style="color:red;font-size:15px"></i>
+                </template> 
+                {{t.approve_result?'通过':'未通过'}}</div>
+            </div> 
+          </el-col>
+          <el-col style="display:flex">
+            <template v-if="t.pro_type === 0">
+              <div class="item" style="padding-left:40px" >
+                <div class="item-title" style="width:40px">评分:</div>
+                <div class="item-con">{{t.score}}</div>
+              </div>
+            </template>
           </el-col>
           <el-col class="text-right">{{t.time|dateTimeFormat}}</el-col>
         </el-row>
+        <el-row type="flex" justify="space-between">
+          <el-col style="display:flex">
+            {{t.approve_user_id.name}}<h6 style="padding-left:15px">:</h6>
+          </el-col>
+        </el-row>
         <div class="item">
-          <div class="item-title">审批意见：</div>
           <div class="item-con">{{t.approve_suggestion}}</div>
-        </div>
-        <template v-if="t.pro_type === 0">
-          <div class="item">
-          <div class="item-title">审批成绩</div>
-          <div class="item-con">{{t.score}}</div>
-        </div>
-        </template>
-        <div class="item">
-          <div class="item-title">审批结果：</div>
-          <div class="item-con" style="color:#ed4014">{{t.approve_result?'通过':'未通过'}}</div>
         </div>
         <div class="item">
           <div class="item-con">
-            <div class="image-list" v-for="(item,index) of t.images" :key="index">
-              第{{item.image_frame}}帧
-              <el-image
-                :src="$store.state.BASE_URL+item.image_path"
-                style="height:45px;width:80px"
-                fit="cover"
-                @click="shwoImage(item.image_path)"
-              ></el-image>
-            </div>
+            <el-col :span="5"  v-for="(item,index) of t.images" :key="index">
+              
+                <el-row>
+                  <el-image
+                  :src="$store.state.BASE_URL+item.image_path"
+                  style="height:55px;width:90px"
+                  fit="cover"
+                  @click="shwoImage(item.image_path)"
+                ></el-image>
+                </el-row>
+                <el-row style="text-align:center">
+                  第{{item.image_frame}}帧
+                </el-row>
+              
+            </el-col>
           </div>
         </div>
       </div>
@@ -78,8 +94,7 @@ export default {
           value: 1
         }
       ],
-      select: 2,
-      
+      select: 2
     };
   },
   methods: {
@@ -117,10 +132,10 @@ export default {
           this.tableLoading = false;
         });
     },
-    getAssetAppooveList(asset_id){
+    getAssetAppooveList(asset_id) {
       this.tableLoading = true;
       getAssetsApprove({
-        asset_id:asset_id
+        asset_id: asset_id
       })
         .then(({ data }) => {
           this.tableLoading = false;
@@ -155,11 +170,11 @@ export default {
   flex: 1 1 auto;
 }
 .item-title {
-  width: 90px;
+  width: 80px;
 }
 .image-list {
   background: #eee;
-  width: 100%;
+  width: 40%;
   display: flex;
   justify-content: space-between;
   align-items: center;

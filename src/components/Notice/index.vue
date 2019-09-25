@@ -17,7 +17,7 @@
             <svg-icon icon-class="people2" style="width:50px;height:50px;"></svg-icon>
           </el-col>
           <el-col :span="14">
-            <el-row style="font-size:20px">{{loginMessage.msg}}</el-row>
+            <el-row style="f5ont-size:20px">{{loginMessage.msg}}</el-row>
             <el-row style="padding-top:10px">
               <el-col :span="4" align="right">邮箱：</el-col>
               <el-col :span="20">{{loginMessage.email}}</el-col>
@@ -26,7 +26,7 @@
               <el-col :span="4" align="right">工种：</el-col>
               <el-col :span="20">
                 <el-col
-                  :span="4"
+                  :span="6"
                   v-for="(item,index) of loginMessage.dept"
                   :key="index"
                   style="cursor: pointer"
@@ -37,25 +37,45 @@
                 </el-col>
               </el-col>
             </el-row>
-            <el-row></el-row>
+          </el-col>
+          <el-col :span="5">
+            <el-popover trigger="click" placement="bottom" width="400">
+              <el-row>
+                <el-col :span="8">
+                  <el-steps direction="vertical" :active="active" :space="200">
+                    <el-step title="上班 9:00" icon="el-icon-user"></el-step>
+                    <el-step title="下班 18:00" icon="el-icon-user-solid"></el-step>
+                  </el-steps>
+                </el-col>
+                <el-col :span="16" align="center" style="padding-top:45px">  
+                    <el-button type="primary"  circle style="width:150px;height:150px" @click="clock()" :disabled="clockClose">
+                      <el-row style="padding-bottom:20px"><h2>打卡</h2></el-row>
+                      <el-row>{{date}}</el-row>
+                    </el-button>
+                </el-col>
+              </el-row>
+              <el-button slot="reference" type="text">
+                <svg-icon icon-class="clock-in" style="width:50px;height:50px;"></svg-icon>
+              </el-button>
+            </el-popover>
           </el-col>
         </el-row>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="我的权限" name="first">
           <template v-if="userPermission">
-           <div >
+            <div>
               <el-row>
-              <el-col :span="4" align="center" class="col">{{"序号"}}</el-col>
-              <el-col :span="10" class="col">{{"权限名称"}}</el-col>
-              <el-col :span="10" class="col">{{"权限说明"}}</el-col>
-            </el-row>
-            <el-row v-for="(item,index) of userPermission" :key="index">
-              <el-col :span="4" align="center" class="col">{{index+1}}</el-col>
-              <el-col :span="10" class="col">{{item.codename}}</el-col>
-              <el-col :span="10" class="col">{{item.name}}</el-col>
-            </el-row>
-           </div>
+                <el-col :span="4" align="center" class="col">{{"序号"}}</el-col>
+                <el-col :span="10" class="col">{{"权限名称"}}</el-col>
+                <el-col :span="10" class="col">{{"权限说明"}}</el-col>
+              </el-row>
+              <el-row v-for="(item,index) of userPermission" :key="index">
+                <el-col :span="4" align="center" class="col">{{index+1}}</el-col>
+                <el-col :span="10" class="col">{{item.codename}}</el-col>
+                <el-col :span="10" class="col">{{item.name}}</el-col>
+              </el-row>
+            </div>
           </template>
           <template v-else>
             <div style="display:flex;justify-content:center;padding-top:20px">
@@ -100,7 +120,28 @@
           <noticeDetail :notice="notice" @getNoticeDetail="getNoticeDetail"></noticeDetail>
         </el-tab-pane>
         <el-tab-pane label="个人资料" name="fifth">
-          <NoticeInfo :userInfo="userInfo"/>
+          <NoticeInfo :userInfo="userInfo" />
+        </el-tab-pane>
+        <el-tab-pane label="打卡记录" name="sixth">
+          <el-table :data="clockRed" ref="clockRed" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        highlight-current-row>
+          <el-table-column prop="user_name" label="用户名"></el-table-column>
+          <el-table-column prop="date" label="打卡日期">
+           <template slot-scope="scope">
+             {{scope.row.date|dateFormat}}
+           </template>
+          </el-table-column>
+          <el-table-column prop="come" label="上班时间">
+           <template slot-scope="scope">
+             {{scope.row.come|dateHMSFormat}}
+           </template>
+          </el-table-column>
+          <el-table-column prop="leave" label="下班时间">
+           <template slot-scope="scope">
+             {{scope.row.leave|dateHMSFormat}}
+           </template>
+          </el-table-column>
+        </el-table>
         </el-tab-pane>
       </el-tabs>
     </Drawer>
@@ -110,14 +151,15 @@
 <script>
 import * as HTTP from "@/api/notice";
 import { getUserPermission, getUserRole } from "@/api/login";
-import noticeDetail from "./components/notice-detail"
-import NoticeInfo from "./components/user-info"
+import noticeDetail from "./components/notice-detail";
+import NoticeInfo from "./components/user-info";
 export default {
   name: "Notice",
   created() {
     this.getNoticeDetail();
+    this.clockRecord()
   },
-  components:{
+  components: {
     noticeDetail,
     NoticeInfo
   },
@@ -133,13 +175,80 @@ export default {
       unreadCount: null,
       userPermission: null,
       userRole: null,
-      userInfo: this.$store.state.login.userInfo
+      userInfo: this.$store.state.login.userInfo,
+      date: new Date().toLocaleTimeString(),
+      clockRed:null,
+      active:1,
+      clockClose:false,
+      dateHour: new Date().getHours()
     };
   },
-
+  watch:{
+    date:{
+      handler:
+        function (newVal,oldVal) {
+          if(newVal){
+            if(this.dateHour >9 && this.dateHour <18){
+              this.clockClose = true;
+            }
+            //console.log(this.dateHour)
+            //this.clockClose = true
+           // console.log(newVal)
+          }
+        }
+      
+    }
+  },
+  mounted: function() {
+    //定时器，用于每秒刷新页面
+    var _this = this; //声明一个变量指向Vue实例this，保证作用域一致
+    this.timer = setInterval(function() {
+      _this.date = new Date().toLocaleTimeString(); //修改数据date
+    }, 1000);
+  },
+  beforeDestory: function() {
+    //清除定时器
+    if (this.timer) {
+      clearInterval(this.timer); //在Vue实例销毁前，清除定时器
+    }
+  },
   methods: {
+    //打卡
+    clock(){
+       if (this.active++ > 2) this.active = 0;
+       let data = null;
+      if(this.dateHour <9){
+        data = {status: 0}
+      }
+      if(this.dateHour >18){
+        data = {status: 1}
+      }
+      HTTP.clockIn(data).then(({data})=>{
+        if(data.status === 0){
+          this.$message.success(data.msg);
+          
+          this.clockRecord()
+        }else{
+          this.$message.error(data.msg)
+        }
+      }).catch(res=>{
+
+      })
+    },
+    //打卡记录
+    clockRecord(){
+      HTTP.getClockRecord({user_id: this.id}).then(({data})=>{
+        if(data.status === 0)
+          this.clockRed = [...data.msg];
+          //console.log(this.clockRed);
+          if(this.clockRed[0].come){
+            this.active = 2
+          }
+         // console.log(this.clockRed)
+      })
+    },
     handleClick(tab, event) {
-      console.log(tab, event);
+    //  console.log(tab, event);
     },
     toggleSelection(rows) {
       if (rows) {
@@ -171,7 +280,7 @@ export default {
       });
     },
     handleChange(val) {
-      console.log(val);
+     // console.log(val);
     },
     //获取当前用户收到的通知
     getNoticeDetail() {
@@ -183,7 +292,7 @@ export default {
 
     //修改是否已读
     updateIsRead(row) {
-      console.log(row);
+     // console.log(row);
       if (row.read === 0) {
         row.read = 1;
       }
