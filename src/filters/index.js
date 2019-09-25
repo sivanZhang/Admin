@@ -47,6 +47,27 @@ export function dateTimeFormat(date) {
         return '-'
     }
 }
+//时间格式化 hh:mm:ss
+export function dateHMSFormat(date){
+    if (date) {
+        const TIME = new Date(date * 1000)
+
+        function add0(val) {
+            if (val < 10) {
+                return `0${val}`
+            } else {
+                return val
+            }
+        }
+        let [dd, mm] = [add0(TIME.getDate()),
+            add0(TIME.getMonth() + 1)
+        ]
+
+        return `${TIME.toLocaleTimeString()}`
+    } else {
+        return '-'
+    }
+}
 //项目工作流格式化
 export function projectStatus(code) {
     switch (code) {
