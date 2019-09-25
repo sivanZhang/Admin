@@ -7,6 +7,7 @@
           ref="scene"
           :activeName="activeName"
           drawer-type="scene"
+          :assetJump="assetJump"
         >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
@@ -15,6 +16,7 @@
       <el-tab-pane label="资产管理" name="tab1" lazy>
         <tab-assets
           :activeName="activeName"
+          :assetJump="assetJump"
         />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2">
@@ -47,7 +49,8 @@ export default {
       AssetList: [],
       asset_type: 0,
       project: {},
-      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first"
+      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first",
+      assetJump:null
     };
   },
   watch: {
@@ -59,6 +62,10 @@ export default {
         }
         if (newVal === "tab3") {
           this.getProjectDetail();
+        }
+        if(newVal === "sixth"){
+          this.activeName = "tab0";
+          this.assetJump = newVal
         }
       }
     }

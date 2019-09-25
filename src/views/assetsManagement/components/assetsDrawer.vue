@@ -104,10 +104,10 @@ import { getAssetTaskList } from "@/api/task";
 import approveLog from "@/views/components/approve-log";
 export default {
   name: "assets-drawer",
-  props: ["project", "RemarksData"],
+  props: ["project", "RemarksData","assetJump"],
   data() {
     return {
-      activeTab: "first",
+      activeTab: this.assetJump?this.assetJump:"first",
       LinkList: [],
       assetVersion: null,
       assetTaskList: null

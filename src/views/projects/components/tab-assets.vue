@@ -879,6 +879,7 @@
         :RemarksData="RemarksData"
         @refresh_assetList="getAssetList"
         ref="assetsDrawer"
+        :assetJump="assetJump"
       />
     </Drawer>
   </div>
@@ -901,6 +902,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      assetId: this.$route.query.asset?this.$route.query.asset:"",
       titImg:null,
       dialogImgMax:false,
       SRC3:"",
@@ -1204,12 +1206,22 @@ export default {
           this.columnSelect2 = [];
         }
       }
+    },
+    assetId:{
+      handler:function(newVal,oldVal) {
+        if(newVal ==! ""){
+          this.show(newVal);    
+        }
+      }
     }
   },
   computed: {
     ...mapState("project", ["ProjectList"])
   },
   props: {
+    assetJump:{
+      type:String
+    },
     activeName: {
       type: String
     },
@@ -1489,7 +1501,7 @@ export default {
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       this.iconShow = false;
-      HTTP.editAssets({
+      let payload = {
         id: row.id,
         priority: row.priority,
         level: row.level,
@@ -1505,7 +1517,15 @@ export default {
         frame_range: row.frame_range,
         start: DateFormat(this.start_date),
         end: DateFormat(this.end_date)
-      }).then(({ data }) => {
+      };
+      if(payload.start === "Invalid Date"){
+        delete payload.start
+      }
+      if(payload.end === "Invalid Date"){
+        delete payload.end
+      }
+      console.log(payload)
+      HTTP.editAssets(payload).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.getAssetList();
