@@ -13,7 +13,7 @@
             <el-button
               type="primary"
               @click="openDialog(1)"
-            >添加用户</el-button>
+            > 添加用户</el-button>
             <el-button icon="el-icon-upload2" type="success" @click="$router.push({name:'import-users'})">
               <slot name="import">用户导入</slot>
             </el-button>
@@ -24,7 +24,7 @@
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button> 
           </el-col>
-          <el-col :span="9">
+          <el-col :span="7">
             <span>
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </span>
@@ -34,6 +34,10 @@
               v-model="filterText"
               class="input-with-select"
             ></el-input>
+            
+          </el-col>
+          <el-col :span="2" style="border:solid;text-align:center;">
+            共{{ UserList.length }}条
           </el-col>
         </el-row>
       </el-header>
