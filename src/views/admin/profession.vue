@@ -54,13 +54,13 @@
           <div class="t-header">
             <el-row type="flex" align="middle">
               <el-col :span="12" >
-                <el-button @click="openGroupForm('update')" type="primary" v-if="DeptAuth">修改工种信息</el-button>
+                <el-button @click="openGroupForm('update')" type="primary" v-if="DeptAuth" :disabled="showList">修改工种信息</el-button>
 
-                <el-button @click="openChangeMember(1)" type="primary" v-if="DeptAuth">添加成员</el-button>
+                <el-button @click="openChangeMember(1)" type="primary" v-if="DeptAuth" :disabled="showList">添加成员</el-button>
 
-                <el-button @click="openChangeMember(0)" type="danger" v-if="DeptAuth">删除成员</el-button>
+                <el-button @click="openChangeMember(0)" type="danger" v-if="DeptAuth" :disabled="showList">删除成员</el-button>
 
-                <el-button @click="show(ActiveGroup)" type="warning">审批流程</el-button>
+                <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button>
               </el-col>
 
               <el-col :span="6">
@@ -216,6 +216,7 @@ export default {
 
         memberEditLoading: false
       },
+      showList:true
       
     };
   },
@@ -350,6 +351,7 @@ export default {
 
     // 工种单击触发事件
     handleGroupClick(data) {
+      this.showList = false;
       this.ActiveGroup = { ...data };
       this.tableLoading = true
       getDept({
