@@ -72,18 +72,15 @@
               highlight-current-row
               row-class-name="hover"
             >
-            <el-table-column prop="current_version" label="版本号" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="current_version" label="版本号" show-overflow-tooltip></el-table-column>
               <el-table-column prop="path" label="审核路径"></el-table-column>
               <el-table-column prop="date" label="更新时间">
-                <template slot-scope="scope">
-                  {{scope.row.date|dateTimeFormat}}
-                </template>
+                <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
               </el-table-column>
-              
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="sixth">
-            <approve-log ref="approvelogs" />
+            <approve-log ref="approvelogs" :project="project" />
           </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
             <info :project="project" @refresh_assetList="getAssetList" />
@@ -104,10 +101,10 @@ import { getAssetTaskList } from "@/api/task";
 import approveLog from "@/views/components/approve-log";
 export default {
   name: "assets-drawer",
-  props: ["project", "RemarksData","assetJump"],
+  props: ["project", "RemarksData", "assetJump"],
   data() {
     return {
-      activeTab: this.assetJump?this.assetJump:"first",
+      activeTab: this.assetJump ? this.assetJump : "first",
       LinkList: [],
       assetVersion: null,
       assetTaskList: null
@@ -116,14 +113,14 @@ export default {
   watch: {
     project: {
       handler: function(newVal, oldVal) {
-        if (newVal ) {
+        if (newVal) {
           this.getAssetVersion();
           this.getAssetApproveLog();
         }
       }
     }
   },
-  components: { remarks, info, links,approveLog },
+  components: { remarks, info, links, approveLog },
   methods: {
     getAssetList() {
       this.$emit("refresh_assetList");
@@ -143,7 +140,7 @@ export default {
         this.assetVersion = [...data.msg];
       });
     },
-    getAssetApproveLog(){
+    getAssetApproveLog() {
       this.$refs["approvelogs"].getAssetAppooveList(this.project.id);
     },
     getAssetTask(id) {
@@ -154,11 +151,15 @@ export default {
       });
     },
     openTaskDetail(row) {
-      const path = "/projects/project-detail/" + row.project.id + "/?tab=tab2&p="+row.project.name;
+      const path =
+        "/projects/project-detail/" +
+        row.project.id +
+        "/?tab=tab2&p=" +
+        row.project.name;
       //console.log(path);
       this.$router.push(path);
     }
-  }
+  },
 };
 </script>
 

@@ -1,32 +1,35 @@
 <template>
   <div>
-    <label for="">项目: {{project.name}}</label>
+    <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="镜头" name="tab0" lazy>
+      <el-tab-pane label="镜头" name="tab0">
         <tab-assets
           ref="scene"
           :activeName="activeName"
           drawer-type="scene"
           :assetJump="assetJump"
+          :assetId="assetId"
         >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
         </tab-assets>
       </el-tab-pane>
-      <el-tab-pane label="资产管理" name="tab1" lazy>
+      <el-tab-pane label="资产管理" name="tab1">
         <tab-assets
+          ref="scene2"
           :activeName="activeName"
           :assetJump="assetJump"
+          :assetId="assetId"
         />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2">
-        <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()"/>
+        <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3">
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
-      <el-tab-pane label="数据统计" name="tab4" lazy>
-        <statistics/>
+      <el-tab-pane label="数据统计" name="tab4">
+        <statistics />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -38,7 +41,7 @@ import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
 import { getProjects } from "@/api/project";
-import {getTrainingProject} from "@/api/training"
+import { getTrainingProject } from "@/api/training";
 import statistics from "./components/statistics";
 export default {
   name: "project-detail",
@@ -55,32 +58,31 @@ export default {
       asset_type: 0,
       project: {},
       configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first",
-      assetJump:null
+      assetId: null,
+      assetJump: null
     };
   },
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
-       // console.log(newVal);
+        // console.log("tiozhuan");
+        // console.log(newVal);
         if (newVal === "tab2") {
-          this.$refs['tab-task'].getTasks();
+          this.$refs["tab-task"].getTasks();
         }
         if (newVal === "tab3") {
           this.getProjectDetail();
         }
-        if(newVal === "sixth"){
-          this.activeName = "tab0";
-          this.assetJump = newVal
-        }
+        
       }
     }
   },
   methods: {
     getAssetList() {
       let payload = {
-          project: this.$route.params.id,
-          sort:"date"
-        };
+        project: this.$route.params.id,
+        sort: "date"
+      };
       queryAssets(payload).then(({ data }) => {
         if (data.status === 0) {
           this.AssetList = [...data.msg];
@@ -88,28 +90,38 @@ export default {
       });
     },
     getProjectDetail() {
-      console.log(this.$route.query.type);
-      if(this.$route.query.type == '0'){
-        getTrainingProject({id: this.$route.params.id}).then(({ data }) => {
-        this.project = data.msg;
-      });
-      }else{
-         getProjects({ id: this.$route.params.id }).then(({ data }) => {
-        this.project = data.msg;
-      });
+      // console.log(this.$route.query.type);
+      if (this.$route.query.type == "0") {
+        getTrainingProject({ id: this.$route.params.id }).then(({ data }) => {
+          this.project = data.msg;
+        });
+      } else {
+        getProjects({ id: this.$route.params.id }).then(({ data }) => {
+          this.project = data.msg;
+        });
       }
-     
     }
   },
   created() {
     this.getAssetList();
     this.getProjectDetail();
+    if (this.$route.query.asset_type && this.$route.query.asset_type === "1") {
+      this.activeName = "tab1";
+      this.assetJump = this.$route.query.tab;
+    }
+    if (this.$route.query.asset_type && this.$route.query.asset_type === "0") {
+      this.activeName = "tab0";
+      this.assetJump = this.$route.query.tab;
+    }
+    this.assetId = this.$route.query.asset;
+    
+    //console.log(this.assetId);
   },
   //每次路由从批量上传进入，会刷新
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (from.name == "asset-import") {
-        vm.$refs['scene'].getAssetList();
+        vm.$refs["scene"].getAssetList();
       }
     });
   }

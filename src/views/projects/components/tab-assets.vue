@@ -902,7 +902,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
-      assetId: this.$route.query.asset?this.$route.query.asset:"",
+      // assetId: this.$route.query.asset?this.$route.query.asset:"",
       titImg:null,
       dialogImgMax:false,
       SRC3:"",
@@ -1209,8 +1209,9 @@ export default {
     },
     assetId:{
       handler:function(newVal,oldVal) {
-        if(newVal ==! ""){
-          this.show(newVal);    
+        if(newVal){
+          this.show(Number(newVal)); 
+            
         }
       }
     }
@@ -1220,6 +1221,9 @@ export default {
   },
   props: {
     assetJump:{
+      type:String
+    },
+    assetId:{
       type:String
     },
     activeName: {
@@ -1524,7 +1528,7 @@ export default {
       if(payload.end === "Invalid Date"){
         delete payload.end
       }
-      console.log(payload)
+      //console.log(payload)
       HTTP.editAssets(payload).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
@@ -1839,6 +1843,20 @@ export default {
   },
   created() {
     this.getAssetList();
+    if(this.assetId){
+      this.value1 = true;
+      let id = this.assetId;
+      HTTP.queryAssets({id}).then(({ data }) => {
+        this.project = { ...[...data.msg][0], id };
+      });
+      const msg = {
+        appid: this.assetId,
+        apptype: 5
+      };
+      getRemark(msg).then(({ data }) => {
+        this.RemarksData = [...data.msg];
+      });
+    }
   }
 };
 </script>

@@ -37,7 +37,10 @@
             
           </el-col>
           <el-col :span="2" style="border:solid;text-align:center;">
-            共{{ UserList.length }}条
+            <template v-if="UserList">
+              共{{ UserList.length }}条
+            </template>
+            <!-- 共{{ UserList.length }}条 -->
           </el-col>
         </el-row>
       </el-header>
