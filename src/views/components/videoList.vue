@@ -153,7 +153,7 @@ export default {
     list-style: none;
     @include scrollX;
     .item {
-      flex: 1 0 20%;
+      flex: 0 0 20%;
       border: 1px dotted #ddd;
       margin: 0 0.5%;
       background: #fff;

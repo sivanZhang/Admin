@@ -2,7 +2,7 @@
   <div id="statistics">
     <label for>项目进度统计</label>
     <el-row type="flex" justify="center">
-      <el-progress type="circle" :percentage="projectProgress" :color="colors" stroke-width="25" width="200"></el-progress>
+      <el-progress type="circle" :percentage="projectProgress" :color="colors" :stroke-width="25" :width="200"></el-progress>
     </el-row>
     <el-divider />
     <chart ref="asset-chart" id="asset-chart" />
