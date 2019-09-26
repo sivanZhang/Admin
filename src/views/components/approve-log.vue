@@ -12,16 +12,16 @@
       <div class="bd" v-for="(t,i) of list" :key="i">
         <el-row type="flex" justify="space-between">
           <el-col style="display:flex">
-            <div class="item">
-              <div class="item-con" style="color:#ed4014">
-                 <template v-if="t.approve_result === '通过'">
-                  <i class="el-icon-check" style="color:green;font-size:15px"></i>
+            <div class="item"> 
+               <div class="item-con">
+                  <template v-if="t.approve_result =='1'">
+                  <i class="el-icon-check" style="color:green;font-size:15px">通过</i>
                 </template>
                 <template v-else>
-                  <i class="el-icon-close" style="color:red;font-size:15px"></i>
-                </template> 
-                {{t.approve_result?'通过':'未通过'}}</div>
-            </div> 
+                  <i class="el-icon-close" style="color:red;font-size:15px">未通过</i>
+                </template>  
+                </div>
+            </div>
           </el-col>
           <el-col style="display:flex">
             <template v-if="t.pro_type === 0">
