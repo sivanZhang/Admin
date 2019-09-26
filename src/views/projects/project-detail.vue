@@ -2,7 +2,7 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="镜头" name="tab0">
+      <el-tab-pane label="镜头" name="tab0" lazy> 
         <tab-assets
           ref="scene"
           :activeName="activeName"
@@ -14,7 +14,7 @@
           <span slot="import">镜头导入</span>
         </tab-assets>
       </el-tab-pane>
-      <el-tab-pane label="资产管理" name="tab1">
+      <el-tab-pane label="资产管理" name="tab1" lazy>
         <tab-assets
           ref="scene2"
           :activeName="activeName"
@@ -22,7 +22,7 @@
           :assetId="assetId"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2">
+      <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3">

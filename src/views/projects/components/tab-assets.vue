@@ -614,6 +614,68 @@
         >
           <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
+        <el-table-column label="小状态" prop="small_status">
+          <!-- /*
+            approving:[],
+      conducting:[],
+      finish:[],
+      notstart:[],
+      pause:[]
+            */  -->
+          <template slot-scope="scope" >
+            
+              <el-select
+              v-model="scope.row.small_status"
+              placeholder="请选择难度等级"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+            <div v-if="scope.row.status === 0">
+                <el-option
+                v-for="item of pause"
+                :key="item.value"
+                :label="item.label"
+                :value="item.id"
+              ></el-option>
+            </div>
+            <div v-if="scope.row.status === 1">
+                <el-option
+                v-for="item of notstart"
+                :key="item.value"
+                :label="item.label"
+                :value="item.id"
+              ></el-option>
+            </div>
+            <div v-if="scope.row.status === 2">
+                <el-option
+                v-for="item of conducting"
+                :key="item.value"
+                :label="item.label"
+                :value="item.id"
+              ></el-option>
+            </div>
+             <div v-if="scope.row.status === 3">
+                <el-option
+                v-for="item of approving"
+                :key="item.value"
+                :label="item.label"
+                :value="item.id"
+              ></el-option>
+            </div>
+             <div v-if="scope.row.status === 4">
+                <el-option
+                v-for="item of finish"
+                :key="item.value"
+                :label="item.label"
+                :value="item.id"
+              ></el-option>
+            </div>
+            </el-select>
+            
+            <span v-if="!editing||clickId !== scope.row.id"> {{scope.row.small_status|taskMinStatus}}</span>
+           
+          </template>
+        </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">
@@ -893,6 +955,7 @@ import { getRemark } from "@/api/remark";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import { getProjectStatus } from "@/api/status";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -903,9 +966,9 @@ export default {
   data() {
     return {
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
-      titImg:null,
-      dialogImgMax:false,
-      SRC3:"",
+      titImg: null,
+      dialogImgMax: false,
+      SRC3: "",
       pageCount: 0,
       AssetList: [],
       total: 0,
@@ -1121,7 +1184,14 @@ export default {
       timeSel: false,
       timeSelection: "",
       visible2: false,
-      sortSelForm: {}
+      sortSelForm: {},
+      approving:[],
+      conducting:[],
+      finish:[],
+      notstart:[],
+      pause:[]
+
+
     };
   },
   watch: {
@@ -1207,11 +1277,10 @@ export default {
         }
       }
     },
-    assetId:{
-      handler:function(newVal,oldVal) {
-        if(newVal){
-          this.show(Number(newVal)); 
-            
+    assetId: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          this.show(Number(newVal));
         }
       }
     }
@@ -1220,11 +1289,11 @@ export default {
     ...mapState("project", ["ProjectList"])
   },
   props: {
-    assetJump:{
-      type:String
+    assetJump: {
+      type: String
     },
-    assetId:{
-      type:String
+    assetId: {
+      type: String
     },
     activeName: {
       type: String
@@ -1447,10 +1516,10 @@ export default {
       this.row = row;
       this.SRC = this.$store.state.BASE_URL + row.image;
     },
-    imgMax(row){
+    imgMax(row) {
       this.dialogImgMax = true;
       this.titImg = row.name;
-      this.SRC3 = this.$store.state.BASE_URL + row.image;   
+      this.SRC3 = this.$store.state.BASE_URL + row.image;
     },
     addImg() {
       // console.log(this.ImgForm)
@@ -1520,13 +1589,17 @@ export default {
         retime: row.retime,
         frame_range: row.frame_range,
         start: DateFormat(this.start_date),
-        end: DateFormat(this.end_date)
+        end: DateFormat(this.end_date),
+        small_status:row.small_status
       };
-      if(payload.start === "Invalid Date"){
-        delete payload.start
+      if (payload.start === "Invalid Date") {
+        delete payload.start;
       }
-      if(payload.end === "Invalid Date"){
-        delete payload.end
+      if (payload.end === "Invalid Date") {
+        delete payload.end;
+      }
+      if(!payload.small_status){
+        delete payload.small_status
       }
       //console.log(payload)
       HTTP.editAssets(payload).then(({ data }) => {
@@ -1630,6 +1703,107 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
+    },
+    //获取项目的状态
+    getProjectAllStatus() {
+      getProjectStatus({ project_id: this.$route.params.id }).then(
+        ({ data }) => {
+          if (data.status === 0) this.projectStatus = [...data.msg];
+         // console.log(this.projectStatus);
+          this.projectStatus.forEach((item,index)=>{
+            
+            switch(item){
+              case 0:
+                this.pause.push({label:'ON_HOLD',id:item});
+                break;
+              case 1:
+                this.pause.push({label:'IGNORE',id:item});
+                break;
+              case 2:
+                this.pause.push({label:'PAUSE',id:item});
+                break;
+              case 3:
+                this.notstart.push({label:'NNT_STARTED',id:item});
+                break;
+              case 4:
+                this.notstart.push({label:'WATING_TO_START',id:item});
+                break;
+              case 5:
+                this.notstart.push({label:'REAY_TO_START',id:item});
+                break;
+              case 6:
+                this.conducting.push({label:'NORMAL',id:item});
+                break;
+              case 7:
+                this.conducting.push({label:'OPEN',id:item});
+                break;
+              case 8:
+                this.conducting.push({label:'IN_PROGESS',id:item});
+                break;
+              case 9:
+                this.conducting.push({label:'OUTSOURCE',id:item});
+                break;
+              case 10:
+                this.conducting.push({label:'SUBMITTED',id:item});
+                break;
+              case 11:
+                this.conducting.push({label:'FEEDBACK',id:item});
+                break;
+              case 12:
+                this.conducting.push({label:'READED',id:item});
+                break;
+              case 13:
+                this.conducting.push({label:'TEST',id:item});
+                break;
+              case 14:
+                this.conducting.push({label:'RR',id:item});
+                break;
+              case 15:
+                this.conducting.push({label:'REDO',id:item});
+                break;
+              case 16:
+                this.approving.push({label:'APPROVE',id:item});
+                break;
+              case 17:
+                this.approving.push({label:'PENDING_REVIEW',id:item});
+                break;
+              case 18:
+                this.approving.push({label:'DAILIES',id:item});
+                break;
+              case 19:
+                this.approving.push({label:'CLIENT_REVIEW',id:item});
+                break;
+              case 20:
+                this.finish.push({label:'CBB',id:item});
+                break;
+              case 21:
+                this.finish.push({label:'APPROVED',id:item});
+                break;
+              case 22:
+                this.finish.push({label:'DIRECTOR_APPROVED',id:item});
+                break;
+              case 23:
+                this.finish.push({label:'REVISION',id:item});
+                break;
+              case 24:
+                this.finish.push({label:'FINAL',id:item});
+                break;
+              case 25:
+                this.finish.push({label:'DELIVERED',id:item});
+                break;
+              case 26:
+                this.finish.push({label:'OMITTED',id:item});
+                break;
+              case 27:
+                this.finish.push({label:'CLOSED',id:item});
+                break;
+              
+            }
+            
+          });
+         // console.log(this.pause);
+        }
+      );
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -1843,10 +2017,11 @@ export default {
   },
   created() {
     this.getAssetList();
-    if(this.assetId){
+    this.getProjectAllStatus();
+    if (this.assetId) {
       this.value1 = true;
       let id = this.assetId;
-      HTTP.queryAssets({id}).then(({ data }) => {
+      HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
       });
       const msg = {

@@ -87,7 +87,7 @@ export function getClientList(params) {
     })
 }
 //添加角色
-export function addRole(data) {
+export function add_Role(data) {
     return AXIOS.post('/role/role/', data)
 }
 //修改角色/为角色绑定/解绑用户

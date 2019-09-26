@@ -9,7 +9,7 @@
           >
             <el-row type="flex" align="middle" class="nav-title">
               <el-button
-                @click="openRoleForm('add')"
+                @click="addRole(1)"
                 type="success"
                 v-if="$store.state.login.userInfo.auth.manage_role"
               >添加角色</el-button>
@@ -21,9 +21,18 @@
                   <el-col :span="18">
                     <span style="cursor:pointer" @click="getRoleUserList(todo.id)">{{todo.name}}</span>
                   </el-col>
-                  <el-col :span="6" align="center">
+                  <el-col :span="3" align="center">
                     <span style="cursor:pointer" v-if="editShow===todo.id" @click="editRole(todo)">
-                      <i class="el-icon-edit" style="color:green"></i>
+                      <el-tooltip class="item" effect="dark" content="修改" placement="top">
+                        <i class="el-icon-edit" style="color:green"></i>
+                      </el-tooltip>
+                    </span>
+                  </el-col>
+                  <el-col :span="3" align="center">
+                    <span style="cursor:pointer" v-if="editShow===todo.id" @click="delRole(todo)">
+                      <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                        <i class="el-icon-delete" style="color:red"></i>
+                      </el-tooltip>
                     </span>
                   </el-col>
                 </el-row>
@@ -142,7 +151,7 @@
                 style="width: 100%"
                 @selection-change="handleDelSelectionChange"
               >
-                <el-table-column type="selection"  align="center"></el-table-column>
+                <el-table-column type="selection" align="center"></el-table-column>
                 <el-table-column prop="codename" label="权限名称"></el-table-column>
                 <el-table-column prop="name" label="权限说明"></el-table-column>
               </el-table>
@@ -184,12 +193,41 @@
             style="width: 100%"
             @selection-change="handleDelUserSelectionChange"
           >
-            <el-table-column type="selection"  align="center"></el-table-column>
+            <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column prop="username" label="用户名"></el-table-column>
           </el-table>
           <div align="right">
             <el-button type="danger" style="margin:5px 0px" @click="delUser">立即解绑</el-button>
           </div>
+        </el-dialog>
+        <el-dialog :visible.sync="add_role_show" title="添加角色" width="480px" top="5vh">
+          <el-form
+            :model="addDeptRole"
+            ref="addDeptRole"
+            label-width="100px"
+            hide-required-asterisk
+            label-position="left"
+          >
+            <el-form-item label="角色名称" prop="name">
+              <el-input v-model="addDeptRole.name"></el-input>
+            </el-form-item>
+            <el-form-item label="角色类别" prop="role_type">
+              <el-radio-group v-model="addDeptRole.role_type">
+                <el-radio :label="1">唯一性角色</el-radio>
+                <el-radio :label="2">多用户角色</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="角色分类" prop="role_sort">
+              <el-radio-group v-model="addDeptRole.role_sort">
+                <el-radio :label="0">内置角色</el-radio>
+                <el-radio :label="1">自定义角色</el-radio>
+              </el-radio-group>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" align="right" @click="addRole(2)">立即绑定</el-button>
+            </el-form-item>
+          </el-form>
         </el-dialog>
       </el-container>
     </el-container>
@@ -203,7 +241,9 @@ import {
   getUsersRole,
   userPermissions,
   updateRole,
-  getUserList
+  getUserList,
+  add_Role,
+  removeRole
 } from "@/api/admin";
 import { mapState } from "vuex";
 export default {
@@ -211,8 +251,8 @@ export default {
   data() {
     return {
       filterText: "",
-      permissionsList: null,
-      userPermissionsList: null,
+      permissionsList: [],
+      userPermissionsList: [],
       roleList: null,
       roleAdd: {},
       editName: null,
@@ -230,7 +270,9 @@ export default {
       optionInput: "",
       editShow: null,
       id: null,
-      editing: false
+      editing: false,
+      add_role_show: false,
+      addDeptRole: {}
     };
   },
   components: {},
@@ -257,6 +299,52 @@ export default {
     ...mapState("admin", ["UserList"])
   },
   methods: {
+    //添加角色
+    addRole(Type) {
+      if (Type === 1) {
+        this.add_role_show = true;
+      } else {
+        add_Role(this.addDeptRole).then(({ data }) => {
+          this.add_role_show = false;
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            //角色列表
+            getRoles().then(({ data }) => {
+              this.roleList = [...data.msg];
+            });
+          }else{
+            this.$message.error(data.msg);
+          }
+        }).catch(res=>{
+          this.$message.error(data.msg);
+          this.add_role_show = false;
+        });
+      }
+    },
+    //删除角色
+    delRole(todo) {
+      this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        removeRole({
+        id: todo.id,
+        method: "delete"
+      }).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          //角色列表
+            getRoles().then(({ data }) => {
+              this.roleList = [...data.msg];
+            });
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+      })
+      
+    },
     getList() {
       //权限列表
       permissions().then(({ data }) => {
@@ -386,19 +474,21 @@ export default {
       updateRole({
         id: this.id,
         name: this.editName,
-        method:"put"
-      }).then(({ data }) => {
-        if (data.status === 0) {
-          this.$message.success(data.msg);
-          this.editing = false;
-          //角色列表
-          getRoles().then(({ data }) => {
-            this.roleList = [...data.msg];
-          });
-        }
-      }).catch(err=>{
-        this.$message.error(err.msg)
-      });
+        method: "put"
+      })
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.editing = false;
+            //角色列表
+            getRoles().then(({ data }) => {
+              this.roleList = [...data.msg];
+            });
+          }
+        })
+        .catch(err => {
+          this.$message.error(err.msg);
+        });
     },
     cancle() {
       this.editing = false;

@@ -1,6 +1,17 @@
 <template>
   <div>
-    <el-select
+    <template v-if="task_or_project==='project'">
+      <el-select
+      v-model="select"
+      placeholder="请选择"
+      style="width:120px;margin-bottom:10px;"
+      @change="getAssetAppooveList()"
+    >
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+    </el-select>
+    </template>
+    <template v-else>
+      <el-select
       v-model="select"
       placeholder="请选择"
       style="width:120px;margin-bottom:10px;"
@@ -8,6 +19,7 @@
     >
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
+    </template>
     <div v-loading="tableLoading">
       <div class="bd" v-for="(t,i) of list" :key="i">
         <el-row type="flex" justify="space-between">
@@ -75,6 +87,7 @@ export default {
   components: {
     ZoomImg
   },
+  props:["task_or_project"],
   data() {
     return {
       tableLoading: false,
@@ -133,10 +146,23 @@ export default {
         });
     },
     getAssetAppooveList(asset_id) {
+      if (asset_id && this.select === 2) {
+        this.httpParams = { asset_id };
+      } else if (!asset_id && this.select === 2) {
+        this.httpParams = { asset_id: this.httpParams["asset_id"] };
+      } else if (asset_id && this.select !== 2) {
+        this.httpParams = {
+          asset_id,
+          approve_result: this.select
+        };
+      } else if (!asset_id && this.select !== 2) {
+        this.httpParams = {
+          ...this.httpParams,
+          approve_result: this.select
+        };
+      }
       this.tableLoading = true;
-      getAssetsApprove({
-        asset_id: asset_id
-      })
+      getAssetsApprove(this.httpParams)
         .then(({ data }) => {
           this.tableLoading = false;
           if (data.status === 0) {

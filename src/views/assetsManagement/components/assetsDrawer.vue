@@ -80,7 +80,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="sixth">
-            <approve-log ref="approvelogs" :project="project" />
+            <approve-log ref="approvelogs" :project="project" task_or_project="project"/>
           </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
             <info :project="project" @refresh_assetList="getAssetList" />
