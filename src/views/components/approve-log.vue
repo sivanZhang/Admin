@@ -35,7 +35,7 @@
         </el-row>
         <el-row type="flex" justify="space-between">
           <el-col style="display:flex">
-            {{t.approve_user_id.name}}<h6 style="padding-left:15px">:</h6>
+            {{t.approve_user_id.name}}<h6 style="padding-left:8px">:</h6>
           </el-col>
         </el-row>
         <div class="item">
