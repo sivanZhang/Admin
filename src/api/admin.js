@@ -128,3 +128,7 @@ export function uploadUsers(data) {
         }]
     })
 }
+//绑定客户部门
+export function bindClientDept(data) {
+    return AXIOS.post('/wkconfig/sysconfig/?client/', data)
+}
