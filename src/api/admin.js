@@ -128,9 +128,13 @@ export function uploadUsers(data) {
         }]
     })
 }
-//绑定客户部门
+//绑定客户部门和外包部门
 export function bindClientDept(data) {
     return AXIOS.post('/wkconfig/sysconfig/?client/', data)
+}
+//获取获取客户部门或者外包部门
+export function getClientDept(params) {
+    return AXIOS.get('/wkconfig/sysconfig/',  { params })
 }
 //绑定外网ip和端口
 export function bindIP(data) {
