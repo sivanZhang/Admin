@@ -132,3 +132,11 @@ export function uploadUsers(data) {
 export function bindClientDept(data) {
     return AXIOS.post('/wkconfig/sysconfig/?client/', data)
 }
+//绑定外网ip和端口
+export function bindIP(data) {
+    return AXIOS.post('/wkconfig/bind/', data)
+}
+//查看外网ip和端口
+export function searchIP(params) {
+    return AXIOS.get('/wkconfig/bind/',  { params })
+}

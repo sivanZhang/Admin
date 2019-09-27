@@ -91,12 +91,12 @@ export const asyncRoutes = [{
                 }
             },
             {
-                path: 'client',
+                path: 'bind',
                 name: 'settings',
                 component: () =>
-                    import ('@/views/admin/client'),
+                    import ('@/views/admin/bind'),
                 meta: {
-                    title: '客户部门绑定',
+                    title: '绑定',
                     icon: 'bangding'
                 }
             },
