@@ -1,7 +1,7 @@
 <template>
   <div id="bind">
     <el-tabs tab-position="left" style="height: ;overflow: auto;padding-top:10px">
-      <el-tab-pane label="配置" style="height: auto;overflow: auto;">
+      <el-tab-pane label="外审系统配置" style="height: auto;overflow: auto;">
         <div style="display:flex">
           <div style="width:50%;padding:5px">
             <div style="display:flex">
@@ -46,7 +46,7 @@
               <h4 style="margin: 0 10px;">已完成的配置</h4>
               <el-button type="primary" style="margin: 0 10px" @click="search">查询配置</el-button>
             </div>
-            <div class="maxstatus-name">
+            <div class="bind-name" v-show="isshow" style="padding-top:10px">
             <el-row >
               <el-col :span="4">IP地址：</el-col>
               <el-col :span="20">{{host}} </el-col>
@@ -64,11 +64,11 @@
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">部门列表</h4>
             <div class="box">
-              <el-row v-for="(item,index) in DeptList" :key="index" class="minstatus-name">
-                <el-col :span="12">{{item.name}}</el-col>
-                <el-col :span="12" align="right">
+              <el-row v-for="(item,index) in DeptList" :key="index" class="list-name">
+                <el-col :span="12" :class="activeClass == index ? 'active':''">{{item.name}}</el-col>
+                <el-col :span="12" align="right" >
                     <el-tooltip class="item" effect="dark" content="绑定" placement="top">
-                    <span @click="bindClient(item.id)">
+                    <span @click="bindClient(item.id,index)" :class="activeClass == index ? 'active':''">
                       <i class="el-icon-circle-check"></i>
                     </span>
                   </el-tooltip>
@@ -78,7 +78,7 @@
           </div>
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">当前绑定的客户</h4>
-            <div class="maxstatus-name">
+            <div class="bind-name">
               <div>{{clientname}}</div>
             </div>
           </div>
@@ -89,11 +89,11 @@
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">部门列表</h4>
             <div class="box">
-              <el-row v-for="(item,index) in DeptList" :key="index" class="minstatus-name">
-                <el-col :span="12">{{item.name}}</el-col>
+              <el-row v-for="(item,index) in DeptList" :key="index" class="list-name">
+                <el-col :span="12" :class="activeClass1 == index ? 'active':''">{{item.name}}</el-col>
                 <el-col :span="12" align="right">
                     <el-tooltip class="item" effect="dark" content="绑定" placement="top">
-                    <span @click="bindList(item.id)">
+                    <span @click="bindList(item.id,index)" :class="activeClass1 == index ? 'active':''">
                       <i class="el-icon-circle-check"></i>
                     </span>
                   </el-tooltip>
@@ -103,7 +103,7 @@
           </div>
           <div style="width: 50%;">
             <h4 style="margin: 0 10px;">绑定的外包部门</h4>
-            <div class="maxstatus-name">
+            <div class="bind-name">
               <div>{{listname}}</div>
             </div>
           </div>
@@ -113,7 +113,7 @@
   </div>
 </template>
 <script>
-import { getDept, bindClientDept, bindIP, searchIP } from "@/api/admin";
+import { getDept, bindClientDept,getClientDept, bindIP, searchIP } from "@/api/admin";
 import { mapState } from "vuex";
 export default {
   data() {
@@ -124,6 +124,9 @@ export default {
       saveForm: {},
       host:null,
       port:null,
+      isshow:false,
+      activeClass:-1,
+      activeClass1:-1,
       saveRules: {
         host: [
           {
@@ -148,6 +151,8 @@ export default {
   },
   created() {
     this.getDeptList();
+    this.getBindClientList();
+    this.getBindList();
   },
   methods: {
     //ip和端口绑定
@@ -168,7 +173,7 @@ export default {
       searchIP().then(({ data })=>{
           this.host = data.host;
           this.port = data.port;
-        
+        this.isshow = !this.isshow;
       })
     },
     //http获取“用户组”列表
@@ -176,27 +181,43 @@ export default {
       this.$store.dispatch("admin/get_DeptList");
     },
     //绑定客户部门
-    bindClient(id) {
+    bindClient(id,index) {
       bindClientDept({ client: id }).then(({ data }) => {
         this.$message.success(data.msg);
         if (data.status === 0) {
-          getDept({ id: id }).then(({ data }) => {
+          this.getBindClientList();
+          this.activeClass = index;
+        }
+      });
+    },
+    //获取绑定客户列表
+    getBindClientList(){
+      getClientDept().then(({ data })=>{
+         getDept({ id: data.client }).then(({ data }) => {
             this.clientname = data.msg.name;
           });
-        }
-      });
-    },
-    //外包部门绑定
-     bindList(id) {
-      bindClientDept({ client: id }).then(({ data }) => {
+      })
+    }, 
+     //外包部门绑定
+     bindList(id,index) {
+      bindClientDept({ outsourcing: id }).then(({ data }) => {
         this.$message.success(data.msg);
         if (data.status === 0) {
-          getDept({ id: id }).then(({ data }) => {
-            this.listname = data.msg.name;
-          });
+         this.getBindList();
+          this.activeClass1 = index;
         }
       });
     },
+    //获取外包部门列表
+    getBindList(){
+      getClientDept().then(({ data })=>{
+        console.log(data)
+         getDept({ id: data.outsourcing }).then(({ data }) => {
+            this.listname = data.msg.name;
+          });
+      })
+    },
+  
   }
 };
 </script>
@@ -206,7 +227,11 @@ export default {
     overflow: auto;
     margin: 0 10px;
   }
-  .minstatus-name {
+  .active{
+    color: rgb(23, 130, 238);
+
+  }
+  .list-name {
     width: 300px;
     height: 30px;
     font-display: center;
@@ -214,10 +239,10 @@ export default {
     cursor: pointer;
     border-bottom: 1px solid #e8eaec;
   }
-   .maxstatus-name {
+   .bind-name {
     height: 25px;
     width: 100%;
-    padding: 5px;
+    padding: 8px;
     font-display: center;
    }
 }
