@@ -394,7 +394,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :page-count="pageCount"
           :total="total"
-          :hide-on-single-page="total<=20"
+          style="margin-top:10px"
         ></el-pagination>
       </div>
     </div>

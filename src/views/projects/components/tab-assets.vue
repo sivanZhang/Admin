@@ -621,59 +621,57 @@
       finish:[],
       notstart:[],
       pause:[]
-            */  -->
-          <template slot-scope="scope" >
-            
-              <el-select
+          */-->
+          <template slot-scope="scope">
+            <el-select
               v-model="scope.row.small_status"
               placeholder="请选择难度等级"
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
             >
-            <div v-if="scope.row.status === 0">
+              <div v-if="scope.row.status === 0">
                 <el-option
-                v-for="item of pause"
-                :key="item.value"
-                :label="item.label"
-                :value="item.id"
-              ></el-option>
-            </div>
-            <div v-if="scope.row.status === 1">
+                  v-for="item of pause"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 1">
                 <el-option
-                v-for="item of notstart"
-                :key="item.value"
-                :label="item.label"
-                :value="item.id"
-              ></el-option>
-            </div>
-            <div v-if="scope.row.status === 2">
+                  v-for="item of notstart"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 2">
                 <el-option
-                v-for="item of conducting"
-                :key="item.value"
-                :label="item.label"
-                :value="item.id"
-              ></el-option>
-            </div>
-             <div v-if="scope.row.status === 3">
+                  v-for="item of conducting"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 3">
                 <el-option
-                v-for="item of approving"
-                :key="item.value"
-                :label="item.label"
-                :value="item.id"
-              ></el-option>
-            </div>
-             <div v-if="scope.row.status === 4">
+                  v-for="item of approving"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 4">
                 <el-option
-                v-for="item of finish"
-                :key="item.value"
-                :label="item.label"
-                :value="item.id"
-              ></el-option>
-            </div>
+                  v-for="item of finish"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
             </el-select>
-            
-            <span v-if="!editing||clickId !== scope.row.id"> {{scope.row.small_status|taskMinStatus}}</span>
-           
+
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.small_status|taskMinStatus}}</span>
           </template>
         </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
@@ -818,7 +816,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :page-count="pageCount"
           :total="total"
-          :hide-on-single-page="total<=20"
+          style="margin-top:10px"
         ></el-pagination>
       </div>
     </div>
@@ -1185,13 +1183,11 @@ export default {
       timeSelection: "",
       visible2: false,
       sortSelForm: {},
-      approving:[],
-      conducting:[],
-      finish:[],
-      notstart:[],
-      pause:[]
-
-
+      approving: [],
+      conducting: [],
+      finish: [],
+      notstart: [],
+      pause: []
     };
   },
   watch: {
@@ -1590,7 +1586,7 @@ export default {
         frame_range: row.frame_range,
         start: DateFormat(this.start_date),
         end: DateFormat(this.end_date),
-        small_status:row.small_status
+        small_status: row.small_status
       };
       if (payload.start === "Invalid Date") {
         delete payload.start;
@@ -1598,8 +1594,8 @@ export default {
       if (payload.end === "Invalid Date") {
         delete payload.end;
       }
-      if(!payload.small_status){
-        delete payload.small_status
+      if (!payload.small_status) {
+        delete payload.small_status;
       }
       //console.log(payload)
       HTTP.editAssets(payload).then(({ data }) => {
@@ -1709,99 +1705,96 @@ export default {
       getProjectStatus({ project_id: this.$route.params.id }).then(
         ({ data }) => {
           if (data.status === 0) this.projectStatus = [...data.msg];
-         // console.log(this.projectStatus);
-          this.projectStatus.forEach((item,index)=>{
-            
-            switch(item){
+          // console.log(this.projectStatus);
+          this.projectStatus.forEach((item, index) => {
+            switch (item) {
               case 0:
-                this.pause.push({label:'ON_HOLD',id:item});
+                this.pause.push({ label: "ON_HOLD", id: item });
                 break;
               case 1:
-                this.pause.push({label:'IGNORE',id:item});
+                this.pause.push({ label: "IGNORE", id: item });
                 break;
               case 2:
-                this.pause.push({label:'PAUSE',id:item});
+                this.pause.push({ label: "PAUSE", id: item });
                 break;
               case 3:
-                this.notstart.push({label:'NNT_STARTED',id:item});
+                this.notstart.push({ label: "NNT_STARTED", id: item });
                 break;
               case 4:
-                this.notstart.push({label:'WATING_TO_START',id:item});
+                this.notstart.push({ label: "WATING_TO_START", id: item });
                 break;
               case 5:
-                this.notstart.push({label:'REAY_TO_START',id:item});
+                this.notstart.push({ label: "REAY_TO_START", id: item });
                 break;
               case 6:
-                this.conducting.push({label:'NORMAL',id:item});
+                this.conducting.push({ label: "NORMAL", id: item });
                 break;
               case 7:
-                this.conducting.push({label:'OPEN',id:item});
+                this.conducting.push({ label: "OPEN", id: item });
                 break;
               case 8:
-                this.conducting.push({label:'IN_PROGESS',id:item});
+                this.conducting.push({ label: "IN_PROGESS", id: item });
                 break;
               case 9:
-                this.conducting.push({label:'OUTSOURCE',id:item});
+                this.conducting.push({ label: "OUTSOURCE", id: item });
                 break;
               case 10:
-                this.conducting.push({label:'SUBMITTED',id:item});
+                this.conducting.push({ label: "SUBMITTED", id: item });
                 break;
               case 11:
-                this.conducting.push({label:'FEEDBACK',id:item});
+                this.conducting.push({ label: "FEEDBACK", id: item });
                 break;
               case 12:
-                this.conducting.push({label:'READED',id:item});
+                this.conducting.push({ label: "READED", id: item });
                 break;
               case 13:
-                this.conducting.push({label:'TEST',id:item});
+                this.conducting.push({ label: "TEST", id: item });
                 break;
               case 14:
-                this.conducting.push({label:'RR',id:item});
+                this.conducting.push({ label: "RR", id: item });
                 break;
               case 15:
-                this.conducting.push({label:'REDO',id:item});
+                this.conducting.push({ label: "REDO", id: item });
                 break;
               case 16:
-                this.approving.push({label:'APPROVE',id:item});
+                this.approving.push({ label: "APPROVE", id: item });
                 break;
               case 17:
-                this.approving.push({label:'PENDING_REVIEW',id:item});
+                this.approving.push({ label: "PENDING_REVIEW", id: item });
                 break;
               case 18:
-                this.approving.push({label:'DAILIES',id:item});
+                this.approving.push({ label: "DAILIES", id: item });
                 break;
               case 19:
-                this.approving.push({label:'CLIENT_REVIEW',id:item});
+                this.approving.push({ label: "CLIENT_REVIEW", id: item });
                 break;
               case 20:
-                this.finish.push({label:'CBB',id:item});
+                this.finish.push({ label: "CBB", id: item });
                 break;
               case 21:
-                this.finish.push({label:'APPROVED',id:item});
+                this.finish.push({ label: "APPROVED", id: item });
                 break;
               case 22:
-                this.finish.push({label:'DIRECTOR_APPROVED',id:item});
+                this.finish.push({ label: "DIRECTOR_APPROVED", id: item });
                 break;
               case 23:
-                this.finish.push({label:'REVISION',id:item});
+                this.finish.push({ label: "REVISION", id: item });
                 break;
               case 24:
-                this.finish.push({label:'FINAL',id:item});
+                this.finish.push({ label: "FINAL", id: item });
                 break;
               case 25:
-                this.finish.push({label:'DELIVERED',id:item});
+                this.finish.push({ label: "DELIVERED", id: item });
                 break;
               case 26:
-                this.finish.push({label:'OMITTED',id:item});
+                this.finish.push({ label: "OMITTED", id: item });
                 break;
               case 27:
-                this.finish.push({label:'CLOSED',id:item});
+                this.finish.push({ label: "CLOSED", id: item });
                 break;
-              
             }
-            
           });
-         // console.log(this.pause);
+          // console.log(this.pause);
         }
       );
     },
