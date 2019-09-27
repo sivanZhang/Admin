@@ -25,40 +25,36 @@
         min-height: calc(100vh - 294px)
     }
     .layout_main_top {
-  display: flex;
-}
-.layout_main_top_left {
-  display: flex;
-  width: 70%;
-  height: 50px;
-  justify-content: flex-start;
-}
-.layout_main_top_right {
-  display: flex;
-  width: 30%;
-  height: 50px;
-  justify-content: flex-end;
-}
-.layout_task {
-  width: 100px;
-  height: 40px;
-  border-right: 1px solid #ddd;
-  text-align: center;
-  color: #909399;
-  cursor:pointer; 
-  .layout_top_span {
-    // color: #909399;
-    font-size: small;
-  }
-  &:first-child {
-    border-left: 1px solid #ddd;
-  } 
-  .active{
-    color: rgb(79, 134, 206);
-  }
-}
- .el-table th.gutter{
-  display: table-cell!important;
-  }
- 
+        display: flex;
+    }
+    .layout_main_top_left {
+        display: flex;
+        width: 70%;
+        height: 50px;
+        justify-content: flex-start;
+    }
+    .layout_main_top_right {
+        display: flex;
+        width: 30%;
+        height: 50px;
+        justify-content: flex-end;
+    }
+    .layout_task {
+        width: 100px;
+        height: 40px;
+        border-right: 1px solid #ddd;
+        text-align: center;
+        color: #909399;
+        cursor: pointer;
+        .layout_top_span {
+            // color: #909399;
+            font-size: small;
+        }
+        &:first-child {
+            border-left: 1px solid #ddd;
+        }
+        .active {
+            color: rgb(79, 134, 206);
+        }
+    }
 }

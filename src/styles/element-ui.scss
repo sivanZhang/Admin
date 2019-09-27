@@ -19,8 +19,9 @@
     font-size: 12px;
 }
 
+//table中点击后的样式
 .el-table__body tr.current-row>td {
-    background-color: #b3e5fc!important;
+    background-color: #cfd8dc!important;
 }
 
 .el-upload__input {
@@ -55,6 +56,10 @@
             margin-right: 0px;
         }
     }
+}
+
+.el-table th.gutter {
+    display: table-cell!important;
 }
 
 // to fixed https://github.com/ElemeFE/element/issues/2461

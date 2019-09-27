@@ -93,7 +93,7 @@ export default {
       if (e) {
         item = {
           ...item,
-          url: this.$store.state.BASE_URL+item.path
+          url:'47HK2MpfKwqx1510325093.mp4' //本地调试47HK2MpfKwqx1510325093.mp4//正式：this.$store.state.BASE_URL+item.path
         };
         //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);

@@ -1,8 +1,8 @@
 <template>
-  <div id="asset-list" ref="drawer-parent">
+  <div id="tab-assets" ref="drawer-parent">
     <div>
-      <el-row>
-        <el-col :span="13" style="padding-bottom:15px;">
+      <el-row :gutter="15">
+        <el-col :span="14" style="padding-bottom:15px;">
           <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
             <slot name="add">添加资产</slot>
           </el-button>
@@ -147,10 +147,22 @@
             <el-button slot="reference" type="primary" icon="el-icon-sort">多列排序</el-button>
           </el-popover>
         </el-col>
-        <el-col :span="11" align="right">
-          <div style="display:flex;margin-left:125px">
-            <div style="width:130px;margin-top:1px">
-              <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
+        <el-col :span="10" align="right">
+          <el-row type="flex" justify="end">
+            <el-input
+              v-if="colShow"
+              placeholder="输入关键字搜索"
+              v-model="filterText"
+              @keyup.enter.native="getAssetList()"
+              style="width:360px"
+            >
+              <el-select
+                v-model="colSel"
+                placeholder="请选择"
+                style="width:130px;"
+                filterable
+                slot="prepend"
+              >
                 <el-option
                   v-for="item in columnSelect"
                   :key="item.value"
@@ -158,16 +170,6 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </div>
-
-            <el-input
-              v-if="colShow"
-              placeholder="输入关键字搜索"
-              style="width:200px;"
-              v-model="filterText"
-              class="input-with-select"
-              @keyup.enter.native="getAssetList()"
-            >
               <el-button
                 @click="getAssetList()"
                 slot="append"
@@ -328,13 +330,14 @@
               </el-popover>
             </el-tooltip>
             <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
-          </div>
+          </el-row>
         </el-col>
       </el-row>
       <el-table
         ref="assetTable"
         :data="AssetList"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+        :cell-style="{borderRight:0}"
         highlight-current-row
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
@@ -345,14 +348,13 @@
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
-        <el-table-column label="缩略图" align="center" v-if="show_image">
+        <el-table-column label="缩略图" align="center" v-if="show_image" class-name="hover">
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
               style="width: 50px;height: 30px;"
               @click.native="imgMax(scope.row)"
               v-if="!editing||clickId !== scope.row.id"
-              class="hover"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -386,6 +388,7 @@
           show-overflow-tooltip
           v-if="show_name"
           sortable="custom"
+          class-name="hover"
         >
           <template slot-scope="scope">
             <el-input
@@ -398,7 +401,6 @@
               <span>{{scope.row.name?scope.row.name:"-"}}</span>
             </el-input>
             <span
-              class="hover"
               v-if="!editing||clickId !== scope.row.id"
               @click="show(scope.row.id)"
             >{{scope.row.name?scope.row.name:"-"}}</span>
@@ -2028,16 +2030,12 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.hover {
-  cursor: pointer;
-  color: #2d8cf0;
-}
-#asset-list {
+<style lang="scss">
+#tab-assets {
   min-height: calc(100vh - 199px);
-  & /deep/ .el-table--border th,
-  & /deep/ .el-table--border td {
-    border-right-width: 0px;
+  .hover {
+    cursor: pointer;
+    color: #2d8cf0;
   }
 }
 </style>

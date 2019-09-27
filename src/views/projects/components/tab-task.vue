@@ -233,19 +233,19 @@
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
         :stripe="true"
-        :row-style="{'font-size':'13px'}"
-        :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+        :cell-style="{borderRight:0}"
+        border
         :row-key="row=>row.id"
         v-loading="tableLoading"
-        row-class-name="hover"
         @filter-change="filterHandler"
         @sort-change="sortFilter"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column label="任务ID" prop="id" width="100px" sortable="custom">
+        <el-table-column label="任务ID" class-name="hover" prop="id" width="100px" sortable="custom">
           <template slot-scope="scope">
-            <span class="hover" @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
@@ -800,8 +800,8 @@ export default {
       timeSelection: "",
       visible2: false,
       sortSelForm: {},
-      linkstart:null,
-      linkend:null,
+      linkstart: null,
+      linkend: null
     };
   },
   filters: {
@@ -839,7 +839,7 @@ export default {
 
           getLinks({ asset: this.TaskForm.asset }).then(({ data }) => {
             const linkData = [...data.msg];
-            this.LinkList = []; 
+            this.LinkList = [];
             linkData.forEach(item => {
               item.forEach(ct => {
                 this.LinkList.push(ct);
@@ -1583,13 +1583,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.hover {
-  cursor: pointer;
-  color: #2d8cf0;
-}
+<style lang="scss">
 #task {
   min-height: calc(100vh - 199px);
+  .hover {
+    cursor: pointer;
+    color: #2d8cf0;
+  }
 }
 </style>
 

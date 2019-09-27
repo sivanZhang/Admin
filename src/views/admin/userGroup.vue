@@ -2,50 +2,47 @@
   <div id="userGroup">
     <el-container>
       <el-header style="padding:0px;margin: 0px">
-        <el-row type="flex" align="middle">
-          <el-col :span="5">
-            <el-radio-group v-model="radio">
+        <el-row type="flex" align="middle" justify="space-between">
+          <el-row type="flex" align="middle">
+            <el-radio-group v-model="radio" style="margin-right:10px">
               <el-radio-button :label="1">所有用户</el-radio-button>
               <el-radio-button :label="2">未分组</el-radio-button>
             </el-radio-group>
-          </el-col>
-          <el-col :span="10" v-if="perssion">
-            <el-button
-              type="primary"
-              @click="openDialog(1)"
-            > 添加用户</el-button>
-            <el-button icon="el-icon-upload2" type="success" @click="$router.push({name:'import-users'})">
-              <slot name="import">用户导入</slot>
-            </el-button>
-           <el-button
-            type="danger"
-            icon="el-icon-delete"
-            @click="delMulUsers()"
-            :disabled="this.multipleSelection.length === 0"
-          >批量删除</el-button> 
-          </el-col>
-          <el-col :span="7">
-            <span>
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </span>
             <el-input
               placeholder="输入关键字搜索"
-              style="width:200px;"
               v-model="filterText"
-              class="input-with-select"
-            ></el-input>
-            
-          </el-col>
-          <el-col :span="2" style="border:solid;text-align:center;">
-            <template v-if="UserList">
-              共{{ UserList.length }}条
+              prefix-icon="el-icon-search"
+              style="width:200px;margin-right:10px"
+            ></el-input>用户总数：
+            <label for style="color:#ed4014">{{ dealUserCount }}</label>
+          </el-row>
+          <el-row type="flex" align="middle">
+            <template v-if="perssion">
+              <el-button type="primary" icon="el-icon-plus" @click="openDialog(1)">添加用户</el-button>
+              <el-button
+                icon="el-icon-upload2"
+                type="success"
+                @click="$router.push({name:'import-users'})"
+              >
+                <slot name="import">用户导入</slot>
+              </el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                @click="delMulUsers()"
+                :disabled="this.multipleSelection.length === 0"
+              >批量删除</el-button>
             </template>
-            <!-- 共{{ UserList.length }}条 -->
-          </el-col>
+          </el-row>
         </el-row>
       </el-header>
       <el-main style="padding: 0px">
-        <users-table :UserList="UserList" :perssion="perssion" @refresh="getAllUserlist" @selection="handleSelectionChange"></users-table>
+        <users-table
+          :UserList="UserList"
+          :perssion="perssion"
+          @refresh="getAllUserlist"
+          @selection="handleSelectionChange"
+        ></users-table>
       </el-main>
     </el-container>
     <el-dialog :visible.sync="dialogShow" :title="dialogName" width="400px">
@@ -106,7 +103,8 @@ export default {
       UserList: null,
       dialogShow: false,
       dialogName: null,
-      perssion:null,
+      perssion: null,
+      dealUserCount: 0,
       userForm: {
         password: "123456",
         isactive: true
@@ -135,12 +133,13 @@ export default {
     getAllUserlist() {
       getUserList().then(({ data }) => {
         this.UserList = [...data];
+        this.dealUserCount = this.UserList.length;
         // console.log(this.UserList)
       });
-      getUserPerfession().then(({data})=>{
+      getUserPerfession().then(({ data }) => {
         this.perssion = data.auth.admin_management;
         //console.log(this.perssion)
-      })
+      });
     },
     getNullDeptUser() {
       getUserList({ deptid: null }).then(({ data }) => {
@@ -157,54 +156,55 @@ export default {
         });
       }
     },
-   //批量删除用户
-    delMulUsers(){
-      this.$confirm("此操作将永久删除用户,是否继续?","提示",{
+    //批量删除用户
+    delMulUsers() {
+      this.$confirm("此操作将永久删除用户,是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         const ids = this.multipleSelection.map(item => item.id).join(",");
-          deleteUser({ ids:ids,method:"delete"}).then(({ data }) => {
-           console.log(data.msg)
-           if (data.status === 0){
-             this.getAllUserlist();
-             this.$message.success(data.msg);
-           } else {
+        deleteUser({ ids: ids, method: "delete" }).then(({ data }) => {
+          console.log(data.msg);
+          if (data.status === 0) {
+            this.getAllUserlist();
+            this.$message.success(data.msg);
+          } else {
             this.$message.error(data.msg);
           }
-         });
-      })
+        });
+      });
     },
     addUser() {
       this.$refs["userForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
-          if(this.userForm.sex === 0){
-            this.userForm={
+          if (this.userForm.sex === 0) {
+            this.userForm = {
               ...this.userForm,
-              sex : "男"}
-            }else{
-              this.userForm={
+              sex: "男"
+            };
+          } else {
+            this.userForm = {
               ...this.userForm,
-              sex : "女"
-              }
-            }
-          
+              sex: "女"
+            };
+          }
+
           addUser(this.userForm).then(({ data }) => {
             if (data.status === 0) {
               this.createLoading = false;
               this.$message.success(data.msg);
               this.dialogShow = false;
-              this.getAllUserlist()
+              this.getAllUserlist();
             } else {
               this.createLoading = false;
               this.$message.error(data.msg);
               this.dialogShow = false;
             }
           });
-        }else{
-          return false
+        } else {
+          return false;
         }
       });
     },
@@ -216,9 +216,9 @@ export default {
         isactive: true
       };
     },
-     handleSelectionChange(val) {
+    handleSelectionChange(val) {
       this.multipleSelection = val;
-    },
+    }
   },
 
   watch: {

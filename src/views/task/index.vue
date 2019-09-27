@@ -256,54 +256,10 @@
             </el-tab-pane>
           </el-tabs>
         </Drawer>
-        <!-- <div class="task-list"></div> -->
-        <!-- <div class="task-list-top">
-          <span class="sort">排序方式</span>
-          <el-select v-model="taskListSortSel" placeholder="截止日期" size="mini">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-select
-            v-model="taskListProgramSel"
-            multiple
-            placeholder="任何项目"
-            size="mini"
-            collapse-tags
-            style="margin-left: 20px;"
-          >
-            <el-option
-              v-for="item in taskList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-select
-            v-model="taskListProgressSel"
-            multiple
-            collapse-tags
-            style="margin-left: 20px;"
-            placeholder="任何备注"
-            size="mini"
-          >
-            <el-option
-              v-for="item in taskProgress"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-checkbox v-model="checked">显示已完成/锁定的项目</el-checkbox>
-        </div>-->
-
         <el-table
           :data="MyTaskList1"
           highlight-current-row
-          borders
+          border
           @row-click="taskBoardRightShow"
           style="width: 100%;">
           <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
