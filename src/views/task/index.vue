@@ -14,60 +14,11 @@
     <el-tabs type="border-card" v-model="activeTab">
       <el-tab-pane label="任务板" name="first" class="tab-task">
         <div>
-          <!-- <div>
-            <span class="svg-container" title="显示小型网格布局">
-              <svg-icon icon-class="list_min"></svg-icon>
-            </span>
-            <span class="svg-container" title="大型网格布局">
-              <svg-icon icon-class="list_max"></svg-icon>
-            </span>
-            <el-select
-              v-model="value1"
-              multiple
-              placeholder="任何项目"
-              size="mini"
-              collapse-tags
-              style="margin-left: 20px;"
-            >
-              <el-option
-                v-for="item in taskList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <el-select
-              v-model="value2"
-              multiple
-              collapse-tags
-              style="margin-left: 20px;"
-              placeholder="任何备注"
-              size="mini"
-            >
-              <el-option
-                v-for="item in taskProgress"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>-->
           <el-row type="flex" justify="space-between" :gutter="15">
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">未开始</el-col>
-                  <!-- <el-col :span="20" style="text-align:right">
-                    <span class="sort">排序方式</span>
-                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value+item.label"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                    </el-select>
-                  </el-col> -->
                 </el-row>
                 <draggable
                   v-model="DraftArr"
@@ -92,17 +43,6 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">进行中</el-col>
-                  <!-- <el-col :span="20" style="text-align:right">
-                    <span class="sort">排序方式</span>
-                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value+item.label"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                    </el-select>
-                  </el-col> -->
                 </el-row>
                 <draggable
                   v-model="InProgressArr"
@@ -123,45 +63,10 @@
                 </draggable>
               </div>
             </el-col>
-            <!-- <el-col>
-              <div class="project-warp">
-                <el-row type="flex" align="middle">
-                  <el-col tag="h4" :span="4">完成</el-col>
-                </el-row>
-                <draggable
-                  class="board-column-content"
-                  v-model="FinishedArr"
-                  group="task"
-                  :sort="false"
-                  :move="checkMove"
-                  @end="handelChanged"
-                  data-arr="FinishedArr"
-                >
-                  <el-card
-                    :style="{margin:'10px 0'}"
-                    v-for="item of FinishedArr"
-                    :key="item.id"
-                    :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#2d8cf0',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
-                </draggable>
-              </div>
-            </el-col> -->
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">超时</el-col>
-                  <!-- <el-col :span="20" style="text-align:right">
-                    <span class="sort">排序方式</span>
-                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                    </el-select>
-                  </el-col> -->
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -185,17 +90,6 @@
               <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="4">暂停</el-col>
-                  <!-- <el-col :span="20" style="text-align:right">
-                    <span class="sort">排序方式</span>
-                    <el-select v-model="notStartedSel" placeholder="截止日期" size="mini">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                    </el-select>
-                  </el-col> -->
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -294,8 +188,6 @@
                 {{scope.row.task.status|taskStatus}}
               </div>
             </template>
-            
-             
             
           </el-table-column>
           <el-table-column label="优先级" header-align="left">

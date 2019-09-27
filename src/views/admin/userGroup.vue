@@ -40,6 +40,7 @@
         <users-table
           :UserList="UserList"
           :perssion="perssion"
+          :tableLoading="tLoading"
           @refresh="getAllUserlist"
           @selection="handleSelectionChange"
         ></users-table>
@@ -98,9 +99,10 @@ export default {
 
   data() {
     return {
+      tLoading:false,
       radio: 1,
       filterText: "",
-      UserList: null,
+      UserList: [],
       dialogShow: false,
       dialogName: null,
       perssion: null,
@@ -131,11 +133,14 @@ export default {
       this.$forceUpdate();
     },
     getAllUserlist() {
+      this.tLoading = true
       getUserList().then(({ data }) => {
         this.UserList = [...data];
         this.dealUserCount = this.UserList.length;
-        // console.log(this.UserList)
-      });
+        this.tLoading = false
+      }).catch(()=>{
+        this.tLoading = false
+      })
       getUserPerfession().then(({ data }) => {
         this.perssion = data.auth.admin_management;
         //console.log(this.perssion)

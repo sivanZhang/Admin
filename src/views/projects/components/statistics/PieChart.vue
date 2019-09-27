@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" :style="{height:height,width:width}" />
+  <div :id="id" :style="{height:height,width:width}" v-loading="loading"/>
 </template>
 
 <script>
@@ -30,13 +30,12 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      loading:true
     };
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initChart();
-    });
+    this.chart = echarts.init(document.getElementById(this.id));
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -48,7 +47,6 @@ export default {
   methods: {
     //title=图标title，data=表单数据
     initChart(title='', data = {}) {
-      this.chart = echarts.init(document.getElementById(this.id));
       let keys = Object.keys(data);
       let chartData = keys.map(t => {
         return { name: t, value: data[t] };
@@ -58,7 +56,9 @@ export default {
           text:title,
           textStyle:{
             fontSize:14
-          }
+          },
+          left:'center',
+          top:0
         },
         tooltip: {
           trigger: "item",
@@ -77,9 +77,8 @@ export default {
           },
         ]
       }
-      this.$nextTick(()=>{
-        this.chart.setOption(options)
-      });
+      this.chart.setOption(options)
+      this.loading=false
     }
   }
 };
