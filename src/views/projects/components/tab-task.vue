@@ -73,9 +73,15 @@
           </el-popover>
         </el-col>
         <el-col :span="11" style="text-align:right">
-          <div style="display:flex;margin-left:125px">
-            <div style="width:130px">
-              <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
+          <div style="display:flex;justify-content:flex-end">
+            <el-input
+              v-if="colShow"
+              placeholder="输入关键字搜索"
+              v-model="keyword"
+              @keyup.enter.native="getTasks()"
+              style="width:360px"
+            >
+              <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable slot="prepend">
                 <el-option
                   v-for="item in columnSelect"
                   :key="item.value"
@@ -83,16 +89,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </div>
-            <el-input
-              v-if="colShow"
-              placeholder="输入关键字搜索"
-              style="width:200px;"
-              v-model="keyword"
-              class="input-with-select"
-              @keyup.enter.native="getTasks()"
-            >
-              <el-button @click="getTasks()" slot="append" icon="el-icon-search" type="primary" />
+              <el-button @click="getTasks()" slot="append" icon="el-icon-search"/>
             </el-input>
             <el-select
               v-show="chooseSel"

@@ -8,6 +8,7 @@
         highlight-current-row
         @row-click="handleCurrentChange"
         @selection-change="handleSelectionChange"
+        :row-key="row=>row.id"
       >
        <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="头像" width="80" align="center">

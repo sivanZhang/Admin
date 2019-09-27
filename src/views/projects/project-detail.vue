@@ -65,11 +65,6 @@ export default {
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
-        // console.log("tiozhuan");
-        // console.log(newVal);
-        if (newVal === "tab2") {
-          this.$refs["tab-task"].getTasks();
-        }
         if (newVal === "tab3") {
           this.getProjectDetail();
         }
