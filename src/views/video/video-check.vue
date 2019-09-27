@@ -104,8 +104,7 @@ export default {
         this.$message.warning("请添加备注");
         return false;
       }
-      let submitFn = [];
-      this.submitList.forEach((t, i, arr) => {
+      let RequestList = this.submitList.map((t, i, arr) => {
         let data = {
           task_id: t.task.id,
           approve_result: this.approve_result,
@@ -123,9 +122,10 @@ export default {
             });
           }
         });
-        SubmitFn.push(postApprove(data));
+        return postApprove(data)
       });
-      AXIOS.all(SubmitFn).then(
+      //并发请求，避免重复处理后逻辑
+      AXIOS.all(RequestList).then(
         AXIOS.spread((...arg) => {
           this.submitList.forEach((t, i) => {
             this.$message({
@@ -192,16 +192,8 @@ export default {
         }
       }
     },
-    showImage(url) {
-      if (url) {
-        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL + url);
-      }
-    },
     zoomImg(imgUrl) {
       this.$refs.zoomImg.zoomImg(imgUrl);
-    },
-    handleTabClick(tab, event) {
-      // console.log(tab, event);
     },
     //传递 获取视频是否属于编辑中
     getCurrentVideoMode(mode) {

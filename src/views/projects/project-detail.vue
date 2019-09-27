@@ -28,7 +28,7 @@
       <el-tab-pane label="项目设置" name="tab3">
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
-      <el-tab-pane label="数据统计" name="tab4">
+      <el-tab-pane label="数据统计" name="tab4" lazy>
         <statistics />
       </el-tab-pane>
     </el-tabs>
