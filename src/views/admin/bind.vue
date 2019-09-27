@@ -195,7 +195,7 @@ export default {
             this.listname = data.msg.name;
           });
         }
-      });a
+      });
     },
   }
 };
