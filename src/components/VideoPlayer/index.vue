@@ -355,10 +355,9 @@ export default {
     getDrawImage(drawImage) {
       var obj = {
         currentFrame: this.calcFrame(this.videoPlayer.currentTime()),
-        currentName: this.currentProject.proName,
         imgUrl: drawImage,
         currentPosition: this.videoPlayer.currentTime(),
-        task: this.currentProject.task.id
+        currentProject: this.currentProject//选中
       };
       this.$emit("getCutImg", obj);
       this.videoPlayerIsShow = true;

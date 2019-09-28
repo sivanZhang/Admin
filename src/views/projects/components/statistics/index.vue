@@ -1,13 +1,7 @@
 <template>
   <div id="statistics" class="text-center">
-    
     <div>
-      <el-progress
-        type="circle"
-        :percentage="projectProgress"
-        :color="colors"
-        :format="format"
-      ></el-progress>
+      <el-progress type="circle" :percentage="projectProgress" :color="colors" :format="format"></el-progress>
     </div>
     <div style="margin-top:15px">
       <label for>项目进度</label>
@@ -16,11 +10,11 @@
     <el-row>
       <el-col :span="12">
         <label for>资产状态统计</label>
-        <chart ref="asset-chart" id="asset-chart" />
+        <chart ref="asset-chart" chart-id="asset-chart" />
       </el-col>
       <el-col :span="12">
         <label for>任务状态统计</label>
-        <chart ref="task-chart" id="task-chart" />
+        <chart ref="task-chart" chart-id="task-chart" />
       </el-col>
     </el-row>
   </div>
@@ -29,17 +23,15 @@
 <script>
 import * as Ajax from "@/api/statistics";
 import Chart from "./PieChart";
-import { nextTick } from "q";
 export default {
   name: "all-statistics",
   components: { Chart },
   data() {
-    const HttpParams = {
-      project_id: this.$route.params.id
-    };
     return {
       projectProgress: 0,
-      HttpParams,
+      HttpParams: {
+        project_id: this.$route.params.id
+      },
       colors: [
         { color: "#f56c6c", percentage: 20 },
         { color: "#e6a23c", percentage: 40 },
@@ -50,9 +42,10 @@ export default {
     };
   },
   methods: {
+    //指定进度条文字内容。
     format(percentage) {
-        return percentage === 100 ? '完成' : `${percentage}%`;
-      },
+      return percentage === 100 ? "完成" : `${percentage}%`;
+    },
     //获取项目进度
     getProjectProgress() {
       Ajax.getProjectStatistic(this.HttpParams).then(({ data }) => {
@@ -76,10 +69,8 @@ export default {
     this.getProjectProgress();
   },
   mounted() {
-    this.$nextTick(() => {
-      this.getAssetStatistics();
-      this.getTaskStatistics();
-    });
+    this.getAssetStatistics();
+    this.getTaskStatistics();
   }
 };
 </script>

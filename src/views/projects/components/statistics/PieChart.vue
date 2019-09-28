@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" :style="{height:height,width:width}" v-loading="loading"/>
+  <div :id="chartId" :style="{height:height,width:width}" v-loading="loading"/>
 </template>
 
 <script>
@@ -23,7 +23,7 @@ export default {
       type: String,
       default: "320px"
     },
-    id:{
+    chartId:{
       type: String,
       default: "chart"
     }
@@ -35,7 +35,7 @@ export default {
     };
   },
   mounted() {
-    this.chart = echarts.init(document.getElementById(this.id));
+    this.chart = echarts.init(document.getElementById(this.chartId));
   },
   beforeDestroy() {
     if (!this.chart) {

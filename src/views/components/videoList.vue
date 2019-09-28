@@ -1,13 +1,5 @@
 <template>
   <div class="video-cont">
-    <!-- <ul id="videoSliderList">
-      <li v-for="(item,index) in selectProjects" :key="index" @click="initSource(index)">
-        <span class="color-slider" :class="index%2==0?'on':''">
-          {{item.asset.name}} {{item.time}}
-          <font v-if="currentPlayId==item.asset.id">正在播放</font>
-        </span>
-      </li>
-    </ul>-->
     <div id="videoSliderList">
       <el-button
         v-for="(item,index) in selectProjects"

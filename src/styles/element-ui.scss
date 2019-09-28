@@ -19,6 +19,15 @@
     font-size: 12px;
 }
 
+//图片展示的背景
+.el-image-viewer__mask {
+    opacity: .8;
+}
+
+.el-image-viewer__btn.el-image-viewer__close {
+    color: rgba(225, 225, 225, .8);
+}
+
 //table中点击后的样式
 .el-table__body tr.current-row>td {
     background-color: #cfd8dc!important;

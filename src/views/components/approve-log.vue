@@ -60,9 +60,9 @@
                 <el-row>
                   <el-image
                   :src="$store.state.BASE_URL+item.image_path"
+                  :preview-src-list="imageList(t.images)"
                   style="height:55px;width:90px"
                   fit="cover"
-                  @click="shwoImage(item.image_path)"
                 ></el-image>
                 </el-row>
                 <el-row style="text-align:center">
@@ -75,18 +75,13 @@
       </div>
     </div>
     <div v-show="!list.length">暂无数据</div>
-    <zoom-img ref="zoomImg" />
   </div>
 </template>
 <script>
-import ZoomImg from "@/components/ZoomImg";
 import { getApproveRemark } from "@/api/video";
 import { getAssetsApprove } from "@/api/assets";
 export default {
   mame: "approve-logs",
-  components: {
-    ZoomImg
-  },
   props:["task_or_project"],
   data() {
     return {
@@ -111,10 +106,8 @@ export default {
     };
   },
   methods: {
-    shwoImage(url) {
-      if (url) {
-        this.$refs.zoomImg.zoomImg(this.$store.state.BASE_URL + url);
-      }
+    imageList(image){
+      return image.map(t=>this.$store.state.BASE_URL+t.image_path)
     },
     //父组件直接通过$refs[组件ref值].getApproveLog(task的id)即可请求列表，切换筛选时自动调用的
     getApproveLog(task_id) {

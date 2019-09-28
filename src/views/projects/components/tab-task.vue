@@ -240,7 +240,7 @@
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column label="任务ID" class-name="hover" prop="id" width="100px" sortable="custom">
+        <el-table-column label="任务ID" class-name="links" prop="id" width="100px" sortable="custom">
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
@@ -249,7 +249,8 @@
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
-              style="width: 50px;height: 30px;"
+              :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
+              style="width: 48px;height: 27px;"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -1583,7 +1584,7 @@ export default {
 <style lang="scss">
 #task {
   min-height: calc(100vh - 199px);
-  .hover {
+  .links {
     cursor: pointer;
     color: #2d8cf0;
   }

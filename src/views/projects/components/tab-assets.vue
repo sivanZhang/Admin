@@ -348,12 +348,12 @@
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
-        <el-table-column label="缩略图" align="center" v-if="show_image" class-name="hover">
+        <el-table-column label="缩略图" align="center" v-if="show_image">
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
-              style="width: 50px;height: 30px;"
-              @click.native="imgMax(scope.row)"
+              style="width: 48px;height: 27px;cursor: pointer;"
+              :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
               v-if="!editing||clickId !== scope.row.id"
             >
               <div slot="placeholder" class="image-slot">
@@ -366,7 +366,7 @@
             </el-image>
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
-              style="width: 50px;height: 30px;"
+              style="width: 48px;height: 27px;"
               @click.native="img(scope.row)"
               v-if="editing&&clickId === scope.row.id"
             >
@@ -388,7 +388,7 @@
           show-overflow-tooltip
           v-if="show_name"
           sortable="custom"
-          class-name="hover"
+          class-name="links"
         >
           <template slot-scope="scope">
             <el-input
@@ -921,9 +921,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog :title="titImg" :visible.sync="dialogImgMax" width="480px" top="5vh">
-      <el-image v-if="SRC3" style="width: 100%; height: 100%" :src="SRC3"></el-image>
-    </el-dialog>
     <Drawer
       scrollable
       closable
@@ -966,9 +963,6 @@ export default {
   data() {
     return {
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
-      titImg: null,
-      dialogImgMax: false,
-      SRC3: "",
       pageCount: 0,
       AssetList: [],
       total: 0,
@@ -1514,11 +1508,6 @@ export default {
       this.row = row;
       this.SRC = this.$store.state.BASE_URL + row.image;
     },
-    imgMax(row) {
-      this.dialogImgMax = true;
-      this.titImg = row.name;
-      this.SRC3 = this.$store.state.BASE_URL + row.image;
-    },
     addImg() {
       // console.log(this.ImgForm)
       this.imagePath = this.ImgForm.image;
@@ -2033,7 +2022,7 @@ export default {
 <style lang="scss">
 #tab-assets {
   min-height: calc(100vh - 199px);
-  .hover {
+  .links {
     cursor: pointer;
     color: #2d8cf0;
   }
