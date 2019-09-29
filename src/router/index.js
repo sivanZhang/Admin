@@ -100,6 +100,17 @@ export const asyncRoutes = [{
                     icon: 'bangding'
                 }
             },
+            {
+                path: 'attrs',
+                name: 'customAttrs',
+                component: () =>
+                    import ('@/views/admin/customAttrs'),
+                meta: {
+                    title: '自定义属性',
+                    icon: 'custom-attrs',
+                    // roles: 'manage_role'
+                }
+            },
         ]
     },
     {
