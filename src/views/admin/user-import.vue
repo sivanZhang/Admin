@@ -131,8 +131,6 @@ export default {
       this.uploadLoading = true;
       uploadUsers(data)
         .then(({ data }) => {
-          console.log(data, "data");
-
           if (data.status === 0) {
             this.$notify({
               title: "提交状态",

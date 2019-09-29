@@ -37,7 +37,7 @@
             </template>
             <template slot-scope="scope">
               <el-input
-                v-if="scope.row.isEdit  && index!=0"
+                v-if="scope.row.isEdit"
                 size="small"
                 v-model="scope.row[col.prop]"
                 placeholder="请输入内容"
