@@ -18,7 +18,7 @@
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
-                  <el-col tag="h4" :span="4">未开始</el-col>
+                  <el-col tag="h4" :span="24">未开始</el-col>
                 </el-row>
                 <draggable
                   v-model="DraftArr"
@@ -42,7 +42,7 @@
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
-                  <el-col tag="h4" :span="4">进行中</el-col>
+                  <el-col tag="h4" :span="24">进行中</el-col>
                 </el-row>
                 <draggable
                   v-model="InProgressArr"
@@ -66,7 +66,7 @@
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
-                  <el-col tag="h4" :span="4">超时</el-col>
+                  <el-col tag="h4" :span="24">超时</el-col>
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -89,7 +89,7 @@
             <el-col>
               <div class="project-warp">
                 <el-row type="flex" align="middle">
-                  <el-col tag="h4" :span="4">暂停</el-col>
+                  <el-col tag="h4" :span="24">暂停</el-col>
                 </el-row>
                 <draggable
                   class="board-column-content"
@@ -107,6 +107,34 @@
                     :body-style="{backgroundColor:'#ff9900',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
                 </draggable>
+              </div>
+            </el-col>
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="24">完成</el-col>
+                </el-row>
+                <el-card
+                    :style="{margin:'10px 0'}"
+                    v-for="item of FinishedArr"
+                    :key="item.id"
+                    :data-taskid="item.id"
+                    :body-style="{backgroundColor:'#2d8cf0',color:'#fff',padding:'15px'}"
+                  >{{item.name}}</el-card>
+              </div>
+            </el-col>
+            <el-col>
+              <div class="project-warp">
+                <el-row type="flex" align="middle">
+                  <el-col tag="h4" :span="24">审核中</el-col>
+                </el-row>
+                <el-card
+                    :style="{margin:'10px 0'}"
+                    v-for="item of ApproveingArr"
+                    :key="item.id"
+                    :data-taskid="item.id"
+                    :body-style="{backgroundColor:'#e91e63',color:'#fff',padding:'15px'}"
+                  >{{item.name}}</el-card>
               </div>
             </el-col>
           </el-row>
