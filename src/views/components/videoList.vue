@@ -10,9 +10,6 @@
         style="margin: 10px 2%;"
       >{{item.task.name}}</el-button>
     </div>
-    <!-- 
-    el-icon-video-play-->
-    <!-- <el-button type="primary" style="margin:10px 0 0 10px;" @click="addVideoList">加入播放队列{{selectProjectIds}}</el-button> -->
     <el-divider content-position="left">选中播放审核：</el-divider>
     <el-checkbox-group v-model="selectProjectIds">
       <div class="list">
@@ -85,9 +82,8 @@ export default {
       if (e) {
         item = {
           ...item,
-          url:'47HK2MpfKwqx1510325093.mp4' //本地调试47HK2MpfKwqx1510325093.mp4//正式：this.$store.state.BASE_URL+item.path
+          url: this.$store.state.BASE_URL + item.path //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
         };
-        //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
       } else {
         this.selectProjects = this.selectProjects.filter(t => {
@@ -95,35 +91,34 @@ export default {
         });
       }
     },
-    addVideoList() {}
   }
 };
 </script>
 <style lang="scss" scoped>
 @mixin scrollX {
   overflow-x: scroll;
-    overflow-y: visible;
-    &::-webkit-scrollbar {
-      /*滚动条整体样式*/
-      width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
-      height: 5px;
-      cursor: pointer;
-    }
-    &::-webkit-scrollbar-thumb {
-      /*滚动条里面小方块*/
-      border-radius: 5px;
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-      background: rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-    }
-    &::-webkit-scrollbar-track {
-      /*滚动条里面轨道*/
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      background: rgba(0, 0, 0, 0.1);
-    }
+  overflow-y: visible;
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 5px;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+  }
 }
-.el-divider{
+.el-divider {
   margin: 20px 0 10px;
 }
 #videoSliderList {

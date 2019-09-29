@@ -1,7 +1,7 @@
 <template>
   <div id="video-check">
     <el-row class="page" :gutter="15">
-      <el-col :span="15" class="page-left" style="height:850px;">
+      <el-col :span="19" class="page-left" style="height:850px;">
         <div class="video-player" style="height：550px;">
           <!-- 播放器 -->
           <video-player
@@ -16,19 +16,27 @@
           <video-list ref="videoList" @initSource="initSource"></video-list>
         </div>
       </el-col>
-      <el-col :span="9" class="page-right">
+      <el-col :span="8" class="page-right">
         <div id="videoTabs" class="video-tabs">
           <div class="mark-cont">
             <div class="mark-form">
               <ul class="img-list" v-if="imgList.length > 0">
                 <li class="img-item" v-for="(item,index) in imgList" :key="index">
-                  <img :src="item.imgUrl" @click="zoomImg(item.imgUrl)" />
-                  <span class="name">{{item.currentName}}(第{{item.currentFrame}}帧)</span>
-                  <el-button
-                    class="btn del-btn"
-                    icon="el-icon-delete-solid"
-                    @click="delMarkImage(item,index)"
-                  ></el-button>
+                  <el-image
+                    :src="item.imgUrl"
+                    :preview-src-list="ImageList(imgList)"
+                    fit="cover"
+                    style="height:45px;width:80px;"
+                  ></el-image>
+                  <div>
+                    <span>{{item.currentProject.task.name}} (第{{item.currentFrame}}帧)</span>
+                    <el-button
+                      type="text"
+                      class="del-btn"
+                      icon="el-icon-delete-solid"
+                      @click="delMarkImage(item,index)"
+                    ></el-button>
+                  </div>
                 </li>
               </ul>
               <el-input placeholder="添加备注" v-model="markText" type="textarea"></el-input>
@@ -55,7 +63,6 @@
         <approve-log ref="approvelogs" id="videoComment" class="video-comment" />
       </el-col>
     </el-row>
-    <zoom-img ref="zoomImg" />
   </div>
 </template>
 
@@ -64,18 +71,16 @@ import AXIOS from "axios";
 import VideoPlayer from "@/components/VideoPlayer";
 import VideoList from "@/views/components/videoList";
 import kscreenshot from "kscreenshot";
-import ZoomImg from "@/components/ZoomImg";
 import { mapState } from "vuex";
 import { postApprove } from "@/api/video";
 import approveLog from "@/views/components/approve-log";
 export default {
-  components: { VideoPlayer, VideoList, ZoomImg, approveLog },
+  components: { VideoPlayer, VideoList, approveLog },
   data() {
     return {
       approve_result: 0,
       score: null,
       imgList: [], //  视频截图列表
-      zoomImgUrl: "",
       activeTab: "first",
       markText: "",
       currentVideoIsEdit: false,
@@ -122,7 +127,7 @@ export default {
             });
           }
         });
-        return postApprove(data)
+        return postApprove(data);
       });
       //并发请求，避免重复处理后逻辑
       AXIOS.all(RequestList).then(
@@ -192,23 +197,47 @@ export default {
         }
       }
     },
-    zoomImg(imgUrl) {
-      this.$refs.zoomImg.zoomImg(imgUrl);
+    ImageList(imgList) {
+      return imgList.map(t => t.imgUrl);
     },
     //传递 获取视频是否属于编辑中
     getCurrentVideoMode(mode) {
       this.currentVideoIsEdit = !mode;
       // console.log("currentVideoIsEdit", this.currentVideoIsEdit);
     },
-    getCurrentPlayId({task}) {
+    getCurrentPlayId({ task }) {
       this.$refs.videoList.getCurrentPlayId(task.id);
-      this.$refs["approvelogs"].getApproveLog(task.id)
+      this.$refs["approvelogs"].getApproveLog(task.id);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@mixin scrollStyle {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 6px;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+#videoComment {
+  overflow-y: scroll;
+}
 #video-check {
   width: 100%;
   min-height: calc(100vh - 84px);
@@ -236,7 +265,7 @@ export default {
     }
     .page-right {
       height: 100%;
-      // margin-left: 0.5%;
+      margin-left: 0.5%;
       .video-tabs {
         padding: 10px;
         background: #fff;
@@ -254,25 +283,7 @@ export default {
       .video-info,
       .video-tabs,
       .video-comment {
-        &::-webkit-scrollbar {
-          /*滚动条整体样式*/
-          width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
-          height: 6px;
-          cursor: pointer;
-        }
-        &::-webkit-scrollbar-thumb {
-          /*滚动条里面小方块*/
-          border-radius: 5px;
-          box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-          background: rgba(0, 0, 0, 0.2);
-          cursor: pointer;
-        }
-        &::-webkit-scrollbar-track {
-          /*滚动条里面轨道*/
-          box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-          border-radius: 0;
-          background: rgba(0, 0, 0, 0.1);
-        }
+        @include scrollStyle
       }
     }
   }
@@ -303,36 +314,27 @@ export default {
 
   .mark-form {
     .img-list {
+      @include scrollStyle;
       list-style: none;
       padding: 0;
       margin: 0;
+      max-height: 195px;
+      overflow-y: scroll;
+      margin-bottom: 5px;
 
       .img-item {
         margin: 6px 0;
         height: 62px;
-        line-height: 50px;
         background: #eee;
-        padding: 6px;
-
-        img {
-          float: left;
-          width: 85px;
-          height: 50px;
-        }
-
-        .name {
-          float: left;
-          padding-left: 10px;
-        }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 8px;
 
         .del-btn {
-          float: right;
-          background: transparent;
-          border: none;
-          padding: 0;
-          height: 50px;
-          font-size: 26px;
+          font-size: 18px;
           color: #f56c6c;
+          margin-left: 10px;
         }
       }
     }
