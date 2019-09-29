@@ -15,7 +15,7 @@ export function dateFormat(date) {
             }
         }
         let [dd, mm] = [add0(TIME.getDate()),
-            add0(TIME.getMonth() + 1)
+        add0(TIME.getMonth() + 1)
         ]
 
         return `${TIME.getFullYear()}/${mm}/${dd}`
@@ -35,11 +35,11 @@ export function dateTimeFormat(date) {
                 return val
             }
         }
-        let [dd, mm, MM, hh,ss] = [add0(TIME.getDate()),
-            add0(TIME.getMonth() + 1),
-            add0(TIME.getMinutes()),
-            add0(TIME.getHours()),
-            add0(TIME.getSeconds()),
+        let [dd, mm, MM, hh, ss] = [add0(TIME.getDate()),
+        add0(TIME.getMonth() + 1),
+        add0(TIME.getMinutes()),
+        add0(TIME.getHours()),
+        add0(TIME.getSeconds()),
         ]
 
         return `${TIME.getFullYear()}/${mm}/${dd} ${hh}:${MM}:${ss}`
@@ -48,7 +48,7 @@ export function dateTimeFormat(date) {
     }
 }
 //时间格式化 hh:mm:ss
-export function dateHMSFormat(date){
+export function dateHMSFormat(date) {
     if (date) {
         const TIME = new Date(date * 1000)
 
@@ -60,7 +60,7 @@ export function dateHMSFormat(date){
             }
         }
         let [dd, mm] = [add0(TIME.getDate()),
-            add0(TIME.getMonth() + 1)
+        add0(TIME.getMonth() + 1)
         ]
 
         return `${TIME.toLocaleTimeString()}`
@@ -95,8 +95,8 @@ export function numberFormat(num) {
     })
 }
 //资产状态
-export function assetStatus(status){
-    switch(status){
+export function assetStatus(status) {
+    switch (status) {
         case 0:
             return '暂停'
             break
@@ -203,7 +203,7 @@ export function taskStatus(data) {
             break
         case 4:
             return '完成'
-             break
+            break
         case 5:
             return '超时'
             break
@@ -213,91 +213,135 @@ export function taskStatus(data) {
 
     }
 }
-export function taskMinStatus(data){
-    switch (data){
-        case 0 :
-           return 'ON_HOLD' 
-           break
-           case 1 :
-                return 'IGNORE' 
-                break
-                case 2 :
-           return 'PAUSE' 
-           break
-           case 3 :
-           return 'NOT_STARTED' 
-           break
-           case 4 :
-           return 'WATING_TO_START' 
-           break
-           case 5:
-           return 'REAY_TO_START' 
-           break
-           case 6 :
-           return 'NORMAL' 
-           break
-           case 7 :
-           return 'OPEN' 
-           break
-           case 8 :
-           return 'IN_PROGESS' 
-           break
-           case 9 :
-           return 'OUTSOURCE' 
-           break
-           case 10 :
-           return 'SUBMITTED' 
-           break
-           case 11 :
-           return 'REEDBACK' 
-           break
-           case 12 :
-           return 'READED' 
-           break
-           case 13 :
-           return 'TEST' 
-           break
-           case 14 :
-           return 'RR' 
-           break
-           case 15 :
-           return 'REDO' 
-           break
-           case 16 :
-           return 'APPROVE' 
-           break
-           case 17 :
-           return 'PENDING_REVIEW' 
-           break
-           case 18 :
-           return 'DAILIES' 
-           break
-           case 19 :
-           return 'CLIENT_REVIEW' 
-           break
-           case 20 :
-           return 'CBB' 
-           break
-           case 21 :
-           return 'APPROVED' 
-           break
-           case 22 :
-           return 'DIRECTOR_APPROVED' 
-           break
-           case 23 :
-           return 'REVISION' 
-           break
-           case 24 :
-           return 'FINAL' 
-           break
-           case 25 :
-           return 'DELIVERED' 
-           break
-           case 26:
-           return 'OMITED' 
-           break
-           case 27 :
-           return 'CLOSED' 
-           break
+//小状态
+export function taskMinStatus(data) {
+    switch (data) {
+        case 0:
+            return 'ON_HOLD'
+            break
+        case 1:
+            return 'IGNORE'
+            break
+        case 2:
+            return 'PAUSE'
+            break
+        case 3:
+            return 'NOT_STARTED'
+            break
+        case 4:
+            return 'WATING_TO_START'
+            break
+        case 5:
+            return 'REAY_TO_START'
+            break
+        case 6:
+            return 'NORMAL'
+            break
+        case 7:
+            return 'OPEN'
+            break
+        case 8:
+            return 'IN_PROGESS'
+            break
+        case 9:
+            return 'OUTSOURCE'
+            break
+        case 10:
+            return 'SUBMITTED'
+            break
+        case 11:
+            return 'REEDBACK'
+            break
+        case 12:
+            return 'READED'
+            break
+        case 13:
+            return 'TEST'
+            break
+        case 14:
+            return 'RR'
+            break
+        case 15:
+            return 'REDO'
+            break
+        case 16:
+            return 'APPROVE'
+            break
+        case 17:
+            return 'PENDING_REVIEW'
+            break
+        case 18:
+            return 'DAILIES'
+            break
+        case 19:
+            return 'CLIENT_REVIEW'
+            break
+        case 20:
+            return 'CBB'
+            break
+        case 21:
+            return 'APPROVED'
+            break
+        case 22:
+            return 'DIRECTOR_APPROVED'
+            break
+        case 23:
+            return 'REVISION'
+            break
+        case 24:
+            return 'FINAL'
+            break
+        case 25:
+            return 'DELIVERED'
+            break
+        case 26:
+            return 'OMITED'
+            break
+        case 27:
+            return 'CLOSED'
+            break
+    }
+}
+//自定义属性类别
+export function attrsFilter(attrs) {
+    switch (attrs) {
+        case 1:
+            return 'NUMBER'
+            break
+        case 2:
+            return 'CHARACTER'
+            break
+        case 3:
+            return 'DATE '
+            break
+        case 4:
+            return 'BOOLEAN'
+            break
+        case 5:
+            return 'ENUMERATE'
+            break
+    }
+}
+//实体信息
+export function entityFilter(entity){
+    switch(entity){
+        case 1:
+            return '任务实体'
+            break
+        case 2:
+            return '模板实体'
+            break
+        case 3:
+            return '流程实体'
+            break
+        case 4:
+            return '项目实体'
+            break
+        case 5:
+            return '资产类别'
+            break
+        case 6:
+            return '工种'
+            break
     }
 }
