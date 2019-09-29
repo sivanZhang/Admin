@@ -110,31 +110,37 @@
               </div>
             </el-col>
             <el-col>
-              <div class="project-warp">
+              <div class="project-warp" style="background-color:#eeeeee">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">完成</el-col>
                 </el-row>
-                <el-card
+                <div class="board-column-content">
+                  <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of FinishedArr"
                     :key="item.id"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#2d8cf0',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
+                </div>
+                
               </div>
             </el-col>
             <el-col>
-              <div class="project-warp">
+              <div class="project-warp" style="background-color:#eeeeee">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">审核中</el-col>
                 </el-row>
-                <el-card
+                <div class="board-column-content">
+                  <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of ApproveingArr"
                     :key="item.id"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#e91e63',color:'#fff',padding:'15px'}"
                   >{{item.name}}</el-card>
+                </div>
+                
               </div>
             </el-col>
           </el-row>
