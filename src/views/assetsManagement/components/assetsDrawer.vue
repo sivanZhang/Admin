@@ -80,7 +80,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="sixth">
-            <approve-log ref="approvelogs" :project="project" task_or_project="project"/>
+            <approve-log ref="approvelogs" :project="project" task_or_project="project" />
           </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
             <info :project="project" @refresh_assetList="getAssetList" />
@@ -151,15 +151,17 @@ export default {
       });
     },
     openTaskDetail(row) {
-      const path =
-        "/projects/project-detail/" +
-        row.project.id +
-        "/?tab=tab2&p=" +
-        row.project.name;
-      //console.log(path);
-      this.$router.push(path);
+      this.$router.push({
+        name: "project-detail", //也可以 path:'/projects/project-detail/'
+        params: {
+          id: row.project.id
+        },
+        query: {
+          tab: "tab2"
+        }
+      });
     }
-  },
+  }
 };
 </script>
 

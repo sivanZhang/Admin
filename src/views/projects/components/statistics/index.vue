@@ -17,15 +17,18 @@
         <chart ref="task-chart" chart-id="task-chart" />
       </el-col>
     </el-row>
+    <el-divider />
+    <gettal/>
   </div>
 </template>
 
 <script>
 import * as Ajax from "@/api/statistics";
 import Chart from "./PieChart";
+import gettal from "./gettal";
 export default {
   name: "all-statistics",
-  components: { Chart },
+  components: { Chart,gettal },
   data() {
     return {
       projectProgress: 0,
