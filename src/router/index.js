@@ -258,6 +258,25 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/production',
+        component: Layout,
+        redirect: '/production',
+        meta: {
+            title: '作品',
+            icon: 'pd'
+        },
+        children: [{
+            path: 'my-production',
+            name: 'my-production',
+            component: () =>
+                import ('@/views/production'),
+            meta: {
+                title: '我的作品',
+                icon: 'pd'
+            }
+        }]
+    },
+    {
         path: '/task',
         component: Layout,
         redirect: '/task',
