@@ -18,19 +18,20 @@
       </el-col>
     </el-row>
     <el-divider />
-    <gettal/>
+    <Gantt id="gantt" :gantt-data="ganttData" />
   </div>
 </template>
 
 <script>
 import * as Ajax from "@/api/statistics";
 import Chart from "./PieChart";
-import gettal from "./gettal";
+import Gantt from "./Gantt";
 export default {
   name: "all-statistics",
-  components: { Chart,gettal },
+  components: { Chart, Gantt },
   data() {
     return {
+      ganttData: [],
       projectProgress: 0,
       HttpParams: {
         project_id: this.$route.params.id
@@ -66,10 +67,33 @@ export default {
       Ajax.getTaskStatistic(this.HttpParams).then(({ data }) => {
         this.$refs["task-chart"].initChart("", data.msg);
       });
+    },
+    //获取甘特图数据
+    getGantt() {
+      Ajax.getGanttData({ id: this.$route.params.id }).then(({ data }) => {
+        const arr = [...data.msg];
+        this.ganttData = arr.map((t, i) => {
+          return {
+            id: t.deptid,
+            label: t.deptname,
+            type: "task",//线条样式
+            start: t.start * 1000,//开始时间
+            end: t.end * 1000,//结束时间
+            duration: t.last * 60 * 60 * 1000,//工时
+            style: {
+              base: {//颜色
+                fill: "#8E44AD",
+                stroke: "#7E349D"
+              }
+            }
+          };
+        });
+      });
     }
   },
   created() {
     this.getProjectProgress();
+    this.getGantt();
   },
   mounted() {
     this.getAssetStatistics();
@@ -81,5 +105,8 @@ export default {
 #statistics {
   position: relative;
   width: 100%;
+  #gantt {
+    padding-bottom: 60px;
+  }
 }
 </style>

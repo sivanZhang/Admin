@@ -19,3 +19,9 @@ export function getTaskStatistic(params) {
         params
     })
 }
+//获取任务甘特图数据
+export function getGanttData(params) {
+    return AXIOS.get('/projects/stat/', {
+        params
+    })
+}
