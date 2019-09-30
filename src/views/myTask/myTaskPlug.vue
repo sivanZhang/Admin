@@ -63,7 +63,7 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="任务详情" name="second" disabled>
+      <el-tab-pane label="任务详情" name="second" disabled lazy>
         <detail
           :TaskDetail="TaskDetail"
           :LogList="LogList"
@@ -106,7 +106,12 @@ export default {
       pageSize: 20,
       pageSizeList: [10, 20, 50, 100],
       TaskDetail: {
-        name: ""
+        asset:{
+          name: "",
+        },
+        project:{
+          image:""
+        }
       },
       LogList: [],
       detailLoading: false,

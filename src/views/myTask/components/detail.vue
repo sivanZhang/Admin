@@ -29,7 +29,7 @@
         <el-tab-pane label="执行任务" name="third">
           <task-form
             :task-record.sync="TaskRecord"
-            :createLoading="createLoading"
+            
             @addRecord="addRecord"
             @cancel="cancel"
           />
