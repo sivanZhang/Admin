@@ -12,7 +12,7 @@
     >
         <el-table-column type="index" :index="indexMethod"></el-table-column>
         <el-table-column label="参与人员" prop="username"></el-table-column>
-        <el-table-column label="参与学校" prop="school"></el-table-column>
+        <el-table-column label="学校" prop="school"></el-table-column>
         <el-table-column label="参与任务数量" prop="task_num" align="center"></el-table-column>
         <el-table-column label="考勤" align="center">
             <el-table-column label="正常考勤" prop="normal"></el-table-column>
