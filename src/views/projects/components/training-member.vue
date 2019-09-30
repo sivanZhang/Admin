@@ -7,7 +7,6 @@
       :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="{borderRight:0}"
       highlight-current-row
-      v-loading="tableLoading"
       :border="false"
     >
         <el-table-column type="index" :index="indexMethod"></el-table-column>
