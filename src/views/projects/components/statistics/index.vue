@@ -86,12 +86,12 @@ export default {
             start: t.start * 1000,//开始时间
             end: t.end * 1000,//结束时间
             duration: t.last * 60 * 60 * 1000,//工时
-            style: {
+            /* style: {
               base: {//颜色
-                fill: "#8E44AD",
-                stroke: "#7E349D"
+                fill: "#26C6DA",
+                stroke: "#4DD0E1"
               }
-            }
+            } */
           };
         });
       });
