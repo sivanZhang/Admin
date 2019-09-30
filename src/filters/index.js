@@ -7,7 +7,7 @@ export function avatarFormat(text) {
 export function dateFormat(date) {
     date *= 1000
     if (dayjs(date).isValid()) {
-        return dayjs().format("YYYY/MM/DD")
+        return dayjs(date).format("YYYY/MM/DD")
     } else {
         return ''
     }
