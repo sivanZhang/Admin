@@ -4,7 +4,7 @@
       <div style="padding-bottom:10px">
         <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
         <el-button type="success" @click="LinkTemplate(1)" v-if="!LinkList.length">环节模板</el-button>
-        <el-button type="primary" @click="LinkTemplate(3,LinkList)" v-if="LinkList.length">保存</el-button>
+        <el-button type="primary" @click="LinkTemplate(3,LinkList)" v-if="LinkList.length">保存模板</el-button>
       </div>
       <div style="display:flex;">
         <el-steps
