@@ -134,7 +134,7 @@ export function bindClientDept(data) {
 }
 //获取获取客户部门或者外包部门
 export function getClientDept(params) {
-    return AXIOS.get('/wkconfig/sysconfig/',  { params })
+    return AXIOS.get('/wkconfig/sysconfig/', { params })
 }
 //绑定外网ip和端口
 export function bindIP(data) {
@@ -142,5 +142,13 @@ export function bindIP(data) {
 }
 //查看外网ip和端口
 export function searchIP(params) {
-    return AXIOS.get('/wkconfig/bind/',  { params })
+    return AXIOS.get('/wkconfig/bind/', { params })
+}
+//导入节假日
+export function importDates(data) {
+    return AXIOS.post('/worktime/getdates/', data)
+}
+//获取节假日
+export function getDates(params) {
+    return AXIOS.get('/worktime/getdates/', { params })
 }

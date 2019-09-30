@@ -111,6 +111,17 @@ export const asyncRoutes = [{
                     // roles: 'manage_role'
                 }
             },
+            {
+                path: 'time-management',
+                name: 'time-management',
+                component: () =>
+                    import ('@/views/admin/time-management'),
+                meta: {
+                    title: '时间管理',
+                    icon: 'fs',
+                    // roles: 'manage_role'
+                }
+            },
         ]
     },
     {
@@ -227,16 +238,28 @@ export const constantRoutes = [{
         },
         hidden: true,
         children: [{
-            path: 'import-users',
-            name: 'import-users',
-            component: () =>
-                import ('@/views/admin/user-import'),
-            meta: {
-                title: '用户上传',
-                icon: 'tree',
-                hiddenSideBar: true
+                path: 'import-users',
+                name: 'import-users',
+                component: () =>
+                    import ('@/views/admin/user-import'),
+                meta: {
+                    title: '用户上传',
+                    icon: 'tree',
+                    hiddenSideBar: true
+                }
+            },
+            {
+                path: 'date-import',
+                name: 'date-import',
+                component: () =>
+                    import ('@/views/admin/date-import'),
+                meta: {
+                    title: '用户上传',
+                    icon: 'tree',
+                    hiddenSideBar: true
+                }
             }
-        }]
+        ]
     },
     {
         path: '/task',
