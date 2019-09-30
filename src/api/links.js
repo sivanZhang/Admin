@@ -62,8 +62,8 @@ export function removeTemplateLink(data){
     return AXIOS.post('/links/links_template/',data)
 }
 //通过模板给资产创建环节
-export function templateCreateLink(params){
-    return AXIOS.post('/links/links/create_links',params,{
+export function templateCreateLink(data){
+    return AXIOS.post('/links/create_links/',data,{
         headers: {
             'Content-Type': 'application/json;charset=UTF-8'
         },
