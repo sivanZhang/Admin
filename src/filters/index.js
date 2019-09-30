@@ -1,71 +1,33 @@
+import dayjs from "dayjs";
 //字符形式的头像 格式化保留前一位
 export function avatarFormat(text) {
     return `${text}`.substring(0, 1);
 }
-//时间戳格式化为 yyyy/dd/mm
+//时间戳格式化为 YYYY/MM/DD
 export function dateFormat(date) {
-    if (date) {
-        const TIME = new Date(date * 1000)
-
-        function add0(val) {
-            if (val < 10) {
-                return `0${val}`
-            } else {
-                return val
-            }
-        }
-        let [dd, mm] = [add0(TIME.getDate()),
-        add0(TIME.getMonth() + 1)
-        ]
-
-        return `${TIME.getFullYear()}/${mm}/${dd}`
+    date *= 1000
+    if (dayjs(date).isValid()) {
+        return dayjs().format("YYYY/MM/DD")
     } else {
-        return '-'
+        return ''
     }
 }
-//时间戳格式化为 yyyy/dd/mm hh:mm:ss
+//时间戳格式化为 YYYY/MM/DD HH:mm:ss
 export function dateTimeFormat(date) {
-    if (date) {
-        const TIME = new Date(date * 1000)
-
-        function add0(val) {
-            if (val < 10) {
-                return `0${val}`
-            } else {
-                return val
-            }
-        }
-        let [dd, mm, MM, hh, ss] = [add0(TIME.getDate()),
-        add0(TIME.getMonth() + 1),
-        add0(TIME.getMinutes()),
-        add0(TIME.getHours()),
-        add0(TIME.getSeconds()),
-        ]
-
-        return `${TIME.getFullYear()}/${mm}/${dd} ${hh}:${MM}:${ss}`
+    date *= 1000
+    if (dayjs(date).isValid()) {
+        return dayjs().format("YYYY/MM/DD HH:mm:ss")
     } else {
-        return '-'
+        return ''
     }
 }
-//时间格式化 hh:mm:ss
+//时间格式化 HH:mm
 export function dateHMSFormat(date) {
-    if (date) {
-        const TIME = new Date(date * 1000)
-
-        function add0(val) {
-            if (val < 10) {
-                return `0${val}`
-            } else {
-                return val
-            }
-        }
-        let [dd, mm] = [add0(TIME.getDate()),
-        add0(TIME.getMonth() + 1)
-        ]
-
-        return `${TIME.toLocaleTimeString()}`
+    date *= 1000
+    if (dayjs(date).isValid()) {
+        return dayjs().format("HH:mm")
     } else {
-        return '-'
+        return ''
     }
 }
 //项目工作流格式化
@@ -323,8 +285,8 @@ export function attrsFilter(attrs) {
     }
 }
 //实体信息
-export function entityFilter(entity){
-    switch(entity){
+export function entityFilter(entity) {
+    switch (entity) {
         case 1:
             return '任务实体'
             break

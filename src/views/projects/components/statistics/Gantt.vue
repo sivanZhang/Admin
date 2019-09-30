@@ -1,15 +1,15 @@
 <style lang="scss">
-  .gantt-elastic__header-btn-recenter{
-    padding: 6px 12px!important;
-    font-size: 14px!important;
-  }
+.gantt-elastic__header-btn-recenter {
+  padding: 6px 12px !important;
+  font-size: 14px !important;
+}
+.gantt-elastic__task-list-header-label{
+  text-align: left;
+}
 </style>
 <template>
   <div>
-    <gantt-elastic
-      :options="options"
-      :tasks="ganttData"
-    >
+    <gantt-elastic :options="options" :tasks="ganttData">
       <gantt-header slot="header" :options="headerOption"></gantt-header>
     </gantt-elastic>
   </div>
@@ -35,25 +35,19 @@ let options = {
     columns: [
       {
         id: 1,
-        label: "工种ID",
-        value: "id",
-        width: 120
-      },
-      {
-        id: 2,
         label: "工种名称",
         value: "label",
         width: 200,
       },
       {
-        id: 3,
+        id: 2,
         label: "开始时间",
         value: task => dayjs(task.start).format("YYYY-MM-DD"),
         width: 120,
         html: true
       },
       {
-        id: 4,
+        id: 3,
         label: "结束时间",
         value: task => dayjs(task.end).format("YYYY-MM-DD"),
         width: 120
@@ -63,7 +57,20 @@ let options = {
   locale: {
     name: "zh-cn",
     weekdays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-    months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',]
+    months: [
+      "01月",
+      "02月",
+      "03月",
+      "04月",
+      "05月",
+      "06月",
+      "07月",
+      "08月",
+      "09月",
+      "10月",
+      "11月",
+      "12月"
+    ]
   }
 };
 /* locale: {
@@ -114,12 +121,10 @@ export default {
   data() {
     return {
       options,
-      dynamicStyle: {},
-      lastId: 16,
       headerOption: {
         title: {
-          label: '',
-          html: false
+          label: "<h6 style='letter-spacing:initial'>项目甘特图:</h6>",
+          html: true
         },
         locale: {
           Now: "当前时间",
