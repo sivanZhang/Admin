@@ -389,11 +389,6 @@ export default {
                     num: this.MyTaskList.length
                 },
                 {
-                    title: '暂停',
-                    status: 0,
-                    num: this.PauseArr.length
-                },
-                {
                     title: '未开始',
                     status: 1,
                     num: this.DraftArr.length
@@ -404,20 +399,26 @@ export default {
                     num: this.InProgressArr.length
                 },
                 {
+                    title: '暂停',
+                    status: 0,
+                    num: this.PauseArr.length
+                },
+                {
                     title: '审核中',
                     status: 3,
                     num: this.ApproveingArr.length
-                },
-                {
-                    title: '完成',
-                    status: 4,
-                    num: this.FinishedArr.length
                 },
                 {
                     title: '超时',
                     status: 5,
                     num: this.TimeOutArr.length
                 },
+                {
+                    title: '完成',
+                    status: 4,
+                    num: this.FinishedArr.length
+                }
+
                 // {
                 //     title: '审核通过',
                 //     status: 6,
