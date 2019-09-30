@@ -7,7 +7,7 @@
           <training :trainingMenber="trainingMenber" />
         </el-tab-pane>
       </template>
-      <el-tab-pane label="镜头" name="tab0" lazy> 
+      <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
           ref="scene"
           :activeName="activeName"
@@ -30,7 +30,7 @@
       <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
-      <el-tab-pane label="项目设置" name="tab3">
+      <el-tab-pane label="项目设置" name="tab3" lazy>
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
       <el-tab-pane label="数据统计" name="tab4" lazy>
@@ -45,7 +45,7 @@ import { queryAssets } from "@/api/assets";
 import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
-import training from "./components/training-member"
+import training from "./components/training-member";
 import { getProjects } from "@/api/project";
 import { getTrainingProject, getProjectJoinMeb } from "@/api/training";
 import statistics from "./components/statistics";
@@ -67,16 +67,17 @@ export default {
       configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first",
       assetId: null,
       assetJump: null,
-      trainingMenber:[]
+      trainingMenber: []
     };
   },
   watch: {
-    activeName: {
+    project: {
       handler: function(newVal, oldVal) {
-        if (newVal === "tab3") {
-          this.getProjectDetail();
+        if (newVal) {
+          if (newVal.pro_type === 0) {
+            this.activeName = "tab5";
+          }
         }
-        
       }
     }
   },
@@ -95,18 +96,19 @@ export default {
     getProjectDetail() {
       // console.log(this.$route.query.type);
       if (this.$route.query.type == "0") {
-        this.activeName = "tab5";
+        // this.activeName = "tab5";
         getTrainingProject({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
         });
-         getProjectJoinMeb({id: this.$route.params.id, users: "users"}).then(({data})=>{
-          this.trainingMenber =[...data.msg]
-        })
+        getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
+          ({ data }) => {
+            this.trainingMenber = [...data.msg];
+          }
+        );
       } else {
         getProjects({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
         });
-       
       }
     }
   },
@@ -122,7 +124,7 @@ export default {
       this.assetJump = this.$route.query.tab;
     }
     this.assetId = this.$route.query.asset;
-    
+
     //console.log(this.assetId);
   },
   //每次路由从批量上传进入，会刷新

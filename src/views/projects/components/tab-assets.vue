@@ -939,6 +939,7 @@
         @refresh_assetList="getAssetList"
         ref="assetsDrawer"
         :assetJump="assetJump"
+        :LinkAssetList="LinkAssetList"
       />
     </Drawer>
   </div>
@@ -1183,7 +1184,8 @@ export default {
       conducting: [],
       finish: [],
       notstart: [],
-      pause: []
+      pause: [],
+      LinkAssetList:[]
     };
   },
   watch: {
@@ -1682,6 +1684,11 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
+            this.AssetList.forEach(item=>{
+              if(!item.link.length){
+                this.LinkAssetList.push(item);
+              }
+            })
             this.total = data.count;
             this.pageCount = data.page_count;
           }

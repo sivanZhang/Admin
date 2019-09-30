@@ -3,6 +3,8 @@
     <div>
       <div style="padding-bottom:10px">
         <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
+        <el-button type="success" @click="LinkTemplate(1)" v-if="!LinkList.length">环节模板</el-button>
+        <el-button type="primary" @click="LinkTemplate(3,LinkList)" v-if="LinkList.length">保存</el-button>
       </div>
       <div style="display:flex;">
         <el-steps
@@ -93,6 +95,7 @@
       </div>
     </div>
 
+    <!-- 添加环节 -->
     <el-dialog title="添加环节" :visible.sync="isDialogShow" width="512px" center :modal="false">
       <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
         <el-col :span="4">
@@ -107,7 +110,12 @@
               prop="content"
               :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
-              <el-input type="textarea" v-model="item.content" style="width:100%" @input="change($event)"></el-input>
+              <el-input
+                type="textarea"
+                v-model="item.content"
+                style="width:100%"
+                @input="change($event)"
+              ></el-input>
             </el-form-item>
             <el-form-item
               label="当前工种"
@@ -151,7 +159,7 @@
       </el-row>
     </el-dialog>
     <!-- 添加任务 -->
-    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="490px" :modal="false">
+    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="512px" center :modal="false">
       <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="100px">
         <el-form-item label="任务名称" prop="name">
           <el-input v-model="TaskForm.name" @input="change($event)"></el-input>
@@ -172,7 +180,7 @@
           <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
-          <el-select v-model="TaskForm.status" filterable  placeholder="请选择任务状态">
+          <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
             <el-option
               v-for="item of StatusList"
               :label="item.label"
@@ -182,7 +190,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" filterable  multiple placeholder="请选择执行人">
+          <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择执行人">
             <el-option
               v-for="item of DeptUsers"
               :label="item.username"
@@ -191,17 +199,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="环节时间" >
+        <el-form-item label="环节时间">
           <el-row style="padding-left:10px;font-size: 12px;">
-          <el-col  :span=5 >
-          {{linkstart|dateFormat}}
-          </el-col>
-          <el-col :span=2  >
-            <span >至</span>
-          </el-col>
-          <el-col :span=17 >
-            {{linkend|dateFormat}}
-          </el-col>
+            <el-col :span="5">{{linkstart|dateFormat}}</el-col>
+            <el-col :span="2">
+              <span>至</span>
+            </el-col>
+            <el-col :span="17">{{linkend|dateFormat}}</el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -226,7 +230,7 @@
       </el-form>
     </el-dialog>
     <!-- 环节修改 -->
-    <el-dialog title="修改环节" :visible.sync="isLinkDialogShow" width="490px" center :modal="false">
+    <el-dialog title="修改环节" :visible.sync="isLinkDialogShow" width="512px" center :modal="false">
       <el-form :model="updateLinkForm" label-width="100px">
         <el-form-item
           label="当前工种"
@@ -254,7 +258,7 @@
             v-model="updateLinkForm.datetime"
             type="daterange"
             range-separator="至"
-            format="yyyy/MM/dd" 
+            format="yyyy/MM/dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item align="right">
@@ -262,12 +266,174 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 环节模板 -->
+    <el-dialog
+      title="环节模板"
+      :visible.sync="linkTemplateDialog"
+      width="512px"
+      center
+      :modal="false"
+      @close="cancelLinkTemplate"
+    >
+      <el-tabs v-model="linkActiveName">
+        <el-tab-pane label="环节模板" name="link-first">
+          <el-table
+            ref="linkTemplateList"
+            :data="linkTemplateList"
+            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+            :cell-style="{borderRight:0}"
+            highlight-current-row
+            :border="false"
+          >
+            <el-table-column type="index"></el-table-column>
+            <el-table-column label="模板名称" prop="name"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" content="使用模板" placement="top">
+                  <el-button
+                    icon="el-icon-plus"
+                    style="color:blue"
+                    type="text"
+                    @click="LinkTemplate(6,scope.row)"
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
+                  <el-button
+                    icon="el-icon-top-right"
+                    style="color:green"
+                    type="text"
+                    @click="LinkTemplate(2,scope.row)"
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                  <el-button
+                    icon="el-icon-delete"
+                    style="color:red"
+                    type="text"
+                    @click="LinkTemplate(5,scope.row)"
+                  ></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="模板详情" name="link-second" :disabled="templateDetail">
+          <div style="display:flex;overflow:auto">
+            <el-steps
+              direction="vertical"
+              :active="1"
+              style="width:250px;display:flex；justify-content:flex-start"
+              v-for="(todo,Index) of linkTemplate"
+              :key="Index"
+            >
+              <el-step
+                v-for="item of todo"
+                :key="item.link_id"
+                status="process"
+                style="width:250px"
+              >
+                <div slot="title" style="font-size:14px;">{{item.dept.name}}</div>
+                <ul slot="description" style="width:250px;">
+                  <li>制作要求: {{item.content}}</li>
+                  <template>
+                    <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
+                    <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
+                  </template>
+                </ul>
+              </el-step>
+            </el-steps>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
+    <!-- 环节保存为模板 -->
+    <el-dialog title="模板保存" :visible.sync="saveTemplateLink" width="512px" center :modal="false">
+      <el-row style="padding-bottom:10px">
+        <el-col :span="4">模板名称：</el-col>
+        <el-col :span="20">
+          <el-input v-model="inputTemplateName"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4">模板展示：</el-col>
+        <el-col :span="20">
+          <div style="display:flex;overflow: auto;">
+            <el-steps
+              direction="vertical"
+              :active="1"
+              style="width:250px;display:flex；justify-content:flex-start"
+              v-for="(todo,Index) of LinkList"
+              :key="Index"
+            >
+              <el-step
+                v-for="item of todo"
+                :key="item.link_id"
+                status="process"
+                style="width:250px"
+              >
+                <div slot="title" style="font-size:14px;">{{item.dept.name}}</div>
+                <ul slot="description" style="width:250px;">
+                  <li>制作要求: {{item.content}}</li>
+                  <template>
+                    <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
+                    <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
+                  </template>
+                </ul>
+              </el-step>
+            </el-steps>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row style="padding-top:10px">
+        <el-col align="right">
+          <el-button type="primary" @click="LinkTemplate(4,LinkList)">保存为模板</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
+    <!-- 使用模板 -->
+    <el-dialog
+      :title="titleTemplate"
+      :visible.sync="useTemplate"
+      width="512px"
+      center
+      :modal="false"
+    >
+      <!-- {{LinkAssetList}} -->
+      <el-row>
+        <el-col :span="4">资产名称：</el-col>
+        <el-col :span="20">
+          <el-select v-model="selAsset" multiple>
+            <el-option
+              v-for="(item,index) of LinkAssetList"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col align="right">
+          <el-button type="primary" @click="LinkTemplate(7)">立即复用</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { addTask } from "@/api/task";
-import { addLinks, getLink, updateLink, delLink } from "@/api/links";
+import {
+  addLinks,
+  getLink,
+  updateLink,
+  delLink,
+  createTemplateLink,
+  searchTempalteLink,
+  putTemplateLink,
+  removeTemplateLink,
+  templateCreateLink
+} from "@/api/links";
 import { getDeptUsers } from "@/api/admin";
 import { getDept } from "@/api/admin";
 import { mapState } from "vuex";
@@ -295,18 +461,126 @@ export default {
       content: null,
       datetime: null,
       datacontent: null,
-      linkstart:null,
-      linkend:null,
+      linkstart: null,
+      linkend: null,
+      linkTemplateDialog: false,
+      linkActiveName: "link-first",
+      templateDetail: true,
+      linkTemplateList: [],
+      linkTemplate: [],
+      saveTemplateLink: false,
+      inputTemplateName: "",
+      useTemplate: false,
+      titleTemplate: "",
+      selAsset: [],
+      templateId: null
     };
   },
-  props: ["LinkList", "project","assetTaskList"],
- 
+  props: ["LinkList", "project", "assetTaskList", "LinkAssetList"],
+  watch: {
+    linkActiveName: {
+      handler: function(newVal, oldVal) {
+        if (newVal === "link-first") {
+          this.templateDetail = true;
+        }
+      }
+    }
+  },
   computed: {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
+    //环节模板
+    LinkTemplate(Type, row) {
+      //获取模板列表
+      if (Type === 1) {
+        this.linkTemplateDialog = true;
+        searchTempalteLink().then(({ data }) => {
+          this.linkTemplateList = [...data.msg];
+        });
+      }
+      //展示模板详情
+      if (row && Type === 2) {
+        this.templateDetail = false;
+        this.linkActiveName = "link-second";
+        searchTempalteLink({ id: row.id }).then(({ data }) => {
+          this.linkTemplate = [...data.msg];
+          //console.log(this.linkTemplate)
+        });
+      }
+      //模板保存dialog
+      if (Type === 3) {
+        this.saveTemplateLink = true;
+      }
+      //模板保存
+      if (row && Type === 4) {
+        let links = [];
+        // console.log(row);
+        row.forEach(item => {
+          item.forEach(ct => {
+            links.push(ct.link_id);
+          });
+        });
+        createTemplateLink({ name: this.inputTemplateName, links: links }).then(
+          ({ data }) => {
+            this.saveTemplateLink = false;
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              //this.LinkTemplate(1);
+            } else {
+              thsi.$message.error(data.msg);
+            }
+          }
+        );
+      }
+      //模板删除
+      if (Type === 5) {
+        this.$confirm("此操作将永久删除该环节模板, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          removeTemplateLink({ id: row.id, method: "delete" }).then(
+            ({ data }) => {
+              if (data.status === 0) {
+                this.$message.success(data.msg);
+                this.LinkTemplate(1);
+              } else {
+                this.$message.error(data.msg);
+              }
+            }
+          );
+        });
+      }
+      //模板复用dialog打开
+      if (row && Type === 6) {
+        this.useTemplate = true;
+        this.titleTemplate = row.name + "模板复用";
+        this.templateId = row.id;
+      }
+      //确认复用模板
+      if (Type === 7) {
+        // console.log(this.selAsset);
+        // console.log(this.templateId);
+        templateCreateLink({
+          asset_ids: this.selAsset,
+          links_template_id: this.templateId
+        }).then(({ data }) => {
+          if (data.staus === 0) {
+            this.$message.success(data.msg);
+            this.$emit("refresh");
+            this.$emit("refresh_assetList");
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      }
+    },
+    cancelLinkTemplate() {
+      this.linkActiveName = "link-first";
+    },
     //总工时默认值
-    changeTime(val){
+    changeTime(val) {
       function dataFormat(params) {
         return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
       }
@@ -321,12 +595,12 @@ export default {
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
-      this.FormList[ind].content=this.datacontent[0].content;
+      this.FormList[ind].content = this.datacontent[0].content;
     },
     //创建环节时，后置
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
-      this.FormList[ind + 1].content=this.datacontent[0].content;
+      this.FormList[ind + 1].content = this.datacontent[0].content;
     },
     //创建环节时，删除
     deleteLink(index) {
@@ -342,10 +616,8 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start:
-            dateFormat(item.date_and_user.date_start) ,
-          date_end:
-            dateFormat(item.date_and_user.date_end) ,
+          date_start: dateFormat(item.date_and_user.date_start),
+          date_end: dateFormat(item.date_and_user.date_end),
           asset: this.project.id,
           pid: this.LinkList[Index][index - 1].pid,
           dept: item.dept.id
@@ -353,12 +625,12 @@ export default {
         {
           id: this.LinkList[Index][index - 1].link_id,
           content: this.LinkList[Index][index - 1].content,
-          date_start:
-            dateFormat(
-              this.LinkList[Index][index - 1].date_and_user.date_start
-            ) ,
-          date_end:
-            dateFormat(this.LinkList[Index][index - 1].date_and_user.date_end),
+          date_start: dateFormat(
+            this.LinkList[Index][index - 1].date_and_user.date_start
+          ),
+          date_end: dateFormat(
+            this.LinkList[Index][index - 1].date_and_user.date_end
+          ),
           asset: this.project.id,
           pid: item.link_id,
           dept: this.LinkList[Index][index - 1].dept.id
@@ -387,11 +659,8 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start:
-            dateFormat(item.date_and_user.date_start),
-          date_end:
-            dateFormat(item.date_and_user.date_end) 
-              ,
+          date_start: dateFormat(item.date_and_user.date_start),
+          date_end: dateFormat(item.date_and_user.date_end),
           asset: this.project.id,
           pid: this.LinkList[Index][index + 1].link_id,
           dept: item.dept.id
@@ -399,12 +668,12 @@ export default {
         {
           id: this.LinkList[Index][index + 1].link_id,
           content: this.LinkList[Index][index + 1].content,
-          date_start:
-            dateFormat(
-              this.LinkList[Index][index + 1].date_and_user.date_start
-            ) ,
-          date_end:
-            dateFormat(this.LinkList[Index][index + 1].date_and_user.date_end ),
+          date_start: dateFormat(
+            this.LinkList[Index][index + 1].date_and_user.date_start
+          ),
+          date_end: dateFormat(
+            this.LinkList[Index][index + 1].date_and_user.date_end
+          ),
           asset: this.project.id,
           pid: item.pid,
           dept: this.LinkList[Index][index + 1].dept.id
@@ -433,10 +702,10 @@ export default {
         {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
-          date_start:
-            dateFormat(this.LinkList[Index][0].date_and_user.date_start) ,
-          date_end:
-            dateFormat(this.LinkList[Index][0].date_and_user.date_end) ,
+          date_start: dateFormat(
+            this.LinkList[Index][0].date_and_user.date_start
+          ),
+          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
           asset: this.project.id,
           pid: this.LinkList[Index - 1][this.LinkList[Index - 1].length - 1]
             .link_id,
@@ -466,10 +735,10 @@ export default {
         {
           id: this.LinkList[Index][0].link_id,
           content: this.LinkList[Index][0].content,
-          date_start:
-            dateFormat(this.LinkList[Index][0].date_and_user.date_start) ,
-          date_end:
-            dateFormat(this.LinkList[Index][0].date_and_user.date_end) ,
+          date_start: dateFormat(
+            this.LinkList[Index][0].date_and_user.date_start
+          ),
+          date_end: dateFormat(this.LinkList[Index][0].date_and_user.date_end),
           asset: this.project.id,
           pid: this.LinkList[Index + 1][this.LinkList[Index + 1].length - 1]
             .link_id,
@@ -500,10 +769,8 @@ export default {
         {
           id: item.link_id,
           content: item.content,
-          date_start:
-            dateFormat(item.date_and_user.date_start) ,
-          date_end:
-            dateFormat(item.date_and_user.date_end) ,
+          date_start: dateFormat(item.date_and_user.date_start),
+          date_end: dateFormat(item.date_and_user.date_end),
           asset: this.project.id,
           pid: 0,
           dept: item.dept.id
@@ -534,13 +801,13 @@ export default {
           priority: 0,
           grade: 0,
           asset: this.project.id,
-          project: this.$route.params.id,
+          project: this.$route.params.id
         }
       );
-     this.datacontent = this.assetTaskList.filter(item=>{
-        return item.asset.id === this.TaskForm.asset
+      this.datacontent = this.assetTaskList.filter(item => {
+        return item.asset.id === this.TaskForm.asset;
       });
-      this.FormList[0].content=this.datacontent[0].content
+      this.FormList[0].content = this.datacontent[0].content;
     },
     cancel() {
       this.isDialogShow = false;
@@ -573,10 +840,10 @@ export default {
       );
       const linkdatastart = date_and_user.date_start;
       const linkdataend = date_and_user.date_end;
-     this.linkstart = linkdatastart;
-     this.linkend = linkdataend;
-      const data = this.assetTaskList.filter(item=>{
-           return item.asset.id === this.TaskForm.asset
+      this.linkstart = linkdatastart;
+      this.linkend = linkdataend;
+      const data = this.assetTaskList.filter(item => {
+        return item.asset.id === this.TaskForm.asset;
       });
       this.TaskForm.name = data[0].asset.name;
     },
@@ -592,8 +859,12 @@ export default {
           this.content = data.msg.content;
           this.dept = data.msg.dept;
           this.datetime = [
-            new Date(dateFormat(data.msg.date_and_user.date_start))>0?new Date(dateFormat(data.msg.date_and_user.date_start)):"",
-            new Date(dateFormat(data.msg.date_and_user.date_end))>0?new Date(dateFormat(data.msg.date_and_user.date_end)):""
+            new Date(dateFormat(data.msg.date_and_user.date_start)) > 0
+              ? new Date(dateFormat(data.msg.date_and_user.date_start))
+              : "",
+            new Date(dateFormat(data.msg.date_and_user.date_end)) > 0
+              ? new Date(dateFormat(data.msg.date_and_user.date_end))
+              : ""
           ];
           this.isLinkDialogShow = true;
           this.updateLinkForm = {
@@ -800,10 +1071,9 @@ export default {
   },
   async created() {
     if (!this.DeptList) {
-     await this.$store.dispatch("admin/get_DeptList");
+      await this.$store.dispatch("admin/get_DeptList");
       this.formatList();
     } else {
-      
       this.formatList();
     }
   }
