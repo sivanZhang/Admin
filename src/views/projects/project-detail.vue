@@ -14,6 +14,7 @@
           drawer-type="scene"
           :assetJump="assetJump"
           :assetId="assetId"
+          @jumpName="jumpName"
         >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
@@ -25,9 +26,10 @@
           :activeName="activeName"
           :assetJump="assetJump"
           :assetId="assetId"
+          @jumpName="jumpName"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2" lazy>
+      <el-tab-pane label="任务" name="tab2" >
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
@@ -82,6 +84,9 @@ export default {
     }
   },
   methods: {
+    jumpName(val){
+      this.activeName = val
+    },
     getAssetList() {
       let payload = {
         project: this.$route.params.id,
@@ -113,6 +118,10 @@ export default {
     }
   },
   created() {
+    // if(this.$route.query.tab === "tab2"){
+    //   this.activeName = "tab2"
+    // }
+    console.log(this.$route.query.tab);
     this.getAssetList();
     this.getProjectDetail();
     if (this.$route.query.asset_type && this.$route.query.asset_type === "1") {
