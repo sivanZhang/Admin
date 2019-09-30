@@ -29,7 +29,7 @@ export function  attrsEntityUnbind(data){
 }
 //创建属性实体
 export function createAttrsEntity(data){
-    return AXIOS.post('/attrs/bind/?delete',data)
+    return AXIOS.post('/attrs/instance/',data)
 }
 //获取属性信息
 export function getAttrsInfo(params){
