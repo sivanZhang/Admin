@@ -343,7 +343,7 @@ export const constantRoutes = [{
         redirect: '/plugin',
         meta: {
             title: '插件',
-            icon: 'list'
+            icon: 'assets'
         },
         children: [{
             path: 'plugin',
@@ -352,7 +352,7 @@ export const constantRoutes = [{
                 import ('@/views/plugin'),
             meta: {
                 title: '插件管理',
-                icon: 'list'
+                icon: 'assets'
             }
         }]
     },

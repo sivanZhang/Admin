@@ -82,28 +82,28 @@
       <div style="width:70%;padding:5px">
         <div style="display:flex">
           <h4 style="margin: 0 10px;"> 插件管理 </h4>
-          <el-button @click="search" type="primary">查询</el-button>
+          <el-button style="margin: 0 10px;" @click="search" type="primary">查询</el-button>
         </div>
-        <div style="padding-top:10px">
+        <div style="margin-top:10px; border: 1px solid #dfe6ec;">
           <el-table :data="tableData" style="width: 100%" ref="plugin">
-            <el-table-column prop="name" label="插件名称"  width="150">
+            <el-table-column prop="name" label="插件名称"  width="120px">
                <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column prop="software" label="适用软件" width="150" >
+            <el-table-column prop="software" label="适用软件" width="120px" >
                <template slot-scope="scope">{{scope.row.software}}</template>
             </el-table-column>
                
-            <el-table-column prop="version" label="插件版本" width="150">
+            <el-table-column prop="version" label="插件版本" width="120px">
                 <template slot-scope="scope">{{scope.row.version}}</template>
             </el-table-column>
               
-            <el-table-column prop="pubdate" label="发布日期" width="150">
+            <el-table-column prop="pubdate" label="发布日期" width="120px">
                <template slot-scope="scope">{{scope.row.pubdate}}</template>
              </el-table-column>  
-            <el-table-column prop="filepath" label="插件文件" width="150">
+            <el-table-column prop="filepath" label="插件文件" width="300px">
                <template slot-scope="scope">{{scope.row.filepath}}</template>
              </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="106px">
               <template slot-scope="scope">
                <el-button @click="deletePlugin(scope.row.name)" type="danger">删除</el-button>
               </template>

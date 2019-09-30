@@ -18,6 +18,9 @@
           :RemarksData="RemarksData"
           :assetsList="TableData"
           :taskList="taskList"
+          :attrsList="attrsList"
+          :customAttrs="customAttrs"
+          @refresh_customAttrs="RefreshcustomAttrs"
           @refresh="show"
         />
       </Drawer>
@@ -169,6 +172,7 @@ import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
 import { delOneProject } from "@/api/project";
+import { getAttrsList, searchBind } from "@/api/attrs";
 export default {
   name: "project",
   components: {
@@ -184,7 +188,9 @@ export default {
       project: null,
       RemarksData: [],
       TableData: [],
-      taskList: []
+      taskList: [],
+      attrsList: [],
+      customAttrs: []
     };
   },
   props: ["trainingProject"],
@@ -220,6 +226,17 @@ export default {
         project: this.project.id
       }).then(({ data }) => {
         this.taskList = [...data.msg];
+      });
+      getAttrsList().then(({ data }) => {
+        this.attrsList = [...data.msg];
+      });
+      searchBind({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
+        this.customAttrs = [...data.msg];
+      });
+    },
+    RefreshcustomAttrs() {
+      searchBind({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
+        this.customAttrs = [...data.msg];
       });
     },
     delProject(item) {

@@ -8,36 +8,44 @@
             <remarks :project="project" :RemarksData="RemarksData"></remarks>
           </el-tab-pane>
           <el-tab-pane label="任务" name="second">
-            <task :taskList="taskList" ></task>
+            <task :taskList="taskList"></task>
           </el-tab-pane>
           <el-tab-pane label="资产" name="third">
-            <assets :project="project"  :assetsList="assetsList"/>
+            <assets :project="project" :assetsList="assetsList" />
           </el-tab-pane>
           <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
           </el-tab-pane>
           <el-tab-pane label="参与工种" name="seventh">
-           <joinDept :project="project"/>
+            <joinDept :project="project" />
+          </el-tab-pane>
+          <el-tab-pane label="自定义属性" name="eighth">
+            <attrsBind :project="project" :customAttrs="customAttrs" :attrsList="attrsList" @refresh_customAttrs="NewcustomAttrs" />
           </el-tab-pane>
         </el-tabs>
       </div>
     </div>
+    
   </div>
 </template>
 
 <script>
 import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
-import assets from "@/components/projectDrawer/components/assets"
-import task from "@/components/projectDrawer/components/task"
-import joinDept from "@/components/projectDrawer/components/joinDept"
+import assets from "@/components/projectDrawer/components/assets";
+import task from "@/components/projectDrawer/components/task";
+import joinDept from "@/components/projectDrawer/components/joinDept";
+import attrsBind from "@/components/projectDrawer/components/attrsBind"
+
 export default {
   props: [
     "project",
     "RemarksData",
     "assetsList",
-    "taskList"
+    "taskList",
+    "attrsList",
+    "customAttrs"
   ],
   data() {
     return {
@@ -46,18 +54,12 @@ export default {
     };
   },
   name: "projectDrawer",
-  components: { remarks, info, assets, task,joinDept},
-  // watch: {
-  //   project: {
-  //     handler: function(newVal, oldVal) {
-  //       if (newVal) {
-  //         this.project = newVal;
-  //       }
-  //     },
-  //     deep: true
-  //   }
-  // },
+  components: { remarks, info, assets, task, joinDept ,attrsBind},
   methods: {
+    
+    NewcustomAttrs(){
+      this.$emit("refresh_customAttrs");
+    },
     handleTabClick(tab, event) {
       // this.getRemarkList();
       console.log(tab, event);
@@ -69,6 +71,7 @@ export default {
 <style lang="scss" scoped>
 .page-right {
   height: 100%;
+  // overflow: auto;
 
   // margin-left: 0.5%;
   .dropdow {
