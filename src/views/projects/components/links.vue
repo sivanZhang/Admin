@@ -566,7 +566,9 @@ export default {
           asset_ids: this.selAsset,
           links_template_id: this.templateId
         }).then(({ data }) => {
-          if (data.staus === 0) {
+          this.linkTemplateDialog = false;
+          this.useTemplate = false;
+          if (data.status === 0) {
             this.$message.success(data.msg);
             this.$emit("refresh");
             this.$emit("refresh_assetList");

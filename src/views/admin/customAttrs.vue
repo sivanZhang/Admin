@@ -3,10 +3,10 @@
   <div id="customAttrs">
     <el-tabs v-model="activeName" >
       <el-tab-pane label="属性" name="tab0" lazy>
-        <attrs :attrsList="attrsList" :tableLoading="tableLoading" />
+        <attrs :attrsList="attrsList" :tableLoading="tableLoading" @refresh-attrs="getAttrs"/>
       </el-tab-pane>
       <el-tab-pane label="属性实体" name="tab1" lazy>
-        <attrsEntity :attrsEntityList="attrsEntityList" :tableLoading="tableLoading"/>
+        <attrsEntity :attrsEntityList="attrsEntityList" :tableLoading="tableLoading" @refresh-attrsEntity="getAttrsEntity"/>
       </el-tab-pane>
     </el-tabs>
   </div>

@@ -315,6 +315,25 @@ export const constantRoutes = [{
         }, ]
     },
     {
+        path: '/plugin',
+        component: Layout,
+        redirect: '/plugin',
+        meta: {
+            title: '插件',
+            icon: 'list'
+        },
+        children: [{
+            path: 'plugin',
+            name: 'plugin',
+            component: () =>
+                import ('@/views/plugin'),
+            meta: {
+                title: '插件管理',
+                icon: 'list'
+            }
+        }]
+    },
+    {
         path: '/assetes',
         component: Layout,
         alwaysShow: true,
