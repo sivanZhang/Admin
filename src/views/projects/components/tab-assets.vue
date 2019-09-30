@@ -498,16 +498,16 @@
           <template slot-scope="scope">
             <el-input
               size="small"
-              v-model="scope.row.reference"
+              v-model="scope.row.pro_reference"
               placeholder="请输入制作参考内容"
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
             >
-              <span>{{scope.row.reference?scope.row.reference:"-"}}</span>
+              <span>{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
             </el-input>
             <span
               v-if="!editing||clickId !== scope.row.id"
-            >{{scope.row.reference?scope.row.reference:"-"}}</span>
+            >{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
           </template>
         </el-table-column>
 
