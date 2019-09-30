@@ -2,6 +2,11 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
+      <template v-if="project.pro_type === 0">
+        <el-tab-pane label="实训成员">
+          <training :trainingMenber="trainingMenber" />
+        </el-tab-pane>
+      </template>
       <el-tab-pane label="镜头" name="tab0" lazy> 
         <tab-assets
           ref="scene"
@@ -40,8 +45,9 @@ import { queryAssets } from "@/api/assets";
 import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
+import training from "./components/training-member"
 import { getProjects } from "@/api/project";
-import { getTrainingProject } from "@/api/training";
+import { getTrainingProject, getProjectJoinMeb } from "@/api/training";
 import statistics from "./components/statistics";
 export default {
   name: "project-detail",
@@ -49,7 +55,8 @@ export default {
     tabTask,
     tabAssets,
     configProject,
-    statistics
+    statistics,
+    training
   },
   data() {
     return {
@@ -59,7 +66,8 @@ export default {
       project: {},
       configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first",
       assetId: null,
-      assetJump: null
+      assetJump: null,
+      trainingMenber:[]
     };
   },
   watch: {
@@ -90,10 +98,14 @@ export default {
         getTrainingProject({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
         });
+         getProjectJoinMeb({id: this.$route.params.id, users: "users"}).then(({data})=>{
+          this.trainingMenber =[...data.msg]
+        })
       } else {
         getProjects({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
         });
+       
       }
     }
   },

@@ -68,7 +68,7 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="参与工种" name="second" style="height: auto;overflow: auto;">
+      <el-tab-pane label="培训岗位" name="second" style="height: auto;overflow: auto;">
         <div style="display:flex">
           <div style="width:50%;padding:5px ">
             <div style="display:flex">
