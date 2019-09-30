@@ -487,6 +487,30 @@
             >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
           </template>
         </el-table-column>
+
+          <el-table-column
+          prop="reference"
+          label="制作参考"
+          align="left"
+          width="120px"
+          v-if="show_frame_reference"
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.reference"
+              placeholder="请输入制作参考内容"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.reference?scope.row.reference:"-"}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.reference?scope.row.reference:"-"}}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="report" label="画面调整信息" align="left" width="120px" v-if="show_report">
           <template slot-scope="scope">
             <el-input
@@ -1031,6 +1055,7 @@ export default {
       show_name: true,
       show_frame: true,
       show_frame_range: true,
+      show_frame_reference: true,
       show_report: true,
       show_retime: true,
       show_inner_version: true,
@@ -1126,6 +1151,10 @@ export default {
         {
           value: "frame_range",
           label: "帧数范围"
+        },
+        {
+          value: "reference",
+          label: "制作参考"
         },
         {
           value: "report",
@@ -1583,7 +1612,8 @@ export default {
         frame_range: row.frame_range,
         start: DateFormat(this.start_date),
         end: DateFormat(this.end_date),
-        small_status: row.small_status
+        small_status: row.small_status,
+        reference:row.reference
       };
       if (payload.start === "Invalid Date") {
         delete payload.start;
@@ -1661,6 +1691,9 @@ export default {
       }
       if (this.colSel == "frame_range" && this.filterText) {
         payload = { ...payload, frame_range: this.filterText };
+      }
+      if (this.colSel == "reference" && this.filterText) {
+        payload = { ...payload, reference: this.filterText };
       }
       if (this.colSel == "creator" && this.filterText) {
         payload = { ...payload, creator: this.filterText };

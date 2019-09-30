@@ -34,8 +34,11 @@
                     v-for="item of DraftArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#808695',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                    :body-style="{backgroundColor:'#c3E3E5',color:'#fff',padding:'5px',width:'200px'}"
+                  >
+                  <div class="cardvalue">{{item.name}}</div>
+                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                  </el-card>
                 </draggable>
               </div>
             </el-col>
@@ -58,8 +61,11 @@
                     v-for="item of InProgressArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#19be6b',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                    :body-style="{backgroundColor:'#589BAD',color:'#fff',padding:'5px',width:'200px'}"
+                  >
+                     <div class="cardvalue">{{item.name}}</div>
+                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                  </el-card>
                 </draggable>
               </div>
             </el-col>
@@ -81,8 +87,11 @@
                     v-for="item of PauseArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#ff9900',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                    :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px',width:'200px'}"
+                  >
+                     <div class="cardvalue">{{item.name}}</div>
+                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                  </el-card>
                 </draggable>
               </div>
             </el-col>
@@ -104,41 +113,67 @@
                     v-for="item of TimeOutArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#ed4014',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
+                    :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px',width:'200px'}"
+                  >
+                     <div class="cardvalue">{{item.name}}</div>
+                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                  </el-card>
                 </draggable>
               </div>
             </el-col>
             <el-col>
-              <div class="project-warp" style="background-color:#eeeeee">
+              <div class="project-warp" >
+              <!-- <div class="project-warp" style="background-color:#eeeeee"> -->
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">审核中</el-col>
                 </el-row>
-                <div class="board-column-content">
+                 <draggable
+                  class="board-column-content"
+                  v-model="FinishedArr"
+                  group="task"
+                  :sort="false"
+                  @end="handelChanged"
+                  data-arr="FinishedArr"
+                >
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of ApproveingArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#e91e63',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
-                </div>
+                    :body-style="{backgroundColor:'#2D5637',color:'#fff',padding:'5px',width:'200px'}"
+                  >
+                     <div class="cardvalue">{{item.name}}</div>
+                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                  </el-card>
+                 </draggable>
+                
               </div>
             </el-col>
             <el-col>
-              <div class="project-warp" style="background-color:#eeeeee">
+              <div class="project-warp">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">完成</el-col>
                 </el-row>
-                <div class="board-column-content">
+                <draggable
+                  class="board-column-content"
+                  v-model="ApproveingArr"
+                  group="task"
+                  :sort="false"
+                  @end="handelChanged"
+                  data-arr="ApproveingArr"
+                >
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of FinishedArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#2d8cf0',color:'#fff',padding:'15px'}"
-                  >{{item.name}}</el-card>
-                </div>
+                    :body-style="{backgroundColor:'#2f5c85',color:'#fff',padding:'5px',height:'120px',width:'200px'}"
+                  >
+                    <div class="cardvalue">{{item.name}}</div>
+                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                  </el-card>
+                </draggable>
+                
               </div>
             </el-col>
           </el-row>

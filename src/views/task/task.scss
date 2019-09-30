@@ -11,6 +11,18 @@
         height: 100%;
         min-height: 51px;
     }
+    .cardvalue{
+        word-break:break-all;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+    }
+    .feedback{
+        font-size: 12px;
+        padding-left: 10px;
+        padding-top: 4px;
+        padding-bottom:15px
+    }
     .status {
         i {
             display: none;
