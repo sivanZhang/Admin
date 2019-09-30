@@ -12,6 +12,7 @@
               @refresh="getLinkList"
               @refresh_assetList="getAssetList"
               :assetTaskList="assetTaskList"
+              :LinkAssetList="LinkAssetList"
             ></links>
           </el-tab-pane>
           <el-tab-pane label="评论" name="second">
@@ -101,7 +102,7 @@ import { getAssetTaskList } from "@/api/task";
 import approveLog from "@/views/components/approve-log";
 export default {
   name: "assets-drawer",
-  props: ["project", "RemarksData", "assetJump"],
+  props: ["project", "RemarksData", "assetJump","LinkAssetList"],
   data() {
     return {
       activeTab: this.assetJump ? this.assetJump : "first",
