@@ -3,7 +3,7 @@
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
       <template v-if="project.pro_type === 0">
-        <el-tab-pane label="实训成员">
+        <el-tab-pane label="实训成员" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
         </el-tab-pane>
       </template>
@@ -95,6 +95,7 @@ export default {
     getProjectDetail() {
       // console.log(this.$route.query.type);
       if (this.$route.query.type == "0") {
+        this.activeName = "tab5";
         getTrainingProject({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
         });
