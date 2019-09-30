@@ -152,15 +152,17 @@ export default {
       });
     },
     openTaskDetail(row) {
-      this.$router.push({
-        name: "project-detail", //也可以 path:'/projects/project-detail/'
-        params: {
-          id: row.project.id
-        },
-        query: {
-          tab: "tab2"
-        }
-      });
+      // this.$router.push({
+      //   name: "project-detail", //也可以 path:'/projects/project-detail/'
+      //   params: {
+      //     id: row.project.id
+      //   },
+      //   query: {
+      //     tab: "tab2"
+      //   }
+      // });
+      this.$emit("jumpName","tab2")
+
     }
   }
 };

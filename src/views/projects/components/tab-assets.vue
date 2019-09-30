@@ -940,6 +940,7 @@
         ref="assetsDrawer"
         :assetJump="assetJump"
         :LinkAssetList="LinkAssetList"
+        @jumpName="jumpName"
       />
     </Drawer>
   </div>
@@ -1298,6 +1299,9 @@ export default {
     }
   },
   methods: {
+    jumpName(val){
+      this.$emit("jumpName",val)
+    },
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
