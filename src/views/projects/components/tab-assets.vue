@@ -1613,7 +1613,7 @@ export default {
         start: DateFormat(this.start_date),
         end: DateFormat(this.end_date),
         small_status: row.small_status,
-        reference:row.reference
+        reference:row.pro_reference
       };
       if (payload.start === "Invalid Date") {
         delete payload.start;
@@ -1829,7 +1829,7 @@ export default {
                 break;
             }
           });
-          // console.log(this.pause);
+          console.log(this.pause);
         }
       );
     },
