@@ -192,9 +192,15 @@ import { getRemark, addRemark, removeRemark } from "@/api/remark";
 
 import { getUserList } from "@/api/admin";
 export default {
-  props:[
-    "project","RemarksData"
-  ],
+  props:{
+    project:{
+      type:Object
+    },
+    RemarksData:{
+      type:Array,
+      default:[]
+    }
+  },
 
   data() {
     return {
@@ -209,6 +215,7 @@ export default {
       remarksResult: {},
       pid: null,
       // RemarksData: this.RemarksData,
+      RemarksData:[],
       buttons: false,
       optionInput: "",
       options: [

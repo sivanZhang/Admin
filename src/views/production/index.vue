@@ -3,7 +3,7 @@
 }
 </style>
 <template>
-  <div id="my-production">
+  <div id="my-production" ref="drawer-parent">
     <el-select v-model="currentAuthor" placeholder="请选择">
       <el-option v-for="item in Authors" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
@@ -62,27 +62,47 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="text">评论</el-button>
+          <el-button type="text" @click="viewComments(scope.row.task[0].taskid)">评论</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
-      <video ref="videoplayer" :src="videoSrc" controls  width="100%">
-      </video>
+      <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
     </el-dialog>
+    <Drawer
+      scrollable
+      closable
+      v-model="isDrawerShow"
+      width="526"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+      title="评论"
+    >
+      <remarks ref="remarks" :project="RemarkParams" />
+    </Drawer>
   </div>
 </template>
 
 <script>
+import remarks from "@/components/projectDrawer/components/remarks";
 import { getProduction } from "@/api/production";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
   name: "my-production",
+  mixins: [thumbtackMixin], //drawer图钉效果
+  components: {
+    remarks
+  },
   data() {
     return {
-      videoSrc:'',
-      dialogTableVisible: false,
-      tableLoading: false,
-      ProductionList: [],
+      RemarkParams: {}, //传给remark的参数
+      isDrawerShow: false, //是否显示drawer
+      videoSrc: "",
+      dialogTableVisible: false, //dialog是否显示
+      tableLoading: false, //table的加载效果
+      ProductionList: [], //table的数据
+      //作品参数
       Authors: [
         {
           label: "所有作品",
@@ -94,6 +114,7 @@ export default {
         }
       ],
       currentAuthor: "myworks",
+      //作品类型
       Types: [
         {
           label: "所有类型",
@@ -112,14 +133,27 @@ export default {
     };
   },
   methods: {
-    endPlay(){
-      this.$refs['videoplayer'].pause()
+    //点击评论按钮显示评论drawer
+    viewComments(id) {
+      this.RemarkParams = {
+        id,
+        entity_type: 1
+      };
+      this.$nextTick(() => {
+        this.$refs["remarks"].getRemarkList();
+        this.isDrawerShow = true;
+      });
     },
-    //打开视频弹框
-    showVideo(path){
-      this.dialogTableVisible = true
-      this.videoSrc = this.$store.state.BASE_URL+path
+    //关闭dialog回调，停止视频播放
+    endPlay() {
+      this.$refs["videoplayer"].pause();
     },
+    //打开视频弹框，为视频src赋值
+    showVideo(path) {
+      this.videoSrc = this.$store.state.BASE_URL + path;
+      this.dialogTableVisible = true;
+    },
+    //获取作品列表
     getProductions() {
       this.tableLoading = true;
       let params = {};
