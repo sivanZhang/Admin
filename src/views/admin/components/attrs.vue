@@ -374,9 +374,11 @@ export default {
               this.$message.success(data.msg);
               this.$emit("refresh-attrs");
               this.editing = false;
+              thsi.iconShow = false
             } else {
               this.$message.error(data.msg);
               this.editing = false;
+              this.iconShow = false
             }
           })
           .catch(res => {});

@@ -238,6 +238,9 @@ export default {
       });
     },
     RefreshcustomAttrs() {
+      searchBind({entity_type:4}).then(({ data }) => {
+        this.attrsList = [...data.msg];
+      });
       getAttrsEntityList({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum = 4
