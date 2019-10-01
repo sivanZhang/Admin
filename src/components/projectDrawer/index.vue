@@ -16,11 +16,6 @@
           <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
-          </el-tab-pane>
-          <el-tab-pane label="参与工种" name="seventh">
-            <joinDept :project="project" />
-          </el-tab-pane>
-          <el-tab-pane label="自定义属性" name="eighth">
             <attrsBind
               :project="project"
               :customAttrs="customAttrs"
@@ -28,6 +23,9 @@
               @refresh_customAttrs="NewcustomAttrs"
               :attrsTypeNum="attrsTypeNum"
             />
+          </el-tab-pane>
+          <el-tab-pane label="参与工种" name="seventh">
+            <joinDept :project="project" />
           </el-tab-pane>
         </el-tabs>
       </div>

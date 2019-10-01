@@ -456,7 +456,6 @@
           <el-col :span="6" class="comment">外部版本</el-col>
           <el-col :span="18" class="comment">{{project.outer_version?project.outer_version:"-"}}</el-col>
         </el-row>
-
         <el-row>
           <el-col :span="6" class="comment">画面调整信息</el-col>
           <el-col :span="15" class="comment">
@@ -477,7 +476,6 @@
             </div>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="6" class="comment">变速信息</el-col>
           <el-col :span="15" class="comment">
@@ -515,6 +513,26 @@
                 @keyup.enter="save2(21)"
               />
               <el-button @click="save2(21)" type="primary">修改</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="comment">制作参考</el-col>
+          <el-col :span="18" class="comment">
+            <div @mouseover="showEdit24=true" @mouseleave="showEdit24 = false">
+              <span v-if="!editing24">{{project.pro_reference}}</span>
+              <i class="el-icon-edit" style="color:blue" @click="edit(23)" v-if="showEdit24"></i>
+            </div>
+            <div v-if="editing24">
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                value="project.pro_reference"
+                v-model="reference"
+                @keyup.enter="save2(23)"
+              />
+              <el-button @click="save2(23)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -573,6 +591,7 @@ export default {
       editing21: false,
       editing22: false,
       editing23: false,
+      editing24:false,
       name: null,
       budget: null,
       charger: null,
@@ -598,6 +617,7 @@ export default {
       retime: null,
       frame_range: null,
       school: null,
+      reference:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -621,6 +641,7 @@ export default {
       showEdit21: false,
       showEdit22: false,
       showEdit23: false,
+      showEdit24:false,
       clientList: null
     };
   },
@@ -813,6 +834,13 @@ export default {
       if (Type === 22) {
         this.showEdit23 = false;
         this.editing23 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
+      if (Type === 23) {
+        this.showEdit24 = false;
+        this.editing24 = true;
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -1075,7 +1103,14 @@ export default {
           frame_range: this.frame_range
         };
       }
-
+      if (Type === 23) {
+        this.editing24 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          reference: this.reference
+        };
+      }
       editAssets(data).then(({ data }) => {
         this.$message.success(data.msg);
         if (data.status === 0) {
@@ -1129,6 +1164,10 @@ export default {
           if (Type === 21) {
             this.project.frame_range = this.frame_range;
             this.frame_range = null;
+          }
+          if (Type === 23) {
+            this.project.pro_reference = this.reference;
+            this.reference = null;
           }
         }
         this.$emit("refresh_assetList");

@@ -16,7 +16,7 @@
         <template slot-scope="scope">{{scope.row.attr_type|attrsFilter}}</template>
       </el-table-column>
       <el-table-column label="属性值" prop="attr_value">
-           <template slot-scope="scope">
+        <template slot-scope="scope">
           <el-input
             size="small"
             v-model="scope.row.attr_value"
@@ -35,10 +35,16 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="修改" placement="top">
-          <el-button icon="el-icon-edit" style="color:green" type="text" v-if="!editing||clickId !== scope.row.id" @click="putAttrtsEntity(scope.row,1)"></el-button>
-        </el-tooltip>
-        <el-tooltip effect="dark" content="确认" placement="top">
+          <el-tooltip class="item" effect="dark" content="修改" placement="top">
+            <el-button
+              icon="el-icon-edit"
+              style="color:green"
+              type="text"
+              v-if="!editing||clickId !== scope.row.id"
+              @click="putAttrtsEntity(scope.row,1)"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="确认" placement="top">
             <el-button
               v-if="editing&&clickId === scope.row.id"
               type="text"
@@ -47,9 +53,14 @@
               @click="putAttrtsEntity(scope.row,2)"
             />
           </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="删除" placement="top">
-          <el-button icon="el-icon-delete" style="color:red" type="text" @click="removeAttrsEntity(scope.row.id)"></el-button>
-        </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除" placement="top">
+            <el-button
+              icon="el-icon-delete"
+              style="color:red"
+              type="text"
+              @click="removeAttrsEntity(scope.row.id)"
+            ></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -68,7 +79,7 @@
 </template>
 
 <script>
-import {updateAttrsEntity, delAttrsEntity} from "@/api/attrs";
+import { updateAttrsEntity, delAttrsEntity } from "@/api/attrs";
 export default {
   name: "attrs-entity",
   components: {},
@@ -80,21 +91,19 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       editing: false,
       clickId: null,
-      iconShow: false,
-     
-      
+      iconShow: false
     };
   },
   watch: {},
   methods: {
-      //是否显示行内修改框
+    //是否显示行内修改框
     showEditIcon() {
       this.iconShow = true;
       this.rowClick = true;
     },
-      //修改属性实体
-      putAttrtsEntity(row,Type){
-           if (Type === 1) {
+    //修改属性实体
+    putAttrtsEntity(row, Type) {
+      if (Type === 1) {
         if (this.iconShow === true) {
           this.$confirm("当前修改未保存", "注意", {
             type: "warning"
@@ -118,10 +127,10 @@ export default {
           })
           .catch(res => {});
       }
-      },
-      //删除属性实体
-    removeAttrsEntity(id){
-        this.$confirm("此操作将永久删除属性, 是否继续?", "提示", {
+    },
+    //删除属性实体
+    removeAttrsEntity(id) {
+      this.$confirm("此操作将永久删除属性, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

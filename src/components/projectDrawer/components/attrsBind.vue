@@ -1,6 +1,6 @@
 <!-- 自定义属性绑定 -->
 <template>
-  <div id="attr_bind">
+  <div id="attr_bind" style="border-top:2px #999999 solid;padding-top:5px">
     <el-button type="primary" @click="showDialog()" style="margin-bottom:10px">自定义属性绑定</el-button>
 
     <el-table

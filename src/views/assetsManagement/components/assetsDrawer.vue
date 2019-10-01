@@ -84,8 +84,6 @@
           </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
             <info :project="project" @refresh_assetList="getAssetList" />
-          </el-tab-pane>
-          <el-tab-pane label="自定义属性" name="eighth">
             <attrsBind
               :project="project"
               :customAttrs="customAttrs"
