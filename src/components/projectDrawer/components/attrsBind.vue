@@ -93,7 +93,7 @@
           <el-input v-model="newAttrForm.attr_name"></el-input>
         </el-form-item>
         <el-form-item label="属性值" prop="attr_value">
-          <el-input v-model="newAttrForm.atr_value"></el-input>
+          <el-input v-model="newAttrForm.attr_value"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="saveNewAttr()">立即创建</el-button>
@@ -105,6 +105,7 @@
 
 <script>
 import {
+  createAttrs,
   createAttrsEntity,
   delAttrsEntity,
   updateAttrsEntity
@@ -150,19 +151,28 @@ export default {
   watch: {},
   methods: {
     saveNewAttr(){
-      let data = {
+      let dataAttrs = {
         ...this.newAttrForm,
         entity_id:this.project.id,
         entity_type:this.attrsTypeNum,
         attr_type:2
       }
-      //console.log(data)
-      createAttrsEntity(data).then(({data})=>{
+      let newAttr = {
+        name: this.newAttrForm.attr_name,
+        type: 2
+      }
+      createAttrs(newAttr).then(({data})=>{
+        createAttrsEntity(dataAttrs).then(({data})=>{
         if(data.status === 0){
+          this.isDialog2 = false;
           this.$message.success(data.msg);
           this.$emit("refresh_customAttrs");
         }
       })
+      });
+       
+      //console.log(data)
+      
     },
     //是否显示行内修改框
     showEditIcon() {
