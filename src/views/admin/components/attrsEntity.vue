@@ -15,7 +15,8 @@
       <el-table-column label="属性类型" prop="attr_type">
         <template slot-scope="scope">{{scope.row.attr_type|attrsFilter}}</template>
       </el-table-column>
-      <el-table-column label="属性值" prop="attr_value">
+     <template v-if="attr_entity === 0">
+        <el-table-column label="属性值" prop="attr_value">
         <template slot-scope="scope">
           <el-input
             size="small"
@@ -30,12 +31,18 @@
         </template>
       </el-table-column>
       <el-table-column label="所属实体" prop="entity_id"></el-table-column>
-      <el-table-column label="实体类别" prop="entity_type">
+     </template>
+      <el-table-column
+        label="实体类别"
+        prop="entity_type"
+        :filters="[{text: '任务实体', value: '1'}, {text: '项目实体', value: '4'}, {text: '资产实体', value: '5'}]"
+        :filter-method="filterHandler"
+      >
         <template slot-scope="scope">{{scope.row.entity_type|entityFilter}}</template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="修改" placement="top">
+          <!-- <el-tooltip class="item" effect="dark" content="修改" placement="top">
             <el-button
               icon="el-icon-edit"
               style="color:green"
@@ -52,8 +59,8 @@
               style="color:green"
               @click="putAttrtsEntity(scope.row,2)"
             />
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="删除" placement="top">
+          </el-tooltip>-->
+          <el-tooltip class="item" effect="dark" content="解绑" placement="top">
             <el-button
               icon="el-icon-delete"
               style="color:red"
@@ -79,11 +86,11 @@
 </template>
 
 <script>
-import { updateAttrsEntity, delAttrsEntity } from "@/api/attrs";
+import { updateAttrsEntity, delAttrsEntity ,attrsEntityUnbind} from "@/api/attrs";
 export default {
   name: "attrs-entity",
   components: {},
-  props: ["attrsEntityList", "tableLoading"],
+  props: ["attrsEntityList", "tableLoading","attr_entity"],
   data() {
     return {
       currentPage: 1,
@@ -135,7 +142,8 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        delAttrsEntity({
+        if(this.attr_entity === 0){
+          delAttrsEntity({
           method: "delete",
           id: id
         }).then(({ data }) => {
@@ -146,9 +154,24 @@ export default {
             this.$message.error(data.msg);
           }
         });
+        }else{
+          attrsEntityUnbind({id:id,method:"delete"}).then(({data})=>{
+            if(data.status === 0){
+              this.$message.success(data.msg);
+              this.$emit("refresh-Entity");
+            }else{
+              this.$message.error(data.msg)
+            }
+          })
+        }
       });
     },
-
+    //筛选
+    filterHandler(value, row) {
+      // console.log(value);
+      // console.log(row.entity_type)
+      return row.entity_type == value;
+    },
     //分页
     handleSizeChange(val) {
       this.pageSize = val;

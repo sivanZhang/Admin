@@ -4,7 +4,7 @@
     <div style="padding-bottom:10px">
       <el-row>
         <el-col>
-          <el-button type="primary" @click="showDialog">自定义属性</el-button>
+          <el-button icon="el-icon-plus" type="primary" @click="showDialog(1)">自定义属性</el-button>
         </el-col>
       </el-row>
     </div>
@@ -39,6 +39,15 @@
       <el-table-column label="默认值" prop="default"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="属性绑定" placement="top">
+            <el-button
+              icon="el-icon-plus"
+              style="color:blue"
+              type="text"
+              @click="showDialog(2,scope.row)"
+              v-if="!editing||clickId !== scope.row.id"
+            ></el-button>
+          </el-tooltip>
           <el-tooltip class="item" effect="dark" content="修改" placement="top">
             <el-button
               icon="el-icon-edit"
@@ -79,8 +88,8 @@
         :total="attrsList.length"
       ></el-pagination>
     </div>
-
-    <el-dialog :visible.sync="isDialog" width="480px" top="5vh" title="添加自定义属性">
+    <!-- 添加自定义属性 -->
+    <el-dialog :visible.sync="isDialog" width="512px" top="5vh" title="添加自定义属性">
       <el-form
         :model="attrsForm"
         ref="attrsForm"
@@ -173,6 +182,27 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 给实体绑定属性值 -->
+    <el-dialog title="实体类别绑定" :visible.sync="isDialog2" width="512px" top="5vh">
+      <el-form :model="bindForm" label-width="90px" :rules="rules" ref="bindForm">
+        <el-form-item label="属性名称" prop="attr_id" >
+          <el-input v-model="attrName" disabled ></el-input>
+        </el-form-item>
+        <el-form-item label="实体类别" prop="entity_type" >
+          <el-select v-model="bindForm.entity_type">
+            <el-option
+              v-for="(item,index) of entityType"
+              :key="index"
+              :label="item.type"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item align="right">
+          <el-button type="primary" @click="bindSubmit">立即绑定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -216,12 +246,49 @@ export default {
       selectway: 0,
       selectForm: [{}],
       selection: {},
-      defailtList: []
+      defailtList: [],
+      isDialog2: false,
+      bindForm: {},
+      entityType: [
+        {
+          type: "任务实体",
+          value: 1
+        },
+        {
+          type: "项目实体",
+          value: 4
+        },
+        {
+          type: "资产实体",
+          value: 5
+        }
+      ],
+      attrName:null,
+      rules:{
+        entity_type: [{ required: true, message: "请选择实体类别", trigger: "blur" }],
+      }
     };
   },
   props: ["attrsList", "tableLoading"],
   watch: {},
   methods: {
+    bindSubmit(){
+       this.$refs["bindForm"].validate(valid => {
+        if (valid) {
+           // console.log(this.bindForm)
+      HTTP.attrsEntityBind(this.bindForm).then(({data})=>{
+        this.isDialog2 = false;
+          this.bindForm = {}
+        if(data.status === 0){
+          this.$message.success(data.msg);
+          this.$emit("bindSearch")
+        }else{
+          this.$message.error(data.msg)
+        }
+      })
+        }})
+    
+    },
     submitForm() {
       function dateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
@@ -229,9 +296,16 @@ export default {
       }
       if (this.attrsForm.type === 5) {
         console.log(this.selectForm);
-        this.attrsForm.value = '{'+'"selectway":'+this.selectway+',"selection":{'+this.selectForm.map((t, i) => {
+        this.attrsForm.value =
+          "{" +
+          '"selectway":' +
+          this.selectway +
+          ',"selection":{' +
+          this.selectForm.map((t, i) => {
             return `"${t.key}":${t.value}`;
-          })+'}}'}
+          }) +
+          "}}";
+      }
       if (this.attrsForm.type === 3) {
         this.attrsForm.default = dateFormat(this.attrsForm.default);
       }
@@ -266,8 +340,15 @@ export default {
     change() {
       this.$forceUpdate();
     },
-    showDialog() {
-      this.isDialog = true;
+    showDialog(Type, row) {
+      if (Type === 1) {
+        this.isDialog = true;
+      }
+      if (Type === 2 && row) {
+        this.isDialog2 = true;
+        this.attrName = row.name;
+        this.bindForm.attr_id = row.id
+      }
     },
     //是否显示行内修改框
     showEditIcon() {
