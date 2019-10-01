@@ -22,6 +22,7 @@
           :customAttrs="customAttrs"
           @refresh_customAttrs="RefreshcustomAttrs"
           @refresh="show"
+          :attrsTypeNum="attrsTypeNum"
         />
       </Drawer>
       <template v-if="!trainingProject">
@@ -190,7 +191,8 @@ export default {
       TableData: [],
       taskList: [],
       attrsList: [],
-      customAttrs: []
+      customAttrs: [],
+      attrsTypeNum:null
     };
   },
   props: ["trainingProject"],
@@ -232,11 +234,13 @@ export default {
       });
       searchBind({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
         this.customAttrs = [...data.msg];
+        this.attrsTypeNum = 4
       });
     },
     RefreshcustomAttrs() {
       searchBind({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
         this.customAttrs = [...data.msg];
+        this.attrsTypeNum = 4
       });
     },
     delProject(item) {

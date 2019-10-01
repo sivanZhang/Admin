@@ -66,7 +66,7 @@ import { attrsEntityBind, attrsEntityUnbind } from "@/api/attrs";
 export default {
   name: "attr_bind",
   components: {},
-  props: ["project","customAttrs","attrsList"],
+  props: ["project","customAttrs","attrsList","attrsTypeNum"],
   data() {
     return {
       bindForm: {},
@@ -105,8 +105,9 @@ export default {
       let data = {
         attr_id: this.bindForm.attr_name,
         entity_id: this.project.id,
-        entity_type: 4
+        entity_type: this.attrsTypeNum
       };
+
       //console.log(data);
       attrsEntityBind(data).then(({ data }) => {
         if (data.status === 0) {

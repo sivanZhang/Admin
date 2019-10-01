@@ -663,7 +663,7 @@
     </el-dialog>
 
     <Drawer
-      title="审批记录"
+      title="任务"
       scrollable
       closable
       v-model="showdrawer"
@@ -672,7 +672,21 @@
       :transfer="false"
       :mask="false"
     >
-      <approve-log ref="approvelogs" />
+     <el-tabs v-model="activeName">
+          <el-tab-pane label="审批记录" name="first">
+               <approve-log ref="approvelogs" />
+          </el-tab-pane>
+          <el-tab-pane label="自定义属性" name="second">
+              <attrsBind
+              :project="project"
+              :customAttrs="customAttrs"
+              :attrsList="attrsList"
+              @refresh_customAttrs="NewcustomAttrs"
+              :attrsTypeNum="attrsTypeNum"
+            />
+          </el-tab-pane>
+     </el-tabs>
+     
     </Drawer>
   </div>
 </template>
@@ -687,7 +701,9 @@ import { queryAssets } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import { type } from "os";
 import approveLog from "@/views/components/approve-log";
+import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import { getAttrsList, searchBind } from "@/api/attrs";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -799,7 +815,12 @@ export default {
       visible2: false,
       sortSelForm: {},
       linkstart: null,
-      linkend: null
+      linkend: null,
+      activeName:"first",
+      project:null,
+      attrsList: [],
+      customAttrs: [],
+      attrsTypeNum:null
     };
   },
   filters: {
@@ -822,7 +843,8 @@ export default {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   components: {
-    approveLog
+    approveLog,
+    attrsBind
   },
   props: {
     AssetList: {
@@ -1063,8 +1085,22 @@ export default {
     },
     showDrawer(item) {
       this.showdrawer = true;
+      this.project = item;
+      getAttrsList().then(({ data }) => {
+        this.attrsList = [...data.msg];
+      });
+      searchBind({ entity_id: item.id ,entity_type:1}).then(({ data }) => {
+        this.customAttrs = [...data.msg];
+        this.attrsTypeNum=1
+      });
       // console.log(item);
       this.$refs["approvelogs"].getApproveLog(item.id);
+    },
+    NewcustomAttrs() {
+      searchBind({ entity_id: this.project.id ,entity_type:1}).then(({ data }) => {
+        this.customAttrs = [...data.msg];
+        this.attrsTypeNum=1
+      });
     },
     change() {
       this.$forceUpdate();

@@ -1829,7 +1829,7 @@ export default {
                 break;
             }
           });
-          console.log(this.pause);
+          // console.log(this.pause);
         }
       );
     },

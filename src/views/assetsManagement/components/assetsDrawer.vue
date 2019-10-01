@@ -86,6 +86,15 @@
           <el-tab-pane label="信息" name="seventh">
             <info :project="project" @refresh_assetList="getAssetList" />
           </el-tab-pane>
+          <el-tab-pane label="自定义属性" name="eighth">
+            <attrsBind
+              :project="project"
+              :customAttrs="customAttrs"
+              :attrsList="attrsList"
+              @refresh_customAttrs="NewcustomAttrs"
+              :attrsTypeNum="attrsTypeNum"
+            />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -100,9 +109,18 @@ import { addLinks, getLinks } from "@/api/links";
 import { getVersion } from "@/api/assets";
 import { getAssetTaskList } from "@/api/task";
 import approveLog from "@/views/components/approve-log";
+import attrsBind from "@/components/projectDrawer/components/attrsBind";
 export default {
   name: "assets-drawer",
-  props: ["project", "RemarksData", "assetJump","LinkAssetList"],
+  props: [
+    "project",
+    "RemarksData",
+    "assetJump",
+    "LinkAssetList",
+    "customAttrs",
+    "attrsList",
+    "attrsTypeNum"
+  ],
   data() {
     return {
       activeTab: this.assetJump ? this.assetJump : "first",
@@ -121,8 +139,11 @@ export default {
       }
     }
   },
-  components: { remarks, info, links, approveLog },
+  components: { remarks, info, links, approveLog, attrsBind },
   methods: {
+    NewcustomAttrs() {
+      this.$emit("refresh_customAttrs");
+    },
     getAssetList() {
       this.$emit("refresh_assetList");
     },
@@ -161,8 +182,7 @@ export default {
       //     tab: "tab2"
       //   }
       // });
-      this.$emit("jumpName","tab2")
-
+      this.$emit("jumpName", "tab2");
     }
   }
 };

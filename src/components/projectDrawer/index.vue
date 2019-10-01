@@ -21,12 +21,17 @@
             <joinDept :project="project" />
           </el-tab-pane>
           <el-tab-pane label="自定义属性" name="eighth">
-            <attrsBind :project="project" :customAttrs="customAttrs" :attrsList="attrsList" @refresh_customAttrs="NewcustomAttrs" />
+            <attrsBind
+              :project="project"
+              :customAttrs="customAttrs"
+              :attrsList="attrsList"
+              @refresh_customAttrs="NewcustomAttrs"
+              :attrsTypeNum="attrsTypeNum"
+            />
           </el-tab-pane>
         </el-tabs>
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -36,7 +41,7 @@ import info from "@/components/projectDrawer/components/info";
 import assets from "@/components/projectDrawer/components/assets";
 import task from "@/components/projectDrawer/components/task";
 import joinDept from "@/components/projectDrawer/components/joinDept";
-import attrsBind from "@/components/projectDrawer/components/attrsBind"
+import attrsBind from "@/components/projectDrawer/components/attrsBind";
 
 export default {
   props: [
@@ -45,19 +50,18 @@ export default {
     "assetsList",
     "taskList",
     "attrsList",
-    "customAttrs"
+    "customAttrs",
+    "attrsTypeNum"
   ],
   data() {
     return {
-      activeTab: "first",
-      
+      activeTab: "first"
     };
   },
   name: "projectDrawer",
-  components: { remarks, info, assets, task, joinDept ,attrsBind},
+  components: { remarks, info, assets, task, joinDept, attrsBind },
   methods: {
-    
-    NewcustomAttrs(){
+    NewcustomAttrs() {
       this.$emit("refresh_customAttrs");
     },
     handleTabClick(tab, event) {
