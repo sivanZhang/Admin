@@ -122,19 +122,11 @@
               </div>
             </el-col>
             <el-col>
-              <div class="project-warp" >
-              <!-- <div class="project-warp" style="background-color:#eeeeee"> -->
+              <div class="project-warp" style="background-color:#eeeeee">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">审核中</el-col>
                 </el-row>
-                 <draggable
-                  class="board-column-content"
-                  v-model="FinishedArr"
-                  group="task"
-                  :sort="false"
-                  @end="handelChanged"
-                  data-arr="FinishedArr"
-                >
+                 <div class="board-column-content">
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of ApproveingArr"
@@ -145,23 +137,15 @@
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
-                 </draggable>
-                
+                 </div> 
               </div>
             </el-col>
             <el-col>
-              <div class="project-warp">
+               <div class="project-warp" style="background-color:#eeeeee">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">完成</el-col>
                 </el-row>
-                <draggable
-                  class="board-column-content"
-                  v-model="ApproveingArr"
-                  group="task"
-                  :sort="false"
-                  @end="handelChanged"
-                  data-arr="ApproveingArr"
-                >
+                 <div class="board-column-content">
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of FinishedArr"
@@ -172,8 +156,7 @@
                     <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
-                </draggable>
-                
+                 </div>
               </div>
             </el-col>
           </el-row>
