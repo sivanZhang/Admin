@@ -10,8 +10,7 @@
               :project="project"
               :LinkList="LinkList"
               @refresh="getLinkList"
-              @refresh_assetList="getAssetList"
-              :assetTaskList="assetTaskList"
+              @refresh_assetList="getAssetList"             
               :LinkAssetList="LinkAssetList"
             ></links>
           </el-tab-pane>

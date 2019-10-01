@@ -476,7 +476,7 @@ export default {
       templateId: null
     };
   },
-  props: ["LinkList", "project", "assetTaskList", "LinkAssetList"],
+  props: ["LinkList", "project",  "LinkAssetList"],
   watch: {
     linkActiveName: {
       handler: function(newVal, oldVal) {
@@ -597,12 +597,12 @@ export default {
     //创建环节时，前置
     before(ind) {
       this.FormList.splice(ind, 0, {});
-      this.FormList[ind].content = this.datacontent[0].content;
+      this.FormList[ind].content = this.project.content;
     },
     //创建环节时，后置
     after(ind) {
       this.FormList.splice(ind + 1, 0, {});
-      this.FormList[ind + 1].content = this.datacontent[0].content;
+      this.FormList[ind + 1].content = this.project.content;
     },
     //创建环节时，删除
     deleteLink(index) {
@@ -806,10 +806,10 @@ export default {
           project: this.$route.params.id
         }
       );
-      this.datacontent = this.assetTaskList.filter(item => {
-        return item.asset.id === this.TaskForm.asset;
-      });
-      this.FormList[0].content = this.datacontent[0].content;
+      // this.datacontent = this.assetTaskList.filter(item => {
+      //   return item.asset.id === this.TaskForm.asset;
+      // });
+      this.FormList[0].content = this.project.content;
     },
     cancel() {
       this.isDialogShow = false;
@@ -844,10 +844,10 @@ export default {
       const linkdataend = date_and_user.date_end;
       this.linkstart = linkdatastart;
       this.linkend = linkdataend;
-      const data = this.assetTaskList.filter(item => {
-        return item.asset.id === this.TaskForm.asset;
-      });
-      this.TaskForm.name = data[0].asset.name;
+      // const data = this.assetTaskList.filter(item => {
+      //   return item.asset.id === this.TaskForm.asset;
+      // });
+      this.TaskForm.name = this.project.name;
     },
     //展示要修改的环节信息
     showLinkForm(item) {
