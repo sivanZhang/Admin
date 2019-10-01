@@ -13,7 +13,7 @@ module.exports = {
     publicPath: './',
     outputDir: 'dist',
     assetsDir: 'static',
-    lintOnSave: false, //process.env.NODE_ENV === 'development'
+    lintOnSave: process.env.NODE_ENV === 'development',
     productionSourceMap: false,
     devServer: {
         port: 8080,
