@@ -11,7 +11,28 @@
       <el-option v-for="item in Types" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
     <el-button type="primary" @click="getProductions()">查询</el-button>
-    <el-table :data="ProductionList" style="width: 100%;margin-top:30px">
+    <el-table :data="ProductionList" style="width: 100%;margin-top:30px" v-loading="tableLoading">
+      <el-table-column label="作品" align="center">
+        <template slot-scope="scope">
+          <el-image
+            v-if="scope.row.path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(scope.row.path)"
+            :src="$store.state.BASE_URL+scope.row.path"
+            style="width: 48px;height: 27px;cursor: pointer;"
+            :preview-src-list="[$store.state.BASE_URL+scope.row.path]"
+          >
+            <div slot="error">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+          </el-image>
+          <el-button
+            v-else-if="scope.row.path"
+            type="text"
+            icon="el-icon-video-camera-solid"
+            @click="showVideo(scope.row.path)"
+          >{{scope.row.path}}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column>
       <el-table-column label="素材" header-align="center">
         <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
         <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column>
@@ -39,15 +60,16 @@
         <el-table-column label="工种名称" header-align="center" prop="task[0].link_dept_name"></el-table-column>
         <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
       </el-table-column>
-      <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column>
-      <el-table-column prop="path" label="作品路径" header-align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="text">展示</el-button>
           <el-button type="text">评论</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
+      <video ref="videoplayer" :src="videoSrc" controls  width="100%">
+      </video>
+    </el-dialog>
   </div>
 </template>
 
@@ -57,6 +79,9 @@ export default {
   name: "my-production",
   data() {
     return {
+      videoSrc:'',
+      dialogTableVisible: false,
+      tableLoading: false,
       ProductionList: [],
       Authors: [
         {
@@ -87,13 +112,26 @@ export default {
     };
   },
   methods: {
+    endPlay(){
+      this.$refs['videoplayer'].pause()
+    },
+    //打开视频弹框
+    showVideo(path){
+      this.dialogTableVisible = true
+      this.videoSrc = this.$store.state.BASE_URL+path
+    },
     getProductions() {
+      this.tableLoading = true;
       let params = {};
-      this.currentType && (params[this.currentType]='')
-      this.currentAuthor && (params[this.currentAuthor]='')
-      getProduction(params).then(({ data }) => {
-        this.ProductionList = [...data.msg];
-      });
+      this.currentType && (params[this.currentType] = "");
+      this.currentAuthor && (params[this.currentAuthor] = "");
+      getProduction(params)
+        .then(({ data }) => {
+          this.ProductionList = [...data.msg];
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
     }
   },
   created() {
