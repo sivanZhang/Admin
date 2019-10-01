@@ -34,7 +34,7 @@
                     v-for="item of DraftArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#c3E3E5',color:'#fff',padding:'5px',width:'200px'}"
+                    :body-style="{backgroundColor:'#c3E3E5',color:'#fff',padding:'5px'}"
                   >
                   <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
@@ -61,7 +61,7 @@
                     v-for="item of InProgressArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#589BAD',color:'#fff',padding:'5px',width:'200px'}"
+                    :body-style="{backgroundColor:'#589BAD',color:'#fff',padding:'5px'}"
                   >
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
@@ -87,7 +87,7 @@
                     v-for="item of PauseArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px',width:'200px'}"
+                    :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px'}"
                   >
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
@@ -113,7 +113,7 @@
                     v-for="item of TimeOutArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px',width:'200px'}"
+                    :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px'}"
                   >
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
@@ -132,7 +132,7 @@
                     v-for="item of ApproveingArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#2D5637',color:'#fff',padding:'5px',width:'200px'}"
+                    :body-style="{backgroundColor:'#2D5637',color:'#fff',padding:'5px'}"
                   >
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
@@ -151,7 +151,7 @@
                     v-for="item of FinishedArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#2f5c85',color:'#fff',padding:'5px',height:'120px',width:'200px'}"
+                    :body-style="{backgroundColor:'#2f5c85',color:'#fff',padding:'5px'}"
                   >
                     <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
