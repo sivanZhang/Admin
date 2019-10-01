@@ -15,23 +15,23 @@
       <el-table-column label="属性类型" prop="attr_type">
         <template slot-scope="scope">{{scope.row.attr_type|attrsFilter}}</template>
       </el-table-column>
-     <template v-if="attr_entity === 0">
+      <template v-if="attr_entity === 0">
         <el-table-column label="属性值" prop="attr_value">
-        <template slot-scope="scope">
-          <el-input
-            size="small"
-            v-model="scope.row.attr_value"
-            placeholder="请输入属性值"
-            v-if="editing&&clickId === scope.row.id"
-            @change="showEditIcon"
-          >
-            <span>{{scope.row.attr_value}}</span>
-          </el-input>
-          <span v-if="!editing||clickId !== scope.row.id">{{scope.row.attr_value}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="所属实体" prop="entity_id"></el-table-column>
-     </template>
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.attr_value"
+              placeholder="请输入属性值"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.attr_value}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.attr_value}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="所属实体" prop="entity_id"></el-table-column>
+      </template>
       <el-table-column
         label="实体类别"
         prop="entity_type"
@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <!-- <el-tooltip class="item" effect="dark" content="修改" placement="top">
+          <el-tooltip class="item" effect="dark" content="修改" placement="top">
             <el-button
               icon="el-icon-edit"
               style="color:green"
@@ -59,7 +59,7 @@
               style="color:green"
               @click="putAttrtsEntity(scope.row,2)"
             />
-          </el-tooltip>-->
+          </el-tooltip>
           <el-tooltip class="item" effect="dark" content="解绑" placement="top">
             <el-button
               icon="el-icon-delete"
@@ -86,11 +86,15 @@
 </template>
 
 <script>
-import { updateAttrsEntity, delAttrsEntity ,attrsEntityUnbind} from "@/api/attrs";
+import {
+  updateAttrsEntity,
+  delAttrsEntity,
+  attrsEntityUnbind
+} from "@/api/attrs";
 export default {
   name: "attrs-entity",
   components: {},
-  props: ["attrsEntityList", "tableLoading","attr_entity"],
+  props: ["attrsEntityList", "tableLoading", "attr_entity"],
   data() {
     return {
       currentPage: 1,
@@ -142,27 +146,27 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        if(this.attr_entity === 0){
+        if (this.attr_entity === 0) {
           delAttrsEntity({
-          method: "delete",
-          id: id
-        }).then(({ data }) => {
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-            this.$emit("refresh-attrsEntity");
-          } else {
-            this.$message.error(data.msg);
-          }
-        });
-        }else{
-          attrsEntityUnbind({id:id,method:"delete"}).then(({data})=>{
-            if(data.status === 0){
+            method: "delete",
+            id: id
+          }).then(({ data }) => {
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.$emit("refresh-attrsEntity");
+            } else {
+              this.$message.error(data.msg);
+            }
+          });
+        } else {
+          attrsEntityUnbind({ id: id, method: "delete" }).then(({ data }) => {
+            if (data.status === 0) {
               this.$message.success(data.msg);
               this.$emit("refresh-Entity");
-            }else{
-              this.$message.error(data.msg)
+            } else {
+              this.$message.error(data.msg);
             }
-          })
+          });
         }
       });
     },

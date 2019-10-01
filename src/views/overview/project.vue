@@ -173,7 +173,7 @@ import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
 import { delOneProject } from "@/api/project";
-import { getAttrsList, searchBind } from "@/api/attrs";
+import { searchBind, getAttrsEntityList } from "@/api/attrs";
 export default {
   name: "project",
   components: {
@@ -229,16 +229,19 @@ export default {
       }).then(({ data }) => {
         this.taskList = [...data.msg];
       });
-      getAttrsList().then(({ data }) => {
+      searchBind({entity_type:4}).then(({ data }) => {
         this.attrsList = [...data.msg];
       });
-      searchBind({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
+      getAttrsEntityList({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum = 4
       });
     },
     RefreshcustomAttrs() {
-      searchBind({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
+      searchBind({entity_type:4}).then(({ data }) => {
+        this.attrsList = [...data.msg];
+      });
+      getAttrsEntityList({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum = 4
       });

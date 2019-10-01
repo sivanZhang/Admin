@@ -488,7 +488,7 @@
           </template>
         </el-table-column>
 
-          <el-table-column
+        <el-table-column
           prop="reference"
           label="制作参考"
           align="left"
@@ -965,6 +965,10 @@
         :assetJump="assetJump"
         :LinkAssetList="LinkAssetList"
         @jumpName="jumpName"
+        :attrsList="attrsList"
+        :customAttrs="customAttrs"
+        @refresh_customAttrs="RefreshcustomAttrs"
+        :attrsTypeNum="attrsTypeNum"
       />
     </Drawer>
   </div>
@@ -979,6 +983,7 @@ import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getProjectStatus } from "@/api/status";
+import { searchBind, getAttrsEntityList } from "@/api/attrs";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -1215,7 +1220,10 @@ export default {
       finish: [],
       notstart: [],
       pause: [],
-      LinkAssetList:[]
+      LinkAssetList: [],
+      attrsList: [],
+      customAttrs: [],
+      attrsTypeNum: null
     };
   },
   watch: {
@@ -1328,8 +1336,8 @@ export default {
     }
   },
   methods: {
-    jumpName(val){
-      this.$emit("jumpName",val)
+    jumpName(val) {
+      this.$emit("jumpName", val);
     },
     //创建环节时，前置
     before(ind) {
@@ -1613,7 +1621,7 @@ export default {
         start: DateFormat(this.start_date),
         end: DateFormat(this.end_date),
         small_status: row.small_status,
-        reference:row.pro_reference
+        reference: row.pro_reference
       };
       if (payload.start === "Invalid Date") {
         delete payload.start;
@@ -1721,11 +1729,11 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
-            this.AssetList.forEach(item=>{
-              if(!item.link.length){
+            this.AssetList.forEach(item => {
+              if (!item.link.length) {
                 this.LinkAssetList.push(item);
               }
-            })
+            });
             this.total = data.count;
             this.pageCount = data.page_count;
           }
@@ -1853,6 +1861,21 @@ export default {
 
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
+      });
+      searchBind({entity_type: 5}).then(({ data }) => {
+        this.attrsList = [...data.msg];
+      });
+      getAttrsEntityList({entity_id:id, entity_type: 5 }).then(({ data }) => {
+        this.customAttrs = [...data.msg];
+        // console.log("mmmm");
+        // console.log(this.customAttrs);
+        this.attrsTypeNum = 5;
+      });
+    },
+    RefreshcustomAttrs() {
+      getAttrsEntityList({entity_id:this.project.id,entity_type: 5 }).then(({ data }) => {
+        this.customAttrs = [...data.msg];
+        this.attrsTypeNum = 5;
       });
     },
     //侧栏关闭
