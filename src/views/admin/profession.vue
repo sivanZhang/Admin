@@ -439,6 +439,8 @@ export default {
             this.$message.success(data.msg);
 
             this.getDeptList();
+            this.ActiveGroup=null;
+            this.GroupUsers=[];
           } else {
             this.$message.error(data.msg);
           }
