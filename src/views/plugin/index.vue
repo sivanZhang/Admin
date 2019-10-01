@@ -65,7 +65,7 @@
                 :file-list="fileList"
                 :clearFiles="clearFiles"
               >
-                <el-button size="small" type="primary">点击下载</el-button>
+                <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
             <el-form-item>
@@ -81,24 +81,26 @@
         </div>
         <div style="margin-top:10px; border: 1px solid #dfe6ec;">
           <el-table :data="tableData" style="width: 100%" ref="plugin"  :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
-            <el-table-column prop="name" label="插件名称" width="128px">
+            <el-table-column prop="name" label="插件名称" >
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column prop="software" label="适用软件" width="120px">
+            <el-table-column prop="software" label="适用软件" >
               <template slot-scope="scope">{{scope.row.software}}</template>
             </el-table-column>
 
-            <el-table-column prop="version" label="插件版本" width="120px">
+            <el-table-column prop="version" label="插件版本" >
               <template slot-scope="scope">{{scope.row.version}}</template>
             </el-table-column>
 
-            <el-table-column prop="pubdate" label="发布日期" width="120px">
+            <el-table-column prop="pubdate" label="发布日期" >
               <template slot-scope="scope">{{scope.row.pubdate}}</template>
             </el-table-column>
-            <el-table-column prop="filepath" label="插件文件" width="300px">
-              <template slot-scope="scope">{{scope.row.filepath}}</template>
+            <el-table-column prop="filepath" label="插件文件" >
+              <template slot-scope="scope">
+                <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+              </template>
             </el-table-column>
-            <el-table-column label="操作" width="100px">
+            <el-table-column label="操作" >
               <template slot-scope="scope">
                 <el-button @click="deletePlugin(scope.row.name)" type="danger">删除</el-button>
               </template>
@@ -173,6 +175,12 @@ export default {
     this.show();
   },
   methods: {
+    download(row){
+      let data="http://tl.chidict.com:8081/"+row.filepath;
+
+      window.location.href = data;
+      //console.log(data)
+    },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
