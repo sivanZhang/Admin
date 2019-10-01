@@ -703,7 +703,7 @@ import { type } from "os";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
-import { getAttrsList, searchBind } from "@/api/attrs";
+import { searchBind, getAttrsEntityList } from "@/api/attrs";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -1086,10 +1086,10 @@ export default {
     showDrawer(item) {
       this.showdrawer = true;
       this.project = item;
-      getAttrsList().then(({ data }) => {
+      searchBind({entity_type:1}).then(({ data }) => {
         this.attrsList = [...data.msg];
       });
-      searchBind({ entity_id: item.id ,entity_type:1}).then(({ data }) => {
+      getAttrsEntityList({ entity_id: item.id ,entity_type:1}).then(({ data }) => {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum=1
       });
@@ -1097,7 +1097,7 @@ export default {
       this.$refs["approvelogs"].getApproveLog(item.id);
     },
     NewcustomAttrs() {
-      searchBind({ entity_id: this.project.id ,entity_type:1}).then(({ data }) => {
+      getAttrsEntityList({ entity_id: this.project.id ,entity_type:1}).then(({ data }) => {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum=1
       });

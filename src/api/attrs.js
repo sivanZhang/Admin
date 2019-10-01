@@ -36,8 +36,8 @@ export function getAttrsInfo(params){
     return AXIOS.get('/attrs/attrs/',{params})
 }
 //获取属性实体列表
-export function getAttrsEntityList(){
-    return AXIOS.get('/attrs/instance/?list')
+export function getAttrsEntityList(params){
+    return AXIOS.get('/attrs/instance/?list',{params})
 }
 //删除属性实体
 export function delAttrsEntity(data){
