@@ -1,12 +1,11 @@
 <template>
   <div id="plugin">
     <div style="display:flex">
-      <div style="width:30%;padding:3 10px">
-       
-          <div style="display:flex">
-             <h4 style="margin: 0 10px;"> 创建插件 </h4>
-          </div>
-           <div style="display:flex;margin-top:20px" >
+      <div style="width:30%;padding:0 10px">
+        <div style="display:flex">
+          <h4 style="margin: 0 10px;">创建插件</h4>
+        </div>
+        <div style="display:flex;margin-top:20px">
           <el-form
             ref="saveForm"
             :label-position="labelPosition"
@@ -54,7 +53,7 @@
                 style="width: 100%;"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="插件文件" prop="file">
+            <el-form-item label="插件文件" prop="filepath">
               <el-upload
                 class="upload-demo"
                 ref="upload"
@@ -64,13 +63,10 @@
                 :on-success="handleSuccess"
                 :before-remove="beforeRemove"
                 :file-list="fileList"
+                :clearFiles="clearFiles"
               >
-                <!-- <el-button slot="trigger" size="small" type="primary">选取文件</el-button> -->
-                <el-button size="small" type="primary">点击上传</el-button>
+                <el-button size="small" type="primary">点击下载</el-button>
               </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt />
-              </el-dialog>
             </el-form-item>
             <el-form-item>
               <el-button :loading="loading" type="primary" @click="save">立即创建</el-button>
@@ -81,31 +77,30 @@
       </div>
       <div style="width:70%;padding:5px">
         <div style="display:flex">
-          <h4 style="margin: 0 10px;"> 插件管理 </h4>
-          <el-button style="margin: 0 10px;" @click="search" type="primary">查询</el-button>
+          <h4 style="margin: 0 10px;">插件文件</h4>
         </div>
         <div style="margin-top:10px; border: 1px solid #dfe6ec;">
-          <el-table :data="tableData" style="width: 100%" ref="plugin">
-            <el-table-column prop="name" label="插件名称"  width="120px">
-               <template slot-scope="scope">{{scope.row.name}}</template>
+          <el-table :data="tableData" style="width: 100%" ref="plugin"  :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
+            <el-table-column prop="name" label="插件名称" width="128px">
+              <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column prop="software" label="适用软件" width="120px" >
-               <template slot-scope="scope">{{scope.row.software}}</template>
+            <el-table-column prop="software" label="适用软件" width="120px">
+              <template slot-scope="scope">{{scope.row.software}}</template>
             </el-table-column>
-               
+
             <el-table-column prop="version" label="插件版本" width="120px">
-                <template slot-scope="scope">{{scope.row.version}}</template>
+              <template slot-scope="scope">{{scope.row.version}}</template>
             </el-table-column>
-              
+
             <el-table-column prop="pubdate" label="发布日期" width="120px">
-               <template slot-scope="scope">{{scope.row.pubdate}}</template>
-             </el-table-column>  
+              <template slot-scope="scope">{{scope.row.pubdate}}</template>
+            </el-table-column>
             <el-table-column prop="filepath" label="插件文件" width="300px">
-               <template slot-scope="scope">{{scope.row.filepath}}</template>
-             </el-table-column>
-            <el-table-column label="操作" width="106px">
+              <template slot-scope="scope">{{scope.row.filepath}}</template>
+            </el-table-column>
+            <el-table-column label="操作" width="100px">
               <template slot-scope="scope">
-               <el-button @click="deletePlugin(scope.row.name)" type="danger">删除</el-button>
+                <el-button @click="deletePlugin(scope.row.name)" type="danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -129,10 +124,8 @@ export default {
       fileList: [],
       labelPosition: "right",
       saveForm: {},
-      dialogImageUrl: "",
-      dialogVisible: false,
       disabled: false,
-      tableData:[],
+      tableData: [],
       saveRules: {
         name: [
           {
@@ -162,7 +155,7 @@ export default {
             message: "请输入时间"
           }
         ],
-        file: [
+        filepath: [
           {
             required: true,
             trigger: "blur",
@@ -176,35 +169,48 @@ export default {
       }
     };
   },
+  created() {
+    this.show();
+  },
   methods: {
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     //监听文件上传成功
     handleSuccess(response, file, fileList) {
-      this.saveForm.file = response.msg;
+      this.saveForm.filepath = response.msg;
       this.saveForm.file_id = response.id;
     },
+    getPluginList() {
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+      }
+      let data = {
+        name: this.saveForm.name,
+        software: this.saveForm.software,
+        version: this.saveForm.version,
+        pubdate: DateFormat(this.saveForm.pubdate),
+        filepath:this.saveForm.filepath,
+      };
+      setPlugin(data).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+        }
+        this.loading = false;
+        this.$refs["saveForm"].resetFields();
+        this.show();
+      });
+    },
+    clearFiles() {
+      this.fileList=[]
+    },
+    //创建插件
     save() {
       this.$refs["saveForm"].validate(valid => {
         if (valid) {
           this.loading = true;
-          let data = {
-            name: this.saveForm.name,
-            software: this.saveForm.software,
-            version: this.saveForm.version,
-            pubdate: this.saveForm.pubdate,
-            pubdate: this.saveForm.pubdate,
-            file: this.saveForm.file
-          };
-          setPlugin(data).then(({ data }) => {
-            console.log(data);
-            // if (data.status === 0) {
-            //   this.$message.success(data.msg);
-            // }
-            // this.loading = false;
-            // this.$refs["saveForm"].resetFields();
-          });
+          this.getPluginList();
+          this.clearFiles();
         } else {
           return false;
         }
@@ -213,25 +219,21 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    search() {
+    show() {
       searchPlugin().then(({ data }) => {
         this.tableData = [...data.plugin];
       });
     },
     deletePlugin(name) {
-      deletePlugin({ method: "delete", name:name }).then(
-        ({ data }) => {
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-            
-          }
-          
+      deletePlugin({ method: "delete", name: name }).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          this.getPluginList();
         }
-      );
+      });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-
 </style>
