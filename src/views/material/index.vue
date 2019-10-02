@@ -253,6 +253,8 @@ export default {
         addMaterial(this.materialForm).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
+            this.addDialog=false;
+            this.materialForm={};
             this.searchMaterial();
           } else {
             this.$message.error(data.msg);
