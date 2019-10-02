@@ -10,11 +10,6 @@
             <slot name="import">资产导入</slot>
           </el-button>
           <el-button
-            type="primary"
-            @click="pushMaterial(1)"
-            :disabled="this.multipleSelection.length === 0"
-          >素材库</el-button>
-          <el-button
             type="danger"
             icon="el-icon-delete"
             @click="delMulAssets()"
@@ -806,8 +801,11 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="100px">
           <template slot-scope="scope">
+            <el-tooltip effect="dark" content="添加至素材库" placement="top">
+              <el-button type="text" icon="el-icon-plus" @click="pushMaterial(1,scope.row.id)" style="color:green"></el-button>
+            </el-tooltip>
             <el-tooltip effect="dark" content="修改" placement="top">
               <el-button
                 @click="editOneAsset(scope.row)"
@@ -851,7 +849,7 @@
         ></el-pagination>
       </div>
     </div>
-
+<!-- 旧版资产修改（利用弹框修改） -->
     <el-dialog :title="dialogTitle" :visible.sync="isShow" width="480px" top="5vh">
       <el-form
         :model="AssetForm"
@@ -917,6 +915,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 资产修改时上传图片 -->
     <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
       <el-form
         :model="ImgForm"
@@ -950,13 +949,14 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 添加至素材库 -->
     <el-dialog title="添加至素材库" :visible.sync="materialShow" width="480px" top="5vh">
       <el-form :model="materialForm" label-width="90px">
         <el-form-item label="素材名称" prop="name">
           <el-input v-model="materialForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="创建时间" prop="estdate">
-          <span>{{materialEstdate}}</span>
+        <el-form-item label="素材路径" prop="path">
+          <el-input v-model="materialForm.path"></el-input>
         </el-form-item>
         <el-form-item label="素材说明" prop="explain">
           <el-input type="textarea" v-model="materialForm.explain"></el-input>
@@ -1016,7 +1016,8 @@ export default {
   neme: "asset-list",
   data() {
     return {
-      materialForm:{},
+      materialForm: {},
+      matrialId:null,
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
       pageCount: 0,
       AssetList: [],
@@ -1248,7 +1249,7 @@ export default {
       attrsList: [],
       customAttrs: [],
       attrsTypeNum: null,
-      materialShow:false,
+      materialShow: false,
       materialEstdate: new Date().toLocaleDateString()
     };
   },
@@ -1363,20 +1364,26 @@ export default {
   },
   methods: {
     //添加进素材库
-    pushMaterial(Type) {
-      if(Type === 1){
-        this.materialShow = true
-      }else{
-        const ids = this.multipleSelection.map(item => item.id).join(",");
+    pushMaterial(Type,id) {
+      if (Type === 1) {
+        this.materialShow = true;
+        this.matrialId = id
+      } else {
         let dateMaterial = {
           ...this.materialForm,
-          estdate:this.materialEstdate,
-          ids 
-        }
-      console.log(dateMaterial);
-      // addMaterial();
+          ids: this.matrialId
+        };
+        //console.log(dateMaterial);
+        addMaterial(dateMaterial).then(({data})=>{
+          // if(data.status === 0){
+            this.$message.success(data.msg);
+            this.materialShow = false;
+          // }else{
+          //    this.$message.error(data.msg);
+          //   this.materialShow = false;
+          // }
+        });
       }
-     
     },
     jumpName(val) {
       this.$emit("jumpName", val);
@@ -1951,7 +1958,7 @@ export default {
         });
       });
     },
-    
+
     //批量删除资产
     delMulAssets() {
       this.$confirm("此操作将永久删除资产, 是否继续?", "提示", {
