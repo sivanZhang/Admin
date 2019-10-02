@@ -22,7 +22,7 @@
 import GanttElastic from "gantt-elastic";
 import GanttHeader from "gantt-elastic-header";
 import dayjs from "dayjs";
-let options = {
+let options = {//甘特图配置
   taskMapping: {
     progress: "percent"
   },
@@ -31,7 +31,7 @@ let options = {
   row: {
     height: 24
   },
-  taskList: {
+  taskList: {//甘特图中的表格配置
     columns: [
       {
         id: 1,
@@ -117,11 +117,16 @@ export default {
     GanttElastic,
     GanttHeader
   },
-  props: ["ganttData"],
+  props: {
+    ganttData:{//甘特图渲染的数据
+      type:Array,
+      required:true
+    }
+  },
   data() {
     return {
       options,
-      headerOption: {
+      headerOption: {//甘特图header部分配置
         title: {
           label: "<h6 style='letter-spacing:initial'>项目甘特图:</h6>",
           html: true

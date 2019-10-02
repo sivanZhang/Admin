@@ -254,7 +254,7 @@ export const constantRoutes = [{
                 component: () =>
                     import ('@/views/admin/date-import'),
                 meta: {
-                    title: '用户上传',
+                    title: '节假日上传',
                     icon: 'tree',
                     hiddenSideBar: true
                 }
