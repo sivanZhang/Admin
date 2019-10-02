@@ -74,7 +74,6 @@
         </template>
       </el-table-column>
     </el-table>
-    </div>
     <div class="block" style="text-align: center;margin-top:10px">
       <el-pagination
         @size-change="handleSizeChange"
@@ -86,6 +85,8 @@
         :total="attrsList.length"
       ></el-pagination>
     </div>
+    </div>
+    
     <!-- 添加自定义属性 -->
     <el-dialog :visible.sync="isDialog" width="512px" top="5vh" title="添加自定义属性">
       <el-form
