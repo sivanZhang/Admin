@@ -2,13 +2,38 @@
 <template>
   <div id="material">
     <div style="padding-bottom:10px" v-if="authRole">
-      <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
-      <el-button
-        type="danger"
-        icon="el-icon-delete"
-        @click="mulDelMaterial()"
-        :disabled="this.multipleSelection.length === 0"
-      >批量删除</el-button>
+      <el-row>
+        <el-col :span="16">
+          <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            @click="mulDelMaterial()"
+            :disabled="this.multipleSelection.length === 0"
+          >批量删除</el-button>
+        </el-col>
+        <el-col :span="8">
+          <el-row>
+            <el-col :span="16">
+              <el-input
+                v-model="filterText"
+                placeholder="请输入素材名称"
+                @keyup.enter.native="searchMaterial(1)"
+              >
+                <el-button
+                  @click="searchMaterial(1)"
+                  slot="append"
+                  icon="el-icon-search"
+                  type="primary"
+                />
+              </el-input>
+            </el-col>
+            <el-col :span="8">
+              <el-button @click="searchMaterial()" type="primary" style="margin-left: 15px">重置</el-button>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
     </div>
     <el-table
       ref="materialList"
@@ -20,7 +45,7 @@
       :border="false"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+      <el-table-column type="selection" :reserve-selection="true" align="left"></el-table-column>
       <el-table-column type="index"></el-table-column>
       <el-table-column label="缩略图" prop="image">
         <template slot-scope="scope">
@@ -240,7 +265,8 @@ export default {
       imagePath: null,
       fileList: [],
       addDialog: false,
-      authRole: null
+      authRole: null,
+      filterText: null
     };
   },
   watch: {},
@@ -253,8 +279,8 @@ export default {
         addMaterial(this.materialForm).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            this.addDialog=false;
-            this.materialForm={};
+            this.addDialog = false;
+            this.materialForm = {};
             this.searchMaterial();
           } else {
             this.$message.error(data.msg);
@@ -373,15 +399,26 @@ export default {
       });
     },
     //查询素材库
-    searchMaterial() {
-      getMaterial().then(({ data }) => {
-        if (data.status === 0) {
-          this.materialList = [...data.msg];
-          this.authRole = data.auth.can_manage_material_state;
-        }
+    searchMaterial(Type) {
+      if (Type === 1 && this.filterText) {
+        getMaterial({ name: this.filterText }).then(({ data }) => {
+          if (data.status === 0) {
+            this.materialList = [...data.msg];
+            this.authRole = data.auth.can_manage_material_state;
+          }
 
-        //console.log(this.materialList)
-      });
+          //console.log(this.materialList)
+        });
+      } else {
+        getMaterial().then(({ data }) => {
+          if (data.status === 0) {
+            this.materialList = [...data.msg];
+            this.authRole = data.auth.can_manage_material_state;
+          }
+
+          //console.log(this.materialList)
+        });
+      }
     }
   },
   created() {

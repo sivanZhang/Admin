@@ -1,7 +1,7 @@
 <!-- 自定义属性绑定 -->
 
 <template>
-  <div id="attr_bind" style="border-top:2px #999999 solid;padding-top:5px">
+  <div id="attr_bind" style="border-top:2px #dcdee2 solid;padding-top:5px">
     <el-button type="primary" @click="showDialog(1)" style="margin-bottom:10px">自定义属性绑定</el-button>
     <div v-for="(item,index) of customAttrs" :key="index" style="padding-top:5px">
       <el-row>
@@ -73,7 +73,7 @@
     </div>
 
     <template v-if="isDialog">
-      <div style="margin-top:20px;border:1px solid">
+      <div style="margin-top:20px;border:1px solid;color:#dfe6ec">
         <div style="padding-top:10px">
           <el-form :model="bindForm" label-width="90px">
             <el-form-item label="属性名称" prop="attr_name">

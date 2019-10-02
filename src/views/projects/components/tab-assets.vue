@@ -149,6 +149,19 @@
         </el-col>
         <el-col :span="10" align="right">
           <el-row type="flex" justify="end">
+            <el-select
+              v-model="colSel"
+              placeholder="请选择"
+              style="width:130px;"
+              filterable
+            >
+              <el-option
+                v-for="item in columnSelect"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
             <el-input
               v-if="colShow"
               placeholder="输入关键字搜索"
@@ -156,20 +169,6 @@
               @keyup.enter.native="getAssetList()"
               style="width:360px"
             >
-              <el-select
-                v-model="colSel"
-                placeholder="请选择"
-                style="width:130px;"
-                filterable
-                slot="prepend"
-              >
-                <el-option
-                  v-for="item in columnSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
               <el-button
                 @click="getAssetList()"
                 slot="append"
@@ -184,7 +183,7 @@
               style="width:130px;margin-top:1px"
               multiple
               filterable
-              @keyup.enter.native="getAssetList()"
+              @change="getAssetList()"
             >
               <el-option
                 v-for="item in columnSelect2"
@@ -193,14 +192,6 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-button
-              v-show="chooseSel"
-              @click="getAssetList()"
-              slot="append"
-              icon="el-icon-search"
-              type="primary"
-              style="margin-top:-1px"
-            />
             <el-date-picker
               v-if="timeSel"
               v-model="timeSelection"
@@ -209,6 +200,15 @@
               @change="getAssetList()"
               style="width:130px"
             ></el-date-picker>
+            <el-button
+              v-show="chooseSel"
+              @click="getAssetList()"
+              slot="append"
+              icon="el-icon-search"
+              type="primary"
+              style="margin-top:-1px"
+            />
+
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
@@ -804,7 +804,11 @@
         <el-table-column label="操作" align="center" width="100px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="导出至素材库" placement="top">
-                <svg-icon  icon-class="exportMaterial" @click="pushMaterial(1,scope.row.id)" style="cursor:pointer;margin-right:10px" /> 
+              <svg-icon
+                icon-class="exportMaterial"
+                @click="pushMaterial(1,scope.row.id)"
+                style="cursor:pointer;margin-right:10px"
+              />
             </el-tooltip>
             <el-tooltip effect="dark" content="修改" placement="top">
               <el-button
@@ -849,7 +853,7 @@
         ></el-pagination>
       </div>
     </div>
-<!-- 旧版资产修改（利用弹框修改） -->
+    <!-- 旧版资产修改（利用弹框修改） -->
     <el-dialog :title="dialogTitle" :visible.sync="isShow" width="480px" top="5vh">
       <el-form
         :model="AssetForm"
@@ -1017,7 +1021,7 @@ export default {
   data() {
     return {
       materialForm: {},
-      matrialId:null,
+      matrialId: null,
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
       pageCount: 0,
       AssetList: [],
@@ -1364,20 +1368,20 @@ export default {
   },
   methods: {
     //添加进素材库
-    pushMaterial(Type,id) {
+    pushMaterial(Type, id) {
       if (Type === 1) {
         this.materialShow = true;
-        this.matrialId = id
+        this.matrialId = id;
       } else {
         let dateMaterial = {
           ...this.materialForm,
           ids: this.matrialId
         };
         //console.log(dateMaterial);
-        addMaterial(dateMaterial).then(({data})=>{
+        addMaterial(dateMaterial).then(({ data }) => {
           // if(data.status === 0){
-            this.$message.success(data.msg);
-            this.materialShow = false;
+          this.$message.success(data.msg);
+          this.materialShow = false;
           // }else{
           //    this.$message.error(data.msg);
           //   this.materialShow = false;
@@ -2161,6 +2165,6 @@ svg-icon {
   width: 22px;
   height: 22px;
   vertical-align: 10px;
-  padding-right:10px
+  padding-right: 10px;
 }
 </style>
