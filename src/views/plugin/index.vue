@@ -42,28 +42,24 @@
                 placeholder="版本号"
                 name="version"
                 style="width:220px"
-                oninput="value=value.replace(/[^\d.]/g,'')"
               />
             </el-form-item>
             <el-form-item label="发布日期" prop="pubdate">
-              <el-date-picker
-                type="date"
-                placeholder="选择日期"
-                v-model="saveForm.pubdate"
-                style="width: 100%;"
-              ></el-date-picker>
+              <span>{{dateNow}}</span>
             </el-form-item>
             <el-form-item label="插件文件" prop="filepath">
               <el-upload
                 class="upload-demo"
                 ref="upload"
                 accept="file"
+                :multiple="false"
                 :action="action"
                 :headers="headers"
                 :on-success="handleSuccess"
                 :before-remove="beforeRemove"
                 :file-list="fileList"
                 :clearFiles="clearFiles"
+                :limit="1"
               >
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
@@ -150,25 +146,12 @@ export default {
             message: "请输入插件版本号"
           }
         ],
-        pubdate: [
-          {
-            required: true,
-            trigger: "blur",
-            message: "请输入时间"
-          }
-        ],
-        filepath: [
-          {
-            required: true,
-            trigger: "blur",
-            message: "请上传文件"
-          }
-        ]
       },
       loading: false,
       headers: {
         Authorization: `JWT ${getToken()}`
-      }
+      },
+      dateNow:new Date().toLocaleDateString()
     };
   },
   created() {
@@ -177,9 +160,7 @@ export default {
   methods: {
     download(row){
       let data="http://tl.chidict.com:8081/"+row.filepath;
-
       window.location.href = data;
-      //console.log(data)
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
@@ -190,24 +171,22 @@ export default {
       this.saveForm.file_id = response.id;
     },
     getPluginList() {
-      function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
-      }
       let data = {
         name: this.saveForm.name,
         software: this.saveForm.software,
         version: this.saveForm.version,
-        pubdate: DateFormat(this.saveForm.pubdate),
         filepath:this.saveForm.filepath,
       };
       setPlugin(data).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-        }
+        }else{
+          this.$message.error(data.msg);
+        };
         this.loading = false;
         this.$refs["saveForm"].resetFields();
         this.show();
-      });
+      })
     },
     clearFiles() {
       this.fileList=[]
@@ -222,26 +201,24 @@ export default {
         } else {
           return false;
         }
-      });
+      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     show() {
       searchPlugin().then(({ data }) => {
-        this.tableData = [...data.plugin];
-      });
+        this.tableData = [...data.plugin]
+      })
     },
     deletePlugin(name) {
       deletePlugin({ method: "delete", name: name }).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-          this.getPluginList();
+          this.show()
         }
-      });
+      })
     }
   }
 };
 </script>
-<style lang="scss" scoped>
-</style>
