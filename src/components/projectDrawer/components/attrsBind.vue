@@ -101,10 +101,12 @@
               </template>
             </el-form-item>
             <el-form-item>
-               <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
-              <el-button type="primary" @click="showDialog(2)">创建属性</el-button>
-               </el-tooltip>
-              <el-button type="primary" @click="saveAttrs">立即绑定</el-button>
+              <el-tooltip class="item" effect="dark" content="创建新的自定义属性" placement="top">
+                <el-button type="primary" @click="showDialog(2)">创建属性</el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="绑定为个性化属性" placement="top">
+                <el-button type="primary" @click="saveAttrs">立即绑定</el-button>
+              </el-tooltip>
             </el-form-item>
           </el-form>
         </div>
@@ -284,7 +286,7 @@ export default {
       }
       if (this.attrtype === 3) {
         this.bindForm.attr_value = dateFormat(this.bindForm.attr_value);
-       // console.log(this.bindForm.attr_value);
+        // console.log(this.bindForm.attr_value);
       }
       let data = {
         attr_type: this.attrtype,
@@ -294,13 +296,13 @@ export default {
         entity_type: this.attrsTypeNum
       };
 
-     // console.log(data);
+      // console.log(data);
       createAttrsEntity(data).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.$emit("refresh_customAttrs");
           this.isDialog = false;
-          this.bindForm={}
+          this.bindForm = {};
         } else {
           this.$message.error(data.msg);
         }
