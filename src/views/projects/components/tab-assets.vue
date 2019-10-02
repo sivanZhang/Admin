@@ -651,7 +651,7 @@
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
-              placeholder="请选择难度等级"
+              placeholder="请选择状态"
               v-if="editing&&clickId === scope.row.id"
               @change="showEditIcon"
             >
