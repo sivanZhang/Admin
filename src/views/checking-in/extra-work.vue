@@ -21,7 +21,7 @@
           <el-button
             v-if="scope.row.overtime_status===null && currentSelect===1"
             type="text"
-            @click="sunbmitApprove(scope.row.task_id)"
+            @click="sunbmitApprove(scope.row.overtime_id)"
           >提交审批</el-button>
           <span v-else-if="scope.row.overtime_status===null && currentSelect===0">待提交</span>
           <span v-else-if="scope.row.overtime_status===2">审批中</span>
@@ -32,7 +32,7 @@
       <el-table-column label="操作" align="center" v-if="currentSelect">
         <template slot-scope="scope">
           <el-button type="text" @click="openPutDialog(scope.row)">修改</el-button>
-          <el-button type="text" style="color:#ed4014" @click="deleteAppty(scope.row.id)">删除</el-button>
+          <el-button type="text" style="color:#ed4014" @click="deleteAppty(scope.row.overtime_id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -111,10 +111,9 @@ export default {
   },
   methods: {
     //加班申请  提交审核
-    sunbmitApprove(id) {
-      console.log(id);
+    sunbmitApprove(overtime_id) {
       postApply({
-        overtime_id: id
+        overtime_id
       }).then(({ data }) => {
         this.$message(data.msg);
         if (data.status === 0) {
@@ -171,7 +170,7 @@ export default {
           reason: row.reason,
           task: row.task.id,
           method: "put",
-          id: row.id
+          id: row.overtime_id
         }
       );
       this.openDialog(1);

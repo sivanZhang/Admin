@@ -45,6 +45,9 @@ export default {
     this.chart = null;
   },
   methods: {
+    openLoading(){
+      this.loading = true
+    },
     //title=图标title，data=表单数据
     initChart(title='', data = {}) {
       let keys = Object.keys(data);

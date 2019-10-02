@@ -27,7 +27,7 @@
 
 <script>
 import * as Ajax from "@/api/statistics";
-import Chart from "./PieChart";
+import Chart from "@/components/ECharts/PieChart";
 import Gantt from "./Gantt";
 export default {
   name: "all-statistics",
