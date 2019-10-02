@@ -38,3 +38,33 @@ export function getAllMinStatus(params) {
 export function getAllMaxStatus(params) {
     return AXIOS.get('/state/state/', params)
 }
+//新建模板（小状态和工种）
+export function setupTemplate(params) {
+    return AXIOS.post('/statustem/statustem/', params, {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }],
+    })
+}
+//删除模板（小状态和工种）
+export function deleteTemplate(params) {
+    return AXIOS.post('/statustem/statustem/?delete',  params)
+}
+//查看模板（小状态和工种）
+export function searchTemplate(params) {
+    return AXIOS.get('/statustem/statustem/', {params})
+}
+//修改模板（小状态和工种）
+export function changeTemplate(params) {
+    return AXIOS.post('/statustem/statustem/?put', params, {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }],
+    })
+}

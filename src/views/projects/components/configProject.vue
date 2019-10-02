@@ -1,5 +1,9 @@
 <template>
   <div id="config-project">
+    <div style="padding-bottom:10px">
+      <el-button type="primary" @click="projectTemplate(3)">保存模板</el-button>
+      <el-button type="primary" @click="projectTemplate(1)">项目模板</el-button>
+    </div>
     <el-tabs
       tab-position="left"
       style="height: ;overflow: auto;"
@@ -255,6 +259,205 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+
+    <!-- 项目模板 -->
+    <el-dialog
+      title="项目模板"
+      :visible.sync="projectTemplateDialog"
+      width="512px"
+      center
+      :modal="false"
+      @close="cancelprojectTemplate"
+    >
+      <el-tabs v-model="projectActiveName">
+        <el-tab-pane label="项目模板" name="project-first">
+          <el-table
+            ref="statusTemplateList"
+            :data="statusTemplateList"
+            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+            :cell-style="{borderRight:0}"
+            highlight-current-row
+            :border="false"
+          >
+            <el-table-column type="index"></el-table-column>
+            <el-table-column label="模板名称" prop="name"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <!-- <el-tooltip class="item" effect="dark" content="使用模板" placement="top">
+                  <el-button
+                    icon="el-icon-plus"
+                    style="color:blue"
+                    type="text"
+                    @click="projectTemplate(6,scope.row)"
+                  ></el-button>
+                </el-tooltip> -->
+                <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
+                  <el-button
+                    icon="el-icon-top-right"
+                    style="color:green"
+                    type="text"
+                    @click="projectTemplate(2,scope.row)"
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                  <el-button
+                    icon="el-icon-delete"
+                    style="color:red"
+                    type="text"
+                    @click="projectTemplate(5,scope.row)"
+                  ></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="模板详情" name="project-second" :disabled="templateDetail">
+          <el-row style="padding:3px">
+            <el-col :span="12">
+              <span>状态列表</span>
+              <div style="display:flex;overflow: auto;">
+                <div class="box">
+                  <el-row>
+                    <div class="maxstatus-name">暂停：</div>
+                  </el-row>
+                  <el-row v-for="item of pause2" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">未开始：</div>
+                  </el-row>
+                  <el-row v-for="item of notstart2" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">进行中：</div>
+                  </el-row>
+                  <el-row v-for="item of conducting2" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">审核中：</div>
+                  </el-row>
+                  <el-row v-for="item of approving2" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">完成：</div>
+                  </el-row>
+                  <el-row v-for="item of finish2" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <span>工种列表</span>
+              <div v-for="(item,index) of projectTemplateList" :key="index" style="padding-top:5px">
+                <span>{{item.name}}</span>
+              </div>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
+    <!-- 项目模板保存 -->
+    <el-dialog title="项目模板" :visible.sync="saveTemplateDialog" width="512px" center :modal="false">
+      <el-row style="padding-bottom:10px">
+        <el-col :span="4">模板名称：</el-col>
+        <el-col :span="20">
+          <el-input v-model="inputTemplateName"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-row>
+          <el-col :span="4">模板展示：</el-col>
+        </el-row>
+        <el-row style="padding:5px">
+          <el-col :span="12">
+            <span>状态列表</span>
+            <div style="display:flex;overflow: auto;">
+              <div class="box">
+                <el-row>
+                  <div class="maxstatus-name">暂停：</div>
+                </el-row>
+                <el-row v-for="item of pause" :key="item" class="minstatus-name">
+                  <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                </el-row>
+                <el-row>
+                  <div class="maxstatus-name">未开始：</div>
+                </el-row>
+                <el-row v-for="item of notstart" :key="item" class="minstatus-name">
+                  <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                </el-row>
+                <el-row>
+                  <div class="maxstatus-name">进行中：</div>
+                </el-row>
+                <el-row v-for="item of conducting" :key="item" class="minstatus-name">
+                  <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                </el-row>
+                <el-row>
+                  <div class="maxstatus-name">审核中：</div>
+                </el-row>
+                <el-row v-for="item of approving" :key="item" class="minstatus-name">
+                  <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                </el-row>
+                <el-row>
+                  <div class="maxstatus-name">完成：</div>
+                </el-row>
+                <el-row v-for="item of finish" :key="item" class="minstatus-name">
+                  <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                </el-row>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <span>工种列表</span>
+            <el-tree
+              class="filter-tree"
+              empty-text="未绑定工种"
+              ref="jointree"
+              :data="project.depts"
+              node-key="id"
+              :props="defaultProps"
+              default-expand-all
+              :expand-on-click-node="false"
+            ></el-tree>
+          </el-col>
+        </el-row>
+      </el-row>
+      <el-row style="padding-top:10px">
+        <el-col align="right">
+          <el-button type="primary" @click="projectTemplate(4)">保存为模板</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
+    <!-- 使用模板
+     <el-dialog
+      :title="titleTemplate"
+      :visible.sync="useTemplate"
+      width="512px"
+      center
+      :modal="false"
+    >
+     <el-row>
+        <el-col :span="4">项目名称：</el-col>
+        <el-col :span="20">
+          <el-select v-model="selAsset" multiple>
+            <el-option
+              v-for="(item,index) of LinkAssetList"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col align="right">
+          <el-button type="primary" @click="LinkTemplate(7)">立即复用</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -266,7 +469,11 @@ import {
   getAllMinStatus,
   getProjectStatus,
   addProjectStatus,
-  delProjectMinStatus
+  delProjectMinStatus,
+  setupTemplate,
+  deleteTemplate,
+  searchTemplate,
+  changeTemplate
 } from "@/api/status";
 
 export default {
@@ -280,6 +487,15 @@ export default {
         children: "children",
         label: "name"
       },
+      projectTemplateDialog: false,
+      saveTemplateDialog: false,
+      inputTemplateName: "",
+      statusTemplateList: [],
+      projectTemplateList: [],
+      projectActiveName: "project-first",
+      templateDetail: true,
+      statusList: [],
+      deptList: [],
       allMaxStatus: null,
       approvingStatus: [],
       conductingStatus: [],
@@ -291,10 +507,19 @@ export default {
       finish: [],
       notstart: [],
       pause: [],
+      approving2: [],
+      conducting2: [],
+      finish2: [],
+      notstart2: [],
+      pause2: [],
       show: true,
       showid: null,
       client: this.project.client ? this.project.client : ""
     };
+  },
+  created() {
+    this.getStatus();
+    this.getPeojectAllStatus();
   },
   watch: {
     activeName: {
@@ -380,11 +605,12 @@ export default {
       //获取当前项目的状态
       getProjectStatus({ project_id: this.project.id }).then(({ data }) => {
         // this.projectStatus = ;
-        this.pause=[];
-        this.notstart=[];
-        this.conducting=[];
-        this.approving=[];
-        this.finish=[];
+        this.statusList = data.msg;
+        this.pause = [];
+        this.notstart = [];
+        this.conducting = [];
+        this.approving = [];
+        this.finish = [];
         [...data.msg].forEach(item => {
           //       approving: [],
           // conducting: [],
@@ -433,6 +659,91 @@ export default {
           this.getPeojectAllStatus();
         }
       });
+    },
+    //项目模板
+    projectTemplate(Type, row) {
+      //获取模板列表
+      if (Type === 1) {
+        this.projectTemplateDialog = true;
+        searchTemplate().then(({ data }) => {
+          this.statusTemplateList = [...data.msg];
+        });
+      }
+      //展示模板详情
+      if (row && Type === 2) {
+        this.projectActiveName = "project-second";
+        searchTemplate({ id: row.id }).then(({ data }) => {
+          [...data.msg].forEach(data => {
+            data.small_status.forEach(item => {
+              if (item <= 2) {
+                this.pause2.push(item);
+              }
+              if (item > 2 && item <= 5) {
+                this.notstart2.push(item);
+              }
+              if (item > 5 && item <= 15) {
+                this.conducting2.push(item);
+              }
+              if (item > 15 && item <= 19) {
+                this.approving2.push(item);
+              }
+              if (item > 19) {
+                this.finish2.push(item);
+              }
+            });
+          });
+          [...data.msg].forEach((item,index) => {
+            this.projectTemplateList = item.depts;
+        })
+        });
+      }
+      //模板保存dialog
+      if (Type === 3) {
+        this.saveTemplateDialog = true;
+      }
+      //模板保存
+      if (Type === 4) {
+        let deptid = [];
+        this.project.depts.forEach(item => {
+          deptid.push(item.id);
+        });
+        setupTemplate({
+          name: this.inputTemplateName,
+          add_small_status_ids: String(this.statusList),
+          add_depts_ids: String(deptid)
+        }).then(({ data }) => {
+          this.saveTemplateDialog = true;
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.saveTemplateDialog = false;
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      }
+      //模板删除
+      if (Type === 5) {
+        this.$confirm("此操作将永久删除该环节模板, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          deleteTemplate({ ids: row.id, method: "delete" }).then(({ data }) => {
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.projectTemplate(1);
+            } else {
+              this.$message.error(data.msg);
+            }
+          });
+        });
+      }
+      //复用模板
+      if (Type === 6) {
+      }
+    },
+    cancelprojectTemplate() {
+      this.projectActiveName = "project-first";
     }
   }
 };
