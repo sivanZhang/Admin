@@ -55,3 +55,7 @@ export function getVersion(params){
 export function getAssetsApprove(params){
     return AXIOS.get('/approve/approve_result/?01',{params})
 }
+//组长分配镜头
+export function allocationScene(params){
+    return AXIOS.get('/assets/scene/',{params})
+}

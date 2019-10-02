@@ -153,6 +153,27 @@ export const asyncRoutes = [{
         path: '*',
         redirect: '/404',
         hidden: true
+    },
+    {
+        path: '/team-manager',
+        component: Layout,
+        redirect: '/',
+        meta: {
+            title: '组长工作台',
+            icon: 'team-manager',
+            roles: 'dept_manager'
+        },
+        children: [{
+            path: 'team-manager',
+            name: 'team-manager',
+            component: () =>
+                import ('@/views/team-manager'),
+            meta: {
+                title: '组长工作台',
+                icon: 'team-manager',
+                roles: 'dept_manager'
+            }
+        }]
     }
 ]
 
