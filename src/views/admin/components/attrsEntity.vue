@@ -18,15 +18,37 @@
       <template v-if="attr_entity === 0">
         <el-table-column label="属性值" prop="attr_value">
           <template slot-scope="scope">
-            <el-input
-              size="small"
-              v-model="scope.row.attr_value"
-              placeholder="请输入属性值"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
-            >
-              <span>{{scope.row.attr_value}}</span>
-            </el-input>
+            <div v-if="scope.row.attr_type <=2 ||scope.row.attr_type === 5">
+              <el-input
+                size="small"
+                v-model="scope.row.attr_value"
+                placeholder="请输入属性值"
+                v-if="editing&&clickId === scope.row.id"
+                @change="showEditIcon"
+              >
+                <span>{{scope.row.attr_value}}</span>
+              </el-input>
+            </div>
+            <div v-if="scope.row.attr_type === 3">
+              <el-date-picker
+                v-model="scope.row.attr_value"
+                type="date"
+                placeholder="选择日期"
+                v-if="editing&&clickId === scope.row.id"
+                @change="showEditIcon"
+                style="width:80%"
+              ></el-date-picker>
+            </div>
+            <div v-if="scope.row.attr_type === 4">
+              <el-select
+                v-model="scope.row.attr_value"
+                v-if="editing&&clickId === scope.row.id"
+                @change="showEditIcon"
+              >
+                <el-option label="false" value="0"></el-option>
+                <el-option label="true" value="1"></el-option>
+              </el-select>
+            </div>
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.attr_value}}</span>
           </template>
         </el-table-column>
@@ -114,6 +136,13 @@ export default {
     },
     //修改属性实体
     putAttrtsEntity(row, Type) {
+      function dateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
+      if (row.attr_type === 3) {
+        row.attr_value = dateFormat(row.attr_value);
+      }
       if (Type === 1) {
         if (this.iconShow === true) {
           this.$confirm("当前修改未保存", "注意", {
@@ -131,9 +160,11 @@ export default {
               this.$message.success(data.msg);
               this.$emit("refresh-attrsEntity");
               this.editing = false;
+              this.iconShow = false;
             } else {
               this.$message.error(data.msg);
               this.editing = false;
+              this.iconShow = false;
             }
           })
           .catch(res => {});
