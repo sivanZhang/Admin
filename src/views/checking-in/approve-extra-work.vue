@@ -1,0 +1,99 @@
+<template>
+  <div id="approve-extra">
+    <el-table :data="ApproveList" v-loading="tableLoading">
+      <el-table-column type="index"></el-table-column>
+      <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
+      <el-table-column prop="task.name" label="加班任务"></el-table-column>
+      <el-table-column prop="reason" label="加班原因"></el-table-column>
+      <el-table-column prop="overtime_hour" label="加班工时"></el-table-column>
+      <el-table-column prop="level" label="审批等级"></el-table-column>
+      <el-table-column prop="approver.username" label="审批人"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button type="text" @click="openDialog(scope.row)">审批</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-dialog title="加班申请" :visible.sync="dialogVisible" width="512px">
+      <el-form :model="ApproveForm" :rules="rules" ref="approve-form" label-width="100px">
+        <el-form-item label="审批结果" prop="approve_result">
+          <el-radio-group v-model="ApproveForm.approve_result">
+            <el-radio-button :label="1">同意</el-radio-button>
+            <el-radio-button :label="0">拒绝</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="审批备注" prop="suggestion">
+          <el-input type="textarea" v-model="ApproveForm.suggestion" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button :loading="submitLoading" type="primary" @click="submitForm('approve-form')">提交</el-button>
+          <el-button @click="resetForm('approve-form')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { getApprove, postApprove } from "@/api/checkingIn";
+export default {
+  name: "approve-extra-work",
+  data() {
+    return {
+      ApproveForm: {},
+      ApproveList: [],
+      tableLoading: false,
+      submitLoading: false,
+      dialogVisible: false,
+      rules: {
+        approve_result: [
+          { required: true, message: "审批结果为必选", trigger: "blur" }
+        ],
+      }
+    };
+  },
+  methods: {
+    //加班申请的审核
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let self = this;
+          function submitFn(Fu, data) {
+            Fu(data)
+              .then(() => {
+                self.resetForm("approve-form");
+                self.dialogVisible = false;
+                self.currentSelect = 1;
+                self.$nextTick(() => {
+                  self.getApproves();
+                });
+              })
+              .finally(() => {
+                self.submitLoading = true;
+              });
+          }
+          this.submitLoading = true;
+          submitFn(postApprove(), self.ApplyForm);
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    openDialog() {
+      this.dialogVisible = true;
+    },
+    getApproves() {
+      getApprove().then(({ data }) => {
+        this.ApproveList = [...data.msg];
+      });
+    }
+  },
+  created() {
+    this.getApproves();
+  }
+};
+</script>
+
+<style>
+</style>

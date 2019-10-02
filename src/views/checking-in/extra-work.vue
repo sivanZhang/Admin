@@ -1,43 +1,38 @@
 <template>
   <div id="extra-work">
-    <el-row :gutter="15">
-      <el-col :span="12">
-        <label for="select">查询范围：</label>
-        <el-select
-          v-model="currentSelect"
-          placeholder="请选择"
-          id="select"
-          @change="handleSelectLChange"
-        >
-          <el-option
-            v-for="item in ListFilters"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="12" style="text-align:right">
-        <el-button type="primary" @click="openDialog">申请加班</el-button>
-      </el-col>
-    </el-row>
+    <label for="select">查询范围：</label>
+    <el-select v-model="currentSelect" placeholder="请选择" id="select" @change="handleSelectLChange">
+      <el-option
+        v-for="item in ListFilters"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+    <el-button type="primary" @click="openDialog(0)" style="margin-left:15px">申请加班</el-button>
     <el-table :data="ExtraworkList" v-loading="tableLoading">
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="creator.username" label="申请人"></el-table-column>
+      <el-table-column prop="task.name" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
       <el-table-column prop="overtime_hour" label="加班工时(小时)"></el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.overtime_status===null" style="color:#ff9900">审批中</span>
-          <span v-else-if="scope.row.overtime_status" style="color:#19be6b">同意</span>
-          <span v-else style="color:#ed4014">拒绝</span>
+          <el-button
+            v-if="scope.row.overtime_status===null && currentSelect===1"
+            type="text"
+            @click="sunbmitApprove(scope.row.task_id)"
+          >提交审批</el-button>
+          <span v-else-if="scope.row.overtime_status===null && currentSelect===0">待提交</span>
+          <span v-else-if="scope.row.overtime_status===2">审批中</span>
+          <span v-else-if="scope.row.overtime_status===1" style="color:#19be6b">同意</span>
+          <span v-else-if="scope.row.overtime_status===0" style="color:#ed4014">拒绝</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
-        <!--  v-if="currentSelect" -->
+      <el-table-column label="操作" align="center" v-if="currentSelect">
         <template slot-scope="scope">
-          <el-button type="text">修改</el-button>
-          <el-button type="text" style="color:#ed4014">删除</el-button>
+          <el-button type="text" @click="openPutDialog(scope.row)">修改</el-button>
+          <el-button type="text" style="color:#ed4014" @click="deleteAppty(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,15 +43,23 @@
         </el-form-item>
         <el-form-item label="加班任务" prop="task">
           <el-select v-model="ApplyForm.task" placeholder="请选择活动区域" style="width:100%">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option
+              v-for="item of myTasks"
+              :label="item.task.name"
+              :value="item.task.id"
+              :key="item.task.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="加班原因" prop="reason">
           <el-input type="textarea" v-model="ApplyForm.reason" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('apply-form')">立即创建</el-button>
+          <el-button
+            :loading="submitLoading"
+            type="primary"
+            @click="submitForm('apply-form')"
+          >{{currentFormType?'提交修改':'立即创建'}}</el-button>
           <el-button @click="resetForm('apply-form')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -65,11 +68,21 @@
 </template>
 
 <script>
-import { getOvertime, postOvertime } from "@/api/checkingIn";
+import {
+  getOvertime,
+  postOvertime,
+  postApply,
+  deleteApply,
+  putApply
+} from "@/api/checkingIn";
+import { getStatusTaskList } from "@/api/task";
 export default {
   name: "extra-work",
   data() {
     return {
+      submitLoading: false,
+      currentFormType: 0, //表单用于提交什么
+      myTasks: null,
       ApplyForm: {},
       rules: {
         overtime_hour: [
@@ -97,17 +110,44 @@ export default {
     };
   },
   methods: {
+    //加班申请  提交审核
+    sunbmitApprove(id) {
+      console.log(id);
+      postApply({
+        overtime_id: id
+      }).then(({ data }) => {
+        this.$message(data.msg);
+        if (data.status === 0) {
+          this.getExtrworks();
+        }
+      });
+    },
+    //加班申请提交
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          postOvertime(this.ApplyForm).then(() => {
-            this.resetForm("apply-form");
-            this.dialogVisible = false;
-            this.currentSelect = 1;
-            this.$nextTick(() => {
-              this.getExtrworks();
-            });
-          });
+          let self = this;
+          function submitFn(Fu, data) {
+            Fu(data)
+              .then(() => {
+                self.resetForm("apply-form");
+                self.dialogVisible = false;
+                self.currentSelect = 1;
+                self.$nextTick(() => {
+                  self.getExtrworks();
+                });
+              })
+              .finally(() => {
+                self.submitLoading = true;
+              });
+          }
+          this.submitLoading = true;
+          if (this.this.currentFormType === 0) {
+            submitFn(postOvertime(), self.ApplyForm);
+          }
+          if (this.this.currentFormType === 1) {
+            submitFn(putApply(), self.ApplyForm);
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -117,13 +157,52 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    openDialog() {
+    //type:0 创建，1 修改
+    openDialog(type) {
+      this.currentFormType = type;
       this.dialogVisible = true;
+    },
+    //修改加班申请
+    openPutDialog(row) {
+      this.ApplyForm = Object.assign(
+        {},
+        {
+          overtime_hour: row.overtime_hour,
+          reason: row.reason,
+          task: row.task.id,
+          method: "put",
+          id: row.id
+        }
+      );
+      this.openDialog(1);
+    },
+    //删除加班申请
+    deleteAppty(id) {
+      this.$confirm("此操作将删除本条申请, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        deleteApply({
+          method: "delete",
+          id
+        }).then(({ data }) => {
+          this.$message(data.msg);
+          if (data.status === 0) {
+            this.dialogVisible = false;
+            this.currentSelect = 1;
+            this.$nextTick(() => {
+              this.getExtrworks();
+            });
+          }
+        });
+      });
     },
     //监听下拉框改变
     handleSelectLChange() {
       this.getExtrworks();
     },
+    //获取 加班申请列表
     getExtrworks() {
       let params = {};
       if (this.currentSelect) {
@@ -143,10 +222,16 @@ export default {
         .finally(() => {
           this.tableLoading = false;
         });
+    },
+    getMyTasks() {
+      getStatusTaskList().then(({ data }) => {
+        this.myTasks = [...data.msg];
+      });
     }
   },
   created() {
     this.getExtrworks();
+    this.getMyTasks();
   }
 };
 </script>

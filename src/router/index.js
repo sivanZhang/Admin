@@ -374,21 +374,32 @@ export const constantRoutes = [{
             icon: 'kq'
         },
         children: [{
-            path: 'extra-work',
-            name: 'extra-work',
-            component: () =>
-                import ('@/views/checking-in/extra-work'),
-            meta: {
-                title: '加班管理',
-                icon: 'jiaban'
+                path: 'extra-work',
+                name: 'extra-work',
+                component: () =>
+                    import ('@/views/checking-in/extra-work'),
+                meta: {
+                    title: '加班管理',
+                    icon: 'jiaban'
+                }
+            },
+            {
+                path: 'approve-extra-work',
+                name: 'approve-extra-work',
+                component: () =>
+                    import ('@/views/checking-in/approve-extra-work'),
+                meta: {
+                    title: '加班审批',
+                    icon: 'jbsp'
+                }
             }
-        }]
+        ]
     },
     /* {
         path: '/assetes',
         component: Layout,
         alwaysShow: true,
-        hidden: true,
+        hidden: true,.a
         redirect: '/assetes',
         meta: {
             title: '资产管理',
