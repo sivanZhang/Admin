@@ -7,8 +7,8 @@
             width="240px"
             style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
           >
-            <el-row type="flex" align="middle" class="nav-title">
-              <el-button @click="openGroupForm('add')" type="success" v-if="DeptAuth">添加工种</el-button>
+            <el-row type="flex" align="middle" class="nav-title" v-if="DeptAuth">
+              <el-button @click="openGroupForm('add')" type="success">添加工种</el-button>
             </el-row>
 
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>

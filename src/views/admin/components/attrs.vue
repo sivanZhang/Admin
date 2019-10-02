@@ -8,15 +8,12 @@
         </el-col>
       </el-row>
     </div>
-    <el-table
+    <div style="padding:15px;border: 1px solid #dfe6ec;">
+      <el-table
       ref="attrsList"
       :data="attrsList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-      :cell-style="{borderRight:0}"
       highlight-current-row
-      v-loading="tableLoading"
-      :border="false"
-    >
+      v-loading="tableLoading">
       <el-table-column type="index" align="center" :index="indexMethod"></el-table-column>
       <el-table-column label="属性名" prop="name">
         <template slot-scope="scope">
@@ -77,6 +74,7 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
     <div class="block" style="text-align: center;margin-top:10px">
       <el-pagination
         @size-change="handleSizeChange"

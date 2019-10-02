@@ -4,11 +4,8 @@
     <el-table
       ref="attrsEntityList"
       :data="attrsEntityList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-      :cell-style="{borderRight:0}"
       highlight-current-row
       v-loading="tableLoading"
-      :border="false"
     >
       <el-table-column type="index" align="center" :index="indexMethod"></el-table-column>
       <el-table-column label="属性名" prop="attr_name"></el-table-column>
@@ -225,4 +222,8 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+#attrs-entity {
+  padding: 15px;
+  border: 1px solid #dfe6ec;
+}
 </style>
