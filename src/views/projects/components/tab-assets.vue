@@ -11,7 +11,7 @@
           </el-button>
           <el-button
             type="primary"
-            @click="pushMaterial()"
+            @click="pushMaterial(1)"
             :disabled="this.multipleSelection.length === 0"
           >素材库</el-button>
           <el-button
@@ -950,6 +950,22 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog title="添加至素材库" :visible.sync="materialShow" width="480px" top="5vh">
+      <el-form :model="materialForm" label-width="90px">
+        <el-form-item label="素材名称" prop="name">
+          <el-input v-model="materialForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="estdate">
+          <span>{{materialEstdate}}</span>
+        </el-form-item>
+        <el-form-item label="素材说明" prop="explain">
+          <el-input type="textarea" v-model="materialForm.explain"></el-input>
+        </el-form-item>
+        <el-form-item align="right">
+          <el-button type="primary" @click="pushMaterial()">立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <Drawer
       scrollable
       closable
@@ -1000,6 +1016,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      materialForm:{},
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
       pageCount: 0,
       AssetList: [],
@@ -1231,7 +1248,8 @@ export default {
       attrsList: [],
       customAttrs: [],
       attrsTypeNum: null,
-      remarkId: null
+      materialShow:false,
+      materialEstdate: new Date().toLocaleDateString()
     };
   },
   watch: {
@@ -1344,6 +1362,22 @@ export default {
     }
   },
   methods: {
+    //添加进素材库
+    pushMaterial(Type) {
+      if(Type === 1){
+        this.materialShow = true
+      }else{
+        const ids = this.multipleSelection.map(item => item.id).join(",");
+        let dateMaterial = {
+          ...this.materialForm,
+          estdate:this.materialEstdate,
+          ids 
+        }
+      console.log(dateMaterial);
+      // addMaterial();
+      }
+     
+    },
     jumpName(val) {
       this.$emit("jumpName", val);
     },
@@ -1917,13 +1951,7 @@ export default {
         });
       });
     },
-    //添加进素材库
-    pushMaterial(Type) {
-      const ids = this.multipleSelection.map(item => item.id).join(",");
-      this.materialShow = ture;
-      console.log(ids);
-      addMaterial();
-    },
+    
     //批量删除资产
     delMulAssets() {
       this.$confirm("此操作将永久删除资产, 是否继续?", "提示", {

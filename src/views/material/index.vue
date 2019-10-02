@@ -1,17 +1,30 @@
 <!-- 素材库 -->
 <template>
-  <div id="material"></div>
+  <div id="material">
+    {{materialList}}
+  </div>
 </template>
 
 <script>
+import {getMaterial,addMaterial,delMaterial,putMaterial} from "@/api/material"
 export default {
   name: "material",
   components: {},
   data() {
-    return {};
+    return {
+      materialList:[]
+    };
   },
   watch: {},
-  methods: {},
+  methods: {
+    searchMaterial(){
+      getMaterial().then(({data})=>{
+        if(data.status === 0){
+          this.materialList = [...data.msg]
+        }
+      })
+    }
+  },
   created() {}
 };
 </script>
