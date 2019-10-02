@@ -1,6 +1,5 @@
 <style lang="scss" scoped>
-#my-production {
-}
+
 </style>
 <template>
   <div id="my-production" ref="drawer-parent">
@@ -79,7 +78,7 @@
       :inner="isInner"
       title="评论"
     >
-      <remarks ref="remarks" :project="RemarkParams" />
+      <remarks ref="remarks" :project="RemarkParams" :RemarksData="RemarksData" @refreshRemark="updateRemark"/>
     </Drawer>
   </div>
 </template>
@@ -88,6 +87,7 @@
 import remarks from "@/components/projectDrawer/components/remarks";
 import { getProduction } from "@/api/production";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import { getRemark} from "@/api/remark";
 export default {
   name: "my-production",
   mixins: [thumbtackMixin], //drawer图钉效果
@@ -97,6 +97,7 @@ export default {
   data() {
     return {
       RemarkParams: {}, //传给remark的参数
+      RemarksData:[],
       isDrawerShow: false, //是否显示drawer
       videoSrc: "",
       dialogTableVisible: false, //dialog是否显示
@@ -139,9 +140,27 @@ export default {
         id,
         entity_type: 1
       };
+      const msg = {
+          appid: this.RemarkParams.id,
+          apptype: this.RemarkParams.entity_type
+        };
+      getRemark(msg).then(({ data }) => {
+          this.RemarksData = [...data.msg];
+          
+          //console.log(this.RemarksData);
+        });
       this.$nextTick(() => {
-        this.$refs["remarks"].getRemarkList();
+        // this.$refs["remarks"].getRemarkList();
         this.isDrawerShow = true;
+      });
+
+    },
+    updateRemark() {
+      getRemark({
+        appid: this.RemarkParams.id,
+        apptype: this.RemarkParams.entity_type
+      }).then(({ data }) => {
+        this.RemarksData = [...data.msg];
       });
     },
     //关闭dialog回调，停止视频播放
