@@ -277,13 +277,24 @@ export const constantRoutes = [{
                     icon: 'tree',
                     hiddenSideBar: true
                 }
-            }
+            },
+            {
+                path: 'asset-import/:id',
+                name: 'asset-import',
+                component: () =>
+                    import ('@/views/assetsManagement/asset-import'),
+                meta: {
+                    title: '批量导入',
+                    icon: 'assetlist'
+                },
+                hidden: true
+            },
         ]
     },
     {
-        path: '/task',
+        path: '/mine',
         component: Layout,
-        redirect: '/task',
+        redirect: '/mine',
         meta: {
             title: '我的工作台',
             icon: 'task'
@@ -300,15 +311,15 @@ export const constantRoutes = [{
         }]
     },
     {
-        path: '/production',
+        path: '/mine',
         component: Layout,
-        redirect: '/production',
+        redirect: '/mine',
         meta: {
-            title: '作品',
+            title: '我的工作台',
             icon: 'pd'
         },
         children: [{
-            path: 'my-production',
+            path: 'production',
             name: 'my-production',
             component: () =>
                 import ('@/views/production'),
@@ -319,42 +330,23 @@ export const constantRoutes = [{
         }]
     },
     {
-        path: '/task',
+        path: '/mine',
         component: Layout,
-        redirect: '/task',
+        redirect: '/mine',
         meta: {
             title: '我的工作台',
             icon: 'task'
         },
         children: [{
-            path: 'overview-users1',
-            name: 'overview-users1',
+            path: 'man-hour',
+            name: 'man-hour',
             component: () =>
-                import ('@/views/overview/users'),
+                import ('@/views/man-hour'),
             meta: {
                 title: '我的工时',
                 icon: 'fs'
             },
         }]
-    },
-    {
-        path: '/task',
-        component: Layout,
-        redirect: '/task',
-        meta: {
-            title: '我的工作台',
-            icon: 'task'
-        },
-        children: [{
-            path: 'overview-users2',
-            name: 'overview-users2',
-            component: () =>
-                import ('@/views/overview/users'),
-            meta: {
-                title: '我的信息',
-                icon: 'zl'
-            },
-        }, ]
     },
     {
         path: '/plugin',
@@ -375,7 +367,7 @@ export const constantRoutes = [{
             }
         }]
     },
-    {
+    /* {
         path: '/assetes',
         component: Layout,
         alwaysShow: true,
@@ -394,18 +386,9 @@ export const constantRoutes = [{
                 title: '资产列表',
                 icon: 'assetlist'
             }
-        }, {
-            path: 'asset-import/:id',
-            name: 'asset-import',
-            component: () =>
-                import ('@/views/assetsManagement/asset-import'),
-            meta: {
-                title: '批量导入',
-                icon: 'assetlist'
-            },
-            hidden: true
         }, ]
-    }, {
+    }, */
+    {
         path: '/404',
         component: () =>
             import ('@/views/404'),
