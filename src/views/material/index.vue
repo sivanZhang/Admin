@@ -1,7 +1,7 @@
 <!-- 素材库 -->
 <template>
   <div id="material">
-    <div style="padding-bottom:10px">
+    <div style="padding-bottom:10px" v-if="authRole">
       <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
       <el-button
         type="danger"
@@ -16,7 +16,7 @@
       :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="{borderRight:0}"
       highlight-current-row
-       :row-key="(row)=>{ return row.id}"
+      :row-key="(row)=>{ return row.id}"
       :border="false"
       @selection-change="handleSelectionChange"
     >
@@ -103,38 +103,40 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="estdate">
-        <template></template>
+        <template slot-scope="scope">{{scope.row.estdate|dateFormat}}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="100px">
-        <template slot-scope="scope">
-          <el-tooltip effect="dark" content="修改" placement="top">
-            <el-button
-              @click="editMaterial(scope.row)"
-              icon="el-icon-edit"
-              type="text"
-              style="color:blue"
-              v-if="!editing||clickId !== scope.row.id"
-            />
-          </el-tooltip>
-          <el-tooltip effect="dark" content="确认" placement="top">
-            <el-button
-              v-if="editing&&clickId === scope.row.id"
-              type="text"
-              icon="el-icon-check"
-              style="color:green"
-              @click="saveMaterial(scope.$index,scope.row)"
-            />
-          </el-tooltip>
-          <el-tooltip effect="dark" content="删除" placement="top">
-            <el-button
-              @click="deleteMaterial(scope.row.id)"
-              icon="el-icon-delete"
-              style="color:red"
-              type="text"
-            />
-          </el-tooltip>
-        </template>
-      </el-table-column>
+      <template v-if="authRole">
+        <el-table-column label="操作" align="center" width="100px">
+          <template slot-scope="scope">
+            <el-tooltip effect="dark" content="修改" placement="top">
+              <el-button
+                @click="editMaterial(scope.row)"
+                icon="el-icon-edit"
+                type="text"
+                style="color:blue"
+                v-if="!editing||clickId !== scope.row.id"
+              />
+            </el-tooltip>
+            <el-tooltip effect="dark" content="确认" placement="top">
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="text"
+                icon="el-icon-check"
+                style="color:green"
+                @click="saveMaterial(scope.$index,scope.row)"
+              />
+            </el-tooltip>
+            <el-tooltip effect="dark" content="删除" placement="top">
+              <el-button
+                @click="deleteMaterial(scope.row.id)"
+                icon="el-icon-delete"
+                style="color:red"
+                type="text"
+              />
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </template>
     </el-table>
     <!-- 修改素材时更改图片 -->
     <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
@@ -172,24 +174,24 @@
     </el-dialog>
     <!-- 添加素材 -->
     <el-dialog title="添加素材" :visible.sync="addDialog" width="480px" top="5vh">
-       <el-form :model="materialForm" label-width="90px">
+      <el-form :model="materialForm" label-width="90px">
         <el-form-item label="素材名称" prop="name">
           <el-input v-model="materialForm.name"></el-input>
         </el-form-item>
         <el-form-item label="素材路径" prop="path">
-           <el-upload
-                class="upload-demo"
-                ref="upload"
-                accept="file"
-                :action="action"
-                :headers="headers"
-                :on-success="handleSuccess"
-                :before-remove="beforeRemove"
-                :file-list="fileList"
-                :clearFiles="clearFiles"
-              >
-                <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            accept="file"
+            :action="action"
+            :headers="headers"
+            :on-success="handleSuccess"
+            :before-remove="beforeRemove"
+            :file-list="fileList"
+            :clearFiles="clearFiles"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
         </el-form-item>
         <el-form-item label="素材说明" prop="explain">
           <el-input type="textarea" v-model="materialForm.explain"></el-input>
@@ -219,7 +221,7 @@ export default {
       action: isPro
         ? "http://tl.chidict.com:8081/appfile/appfile/"
         : "/api/appfile/appfile/",
-      materialForm:{},
+      materialForm: {},
       materialList: [],
       editing: false,
       clickId: null,
@@ -237,25 +239,26 @@ export default {
       multipleSelection: [],
       imagePath: null,
       fileList: [],
-      addDialog:false,
+      addDialog: false,
+      authRole: null
     };
   },
   watch: {},
   methods: {
     //素材添加
     AddMaterial(Type) {
-      if(Type === 1){
-         this.addDialog = true;
-      }else{
-        addMaterial(this.materialForm).then(({data})=>{
-          // if(data.status === 0){
+      if (Type === 1) {
+        this.addDialog = true;
+      } else {
+        addMaterial(this.materialForm).then(({ data }) => {
+          if (data.status === 0) {
             this.$message.success(data.msg);
-            this.searchMaterial()
-          // }
-        })
-        
+            this.searchMaterial();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       }
-     
     },
     //修改图片弹出
     img(row) {
@@ -283,13 +286,13 @@ export default {
       this.ImgForm.image = response.msg;
       this.ImgForm.image_id = response.id;
       this.materialForm.path = response.msg;
-      this.materialForm.ids = response.id;
+      //this.materialForm.path_id = response.id;
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     clearFiles() {
-      this.fileList=[]
+      this.fileList = [];
     },
     //是否显示行内修改框
     showEditIcon() {
@@ -322,13 +325,13 @@ export default {
         explain: row.explain
       };
       putMaterial(dataMaterial).then(({ data }) => {
-        // if(data.status === 0){
-        this.$message.success(data.msg);
-        this.searchMaterial();
-        this.editing = false;
-        // }else{
-        //   this.$message.error(data.msg)
-        // }
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          this.searchMaterial();
+          this.editing = false;
+        } else {
+          this.$message.error(data.msg);
+        }
       });
       // console.log(dataMaterial)
     },
@@ -340,10 +343,10 @@ export default {
         type: "warning"
       }).then(() => {
         delMaterial({ ids: id, method: "delete" }).then(({ data }) => {
-          // if(data.status === 0){
-          this.$message.success(data.msg);
-          this.searchMaterial();
-          // }
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.searchMaterial();
+          }
         });
       });
     },
@@ -360,17 +363,21 @@ export default {
         type: "warning"
       }).then(() => {
         delMaterial({ ids, method: "delete" }).then(({ data }) => {
-          // if(data.status === 0){
-          this.$message.success(data.msg);
-          this.searchMaterial();
-          // }
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.searchMaterial();
+          }
         });
       });
     },
     //查询素材库
     searchMaterial() {
       getMaterial().then(({ data }) => {
-        this.materialList = data;
+        if (data.status === 0) {
+          this.materialList = [...data.msg];
+          this.authRole = data.auth.can_manage_material_state;
+        }
+
         //console.log(this.materialList)
       });
     }
