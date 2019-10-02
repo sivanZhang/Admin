@@ -18,6 +18,11 @@
           </el-row>
           <el-row type="flex" align="middle">
             <template v-if="perssion">
+            <el-button
+              type="primary"
+              @click="openDialog(2)"
+              :disabled="this.multipleSelection.length === 0 ||this.multipleSelection.length>1"
+            >重置密码</el-button>
               <el-button type="primary" icon="el-icon-plus" @click="openDialog(1)">添加用户</el-button>
               <el-button
                 icon="el-icon-upload2"
@@ -46,7 +51,7 @@
         ></users-table>
       </el-main>
     </el-container>
-    <el-dialog :visible.sync="dialogShow" :title="dialogName" width="400px">
+    <el-dialog :visible.sync="dialogShow1" :title="dialogName" width="400px">
       <el-form
         :loading="buttonStates.createLoading"
         :model="userForm"
@@ -83,12 +88,35 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    
+   
+    <el-dialog title="重置密码" :visible.sync="dialogShow2" width="400px">
+      <el-form
+        :model="resetPassForm"
+        status-icon
+        :rules="rules"
+        ref="resetPassForm"
+        label-width="90px"
+      >
+        <el-form-item label="密码" prop="pass">
+          <el-input type="password" v-model="resetPassForm.pass"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input type="password" v-model="resetPassForm.checkPass"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <!-- <el-button @click="resetForm('resetPassForm')">重置</el-button> -->
+          <el-button type="primary" @click="submitForm('resetPassForm')">提交</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import usersTable from "@/views/components/UsersTable";
-import { getUserList, getUserPerfession, deleteUser } from "@/api/admin";
+import { getUserList, getUserPerfession, deleteUser, editUserDetail } from "@/api/admin";
 import { addUser } from "@/api/login";
 export default {
   name: "userGroup",
@@ -98,12 +126,32 @@ export default {
   },
 
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.resetPassForm.checkPass !== "") {
+          this.$refs.resetPassForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.resetPassForm.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       tLoading:false,
       radio: 1,
       filterText: "",
       UserList: [],
-      dialogShow: false,
+      dialogShow1: false,
+      dialogShow2: false,
       dialogName: null,
       perssion: null,
       dealUserCount: 0,
@@ -111,12 +159,17 @@ export default {
         password: "123456",
         isactive: true
       },
-      rules: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
-        ],
-        email: [{ required: true, message: "请输入邮箱", trigger: "blur" }]
+      resetPassForm: {
+        pass: "",
+        checkPass: ""
       },
+      rules: {
+      
+          pass: [{ validator: validatePass, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
+            username: [{ required: true, message: "请输入用户名", trigger: "blur" }
+        ],
+        email: [{ required: true, message: "请输入邮箱", trigger: "blur" }]},
       buttonStates: {
         createLoading: false
       },
@@ -128,7 +181,30 @@ export default {
   //   ...mapState('admin',['UserList'])
   // },
 
+
   methods: {
+    submitForm(resetPassForm) {
+      // console.log(this.resetPassForm)
+       console.log(this.multipleSelection)
+      this.$refs[resetPassForm].validate(valid => {
+        if (valid) {
+          const id = this.multipleSelection.map(item => item.id).join(",");
+          editUserDetail({ method: "put", userid: id ,password:this.resetPassForm.pass }).then(({ data }) => {
+            console.log("data");
+            console.log(data);
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.dialogShow2 = false;
+            }
+          });
+          // alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
     change() {
       this.$forceUpdate();
     },
@@ -155,6 +231,8 @@ export default {
       if (Type === 1) {
         this.dialogName = "添加用户";
         this.dialogShow = true;
+      }else if (Type === 2) {
+        this.dialogShow2 = true;
       } else {
         this.$router.push({
           name: "user-import"
