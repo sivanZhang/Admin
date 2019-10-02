@@ -803,8 +803,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="dark" content="添加至素材库" placement="top">
-              <el-button type="text" icon="el-icon-plus" @click="pushMaterial(1,scope.row.id)" style="color:green"></el-button>
+            <el-tooltip effect="dark" content="导出至素材库" placement="top">
+                <svg-icon  icon-class="exportMaterial" @click="pushMaterial(1,scope.row.id)" style="cursor:pointer;margin-right:10px" /> 
             </el-tooltip>
             <el-tooltip effect="dark" content="修改" placement="top">
               <el-button
@@ -2153,5 +2153,14 @@ export default {
     cursor: pointer;
     color: #2d8cf0;
   }
+}
+svg-icon {
+  display: inline-block;
+  cursor: pointer;
+  fill: #5a5e66;
+  width: 22px;
+  height: 22px;
+  vertical-align: 10px;
+  padding-right:10px
 }
 </style>
