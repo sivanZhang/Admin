@@ -33,10 +33,8 @@
       </el-table-column>
       <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column>
       <el-table-column label="素材" header-align="center">
-        <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
         <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column>
-        <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
-        <el-table-column prop="asset.image" label="缩略图" header-align="center">
+        <el-table-column prop="asset.image" label="缩略图" align="center">
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
