@@ -671,6 +671,11 @@ export default {
       }
       //展示模板详情
       if (row && Type === 2) {
+        this.pause2=[],
+        this.notstart2=[];
+        this.conducting2=[],
+        this.approving2=[],
+        this.finish2=[],
         this.projectActiveName = "project-second";
         searchTemplate({ id: row.id }).then(({ data }) => {
           [...data.msg].forEach(data => {
