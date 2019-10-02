@@ -434,8 +434,7 @@ import {
   removeTemplateLink,
   templateCreateLink
 } from "@/api/links";
-import { getDeptUsers } from "@/api/admin";
-import { getDept } from "@/api/admin";
+import { getDept ,getDeptUsers} from "@/api/admin";
 import { mapState } from "vuex";
 import myMixin from "./mixins";
 import { type } from "os";
