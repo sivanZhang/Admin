@@ -215,7 +215,7 @@ export default {
       remarksResult: {},
       pid: null,
       // RemarksData: this.RemarksData,
-      RemarksData:[],
+      // RemarksData:[],
       buttons: false,
       optionInput: "",
       options: [
@@ -275,19 +275,19 @@ export default {
     //筛选备注
 
     //获取备注列表
-    getRemarkList() {
-      if (this.project) {
-        const msg = {
-          appid: this.project.id,
-          apptype: this.project.entity_type
-        };
-        getRemark(msg).then(({ data }) => {
-          this.RemarksData = [...data.msg];
+    // getRemarkList() {
+    //   if (this.project) {
+    //     const msg = {
+    //       appid: this.project.id,
+    //       apptype: this.project.entity_type
+    //     };
+    //     getRemark(msg).then(({ data }) => {
+    //       this.RemarksData = [...data.msg];
           
-          //console.log(this.RemarksData);
-        });
-      }
-    },
+    //       //console.log(this.RemarksData);
+    //     });
+    //   }
+    // },
     //添加备注
     addRemarks() {
       if (this.remarks) {
@@ -303,7 +303,7 @@ export default {
               this.$message.success(data.msg);
               this.remarks = "";
               this.buttons = false;
-              this.getRemarkList();
+              this.$emit("refreshRemark");
             } else {
               this.$message.error(data.msg);
             }
@@ -321,14 +321,14 @@ export default {
           entity_type: this.project.entity_type,
           pid: item.id,
           content: this.comment[item.id]
-        };
+        }
         addRemark(this.commentResult)
           .then(({ data }) => {
             if (data.status === 0) {
               this.$message.success(data.msg);
               this.comment[item.id] = [];
               this.showAll = null;
-              this.getRemarkList();
+              this.$emit("refreshRemark");
             } else {
               this.$message.error(data.msg);
             }
@@ -354,7 +354,7 @@ export default {
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            this.getRemarkList();
+            this.$emit("refreshRemark");
           } else {
             this.$message.error(data.msg);
           }
@@ -377,7 +377,8 @@ export default {
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            this.getRemarkList();
+            
+            this.$emit("refreshRemark");
           } else {
             this.$message.error(data.msg);
           }
@@ -401,7 +402,7 @@ export default {
           if (data.status === 0) {
             this.$message.success(data.msg);
 
-            this.getRemarkList();
+            this.$emit("refreshRemark");
           } else {
             this.$message.error(data.msg);
           }

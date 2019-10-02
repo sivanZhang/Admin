@@ -125,6 +125,25 @@ export const asyncRoutes = [{
         ]
     },
     {
+        path: '/material',
+        component: Layout,
+        redirect: '/',
+        meta: {
+            title: '素材库',
+            icon: 'task'
+        },
+        children: [{
+            path: 'material',
+            name: 'material',
+            component: () =>
+                import ('@/views/material'),
+            meta: {
+                title: '素材库',
+                icon: 'material'
+            }
+        }]
+    },
+    {
         path: '*',
         redirect: '/404',
         hidden: true

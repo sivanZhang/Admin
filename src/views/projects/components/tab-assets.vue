@@ -10,6 +10,11 @@
             <slot name="import">资产导入</slot>
           </el-button>
           <el-button
+            type="primary"
+            @click="pushMaterial(1)"
+            :disabled="this.multipleSelection.length === 0"
+          >素材库</el-button>
+          <el-button
             type="danger"
             icon="el-icon-delete"
             @click="delMulAssets()"
@@ -945,6 +950,22 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog title="添加至素材库" :visible.sync="materialShow" width="480px" top="5vh">
+      <el-form :model="materialForm" label-width="90px">
+        <el-form-item label="素材名称" prop="name">
+          <el-input v-model="materialForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="estdate">
+          <span>{{materialEstdate}}</span>
+        </el-form-item>
+        <el-form-item label="素材说明" prop="explain">
+          <el-input type="textarea" v-model="materialForm.explain"></el-input>
+        </el-form-item>
+        <el-form-item align="right">
+          <el-button type="primary" @click="pushMaterial()">立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <Drawer
       scrollable
       closable
@@ -960,6 +981,7 @@
       <assetsDrawer
         :project="project"
         :RemarksData="RemarksData"
+        @refreshRemark="updateRemark()"
         @refresh_assetList="getAssetList"
         ref="assetsDrawer"
         :assetJump="assetJump"
@@ -984,6 +1006,7 @@ import { getToken } from "@/utils/auth";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getProjectStatus } from "@/api/status";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
+import { addMaterial } from "@/api/material";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -993,6 +1016,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      materialForm:{},
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
       pageCount: 0,
       AssetList: [],
@@ -1223,7 +1247,9 @@ export default {
       LinkAssetList: [],
       attrsList: [],
       customAttrs: [],
-      attrsTypeNum: null
+      attrsTypeNum: null,
+      materialShow:false,
+      materialEstdate: new Date().toLocaleDateString()
     };
   },
   watch: {
@@ -1336,6 +1362,22 @@ export default {
     }
   },
   methods: {
+    //添加进素材库
+    pushMaterial(Type) {
+      if(Type === 1){
+        this.materialShow = true
+      }else{
+        const ids = this.multipleSelection.map(item => item.id).join(",");
+        let dateMaterial = {
+          ...this.materialForm,
+          estdate:this.materialEstdate,
+          ids 
+        }
+      console.log(dateMaterial);
+      // addMaterial();
+      }
+     
+    },
     jumpName(val) {
       this.$emit("jumpName", val);
     },
@@ -1845,8 +1887,17 @@ export default {
       this.multipleSelection = val;
       //console.log(this.multipleSelection.length);
     },
+    updateRemark() {
+      getRemark({
+        appid: this.project.id,
+        apptype: 5
+      }).then(({ data }) => {
+        this.RemarksData = [...data.msg];
+      });
+    },
     //展示侧栏
     show(id) {
+      // this.remarkId = id;
       this.value1 = true;
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
@@ -1862,10 +1913,10 @@ export default {
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
       });
-      searchBind({entity_type: 5}).then(({ data }) => {
+      searchBind({ entity_type: 5 }).then(({ data }) => {
         this.attrsList = [...data.msg];
       });
-      getAttrsEntityList({entity_id:id, entity_type: 5 }).then(({ data }) => {
+      getAttrsEntityList({ entity_id: id, entity_type: 5 }).then(({ data }) => {
         this.customAttrs = [...data.msg];
         // console.log("mmmm");
         // console.log(this.customAttrs);
@@ -1873,10 +1924,12 @@ export default {
       });
     },
     RefreshcustomAttrs() {
-      getAttrsEntityList({entity_id:this.project.id,entity_type: 5 }).then(({ data }) => {
-        this.customAttrs = [...data.msg];
-        this.attrsTypeNum = 5;
-      });
+      getAttrsEntityList({ entity_id: this.project.id, entity_type: 5 }).then(
+        ({ data }) => {
+          this.customAttrs = [...data.msg];
+          this.attrsTypeNum = 5;
+        }
+      );
     },
     //侧栏关闭
     drawerClose() {
@@ -1898,7 +1951,7 @@ export default {
         });
       });
     },
-
+    
     //批量删除资产
     delMulAssets() {
       this.$confirm("此操作将永久删除资产, 是否继续?", "提示", {
