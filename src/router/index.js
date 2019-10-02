@@ -3,27 +3,33 @@ import Router from 'vue-router'
 Vue.use(Router)
 import Layout from '@/layout'
 /**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'             the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
+ //当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
+hidden: true // (默认 false)
+
+//当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
+redirect: 'noRedirect'
+
+//当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
+//只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
+//若你想不管路由下面的 children 声明的个数都显示你的根路由
+//你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+alwaysShow: true
+
+name: 'router-name' //设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+meta: {
+  roles: 'manage_approve' //设置该路由进入的权限
+  title: 'title' //设置该路由在侧边栏和面包屑中展示的名字
+  icon: 'svg-name' //设置该路由的图标
+  noCache: true //如果设置为true，则不会被 <keep-alive> 缓存(默认 false)
+  breadcrumb: false // 如果设置为false，则不会在breadcrumb面包屑中显示
+}
  */
 
+//涉及权限的动态加载路由
 export const asyncRoutes = [{
         path: '/task',
         component: Layout,
-        redirect: '/task',
+        redirect: 'noRedirect',
         meta: {
             title: '我的工作台',
             icon: 'task'
@@ -54,13 +60,13 @@ export const asyncRoutes = [{
     }, {
         path: '/admin',
         component: Layout,
-        redirect: '/admin', //点击2级面包屑对应哪个路由
+        redirect: 'noRedirect', //点击2级面包屑对应哪个路由，如果和path一样就不会跳转
         meta: {
             title: '系统设置',
             icon: 'settings'
         },
         children: [{
-                path: 'profession', //直接写字符串会生成/admin/profession   如果前面带/就是绝对路径了，会生成 /profession
+                path: 'profession', //直接写字符串会生成"/admin/profession";如果前面带/就是绝对路径了，会生成"/profession"
                 name: 'profession',
                 component: () =>
                     import ('@/views/admin/userGroup'),
@@ -127,7 +133,7 @@ export const asyncRoutes = [{
     {
         path: '/material',
         component: Layout,
-        redirect: '/',
+        redirect: 'noRedirect',
         meta: {
             title: '素材库',
             icon: 'task'
@@ -150,11 +156,7 @@ export const asyncRoutes = [{
     }
 ]
 
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
+//不涉及权限的固定路由
 export const constantRoutes = [{
         path: '/redirect',
         component: Layout,
@@ -227,11 +229,10 @@ export const constantRoutes = [{
     {
         path: '/projects',
         component: Layout,
-        redirect: '/projects',
+        redirect: 'noRedirect',
         meta: {
             title: '项目',
             icon: 'tree-table',
-            hiddenSideBar: true
         },
         hidden: true,
         children: [{
@@ -242,18 +243,16 @@ export const constantRoutes = [{
             meta: {
                 title: '项目详情',
                 icon: 'tree',
-                hiddenSideBar: true
             }
         }]
     },
     {
         path: '/import',
         component: Layout,
-        redirect: '/import',
+        redirect: 'noRedirect',
         meta: {
             title: '批量上传',
             icon: 'tree-table',
-            hiddenSideBar: true
         },
         hidden: true,
         children: [{
@@ -264,7 +263,6 @@ export const constantRoutes = [{
                 meta: {
                     title: '用户上传',
                     icon: 'tree',
-                    hiddenSideBar: true
                 }
             },
             {
@@ -275,7 +273,6 @@ export const constantRoutes = [{
                 meta: {
                     title: '节假日上传',
                     icon: 'tree',
-                    hiddenSideBar: true
                 }
             },
             {
@@ -294,7 +291,7 @@ export const constantRoutes = [{
     {
         path: '/mine',
         component: Layout,
-        redirect: '/mine',
+        redirect: 'noRedirect',
         meta: {
             title: '我的工作台',
             icon: 'task'
@@ -313,7 +310,7 @@ export const constantRoutes = [{
     {
         path: '/mine',
         component: Layout,
-        redirect: '/mine',
+        redirect: 'noRedirect',
         meta: {
             title: '我的工作台',
             icon: 'pd'
@@ -332,7 +329,7 @@ export const constantRoutes = [{
     {
         path: '/mine',
         component: Layout,
-        redirect: '/mine',
+        redirect: 'noRedirect',
         meta: {
             title: '我的工作台',
             icon: 'task'
@@ -351,7 +348,7 @@ export const constantRoutes = [{
     {
         path: '/plugin',
         component: Layout,
-        redirect: '/plugin',
+        redirect: 'noRedirect',
         meta: {
             title: '插件',
             icon: 'assets'
@@ -364,6 +361,26 @@ export const constantRoutes = [{
             meta: {
                 title: '插件管理',
                 icon: 'assets'
+            }
+        }]
+    },
+    {
+        path: '/checking-in',
+        component: Layout,
+        redirect: 'noRedirect',
+        alwaysShow: true,
+        meta: {
+            title: '我的考勤',
+            icon: 'kq'
+        },
+        children: [{
+            path: 'extra-work',
+            name: 'extra-work',
+            component: () =>
+                import ('@/views/checking-in/extra-work'),
+            meta: {
+                title: '加班管理',
+                icon: 'jiaban'
             }
         }]
     },
@@ -396,19 +413,14 @@ export const constantRoutes = [{
     }
 ]
 const createRouter = () => new Router({
-    // mode: 'history', // require service support
     scrollBehavior: () => ({
         y: 0
     }),
     routes: constantRoutes
 })
-
 const router = createRouter()
-
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
     const newRouter = createRouter()
     router.matcher = newRouter.matcher // reset router
 }
-
 export default router
