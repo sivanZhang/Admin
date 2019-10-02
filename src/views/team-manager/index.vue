@@ -4,8 +4,8 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="未分配镜头" name="first">
         <el-table
-          ref="scene"
-          :data="scene"
+          ref="sceneNeed"
+          :data="sceneNeed"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           :cell-style="{borderRight:0}"
           highlight-current-row
@@ -13,9 +13,13 @@
           :row-key="(row)=>{ return row.id}"
           :border="false"
         >
-          <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+          <el-table-column type="selection" :reserve-selection="true" align="right"></el-table-column>
           <el-table-column type="index"></el-table-column>
-          <el-table-column label="镜头号" prop="name" show-overflow-tooltip></el-table-column>
+          <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
+            <template slot-scope="scope">
+              <span @click="showDrawer(scope.row)">{{scope.row.name}}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="缩略图" prop="image">
             <template slot-scope="scope">
               <el-image
@@ -47,18 +51,26 @@
           <el-table-column prop="level" label="难度等级">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
-          <el-table-column
-            label="创建日期"
-            align="left"
-            width="160px"
-            v-if="show_create_date"
-            prop="date"
-            class-name="date"
-            sortable="custom"
-          >
+          <el-table-column label="当前环节" align="center" width="160px">
+            <el-table-column prop="link" label="工种" align="left">
+              <template slot-scope="scope">
+                <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="截止日期" align="left" width="95px">
+              <template slot-scope="scope">
+                <div
+                  v-for="(todo,index) of scope.row.link"
+                  :key="index"
+                  style="position:top"
+                >{{todo.date_end|dateFormat}}</div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="创建日期" align="left" width="160px" prop="date">
             <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
+          <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
       </el-tab-pane>
@@ -73,7 +85,6 @@
           :row-key="(row)=>{ return row.id}"
           :border="false"
         >
-          <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
           <el-table-column type="index"></el-table-column>
           <el-table-column label="镜头号" prop="name" show-overflow-tooltip></el-table-column>
           <el-table-column label="缩略图" prop="image">
@@ -107,39 +118,284 @@
           <el-table-column prop="level" label="难度等级">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
-          <el-table-column
-            label="创建日期"
-            align="left"
-            width="160px"
-            v-if="show_create_date"
-            prop="date"
-            class-name="date"
-            sortable="custom"
-          >
+          <el-table-column label="当前环节" align="center" width="160px">
+            <el-table-column prop="link" label="工种" align="left">
+              <template slot-scope="scope">
+                <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="截止日期" align="left" width="95px">
+              <template slot-scope="scope">
+                <div
+                  v-for="(todo,index) of scope.row.link"
+                  :key="index"
+                  style="position:top"
+                >{{todo.date_end|dateFormat}}</div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="创建日期" align="left" width="160px" prop="date">
             <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
+          <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
+
+    <Drawer
+      scrollable
+      closable
+      v-model="value1"
+      width="526"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+      title="制作环节"
+    >
+      <div style="display:flex;overflow:auto">
+        <el-steps
+          direction="vertical"
+          :active="1"
+          style="width:250px;display:flex；justify-content:flex-start"
+          v-for="(todo,Index) of link"
+          :key="Index"
+        >
+          <el-step v-for="item of todo" :key="item.link_id" status="process" style="width:250px">
+            <div
+              slot="title"
+              style="font-size:14px;display:flex;justify-content:flex-start"
+            >{{item.dept.name}}
+            <template v-if="deptList.filter(todo=>{  return todo.id === item.dept.id}).length">
+              <el-tooltip effect="dark" content="添加任务" placement="top">
+                <span style="padding-left:5px">
+                  <i
+                    class="el-icon-plus"
+                    style="color:blue"
+                    @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
+                  ></i>
+                </span>
+              </el-tooltip>
+            </template>
+            </div>
+            <ul slot="description" style="width:250px;">
+              <li>制作要求: {{item.content}}</li>
+              <template>
+                <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
+                <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
+              </template>
+            </ul>
+          </el-step>
+        </el-steps>
+      </div>
+    </Drawer>
+
+     <!-- 添加任务 -->
+    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="512px" center :modal="false">
+      <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="100px">
+        <el-form-item label="任务名称" prop="name">
+          <el-input v-model="TaskForm.name" @input="change($event)"></el-input>
+        </el-form-item>
+        <el-form-item label="任务内容" prop="content">
+          <el-input type="textarea" :rows="3" v-model="TaskForm.content" @input="change($event)"></el-input>
+        </el-form-item>
+        <el-form-item label="优先级" prop="priority">
+          <!-- <el-input v-model="TaskForm.code"></el-input> -->
+          <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+        </el-form-item>
+        <el-form-item label="任务难度" prop="grade">
+          <!-- <el-input v-model="TaskForm.code"></el-input> -->
+          <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
+        </el-form-item>
+        <el-form-item label="任务状态" prop="status">
+          <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
+            <el-option
+              v-for="item of StatusList"
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="任务执行人" prop="executorlist">
+          <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择执行人">
+            <el-option
+              v-for="item of DeptUsers"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="环节时间">
+          <el-row style="padding-left:10px;font-size: 12px;">
+            <el-col :span="5">{{linkstart|dateFormat}}</el-col>
+            <el-col :span="2">
+              <span>至</span>
+            </el-col>
+            <el-col :span="17">{{linkend|dateFormat}}</el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="任务时间" prop="datetime">
+          <el-date-picker
+            v-model="TaskForm.datetime"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            format="yyyy/MM/dd"
+            @change="changeTime()"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="总工时" prop="total_hour">
+          <el-input v-model="TaskForm.total_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button @click="cancelTask">取消</el-button>
+          <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { allocationScene } from "@/api/assets";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
+import myMixin from "@/views/projects/components/mixins";
+import { getLinks } from "@/api/links";
+import { getDept } from "@/api/admin";
+import { addTask } from "@/api/task";
 export default {
+  mixins: [myMixin,thumbtackMixin],
   name: "team-manager",
   components: {},
   data() {
     return {
       activeName: "first",
       sceneNeed: [],
-      sceneUnneed: []
+      sceneUnneed: [],
+      multipleSelection: [],
+      value1: false,
+      deptUser: [],
+      link: null,
+      deptList:this.$store.state.login.userInfo.dept,
+       DeptUsers: [],
+       isCreateTaskShow: false,
+       createTaskLoading: false,
+      TaskForm: {},
+      linkstart: null,
+      linkend: null,
+      assetId:null,
+      assetName:null
     };
   },
   watch: {},
   methods: {
+    //展示添加任务表单
+    showTaskForm(link_id, dept_id, content, date_and_user) {
+      getDept({
+        id: dept_id
+      }).then(res => {
+        this.DeptUsers = [...res.data.users];
+        //console.log(this.DeptUsers);
+      });
+      this.isCreateTaskShow = true;
+      this.TaskForm = Object.assign(
+        {},
+        {
+          priority: 0,
+          grade: 0,
+          asset: this.assetId,
+          project: this.$route.params.id,
+          link_id,
+          content
+        }
+      );
+      const linkdatastart = date_and_user.date_start;
+      const linkdataend = date_and_user.date_end;
+      this.linkstart = linkdatastart;
+      this.linkend = linkdataend;
+      // const data = this.assetTaskList.filter(item => {
+      //   return item.asset.id === this.TaskForm.asset;
+      // });
+      this.TaskForm.name = this.assetName;
+    },
+    //总工时默认值
+    changeTime(val) {
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      const totalHour =
+        (this.TaskForm.datetime[1] - this.TaskForm.datetime[0]) /
+        (1000 * 3600 * 24);
+      this.TaskForm = {
+        ...this.TaskForm,
+        total_hour: 8 * totalHour
+      };
+    },
+    //取消对话框
+    cancelTask() {
+      this.isCreateTaskShow = false;
+      this.TaskForm = {};
+    },
+    //给某一环节添加任务
+    addTasks() {
+      this.$refs["TaskForm"].validate(valid => {
+        if (valid) {
+          this.createTaskLoading = true;
+          function dataFormat(params) {
+            return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+          }
+          let data = {
+            ...this.TaskForm,
+            start_date: dataFormat(this.TaskForm.datetime[0]),
+            end_date: dataFormat(this.TaskForm.datetime[1]),
+            project: this.$route.params.id
+          };
+          if (this.TaskForm.executorlist.length) {
+            data["executorlist"] = data["executorlist"].join();
+          }
+          delete data.datetime;
+          addTask(data)
+            .then(({ data }) => {
+              this.createTaskLoading = false;
+              this.$message.success(data.msg);
+              if (data.status === 0) {
+                this.cancelTask();
+                this.isDialogShow = false;
+                this.value1 = false;
+                this.getScene()
+              }
+            })
+            .catch(err => {
+              this.createTaskLoading = false;
+            });
+        } else {
+          return false;
+        }
+      });
+    },
+    change() {
+      this.$forceUpdate();
+    },
+    showDrawer(row) {
+      this.value1 = true;
+      this.assetId = row.id;
+      this.assetName = row.name;
+      getLinks({ asset: row.id }).then(({ data }) => {
+        this.link = [...data.msg];
+      });
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      //console.log(this.multipleSelection.length);
+    },
     getScene() {
       allocationScene().then(({ data }) => {
         this.sceneNeed = [...data.need];
@@ -180,5 +436,12 @@ export default {
   }
 };
 </script>
-<style lang='scss' scoped>
+<style lang='scss'>
+#team-manager {
+  min-height: calc(100vh - 199px);
+  .links {
+    cursor: pointer;
+    color: #2d8cf0;
+  }
+}
 </style>
