@@ -16,6 +16,7 @@
         <project-drawer
           :project="project"
           :RemarksData="RemarksData"
+          @refreshRemark="updateRemark"
           :assetsList="TableData"
           :taskList="taskList"
           :attrsList="attrsList"
@@ -235,6 +236,14 @@ export default {
       getAttrsEntityList({ entity_id: this.project.id ,entity_type:4}).then(({ data }) => {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum = 4
+      });
+    },
+     updateRemark() {
+      getRemark({
+        appid: this.project.id,
+        apptype: 5
+      }).then(({ data }) => {
+        this.RemarksData = [...data.msg];
       });
     },
     RefreshcustomAttrs() {

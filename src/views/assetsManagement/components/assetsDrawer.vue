@@ -15,7 +15,7 @@
             ></links>
           </el-tab-pane>
           <el-tab-pane label="评论" name="second">
-            <remarks :project="project" :RemarksData="RemarksData" />
+            <remarks :project="project" :RemarksData="RemarksData" @refreshRemark="updateRemark" />
           </el-tab-pane>
           <el-tab-pane label="相关任务" name="third">
             <el-table
@@ -138,6 +138,9 @@ export default {
   },
   components: { remarks, info, links, approveLog, attrsBind },
   methods: {
+    updateRemark(){
+      this.$emit("refreshRemark")
+    },
     NewcustomAttrs() {
       this.$emit("refresh_customAttrs");
     },
