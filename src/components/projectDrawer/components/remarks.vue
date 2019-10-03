@@ -68,11 +68,17 @@
             <p class="pro-text">
               <!-- 实体图片 -->
               <el-image
-                class="mini-image"
-                :src="project.image?$store.state.BASE_URL+project.image:''"
-                fit="cover"
-                style="width: 30px;height: 30px;float: left;margin-right: 10px"
-              ></el-image>
+              :src="$store.state.BASE_URL+project.image"
+              style="width: 30px;height: 30px;float: left;margin-right: 10px"
+              :preview-src-list="[$store.state.BASE_URL+project.image]" >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
               <!-- 进入实体的链接 -->
               <span>
                 <router-link :to="`/projects/project-detail/${item.user.id}`">{{project.name}}</router-link>

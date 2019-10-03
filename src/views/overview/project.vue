@@ -16,7 +16,7 @@
         <project-drawer
           :project="project"
           :RemarksData="RemarksData"
-          @refreshRemark="updateRemark"
+          @refreshRemark="updateRemark()"
           :assetsList="TableData"
           :taskList="taskList"
           :attrsList="attrsList"
@@ -24,6 +24,7 @@
           @refresh_customAttrs="RefreshcustomAttrs"
           @refresh="show"
           :attrsTypeNum="attrsTypeNum"
+
         />
       </Drawer>
       <template v-if="!trainingProject">
@@ -241,7 +242,7 @@ export default {
      updateRemark() {
       getRemark({
         appid: this.project.id,
-        apptype: 5
+        apptype: 4
       }).then(({ data }) => {
         this.RemarksData = [...data.msg];
       });

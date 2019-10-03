@@ -5,7 +5,7 @@
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
           <el-tab-pane label="评论" name="first">
-            <remarks :project="project" :RemarksData="RemarksData" @refreshRemark="updateRemark"></remarks>
+            <remarks :project="project" :RemarksData="RemarksData" @refreshRemark="updateRemark()"></remarks>
           </el-tab-pane>
           <el-tab-pane label="任务" name="second">
             <task :taskList="taskList"></task>
@@ -60,7 +60,7 @@ export default {
   components: { remarks, info, assets, task, joinDept, attrsBind },
   methods: {
     updateRemark(){
-      console.log("父亲");
+      //console.log("父亲");
       this.$emit("refreshRemark")
     },
     NewcustomAttrs() {
