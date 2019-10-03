@@ -10,7 +10,7 @@
 <template>
   <div>
     <gantt-elastic :options="options" :tasks="ganttData">
-      <gantt-header slot="header" :options="defaultHeaderOption"></gantt-header>
+      <gantt-header slot="header" :options="HeaderOption"></gantt-header>
     </gantt-elastic>
   </div>
 </template>

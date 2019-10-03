@@ -28,16 +28,17 @@
 <script>
 import * as Ajax from "@/api/statistics";
 import Chart from "@/components/ECharts/PieChart";
-import Gantt from "@/components/Gantt"
+import Gantt from "@/components/Gantt";
 export default {
   name: "all-statistics",
   components: { Chart, Gantt },
   data() {
     return {
-      ganttLoading:false,
-      ganttData: [],//传给甘特图的数据
+      ganttLoading: false,
+      ganttData: [], //传给甘特图的数据
       projectProgress: 0,
-      HttpParams: {//http传参对象
+      HttpParams: {
+        //http传参对象
         project_id: this.$route.params.id
       },
       colors: [
@@ -63,29 +64,40 @@ export default {
     //获取资产状态统计  并传参调用图表组件的初始化方法
     getAssetStatistics() {
       Ajax.getAssetStatistic(this.HttpParams).then(({ data }) => {
-        this.$refs["asset-chart"].initChart("", data.msg);
+        let keys = Object.keys(data.msg);
+        let chartData = keys.map(t => {
+          return { name: t, value: data.msg[t] };
+        });
+        console.log(chartData);
+        
+        this.$refs["asset-chart"].initChart("", chartData);
       });
     },
     //获取任务状态统计  并传参调用图表组件的初始化方法
     getTaskStatistics() {
       Ajax.getTaskStatistic(this.HttpParams).then(({ data }) => {
-        this.$refs["task-chart"].initChart("", data.msg);
+        let keys = Object.keys(data.msg);
+        let chartData = keys.map(t => {
+          return { name: t, value: data.msg[t] };
+           console.log(chartData);
+        });
+        this.$refs["task-chart"].initChart("", chartData);
       });
     },
     //获取甘特图数据
     getGantt() {
-      this.ganttLoading=true
+      this.ganttLoading = true;
       Ajax.getGanttData({ id: this.$route.params.id }).then(({ data }) => {
         const arr = [...data.msg];
-        this.ganttLoading=false
+        this.ganttLoading = false;
         this.ganttData = arr.map((t, i) => {
           return {
             id: t.deptid,
             label: t.deptname,
-            type: "task",//线条样式
-            start: t.start * 1000,//开始时间
-            end: t.end * 1000,//结束时间
-            duration: t.last * 60 * 60 * 1000,//工时
+            type: "task", //线条样式
+            start: t.start * 1000, //开始时间
+            end: t.end * 1000, //结束时间
+            duration: t.last * 60 * 60 * 1000 //工时
             /* style: {
               base: {//颜色
                 fill: "#26C6DA",

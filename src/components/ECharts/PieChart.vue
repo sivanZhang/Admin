@@ -1,5 +1,5 @@
 <template>
-  <div :id="chartId" :style="{height:height,width:width}" v-loading="loading"/>
+  <div :id="chartId" :style="{height:height,width:width}" v-loading="loading" />
 </template>
 
 <script>
@@ -23,7 +23,7 @@ export default {
       type: String,
       default: "320px"
     },
-    chartId:{
+    chartId: {
       type: String,
       default: "chart"
     }
@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       chart: null,
-      loading:true
+      loading: true
     };
   },
   mounted() {
@@ -45,43 +45,38 @@ export default {
     this.chart = null;
   },
   methods: {
-    openLoading(){
-      this.loading = true
+    openLoading() {
+      this.loading = true;
     },
     //title=图标title，data=表单数据
-    initChart(title='', data = {}) {
-      let keys = Object.keys(data);
-      let chartData = keys.map(t => {
-        return { name: t, value: data[t] };
-      });
-      let options ={
-        title:{
-          text:title,
-          textStyle:{
-            fontSize:14
+    initChart(title = "", chartData = []) {
+      let options = {
+        title: {
+          text: title,
+          textStyle: {
+            fontSize: 14
           },
-          left:'center',
-          top:0
+          left: "center",
+          top: 0
         },
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
-          data: keys,
-          bottom:'0'
+          bottom: "0"
         },
         series: [
           {
             name: title,
             type: "pie",
             data: chartData,
-            radius:[0,100],
-          },
+            radius: [0, 100]
+          }
         ]
-      }
-      this.chart.setOption(options)
-      this.loading=false
+      };
+      this.chart.setOption(options);
+      this.loading = false;
     }
   }
 };
