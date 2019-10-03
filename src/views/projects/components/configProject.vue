@@ -265,14 +265,14 @@
               <span style="padding-bottom:10px;display:flex">
                 <h3>分组</h3>
                 <el-row>
-                  <el-button type="success" @click="addTeam(1)" style="margin-left:20px">添加分组</el-button>
+                  <el-button type="success" @click="addTeam(1)" style="margin-left:40px">添加分组</el-button>
                 </el-row>
               </span>
               <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
               <el-tree
                 class="filter-tree"
                 empty-text="未创建工种"
-                highlight-current
+                highlight-current    
                 ref="tree"
                 :data="teamList"
                 @node-click="handleGroupClick"
@@ -303,11 +303,12 @@
               </el-tree>
             </div>
             <div style="width:60%;padding:10px">
-              <span style="padding-bottom:10px">
-                <h3>成员信息</h3>
+              <span style="padding-bottom:10px;">
+                <h3 style="margin-bottom:15px;">成员信息</h3>
               </span>
               <el-table
                 :data="members"
+                style="margin-top:5px;"
                 :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
                 :cell-style="{borderRight:0}"
                 highlight-current-row
@@ -341,12 +342,12 @@
           <el-input v-model="teamForm.name"></el-input>
         </el-form-item>
         <el-form-item label="分组成员" prop="memberes">
-          <el-select v-model="teamForm.memberes" multiple>
+          <el-select v-model="teamForm.memberes" multiple style="width:390px;">
             <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="addTeam(2)">立即添加</el-button>
+          <el-button type="primary" @click="addTeam(2)" style="margin-left:115px;">立即添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -359,7 +360,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="addMember(2)">立即添加</el-button>
+          <el-button type="primary" @click="addMember(2)" style="margin-left:60px;">立即添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -382,7 +383,7 @@
             highlight-current-row
             :border="false"
           >
-            <el-table-column type="index"></el-table-column>
+           <el-table-column type="index"></el-table-column>
             <el-table-column label="模板名称" prop="name"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
