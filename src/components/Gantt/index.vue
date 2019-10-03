@@ -3,14 +3,14 @@
   padding: 6px 12px !important;
   font-size: 14px !important;
 }
-.gantt-elastic__task-list-header-label{
+.gantt-elastic__task-list-header-label {
   text-align: left;
 }
 </style>
 <template>
   <div>
     <gantt-elastic :options="options" :tasks="ganttData">
-      <gantt-header slot="header" :options="headerOption"></gantt-header>
+      <gantt-header slot="header" :options="defaultHeaderOption"></gantt-header>
     </gantt-elastic>
   </div>
 </template>
@@ -22,7 +22,8 @@
 import GanttElastic from "gantt-elastic";
 import GanttHeader from "gantt-elastic-header";
 import dayjs from "dayjs";
-let options = {//甘特图配置
+let defaultOptions = {
+  //甘特图配置
   taskMapping: {
     progress: "percent"
   },
@@ -31,13 +32,14 @@ let options = {//甘特图配置
   row: {
     height: 24
   },
-  taskList: {//甘特图中的表格配置
+  taskList: {
+    //甘特图中的表格配置
     columns: [
       {
         id: 1,
         label: "工种名称",
         value: "label",
-        width: 200,
+        width: 200
       },
       {
         id: 2,
@@ -118,28 +120,40 @@ export default {
     GanttHeader
   },
   props: {
-    ganttData:{//甘特图渲染的数据
-      type:Array,
-      required:true
+    ganttData: {
+      //甘特图渲染的数据
+      type: Array,
+      required: true
+    },
+    customHeaderOption: {
+      type: Object
+    },
+    customOptions:{
+      type: Object
     }
   },
   data() {
     return {
-      options,
-      headerOption: {//甘特图header部分配置
-        title: {
-          label: "<h6 style='letter-spacing:initial'>项目甘特图:</h6>",
-          html: true
+      options:Object.assign({},defaultOptions,this.customOptions),
+      HeaderOption: Object.assign(
+        {},
+        {
+          //甘特图header部分配置
+          title: {
+            label: "<h6 style='letter-spacing:initial'>项目甘特图:</h6>",
+            html: true
+          },
+          locale: {
+            Now: "当前时间",
+            "X-Scale": "横向尺寸",
+            "Y-Scale": "纵向尺寸",
+            "Task list width": "表格宽度",
+            "Before/After": "日期范围",
+            "Display task list": "表格显示"
+          }
         },
-        locale: {
-          Now: "当前时间",
-          "X-Scale": "横向尺寸",
-          "Y-Scale": "纵向尺寸",
-          "Task list width": "表格宽度",
-          "Before/After": "日期范围",
-          "Display task list": "表格显示"
-        }
-      }
+        this.customHeaderOption
+      )
     };
   }
 };
