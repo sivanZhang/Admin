@@ -94,6 +94,13 @@
             format="yyyy/MM/dd"
           ></el-date-picker>
         </el-form-item>
+        <el-form-item label="模板使用">
+          <div style="padding-left:3px;float:left">
+            <el-button type="primary" @click="projectTemplate(1)">项目模板</el-button>
+            <el-input style="padding-top:10px;" :disabled="true" v-model="TemplateListName" placeholder="选择的模板名称"></el-input>
+          </div>
+          <div style="padding-left:3px;"></div>
+        </el-form-item>
         <div style="text-align:right">
           <el-button @click="cancel">取消</el-button>
           <el-button type="primary" @click="submitForm">立即创建</el-button>
@@ -125,6 +132,93 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 项目模板 -->
+    <el-dialog
+      title="项目模板"
+      :visible.sync="projectTemplateDialog"
+      width="512px"
+      center
+      :modal="false"
+      @close="cancelprojectTemplate"
+    >
+      <el-tabs v-model="projectActiveName">
+        <el-tab-pane label="项目模板" name="project-first">
+          <el-table
+            ref="statusTemplateList"
+            :data="statusTemplateList"
+            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+            :cell-style="{borderRight:0}"
+            highlight-current-row
+            :border="false"
+          >
+            <el-table-column type="index"></el-table-column>
+            <el-table-column label="模板名称" prop="name"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
+                  <el-button
+                    icon="el-icon-top-right"
+                    style="color:green"
+                    type="text"
+                    @click="projectTemplate(2,scope.row)"
+                  ></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="模板详情" name="project-second" :disabled="templateDetail">
+          <el-row style="padding:3px">
+            <el-col :span="12">
+              <span>状态列表</span>
+              <div style="display:flex;overflow: auto;">
+                <div class="box">
+                  <el-row>
+                    <div class="maxstatus-name">暂停：</div>
+                  </el-row>
+                  <el-row v-for="item of pause" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">未开始：</div>
+                  </el-row>
+                  <el-row v-for="item of notstart" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">进行中：</div>
+                  </el-row>
+                  <el-row v-for="item of conducting" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">审核中：</div>
+                  </el-row>
+                  <el-row v-for="item of approving" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                  <el-row>
+                    <div class="maxstatus-name">完成：</div>
+                  </el-row>
+                  <el-row v-for="item of finish" :key="item" class="minstatus-name">
+                    <el-col :span="24">{{item|taskMinStatus}}</el-col>
+                  </el-row>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <span>工种列表</span>
+              <div v-for="(item,index) of projectTemplateList" :key="index" style="padding-top:5px">
+                <span>{{item.name}}</span>
+              </div>
+            </el-col>
+          </el-row>
+          <div style="padding-left:350px">
+            <el-button type="primary" @click="saveProjectTemplate">选择模板</el-button>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 
@@ -133,12 +227,29 @@ import { addProjects } from "@/api/project";
 import AXIOS from "@/utils/request";
 import { getToken } from "@/utils/auth";
 import { mapState } from "vuex";
+import { searchTemplate } from "@/api/status";
 /* 
 import { close } from "fs"; */
 export default {
   name: "CreateProject",
   data() {
     return {
+      projectTemplateDialog: false,
+      templateid:'',
+      statusTemplateList: [],
+      projectTemplateList: [],
+      projectActiveName: "project-first",
+      statusList: [],
+      deptsList: [],
+      statusid: [],
+      templateDetail: true,
+      approving: [],
+      conducting: [],
+      finish: [],
+      notstart: [],
+      pause: [],
+      TemplateList: [],
+      TemplateListName: null,
       ProjectForm: {
         image: null,
         color: "#409EFF"
@@ -192,6 +303,63 @@ export default {
     ...mapState("admin", ["UserList"])
   },
   methods: {
+    //项目模板
+    projectTemplate(Type, row) {
+      //获取模板列表
+      if (Type === 1) {
+        this.projectTemplateDialog = true;
+        searchTemplate().then(({ data }) => {
+          this.statusTemplateList = [...data.msg];
+        });
+      }
+      //展示模板详情
+      if (Type === 2) {
+          this.projectTemplateList = [],
+         this.pause=[],
+        this.notstart=[];
+        this.conducting=[],
+        this.approving=[],
+        this.finish=[],
+        this.TemplateList = row.name;
+        this.projectActiveName = "project-second";
+        searchTemplate({ id: row.id }).then(({ data }) => {
+           const datastatus = data.msg.small_status;
+          const deptdata = data.msg.depts;
+           console.log(datastatus)
+           console.log(deptdata)
+            this.templateid = data.msg.id
+            datastatus.forEach(item => {
+              this.statusid = item;
+              if (item <= 2) {
+                this.pause.push(item);
+              }
+              if (item > 2 && item <= 5) {
+                this.notstart.push(item);
+              }
+              if (item > 5 && item <= 15) {
+                this.conducting.push(item);
+              }
+              if (item > 15 && item <= 19) {
+                this.approving.push(item);
+              }
+              if (item > 19) {
+                this.finish.push(item);
+              }
+          });
+         deptdata.forEach((item,index) => {
+            this.projectTemplateList[index] = item;
+        })
+        });
+      }
+    },
+    //选择模板
+    saveProjectTemplate() {
+      this.TemplateListName = this.TemplateList;
+      this.projectTemplateDialog = false;
+    },
+    cancelprojectTemplate() {
+      this.projectActiveName = "project-first";
+    },
     cancel() {
       //告诉父组件：不显示弹框
       this.$emit("update:isShow", false);
@@ -207,13 +375,16 @@ export default {
           let Data = {
             ...this.ProjectForm,
             start: this.ProjectForm.datetime[0].toLocaleDateString(),
-            end: this.ProjectForm.datetime[1].toLocaleDateString()
+            end: this.ProjectForm.datetime[1].toLocaleDateString(),
+            templateid:this.templateid
           };
           if (this.radio === 0) {
             Data = { ...Data, training: null };
           }
           addProjects(Data).then(({ data }) => {
-            this.$message.success(data.msg);
+            console.log(data)
+            console.log(this.templateid)
+            this.$message.success(data.msg);          
             if (data.status === 0) {
               this.id = data.id;
               this.isShowNext = true;
@@ -223,8 +394,10 @@ export default {
                 this.$store.dispatch("project/get_Projects");
               }
               this.$emit("update:isShow", false);
+              
             }
           });
+         
         } else {
           return false;
         }
@@ -309,6 +482,30 @@ label {
       height: 247px;
     }
   }
+}
+</style>
+<style lang="scss">
+.box {
+  overflow: auto;
+  border: 1px solid #e8eaec;
+  margin: 0 10px;
+}
+.maxstatus-name {
+  width: 100%;
+  background-color: #eef1f6;
+  height: 30px;
+  font-weight: 600;
+  font-display: center;
+  padding: 5px;
+  border-bottom: 1px solid rgb(234, 232, 236);
+}
+.minstatus-name {
+  border-bottom: 1px solid #e8eaec;
+  height: 25px;
+  width: 100%;
+  padding: 5px;
+  font-display: center;
+  cursor: pointer;
 }
 </style>
 

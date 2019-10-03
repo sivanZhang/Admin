@@ -386,14 +386,6 @@
             <el-table-column label="模板名称" prop="name"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <!-- <el-tooltip class="item" effect="dark" content="使用模板" placement="top">
-                  <el-button
-                    icon="el-icon-plus"
-                    style="color:blue"
-                    type="text"
-                    @click="projectTemplate(6,scope.row)"
-                  ></el-button>
-                </el-tooltip>-->
                 <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
                   <el-button
                     icon="el-icon-top-right"
@@ -534,33 +526,6 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <!-- 使用模板
-     <el-dialog
-      :title="titleTemplate"
-      :visible.sync="useTemplate"
-      width="512px"
-      center
-      :modal="false"
-    >
-     <el-row>
-        <el-col :span="4">项目名称：</el-col>
-        <el-col :span="20">
-          <el-select v-model="selAsset" multiple>
-            <el-option
-              v-for="(item,index) of LinkAssetList"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col align="right">
-          <el-button type="primary" @click="LinkTemplate(7)">立即复用</el-button>
-        </el-col>
-      </el-row>
-    </el-dialog>-->
   </div>
 </template>
 
@@ -912,14 +877,18 @@ export default {
       }
       //展示模板详情
       if (row && Type === 2) {
-        (this.pause2 = []), (this.notstart2 = []);
-        (this.conducting2 = []),
-          (this.approving2 = []),
-          (this.finish2 = []),
-          (this.projectActiveName = "project-second");
+        this.projectTemplateList = [],
+        this.pause2 = [],
+        this.notstart2 = [];
+        this.conducting2 = [],
+          this.approving2 = [],
+          this.finish2 = [],
+          this.projectActiveName = "project-second";
         searchTemplate({ id: row.id }).then(({ data }) => {
-          [...data.msg].forEach(data => {
-            data.small_status.forEach(item => {
+          // [...data.msg].forEach(data => {
+          const datastatus = data.msg.small_status;
+          const deptdata = data.msg.depts;
+            datastatus.forEach(item => {
               if (item <= 2) {
                 this.pause2.push(item);
               }
@@ -935,11 +904,11 @@ export default {
               if (item > 19) {
                 this.finish2.push(item);
               }
-            });
+            // });
           });
-          [...data.msg].forEach((item, index) => {
-            this.projectTemplateList = item.depts;
-          });
+          deptdata.forEach((item,index) => {
+            this.projectTemplateList[index] = item;
+        })
         });
       }
       //模板保存dialog
