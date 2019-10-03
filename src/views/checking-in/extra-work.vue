@@ -38,11 +38,11 @@
     </el-table>
     <el-dialog title="加班申请" :visible.sync="dialogVisible" width="512px">
       <el-form :model="ApplyForm" :rules="rules" ref="apply-form" label-width="100px">
-        <el-form-item label="加班时间" prop="overtime_hour">
+        <el-form-item label="加班时长" prop="overtime_hour">
           <el-input-number v-model="ApplyForm.overtime_hour" style="width:100%"></el-input-number>
         </el-form-item>
         <el-form-item label="加班任务" prop="task">
-          <el-select v-model="ApplyForm.task" placeholder="请选择活动区域" style="width:100%">
+          <el-select v-model="ApplyForm.task" placeholder="请选择由于哪个任务加班" style="width:100%">
             <el-option
               v-for="item of myTasks"
               :label="item.task.name"
@@ -86,10 +86,10 @@ export default {
       ApplyForm: {},
       rules: {
         overtime_hour: [
-          { required: true, message: "请输入活动名称", trigger: "blur" }
+          { required: true, message: "请输入加班时长（单位：小时）", trigger: "blur" }
         ],
         reason: [
-          { required: true, message: "请选择活动区域", trigger: "change" }
+          { required: true, message: "请选择由于哪个任务加班", trigger: "change" }
         ],
         task: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
       },
