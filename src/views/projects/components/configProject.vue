@@ -265,13 +265,13 @@
               <span style="padding-bottom:10px;display:flex">
                 <h3>分组</h3>
                 <el-row>
-                  <el-button type="success" @click="addTeam(1)" style="margin-left:40px">添加分组</el-button>
+                  <el-button type="success" @click="addTeam(1)" style="margin-left:40px" v-if="teamAuth">添加分组</el-button>
                 </el-row>
               </span>
               <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
               <el-tree
                 class="filter-tree"
-                empty-text="未创建工种"
+                empty-text="未创建分组"
                 highlight-current    
                 ref="tree"
                 :data="teamList"
@@ -318,7 +318,7 @@
               >
                 <el-table-column label="成员名称" prop="name"></el-table-column>
                 <el-table-column label="操作">
-                  <template slot-scope="scope">
+                  <template slot-scope="scope" v-if="teamAuth">
                     <el-tooltip effect="dark" content="删除" placement="top">
                     <el-button
                       type="text"

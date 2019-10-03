@@ -114,7 +114,9 @@ export default {
         });
         getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
           ({ data }) => {
-            this.trainingMenber = [...data.msg];
+            [...data.msg].forEach((item,index)=>{item.members.forEach(ct=>{this.trainingMenber.push({...ct,id:item.id,name:item.name})})});
+            // console.log("1111");
+            // console.log(this.trainingMenber)
           }
         );
       } else {

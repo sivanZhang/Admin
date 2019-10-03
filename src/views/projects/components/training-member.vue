@@ -1,28 +1,26 @@
 <!-- 实训成员 -->
 <template>
   <div id="training">
-      <el-table
+    <el-table
       ref="trainingMenber"
       :data="trainingMenber.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-      :cell-style="{borderRight:0}"
-      highlight-current-row
-      :border="false"
+      
+      :span-method="objectSpanMethod"
     >
-        <el-table-column type="index" :index="indexMethod"></el-table-column>
-        <el-table-column label="参与人员" prop="username"></el-table-column>
-        <el-table-column label="学校" prop="school"></el-table-column>
-        <el-table-column label="参与任务数量" prop="task_num" align="center"></el-table-column>
-        <el-table-column label="考勤" align="center">
-            <el-table-column label="正常考勤" prop="normal"></el-table-column>
-            <el-table-column label="迟到次数" prop="late"></el-table-column>
-            <el-table-column label="早退次数" prop="leave_early"></el-table-column>
-            <el-table-column label="旷课次数" prop="absentee"></el-table-column>
-        </el-table-column>
-        <el-table-column label="总得分" prop="total_score"></el-table-column>
-        <el-table-column label="排名" prop="range"></el-table-column>
-      </el-table>
-       <div class="block" style="text-align: center;margin-top:10px">
+      <el-table-column label="所属分组" prop="name"></el-table-column>
+      <el-table-column label="实训人员" prop="username"></el-table-column>
+      <el-table-column label="学校" prop="school"></el-table-column>
+      <el-table-column label="参与任务数量" prop="task_num" align="center"></el-table-column>
+      <el-table-column label="考勤" align="center">
+        <el-table-column label="正常考勤" prop="normal"></el-table-column>
+        <el-table-column label="迟到次数" prop="late"></el-table-column>
+        <el-table-column label="早退次数" prop="leave_early"></el-table-column>
+        <el-table-column label="旷课次数" prop="absentee"></el-table-column>
+      </el-table-column>
+      <el-table-column label="总得分" prop="total_score"></el-table-column>
+      <el-table-column label="排名" prop="range"></el-table-column>
+    </el-table>
+    <div class="block" style="text-align: center;margin-top:10px">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -40,17 +38,55 @@
 export default {
   name: "training",
   components: {},
-  props:["trainingMenber"],
+  props: ["trainingMenber"],
   data() {
     return {
-         currentPage: 1,
+      currentPage: 1,
       pageSize: 20,
-      pageSizeList: [10, 20, 50, 100],
+      pageSizeList: [10, 20, 50, 100]
     };
   },
   watch: {},
+  computed: {
+    groupNum() {
+      return new Set(this.trainingMenber.map(item => item.name));
+    }
+  },
   methods: {
-      //分页
+    Group(name) {
+      return this.trainingMenber.filter(item => item.name == name).length;
+    },
+    NameLen(name) {
+      const tmp = Array.from(this.groupNum);
+      const index = tmp.indexOf(name);
+      let len = 0;
+      for (let i = 0; i < index; i++) {
+        len += this.Group(tmp[i]);
+      }
+      return len;
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const len = this.Group(row.name);
+        const lenName = this.NameLen(row.name);
+        if (rowIndex === lenName) {
+          return {
+            rowspan: len,
+            colspan: 1
+          };
+        } else
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+      } else {
+        return {
+          rowspan: 1,
+          colspan: 1
+        };
+      }
+    },
+    //分页
     handleSizeChange(val) {
       this.pageSize = val;
       //console.log(this.pagesize);
