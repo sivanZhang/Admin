@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     showDetail(row) {
-      this.currentPName = row.name;
+      this.currentPName = `${row.name}每日工时`;
       this.showdrawer = true;
       this.detailLoading = true
       let data = { project_day_id: row.id };
