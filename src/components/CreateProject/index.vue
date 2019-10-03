@@ -363,9 +363,11 @@ export default {
     cancel() {
       //告诉父组件：不显示弹框
       this.$emit("update:isShow", false);
+      this.TemplateListName = []
     },
     cancel1() {
       this.isShowNext = false;
+      this.TemplateListName = []
     },
     //验证，并提交创建项目的表单
     submitForm() {
