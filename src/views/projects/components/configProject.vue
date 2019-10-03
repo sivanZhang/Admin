@@ -72,7 +72,7 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="实训岗位" name="second" style="height: auto;overflow: auto;">
+      <el-tab-pane :label="labelChange" name="second" style="height: auto;overflow: auto;">
         <div style="display:flex">
           <div style="width:50%;padding:5px ">
             <div style="display:flex">
@@ -605,7 +605,8 @@ export default {
       },
       addMebDialog:false,
       addMebForm:{},
-      addId:null
+      addId:null,
+      labelChange:this.project.pro_type == 0?"实训岗位":"参与工种"
     };
   },
   created() {
