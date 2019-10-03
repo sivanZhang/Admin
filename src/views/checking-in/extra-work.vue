@@ -60,7 +60,7 @@
             type="primary"
             @click="submitForm('apply-form')"
           >{{currentFormType?'提交修改':'立即创建'}}</el-button>
-          <el-button @click="resetForm('apply-form')">重置</el-button>
+          <el-button v-if="!currentFormType" @click="resetForm('apply-form')">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -127,6 +127,7 @@ export default {
         if (valid) {
           let self = this;
           function submitFn(Fu, data) {
+            self.submitLoading = true;
             Fu(data)
               .then(() => {
                 self.resetForm("apply-form");
@@ -137,15 +138,15 @@ export default {
                 });
               })
               .finally(() => {
-                self.submitLoading = true;
+                self.submitLoading = false;
               });
           }
-          this.submitLoading = true;
-          if (this.this.currentFormType === 0) {
-            submitFn(postOvertime(), self.ApplyForm);
+          
+          if (this.currentFormType === 0) {
+            submitFn(postOvertime, self.ApplyForm);
           }
-          if (this.this.currentFormType === 1) {
-            submitFn(putApply(), self.ApplyForm);
+          if (this.currentFormType === 1) {
+            submitFn(putApply, self.ApplyForm);
           }
         } else {
           console.log("error submit!!");
