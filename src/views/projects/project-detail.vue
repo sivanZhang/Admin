@@ -121,7 +121,7 @@ export default {
     // if(this.$route.query.tab === "tab2"){
     //   this.activeName = "tab2"
     // }
-    console.log(this.$route.query.tab);
+   // console.log(this.$route.query.tab);
     this.getAssetList();
     this.getProjectDetail();
     if (this.$route.query.asset_type && this.$route.query.asset_type === "1") {
