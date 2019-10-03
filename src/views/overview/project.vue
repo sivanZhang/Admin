@@ -49,7 +49,7 @@
             </div>
             <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
             <div slot="header" class="box-card-header">
-              <router-link :to="{name:'project-detail',params:{id:item.id}}">
+              <router-link :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}">
                 <el-image
                   class="mini-image"
                   :src="item.image?$store.state.BASE_URL+item.image:''"
@@ -63,7 +63,7 @@
               </router-link>
             </div>
             <div style="padding: 15px;">
-              <router-link :to="{name:'project-detail',params:{id:item.id}}">
+              <router-link :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}">
                 <mallki class-name="mallki-text" :text="item.name" />
               </router-link>
               <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>

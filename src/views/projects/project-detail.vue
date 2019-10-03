@@ -81,6 +81,13 @@ export default {
           }
         }
       }
+    },
+    activeName:{
+      handler:function(newVal,oldVal){
+        if(newVal === "tab2"){
+          this.getAssetList()
+        }
+      }
     }
   },
   methods: {
