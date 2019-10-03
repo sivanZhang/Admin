@@ -995,6 +995,7 @@
         :customAttrs="customAttrs"
         @refresh_customAttrs="RefreshcustomAttrs"
         :attrsTypeNum="attrsTypeNum"
+        :pro_type="pro_type"
       />
     </Drawer>
   </div>
@@ -1254,7 +1255,8 @@ export default {
       customAttrs: [],
       attrsTypeNum: null,
       materialShow: false,
-      materialEstdate: new Date().toLocaleDateString()
+      materialEstdate: new Date().toLocaleDateString(),
+      pro_type:null
     };
   },
   watch: {
@@ -1910,6 +1912,8 @@ export default {
     show(id) {
       // this.remarkId = id;
       this.value1 = true;
+      this.pro_type = this.$route.query.type;
+      //console.log(this.pro_type)
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
       });

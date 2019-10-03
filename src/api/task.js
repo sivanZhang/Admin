@@ -55,3 +55,8 @@ export function taskApprove(data) {
 export function getAssetTaskList(params){
     return AXIOS.get('/task/task/',{params})
 }
+
+//给实训项目批量创建任务
+export function mulCreateTasks(data){
+    return AXIOS.post('/task/batch_task/',data)
+}

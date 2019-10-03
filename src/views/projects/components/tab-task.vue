@@ -81,7 +81,13 @@
               @keyup.enter.native="getTasks()"
               style="width:360px"
             >
-              <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable slot="prepend">
+              <el-select
+                v-model="colSel"
+                placeholder="请选择"
+                style="width:130px;"
+                filterable
+                slot="prepend"
+              >
                 <el-option
                   v-for="item in columnSelect"
                   :key="item.value"
@@ -89,7 +95,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              <el-button @click="getTasks()" slot="append" icon="el-icon-search"/>
+              <el-button @click="getTasks()" slot="append" icon="el-icon-search" />
             </el-input>
             <el-select
               v-show="chooseSel"
@@ -473,18 +479,31 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="任务执行人" prop="executorlist">
-            <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择任务执行人">
-              <el-option
-                v-for="item of DeptUsers"
-                :label="item.username"
-                :value="item.id"
-                :key="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="环节时间" prop="executorlist">
+          <template v-if="$route.query.type == 0">
+            <el-form-item label="执行小组" prop="group_id">
+              <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
+                <el-option
+                  v-for="(item,index) of trainingMenber"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </template>
+          <template v-else>
+            <el-form-item label="任务执行人" prop="executorlist">
+              <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择任务执行人">
+                <el-option
+                  v-for="item of DeptUsers"
+                  :label="item.username"
+                  :value="item.id"
+                  :key="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </template>
+          <el-form-item label="环节时间">
             <el-row style="padding-left:10px;font-size: 12px;">
               <el-col :span="5">{{linkstart|dateFormat}}</el-col>
               <el-col :span="2">
@@ -672,38 +691,36 @@
       :transfer="false"
       :mask="false"
     >
-     <el-tabs v-model="activeName">
-          <el-tab-pane label="审批记录" name="first">
-               <approve-log ref="approvelogs" />
-          </el-tab-pane>
-          <el-tab-pane label="自定义属性" name="second">
-              <attrsBind
-              :project="project"
-              :customAttrs="customAttrs"
-              :attrsList="attrsList"
-              @refresh_customAttrs="NewcustomAttrs"
-              :attrsTypeNum="attrsTypeNum"
-            />
-          </el-tab-pane>
-     </el-tabs>
-     
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="审批记录" name="first">
+          <approve-log ref="approvelogs" />
+        </el-tab-pane>
+        <el-tab-pane label="自定义属性" name="second">
+          <attrsBind
+            :project="project"
+            :customAttrs="customAttrs"
+            :attrsList="attrsList"
+            @refresh_customAttrs="NewcustomAttrs"
+            :attrsTypeNum="attrsTypeNum"
+          />
+        </el-tab-pane>
+      </el-tabs>
     </Drawer>
   </div>
 </template>
 <script>
 import * as HTTP from "@/api/task";
-import { log } from "util";
 import { Transform } from "stream";
 import myMixin from "./mixins";
 import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
 import { queryAssets } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
-import { type } from "os";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
+import { getProjectJoinMeb } from "@/api/training";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -816,11 +833,12 @@ export default {
       sortSelForm: {},
       linkstart: null,
       linkend: null,
-      activeName:"first",
-      project:null,
+      activeName: "first",
+      project: null,
       attrsList: [],
       customAttrs: [],
-      attrsTypeNum:null
+      attrsTypeNum: null,
+      trainingMenber: []
     };
   },
   filters: {
@@ -980,6 +998,15 @@ export default {
     }
   },
   methods: {
+    //获取实训分组
+    getTeam() {
+      getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
+        ({ data }) => {
+          this.trainingMenber = [...data.msg];
+          console.log(this.trainingMenber);
+        }
+      );
+    },
     //多条件筛选
     MulSel() {
       this.visible2 = false;
@@ -1086,21 +1113,25 @@ export default {
     showDrawer(item) {
       this.showdrawer = true;
       this.project = item;
-      searchBind({entity_type:1}).then(({ data }) => {
+      searchBind({ entity_type: 1 }).then(({ data }) => {
         this.attrsList = [...data.msg];
       });
-      getAttrsEntityList({ entity_id: item.id ,entity_type:1}).then(({ data }) => {
-        this.customAttrs = [...data.msg];
-        this.attrsTypeNum=1
-      });
+      getAttrsEntityList({ entity_id: item.id, entity_type: 1 }).then(
+        ({ data }) => {
+          this.customAttrs = [...data.msg];
+          this.attrsTypeNum = 1;
+        }
+      );
       // console.log(item);
       this.$refs["approvelogs"].getApproveLog(item.id);
     },
     NewcustomAttrs() {
-      getAttrsEntityList({ entity_id: this.project.id ,entity_type:1}).then(({ data }) => {
-        this.customAttrs = [...data.msg];
-        this.attrsTypeNum=1
-      });
+      getAttrsEntityList({ entity_id: this.project.id, entity_type: 1 }).then(
+        ({ data }) => {
+          this.customAttrs = [...data.msg];
+          this.attrsTypeNum = 1;
+        }
+      );
     },
     change() {
       this.$forceUpdate();
@@ -1389,28 +1420,71 @@ export default {
             return new Date(dateVal).toLocaleDateString();
             //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
           }
-          let data = {
-            ...this.TaskForm,
-            start_date: changeDateFormat(this.TaskForm.datetime[0]),
-            end_date: changeDateFormat(this.TaskForm.datetime[1]),
-            project: this.$route.params.id
-          };
-          if (this.TaskForm.executorlist.length) {
-            data["executorlist"] = data["executorlist"].join();
-          }
-          //若果是修改
-          HTTP.addTask(data).then(({ data }) => {
-            if (data.status === 0) {
-              this.$message.success(data.msg);
-              this.mainTaskShow = false;
-              this.active = 0;
-              this.getTasks();
+          if (this.$route.query.type == 0) {
+            //console.log(this.TaskForm);
+            let dataMulTask = {
+              group_id: this.TaskForm.group_id,
 
-              // console.log(this.mainTaskShow);
-            } else {
-              this.$message.error(data.msg);
+              link_id: this.TaskForm.link_id,
+
+              asset_id: this.TaskForm.asset,
+
+              name: this.TaskForm.name,
+
+              content: this.TaskForm.content,
+
+              start_date: changeDateFormat(this.TaskForm.datetime[0]),
+              end_date: changeDateFormat(this.TaskForm.datetime[1]),
+
+              total_hour: this.TaskForm.total_hour,
+
+              project_id: this.$route.params.id,
+
+              status: this.TaskForm.status,
+
+              priority: this.TaskForm.priority,
+
+              grade: this.TaskForm.grade
+            };
+            //console.log(dataMulTask);
+            HTTP.mulCreateTasks(dataMulTask)
+              .then(({ data }) => {
+                
+                this.$message.success(data.msg);
+                if (data.status === 0) {
+                  this.mainTaskShow = false;
+                  this.active = 0;
+                  this.getTasks();
+                  t;
+                }
+              })
+              .catch(err => {
+                
+              });
+          } else {
+            let data = {
+              ...this.TaskForm,
+              start_date: changeDateFormat(this.TaskForm.datetime[0]),
+              end_date: changeDateFormat(this.TaskForm.datetime[1]),
+              project: this.$route.params.id
+            };
+            if (this.TaskForm.executorlist.length) {
+              data["executorlist"] = data["executorlist"].join();
             }
-          });
+            //若果是修改
+            HTTP.addTask(data).then(({ data }) => {
+              if (data.status === 0) {
+                this.$message.success(data.msg);
+                this.mainTaskShow = false;
+                this.active = 0;
+                this.getTasks();
+
+                // console.log(this.mainTaskShow);
+              } else {
+                this.$message.error(data.msg);
+              }
+            });
+          }
         }
       });
     },
@@ -1606,6 +1680,10 @@ export default {
     }
   },
   async created() {
+    if (this.$route.query.type == 0) {
+      this.getTeam();
+      //console.log("train")
+    }
     this.getTasks();
     if (!this.DeptList) {
       await this.$store.dispatch("admin/get_DeptList");

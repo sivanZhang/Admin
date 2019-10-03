@@ -189,16 +189,30 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择执行人">
-            <el-option
-              v-for="item of DeptUsers"
-              :label="item.username"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <template v-if="pro_type == 0">
+          <el-form-item label="执行小组" prop="group_id">
+            <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
+              <el-option
+                v-for="(item,index) of trainingMenber"
+                :key="index"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </template>
+        <template v-else>
+          <el-form-item label="任务执行人" prop="executorlist">
+            <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择执行人">
+              <el-option
+                v-for="item of DeptUsers"
+                :label="item.username"
+                :value="item.id"
+                :key="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </template>
         <el-form-item label="环节时间">
           <el-row style="padding-left:10px;font-size: 12px;">
             <el-col :span="5">{{linkstart|dateFormat}}</el-col>
@@ -398,7 +412,6 @@
       center
       :modal="false"
     >
-      <!-- {{LinkAssetList}} -->
       <el-row>
         <el-col :span="4">资产名称：</el-col>
         <el-col :span="20">
@@ -422,7 +435,7 @@
 </template>
 
 <script>
-import { addTask } from "@/api/task";
+import { addTask, mulCreateTasks } from "@/api/task";
 import {
   addLinks,
   getLink,
@@ -434,10 +447,11 @@ import {
   removeTemplateLink,
   templateCreateLink
 } from "@/api/links";
-import { getDept ,getDeptUsers} from "@/api/admin";
+import { getDept, getDeptUsers } from "@/api/admin";
 import { mapState } from "vuex";
 import myMixin from "./mixins";
 import { type } from "os";
+import {getProjectJoinMeb } from "@/api/training";
 export default {
   mixins: [myMixin],
   name: "links",
@@ -472,15 +486,27 @@ export default {
       useTemplate: false,
       titleTemplate: "",
       selAsset: [],
-      templateId: null
+      templateId: null,
+      trainingMenber: []
     };
   },
-  props: ["LinkList", "project",  "LinkAssetList"],
+  props: ["LinkList", "project", "LinkAssetList", "pro_type"],
   watch: {
     linkActiveName: {
       handler: function(newVal, oldVal) {
         if (newVal === "link-first") {
           this.templateDetail = true;
+        }
+      }
+    },
+    pro_type: {
+      handler: function(newVal, oldVal) {
+        if (newVal == 0) {
+          getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
+            ({ data }) => {
+              this.trainingMenber = [...data.msg];
+            }
+          );
         }
       }
     }
@@ -918,28 +944,68 @@ export default {
           function dataFormat(params) {
             return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
           }
-          let data = {
-            ...this.TaskForm,
-            start_date: dataFormat(this.TaskForm.datetime[0]),
-            end_date: dataFormat(this.TaskForm.datetime[1]),
-            project: this.$route.params.id
-          };
-          if (this.TaskForm.executorlist.length) {
-            data["executorlist"] = data["executorlist"].join();
+          if (this.pro_type == 1) {
+            let data = {
+              ...this.TaskForm,
+              start_date: dataFormat(this.TaskForm.datetime[0]),
+              end_date: dataFormat(this.TaskForm.datetime[1]),
+              project: this.$route.params.id
+            };
+            if (this.TaskForm.executorlist.length) {
+              data["executorlist"] = data["executorlist"].join();
+            }
+            delete data.datetime;
+            addTask(data)
+              .then(({ data }) => {
+                this.createTaskLoading = false;
+                this.$message.success(data.msg);
+                if (data.status === 0) {
+                  this.cancelTask();
+                  this.isDialogShow = false;
+                }
+              })
+              .catch(err => {
+                this.createTaskLoading = false;
+              });
+          } else {
+            let dataMulTask = {
+              group_id: this.TaskForm.group_id,
+
+              link_id: this.TaskForm.link_id,
+
+              asset_id: this.TaskForm.asset,
+
+              name: this.TaskForm.name,
+
+              content: this.TaskForm.content,
+
+              start_date: dataFormat(this.TaskForm.datetime[0]),
+              end_date: dataFormat(this.TaskForm.datetime[1]),
+
+              total_hour: this.TaskForm.total_hour,
+
+              project_id: this.$route.params.id,
+
+              status: this.TaskForm.status,
+
+              priority: this.TaskForm.priority,
+
+              grade: this.TaskForm.grade
+            };
+            //console.log(dataMulTask);
+            mulCreateTasks(dataMulTask)
+              .then(({ data }) => {
+                this.createTaskLoading = false;
+                this.$message.success(data.msg);
+                if (data.status === 0) {
+                  this.cancelTask();
+                  this.isDialogShow = false;
+                }
+              })
+              .catch(err => {
+                this.createTaskLoading = false;
+              });
           }
-          delete data.datetime;
-          addTask(data)
-            .then(({ data }) => {
-              this.createTaskLoading = false;
-              this.$message.success(data.msg);
-              if (data.status === 0) {
-                this.cancelTask();
-                this.isDialogShow = false;
-              }
-            })
-            .catch(err => {
-              this.createTaskLoading = false;
-            });
         } else {
           return false;
         }

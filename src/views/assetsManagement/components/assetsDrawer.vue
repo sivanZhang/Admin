@@ -12,6 +12,7 @@
               @refresh="getLinkList"
               @refresh_assetList="getAssetList"             
               :LinkAssetList="LinkAssetList"
+              :pro_type="pro_type"
             ></links>
           </el-tab-pane>
           <el-tab-pane label="评论" name="second">
@@ -116,7 +117,8 @@ export default {
     "LinkAssetList",
     "customAttrs",
     "attrsList",
-    "attrsTypeNum"
+    "attrsTypeNum",
+    "pro_type"
   ],
   data() {
     return {

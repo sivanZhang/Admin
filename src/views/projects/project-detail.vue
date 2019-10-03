@@ -29,7 +29,7 @@
           @jumpName="jumpName"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2" >
+      <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
