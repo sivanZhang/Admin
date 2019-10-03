@@ -128,6 +128,17 @@ export const asyncRoutes = [{
                     // roles: 'manage_role'
                 }
             },
+            {
+                path: 'extra-approve',
+                name: 'extra-approve',
+                component: () =>
+                    import ('@/views/checking-in/extra-approve'),
+                meta: {
+                    title: '加班审批模板',
+                    icon: 'extra-approve',
+                    // roles: 'manage_role'
+                }
+            },
         ]
     },
     {

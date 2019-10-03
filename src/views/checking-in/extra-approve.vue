@@ -1,22 +1,26 @@
+<!-- 加班审批 -->
 <template>
-  <div id="links">
-    <template v-if="!LinkTemplateList.length">
-      <el-button icon="el-icon-plus" type="primary" @click="showLinkWKForm" v-if="DeptAuth">添加审批流程</el-button>
+  <div id="extra-approve">
+    <template v-if="!extraTemplate.length">
+      <el-button type="primary" @click="addTemplate(1)">添加模板</el-button>
     </template>
     <template v-else>
-      <el-button icon="el-icon-edit" type="success" @click="editLinkWKForm" v-if="DeptAuth">修改审批流程</el-button>
-      <el-button
-        icon="el-icon-delete"
-        type="danger"
-        @click="delLinkWKForm(LinkTemplateList)"
-        v-if="DeptAuth"
-      >删除审批流程</el-button>
+      <div style="width:400px">
+        <el-row style="padding:10px">
+          <el-col :span="12">
+            <el-button type="success" @click="editTemplate(1)">修改模板</el-button>
+          </el-col>
+          <el-col :span="12">
+            <el-button type="danger" @click="delTemplate">删除模板</el-button>
+          </el-col>
+        </el-row>
+      </div>
       <el-steps direction="vertical" :active="1" :space="100">
-        <el-step v-for="(item,index) of LinkTemplateList" :key="index" status="process">
+        <el-step v-for="(item,index) of extraTemplate" :key="index" status="process">
           <div slot="title" style="font-size:14px">{{index+1|WKLevel}}</div>
           <ul slot="description" style="width:200px;">
             <el-row style="font-size:16px;font-weight:400;padding-top:20px">
-              <span>审批角色：{{item.entity_id.role_name||item.entity_id.user_name}}</span>
+              <span>审批角色：{{item.name}}</span>
             </el-row>
           </ul>
         </el-step>
@@ -87,7 +91,7 @@
       </el-row>
       <el-row type="flex" justify="end">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submitForm()">立即创建</el-button>
+        <el-button type="primary" @click="addTemplate()">立即创建</el-button>
       </el-row>
     </el-dialog>
 
@@ -155,33 +159,31 @@
       </el-row>
       <el-row type="flex" justify="end">
         <el-button @click="cancel2">取消</el-button>
-        <el-button type="primary" @click="update()">立即修改</el-button>
+        <el-button type="primary" @click="editTemplate()">立即修改</el-button>
       </el-row>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { getRoles } from "@/api/admin";
 import {
-  getRoles,
-  getWKTemplate,
-  addWKTemplate,
-  updateWKTemplate,
-  deleteWKTemplate
-} from "@/api/admin";
+  getExtraTemplate,
+  delExtraTemplate,
+  putExtraTemplate,
+  createExtraTemplate
+} from "@/api/checkingIn";
 import { mapState } from "vuex";
 export default {
-  name: "links",
+  name: "extra-approve",
+  components: {},
   data() {
     return {
-      FormList: [{}],
-
-      radio: null,
+      extraTemplate: [],
       isDrawerShow: false,
       isUpdateShow: false,
+      FormList: [{}],
       rolesList: [],
-      value: "",
-      updateList: [{}],
       updateForm: [
         {
           level: null,
@@ -191,11 +193,10 @@ export default {
       ]
     };
   },
-  props: ["LinkTemplateList", "deptId", "deptName", "DeptAuth"],
+  watch: {},
   computed: {
     ...mapState("admin", ["UserList"]) //DeptUsers是根据登录账号得来的
   },
-
   methods: {
     //前置
     before(ind) {
@@ -212,16 +213,16 @@ export default {
     editBefore(index) {
       this.updateForm.splice(index, 0, {});
       //this.updateForm[index].level = index +1;
-      this.updateForm.forEach((item,index)=>{
-        item.level = index +1
-      })
+      this.updateForm.forEach((item, index) => {
+        item.level = index + 1;
+      });
     },
     editAfter(index) {
-      console.log(index)
+      console.log(index);
       this.updateForm.splice(index + 1, 0, {});
-      this.updateForm.forEach((item,index)=>{
-        item.level = index +1
-      })
+      this.updateForm.forEach((item, index) => {
+        item.level = index + 1;
+      });
     },
     editDeleteLink(index) {
       if (index !== 0) this.updateForm.splice(index, 1);
@@ -230,135 +231,101 @@ export default {
       this.isDrawerShow = false;
       this.FormList = [{}];
     },
-    rolesListChange(item) {
-      this.$forceUpdate();
-
-      // console.log(item);
-    },
-    showLinkWKForm() {
-      this.isDrawerShow = true;
-      //获取角色列表
-      getRoles().then(({ data }) => {
-        this.rolesList = [...data.msg];
-        //console.log(this.rolesList);
-      });
-    },
     cancel2() {
       this.isUpdateShow = false;
       this.updateForm = [{}];
     },
-    submitForm() {
-      this.FormList.forEach((item, index) => {
-        // if(item.type === 1)
-        this.FormList[index] = Object.assign({}, this.FormList[index], {
-          level: index + 1,
-          role_id: this.FormList[index].role_id,
-          type: this.FormList[index].type
+    addTemplate(Type) {
+      if (Type === 1) {
+        this.isDrawerShow = true;
+        //获取角色列表
+        getRoles().then(({ data }) => {
+          this.rolesList = [...data.msg];
+          //console.log(this.rolesList);
         });
-      });
-      //console.log(this.FormList);
-      const msg = {
-        dept: this.deptId,
-        rule: this.FormList
-      };
-      addWKTemplate(msg)
-        .then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.$emit("refresh");
-            this.isDrawerShow = false;
-            // this.dynamicValidateForm.domains.value = "";
-          } else {
-            this.$message.error(data.msg);
-          }
-        })
-        .catch(() => {});
-    },
-    update() {
-     //console.log(this.updateForm);
-      // console.log(this.updateForm)
-      const msg = {
-        id: this.updateList[0].id,
-        rule: this.updateForm,
-        method: "put"
-      };
-      updateWKTemplate(msg)
-        .then(({ data }) => {
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.$emit("refresh");
-            this.isUpdateShow = false;
-          } else {
-            this.$message.error(data.msg);
-          }
-        })
-        .catch(() => {});
-    },
-    removeDomain(item) {
-      var index = this.dynamicValidateForm.domains.indexOf(item);
-      if (index !== 0) {
-        this.dynamicValidateForm.domains.splice(index, 1);
-      }
-    },
-    addDomain() {
-      this.dynamicValidateForm.domains.push({
-        value: "",
-        key: Date.now()
-      });
-    },
-    //展示修改审批流程
-    editLinkWKForm() {
-      getWKTemplate({
-        dept: this.deptId
-      }).then(({ data }) => {
-        this.updateList = [...data.msg];
-        this.updateList.forEach((item, index) => {
-          let role_id = null;
-          if (item.type === 1) {
-            role_id = item.entity_id.user_id;
-          } else {
-            role_id = item.entity_id.role_id;
-          }
-          this.updateForm.splice(index, 1, {
+      } else {
+        this.FormList.forEach((item, index) => {
+          // if(item.type === 1)
+          this.FormList[index] = Object.assign({}, this.FormList[index], {
             level: index + 1,
-            role_id,
-            type: this.updateList[index].type
+            role_id: this.FormList[index].role_id,
+            type: this.FormList[index].type
           });
         });
-        //console.log(this.updateForm);
-        this.isUpdateShow = true;
-      });
-
-      //console.log(this.updateForm);
-      //获取角色列表
-      getRoles().then(({ data }) => {
-        this.rolesList = [...data.msg];
-        // console.log(this.rolesList);
-      });
+        createExtraTemplate({ rule: this.FormList }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.isDrawerShow = false;
+            this.getTemplate();
+          }
+        });
+      }
     },
-    //删除审批流程
-    delLinkWKForm(LinkTemplateList) {
-      const id = LinkTemplateList[0].id;
+    editTemplate(Type) {
+      if (Type === 1) {
+        getExtraTemplate().then(({ data }) => {
+          this.updateList = [...data.msg];
+          this.updateList.forEach((item, index) => {
+            let role_id = null;
+
+            role_id = item.id;
+
+            this.updateForm.splice(index, 1, {
+              level: index + 1,
+              role_id,
+              type: this.updateList[index].type
+            });
+          });
+          //console.log(this.updateForm);
+          this.isUpdateShow = true;
+        });
+
+        //console.log(this.updateForm);
+        //获取角色列表
+        getRoles().then(({ data }) => {
+          this.rolesList = [...data.msg];
+          // console.log(this.rolesList);
+        });
+      } else {
+        putExtraTemplate({ rule: this.updateForm }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.isUpdateShow=false;
+            this.getTemplate();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      }
+    },
+    delTemplate() {
       this.$confirm("删除模板后无法恢复，确认删除?", "注意", {
         confirmButtonText: "删除",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteWKTemplate({
-          method: "delete",
-          id: id
-        }).then(({ data }) => {
-          this.$message.success(data.msg);
+        delExtraTemplate({ method: "delete" }).then(({ data }) => {
           if (data.status === 0) {
-            this.$emit("refresh");
+            this.$message.success(data.msg);
+            this.getTemplate();
           }
         });
       });
+    },
+    getTemplate() {
+      getExtraTemplate().then(({ data }) => {
+        if (data.status === 0) {
+          this.extraTemplate = [...data.msg];
+        } else {
+          this.extraTemplate = [];
+        }
+      });
     }
+  },
+  created() {
+    this.getTemplate();
   }
 };
 </script>
-
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 </style>
-

@@ -31,3 +31,33 @@ export function getApprove(params) {
 export function postApprove(data) {
     return AXIOS.post('/overtime/approve/', data)
 }
+//新建加班审批模板
+export function createExtraTemplate(params){
+    return AXIOS.post('/wktemplate/extral_work_rule/',params,{
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }]
+    })
+}
+//修改加班审批模板
+export function putExtraTemplate(params){
+    return AXIOS.post('/wktemplate/extral_work_rule/',params,{
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }]
+    })
+}
+//删除加班审批模板
+export function delExtraTemplate(data){
+    return AXIOS.post('/wktemplate/extral_work_rule/',data)
+}
+//查看加班审批模板
+export function getExtraTemplate(params){
+    return AXIOS.get('/wktemplate/extral_work_rule/',{params})
+}
