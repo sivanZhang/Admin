@@ -258,8 +258,111 @@
           </div>
         </div>
       </el-tab-pane>
+      <template v-if="project.pro_type === 0">
+        <el-tab-pane label="分组管理" name="fourth">
+          <div style="display:flex">
+            <div style="width:40%;padding:10px">
+              <span style="padding-bottom:10px;display:flex">
+                <h3>分组</h3>
+                <el-row>
+                  <el-button type="success" @click="addTeam(1)" style="margin-left:20px">添加分组</el-button>
+                </el-row>
+              </span>
+              <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
+              <el-tree
+                class="filter-tree"
+                empty-text="未创建工种"
+                highlight-current
+                ref="tree"
+                :data="teamList"
+                @node-click="handleGroupClick"
+                :props="defaultProps2"
+                default-expand-all
+                :filter-node-method="searchGroup"
+                :expand-on-click-node="false"
+              >
+                <span class="custom-tree-node" slot-scope="{ node, data }">
+                  <span style="margin-right:6px;">{{node.label}}</span>
+                  <span class="iconWarp">
+                    <i
+                      class="el-icon-plus"
+                      @click="addMember(1,data)"
+                      style="color:#409EFF"
+                      title="添加成员"
+                      v-if="teamAuth"
+                    ></i>
+                    <i
+                      class="el-icon-delete"
+                      @click="delTeam(data)"
+                      style="color:#F56C6C"
+                      title="删除当前分组"
+                      v-if="teamAuth"
+                    ></i>
+                  </span>
+                </span>
+              </el-tree>
+            </div>
+            <div style="width:60%;padding:10px">
+              <span style="padding-bottom:10px">
+                <h3>成员信息</h3>
+              </span>
+              <el-table
+                :data="members"
+                :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+                :cell-style="{borderRight:0}"
+                highlight-current-row
+                @selection-change="handleSelectionChange"
+                :row-key="(row)=>{ return row.id}"
+                :border="true"
+              >
+                <el-table-column label="成员名称" prop="name"></el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-tooltip effect="dark" content="删除" placement="top">
+                    <el-button
+                      type="text"
+                      icon="el-icon-delete"
+                      style="color:red"
+                      @click="delMember(scope.row)"
+                    ></el-button>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </el-tab-pane>
+      </template>
     </el-tabs>
-
+    <!-- 添加分组 -->
+    <el-dialog title="添加分组" :visible.sync="teamDialog" width="521px" top="5vh">
+      <el-form :model="teamForm" label-width="90px">
+        <el-form-item label="分组名称" prop="name">
+          <el-input v-model="teamForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="分组成员" prop="memberes">
+          <el-select v-model="teamForm.memberes" multiple>
+            <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addTeam(2)">立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!-- 添加成员 -->
+    <el-dialog title="添加成员" :visible.sync="addMebDialog" width="512px" top="5vh">
+      <el-form :model="addMebForm" label-width="90px">
+        <el-form-item label="成员名称" prop="ids">
+          <el-select v-model="addMebForm.ids" multiple>
+            <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addMember(2)">立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <!-- 项目模板 -->
     <el-dialog
       title="项目模板"
@@ -290,7 +393,7 @@
                     type="text"
                     @click="projectTemplate(6,scope.row)"
                   ></el-button>
-                </el-tooltip> -->
+                </el-tooltip>-->
                 <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
                   <el-button
                     icon="el-icon-top-right"
@@ -463,7 +566,13 @@
 
 <script>
 import { mapState } from "vuex";
-import { projectProfession } from "@/api/project";
+import {
+  projectProfession,
+  createTeam,
+  putTeam,
+  delTeam,
+  getTeamList
+} from "@/api/project";
 import {
   getAllMaxStatus,
   getAllMinStatus,
@@ -475,7 +584,6 @@ import {
   searchTemplate,
   changeTemplate
 } from "@/api/status";
-
 export default {
   name: "config-project",
   props: ["project", "configTab"],
@@ -485,6 +593,10 @@ export default {
       activeName: this.configTab ? this.configTab : "first",
       defaultProps: {
         children: "children",
+        label: "name"
+      },
+      defaultProps2: {
+        // children: "members",
         label: "name"
       },
       projectTemplateDialog: false,
@@ -514,7 +626,20 @@ export default {
       pause2: [],
       show: true,
       showid: null,
-      client: this.project.client ? this.project.client : ""
+      client: this.project.client ? this.project.client : "",
+      teamList: null,
+      members: [],
+      team: null,
+      multipleSelection: [],
+      teamAuth: null,
+      filterText: "",
+      teamDialog: false,
+      teamForm:{
+        projectid:this.project.id
+      },
+      addMebDialog:false,
+      addMebForm:{},
+      addId:null
     };
   },
   created() {
@@ -528,13 +653,129 @@ export default {
           this.getStatus();
           this.getPeojectAllStatus();
         }
+        if (newVal === "fourth" && this.project.pro_type === 0) {
+          this.getTeam();
+        }
       }
+    },
+    filterText(val) {
+      this.$refs.tree.filter(val);
     }
   },
   computed: {
-    ...mapState("admin", ["DeptList"])
+    ...mapState("admin", ["DeptList", "UserList"])
   },
   methods: {
+    //分组搜索
+    searchGroup(value, data) {
+      if (!value) return true;
+
+      return data.name.indexOf(value) !== -1;
+    },
+    //添加分组
+    addTeam(Type) {
+      if (Type === 1) {
+        this.teamDialog = true;
+      }else{
+        this.teamForm.memberes=this.teamForm.memberes.map(item=>item).join(",")
+        // console.log(this.teamForm)
+        createTeam(this.teamForm).then(({data})=>{
+          if(data.status === 0){
+            this.teamDialog = false;
+            this.$message.success(data.msg);
+            this.getTeam()
+          }
+        })
+      }
+    },
+    //添加成员
+    addMember(Type,row) {
+      if(Type === 1){
+        this.addMebDialog = true;
+        this.addId = row.id
+        console.log(row)
+      }else{
+       let addMeb = {
+         method:"put",
+         id:this.addId,
+         add_user_ids:this.addMebForm.ids.map(item=>item).join(",")
+       }
+       putTeam(addMeb).then(({data})=>{
+         if(data.status === 0){
+           this.$message.success(data.msg);
+           this.addMebDialog = false;
+           this.getTeam(1)
+         }
+       })
+      }
+    },
+    //删除分组
+    delTeam(data) {
+      this.$confirm("此操作将永久删除该分组?", "注意", {
+        confirmButtonText: "删除",
+
+        cancelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+      delTeam({method:"delete",ids:data.id}).then(({data})=>{
+        if(data.status === 0){
+          this.$message.success(data.msg);
+          this.getTeam()
+        }else{
+          this.$message.error(data.msg)
+        }
+      })})
+    },
+    //table行被选中
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      //console.log(this.multipleSelection.length);
+    },
+    //删除成员
+    delMember(row) {
+      this.$confirm("此操作将永久删除此分组中的该成员?", "注意", {
+        confirmButtonText: "删除",
+
+        cancelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+        putTeam({
+          method:"put",
+          id:this.team.id,
+          del_user_ids:row.id
+        }).then(({data})=>{
+          if(data.status === 0){
+            this.$message.success(data.msg);
+            this.getTeam(1);
+          }
+        })
+      })
+    },
+    // 工种单击触发事件
+    handleGroupClick(data) {
+      this.members = [];
+      this.team = data;
+      this.members = data.members;
+      // console.log(data);
+    },
+    //获取分组
+    getTeam(Type) {
+      getTeamList({ projectid: this.project.id }).then(({ data }) => {
+        if (data.status === 0) {
+          if(Type === 1){
+            [...data.msg].forEach(item=>{
+              if(item.id === this.team.id){
+                this.members = item.members
+              }
+            })
+          }
+          this.teamList = [...data.msg];
+          this.teamAuth = data.auth.manage_projectteam;
+        }
+      });
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -671,12 +912,11 @@ export default {
       }
       //展示模板详情
       if (row && Type === 2) {
-        this.pause2=[],
-        this.notstart2=[];
-        this.conducting2=[],
-        this.approving2=[],
-        this.finish2=[],
-        this.projectActiveName = "project-second";
+        (this.pause2 = []), (this.notstart2 = []);
+        (this.conducting2 = []),
+          (this.approving2 = []),
+          (this.finish2 = []),
+          (this.projectActiveName = "project-second");
         searchTemplate({ id: row.id }).then(({ data }) => {
           [...data.msg].forEach(data => {
             data.small_status.forEach(item => {
@@ -697,9 +937,9 @@ export default {
               }
             });
           });
-          [...data.msg].forEach((item,index) => {
+          [...data.msg].forEach((item, index) => {
             this.projectTemplateList = item.depts;
-        })
+          });
         });
       }
       //模板保存dialog
@@ -790,5 +1030,22 @@ export default {
 <style lang="scss">
 .el-checkbox__inner {
   margin-right: 10px;
+}
+.iconWarp {
+  display: none;
+  font-size: 12px;
+  & > * {
+    cursor: pointer;
+  }
+}
+.custom-tree-node {
+  &:hover {
+    .iconWarp {
+      display: inline-block;
+    }
+  }
+}
+.search-group {
+  margin-bottom: 10px;
 }
 </style>
