@@ -16,6 +16,7 @@
         </el-dropdown-menu>
           </el-dropdown>-->
           <el-button icon="el-icon-download" type="primary">导入</el-button>
+          <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
 
           <el-button
             type="danger"
@@ -680,7 +681,21 @@
         <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
       </el-row>
     </el-dialog>
-
+    <!-- 任务导出 -->
+   <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
+      <el-row>
+        <el-col :span="6">
+          <span>excel文件</span>
+        </el-col>
+        <el-col :span="18">
+           <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadVisible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadExcel">确定</el-button>
+      </span>
+    </el-dialog>
     <Drawer
       title="任务"
       scrollable
@@ -726,6 +741,7 @@ export default {
   name: "tab-task",
   data() {
     return {
+      uploadVisible: false,
       activeTab: "first",
       tableLoading: false, //表格加载状态
       total: 0,
@@ -752,7 +768,7 @@ export default {
       selectList: [],
       createLoading: false,
       multipleSelection: [],
-
+      path:null,
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 50, 100],
@@ -1006,6 +1022,33 @@ export default {
           console.log(this.trainingMenber);
         }
       );
+    },
+    //任务导出dialog
+    targetUpload() {
+        let data = {
+        ...this.sortSelForm,
+        project: this.$route.params.id,
+        print:"null"
+      };
+        HTTP.queryTask(data).then(({ data }) => {
+          if (data.status === 0) {
+           this.uploadVisible = true;
+           this.path = data.path
+          }
+        })
+        .catch(err => {
+          this.$message.error(data.msg);
+        });
+    },
+    //导出Excel文件
+    //导出Excel
+    download(){
+      let data="http://tl.chidict.com:8081/"+this.path;
+      window.location.href = data;
+    },
+    uploadExcel(){
+      //  this.download();
+      this.uploadVisible = false;
     },
     //多条件筛选
     MulSel() {

@@ -6,8 +6,11 @@
           <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
             <slot name="add">添加资产</slot>
           </el-button>
-          <el-button icon="el-icon-upload2" type="primary" @click="targetImport">
+          <el-button icon="el-icon-download" type="primary" @click="targetdownload">
             <slot name="import">资产导入</slot>
+          </el-button>
+          <el-button icon="el-icon-upload2" type="success" @click="targetUpload">
+            <slot name="upload">资产导出</slot>
           </el-button>
           <el-button
             type="danger"
@@ -149,12 +152,7 @@
         </el-col>
         <el-col :span="10" align="right">
           <el-row type="flex" justify="end">
-            <el-select
-              v-model="colSel"
-              placeholder="请选择"
-              style="width:130px;"
-              filterable
-            >
+            <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
               <el-option
                 v-for="item in columnSelect"
                 :key="item.value"
@@ -970,6 +968,21 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 导出 -->
+    <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
+      <el-row>
+        <el-col :span="6">
+          <span>excel文件</span>
+        </el-col>
+        <el-col :span="18">
+           <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadVisible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadExcel">确定</el-button>
+      </span>
+    </el-dialog>
     <Drawer
       scrollable
       closable
@@ -1021,6 +1034,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      uploadVisible: false,
       materialForm: {},
       matrialId: null,
       // assetId: this.$route.query.asset?this.$route.query.asset:"",
@@ -1115,6 +1129,7 @@ export default {
       filterLevel: [],
       sort: null,
       FormList: [{}],
+      path:null,
       options: [
         {
           value: "session",
@@ -1702,11 +1717,38 @@ export default {
       this.$forceUpdate();
     },
     //跳转批量上传页
-    targetImport() {
+    targetdownload() {
       this.$router.push({
         name: "asset-import",
         params: { id: this.$route.params.id }
       });
+    },
+    //跳转导出页面dialog
+    targetUpload() {
+       HTTP.queryAssets({
+         ...this.sortSelForm, 
+         project: this.$route.params.id,
+         print:"null"
+         }).then(({ data })=>{
+           if (data.status === 0) {
+           console.log("111111")
+           this.uploadVisible = true;
+           this.path = data.path
+           }
+       }).catch(err => {
+          this.tableLoading = false;
+          this.visible2 = false;
+          this.sortSelForm = {};
+        });
+    },
+    //导出Excel
+    download(){
+      let data="http://tl.chidict.com:8081/"+this.path;
+      window.location.href = data;
+    },
+    uploadExcel(){
+      //  this.download();
+      this.uploadVisible = false;
     },
     //获取资产或者镜头列表，type=1时表示重置（包括单条件筛选）
     getAssetList(type) {
