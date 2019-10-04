@@ -133,7 +133,7 @@ export default {
      },
     //批量删除
     deletList(){
-      this.$confirm("此操作将永久删除用户,是否继续?", "提示", {
+      this.$confirm("此操作将永久删除申请,是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
