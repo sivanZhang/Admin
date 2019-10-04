@@ -16,14 +16,14 @@
     </el-table>
     <el-dialog title="加班申请" :visible.sync="dialogVisible" width="512px">
       <el-form :model="ApproveForm" :rules="rules" ref="approve-form" label-width="100px">
-        <el-form-item label="审批结果" prop="approve_result">
+        <el-form-item label="审批意见" prop="suggestion">
+          <el-input type="textarea" v-model="ApproveForm.suggestion" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="审批决定" prop="approve_result">
           <el-radio-group v-model="ApproveForm.approve_result">
             <el-radio-button :label="1">同意</el-radio-button>
             <el-radio-button :label="0">拒绝</el-radio-button>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="审批备注" prop="suggestion">
-          <el-input type="textarea" v-model="ApproveForm.suggestion" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button :loading="submitLoading" type="primary" @click="submitForm('approve-form')">提交</el-button>

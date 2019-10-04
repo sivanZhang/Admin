@@ -36,6 +36,7 @@
             @click="sunbmitApprove(scope.row.overtime_id)"
           >提交审批</el-button>
           <span v-else-if="scope.row.overtime_status===null && currentSelect===0">待提交</span>
+          <span v-else-if="scope.row.overtime_status===3">已提交</span>
           <span v-else-if="scope.row.overtime_status===2">审批中</span>
           <span v-else-if="scope.row.overtime_status===1" style="color:#19be6b">同意</span>
           <span v-else-if="scope.row.overtime_status===0" style="color:#ed4014">拒绝</span>
