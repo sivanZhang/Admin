@@ -103,7 +103,7 @@ export default {
     activeName: {
       handler: function(newVal, oldVal) {
         if (newVal === "fifth") {
-          this.$refs["taskApprovelog"].getApproveLog(TaskDetail.id);
+          this.$refs["taskApprovelog"].getApproveLog(this.TaskDetail.id);
         }
       }
     }
