@@ -48,11 +48,6 @@
         <el-form-item label="项目编码" prop="code">
           <el-input v-model="ProjectForm.code"></el-input>
         </el-form-item>
-        <template v-if="radio === 0">
-          <el-form-item label="所属学校" prop="school">
-            <el-input v-model="ProjectForm.school"></el-input>
-          </el-form-item>
-        </template>
         <el-form-item label="Windows路径" prop="windows_path">
           <el-input v-model="ProjectForm.windows_path"></el-input>
         </el-form-item>
@@ -97,7 +92,12 @@
         <el-form-item label="模板使用">
           <div style="padding-left:3px;float:left">
             <el-button type="primary" @click="projectTemplate(1)">项目模板</el-button>
-            <el-input style="padding-top:10px;" :disabled="true" v-model="TemplateListName" placeholder="选择的模板名称"></el-input>
+            <el-input
+              style="padding-top:10px;"
+              :disabled="true"
+              v-model="TemplateListName"
+              placeholder="选择的模板名称"
+            ></el-input>
           </div>
           <div style="padding-left:3px;"></div>
         </el-form-item>
@@ -235,7 +235,7 @@ export default {
   data() {
     return {
       projectTemplateDialog: false,
-      templateid:'',
+      templateid: "",
       statusTemplateList: [],
       projectTemplateList: [],
       projectActiveName: "project-first",
@@ -314,41 +314,41 @@ export default {
       }
       //展示模板详情
       if (Type === 2) {
-          this.projectTemplateList = [],
-         this.pause=[],
-        this.notstart=[];
-        this.conducting=[],
-        this.approving=[],
-        this.finish=[],
-        this.TemplateList = row.name;
+        (this.projectTemplateList = []),
+          (this.pause = []),
+          (this.notstart = []);
+        (this.conducting = []),
+          (this.approving = []),
+          (this.finish = []),
+          (this.TemplateList = row.name);
         this.projectActiveName = "project-second";
         searchTemplate({ id: row.id }).then(({ data }) => {
-           const datastatus = data.msg.small_status;
+          const datastatus = data.msg.small_status;
           const deptdata = data.msg.depts;
-           console.log(datastatus)
-           console.log(deptdata)
-            this.templateid = data.msg.id
-            datastatus.forEach(item => {
-              this.statusid = item;
-              if (item <= 2) {
-                this.pause.push(item);
-              }
-              if (item > 2 && item <= 5) {
-                this.notstart.push(item);
-              }
-              if (item > 5 && item <= 15) {
-                this.conducting.push(item);
-              }
-              if (item > 15 && item <= 19) {
-                this.approving.push(item);
-              }
-              if (item > 19) {
-                this.finish.push(item);
-              }
+          //  console.log(datastatus)
+          //  console.log(deptdata)
+          this.templateid = data.msg.id;
+          datastatus.forEach(item => {
+            this.statusid = item;
+            if (item <= 2) {
+              this.pause.push(item);
+            }
+            if (item > 2 && item <= 5) {
+              this.notstart.push(item);
+            }
+            if (item > 5 && item <= 15) {
+              this.conducting.push(item);
+            }
+            if (item > 15 && item <= 19) {
+              this.approving.push(item);
+            }
+            if (item > 19) {
+              this.finish.push(item);
+            }
           });
-         deptdata.forEach((item,index) => {
+          deptdata.forEach((item, index) => {
             this.projectTemplateList[index] = item;
-        })
+          });
         });
       }
     },
@@ -363,11 +363,11 @@ export default {
     cancel() {
       //告诉父组件：不显示弹框
       this.$emit("update:isShow", false);
-      this.TemplateListName = []
+      this.TemplateListName = [];
     },
     cancel1() {
       this.isShowNext = false;
-      this.TemplateListName = []
+      this.TemplateListName = [];
     },
     //验证，并提交创建项目的表单
     submitForm() {
@@ -377,16 +377,21 @@ export default {
           let Data = {
             ...this.ProjectForm,
             start: this.ProjectForm.datetime[0].toLocaleDateString(),
-            end: this.ProjectForm.datetime[1].toLocaleDateString(),
-            templateid:this.templateid
+            end: this.ProjectForm.datetime[1].toLocaleDateString()
           };
+          if (this.templateid) {
+            Data = { ...Data, templateid: this.templateid };
+          }
+
+          delete this.ProjectForm.datetime[0];
+          delete this.ProjectForm.datetime[1];
           if (this.radio === 0) {
             Data = { ...Data, training: null };
           }
           addProjects(Data).then(({ data }) => {
-            console.log(data)
-            console.log(this.templateid)
-            this.$message.success(data.msg);          
+            // console.log(data)
+            // console.log(this.templateid)
+            this.$message.success(data.msg);
             if (data.status === 0) {
               this.id = data.id;
               this.isShowNext = true;
@@ -396,10 +401,8 @@ export default {
                 this.$store.dispatch("project/get_Projects");
               }
               this.$emit("update:isShow", false);
-              
             }
           });
-         
         } else {
           return false;
         }
