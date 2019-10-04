@@ -76,7 +76,7 @@
           <h4 style="margin: 0 10px;">插件文件</h4>
         </div>
         <div style="margin-top:10px; border: 1px solid #dfe6ec;">
-          <el-table :data="tableData" style="width: 100%" ref="plugin"  :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
+          <el-table :data="tableData" style="width: 100%" ref="plugin" :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
             <el-table-column prop="name" label="插件名称" >
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
@@ -89,7 +89,7 @@
             </el-table-column>
 
             <el-table-column prop="pubdate" label="发布日期" >
-              <template slot-scope="scope">{{scope.row.pubdate}}</template>
+              <template slot-scope="scope">{{scope.row.pubdate|dateFormat}}</template>
             </el-table-column>
             <el-table-column prop="filepath" label="插件文件" >
               <template slot-scope="scope">
@@ -98,7 +98,7 @@
             </el-table-column>
             <el-table-column label="操作" >
               <template slot-scope="scope">
-                <el-button @click="deletePlugin(scope.row.name)" type="danger">删除</el-button>
+                <el-button @click="deletePlugin(scope.row.id)" type="danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -208,11 +208,11 @@ export default {
     },
     show() {
       searchPlugin().then(({ data }) => {
-        this.tableData = [...data.plugin]
+        this.tableData = [...data.msg]
       })
     },
-    deletePlugin(name) {
-      deletePlugin({ method: "delete", name: name }).then(({ data }) => {
+    deletePlugin(id) {
+      deletePlugin({ method: "delete", ids: id }).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.show()
