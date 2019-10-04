@@ -887,7 +887,6 @@ export default {
           this.finish2 = [],
           this.projectActiveName = "project-second";
         searchTemplate({ id: row.id }).then(({ data }) => {
-          // [...data.msg].forEach(data => {
           const datastatus = data.msg.small_status;
           const deptdata = data.msg.depts;
             datastatus.forEach(item => {
@@ -906,7 +905,6 @@ export default {
               if (item > 19) {
                 this.finish2.push(item);
               }
-            // });
           });
           deptdata.forEach((item,index) => {
             this.projectTemplateList[index] = item;
@@ -939,7 +937,7 @@ export default {
       }
       //模板删除
       if (Type === 5) {
-        this.$confirm("此操作将永久删除该环节模板, 是否继续?", "提示", {
+        this.$confirm("此操作将永久删除该项目模板, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -953,9 +951,6 @@ export default {
             }
           });
         });
-      }
-      //复用模板
-      if (Type === 6) {
       }
     },
     cancelprojectTemplate() {

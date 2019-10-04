@@ -389,9 +389,7 @@ export default {
             Data = { ...Data, training: null };
           }
           addProjects(Data).then(({ data }) => {
-            // console.log(data)
-            // console.log(this.templateid)
-            this.$message.success(data.msg);
+            this.$message.success("项目创建成功！");
             if (data.status === 0) {
               this.id = data.id;
               this.isShowNext = true;
