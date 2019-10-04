@@ -33,7 +33,7 @@
           @jumpName="jumpName"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2" lazy>
+      <el-tab-pane label="任务" name="tab2" >
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
@@ -87,6 +87,7 @@ export default {
     activeName:{
       handler:function(newVal,oldVal){
         if(newVal === "tab2"){
+          this.$refs["tab-task"].getTasks()
           this.getAssetList()
         }
       }
