@@ -16,7 +16,7 @@ export function dateFormat(date) {
 export function dateTimeFormat(date) {
     date *= 1000
     if (date) {
-        return dayjs().format("YYYY/MM/DD HH:mm:ss")
+        return dayjs(date).format("YYYY/MM/DD HH:mm:ss")
     } else {
         return ''
     }
@@ -25,7 +25,7 @@ export function dateTimeFormat(date) {
 export function dateHMSFormat(date) {
     date *= 1000
     if (date) {
-        return dayjs().format("HH:mm")
+        return dayjs(date).format("HH:mm")
     } else {
         return ''
     }

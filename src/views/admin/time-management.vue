@@ -9,7 +9,15 @@
 <script>
 import { getDates } from "@/api/admin";
 export default {
-  name: "time-management"
+  name: "time-management",
+  methods: {
+    getDates(){
+      let data = {}
+      getDates().then(()=>{
+        
+      })
+    }
+  },
 };
 </script>
 
