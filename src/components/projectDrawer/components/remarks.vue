@@ -67,21 +67,27 @@
             <p class="desc-text">{{item.content}}</p>
             <p class="pro-text">
               <!-- 实体图片 -->
+              <!-- <router-link
+                :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}"
+              >
+                <span>{{item.name}}</span>
+              </router-link> -->
               <el-image
-              :src="$store.state.BASE_URL+project.image"
-              style="width: 30px;height: 30px;float: left;margin-right: 10px"
-              :preview-src-list="[$store.state.BASE_URL+project.image]" >
-              <div slot="placeholder" class="image-slot">
-                加载中
-                <span class="dot">...</span>
-              </div>
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
-              </div>
-            </el-image>
+                :src="$store.state.BASE_URL+project.image"
+                style="width: 30px;height: 30px;float: left;margin-right: 10px"
+                :preview-src-list="[$store.state.BASE_URL+project.image]"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span class="dot">...</span>
+                </div>
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture" style="color:#909399"></i>
+                </div>
+              </el-image>
               <!-- 进入实体的链接 -->
               <span>
-                <router-link :to="`/projects/project-detail/${item.user.id}`">{{project.name}}</router-link>
+                <router-link  :to="{name:'project-detail',params:{id:project.id},query:{type:project.pro_type}}">{{project.name}}</router-link>
               </span>
             </p>
             <!-- 备注对应的评论的展示 -->
@@ -198,13 +204,13 @@ import { getRemark, addRemark, removeRemark } from "@/api/remark";
 
 import { getUserList } from "@/api/admin";
 export default {
-  props:{
-    project:{
-      type:Object
+  props: {
+    project: {
+      type: Object
     },
-    RemarksData:{
-      type:Array,
-      default:[]
+    RemarksData: {
+      type: Array,
+      default: []
     }
   },
 
@@ -289,7 +295,7 @@ export default {
     //     };
     //     getRemark(msg).then(({ data }) => {
     //       this.RemarksData = [...data.msg];
-          
+
     //       //console.log(this.RemarksData);
     //     });
     //   }
@@ -327,7 +333,7 @@ export default {
           entity_type: this.project.entity_type,
           pid: item.id,
           content: this.comment[item.id]
-        }
+        };
         addRemark(this.commentResult)
           .then(({ data }) => {
             if (data.status === 0) {
@@ -383,7 +389,7 @@ export default {
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            
+
             this.$emit("refreshRemark");
           } else {
             this.$message.error(data.msg);

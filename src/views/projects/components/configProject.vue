@@ -342,7 +342,7 @@
           <el-input v-model="teamForm.name"></el-input>
         </el-form-item>
         <el-form-item label="分组成员" prop="memberes">
-          <el-select v-model="teamForm.memberes" multiple style="width:390px;">
+          <el-select v-model="teamForm.memberes" multiple style="width:390px;" filterable>
             <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -355,7 +355,7 @@
     <el-dialog title="添加成员" :visible.sync="addMebDialog" width="512px" top="5vh">
       <el-form :model="addMebForm" label-width="90px">
         <el-form-item label="成员名称" prop="ids">
-          <el-select v-model="addMebForm.ids" multiple>
+          <el-select v-model="addMebForm.ids" multiple filterable>
             <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
