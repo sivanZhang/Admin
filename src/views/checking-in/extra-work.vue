@@ -230,7 +230,7 @@ export default {
       }).then(() => {
         deleteApply({
           method: "delete",
-          id
+          ids:id
         }).then(({ data }) => {
           this.$message(data.msg);
           if (data.status === 0) {
