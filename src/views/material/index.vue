@@ -278,12 +278,12 @@ export default {
       } else {
         addMaterial(this.materialForm).then(({ data }) => {
           if (data.status === 0) {
-            this.$message.success(data.msg);
+            this.$message.success("导出至素材库成功！");
             this.addDialog = false;
             this.materialForm = {};
             this.searchMaterial();
           } else {
-            this.$message.error(data.msg);
+            this.$message.error("导出至素材库失败！");
           }
         });
       }
