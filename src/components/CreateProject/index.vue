@@ -126,7 +126,7 @@
             <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
           </router-link>
 
-          <router-link :to="`/assetes/asset-import/${id}`">
+          <router-link :to="`/import/asset-import/${id}`">
             <el-button type="primary" @click="cancel1()">导入镜头</el-button>
           </router-link>
         </el-col>
@@ -389,7 +389,7 @@ export default {
             Data = { ...Data, training: null };
           }
           addProjects(Data).then(({ data }) => {
-            this.$message.success("项目创建成功！");
+            // this.$message.success("项目创建成功！");
             if (data.status === 0) {
               this.id = data.id;
               this.isShowNext = true;

@@ -51,3 +51,8 @@ export function getAttrsEntityInfo(params){
 export function searchBind(params){
     return AXIOS.get('/attrs/bind/',{params})
 }
+
+//操作属性权限
+export function authAttr(){
+    return AXIOS.get('/attrs/attrs/?auth')
+}

@@ -208,7 +208,7 @@ export default {
         this.attrsList = [...data.msg];
       });
       getAttrsEntityList({ entity_id: row.id, entity_type: 7 }).then(({ data }) => {
-        console.log("llllll");
+        // console.log("llllll");
         this.customAttrs = [...data.msg];
         // console.log("mmmm");
         // console.log(this.customAttrs);

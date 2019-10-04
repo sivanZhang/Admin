@@ -2,7 +2,7 @@
 
 <template>
   <div id="attr_bind" style="border-top:2px #dcdee2 solid;padding-top:5px">
-    <el-button type="primary" @click="showDialog(1)" style="margin-bottom:10px">自定义属性绑定</el-button>
+    <el-button type="primary" @click="showDialog(1)" style="margin-bottom:10px" v-if="auth">自定义属性绑定</el-button>
     <div v-for="(item,index) of customAttrs" :key="index" style="padding-top:5px">
       <el-row>
         <el-col :span="6">{{item.attr_name}}</el-col>
@@ -42,7 +42,8 @@
           <span v-if="!editing||clickId !== item.id">{{item.attr_value}}</span>
         </el-col>
         <el-col :span="9">
-          <el-tooltip class="item" effect="dark" content="修改" placement="top">
+          <template v-if="auth">
+            <el-tooltip class="item" effect="dark" content="修改" placement="top">
             <el-button
               icon="el-icon-edit"
               style="color:green"
@@ -68,6 +69,7 @@
               @click="removeBind(item.id)"
             ></el-button>
           </el-tooltip>
+          </template>
         </el-col>
       </el-row>
     </div>
@@ -135,7 +137,8 @@ import {
   delAttrsEntity,
   updateAttrsEntity,
   attrsEntityBind,
-  getAttrsEntityList
+  getAttrsEntityList,
+  authAttr
 } from "@/api/attrs";
 export default {
   name: "attr_bind",
@@ -177,7 +180,8 @@ export default {
       iconShow: false,
       newAttrForm: {},
       attrtype: null,
-      attrname: null
+      attrname: null,
+      auth:null
     };
   },
 
@@ -327,7 +331,13 @@ export default {
     }
   },
 
-  created() {}
+  created() {
+    authAttr().then(({data})=>{
+      if(data.status === 0){
+        this.auth = data.auth.can_manage_attr
+      }
+    })
+  }
 };
 </script>
 
