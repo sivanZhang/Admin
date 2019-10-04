@@ -2,6 +2,9 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
+      <el-tab-pane label="数据统计" name="tab4" lazy>
+        <statistics />
+      </el-tab-pane>
       <template v-if="project.pro_type === 0">
         <el-tab-pane label="实训成员" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
@@ -36,9 +39,7 @@
       <el-tab-pane label="项目设置" name="tab3" lazy>
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
-      <el-tab-pane label="数据统计" name="tab4" lazy>
-        <statistics />
-      </el-tab-pane>
+      
     </el-tabs>
   </div>
 </template>
@@ -63,7 +64,7 @@ export default {
   },
   data() {
     return {
-      activeName: this.$route.query.tab ? this.$route.query.tab : "tab0",
+      activeName: this.$route.query.tab ? this.$route.query.tab : "tab4",
       AssetList: [],
       asset_type: 0,
       project: {},
@@ -74,15 +75,15 @@ export default {
     };
   },
   watch: {
-    project: {
-      handler: function(newVal, oldVal) {
-        if (newVal) {
-          if (newVal.pro_type === 0) {
-            this.activeName = "tab5";
-          }
-        }
-      }
-    },
+    // project: {
+    //   handler: function(newVal, oldVal) {
+    //     if (newVal) {
+    //       if (newVal.pro_type === 0) {
+    //         this.activeName = "tab5";
+    //       }
+    //     }
+    //   }
+    // },
     activeName:{
       handler:function(newVal,oldVal){
         if(newVal === "tab2"){
