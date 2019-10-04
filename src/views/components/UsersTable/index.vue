@@ -10,13 +10,13 @@
         @selection-change="handleSelectionChange"
         :row-key="row=>row.id"
       >
-       <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="头像" width="80" align="center">
           <template slot-scope="scope">
             <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="姓名" align="left">
+        <el-table-column prop="username" label="姓名" align="left" class-name="links">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -27,7 +27,10 @@
             >
               <span>{{scope.row.username}}</span>
             </el-input>
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.username}}</span>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+              @click="showDrawer(scope.row)"
+            >{{scope.row.username}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="sex" label="性别" align="center" width="80">
@@ -94,35 +97,30 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" align="center"  show-overflow v-if="perssion">
-          <template slot-scope="scope" >
+        <el-table-column label="操作" align="center" show-overflow v-if="perssion">
+          <template slot-scope="scope">
             <!-- <el-tooltip content="用户权限" placement="top">
             <el-button icon="el-icon-user" type="text" style="color:deepskyblue" />
             </el-tooltip>-->
-           <el-tooltip effect="dark" content="修改" placement="top">        
-            <el-button
-              v-if="!editing||clickId !== scope.row.id"
-              type="primary"
-              icon="el-icon-edit"
-              @click="editUser(scope.row)"
-            />
+            <el-tooltip effect="dark" content="修改" placement="top">
+              <el-button
+                v-if="!editing||clickId !== scope.row.id"
+                type="primary"
+                icon="el-icon-edit"
+                @click="editUser(scope.row)"
+              />
             </el-tooltip>
-             <el-tooltip effect="dark" content="保存" placement="top">
-            <el-button
-              v-if="editing&&clickId === scope.row.id"
-              type="success"
-              icon="el-icon-check"
-              @click="saveEdit(scope.$index,scope.row)"
-            />
-             </el-tooltip>
+            <el-tooltip effect="dark" content="保存" placement="top">
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="success"
+                icon="el-icon-check"
+                @click="saveEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
             <el-tooltip effect="dark" content="删除" placement="top">
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              @click="deleteUser(scope.row.id)"
-            />
-             </el-tooltip>
-
+              <el-button type="danger" icon="el-icon-delete" @click="deleteUser(scope.row.id)" />
+            </el-tooltip>
 
             <!-- <el-tooltip content="删除用户" placement="top">
             <el-button icon="el-icon-delete" type="text" style="color:red"  />
@@ -143,12 +141,33 @@
         ></el-pagination>
       </div>
     </template>
+    <Drawer
+      scrollable
+      closable
+      v-model="drawer"
+      width="526"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+    >
+      <attrsBind
+        :project="project"
+        :customAttrs="customAttrs"
+        :attrsList="attrsList"
+        @refresh_customAttrs="NewcustomAttrs"
+        :attrsTypeNum="attrsTypeNum"
+      />
+    </Drawer>
   </div>
 </template>
 
 <script>
-import { editUserDetail , deleteUser} from "@/api/admin";
+import { editUserDetail, deleteUser } from "@/api/admin";
+import { searchBind, getAttrsEntityList } from "@/api/attrs";
+import attrsBind from "@/components/projectDrawer/components/attrsBind";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
+  mixins: [thumbtackMixin],
   name: "UsersTable",
   props: {
     UserList: {
@@ -162,6 +181,9 @@ export default {
       type: Boolean
     }
   },
+  components: {
+    attrsBind
+  },
   data() {
     return {
       currentPage: 1,
@@ -170,10 +192,37 @@ export default {
       editing: false,
       clickId: null,
       iconShow: false,
-      multipleSelection: []
+      multipleSelection: [],
+      drawer: false,
+      project: null,
+      attrsList: [],
+      customAttrs: [],
+      attrsTypeNum: null
     };
   },
   methods: {
+    showDrawer(row) {
+      this.drawer = true;
+      this.project = row;
+      searchBind({ entity_type: 7 }).then(({ data }) => {
+        this.attrsList = [...data.msg];
+      });
+      getAttrsEntityList({ entity_id: row.id, entity_type: 7 }).then(({ data }) => {
+        console.log("llllll");
+        this.customAttrs = [...data.msg];
+        // console.log("mmmm");
+        // console.log(this.customAttrs);
+        this.attrsTypeNum = 7;
+      });
+    },
+    NewcustomAttrs() {
+      getAttrsEntityList({ entity_id: this.project.id, entity_type: 7 }).then(
+        ({ data }) => {
+          this.customAttrs = [...data.msg];
+          this.attrsTypeNum = 7;
+        }
+      );
+    },
     jump(id) {
       // console.log(id);
       this.$emit("jump", id);
@@ -208,26 +257,26 @@ export default {
     },
     //删除单个用户
     deleteUser(id) {
-       this.$confirm("此操作将永久删除该用户，是否继续?","提示",{
-         confirmButtonText: "确认",
-         cancelButtonText: "取消",
-         type: "warning"
-       }).then(() => {
-         console.log(id)
-        deleteUser({ ids:id,method:"delete "}).then(({ data }) => {
-           console.log(data.msg)
-           if (data.status === 0){
-             this.$emit("refresh");
-             this.$message.success(data.msg);
-           } else {
+      this.$confirm("此操作将永久删除该用户，是否继续?", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        console.log(id);
+        deleteUser({ ids: id, method: "delete " }).then(({ data }) => {
+          console.log(data.msg);
+          if (data.status === 0) {
+            this.$emit("refresh");
+            this.$message.success(data.msg);
+          } else {
             this.$message.error(data.msg);
           }
-         });
-       });
+        });
+      });
     },
-    handleSelectionChange(val){
+    handleSelectionChange(val) {
       this.multipleSelection = val;
-      this.$emit("selection",val)  
+      this.$emit("selection", val);
     },
     handleCurrentChange(row, event, column) {
       // console.log(row, event, column, event.currentTarget);
@@ -266,8 +315,12 @@ export default {
 };
 </script>
 <style lang="scss">
-#users-table{
+#users-table {
   border: 1px solid #dfe6ec;
   padding: 15px;
+}
+.links {
+  cursor: pointer;
+  color: #2d8cf0;
 }
 </style>

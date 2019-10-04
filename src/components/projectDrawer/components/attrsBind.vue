@@ -192,7 +192,7 @@ export default {
       });
       // console.log(this.attrsList)
       // console.log(this.bindForm.attr_name)
-      console.log(this.attrtype);
+      //console.log(this.attrtype);
     },
 
     saveNewAttr() {
