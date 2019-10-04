@@ -125,7 +125,10 @@ export default {
             });
             this.$router.push({
               name: "project-detail",
-              params: { id: this.$route.params.id }
+              params: { id: this.$route.params.id },
+              qurey: {
+                tab: "tab0"
+              }
             });
           }
         })
@@ -145,7 +148,7 @@ export default {
         return;
       }
       let data = {
-        reset:false,
+        reset: false,
         datas: this.testDataJSON,
         keysMap: this.keysMap,
         requiredKeysMap: this.requiredKeysMap

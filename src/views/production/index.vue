@@ -57,9 +57,9 @@
         <el-table-column label="工种名称" header-align="center" prop="task[0].link_dept_name"></el-table-column>
         <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="评论" align="center">
         <template slot-scope="scope">
-          <el-button type="text" @click="viewComments(scope.row.task[0].taskid)">评论</el-button>
+          <el-button type="text" style="font-size:15px" @click="viewComments(scope.row.task[0].taskid)" icon="el-icon-chat-line-round"></el-button>
         </template>
       </el-table-column>
     </el-table>

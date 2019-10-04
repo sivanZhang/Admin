@@ -30,9 +30,19 @@ export function postApprove(data) {
 }
 //获取审核备注列表/approve/approve/
 export function getApproveRemark(params) {
-    return AXIOS.get('/approve/approve_result/', { params })
+    return AXIOS.get('/approve/approve_result/', {
+        params
+    })
 }
 //根据任务id查询审核信息
-export function getApproveDetail(params){
-    return AXIOS.get('/approve/approve/',{ params })
+export function getApproveDetail(params) {
+    return AXIOS.get('/approve/approve/', {
+        params
+    })
+}
+//提交外网审核
+export function postApproveToclient(params) {
+    return AXIOS.post('/approve/toclient/', {
+        params
+    })
 }

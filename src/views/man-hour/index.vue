@@ -20,9 +20,9 @@
         <el-table-column prop="task_count" label="任务工时"></el-table-column>
         <el-table-column prop="overtime_count" label="加班工时"></el-table-column>
         <el-table-column prop="project_count" label="总工时"></el-table-column>
-        <el-table-column label="查看每天工时" align="center">
+        <el-table-column label="每日工时" align="center">
           <template slot-scope="scope">
-            <el-button type="text" icon="el-icon-tickets" @click="showDetail(scope.row)"></el-button>
+            <el-button type="text" style="font-size:15px" icon="el-icon-time" @click="showDetail(scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>

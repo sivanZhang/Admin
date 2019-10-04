@@ -10,7 +10,7 @@
       <el-table-column prop="approver.username" label="审批人"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="text" @click="openDialog(scope.row)">审批</el-button>
+          <el-button type="text" @click="openDialog(scope.row.id)">审批</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,7 +48,7 @@ export default {
       rules: {
         approve_result: [
           { required: true, message: "审批结果为必选", trigger: "blur" }
-        ],
+        ]
       }
     };
   },
@@ -57,36 +57,45 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let self = this;
-          function submitFn(Fu, data) {
-            Fu(data)
-              .then(() => {
-                self.resetForm("approve-form");
-                self.dialogVisible = false;
-                self.currentSelect = 1;
-                self.$nextTick(() => {
-                  self.getApproves();
-                });
-              })
-              .finally(() => {
-                self.submitLoading = true;
-              });
-          }
           this.submitLoading = true;
-          submitFn(postApprove(), self.ApplyForm);
+          postApprove(this.ApproveForm)
+            .then(({ data }) => {
+              this.$message(data.msg);
+              this.dialogVisible = false;
+              this.getApproves();
+            })
+            .finally(() => {
+              this.submitLoading = false;
+            });
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    openDialog() {
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    openDialog(id) {
       this.dialogVisible = true;
+      this.ApproveForm = Object.assign(
+        {},
+        {
+          id,
+          approve_result: "",
+          suggestion: ""
+        }
+      );
     },
     getApproves() {
-      getApprove().then(({ data }) => {
-        this.ApproveList = [...data.msg];
-      });
+      this.tableLoading = true;
+      getApprove()
+        .then(({ data }) => {
+          this.ApproveList = [...data.msg];
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
     }
   },
   created() {

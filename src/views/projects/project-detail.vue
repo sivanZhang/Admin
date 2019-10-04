@@ -2,6 +2,9 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
+      <el-tab-pane label="数据统计" name="tab4" lazy>
+        <statistics />
+      </el-tab-pane>
       <template v-if="project.pro_type === 0">
         <el-tab-pane label="实训成员" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
@@ -36,9 +39,6 @@
       <el-tab-pane label="项目设置" name="tab3" lazy>
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
       </el-tab-pane>
-      <el-tab-pane label="数据统计" name="tab4" lazy>
-        <statistics />
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      activeName: this.$route.query.tab ? this.$route.query.tab : "tab0",
+      activeName: this.$route.query.tab ? this.$route.query.tab : "tab4",
       AssetList: [],
       asset_type: 0,
       project: {},
@@ -83,17 +83,17 @@ export default {
         }
       }
     },
-    activeName:{
-      handler:function(newVal,oldVal){
-        if(newVal === "tab2"){
-          this.getAssetList()
+    activeName: {
+      handler: function(newVal, oldVal) {
+        if (newVal === "tab2") {
+          this.getAssetList();
         }
       }
     }
   },
   methods: {
-    jumpName(val){
-      this.activeName = val
+    jumpName(val) {
+      this.activeName = val;
     },
     getAssetList() {
       let payload = {
@@ -115,7 +115,15 @@ export default {
         });
         getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
           ({ data }) => {
-            [...data.msg].forEach((item,index)=>{item.members.forEach(ct=>{this.trainingMenber.push({...ct,id:item.id,name:item.name})})});
+            [...data.msg].forEach((item, index) => {
+              item.members.forEach(ct => {
+                this.trainingMenber.push({
+                  ...ct,
+                  id: item.id,
+                  name: item.name
+                });
+              });
+            });
             // console.log("1111");
             // console.log(this.trainingMenber)
           }
@@ -131,7 +139,7 @@ export default {
     // if(this.$route.query.tab === "tab2"){
     //   this.activeName = "tab2"
     // }
-   // console.log(this.$route.query.tab);
+    // console.log(this.$route.query.tab);
     this.getAssetList();
     this.getProjectDetail();
     if (this.$route.query.asset_type && this.$route.query.asset_type === "1") {
