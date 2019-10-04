@@ -191,10 +191,10 @@ export function taskMinStatus(data) {
             return 'NOT_STARTED'
             break
         case 4:
-            return 'WATING_TO_START'
+            return 'WAITING_TO_START'
             break
         case 5:
-            return 'REAY_TO_START'
+            return 'READY_TO_START'
             break
         case 6:
             return 'NORMAL'
@@ -203,7 +203,7 @@ export function taskMinStatus(data) {
             return 'OPEN'
             break
         case 8:
-            return 'IN_PROGESS'
+            return 'IN_PROGRESS'
             break
         case 9:
             return 'OUTSOURCE'
@@ -212,7 +212,7 @@ export function taskMinStatus(data) {
             return 'SUBMITTED'
             break
         case 11:
-            return 'REEDBACK'
+            return 'FEEDBACK'
             break
         case 12:
             return 'READED'
@@ -257,7 +257,7 @@ export function taskMinStatus(data) {
             return 'DELIVERED'
             break
         case 26:
-            return 'OMITED'
+            return 'OMITTED'
             break
         case 27:
             return 'CLOSED'
