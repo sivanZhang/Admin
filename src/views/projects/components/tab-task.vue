@@ -1040,11 +1040,11 @@ export default {
           this.$message.error(data.msg);
         });
     },
-    //导出Excel文件
     //导出Excel
     download(){
       let data="http://tl.chidict.com:8081/"+this.path;
       window.location.href = data;
+       this.uploadVisible = false;
     },
     uploadExcel(){
       //  this.download();
