@@ -72,33 +72,82 @@
         </div>
       </div>
       <div style="width:70%;padding:5px">
-        <div style="display:flex">
-          <h4 style="margin: 0 10px;">插件文件</h4>
+        <div style="padding-bottom:10px">
+          <el-row>
+            <el-col :span="16">
+              <div style="display:flex">
+              <h4 style="margin: 0 10px;">插件文件</h4>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                @click="deletList"
+                style="margin-left:15px"
+                :disabled="this.multipleSelection.length === 0"
+              >批量删除</el-button>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <el-row>
+                <el-col :span="16">
+                  <el-input
+                    v-model="filterText"
+                    placeholder="请输入插件名称"
+                    @keyup.enter.native="searchPluginList(1)"
+                  >
+                    <el-button
+                      @click="searchPluginList(1)"
+                      slot="append"
+                      icon="el-icon-search"
+                      type="primary"
+                    />
+                  </el-input>
+                </el-col>
+                <el-col :span="8">
+                  <el-button @click="searchPluginList()" type="primary" style="margin-left: 15px">重置</el-button>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
         </div>
         <div style="margin-top:10px; border: 1px solid #dfe6ec;">
-          <el-table :data="tableData" style="width: 100%" ref="plugin"  :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}">
-            <el-table-column prop="name" label="插件名称" >
+          <el-table
+            :row-key="row=>row.id"
+            @selection-change="handleSelectionChange"
+            :data="tableData"
+            style="width: 100%"
+            ref="tableData"
+            :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+          >
+            <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
+            <el-table-column prop="name" label="插件名称">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
-            <el-table-column prop="software" label="适用软件" >
+            <el-table-column prop="software" label="适用软件">
               <template slot-scope="scope">{{scope.row.software}}</template>
             </el-table-column>
 
-            <el-table-column prop="version" label="插件版本" >
+            <el-table-column prop="version" label="插件版本">
               <template slot-scope="scope">{{scope.row.version}}</template>
             </el-table-column>
 
-            <el-table-column prop="pubdate" label="发布日期" >
-              <template slot-scope="scope">{{scope.row.pubdate}}</template>
+            <el-table-column prop="pubdate" label="发布日期">
+              <template slot-scope="scope">{{scope.row.pubdate|dateFormat}}</template>
             </el-table-column>
-            <el-table-column prop="filepath" label="插件文件" >
+            <el-table-column prop="filepath" label="插件文件">
               <template slot-scope="scope">
                 <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" >
+            <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button @click="deletePlugin(scope.row.name)" type="danger">删除</el-button>
+                <el-tooltip effect="dark" content="删除" placement="top">
+                  <el-button
+                    icon="el-icon-delete"
+                    style="color:red"
+                    type="text"
+                    @click="deletePlugin(scope.row.id)"
+                  />
+                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
@@ -124,6 +173,8 @@ export default {
       saveForm: {},
       disabled: false,
       tableData: [],
+      multipleSelection: [],
+      filterText: "",
       saveRules: {
         name: [
           {
@@ -145,21 +196,54 @@ export default {
             trigger: "blur",
             message: "请输入插件版本号"
           }
-        ],
+        ]
       },
       loading: false,
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      dateNow:new Date().toLocaleDateString()
+      dateNow: new Date().toLocaleDateString()
     };
   },
   created() {
-    this.show();
+    // this.show();
+    this.searchPluginList()
   },
   methods: {
-    download(row){
-      let data="http://tl.chidict.com:8081/"+row.filepath;
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    //批量删除
+    deletList() {
+      this.$confirm("此操作将永久删除插件,是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        const ids = this.multipleSelection.map(item => item.id).join(",");
+        deletePlugin({
+          method: "delete",
+          ids: ids
+        }).then(({ data }) => {
+          this.$message.success(data.msg);
+          this.searchPluginList()
+        });
+      });
+    },
+    //查询插件
+    searchPluginList(Type) {
+      if (Type === 1 && this.filterText) {
+        searchPlugin({ name: this.filterText }).then(({ data }) => {
+          this.tableData = [...data.msg];
+        });
+      } else {
+        searchPlugin().then(({ data }) => {
+          this.tableData = [...data.msg];
+        });
+      }
+    },
+    download(row) {
+      let data = "http://tl.chidict.com:8081/" + row.filepath;
       window.location.href = data;
     },
     beforeRemove(file, fileList) {
@@ -175,21 +259,21 @@ export default {
         name: this.saveForm.name,
         software: this.saveForm.software,
         version: this.saveForm.version,
-        filepath:this.saveForm.filepath,
+        filepath: this.saveForm.filepath
       };
       setPlugin(data).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-        }else{
+        } else {
           this.$message.error(data.msg);
-        };
+        }
         this.loading = false;
         this.$refs["saveForm"].resetFields();
-        this.show();
-      })
+        this.searchPluginList()
+      });
     },
     clearFiles() {
-      this.fileList=[]
+      this.fileList = [];
     },
     //创建插件
     save() {
@@ -201,23 +285,19 @@ export default {
         } else {
           return false;
         }
-      })
+      });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    show() {
-      searchPlugin().then(({ data }) => {
-        this.tableData = [...data.plugin]
-      })
-    },
-    deletePlugin(name) {
-      deletePlugin({ method: "delete", name: name }).then(({ data }) => {
+    //单个删除插件
+    deletePlugin(id) {
+      deletePlugin({ method: "delete", ids: id }).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-          this.show()
+          this.searchPluginList()
         }
-      })
+      });
     }
   }
 };

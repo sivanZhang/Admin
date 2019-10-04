@@ -186,6 +186,9 @@ export default {
       // });
       this.$emit("jumpName", "tab2");
     }
+  },
+  created(){
+    this.getAssetTask(this.$route.query.asset)
   }
 };
 </script>
