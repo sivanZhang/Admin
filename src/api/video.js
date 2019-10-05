@@ -40,7 +40,3 @@ export function getApproveDetail(params) {
         params
     })
 }
-//提交外网审核
-export function postApproveToclient(data) {
-    return AXIOS.post('/approve/toclient/', data)
-}

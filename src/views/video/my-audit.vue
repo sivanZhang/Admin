@@ -124,8 +124,7 @@ import {
 import {
   getApprove,
   postApprove,
-  getApproveDetail,
-  postApproveToclient
+  getApproveDetail
 } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
