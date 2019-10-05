@@ -4,6 +4,7 @@
       <div style="width:30%;padding:0 10px">
         <div style="display:flex">
           <h4 style="margin: 0 10px;">上传文件</h4>
+          <div class="el-upload__tip" slot="tip">上传文件的大小不可超过50M</div>
         </div>
         <div style="display:flex;margin-top:20px">
           <el-form
@@ -18,14 +19,12 @@
                 class="upload-demo"
                 ref="upload"
                 accept="file"
-                :multiple="false"
                 :action="action"
                 :headers="headers"
                 :on-success="handleSuccess"
                 :before-remove="beforeRemove"
                 :file-list="fileList"
                 :clearFiles="clearFiles"
-                :limit="1"
               >
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
@@ -33,7 +32,7 @@
           </el-form>
         </div>
       </div>
-      <div style="width:70%;padding:5px">
+      <div style="width:70%;">
         <div style="padding-bottom:10px">
           <el-row>
             <el-col :span="16">
@@ -81,11 +80,19 @@
             :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
+             <el-table-column type="index"></el-table-column>
             <el-table-column prop="filename" label="文件名称">
               <template slot-scope="scope">{{scope.row.filename}}</template>
             </el-table-column>
             <el-table-column prop="filepath" label="文件路径">
-              <template slot-scope="scope">{{scope.row.filepath}}</template>
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" placement="top">
+                  <div slot="content">{{scope.row.filepath}}</div>
+                <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+                </el-tooltip>
+              </template>
+
+              <!-- <template slot-scope="scope">{{scope.row.filepath}}</template> -->
             </el-table-column>
 
             <el-table-column prop="date" label="提交日期">
@@ -144,6 +151,11 @@ export default {
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    //点击下载文件
+     download(row) {
+      let data = "http://tl.chidict.com:8081/" + row.filepath;
+      window.location.href = data;
     },
     //批量删除
     deletList() {

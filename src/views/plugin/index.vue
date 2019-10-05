@@ -71,7 +71,7 @@
           </el-form>
         </div>
       </div>
-      <div style="width:70%;padding:5px">
+      <div style="width:70%;">
         <div style="padding-bottom:10px">
           <el-row>
             <el-col :span="16">
@@ -119,6 +119,7 @@
             :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
+             <el-table-column type="index"></el-table-column>
             <el-table-column prop="name" label="插件名称">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
