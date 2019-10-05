@@ -27,6 +27,37 @@ meta: {
 
 //涉及权限的动态加载路由
 export const asyncRoutes = [{
+        path: '/checking-in',
+        component: Layout,
+        redirect: 'noRedirect',
+        alwaysShow: true,
+        meta: {
+            title: '我的考勤',
+            icon: 'kq'
+        },
+        children: [{
+                path: 'extra-work',
+                name: 'extra-work',
+                component: () =>
+                    import ('@/views/checking-in/extra-work'),
+                meta: {
+                    title: '加班管理',
+                    icon: 'jiaban'
+                }
+            },
+            {
+                path: 'approve-extra-work',
+                name: 'approve-extra-work',
+                component: () =>
+                    import ('@/views/checking-in/approve-extra-work'),
+                meta: {
+                    title: '加班审批',
+                    icon: 'jbsp',
+                    roles: 'manage_overtime_approve'
+                }
+            }
+        ]
+    }, {
         path: '/task',
         component: Layout,
         redirect: 'noRedirect',
@@ -114,7 +145,6 @@ export const asyncRoutes = [{
                 meta: {
                     title: '自定义属性',
                     icon: 'custom-attrs',
-                    // roles: 'manage_role'
                 }
             },
             {
@@ -125,7 +155,6 @@ export const asyncRoutes = [{
                 meta: {
                     title: '时间管理',
                     icon: 'fs',
-                    // roles: 'manage_role'
                 }
             },
             {
@@ -136,7 +165,6 @@ export const asyncRoutes = [{
                 meta: {
                     title: '加班审批模板',
                     icon: 'extra-approve',
-                    // roles: 'manage_role'
                 }
             },
         ]
@@ -415,37 +443,7 @@ export const constantRoutes = [{
             }
         }]
     },
-    {
-        path: '/checking-in',
-        component: Layout,
-        redirect: 'noRedirect',
-        alwaysShow: true,
-        meta: {
-            title: '我的考勤',
-            icon: 'kq'
-        },
-        children: [{
-                path: 'extra-work',
-                name: 'extra-work',
-                component: () =>
-                    import ('@/views/checking-in/extra-work'),
-                meta: {
-                    title: '加班管理',
-                    icon: 'jiaban'
-                }
-            },
-            {
-                path: 'approve-extra-work',
-                name: 'approve-extra-work',
-                component: () =>
-                    import ('@/views/checking-in/approve-extra-work'),
-                meta: {
-                    title: '加班审批',
-                    icon: 'jbsp'
-                }
-            }
-        ]
-    },
+
     /* {
         path: '/assetes',
         component: Layout,

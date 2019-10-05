@@ -3,6 +3,7 @@
     <el-button>
       <router-link :to="{name:'date-import'}">导入节假日</router-link>
     </el-button>
+    
   </div>
 </template>
 
@@ -13,8 +14,8 @@ export default {
   methods: {
     getDates(){
       let data = {}
-      getDates().then(()=>{
-        
+      getDates().then(({data})=>{
+        console.log(data);
       })
     }
   },

@@ -68,8 +68,6 @@ export default {
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
         });
-        console.log(chartData);
-        
         this.$refs["asset-chart"].initChart("", chartData);
       });
     },
@@ -79,7 +77,6 @@ export default {
         let keys = Object.keys(data.msg);
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
-           console.log(chartData);
         });
         this.$refs["task-chart"].initChart("", chartData);
       });

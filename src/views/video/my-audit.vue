@@ -7,7 +7,7 @@
       class="pan-btn green-btn"
     >任务审核</el-button>
     <el-table
-    v-loading="tableLoading"
+      v-loading="tableLoading"
       :data="AuditList"
       style="margin-top:20px;width:100%"
       highlight-current-row
@@ -90,19 +90,21 @@
               </el-col>
             </el-row>
           </template>
+          <div>
+            <el-checkbox v-model="checked">是否提交客户审批</el-checkbox>
+          </div>
+          <el-input
+            v-if="checked"
+            type="textarea"
+            v-model="out_suggestion"
+            ref="outer-input"
+            placeholder="提交客户审批的说明"
+            style="margin-top:10px"
+          ></el-input>
           <div style="margin-top:10px">
             <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
-          <el-divider>提交外网审批</el-divider>
-          <el-input
-            type="textarea"
-            ref="outer-input"
-            placeholder="请输入审批意见"
-            v-model="OuterNetForm.suggestion"
-          ></el-input>
-          <div style="margin-top:10px">
-            <el-button type="primary" :loading="submitLoading" @click="submitApproveOuter">提交</el-button>
-          </div>
+          {{form_obj}}
         </el-tab-pane>
         <el-tab-pane label="执行记录" lazy>
           <tabLog :loglist="LogList" :logsLoading="logsLoading" />
@@ -140,10 +142,8 @@ export default {
   },
   data() {
     return {
-      OuterNetForm: {
-        approve_id: "",
-        suggestion: ""
-      },
+      out_suggestion: "",
+      checked: false,
       submitLoading: false,
       form_obj: {},
       AuditList: [],
@@ -157,31 +157,10 @@ export default {
       SelectionList: [],
       path: null,
       pro_type: null,
-      submitOuterLoading: false,
-      tableLoading:false
+      tableLoading: false
     };
   },
   methods: {
-    //提交外网审核
-        submitApproveOuter() {
-            if (!this.OuterNetForm.suggestion) {
-                this.$message.error('请输入审核意见')
-                this.$refs['outer-input'].focus()
-                return
-            }
-            this.submitOuterLoading = true
-            postApproveToclient(this.OuterNetForm).then(({
-                data
-            }) => {
-                if (data.status === 0) {
-                    this.$message.success(data.msg)
-                } else {
-                    this.$message.warning(data.msg)
-                }
-            }).finally(() => {
-                this.submitApproveOuter = false
-            })
-        },
     //表格中选中任务
     taskSelect(selection) {
       this.SelectionList = [...selection];
@@ -200,7 +179,6 @@ export default {
     //是否显示任务板右侧
     taskBoardRightShow(row) {
       this.isDrawerShow = true;
-      this.OuterNetForm.approve_id = row.task.id;
       this.TaskRecord = Object.assign(
         {},
         {
@@ -254,17 +232,27 @@ export default {
     },
     submitApprove() {
       this.submitLoading = true;
+      if (this.checked) {
+        //添加提交外网审核字段
+        this.form_obj = {
+          ...this.form_obj,
+          click: "",
+          out_suggestion: this.out_suggestion
+        };
+      }
       postApprove(this.form_obj)
         .then(res => {
-          this.submitLoading = false;
-          this.AuditList = [];
-          this.getMyTasks();
-          this.isDrawerShow = false;
-          this.$message.success(res.data.msg);
+          if (res.data.status === 0) {
+            this.AuditList = [];
+            this.getMyTasks();
+            this.isDrawerShow = false;
+            this.$message.success(res.data.msg);
+          }else{
+            this.$message.warning(res.data.msg);
+          }
         })
-        .catch(err => {
+        .finally(() => {
           this.submitLoading = false;
-          this.$message.error(res.data.msg);
         });
     },
     //http获取‘我的任务’
@@ -277,15 +265,17 @@ export default {
           this.AuditList.push(item.task);
         });
       }); */
-      this.tableLoading = true
-      
-      await getApprove().then(({ data }) => {
-        [...data.msg].forEach(item => {
-          this.AuditList.push(item);
+      this.tableLoading = true;
+
+      await getApprove()
+        .then(({ data }) => {
+          [...data.msg].forEach(item => {
+            this.AuditList.push(item);
+          });
+        })
+        .finally(() => {
+          this.tableLoading = false;
         });
-      }).finally(()=>{
-         this.tableLoading = false
-      })
     }
     //添加任务执行记录
     /* addRecord() {
