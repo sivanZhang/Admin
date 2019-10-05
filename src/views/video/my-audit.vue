@@ -7,6 +7,7 @@
       class="pan-btn green-btn"
     >任务审核</el-button>
     <el-table
+    v-loading="tableLoading"
       :data="AuditList"
       style="margin-top:20px;width:100%"
       highlight-current-row
@@ -156,7 +157,8 @@ export default {
       SelectionList: [],
       path: null,
       pro_type: null,
-      submitOuterLoading: false
+      submitOuterLoading: false,
+      tableLoading:false
     };
   },
   methods: {
@@ -275,11 +277,15 @@ export default {
           this.AuditList.push(item.task);
         });
       }); */
+      this.tableLoading = true
+      
       await getApprove().then(({ data }) => {
         [...data.msg].forEach(item => {
           this.AuditList.push(item);
         });
-      });
+      }).finally(()=>{
+         this.tableLoading = false
+      })
     }
     //添加任务执行记录
     /* addRecord() {
