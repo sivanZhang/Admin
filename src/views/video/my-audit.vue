@@ -104,7 +104,7 @@
           <div style="margin-top:10px">
             <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
-          {{form_obj}}
+          <!-- {{form_obj}} -->
         </el-tab-pane>
         <el-tab-pane label="执行记录" lazy>
           <tabLog :loglist="LogList" :logsLoading="logsLoading" />

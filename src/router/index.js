@@ -30,9 +30,11 @@ export const asyncRoutes = [ {
         path: '/task',
         component: Layout,
         redirect: 'noRedirect',
+        // alwaysShow: true,
         meta: {
-            title: '我的工作台',
-            icon: 'task'
+            title: '审批',
+            icon: 'task',
+            roles: 'manage_approve'
         },
         children: [{
                 path: 'approve',
@@ -41,6 +43,17 @@ export const asyncRoutes = [ {
                     import ('@/views/video/my-audit'),
                 meta: {
                     title: '我的审批',
+                    icon: 'v2',
+                    roles: 'manage_approve'
+                }
+            },
+            {
+                path: 'audit-approve',
+                name: 'audit-approve',
+                component: () =>
+                    import ('@/views/video/extra-audit'),
+                meta: {
+                    title: '客户审批',
                     icon: 'v2',
                     roles: 'manage_approve'
                 }

@@ -40,3 +40,13 @@ export function getApproveDetail(params) {
         params
     })
 }
+
+//客户待审批列表
+export function getExtraApproveList(){
+    return AXIOS.get('/approve/pendingclient/')
+}
+
+//向外网发数据
+export function submitExtra(data){
+    return AXIOS.post('/approve/toclient/',data)
+}
