@@ -5,8 +5,8 @@ export function avatarFormat(text) {
 }
 //时间戳格式化为 YYYY/MM/DD
 export function dateFormat(date) {
-    date *= 1000
     if (date) {
+        date *= 1000
         return dayjs(date).format("YYYY/MM/DD")
     } else {
         return ''
@@ -14,8 +14,8 @@ export function dateFormat(date) {
 }
 //时间戳格式化为 YYYY/MM/DD HH:mm:ss
 export function dateTimeFormat(date) {
-    date *= 1000
     if (date) {
+        date *= 1000
         return dayjs(date).format("YYYY/MM/DD HH:mm:ss")
     } else {
         return ''
@@ -23,8 +23,8 @@ export function dateTimeFormat(date) {
 }
 //时间格式化 HH:mm
 export function dateHMSFormat(date) {
-    date *= 1000
     if (date) {
+        date *= 1000
         return dayjs(date).format("HH:mm")
     } else {
         return ''
