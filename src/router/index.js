@@ -444,6 +444,47 @@ export const constantRoutes = [{
         }]
     },
 
+    {
+        path: '/checking-in',
+        component: Layout,
+        redirect: 'noRedirect',
+        alwaysShow: true,
+        meta: {
+            title: '加班管理',
+            icon: 'kq'
+        },
+        children: [{
+                path: 'extra-work',
+                name: 'extra-work',
+                component: () =>
+                    import ('@/views/checking-in/extra-work'),
+                meta: {
+                    title: '加班申请',
+                    icon: 'jiaban'
+                }
+            },
+            {
+                path: 'approve-extra-work',
+                name: 'approve-extra-work',
+                component: () =>
+                    import ('@/views/checking-in/approve-extra-work'),
+                meta: {
+                    title: '加班审批',
+                    icon: 'jbsp'
+                }
+            },
+            {
+                path: 'manage-work',
+                name: 'manage-work',
+                component: () =>
+                    import ('@/views/checking-in/manage-work'),
+                meta: {
+                    title: '工时管理',
+                    icon: 'team-manager'
+                }
+            }
+        ]
+    },
     /* {
         path: '/assetes',
         component: Layout,
