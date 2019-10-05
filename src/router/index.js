@@ -397,6 +397,25 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/sharefiles',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: {
+            title: '共享文件',
+            icon: 'list'
+        },
+        children: [{
+            path: 'sharefiles',
+            name: 'sharefiles',
+            component: () =>
+                import ('@/views/sharefiles'),
+            meta: {
+                title: '共享文件',
+                icon: 'list'
+            }
+        }]
+    },
+    {
         path: '/checking-in',
         component: Layout,
         redirect: 'noRedirect',
