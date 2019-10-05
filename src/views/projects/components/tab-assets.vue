@@ -378,6 +378,15 @@
             </el-image>
           </template>
         </el-table-column>
+        <el-table-column label="阶段" prop="groups" v-if="$route.query.type === 0" width="120px">
+          <template slot-scope="scope">
+            <el-row v-for="(item,index) of scope.row.groups" :key="index">
+              <el-col>
+                {{item}}
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="name"
           label="镜头号"
@@ -975,7 +984,7 @@
           <span>excel文件</span>
         </el-col>
         <el-col :span="18">
-           <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -1129,7 +1138,7 @@ export default {
       filterLevel: [],
       sort: null,
       FormList: [{}],
-      path:null,
+      path: null,
       options: [
         {
           value: "session",
@@ -1252,8 +1261,8 @@ export default {
         }
       ],
       colSel: "name",
-       multiSelect:[],
-      name:"",
+      multiSelect: [],
+      name: "",
       colShow: true,
       chooseSel: false,
       columnSelect2: [],
@@ -1273,7 +1282,7 @@ export default {
       attrsTypeNum: null,
       materialShow: false,
       materialEstdate: new Date().toLocaleDateString(),
-      pro_type:null
+      pro_type: null
     };
   },
   watch: {
@@ -1595,7 +1604,7 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-      this.multiSelect = this.sortSelForm
+      this.multiSelect = this.sortSelForm;
       this.tableLoading = true;
       HTTP.queryAssets({ ...data })
         .then(({ data }) => {
@@ -1727,32 +1736,34 @@ export default {
     },
     //跳转导出页面dialog
     targetUpload() {
-       HTTP.queryAssets({
-         ...this.multiSelect, 
-         ...this.name,
-         project: this.$route.params.id,
-         print:"null"
-         }).then(({ data })=>{
-           if (data.status === 0) {
-           this.uploadVisible = true;
-           this.path = data.path;
-          this.multiSelect = [];
-          this.name = [];
-           }
-       }).catch(err => {
-         this.$message.error(data.msg);
+      HTTP.queryAssets({
+        ...this.multiSelect,
+        ...this.name,
+        project: this.$route.params.id,
+        print: "null"
+      })
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.uploadVisible = true;
+            this.path = data.path;
+            this.multiSelect = [];
+            this.name = [];
+          }
+        })
+        .catch(err => {
+          this.$message.error(data.msg);
           // this.uploadVisible = true;
           this.multiSelect = [];
           this.name = [];
         });
     },
     //导出Excel
-    download(){
-      let data="http://tl.chidict.com:8081/"+this.path;
+    download() {
+      let data = "http://tl.chidict.com:8081/" + this.path;
       window.location.href = data;
       this.uploadVisible = false;
     },
-    uploadExcel(){
+    uploadExcel() {
       //  this.download();
       this.uploadVisible = false;
     },
@@ -1775,72 +1786,72 @@ export default {
       };
       if (this.colSel == "name" && this.filterText) {
         payload = { ...payload, name: this.filterText };
-         this.name = { name: this.filterText }
+        this.name = { name: this.filterText };
       }
       if (this.colSel == "inner_version" && this.filterText) {
         payload = { ...payload, inner_version: this.filterText };
-         this.name = { inner_version: this.filterText }
+        this.name = { inner_version: this.filterText };
       }
       if (this.colSel == "session" && this.filterText) {
         payload = { ...payload, session: this.filterText };
-         this.name = { session: this.filterText }
+        this.name = { session: this.filterText };
       }
       if (this.colSel == "frame" && this.filterText) {
         payload = { ...payload, frame: this.filterText };
-         this.name = { frame: this.filterText }
+        this.name = { frame: this.filterText };
       }
       if (this.colSel == "episode" && this.filterText) {
         payload = { ...payload, episode: this.filterText };
-         this.name = { episode: this.filterText }
+        this.name = { episode: this.filterText };
       }
       if (this.colSel == "content" && this.filterText) {
         payload = { ...payload, content: this.filterText };
-         this.name = { content: this.filterText}
+        this.name = { content: this.filterText };
       }
       if (this.colSel == "remark" && this.filterText) {
         payload = { ...payload, remark: this.filterText };
-         this.name = { remark: this.filterText }
+        this.name = { remark: this.filterText };
       }
       if (this.colSel == "report" && this.filterText) {
         payload = { ...payload, report: this.filterText };
-         this.name = { report: this.filterText}
+        this.name = { report: this.filterText };
       }
       if (this.colSel == "retime" && this.filterText) {
         payload = { ...payload, retime: this.filterText };
-         this.name = { retime: this.filterText }
+        this.name = { retime: this.filterText };
       }
       if (this.colSel == "frame_range" && this.filterText) {
         payload = { ...payload, frame_range: this.filterText };
-         this.name = { frame_range: this.filterText }
+        this.name = { frame_range: this.filterText };
       }
       if (this.colSel == "reference" && this.filterText) {
         payload = { ...payload, reference: this.filterText };
-         this.name = { reference: this.filterTextd }
+        this.name = { reference: this.filterTextd };
       }
       if (this.colSel == "creator" && this.filterText) {
         payload = { ...payload, creator: this.filterText };
-         this.name = { creator: this.filterText }
+        this.name = { creator: this.filterText };
       }
       if (this.colSel == "start" && this.timeSelection) {
         payload = { ...payload, start: DateFormat(this.timeSelection) };
-         this.name = { start: DateFormat(this.timeSelection) }
+        this.name = { start: DateFormat(this.timeSelection) };
       }
       if (this.colSel == "end" && this.timeSelection) {
         payload = { ...payload, end: DateFormat(this.timeSelection) };
-         this.name = {end: DateFormat(this.timeSelection)}
+        this.name = { end: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "status") {
           payload = { ...payload, status: "[" + String(this.colSel2) + "]" };
-           this.name = { status: "[" + String(this.colSel2) + "]" }
+          this.name = { status: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "level") {
           payload = { ...payload, level: "[" + String(this.colSel2) + "]" };
-           this.name = {level: "[" + String(this.colSel2) + "]"}
+          this.name = { level: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "priority") {
           payload = { ...payload, priority: "[" + String(this.colSel2) + "]" };
-           this.name = {priority: "[" + String(this.colSel2) + "]"}
+          this.name = { priority: "[" + String(this.colSel2) + "]" };
         }
       }
 

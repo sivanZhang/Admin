@@ -849,9 +849,9 @@
           </el-col>
         </el-row>
         <el-row>
-         <el-col align="right">
+          <el-col align="right">
             <el-button type="primary" @click="mulEditTasks(2)">立即修改</el-button>
-         </el-col>
+          </el-col>
         </el-row>
       </el-form>
     </el-dialog>
@@ -1193,46 +1193,57 @@ export default {
       if (Type === 1) {
         this.mulEditDialog = true;
       } else {
-        let keys = {};
+        let keys = [{}];
         if (this.radio1 == "YES") {
-          keys = { ...keys, name: this.updateMulTask.name };
+            keys = [...keys, { key: "name", value: this.updateMulTask.name }];
+
         }
         if (this.radio2 == "YES") {
-          keys = { ...keys, content: this.updateMulTask.content };
+          
+            keys = [
+              ...keys,
+              { key: "content", value: this.updateMulTask.content }
+            ];
+          
         }
         if (this.radio3 == "YES") {
-          keys = { ...keys, priority: this.updateMulTask.priority };
+          keys = [...keys,{ key:"priority",value: this.updateMulTask.priority }];
         }
         if (this.radio4 == "YES") {
-          keys = { ...keys, grade: this.updateMulTask.grade };
+          keys =[...keys,{ key:"grade",value: this.updateMulTask.grade }];
         }
         if (this.radio5 == "YES") {
-          keys = { ...keys, status: this.updateMulTask.status };
+          keys = [ ...keys, {key:"status", value:this.updateMulTask.status }];
         }
         if (this.radio6 == "YES") {
-          keys = {
-            ...keys,
-            executorlist: this.updateMulTask.executorlist.join()
-          };
+          keys = 
+            [...keys,
+            {key:"executorlist",value: this.updateMulTask.executorlist.join()
+          }];
         }
         if (this.radio7 == "YES") {
-          keys = {
+          keys =[ 
             ...keys,
-            start_date: dataFormat(this.updateMulTask.datetime[0]),
-            end_date: dataFormat(this.updateMulTask.datetime[1])
-          };
+            {key:"start_date",value:dataFormat(this.updateMulTask.datetime[0])},
+            {key:"end_date",value:dataFormat(this.updateMulTask.datetime[1])}];
         }
         if (this.radio8 == "YES") {
-          keys = { ...keys, total_hour: this.updateMulTask.total_hour };
+          keys = [ ...keys, {key:"total_hour",value:this.updateMulTask.total_hour }];
         }
         let data = {
           method: "put",
           ids: this.multipleSelection.map(item => item.id).join(","),
-          keys: keys
+          keys:
+            "{" +
+            keys.map((t, i) => {
+              return `"${t.key}":"${t.value}"`;
+            }) +
+            "}"
         };
         HTTP.mulPutTasks(data).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
+            this.mulEditDialog = false;
             this.getTasks();
           } else {
             this.$message.error(data.msg);

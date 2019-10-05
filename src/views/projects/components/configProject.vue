@@ -265,14 +265,19 @@
               <span style="padding-bottom:10px;display:flex">
                 <h3>分组</h3>
                 <el-row>
-                  <el-button type="success" @click="addTeam(1)" style="margin-left:40px" v-if="teamAuth">添加分组</el-button>
+                  <el-button
+                    type="success"
+                    @click="addTeam(1)"
+                    style="margin-left:40px"
+                    v-if="teamAuth"
+                  >添加分组</el-button>
                 </el-row>
               </span>
               <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
               <el-tree
                 class="filter-tree"
                 empty-text="未创建分组"
-                highlight-current    
+                highlight-current
                 ref="tree"
                 :data="teamList"
                 @node-click="handleGroupClick"
@@ -320,12 +325,107 @@
                 <el-table-column label="操作">
                   <template slot-scope="scope" v-if="teamAuth">
                     <el-tooltip effect="dark" content="删除" placement="top">
-                    <el-button
-                      type="text"
-                      icon="el-icon-delete"
-                      style="color:red"
-                      @click="delMember(scope.row)"
-                    ></el-button>
+                      <el-button
+                        type="text"
+                        icon="el-icon-delete"
+                        style="color:red"
+                        @click="delMember(scope.row)"
+                      ></el-button>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="阶段管理" name="fifth">
+          <div style="display:flex">
+            <div style="width:40%;padding:10px">
+              <span style="padding-bottom:10px;display:flex">
+                <h3>阶段分类</h3>
+                <el-row>
+                  <el-button
+                    type="success"
+                    @click="addGroup(1)"
+                    style="margin-left:40px"
+                    v-if="groupAuth"
+                  >添加阶段</el-button>
+                </el-row>
+              </span>
+              <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
+              <el-tree
+                class="filter-tree"
+                empty-text="未创建阶段"
+                highlight-current
+                ref="tree"
+                :data="groupList"
+                @node-click="handleGroupClick2"
+                :props="defaultProps3"
+                default-expand-all
+                :filter-node-method="searchGroup2"
+                :expand-on-click-node="false"
+              >
+                <span class="custom-tree-node" slot-scope="{ node, data }">
+                  <span style="margin-right:6px;">{{node.label}}</span>
+                  <span class="iconWarp">
+                    <i
+                      class="el-icon-plus"
+                      @click="addScene(1,data)"
+                      style="color:#409EFF"
+                      title="添加镜头"
+                      v-if="groupAuth"
+                    ></i>
+                    <i
+                      class="el-icon-delete"
+                      @click="delGroup(data)"
+                      style="color:#F56C6C"
+                      title="删除当前阶段"
+                      v-if="groupAuth"
+                    ></i>
+                  </span>
+                </span>
+              </el-tree>
+            </div>
+            <div style="width:60%;padding:10px">
+              <span style="padding-bottom:10px;">
+                <h3 style="margin-bottom:15px;">镜头信息</h3>
+              </span>
+              <el-table
+                :data="groups"
+                style="margin-top:5px;"
+                :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+                :cell-style="{borderRight:0}"
+                highlight-current-row
+                @selection-change="handleSelectionChange"
+                :row-key="(row)=>{ return row.id}"
+                :border="true"
+              >
+                <el-table-column label="镜头号" prop="name"></el-table-column>
+                <el-table-column label="缩略图" prop="image">
+                  <template slot-scope="scope">
+                    <el-image
+                      :src="$store.state.BASE_URL+scope.row.image"
+                      style="width: 48px;height: 27px;"
+                    >
+                      <div slot="placeholder" class="image-slot">
+                        加载中
+                        <span class="dot">...</span>
+                      </div>
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture" style="color:#909399"></i>
+                      </div>
+                    </el-image>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope" v-if="groupAuth">
+                    <el-tooltip effect="dark" content="删除" placement="top">
+                      <el-button
+                        type="text"
+                        icon="el-icon-delete"
+                        style="color:red"
+                        @click="delScene(scope.row)"
+                      ></el-button>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -343,7 +443,12 @@
         </el-form-item>
         <el-form-item label="分组成员" prop="memberes">
           <el-select v-model="teamForm.memberes" multiple style="width:390px;" filterable>
-            <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
+            <el-option
+              v-for="(item,index) of UserList"
+              :key="index"
+              :label="item.username"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -356,11 +461,55 @@
       <el-form :model="addMebForm" label-width="90px">
         <el-form-item label="成员名称" prop="ids">
           <el-select v-model="addMebForm.ids" multiple filterable>
-            <el-option v-for="(item,index) of UserList" :key="index" :label="item.username" :value="item.id"></el-option>
+            <el-option
+              v-for="(item,index) of UserList"
+              :key="index"
+              :label="item.username"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addMember(2)" style="margin-left:60px;">立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+ <!-- 添加阶段 -->
+    <el-dialog title="添加阶段" :visible.sync="groupDialog" width="521px" top="5vh">
+      <el-form :model="groupForm" label-width="90px">
+        <el-form-item label="分组名称" prop="name">
+          <el-input v-model="groupForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="分组镜头" prop="assets">
+          <el-select v-model="groupForm.assets" multiple style="width:390px;" filterable>
+            <el-option
+              v-for="(item,index) of scene"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addGroup(2)" style="margin-left:115px;">立即添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!-- 添加镜头 -->
+    <el-dialog title="添加镜头" :visible.sync="addSceneDialog" width="512px" top="5vh">
+      <el-form :model="addSceneForm" label-width="90px">
+        <el-form-item label="镜头号" prop="ids">
+          <el-select v-model="addSceneForm.ids" multiple filterable>
+            <el-option
+              v-for="(item,index) of scene"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addScene(2)" style="margin-left:60px;">立即添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -383,7 +532,7 @@
             highlight-current-row
             :border="false"
           >
-           <el-table-column type="index"></el-table-column>
+            <el-table-column type="index"></el-table-column>
             <el-table-column label="模板名称" prop="name"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -550,6 +699,7 @@ import {
   searchTemplate,
   changeTemplate
 } from "@/api/status";
+import {allScene,createGroup,removeGroup,putGroup,getGroup} from "@/api/training"
 export default {
   name: "config-project",
   props: ["project", "configTab"],
@@ -564,6 +714,10 @@ export default {
       defaultProps2: {
         // children: "members",
         label: "name"
+      },
+      defaultProps3: {
+        // children: "members",
+        label: "groupname"
       },
       projectTemplateDialog: false,
       saveTemplateDialog: false,
@@ -600,13 +754,25 @@ export default {
       teamAuth: null,
       filterText: "",
       teamDialog: false,
-      teamForm:{
-        projectid:this.project.id
+      teamForm: {
+        projectid: this.project.id
       },
-      addMebDialog:false,
-      addMebForm:{},
-      addId:null,
-      labelChange:this.project.pro_type == 0?"实训岗位":"参与工种"
+      addMebDialog: false,
+      addMebForm: {},
+      addId: null,
+      labelChange: this.project.pro_type == 0 ? "实训岗位" : "参与工种",
+      groupDialog:false,
+      groupForm: {
+        projectid: this.project.id
+      },
+      group:null,
+      groups:[],
+      groupList:null,
+      groupAuth:null,
+      scene:[],
+      addSceneDialog:false,
+      addSceneForm:{},
+      sceneId:null
     };
   },
   created() {
@@ -623,6 +789,9 @@ export default {
         if (newVal === "fourth" && this.project.pro_type === 0) {
           this.getTeam();
         }
+        if(newVal === "fifth" && this.project.pro_type === 0){
+          this.getGroupList()
+        }
       }
     },
     filterText(val) {
@@ -633,47 +802,141 @@ export default {
     ...mapState("admin", ["DeptList", "UserList"])
   },
   methods: {
+    //添加阶段
+    addGroup(Type){
+      if (Type === 1) {
+        this.groupDialog = true;
+        allScene({project:this.project.id,all: "all"}).then(({data})=>{
+          if(data.status === 0){
+            this.scene = [...data.msg]
+          }
+        })
+      } else {
+        this.groupForm.assets = this.groupForm.assets
+          .map(item => item)
+          .join(",");
+        // console.log(this.teamForm)
+        createGroup(this.groupForm).then(({ data }) => {
+          if (data.status === 0) {
+            this.groupDialog = false;
+            this.$message.success(data.msg);
+            this.getGroupList();
+          }else{
+            this.$message.error(data.msg)
+          }
+        });
+      }
+    },
+    //添加镜头
+    addScene(Type, row) {
+      if (Type === 1) {
+        this.addSceneDialog = true;
+        this.sceneId = row.id;
+        //console.log(row);
+      } else {
+        let addScene = {
+          method: "put",
+          id: this.sceneId,
+          add_asset_ids: this.addSceneForm.ids.map(item => item).join(",")
+        };
+        putGroup(addScene).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.addSceneDialog = false;
+            this.getGroupList(1);
+          }
+        });
+      }
+    },
+    //删除阶段
+    delGroup(data) {
+      this.$confirm("此操作将永久删除该阶段?", "注意", {
+        confirmButtonText: "删除",
+
+        cancelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+        removeGroup({ method: "delete", ids: data.id }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getGroupList();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      });
+    },
+    //删除镜头
+    delScene(row) {
+      this.$confirm("此操作将永久删除此阶段中的该镜头?", "注意", {
+        confirmButtonText: "删除",
+
+        cancelButtonText: "取消",
+
+        type: "warning"
+      }).then(() => {
+        putGroup({
+          method: "put",
+          id: this.group.id,
+          del_asset_ids: row.id
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getGroupList(1);
+          }
+        });
+      });
+    },
     //分组搜索
     searchGroup(value, data) {
       if (!value) return true;
 
       return data.name.indexOf(value) !== -1;
     },
+    //阶段搜索
+    searchGroup2(value, data) {
+      if (!value) return true;
+
+      return data.groupname.indexOf(value) !== -1;
+    },
     //添加分组
     addTeam(Type) {
       if (Type === 1) {
         this.teamDialog = true;
-      }else{
-        this.teamForm.memberes=this.teamForm.memberes.map(item=>item).join(",")
+      } else {
+        this.teamForm.memberes = this.teamForm.memberes
+          .map(item => item)
+          .join(",");
         // console.log(this.teamForm)
-        createTeam(this.teamForm).then(({data})=>{
-          if(data.status === 0){
+        createTeam(this.teamForm).then(({ data }) => {
+          if (data.status === 0) {
             this.teamDialog = false;
             this.$message.success(data.msg);
-            this.getTeam()
+            this.getTeam();
           }
-        })
+        });
       }
     },
     //添加成员
-    addMember(Type,row) {
-      if(Type === 1){
+    addMember(Type, row) {
+      if (Type === 1) {
         this.addMebDialog = true;
-        this.addId = row.id
-        console.log(row)
-      }else{
-       let addMeb = {
-         method:"put",
-         id:this.addId,
-         add_user_ids:this.addMebForm.ids.map(item=>item).join(",")
-       }
-       putTeam(addMeb).then(({data})=>{
-         if(data.status === 0){
-           this.$message.success(data.msg);
-           this.addMebDialog = false;
-           this.getTeam(1)
-         }
-       })
+        this.addId = row.id;
+        console.log(row);
+      } else {
+        let addMeb = {
+          method: "put",
+          id: this.addId,
+          add_user_ids: this.addMebForm.ids.map(item => item).join(",")
+        };
+        putTeam(addMeb).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.addMebDialog = false;
+            this.getTeam(1);
+          }
+        });
       }
     },
     //删除分组
@@ -685,14 +948,15 @@ export default {
 
         type: "warning"
       }).then(() => {
-      delTeam({method:"delete",ids:data.id}).then(({data})=>{
-        if(data.status === 0){
-          this.$message.success(data.msg);
-          this.getTeam()
-        }else{
-          this.$message.error(data.msg)
-        }
-      })})
+        delTeam({ method: "delete", ids: data.id }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getTeam();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      });
     },
     //table行被选中
     handleSelectionChange(val) {
@@ -709,16 +973,16 @@ export default {
         type: "warning"
       }).then(() => {
         putTeam({
-          method:"put",
-          id:this.team.id,
-          del_user_ids:row.id
-        }).then(({data})=>{
-          if(data.status === 0){
+          method: "put",
+          id: this.team.id,
+          del_user_ids: row.id
+        }).then(({ data }) => {
+          if (data.status === 0) {
             this.$message.success(data.msg);
             this.getTeam(1);
           }
-        })
-      })
+        });
+      });
     },
     // 工种单击触发事件
     handleGroupClick(data) {
@@ -727,21 +991,43 @@ export default {
       this.members = data.members;
       // console.log(data);
     },
+    handleGroupClick2(data) {
+      this.groups = [];
+      this.group = data;
+      this.groups = data.assets;
+      // console.log(data);
+    },
     //获取分组
     getTeam(Type) {
       getTeamList({ projectid: this.project.id }).then(({ data }) => {
         if (data.status === 0) {
-          if(Type === 1){
-            [...data.msg].forEach(item=>{
-              if(item.id === this.team.id){
-                this.members = item.members
+          if (Type === 1) {
+            [...data.msg].forEach(item => {
+              if (item.id === this.team.id) {
+                this.members = item.members;
               }
-            })
+            });
           }
           this.teamList = [...data.msg];
           this.teamAuth = data.auth.manage_projectteam;
         }
       });
+    },
+    //获取阶段
+    getGroupList(Type){
+      getGroup({projectid: this.project.id}).then(({data})=>{
+        if(data.status === 0){
+          if(Type === 1){
+            [...data.msg].forEach(item => {
+              if (item.id === this.group.id) {
+                this.groups = item.assets;
+              }
+            });
+          }
+           this.groupList = [...data.msg];
+          this.groupAuth = data.auth.manage_asset_group;
+        }
+      })
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -879,36 +1165,36 @@ export default {
       }
       //展示模板详情
       if (row && Type === 2) {
-        this.projectTemplateList = [],
-        this.pause2 = [],
-        this.notstart2 = [];
-        this.conducting2 = [],
-          this.approving2 = [],
-          this.finish2 = [],
-          this.projectActiveName = "project-second";
+        (this.projectTemplateList = []),
+          (this.pause2 = []),
+          (this.notstart2 = []);
+        (this.conducting2 = []),
+          (this.approving2 = []),
+          (this.finish2 = []),
+          (this.projectActiveName = "project-second");
         searchTemplate({ id: row.id }).then(({ data }) => {
           const datastatus = data.msg.small_status;
           const deptdata = data.msg.depts;
-            datastatus.forEach(item => {
-              if (item <= 2) {
-                this.pause2.push(item);
-              }
-              if (item > 2 && item <= 5) {
-                this.notstart2.push(item);
-              }
-              if (item > 5 && item <= 15) {
-                this.conducting2.push(item);
-              }
-              if (item > 15 && item <= 19) {
-                this.approving2.push(item);
-              }
-              if (item > 19) {
-                this.finish2.push(item);
-              }
+          datastatus.forEach(item => {
+            if (item <= 2) {
+              this.pause2.push(item);
+            }
+            if (item > 2 && item <= 5) {
+              this.notstart2.push(item);
+            }
+            if (item > 5 && item <= 15) {
+              this.conducting2.push(item);
+            }
+            if (item > 15 && item <= 19) {
+              this.approving2.push(item);
+            }
+            if (item > 19) {
+              this.finish2.push(item);
+            }
           });
-          deptdata.forEach((item,index) => {
+          deptdata.forEach((item, index) => {
             this.projectTemplateList[index] = item;
-        })
+          });
         });
       }
       //模板保存dialog

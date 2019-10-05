@@ -118,22 +118,15 @@
           <el-table-column prop="level" label="难度等级">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
-          <el-table-column label="当前环节" align="center" width="160px">
-            <el-table-column prop="link" label="工种" align="left">
-              <template slot-scope="scope">
-                <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="截止日期" align="left" width="95px">
-              <template slot-scope="scope">
-                <div
-                  v-for="(todo,index) of scope.row.link"
-                  :key="index"
-                  style="position:top"
-                >{{todo.date_end|dateFormat}}</div>
-              </template>
-            </el-table-column>
-          </el-table-column>
+         <el-table-column label="执行人" prop="executor_list">
+           <template slot-scope="scope">
+             <el-row v-for="(item,index) of scope.row.executor_list" :key="index">
+               <el-col>
+                 {{item.name}}
+               </el-col>
+             </el-row>
+           </template>
+         </el-table-column>
           <el-table-column label="创建日期" align="left" width="160px" prop="date">
             <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
           </el-table-column>
