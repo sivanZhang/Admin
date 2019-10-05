@@ -45,15 +45,26 @@
                   <el-radio :label="0">拒绝</el-radio>
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
+                <div style="margin-top:5px">
+                  <el-checkbox v-model="checked">是否提交客户审批</el-checkbox>
+                </div>
+                <el-input
+                  v-if="checked"
+                  type="textarea"
+                  v-model="out_suggestion"
+                  ref="outer-input"
+                  placeholder="提交客户审批的说明"
+                  style="margin-top:5px"
+                ></el-input>
                 <template v-if="scoreShow">
-                  <el-row type="flex" align="middle" style="margin-top:10px">
+                  <el-row type="flex" align="middle" style="margin-top:5px">
                     <el-col :span="5">评分</el-col>
                     <el-col :span="19" align="left">
                       <el-input-number v-model="score" :min="0" :max="100" :step="10"></el-input-number>
                     </el-col>
                   </el-row>
                 </template>
-                <div class="fr">
+                <div class="fr" style="margin-top:5px">
                   <el-button type="primary" class="btn add-btn" @click="commitApprove">提交</el-button>
                 </div>
               </div>
@@ -78,6 +89,8 @@ export default {
   components: { VideoPlayer, VideoList, approveLog },
   data() {
     return {
+      out_suggestion: "",
+      checked: false,
       approve_result: 0,
       score: null,
       imgList: [], //  视频截图列表
@@ -116,6 +129,14 @@ export default {
           suggestion: this.markText,
           key: []
         };
+        if (this.checked) {
+          //添加提交外网审核字段
+          data = {
+            ...data,
+            click: "",
+            out_suggestion: this.out_suggestion
+          };
+        }
         if (this.scoreShow === true) {
           data = { ...data, score: this.score };
         }
@@ -283,7 +304,7 @@ export default {
       .video-info,
       .video-tabs,
       .video-comment {
-        @include scrollStyle
+        @include scrollStyle;
       }
     }
   }
