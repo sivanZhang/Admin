@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-
 </style>
 <template>
   <div id="my-production" ref="drawer-parent">
@@ -59,7 +58,12 @@
       </el-table-column>
       <el-table-column label="评论" align="center">
         <template slot-scope="scope">
-          <el-button type="text" style="font-size:15px" @click="viewComments(scope.row.task[0].taskid)" icon="el-icon-chat-line-round"></el-button>
+          <el-button
+            type="text"
+            style="font-size:15px"
+            @click="viewComments(scope.row.task[0].taskid)"
+            icon="el-icon-chat-line-round"
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,7 +80,13 @@
       :inner="isInner"
       title="评论"
     >
-      <remarks ref="remarks" :project="RemarkParams" :RemarksData="RemarksData" @refreshRemark="updateRemark"/>
+      <remarks
+        ref="remarks"
+        :project="RemarkParams"
+        :RemarksData="RemarksData"
+        @refreshRemark="updateRemark"
+        :showImage="false"
+      />
     </Drawer>
   </div>
 </template>
@@ -85,7 +95,7 @@
 import remarks from "@/components/projectDrawer/components/remarks";
 import { getProduction } from "@/api/production";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
-import { getRemark} from "@/api/remark";
+import { getRemark } from "@/api/remark";
 export default {
   name: "my-production",
   mixins: [thumbtackMixin], //drawer图钉效果
@@ -95,7 +105,7 @@ export default {
   data() {
     return {
       RemarkParams: {}, //传给remark的参数
-      RemarksData:[],
+      RemarksData: [],
       isDrawerShow: false, //是否显示drawer
       videoSrc: "",
       dialogTableVisible: false, //dialog是否显示
@@ -139,19 +149,18 @@ export default {
         entity_type: 1
       };
       const msg = {
-          appid: this.RemarkParams.id,
-          apptype: this.RemarkParams.entity_type
-        };
+        appid: id,
+        apptype: 1
+      };
       getRemark(msg).then(({ data }) => {
-          this.RemarksData = [...data.msg];
-          
-          //console.log(this.RemarksData);
-        });
+        this.RemarksData = [...data.msg];
+
+        //console.log(this.RemarksData);
+      });
       this.$nextTick(() => {
         // this.$refs["remarks"].getRemarkList();
         this.isDrawerShow = true;
       });
-
     },
     updateRemark() {
       getRemark({

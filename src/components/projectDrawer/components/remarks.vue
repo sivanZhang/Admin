@@ -65,7 +65,7 @@
             </p>
             <!-- 备注内容 -->
             <p class="desc-text">{{item.content}}</p>
-            <p class="pro-text">
+            <p class="pro-text" v-if="showImage">
               <!-- 实体图片 -->
               <!-- <router-link
                 :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}"
@@ -211,6 +211,10 @@ export default {
     RemarksData: {
       type: Array,
       default: []
+    },
+    showImage:{//是否显示评价中的项目图片
+      type:Boolean,
+      default:true
     }
   },
 
@@ -226,8 +230,6 @@ export default {
       timeRemarks: [],
       remarksResult: {},
       pid: null,
-      // RemarksData: this.RemarksData,
-      // RemarksData:[],
       buttons: false,
       optionInput: "",
       options: [
