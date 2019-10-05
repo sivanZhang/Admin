@@ -934,6 +934,8 @@ export default {
       colSel: "name",
       colShow: true,
       chooseSel: false,
+      multiSelect:[],
+      name:"",
       columnSelect2: [],
       colSel2: [],
       timeSel: false,
@@ -1121,26 +1123,32 @@ export default {
       getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
         ({ data }) => {
           this.trainingMenber = [...data.msg];
-          console.log(this.trainingMenber);
+          // console.log(this.trainingMenber);
         }
       );
     },
     //任务导出dialog
     targetUpload() {
-      let data = {
-        ...this.sortSelForm,
+        let data = {
+       ...this.name,
+        ...this.multiSelect ,
         project: this.$route.params.id,
         print: "null"
       };
       HTTP.queryTask(data)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.uploadVisible = true;
-            this.path = data.path;
+           this.uploadVisible = true;
+           this.path = data.path;
+           this.multiSelect = [];
+          this.name = [];
           }
         })
         .catch(err => {
           this.$message.error(data.msg);
+          // this.uploadVisible = true;
+          this.multiSelect = [];
+          this.name = [];
         });
     },
     //导出Excel
@@ -1194,7 +1202,7 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-
+      this.multiSelect = this.sortSelForm
       this.tableLoading = true;
       HTTP.queryTask(data)
         .then(({ data }) => {
@@ -1733,34 +1741,44 @@ export default {
       };
       if (this.colSel == "name" && this.keyword) {
         data = { ...data, name: this.keyword };
+        this.name = { name: this.keyword }
       }
       if (this.colSel == "dept" && this.keyword) {
         data = { ...data, dept: this.keyword };
+        this.name = { dept: this.keyword }
       }
       if (this.colSel == "content" && this.keyword) {
         data = { ...data, content: this.keyword };
+        this.name = { content: this.keyword  }
       }
       if (this.colSel == "user" && this.keyword) {
         data = { ...data, user: this.keyword };
+         this.name = { user: this.keyword  }
       }
       if (this.colSel == "total_hour" && this.keyword) {
         data = { ...data, content: this.keyword };
+        this.name = { content: this.keyword   }
       }
       if (this.colSel == "start_date" && this.timeSelection) {
         payload = { ...payload, start_date: DateFormat(this.timeSelection) };
+        this.name = { start_date: DateFormat(this.timeSelection)   }
       }
       if (this.colSel == "end_date" && this.timeSelection) {
         payload = { ...payload, end_date: DateFormat(this.timeSelection) };
+         this.name = { end_date: DateFormat(this.timeSelection)   }
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "priority") {
           data = { ...data, priority: "[" + String(this.colSel2) + "]" };
+           this.name = { priority: "[" + String(this.colSel2) + "]"  }
         }
         if (this.colSel == "status") {
           data = { ...data, status: "[" + String(this.colSel2) + "]" };
+          this.name = { status: "[" + String(this.colSel2) + "]"  }
         }
         if (this.colSel == "grade") {
           data = { ...data, grade: "[" + String(this.colSel2) + "]" };
+          this.name = { grade: "[" + String(this.colSel2) + "]" }
         }
       }
 

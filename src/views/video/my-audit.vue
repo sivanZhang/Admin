@@ -67,6 +67,7 @@
           <approve-log ref="approvelogs" />
         </el-tab-pane>
         <el-tab-pane label="快捷审批" lazy>
+          <el-divider>提交内网审批</el-divider>
           <el-row type="flex">
             <el-input
               type="textarea"
@@ -91,6 +92,16 @@
           <div style="margin-top:10px">
             <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
+          <el-divider>提交外网审批</el-divider>
+          <el-input
+            type="textarea"
+            ref="outer-input"
+            placeholder="请输入审批意见"
+            v-model="OuterNetForm.suggestion"
+          ></el-input>
+          <div style="margin-top:10px">
+            <el-button type="primary" :loading="submitLoading" @click="submitApproveOuter">提交</el-button>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="执行记录" lazy>
           <tabLog :loglist="LogList" :logsLoading="logsLoading" />
@@ -107,7 +118,12 @@ import {
   queryTaskRecord,
   queryTask
 } from "@/api/task";
-import { getApprove, postApprove, getApproveDetail } from "@/api/video";
+import {
+  getApprove,
+  postApprove,
+  getApproveDetail,
+  postApproveToclient
+} from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
@@ -123,6 +139,10 @@ export default {
   },
   data() {
     return {
+      OuterNetForm: {
+        approve_id: "",
+        suggestion: ""
+      },
       submitLoading: false,
       form_obj: {},
       AuditList: [],
@@ -135,10 +155,31 @@ export default {
       TaskDetail: {},
       SelectionList: [],
       path: null,
-      pro_type: null
+      pro_type: null,
+      submitOuterLoading: false
     };
   },
   methods: {
+    //提交外网审核
+        submitApproveOuter() {
+            if (!this.OuterNetForm.suggestion) {
+                this.$message.error('请输入审核意见')
+                this.$refs['outer-input'].focus()
+                return
+            }
+            this.submitOuterLoading = true
+            postApproveToclient(this.OuterNetForm).then(({
+                data
+            }) => {
+                if (data.status === 0) {
+                    this.$message.success(data.msg)
+                } else {
+                    this.$message.warning(data.msg)
+                }
+            }).finally(() => {
+                this.submitApproveOuter = false
+            })
+        },
     //表格中选中任务
     taskSelect(selection) {
       this.SelectionList = [...selection];
@@ -157,6 +198,7 @@ export default {
     //是否显示任务板右侧
     taskBoardRightShow(row) {
       this.isDrawerShow = true;
+      this.OuterNetForm.approve_id = row.task.id;
       this.TaskRecord = Object.assign(
         {},
         {

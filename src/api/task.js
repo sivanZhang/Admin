@@ -60,3 +60,15 @@ export function getAssetTaskList(params){
 export function mulCreateTasks(data){
     return AXIOS.post('/task/batch_task/',data)
 }
+
+//任务批量修改
+export function mulPutTasks(params){
+    return AXIOS.post('/task/task/?02',params,{
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        transformRequest: [params => {
+            return JSON.stringify(params)
+        }]
+    })
+}
