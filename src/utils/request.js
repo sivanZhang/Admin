@@ -16,13 +16,13 @@ import {
 } from '@/utils/auth'
 // create an axios instance
 const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BASE_API,
-        timeout: 0,
-        transformRequest: [data => {
-            return qs.stringify(data);
-        }],
-    })
-    /* AXIOS.defaults.headers['Access-Control-Allow-Origin'] = '*' */
+    baseURL: process.env.VUE_APP_BASE_API,
+    timeout: 0,
+    transformRequest: [data => {
+        return qs.stringify(data);
+    }],
+})
+AXIOS.defaults.headers['Access-Control-Allow-Origin'] = '*'
 AXIOS.interceptors.request.use(
     config => {
         if (store.getters.token) {
@@ -49,6 +49,8 @@ AXIOS.interceptors.response.use(
     response => {
         const res = response
             // if the custom code is not 20000, it is judged as an error.
+        console.log('res.status', res.status);
+
         if (res.status !== 200) {
             Message({
                 message: res.message || 'Error',
@@ -73,7 +75,7 @@ AXIOS.interceptors.response.use(
         }
     },
     error => {
-
+        console.log('error.response', error.response, error);
         /* if (!!error.response && !!error.response.status) {
     switch (error.response.status) {
       case 403:
