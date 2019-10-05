@@ -378,7 +378,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="阶段" prop="groups" v-if="$route.query.type === 0" width="120px">
+        <el-table-column label="实训阶段" prop="groups" v-if="groupType" width="120px">
           <template slot-scope="scope">
             <el-row v-for="(item,index) of scope.row.groups" :key="index">
               <el-col>
@@ -1282,7 +1282,8 @@ export default {
       attrsTypeNum: null,
       materialShow: false,
       materialEstdate: new Date().toLocaleDateString(),
-      pro_type: null
+      pro_type: null,
+      groupType:this.$route.query.type === 0?true:false
     };
   },
   watch: {
