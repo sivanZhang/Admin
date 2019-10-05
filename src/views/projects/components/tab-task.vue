@@ -17,7 +17,12 @@
           </el-dropdown>-->
           <el-button icon="el-icon-download" type="primary">导入</el-button>
           <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
-
+          <el-button
+            type="success"
+            @click="mulEditTasks(1)"
+            icon="el-icon-edit"
+            :disabled="this.multipleSelection.length === 0"
+          >批量修改</el-button>
           <el-button
             type="danger"
             @click="deleteTask"
@@ -75,6 +80,20 @@
         </el-col>
         <el-col :span="11" style="text-align:right">
           <div style="display:flex;justify-content:flex-end">
+            <el-select
+              v-model="colSel"
+              placeholder="请选择"
+              style="width:130px;"
+              filterable
+              slot="prepend"
+            >
+              <el-option
+                v-for="item in columnSelect"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
             <el-input
               v-if="colShow"
               placeholder="输入关键字搜索"
@@ -82,20 +101,6 @@
               @keyup.enter.native="getTasks()"
               style="width:360px"
             >
-              <el-select
-                v-model="colSel"
-                placeholder="请选择"
-                style="width:130px;"
-                filterable
-                slot="prepend"
-              >
-                <el-option
-                  v-for="item in columnSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
               <el-button @click="getTasks()" slot="append" icon="el-icon-search" />
             </el-input>
             <el-select
@@ -682,19 +687,106 @@
       </el-row>
     </el-dialog>
     <!-- 任务导出 -->
-   <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
+    <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
       <el-row>
         <el-col :span="6">
           <span>excel文件</span>
         </el-col>
         <el-col :span="18">
-           <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="uploadVisible = false">取 消</el-button>
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
+    </el-dialog>
+    <!-- 批量修改任务 -->
+    <el-dialog title="批量修改任务" :visible.sync="mulEditDialog" width="512px" center :modal="false">
+      <el-form :model="updateMulTask" label-width="90px">
+        <el-row>
+          <el-col :span="6" align="center">
+            <span style="padding-bottom:10px">是否修改</span>
+          </el-col>
+          <el-col :span="18"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-radio-group v-model="radio1" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="任务名称" prop="name">
+              <el-input v-model="updateMulTask.name" placeholder="请填写任务名称"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-radio-group v-model="radio2" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="任务内容" prop="content">
+              <el-input v-model="updateMulTask.content" type="textarea" placeholder="请填写任务内容"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-radio-group v-model="radio3" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="优先级" prop="priority">
+              <el-radio v-model="updateMulTask.priority" :label="0">低级</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="1">中级</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="2">高级</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-radio-group v-model="radio4" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="任务难度" prop="priority">
+              <el-radio v-model="updateMulTask.grade" :label="0">简单</el-radio>
+              <el-radio v-model="updateMulTask.grade" :label="1">标准</el-radio>
+              <el-radio v-model="updateMulTask.grade" :label="2">困难</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-radio-group v-model="radio5" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="任务状态" prop="status">
+          <el-select v-model="updateMulTask.status" filterable placeholder="请选择任务状态">
+            <el-option
+              v-for="item of StatusList2"
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
     </el-dialog>
     <Drawer
       title="任务"
@@ -736,6 +828,7 @@ import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
+import { mulPutTasks } from "@/api/task";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -768,7 +861,7 @@ export default {
       selectList: [],
       createLoading: false,
       multipleSelection: [],
-      path:null,
+      path: null,
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 50, 100],
@@ -854,7 +947,10 @@ export default {
       attrsList: [],
       customAttrs: [],
       attrsTypeNum: null,
-      trainingMenber: []
+      trainingMenber: [],
+      mulEditDialog: false,
+      updateMulTask: {},
+      radio1: "NO"
     };
   },
   filters: {
@@ -1014,6 +1110,12 @@ export default {
     }
   },
   methods: {
+    //批量修改任务
+    mulEditTasks(Type) {
+      if (Type === 1) {
+        this.mulEditDialog = true;
+      }
+    },
     //获取实训分组
     getTeam() {
       getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
@@ -1025,15 +1127,16 @@ export default {
     },
     //任务导出dialog
     targetUpload() {
-        let data = {
+      let data = {
         ...this.sortSelForm,
         project: this.$route.params.id,
-        print:"null"
+        print: "null"
       };
-        HTTP.queryTask(data).then(({ data }) => {
+      HTTP.queryTask(data)
+        .then(({ data }) => {
           if (data.status === 0) {
-           this.uploadVisible = true;
-           this.path = data.path
+            this.uploadVisible = true;
+            this.path = data.path;
           }
         })
         .catch(err => {
@@ -1041,12 +1144,12 @@ export default {
         });
     },
     //导出Excel
-    download(){
-      let data="http://tl.chidict.com:8081/"+this.path;
+    download() {
+      let data = "http://tl.chidict.com:8081/" + this.path;
       window.location.href = data;
-       this.uploadVisible = false;
+      this.uploadVisible = false;
     },
-    uploadExcel(){
+    uploadExcel() {
       //  this.download();
       this.uploadVisible = false;
     },
@@ -1492,7 +1595,6 @@ export default {
             //console.log(dataMulTask);
             HTTP.mulCreateTasks(dataMulTask)
               .then(({ data }) => {
-                
                 this.$message.success(data.msg);
                 if (data.status === 0) {
                   this.mainTaskShow = false;
@@ -1501,9 +1603,7 @@ export default {
                   t;
                 }
               })
-              .catch(err => {
-                
-              });
+              .catch(err => {});
           } else {
             let data = {
               ...this.TaskForm,
