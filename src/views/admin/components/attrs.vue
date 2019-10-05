@@ -294,7 +294,7 @@ export default {
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (this.attrsForm.type === 5) {
-        console.log(this.selectForm);
+      //  console.log(this.selectForm);
         this.attrsForm.value =
           "{" +
           '"selectway":' +

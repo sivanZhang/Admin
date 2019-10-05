@@ -702,16 +702,16 @@
       </span>
     </el-dialog>
     <!-- 批量修改任务 -->
-    <el-dialog title="批量修改任务" :visible.sync="mulEditDialog" width="512px" center :modal="false">
+    <el-dialog title="批量修改任务" :visible.sync="mulEditDialog" width="620px" center :modal="false">
       <el-form :model="updateMulTask" label-width="90px">
         <el-row>
           <el-col :span="6" align="center">
-            <span style="padding-bottom:10px">是否修改</span>
+            <h4 style="padding-bottom:10px">是否修改</h4>
           </el-col>
-          <el-col :span="18"></el-col>
+          <el-col :span="18" align="center"></el-col>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="6" align="center">
             <el-radio-group v-model="radio1" size="mini">
               <el-radio-button label="YES"></el-radio-button>
               <el-radio-button label="NO"></el-radio-button>
@@ -724,7 +724,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="6" align="center">
             <el-radio-group v-model="radio2" size="mini">
               <el-radio-button label="YES"></el-radio-button>
               <el-radio-button label="NO"></el-radio-button>
@@ -737,7 +737,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="6" align="center">
             <el-radio-group v-model="radio3" size="mini">
               <el-radio-button label="YES"></el-radio-button>
               <el-radio-button label="NO"></el-radio-button>
@@ -752,14 +752,14 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="6" align="center">
             <el-radio-group v-model="radio4" size="mini">
               <el-radio-button label="YES"></el-radio-button>
               <el-radio-button label="NO"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
-            <el-form-item label="任务难度" prop="priority">
+            <el-form-item label="任务难度" prop="grade">
               <el-radio v-model="updateMulTask.grade" :label="0">简单</el-radio>
               <el-radio v-model="updateMulTask.grade" :label="1">标准</el-radio>
               <el-radio v-model="updateMulTask.grade" :label="2">困难</el-radio>
@@ -767,7 +767,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="6" align="center">
             <el-radio-group v-model="radio5" size="mini">
               <el-radio-button label="YES"></el-radio-button>
               <el-radio-button label="NO"></el-radio-button>
@@ -775,16 +775,83 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务状态" prop="status">
-          <el-select v-model="updateMulTask.status" filterable placeholder="请选择任务状态">
-            <el-option
-              v-for="item of StatusList2"
-              :label="item.label"
-              :value="item.value"
-              :key="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+              <el-select v-model="updateMulTask.status" filterable placeholder="请选择任务状态">
+                <el-option
+                  v-for="item of StatusList2"
+                  :label="item.label"
+                  :value="item.value"
+                  :key="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-radio-group v-model="radio6" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="任务执行人" prop="executorlist">
+              <el-select
+                v-model="updateMulTask.executorlist"
+                filterable
+                multiple
+                placeholder="请选择任务执行人"
+              >
+                <el-option
+                  v-for="item of UserList"
+                  :label="item.username"
+                  :value="item.id"
+                  :key="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-radio-group v-model="radio7" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="任务时间" prop="datetime">
+              <el-date-picker
+                v-model="updateMulTask.datetime"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                format="yyyy/MM/dd"
+                @change="changeTime2()"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-radio-group v-model="radio8" size="mini">
+              <el-radio-button label="YES"></el-radio-button>
+              <el-radio-button label="NO"></el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="总工时" prop="total_hour">
+              <el-input
+                v-model="updateMulTask.total_hour"
+                oninput="value=value.replace(/[^\d.]/g,'')"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+         <el-col align="right">
+            <el-button type="primary" @click="mulEditTasks(2)">立即修改</el-button>
+         </el-col>
         </el-row>
       </el-form>
     </el-dialog>
@@ -828,7 +895,6 @@ import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
-import { mulPutTasks } from "@/api/task";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -934,8 +1000,8 @@ export default {
       colSel: "name",
       colShow: true,
       chooseSel: false,
-      multiSelect:[],
-      name:"",
+      multiSelect: [],
+      name: "",
       columnSelect2: [],
       colSel2: [],
       timeSel: false,
@@ -952,7 +1018,14 @@ export default {
       trainingMenber: [],
       mulEditDialog: false,
       updateMulTask: {},
-      radio1: "NO"
+      radio1: "NO",
+      radio2: "NO",
+      radio3: "NO",
+      radio4: "NO",
+      radio5: "NO",
+      radio6: "NO",
+      radio7: "NO",
+      radio8: "NO"
     };
   },
   filters: {
@@ -972,7 +1045,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
+    ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
   components: {
     approveLog,
@@ -1114,8 +1187,59 @@ export default {
   methods: {
     //批量修改任务
     mulEditTasks(Type) {
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
       if (Type === 1) {
         this.mulEditDialog = true;
+      } else {
+        let keys = {};
+        if (this.radio1 == "YES") {
+          keys = { ...keys, name: this.updateMulTask.name };
+        }
+        if (this.radio2 == "YES") {
+          keys = { ...keys, content: this.updateMulTask.content };
+        }
+        if (this.radio3 == "YES") {
+          keys = { ...keys, priority: this.updateMulTask.priority };
+        }
+        if (this.radio4 == "YES") {
+          keys = { ...keys, grade: this.updateMulTask.grade };
+        }
+        if (this.radio5 == "YES") {
+          keys = { ...keys, status: this.updateMulTask.status };
+        }
+        if (this.radio6 == "YES") {
+          keys = {
+            ...keys,
+            executorlist: this.updateMulTask.executorlist.join()
+          };
+        }
+        if (this.radio7 == "YES") {
+          keys = {
+            ...keys,
+            start_date: dataFormat(this.updateMulTask.datetime[0]),
+            end_date: dataFormat(this.updateMulTask.datetime[1])
+          };
+        }
+        if (this.radio8 == "YES") {
+          keys = { ...keys, total_hour: this.updateMulTask.total_hour };
+        }
+        let data = {
+          method: "put",
+          ids: this.multipleSelection.map(item => item.id).join(","),
+          keys: keys
+        };
+        HTTP.mulPutTasks(data).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getTasks();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+        // console.log(data);
+        // console.log(keys);
       }
     },
     //获取实训分组
@@ -1129,19 +1253,19 @@ export default {
     },
     //任务导出dialog
     targetUpload() {
-        let data = {
-       ...this.name,
-        ...this.multiSelect ,
+      let data = {
+        ...this.name,
+        ...this.multiSelect,
         project: this.$route.params.id,
         print: "null"
       };
       HTTP.queryTask(data)
         .then(({ data }) => {
           if (data.status === 0) {
-           this.uploadVisible = true;
-           this.path = data.path;
-           this.multiSelect = [];
-          this.name = [];
+            this.uploadVisible = true;
+            this.path = data.path;
+            this.multiSelect = [];
+            this.name = [];
           }
         })
         .catch(err => {
@@ -1202,7 +1326,7 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-      this.multiSelect = this.sortSelForm
+      this.multiSelect = this.sortSelForm;
       this.tableLoading = true;
       HTTP.queryTask(data)
         .then(({ data }) => {
@@ -1255,10 +1379,23 @@ export default {
       const totalHour =
         (this.TaskForm.datetime[1] - this.TaskForm.datetime[0]) /
         (1000 * 3600 * 24);
+
       this.TaskForm = {
         ...this.TaskForm,
         total_hour: 8 * totalHour
       };
+    },
+    changeTime2(val) {
+      if (this.radio7 == "YES") {
+        this.radio8 = "YES";
+        const totalHour2 =
+          (this.updateMulTask.datetime[1] - this.updateMulTask.datetime[0]) /
+          (1000 * 3600 * 24);
+        this.updateMulTask = {
+          ...this.updateMulTask,
+          total_hour: 8 * totalHour2
+        };
+      }
     },
     handleTabClick(tab, event) {
       //this.getRemarkList();
@@ -1741,44 +1878,44 @@ export default {
       };
       if (this.colSel == "name" && this.keyword) {
         data = { ...data, name: this.keyword };
-        this.name = { name: this.keyword }
+        this.name = { name: this.keyword };
       }
       if (this.colSel == "dept" && this.keyword) {
         data = { ...data, dept: this.keyword };
-        this.name = { dept: this.keyword }
+        this.name = { dept: this.keyword };
       }
       if (this.colSel == "content" && this.keyword) {
         data = { ...data, content: this.keyword };
-        this.name = { content: this.keyword  }
+        this.name = { content: this.keyword };
       }
       if (this.colSel == "user" && this.keyword) {
         data = { ...data, user: this.keyword };
-         this.name = { user: this.keyword  }
+        this.name = { user: this.keyword };
       }
       if (this.colSel == "total_hour" && this.keyword) {
         data = { ...data, content: this.keyword };
-        this.name = { content: this.keyword   }
+        this.name = { content: this.keyword };
       }
       if (this.colSel == "start_date" && this.timeSelection) {
         payload = { ...payload, start_date: DateFormat(this.timeSelection) };
-        this.name = { start_date: DateFormat(this.timeSelection)   }
+        this.name = { start_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel == "end_date" && this.timeSelection) {
         payload = { ...payload, end_date: DateFormat(this.timeSelection) };
-         this.name = { end_date: DateFormat(this.timeSelection)   }
+        this.name = { end_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "priority") {
           data = { ...data, priority: "[" + String(this.colSel2) + "]" };
-           this.name = { priority: "[" + String(this.colSel2) + "]"  }
+          this.name = { priority: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "status") {
           data = { ...data, status: "[" + String(this.colSel2) + "]" };
-          this.name = { status: "[" + String(this.colSel2) + "]"  }
+          this.name = { status: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "grade") {
           data = { ...data, grade: "[" + String(this.colSel2) + "]" };
-          this.name = { grade: "[" + String(this.colSel2) + "]" }
+          this.name = { grade: "[" + String(this.colSel2) + "]" };
         }
       }
 
