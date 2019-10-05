@@ -34,7 +34,7 @@
                     v-for="item of DraftArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#c3E3E5',color:'#fff',padding:'5px'}"
+                    :body-style="{backgroundColor:'#59e0e8',color:'#fff',padding:'5px'}"
                   >
                   <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>

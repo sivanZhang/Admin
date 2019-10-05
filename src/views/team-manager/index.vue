@@ -226,11 +226,11 @@
         </el-form-item>
         <el-form-item label="环节时间">
           <el-row style="padding-left:10px;font-size: 12px;">
-            <el-col :span="5">{{linkstart|dateFormat}}</el-col>
-            <el-col :span="2">
+            <el-col :span="6">{{linkstart|dateFormat}}</el-col>
+            <el-col :span="3">
               <span>至</span>
             </el-col>
-            <el-col :span="17">{{linkend|dateFormat}}</el-col>
+            <el-col :span="15">{{linkend|dateFormat}}</el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
