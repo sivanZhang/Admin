@@ -1,36 +1,56 @@
 <template>
   <div id="statistics" class="text-center">
     <div>
-      <el-progress type="circle" :percentage="projectProgress" :color="colors" :format="format"></el-progress>
+      <el-row>
+        <el-col :span="5" align="middle">
+          <div >
+            <label for>项目进度</label>
+          </div>
+          <div style="margin-top:80px">
+            <el-progress type="circle" :percentage="projectProgress" :color="colors" :format="format"></el-progress>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <label for>资产状态统计</label>
+          <!-- 图表组件 -->
+          <chart ref="asset-chart" chart-id="asset-chart" />
+        </el-col>
+        <el-col :span="11">
+          <label for>任务状态统计</label>
+          <!-- 图表组件 -->
+          <chart ref="task-chart" chart-id="task-chart" />
+        </el-col>
+      </el-row>
     </div>
-    <div style="margin-top:15px">
-      <label for>项目进度</label>
-    </div>
+
     <el-divider />
     <!-- 甘特图组件 -->
     <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" />
     <el-divider />
     <el-row>
       <el-col :span="12">
-        <LineChart chart-id="line-chart1" ref="line-chart1"/>
+        <LineChart chart-id="line-chart1" ref="line-chart1" />
       </el-col>
       <el-col :span="12">
-        <LineChart chart-id="line-chart2" ref="line-chart2"/>
+        <LineChart chart-id="line-chart2" ref="line-chart2" />
       </el-col>
     </el-row>
-    <el-divider />
-    <el-row>
-      <el-col :span="12">
-        <label for>资产状态统计</label>
-        <!-- 图表组件 -->
-        <chart ref="asset-chart" chart-id="asset-chart" />
-      </el-col>
-      <el-col :span="12">
-        <label for>任务状态统计</label>
-        <!-- 图表组件 -->
-        <chart ref="task-chart" chart-id="task-chart" />
-      </el-col>
-    </el-row>
+
+    <template v-if="show_inner">
+      <el-divider />
+      <el-row>
+        <el-col :span="12">
+          <label for>内网提交统计</label>
+          <!-- 图表组件 -->
+          <chart ref="commit-inner" chart-id="commit-inner" />
+        </el-col>
+        <el-col :span="12">
+          <label for>外网提交统计</label>
+          <!-- 图表组件 -->
+          <chart ref="commit-outer" chart-id="commit-outer" />
+        </el-col>
+      </el-row>
+    </template>
   </div>
 </template>
 
@@ -57,7 +77,8 @@ export default {
         { color: "#6f7ad3", percentage: 60 },
         { color: "#1989fa", percentage: 80 },
         { color: "#5cb87a", percentage: 100 }
-      ]
+      ],
+      show_inner: true
     };
   },
   methods: {
@@ -114,6 +135,88 @@ export default {
           };
         });
       });
+    },
+    //获取燃尽图数据
+    getBurnOut() {
+      this.$refs["line-chart1"].openLoading();
+      Ajax.burnOut({ id: this.$route.params.id, bourout: "" }).then(
+        ({ data }) => {
+          if (data.status === 0) {
+            let customOption = {
+              title: {
+                top: 20,
+                text: "项目燃尽图",
+                textStyle: {
+                  fontWeight: 600,
+                  fontSize: 16
+                },
+                left: "left",
+                top: 0
+              },
+              tooltip: {
+                trigger: "axis"
+              },
+              legend: {
+                //图例
+                data: ["计划工作时长", "实际工作时长"], // 名字
+                tooltip: {
+                  show: true
+                }
+              },
+              xAxis: [
+                {
+                  type: "category",
+                  boundaryGap: false,
+                  data: data.dates
+                }
+              ],
+              yAxis: [
+                {
+                  type: "value"
+                  /* name: "(%)", */
+                }
+              ],
+              series: [
+                // 线数据
+                {
+                  name: "计划工作时长",
+                  type: "line",
+                  smooth: true,
+                  showSymbol: true,
+                  data: data.plan_worktimes
+                },
+                {
+                  name: "实际工作时长",
+                  type: "line",
+                  smooth: true, // 是否曲线
+                  showSymbol: true, // 是否显示点
+                  data: data.real_worktimes
+                }
+              ]
+            };
+            this.$refs["line-chart1"].initChart(customOption);
+            this.$refs["line-chart2"].initChart("");
+          }
+        }
+      );
+    },
+    //获取项目提交次数统计数据
+    getCommitCount() {
+      Ajax.proCommitCount({ project_id: this.$route.params.id }).then(
+        ({ data }) => {
+          if (!data.inner_num.length) {
+            this.show_inner = false;
+          }
+          let chartData = data.inner_num.map(t => {
+            return { name: t.submit_name, value: t.num };
+          });
+          let chartData2 = data.out_num.map(t => {
+            return { name: t.submit_name, value: t.num };
+          });
+          this.$refs["commit-inner"].initChart("", chartData);
+          this.$refs["commit-outer"].initChart("", chartData2);
+        }
+      );
     }
   },
   created() {
@@ -123,6 +226,8 @@ export default {
   mounted() {
     this.getAssetStatistics();
     this.getTaskStatistics();
+    this.getBurnOut();
+    this.getCommitCount();
   }
 };
 </script>

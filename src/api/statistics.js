@@ -25,3 +25,11 @@ export function getGanttData(params) {
         params
     })
 }
+//燃尽图接口
+export function burnOut(params){
+    return AXIOS.get('/projects/stat/?04',{params})
+}
+//查询项目提交次数
+export function proCommitCount(params){
+    return AXIOS.get('/projects/submitrecord/', {params})
+}
