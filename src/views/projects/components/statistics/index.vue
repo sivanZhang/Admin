@@ -3,11 +3,16 @@
     <div>
       <el-row>
         <el-col :span="5" align="middle">
-          <div >
+          <div>
             <label for>项目进度</label>
           </div>
           <div style="margin-top:80px">
-            <el-progress type="circle" :percentage="projectProgress" :color="colors" :format="format"></el-progress>
+            <el-progress
+              type="circle"
+              :percentage="projectProgress"
+              :color="colors"
+              :format="format"
+            ></el-progress>
           </div>
         </el-col>
         <el-col :span="8">
@@ -22,10 +27,6 @@
         </el-col>
       </el-row>
     </div>
-
-    <el-divider />
-    <!-- 甘特图组件 -->
-    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" />
     <el-divider />
     <el-row>
       <el-col :span="12">
@@ -51,6 +52,18 @@
         </el-col>
       </el-row>
     </template>
+
+    <el-divider />
+    <!-- 甘特图组件 -->
+    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" />
+    <!-- 甘特图组件 -->
+    <Gantt
+      v-loading="ganttStatLoading"
+      id="gantt-stat"
+      :gantt-data="ganttStatData"
+      :customHeaderOption="customHeaderOption"
+      :customOptions="customOptions"
+    />
   </div>
 </template>
 
@@ -59,16 +72,19 @@ import * as Ajax from "@/api/statistics";
 import Chart from "@/components/ECharts/PieChart";
 import Gantt from "@/components/Gantt";
 import LineChart from "@/components/ECharts/LineMarker";
+import dayjs from "dayjs";
 export default {
   name: "all-statistics",
   components: { Chart, Gantt, LineChart },
   data() {
     return {
+      ganttStatLoading: false,
       ganttLoading: false,
-      ganttData: [], //传给甘特图的数据
+      ganttData: [], // 传给甘特图的数据
+      ganttStatData: [], // 传给甘特图2的数据
       projectProgress: 0,
       HttpParams: {
-        //http传参对象
+        // http传参对象
         project_id: this.$route.params.id
       },
       colors: [
@@ -78,7 +94,45 @@ export default {
         { color: "#1989fa", percentage: 80 },
         { color: "#5cb87a", percentage: 100 }
       ],
-      show_inner: true
+      show_inner: true,
+      customHeaderOption: {
+        title: {
+          label: "<h6 style='letter-spacing:initial'>人员工时统计:</h6>",
+          html: true
+        }
+      },
+      customOptions: {
+        taskList: {
+          //甘特图中的表格配置
+          columns: [
+            {
+              id: 1,
+              label: "人员名称",
+              value: task => (task.pid ? "" : task.label),
+              width: 200
+            },
+            {
+              id: 2,
+              label: "开始时间",
+              value: task => dayjs(task.start).format("YYYY-MM-DD"),
+              width: 120,
+              html: true
+            },
+            {
+              id: 3,
+              label: "结束时间",
+              value: task => dayjs(task.end).format("YYYY-MM-DD"),
+              width: 120
+            },
+            {
+              id: 4,
+              label: "任务进度(%)",
+              value: "progress",
+              width: 120
+            }
+          ]
+        }
+      }
     };
   },
   methods: {
@@ -112,13 +166,42 @@ export default {
         this.$refs["task-chart"].initChart("", chartData);
       });
     },
-    //获取甘特图数据
+    //获取甘特图2数据
+    getganttStat() {
+      this.ganttStatLoading = true;
+      Ajax.getingExecutorChart({ id: this.$route.params.id, executors: "" })
+        .then(({ data }) => {
+          let arr = [...data.msg];
+          this.ganttStatData = arr.map((t, i) => {
+            let obj = {
+              id: t[0],
+              type: "task",
+              start: t[2] * 1000,
+              end: t[3] * 1000,
+              duration: t[4] * 60 * 60 * 1000,
+              progress: 30,
+              collapsed: false
+            };
+            if(t[7]) {
+              obj.parentId = t[7]
+            }else{
+              obj.label = t[1]
+            }
+            return obj;
+          });
+          console.log(arr);
+        })
+        .finally(() => {
+          this.ganttStatLoading = false;
+        });
+    },
+    //获取甘特图1数据
     getGantt() {
       this.ganttLoading = true;
       Ajax.getGanttData({ id: this.$route.params.id }).then(({ data }) => {
         const arr = [...data.msg];
         this.ganttLoading = false;
-        this.ganttData = arr.map((t, i) => {
+        this.ganttData = arr.map((t, i, Arr) => {
           return {
             id: t.deptid,
             label: t.deptname,
@@ -222,6 +305,7 @@ export default {
   created() {
     this.getProjectProgress();
     this.getGantt();
+    this.getganttStat();
   },
   mounted() {
     this.getAssetStatistics();
