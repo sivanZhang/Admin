@@ -145,7 +145,7 @@ export function searchIP(params) {
     return AXIOS.get('/wkconfig/bind/', { params })
 }
 //导入节假日
-export function importDates(data) {
+export function uploadDates(data) {
     return AXIOS.post('/worktime/getdates/', data)
 }
 //获取节假日
