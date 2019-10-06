@@ -24,89 +24,45 @@
       <el-col :span="12">
         <el-row type="flex" justify="end">
           <el-button
-            v-if="!isUpload"
-            icon="el-icon-circle-plus"
             type="success"
-            @click="openFile"
-            :loading="btnLoading"
+            @click="skipImpory"
           >Excel导入节假日</el-button>
-          <el-button
-            v-else
-            icon="el-icon-upload"
-            :loading="btnLoading"
-            type="success"
-            @click="uploadExcel"
-          >上传Excel</el-button>
         </el-row>
       </el-col>
     </el-row>
     <el-calendar v-model="value" :first-day-of-week="7">
       <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
       <template slot="dateCell" slot-scope="{date, data}">
-        <div>{{data.day.split('-')[2]}}</div>
-        <h4 style="color:#ed4014;margin-top:10px">{{ isFestival(date)}}</h4>
+        <div style="padding:8px;">{{data.day.split('-')[2]}}</div>
+        <div style="background:#3F51B5;margin-top:8px;color:#fff;padding:0 8px;">{{ isFestival(date)}}</div>
       </template>
     </el-calendar>
-    <input
-      class="file_inp"
-      ref="file_inp"
-      style="display: none;"
-      accept=".xlsx"
-      type="file"
-      @change="importExcel"
-    />
   </div>
 </template>
 
 <script>
 import dayjs from "dayjs";
-import { parseExcel } from "@/api/assets";
-import { getDates, uploadDates } from "@/api/admin";
+import { getDates } from "@/api/admin";
 export default {
   name: "time-management",
   data() {
     return {
-      dayjs,
       rangeDate: "",
-      yearDate: "",
+      yearDate:new Date(),
       searchType: false, // 按哪种形式搜索
-      btnLoading: false,
       searchLoading: false,
-      value: new Date(),
+      value: new Date(), //控制日期当前显示时间
       UploadData: [], // 导入后的数据
-      isUpload: false, // 显示“导入”还是“上传”按钮
-      DateList: [],
+      DateList: []
     };
   },
-  /* computed: {
-    FestivalF() {
-      this.DateList
-      return function(date) {
-        let obj = this.DateList.findIndex(t => {
-          return (
-            dayjs(t.date * 1000).format("YYYYMMDD") ==
-            dayjs(date).format("YYYYMMDD")
-          );
-        });
-        return obj.name || ""
-      };
-    }
-  }, */
-  /* filters: {
-    FestivalF(date) {
-      let index =this.DateList.findIndex(t => {
+  methods: {
+    isFestival(date) {
+      let obj = this.DateList.find(t => {
         return (
           dayjs(t.date * 1000).format("YYYYMMDD") ==
           dayjs(date).format("YYYYMMDD")
         );
-      });
-      return index ? this.DateList[index].name : "";
-    }
-  }, */
-  methods: {
-    isFestival(date) {
-      let obj = this.DateList.find(t => {
-        return dayjs(t.day * 1000).format("YYYYMMDD") == dayjs(date).format("YYYYMMDD");
       });
       return obj ? obj.name : "";
     },
@@ -122,7 +78,7 @@ export default {
           start: dayjs(this.rangeDate[0]).format("YYYY/MM/DD"),
           end: dayjs(this.rangeDate[1]).format("YYYY/MM/DD")
         };
-        this.value = this.rangeDate[0]
+        this.value = this.rangeDate[0];
       } else {
         if (!this.yearDate) {
           this.$message.error("请选择年份");
@@ -131,61 +87,42 @@ export default {
         params = {
           year: dayjs(this.yearDate).format("YYYY")
         };
-        this.value = params.year
+        this.value = params.year;
       }
       this.searchLoading = true;
       getDates(params)
         .then(({ data }) => {
-          this.DateList = [...data.msg]
+          this.DateList = [...data.msg];
         })
         .finally(() => {
           this.searchLoading = false;
         });
     },
     //打开excel文件
-    openFile() {
-      this.$refs.file_inp.click();
-    },
-    //后端解析excel
-    importExcel(e) {
-      if (!e.target.files) {
-        return;
-      }
-      let file = e.target.files[0];
-      let Fdata = new FormData();
-      Fdata.append("file", file);
-      this.btnLoading = true;
-      parseExcel(Fdata)
-        .then(({ data }) => {
-          if (data.status === 0) {
-            this.UploadData = [...data.msg];
-            this.isUpload = true;
-          } else {
-            this.$message.error(data.msg);
-          }
-        })
-        .finally(() => {
-          this.btnLoading = false;
-        });
-    },
-    //上传节假日
-    uploadExcel() {
-      this.btnLoading = true;
-      uploadDates(this.UploadData)
-        .then(({ data }) => {
-          this.$notify.info({
-            title: "消息",
-            message: data.msg
-          });
-          this.isUpload = false;
-        })
-        .finally(() => {
-          this.btnLoading = false;
-        });
+    skipImpory() {
+      this.$router.push({ name: "date-import" });
     }
+  },
+  created() {
+    this.searchLoading = true;
+    getDates({
+      year: dayjs(this.yearDate).format("YYYY")
+    })
+      .then(({ data }) => {
+        this.DateList = [...data.msg];
+      })
+      .finally(() => {
+        this.searchLoading = false;
+      });
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.el-calendar{
+  margin-top: 30px;
+}
+.el-calendar-day{
+  padding: 0px!important;
+}
 </style>

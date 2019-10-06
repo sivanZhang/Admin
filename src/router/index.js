@@ -315,6 +315,28 @@ export const constantRoutes = [{
           icon: 'assetlist'
         },
         hidden: true
+      },
+      {
+        path: 'clockin-import',
+        name: 'clockin-import',
+        component: () =>
+          import('@/views/checking-in/clockin-import'),
+        meta: {
+          title: '打卡导入',
+          icon: 'assetlist'
+        },
+        hidden: true
+      },
+      {
+        path: 'date-import',
+        name: 'date-import',
+        component: () =>
+          import('@/views/admin/date-import'),
+        meta: {
+          title: '节假日导入',
+          icon: 'assetlist'
+        },
+        hidden: true
       }
     ]
   },
