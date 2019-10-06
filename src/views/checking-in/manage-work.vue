@@ -1,33 +1,215 @@
 <template>
   <div id="manage-work">
-      加班调休
-      <!-- <el-table :data="leaverhourList" v-loading="tableLoading">
-      <el-table-column type="index"></el-table-column>
-      <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
-      <el-table-column prop="task.name" label="加班任务"></el-table-column>
-      <el-table-column prop="reason" label="加班原因"></el-table-column>
-      <el-table-column prop="overtime_hour" label="加班工时"></el-table-column>
-      <el-table-column prop="level" label="审批等级"></el-table-column>
-      <el-table-column prop="approver.username" label="审批人"></el-table-column>
-      <el-table-column label="操作" align="center">
+    <template v-if="auth">
+      <div style="padding-bottom:10px">
+        <el-button icon="el-icon-plus" type="primary" @click="openDialog(1)">添加调休表</el-button>
+        <el-button
+          icon="el-icon-delete"
+          type="danger"
+          @click="removeDayOff()"
+          :disabled="this.multipleSelection.length === 0"
+        >批量删除</el-button>
+      </div>
+    </template>
+    <el-table :data="leaverhourList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+      <el-table-column prop="off_user.username" label="调休人" class-name="links">
         <template slot-scope="scope">
-          <el-button type="text" @click="openDialog(scope.row.id)">审批</el-button>
+          <span @click="showDrawer(scope.row)">{{scope.row.off_user.username}}</span>
         </template>
       </el-table-column>
-    </el-table> -->
+      <el-table-column label="调休时长" prop="off_hour"></el-table-column>
+      <el-table-column prop="reason" label="调休理由"></el-table-column>
+      <el-table-column prop="off_count" label="调休详情" align="center">
+        <el-table-column label="总调休时间" prop="off_count.all_off_hour"></el-table-column>
+        <el-table-column label="已调休时间" prop="off_count.have_off_hour"></el-table-column>
+        <el-table-column label="剩余调休时间" prop="off_count.allow_off_hour"></el-table-column>
+      </el-table-column>
+      <template v-if="auth">
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              style="color:red"
+              @click="remove(scope.row)"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </template>
+    </el-table>
+
+    <Drawer
+      scrollable
+      closable
+      v-model="value1"
+      width="526"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+      :title="titleSHow"
+    >
+      <el-table :data="overtime_list">
+        <el-table-column type="index"></el-table-column>
+        <el-table-column label="创建时间" prop="creator_date">
+          <template slot-scope="scope">{{scope.row.creator_date|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="加班时长（小时）" prop="overtime_hour"></el-table-column>
+        <el-table-column label="加班原因" prop="reason"></el-table-column>
+        <el-table-column label="开始时间" prop="start_time">
+          <template slot-scope="scope">{{scope.row.start_time|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间" prop="end_time">
+          <template slot-scope="scope">{{scope.row.end_time|dateFormat}}</template>
+        </el-table-column>
+      </el-table>
+    </Drawer>
+    <el-dialog title="添加调休记录" :visible.sync="dialogShow" width="512px">
+      <el-form :model="dayOffForm" label-width="110px">
+        <el-form-item label="调休人" prop="off_user_id">
+          <el-select v-model="dayOffForm.off_user_id" filterable>
+            <el-option
+              v-for="(item,index) of UserList"
+              :key="index"
+              :label="item.username"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调休时间">
+          <el-input v-model="dayOffForm.off_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+        </el-form-item>
+        <el-form-item label="调休原因">
+          <el-input type="textarea" v-model="dayOffForm.reason"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="openDialog(2)" type="primary">立即提交</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getDayOffList, addDayOff, delDayOff } from "@/api/checkingIn";
+import { mapState } from "vuex";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
-    name:"manage-work",
-    data(){
-        return{
-          leaverhourList:[],
-        }
+  mixins: [thumbtackMixin],
+  name: "manage-work",
+  data() {
+    return {
+      leaverhourList: [],
+      dialogShow: false,
+      dialogTitle: "",
+      dayOffForm: {},
+      allow_off: null,
+      myDayOff: [],
+      auth: null,
+      overtime_list: null,
+      value1: false,
+      multipleSelection: [],
+      titleSHow: ""
+    };
+  },
+  computed: {
+    ...mapState("admin", ["UserList"])
+  },
+  methods: {
+    //批量删除
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      //console.log(this.multipleSelection.length);
     },
-    methods:{
-
+    removeDayOff() {
+      this.$confirm("此操作将永久删除调休记录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        delDayOff({
+          method: "delete",
+          ids: this.multipleSelection.map(item => item.daysoff_id).join(",")
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getList();
+          }
+        });
+      });
+    },
+    //单个删除
+    remove(row) {
+      this.$confirm("此操作将永久删除调休记录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        delDayOff({
+          method: "delete",
+          ids: row.daysoff_id
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getList();
+          }
+        });
+      });
+    },
+    //展开侧栏
+    showDrawer(row) {
+      this.value1 = true;
+      getDayOffList({ daysoff_id: row.daysoff_id }).then(({ data }) => {
+        this.overtime_list = data.msg.overtime_list;
+        this.titleSHow = data.msg.off_user.username + "的加班详情";
+      });
+    },
+    //添加调休表
+    openDialog(Type) {
+      if (Type === 1) {
+        this.dialogShow = true;
+      } else {
+        addDayOff(this.dayOffForm).then(({ data }) => {
+          if (data.status === 0) {
+            this.dialogShow = false;
+            this.$message.success(data.msg);
+            this.getList();
+          } else {
+            this.dialogShow = false;
+            this.$message.error(data.msg);
+          }
+        });
+      }
+    },
+    getList() {
+      getDayOffList({ all_daysoff: "" }).then(({ data }) => {
+        if (data.status === 0) {
+          this.auth = data.auth.daysoff_operate;
+          if (data.auth.daysoff_operate == true) {
+            this.leaverhourList = [...data.msg];
+          } else {
+            getDayOffList({
+              my_daysoff: this.$store.state.login.userInfo.id
+            }).then(({ data }) => {
+              if (data.status === 0) {
+                this.leaverhourList = [...data.msg];
+              }
+            });
+          }
+        }
+      });
     }
-}
+  },
+  created() {
+    this.getList();
+  }
+};
 </script>
+<style lang="scss">
+#manage-work {
+  .links {
+    cursor: pointer;
+    color: #2d8cf0;
+  }
+}
+</style>

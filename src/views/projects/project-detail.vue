@@ -2,9 +2,6 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="数据统计" name="tab4" lazy>
-        <statistics />
-      </el-tab-pane>
       <template v-if="project.pro_type === 0">
         <el-tab-pane label="实训成员" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
@@ -35,6 +32,9 @@
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2" >
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
+      </el-tab-pane>
+      <el-tab-pane label="数据统计" name="tab4" lazy>
+        <statistics />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
         <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />

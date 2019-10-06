@@ -61,3 +61,16 @@ export function delExtraTemplate(data){
 export function getExtraTemplate(params){
     return AXIOS.get('/wktemplate/extral_work_rule/',{params})
 }
+
+//查看调休信息
+export function getDayOffList(params){
+    return AXIOS.get('/overtime/daysoff/',{params})
+}
+//添加调休
+export function addDayOff(data){
+    return AXIOS.post('/overtime/daysoff/',data)
+}
+//删除调休
+export function delDayOff(data){
+    return AXIOS.post('/overtime/daysoff/?delete',data)
+}
