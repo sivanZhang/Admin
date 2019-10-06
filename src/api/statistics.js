@@ -26,20 +26,23 @@ export function getGanttData(params) {
   })
 }
 //燃尽图接口
-export function burnOut(params) {
-  return AXIOS.get('/projects/stat/?04', {
-    params
-  })
+export function burnOut(params){
+    return AXIOS.get('/projects/stat/',{params})
+}
+//外包
+export function exportTask(params){
+    return AXIOS.get('/projects/stat/',{params})
 }
 //查询项目提交次数
-export function proCommitCount(params) {
-  return AXIOS.get('/projects/submitrecord/', {
-    params
-  })
+export function proCommitCount(params){
+    return AXIOS.get('/projects/submitrecord/', {params})
 }
-//查询项目任务执行人任务统计图
-export function getingExecutorChart(params) {
-  return AXIOS.get('/projects/stat/?05', {
-    params
-  })
+
+//统计项目成员的资产和任务信息
+export function statisticMemberDetail(params){
+    return AXIOS.get('/statistic/member/',{params})
+}
+//成员排名
+export function MemberSort(params){
+    return AXIOS.get("/statistic/score/",{params})
 }
