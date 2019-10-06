@@ -80,8 +80,7 @@ export const asyncRoutes = [ {
         },
         hidden: true
       }
-    ]
-  }, {
+    ,{
     path: '/admin',
     component: Layout,
     redirect: 'noRedirect', // 点击2级面包屑对应哪个路由，如果和path一样就不会跳转
