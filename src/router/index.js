@@ -26,62 +26,52 @@ meta: {
  */
 
 //涉及权限的动态加载路由
-export const asyncRoutes = [ {
-        path: '/task',
-        component: Layout,
-        redirect: 'noRedirect',
-        // alwaysShow: true,
+export const asyncRoutes = [{
+    path: '/task',
+    component: Layout,
+    redirect: 'noRedirect',
+    // alwaysShow: true,
+    meta: {
+      title: '审批',
+      icon: 'task',
+      roles: 'manage_approve'
+    },
+    children: [{
+        path: 'approve',
+        name: 'approve',
+        component: () =>
+          import('@/views/video/my-audit'),
         meta: {
-            title: '审批',
-            icon: 'task',
-            roles: 'manage_approve'
-        },
-        children: [{
-                path: 'approve',
-                name: 'approve',
-                component: () =>
-                    import ('@/views/video/my-audit'),
-                meta: {
-                    title: '我的审批',
-                    icon: 'v2',
-                    roles: 'manage_approve'
-                }
-            },
-            {
-                path: 'audit-approve',
-                name: 'audit-approve',
-                component: () =>
-                    import ('@/views/video/extra-audit'),
-                meta: {
-                    title: '客户审批',
-                    icon: 'v2',
-                    roles: 'manage_approve'
-                }
-            },
-            {
-                path: '/check-video',
-                name: 'check-video',
-                component: () =>
-                    import ('@/views/video/video-check'),
-                meta: {
-                    title: '审核意见',
-                    activeMenu: '/task/approve'
-                },
-                hidden: true
-            },
-        ]
-    }, {
-        path: '/admin',
-        component: Layout,
-        redirect: 'noRedirect', //点击2级面包屑对应哪个路由，如果和path一样就不会跳转
+          title: '我的审批',
+          icon: 'v2',
+          roles: 'manage_approve'
+        }
+      },
+      {
+        path: 'audit-approve',
+        name: 'audit-approve',
+        component: () =>
+          import('@/views/video/extra-audit'),
+        meta: {
+          title: '客户审批',
+          icon: 'v2',
+          roles: 'manage_approve'
+        }
+      },
+      {
+        path: '/check-video',
+        name: 'check-video',
+        component: () =>
+          import('@/views/video/video-check'),
         meta: {
           title: '审核意见',
           activeMenu: '/task/approve'
         },
         hidden: true
-      }
+      },
     ]
-  }, {
+  },
+  {
     path: '/admin',
     component: Layout,
     redirect: 'noRedirect', // 点击2级面包屑对应哪个路由，如果和path一样就不会跳转
@@ -89,8 +79,7 @@ export const asyncRoutes = [ {
       title: '系统设置',
       icon: 'settings'
     },
-    children: [
-      {
+    children: [{
         path: 'profession', // 直接写字符串会生成"/admin/profession";如果前面带/就是绝对路径了，会生成"/profession"
         name: 'profession',
         component: () =>
@@ -162,8 +151,7 @@ export const asyncRoutes = [ {
         }
       },
     ]
-  },
-  {
+  }, {
     path: '/material',
     component: Layout,
     redirect: 'noRedirect',
@@ -181,13 +169,11 @@ export const asyncRoutes = [ {
         icon: 'material'
       }
     }]
-  },
-  {
+  }, {
     path: '*',
     redirect: '/404',
     hidden: true
-  },
-  {
+  }, {
     path: '/team-manager',
     component: Layout,
     redirect: '/',
@@ -211,8 +197,7 @@ export const asyncRoutes = [ {
 ]
 
 // 不涉及权限的固定路由
-export const constantRoutes = [
-  {
+export const constantRoutes = [{
     path: '/redirect',
     component: Layout,
     hidden: true,
@@ -259,8 +244,7 @@ export const constantRoutes = [
       title: '概览',
       icon: 'gailan'
     },
-    children: [
-      {
+    children: [{
         path: '/overview/project',
         name: 'overview-project',
         component: () =>
@@ -311,8 +295,7 @@ export const constantRoutes = [
       icon: 'tree-table',
     },
     hidden: true,
-    children: [
-      {
+    children: [{
         path: 'import-users',
         name: 'import-users',
         component: () =>
@@ -440,8 +423,7 @@ export const constantRoutes = [
       title: '加班管理',
       icon: 'kq'
     },
-    children: [
-      {
+    children: [{
         path: 'extra-work',
         name: 'extra-work',
         component: () =>
