@@ -25,7 +25,8 @@ export default {
     },
     chartId: {
       type: String,
-      default: "chart"
+      default: "chart",
+      required: true
     }
   },
   data() {
@@ -45,10 +46,17 @@ export default {
     this.chart = null;
   },
   methods: {
+    // 父组件调用,开启加载动画
     openLoading() {
       this.loading = true;
     },
-    //title=图标title，data=表单数据
+    /**
+     * 父组件直接调用该方法即可渲染，但是父组件必须在其 mounted() 钩子中调用
+     *
+     * @param {string} title 饼图的标题文字，非必传
+     * @param {Array} chartData 饼图的数据，必传,具体格式为[{ name:'demo', value: 10 }]
+     *
+     */
     initChart(title = "", chartData = []) {
       let options = {
         title: {
