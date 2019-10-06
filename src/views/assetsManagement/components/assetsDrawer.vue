@@ -13,6 +13,7 @@
               @refresh_assetList="getAssetList"             
               :LinkAssetList="LinkAssetList"
               :pro_type="pro_type"
+              :authLink="authLink"
             ></links>
           </el-tab-pane>
           <el-tab-pane label="评论" name="second">
@@ -84,7 +85,7 @@
             <approve-log ref="approvelogs" :project="project" task_or_project="project" />
           </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
-            <info :project="project" @refresh_assetList="getAssetList" />
+            <info :project="project" @refresh_assetList="getAssetList" :authAsset="authAsset"/>
             <attrsBind
               :project="project"
               :customAttrs="customAttrs"
@@ -118,12 +119,14 @@ export default {
     "customAttrs",
     "attrsList",
     "attrsTypeNum",
-    "pro_type"
+    "pro_type",
+    "authAsset"
   ],
   data() {
     return {
       activeTab: this.assetJump ? this.assetJump : "first",
       LinkList: [],
+      authLink:null,
       assetVersion: null,
       assetTaskList: null
     };
@@ -155,6 +158,7 @@ export default {
         asset
       }).then(res => {
         this.LinkList = [...res.data.msg];
+        this.authLink = res.data.auth.can_manage_link
       });
     },
     getAssetVersion(id) {

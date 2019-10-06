@@ -280,7 +280,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false">
               <span v-if="!editing15">{{project.name}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(14)" v-if="showEdit15"></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(14)" v-if="showEdit15&&authAsset" ></i>
             </div>
             <div v-if="editing15">
               <input
@@ -304,7 +304,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
               <span v-if="!editing4">{{project.path?project.path:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit4" @click="edit(3)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit4&&authAsset" @click="edit(3)"></i>
             </div>
             <div v-if="editing4">
               <input
@@ -328,7 +328,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit18=true" @mouseleave="showEdit18 = false">
               <span v-if="!editing18">{{project.priority |Priority}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit18" @click="edit(17)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit18&&authAsset" @click="edit(17)"></i>
             </div>
             <div v-if="editing18">
               <el-select
@@ -350,7 +350,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
               <span v-if="!editing19">{{project.level |Level}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit19" @click="edit(18)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit19&&authAsset" @click="edit(18)"></i>
             </div>
             <div v-if="editing19">
               <el-select
@@ -374,7 +374,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit11=true" @mouseleave="showEdit11 = false">
               <span v-if="!editing11">{{project.start_date|dateFormat}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit11" @click="edit(10)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit11&&authAsset" @click="edit(10)"></i>
             </div>
             <div v-if="editing11">
               <el-date-picker
@@ -393,7 +393,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit12=true" @mouseleave="showEdit12 = false">
               <span v-if="!editing12">{{project.end_date|dateFormat}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit12" @click="edit(11)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit12&&authAsset" @click="edit(11)"></i>
             </div>
             <div v-if="editing12">
               <!-- $store.state.login.userInfo -->
@@ -413,7 +413,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false">
               <span v-if="!editing16">{{project.frame?project.frame:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(15)" v-if="showEdit16"></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(15)" v-if="showEdit16&&authAsset"></i>
             </div>
             <div v-if="editing16">
               <input
@@ -433,7 +433,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false">
               <span v-if="!editing17">{{project.episode?project.episode:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(16)" v-if="showEdit17"></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(16)" v-if="showEdit17&&authAsset"></i>
             </div>
             <div v-if="editing17">
               <input
@@ -461,7 +461,7 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false">
               <span v-if="!editing20">{{project.report?project.report:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit20" @click="edit(19)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit20&&authAsset" @click="edit(19)"></i>
             </div>
             <div v-if="editing20">
               <input
@@ -481,7 +481,7 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false">
               <span v-if="!editing21">{{project.retime?project.retime:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit21" @click="edit(20)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit21&&authAsset" @click="edit(20)"></i>
             </div>
             <div v-if="editing21">
               <input
@@ -501,7 +501,7 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false">
               <span v-if="!editing22">{{project.frame_range?project.frame_range:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit22" @click="edit(21)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit22&&authAsset" @click="edit(21)"></i>
             </div>
             <div v-if="editing22">
               <input
@@ -521,7 +521,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit24=true" @mouseleave="showEdit24 = false">
               <span v-if="!editing24">{{project.pro_reference}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(23)" v-if="showEdit24"></i>
+              <i class="el-icon-edit" style="color:blue" @click="edit(23)" v-if="showEdit24&&authAsset"></i>
             </div>
             <div v-if="editing24">
               <input
@@ -542,7 +542,7 @@
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
               <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
               <span v-else v-show="!project.remark">{{"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit10" @click="edit(9)"></i>
+              <i class="el-icon-edit" style="color:blue" v-if="showEdit10&&authAsset" @click="edit(9)"></i>
             </div>
 
             <div v-if="editing10" style="display:flex">
@@ -564,7 +564,7 @@ import { mapState } from "vuex";
 import { returnStatement } from "@babel/types";
 import { constants } from "crypto";
 export default {
-  props: ["project"],
+  props: ["project","authAsset"],
   name: "info",
   data() {
     return {
