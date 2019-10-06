@@ -197,11 +197,7 @@ export default {
       getDayOffList(payload).then(({ data }) => {
         if(!data.auth.daysoff_operate){
           let Data = data.msg[0].off_count;
-        }else{
-          return;
-        }
-        
-        //console.log(data.msg)
+          //console.log(data.msg)
         let chartData = [
           {
             name: "已调休时长",
@@ -213,6 +209,11 @@ export default {
           }
         ];
         this.$refs["dayoff-hour"].initChart("调休统计", chartData);
+        }else{
+          return;
+        }
+        
+        
       });
     },
 
