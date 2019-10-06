@@ -12,6 +12,15 @@
     <el-divider />
     <el-row>
       <el-col :span="12">
+        <LineChart chart-id="line-chart1" ref="line-chart1"/>
+      </el-col>
+      <el-col :span="12">
+        <LineChart chart-id="line-chart2" ref="line-chart2"/>
+      </el-col>
+    </el-row>
+    <el-divider />
+    <el-row>
+      <el-col :span="12">
         <label for>资产状态统计</label>
         <!-- 图表组件 -->
         <chart ref="asset-chart" chart-id="asset-chart" />
@@ -22,8 +31,6 @@
         <chart ref="task-chart" chart-id="task-chart" />
       </el-col>
     </el-row>
-    <el-divider />
-    <LineChart height="600px" width="100%" />
   </div>
 </template>
 

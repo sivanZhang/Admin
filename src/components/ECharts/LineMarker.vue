@@ -1,5 +1,5 @@
 <template>
-  <div :id="chartId" :class="className" :style="{height:height,width:width}" />
+  <div :id="chartId" :class="className" :style="{height:height,width:width}" v-loading="loading"/>
 </template>
 
 <script>
@@ -48,7 +48,7 @@ const DefaultOption = {
   yAxis: [
     {
       type: "value",
-      name: "(%)",
+      /* name: "(%)", */
     }
   ],
   series: [
@@ -98,11 +98,12 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      loading:false
     };
   },
   mounted() {
-    this.initChart();
+    this.chart = echarts.init(document.getElementById(this.chartId));
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -112,10 +113,20 @@ export default {
     this.chart = null;
   },
   methods: {
+    // 父组件调用,开启加载动画
+    openLoading() {
+      this.loading = true;
+    },
+    /**
+     * 父组件直接调用该方法即可渲染，但是父组件必须在其 mounted() 钩子中调用
+     *
+     * @param {Object} customOption 参考上面DefaultOption里面配置 
+     *
+     */
     initChart(customOption = {}) {
-      this.chart = echarts.init(document.getElementById(this.chartId));
       let option = Object.assign({}, DefaultOption, customOption);
       this.chart.setOption(option);
+      this.loading = false;
     }
   }
 };
