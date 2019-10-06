@@ -713,8 +713,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio1" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -726,8 +726,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio2" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -739,8 +739,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio3" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -754,8 +754,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio4" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -769,8 +769,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio5" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -789,8 +789,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio6" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -814,8 +814,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio7" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -835,8 +835,8 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio8" size="mini">
-              <el-radio-button label="YES"></el-radio-button>
-              <el-radio-button label="NO"></el-radio-button>
+              <el-radio-button label="是" ></el-radio-button>
+              <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
           <el-col :span="18">
@@ -1018,14 +1018,14 @@ export default {
       trainingMenber: [],
       mulEditDialog: false,
       updateMulTask: {},
-      radio1: "NO",
-      radio2: "NO",
-      radio3: "NO",
-      radio4: "NO",
-      radio5: "NO",
-      radio6: "NO",
-      radio7: "NO",
-      radio8: "NO"
+      radio1: "否",
+      radio2: "否",
+      radio3: "否",
+      radio4: "否",
+      radio5: "否",
+      radio6: "否",
+      radio7: "否",
+      radio8: "否"
     };
   },
   filters: {
@@ -1194,11 +1194,11 @@ export default {
         this.mulEditDialog = true;
       } else {
         let keys = [{}];
-        if (this.radio1 == "YES") {
+        if (this.radio1 == "是") {
             keys = [...keys, { key: "name", value: this.updateMulTask.name }];
 
         }
-        if (this.radio2 == "YES") {
+        if (this.radio2 == "是") {
           
             keys = [
               ...keys,
@@ -1206,28 +1206,28 @@ export default {
             ];
           
         }
-        if (this.radio3 == "YES") {
+        if (this.radio3 == "是") {
           keys = [...keys,{ key:"priority",value: this.updateMulTask.priority }];
         }
-        if (this.radio4 == "YES") {
+        if (this.radio4 == "是") {
           keys =[...keys,{ key:"grade",value: this.updateMulTask.grade }];
         }
-        if (this.radio5 == "YES") {
+        if (this.radio5 == "是") {
           keys = [ ...keys, {key:"status", value:this.updateMulTask.status }];
         }
-        if (this.radio6 == "YES") {
+        if (this.radio6 == "是") {
           keys = 
             [...keys,
             {key:"executorlist",value: this.updateMulTask.executorlist.join()
           }];
         }
-        if (this.radio7 == "YES") {
+        if (this.radio7 == "是") {
           keys =[ 
             ...keys,
             {key:"start_date",value:dataFormat(this.updateMulTask.datetime[0])},
             {key:"end_date",value:dataFormat(this.updateMulTask.datetime[1])}];
         }
-        if (this.radio8 == "YES") {
+        if (this.radio8 == "是") {
           keys = [ ...keys, {key:"total_hour",value:this.updateMulTask.total_hour }];
         }
         let data = {
@@ -1397,8 +1397,8 @@ export default {
       };
     },
     changeTime2(val) {
-      if (this.radio7 == "YES") {
-        this.radio8 = "YES";
+      if (this.radio7 == "是") {
+        this.radio8 = "是";
         const totalHour2 =
           (this.updateMulTask.datetime[1] - this.updateMulTask.datetime[0]) /
           (1000 * 3600 * 24);

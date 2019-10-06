@@ -68,7 +68,7 @@ export const asyncRoutes = [{
           activeMenu: '/task/approve'
         },
         hidden: true
-      },
+      }
     ]
   },
   {
