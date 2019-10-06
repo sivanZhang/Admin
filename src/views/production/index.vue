@@ -67,6 +67,7 @@
         </template>
       </el-table-column>
     </el-table>
+    
     <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
       <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
     </el-dialog>
@@ -96,6 +97,7 @@ import remarks from "@/components/projectDrawer/components/remarks";
 import { getProduction } from "@/api/production";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getRemark } from "@/api/remark";
+
 export default {
   name: "my-production",
   mixins: [thumbtackMixin], //drawer图钉效果

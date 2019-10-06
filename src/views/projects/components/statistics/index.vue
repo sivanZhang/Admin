@@ -22,6 +22,8 @@
         <chart ref="task-chart" chart-id="task-chart" />
       </el-col>
     </el-row>
+    <el-divider />
+    <LineChart height="600px" width="100%" />
   </div>
 </template>
 
@@ -29,9 +31,10 @@
 import * as Ajax from "@/api/statistics";
 import Chart from "@/components/ECharts/PieChart";
 import Gantt from "@/components/Gantt";
+import LineChart from "@/components/ECharts/LineMarker";
 export default {
   name: "all-statistics",
-  components: { Chart, Gantt },
+  components: { Chart, Gantt, LineChart },
   data() {
     return {
       ganttLoading: false,

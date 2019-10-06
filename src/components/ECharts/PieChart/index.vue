@@ -3,13 +3,7 @@
 </template>
 
 <script>
-require("echarts/theme/macarons"); // echarts theme
-var echarts = require("echarts/lib/echarts");
-// 引入柱状图
-require("echarts/lib/chart/pie");
-// 引入提示框和标题组件
-require("echarts/lib/component/tooltip");
-require("echarts/lib/component/title");
+import echarts from 'echarts'
 import resize from "./resize";
 
 export default {
