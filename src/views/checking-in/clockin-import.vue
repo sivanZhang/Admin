@@ -1,7 +1,13 @@
 <template>
   <div id="asset-list">
     <div style="padding-bottom:15px;">
-      <input class="file_inp" ref="file_inp" accept=".xlsx" type="file" @change="importExcel" />
+      <input
+        class="file_inp"
+        ref="file_inp"
+        accept=".xlsx, .xls, .csv"
+        type="file"
+        @change="importExcel($event.target)"
+      />
       <el-button
         icon="el-icon-circle-plus"
         type="success"
@@ -40,20 +46,20 @@
 </template>
 
 <script>
-import { uploadDates } from "@/api/admin";
-import { updateWorkLog } from "@/api/checkingIn";
-import ImportTableTemplate from "@/views/components/importTableTemplate";
-import { parseExcel } from "@/api/assets";
+import { clockIn } from "@/api/notice";
+import XLSX from "xlsx";
+import ImportTableTemplate from "@/views/components/importUserTable";
 export default {
   neme: "asset-import",
   data() {
-    const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
       uploadLoading: false,
       uploadDisabled: true,
       requiredKeysMap: {
-        festivalname: "节假日名",
-        festivalday: "日期"
+        username: "用户名",
+        date: "日期",
+        startwork: "上班打卡时间",
+        endwork: "下班打卡时间"
       },
       keysMap: {},
       testDataJSON: []
@@ -65,25 +71,50 @@ export default {
     openFile() {
       this.$refs.file_inp.click();
     },
-    deleteTableRow() {
-      this.$refs.tableTemplate.deleteRow();
-    },
     //导入excel 变异为数组
-    importExcel(e) {
-      if (!e.target.files) {
+    importExcel(obj) {
+      let _self = this;
+      if (!obj.files) {
         return;
       }
-      let file = e.target.files[0];
-      let Fdata = new FormData();
-      Fdata.append("file", file);
-      this.$refs.tableTemplate.openLoading("数据导入中");
-      parseExcel(Fdata).then(({ data }) => {
+      let file = obj.files[0],
+        types = file.name.split(".")[1],
+        fileType = ["xlsx", "xlc", "xlm", "xls", "xlt", "xlw", "csv"].some(
+          item => item === types
+        );
+      if (!fileType) {
+        this.$message.error("格式错误！请重新选择");
+        return;
+      }
+      _self.testDataJSON = [];
+      _self.$refs.tableTemplate.openLoading("数据导入中");
+      //异步等到解析文件后调用其他方法
+      file2Xce(file).then(tabJson => {
         //这里可判断数据是否为空
-        this.testDataJSON = [...data.msg];
-        this.importAsset();
-        this.uploadDisabled = false;
-        e.target.value = null; //可以重新导入同一个表
+        _self.testDataJSON = [...tabJson];
+        _self.importAsset();
+        _self.uploadDisabled = false;
+        obj.value = null; //可以重新导入同一个表
       });
+      function file2Xce(file) {
+        return new Promise(function(resolve, reject) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            let data = e.target.result;
+            let wb = XLSX.read(data, {
+              type: "binary"
+            });
+            resolve(
+              XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+                header: 1, //二维数组展示
+                raw: false,
+                skipHeader: true
+              })
+            );
+          };
+          reader.readAsBinaryString(file);
+        });
+      }
     },
     //获得编辑后的数据
     getAsset() {
@@ -95,30 +126,31 @@ export default {
      */
     returnAssemblingData(data) {
       //提交jsons数据
+      data = {
+        attendance: { ...data }
+      };
       this.uploadLoading = true;
-      uploadDates(data)
+      clockIn(data)
         .then(({ data }) => {
-          if (data.msg) {
-            this.$message.warning(data.msg);
-          } else {
-            this.$notify({
-              title: "提交状态",
-              message: `资产/镜头创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
-              duration: 0,
-              type: "warning"
+          if (data.status === 0) {
+            this.$notify.info({
+              title: `导入成功${data.msg.suc_num}条，失败${data.msg.fail_num}条`,
+              message: data.msg.msg.join(),
+              duration: 0
             });
             this.$router.push({
-              name: "project-detail",
-              params: { id: this.$route.params.id },
-              qurey: {
-                tab: "tab0"
-              }
+              name: "manage-work"
             });
+          } else {
+            this.$message.warning(data.msg);
           }
         })
         .finally(() => {
           this.uploadLoading = false;
         });
+    },
+    deleteTableRow() {
+      this.$refs.tableTemplate.deleteRow();
     },
     //导入数据 type=1表示重置
     importAsset(type) {

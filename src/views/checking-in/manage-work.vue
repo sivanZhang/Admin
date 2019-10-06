@@ -1,6 +1,5 @@
 <template>
   <div id="manage-work">
-    加班调休
     <!-- <el-table :data="leaverhourList" v-loading="tableLoading">
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
