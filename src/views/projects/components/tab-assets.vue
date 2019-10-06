@@ -3,21 +3,23 @@
     <div>
       <el-row :gutter="15">
         <el-col :span="14" style="padding-bottom:15px;">
-          <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
-            <slot name="add">添加资产</slot>
-          </el-button>
-          <el-button icon="el-icon-download" type="primary" @click="targetdownload">
-            <slot name="import">资产导入</slot>
-          </el-button>
-          <el-button icon="el-icon-upload2" type="success" @click="targetUpload">
-            <slot name="upload">资产导出</slot>
-          </el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            @click="delMulAssets()"
-            :disabled="this.multipleSelection.length === 0"
-          >批量删除</el-button>
+          <template v-if="authAsset">
+            <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
+              <slot name="add">添加资产</slot>
+            </el-button>
+            <el-button icon="el-icon-download" type="primary" @click="targetdownload">
+              <slot name="import">资产导入</slot>
+            </el-button>
+            <el-button icon="el-icon-upload2" type="success" @click="targetUpload">
+              <slot name="upload">资产导出</slot>
+            </el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              @click="delMulAssets()"
+              :disabled="this.multipleSelection.length === 0"
+            >批量删除</el-button>
+          </template>
           <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
             <el-col :span="12">
               <el-checkbox v-model="ind">序号</el-checkbox>
@@ -381,9 +383,7 @@
         <el-table-column label="实训阶段" prop="groups" v-if="groupType" width="120px">
           <template slot-scope="scope">
             <el-row v-for="(item,index) of scope.row.groups" :key="index">
-              <el-col>
-                {{item}}
-              </el-col>
+              <el-col>{{item}}</el-col>
             </el-row>
           </template>
         </el-table-column>
@@ -808,7 +808,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="100px">
+        <el-table-column label="操作" align="center" width="100px" v-if="authAsset">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="导出至素材库" placement="top">
               <svg-icon
@@ -1018,6 +1018,7 @@
         @refresh_customAttrs="RefreshcustomAttrs"
         :attrsTypeNum="attrsTypeNum"
         :pro_type="pro_type"
+        :authAsset="authAsset"
       />
     </Drawer>
   </div>
@@ -1283,7 +1284,8 @@ export default {
       materialShow: false,
       materialEstdate: new Date().toLocaleDateString(),
       pro_type: null,
-      groupType:this.$route.query.type === 0?true:false
+      groupType: this.$route.query.type === 0 ? true : false,
+      authAsset: null
     };
   },
   watch: {
@@ -1875,6 +1877,14 @@ export default {
           this.tableLoading = false;
         });
     },
+    //获取操作资产权限
+    getAuth() {
+      HTTP.auth().then(({ data }) => {
+        if (data.status === 0) {
+          this.authAsset = data.auth.manage_asset;
+        }
+      });
+    },
     //获取项目的状态
     getProjectAllStatus() {
       getProjectStatus({ project_id: this.$route.params.id }).then(
@@ -2212,6 +2222,7 @@ export default {
     }
   },
   created() {
+    this.getAuth();
     this.getAssetList();
     this.getProjectAllStatus();
     if (this.assetId) {

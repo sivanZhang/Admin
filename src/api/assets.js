@@ -59,3 +59,8 @@ export function getAssetsApprove(params){
 export function allocationScene(params){
     return AXIOS.get('/assets/scene/',{params})
 }
+
+//操作资产的权限
+export function auth(){
+    return AXIOS.get('/assets/assets/?auth')
+}

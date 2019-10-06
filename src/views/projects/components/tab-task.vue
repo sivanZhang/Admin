@@ -3,32 +3,23 @@
     <div>
       <el-row>
         <el-col :span="13">
-          <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建任务</el-button>
-
-          <!-- <el-dropdown>
-        <el-button type="primary"  @click.native="openDialog(2)">
-          创建
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="openDialog(1)">主任务</el-dropdown-item>
-          <el-dropdown-item @click.native="openDialog(2)">子任务</el-dropdown-item>
-        </el-dropdown-menu>
-          </el-dropdown>-->
-          <el-button icon="el-icon-download" type="primary">导入</el-button>
-          <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
-          <el-button
-            type="success"
-            @click="mulEditTasks(1)"
-            icon="el-icon-edit"
-            :disabled="this.multipleSelection.length === 0"
-          >批量修改</el-button>
-          <el-button
-            type="danger"
-            @click="deleteTask"
-            icon="el-icon-delete"
-            :disabled="this.multipleSelection.length === 0"
-          >批量删除</el-button>
+          <template v-if="authTask">
+            <el-button type="primary" icon="el-icon-plus" @click.native="mainTask">创建任务</el-button>
+            <el-button icon="el-icon-download" type="primary">导入</el-button>
+            <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
+            <el-button
+              type="success"
+              @click="mulEditTasks(1)"
+              icon="el-icon-edit"
+              :disabled="this.multipleSelection.length === 0"
+            >批量修改</el-button>
+            <el-button
+              type="danger"
+              @click="deleteTask"
+              icon="el-icon-delete"
+              :disabled="this.multipleSelection.length === 0"
+            >批量删除</el-button>
+          </template>
           <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
             <el-col :span="12">
               <el-checkbox v-model="show_name">任务</el-checkbox>
@@ -369,7 +360,7 @@
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="total_hour" label="预设时间（小时）" width="130px" v-if="show_total_hour"></el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" v-if="authTask">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">
               <span>
@@ -835,7 +826,7 @@
         <el-row>
           <el-col :span="6" align="center">
             <el-radio-group v-model="radio8" size="mini">
-              <el-radio-button label="是" ></el-radio-button>
+              <el-radio-button label="是"></el-radio-button>
               <el-radio-button label="否"></el-radio-button>
             </el-radio-group>
           </el-col>
@@ -900,6 +891,7 @@ export default {
   name: "tab-task",
   data() {
     return {
+      authTask: null,
       uploadVisible: false,
       activeTab: "first",
       tableLoading: false, //表格加载状态
@@ -1195,40 +1187,53 @@ export default {
       } else {
         let keys = [{}];
         if (this.radio1 == "是") {
-            keys = [...keys, { key: "name", value: this.updateMulTask.name }];
-
+          keys = [...keys, { key: "name", value: this.updateMulTask.name }];
         }
         if (this.radio2 == "是") {
-          
-            keys = [
-              ...keys,
-              { key: "content", value: this.updateMulTask.content }
-            ];
-          
+          keys = [
+            ...keys,
+            { key: "content", value: this.updateMulTask.content }
+          ];
         }
         if (this.radio3 == "是") {
-          keys = [...keys,{ key:"priority",value: this.updateMulTask.priority }];
+          keys = [
+            ...keys,
+            { key: "priority", value: this.updateMulTask.priority }
+          ];
         }
         if (this.radio4 == "是") {
-          keys =[...keys,{ key:"grade",value: this.updateMulTask.grade }];
+          keys = [...keys, { key: "grade", value: this.updateMulTask.grade }];
         }
         if (this.radio5 == "是") {
-          keys = [ ...keys, {key:"status", value:this.updateMulTask.status }];
+          keys = [...keys, { key: "status", value: this.updateMulTask.status }];
         }
         if (this.radio6 == "是") {
-          keys = 
-            [...keys,
-            {key:"executorlist",value: this.updateMulTask.executorlist.join()
-          }];
+          keys = [
+            ...keys,
+            {
+              key: "executorlist",
+              value: this.updateMulTask.executorlist.join()
+            }
+          ];
         }
         if (this.radio7 == "是") {
-          keys =[ 
+          keys = [
             ...keys,
-            {key:"start_date",value:dataFormat(this.updateMulTask.datetime[0])},
-            {key:"end_date",value:dataFormat(this.updateMulTask.datetime[1])}];
+            {
+              key: "start_date",
+              value: dataFormat(this.updateMulTask.datetime[0])
+            },
+            {
+              key: "end_date",
+              value: dataFormat(this.updateMulTask.datetime[1])
+            }
+          ];
         }
         if (this.radio8 == "是") {
-          keys = [ ...keys, {key:"total_hour",value:this.updateMulTask.total_hour }];
+          keys = [
+            ...keys,
+            { key: "total_hour", value: this.updateMulTask.total_hour }
+          ];
         }
         let data = {
           method: "put",
@@ -1343,6 +1348,7 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.TaskList = [...data.msg];
+            this.authTask = data.auth.manage_task;
             this.total = data.count;
             this.pageCount = data.page_count;
             this.visible2 = false;
@@ -1374,6 +1380,7 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.TaskList = [...data.msg];
+            this.authTask = data.auth.manage_task;
             this.total = data.count;
             this.pageCount = data.page_count;
           }
@@ -1862,6 +1869,7 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.TaskList = [...data.msg];
+            this.authTask = data.auth.manage_task;
             this.total = data.count;
             this.pageCount = data.page_count;
           }
@@ -1935,6 +1943,8 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.TaskList = [...data.msg];
+            this.authTask = data.auth.manage_task;
+            // console.log(this.authTask);
             this.total = data.count;
             this.pageCount = data.page_count;
           }

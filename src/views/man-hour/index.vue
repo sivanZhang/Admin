@@ -5,7 +5,15 @@
 </style>
 <template>
   <div ref="drawer-parent">
-    <chart ref="man-hour" chart-id="man-hour" />
+    <template v-if="!authDaysOff">
+      <div style="display:flex">
+        <chart ref="man-hour" chart-id="man-hour" />
+        <chart ref="dayoff-hour" chart-id="dayoff-hour" />
+      </div>
+    </template>
+    <template v-else>
+      <chart ref="man-hour" chart-id="man-hour" />
+    </template>
     <el-card shadow="never">
       <div slot="header">项目工时列表</div>
       <el-table :data="projectCount">
@@ -43,7 +51,7 @@
       :transfer="false"
       :mask="false"
     >
-      <el-tabs v-model="activeName" >
+      <el-tabs v-model="activeName">
         <el-tab-pane label="每日工时" name="first">
           <el-table
             :data="dayManWork"
@@ -125,6 +133,7 @@ import Chart from "@/components/ECharts/PieChart";
 import Gantt from "@/components/Gantt";
 import * as Ajax from "@/api/manHour";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import { getDayOffList } from "@/api/checkingIn";
 export default {
   name: "my-man-hour",
   mixins: [thumbtackMixin],
@@ -138,7 +147,8 @@ export default {
       projectCount: [], //我的每个标准项目工时，
       activeName: "first",
       taskList: [], //任务明细
-      overtime_list: [] //加班明细
+      overtime_list: [], //加班明细
+      authDaysOff: null
     };
   },
   methods: {
@@ -163,10 +173,12 @@ export default {
         }
       });
     },
-    //获取工时统计并渲染饼状图
+    //获取工时和调休统计并渲染饼状图
     getStatistics() {
       let data = { total_count: "" };
+
       this.$refs["man-hour"].openLoading();
+
       Ajax.getManHour(data).then(({ data }) => {
         let chartData = [
           {
@@ -180,7 +192,30 @@ export default {
         ];
         this.$refs["man-hour"].initChart("工时统计", chartData);
       });
+      let payload = { my_daysoff: "" };
+      this.$refs["dayoff-hour"].openLoading();
+      getDayOffList(payload).then(({ data }) => {
+        if(!data.auth.daysoff_operate){
+          let Data = data.msg[0].off_count;
+        }else{
+          return;
+        }
+        
+        //console.log(data.msg)
+        let chartData = [
+          {
+            name: "已调休时长",
+            value: Data.have_off_hour
+          },
+          {
+            name: "可调休时长",
+            value: Data.allow_off_hour
+          }
+        ];
+        this.$refs["dayoff-hour"].initChart("调休统计", chartData);
+      });
     },
+
     getProjectsHour() {
       let data = { project_count: "" };
       Ajax.getManHour(data).then(({ data }) => {
@@ -192,6 +227,10 @@ export default {
     this.getProjectsHour();
   },
   mounted() {
+    getDayOffList({ my_daysoff: "" }).then(({ data }) => {
+      this.authDaysOff = data.auth.daysoff_operate;
+     // console.log(this.authDaysOff);
+    });
     this.getStatistics();
   }
 };

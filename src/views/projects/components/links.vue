@@ -1,7 +1,7 @@
 <template>
   <div id="links" style="display:flex;overflow:auto;">
     <div>
-      <div style="padding-bottom:10px">
+      <div style="padding-bottom:10px" v-if="authLink">
         <el-button icon="el-icon-plus" type="primary" @click="showLinksForm">添加环节</el-button>
         <el-button type="success" @click="LinkTemplate(1)" v-if="!LinkList.length">环节模板</el-button>
         <el-button type="primary" @click="LinkTemplate(3,LinkList)" v-if="LinkList.length">保存模板</el-button>
@@ -22,66 +22,72 @@
           >
             <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
               {{item.dept.name}}
-              <el-tooltip effect="dark" content="添加任务" placement="top">
-                <span style="padding-left:5px">
-                  <i
-                    class="el-icon-plus"
-                    style="color:blue"
-                    @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
-                  ></i>
-                </span>
-              </el-tooltip>
-              <el-tooltip effect="dark" content="修改环节" placement="top">
-                <span style="padding-left:5px">
-                  <i class="el-icon-edit" style="color:green" @click="showLinkForm(item)"></i>
-                </span>
-              </el-tooltip>
-              <el-tooltip effect="dark" content="上移" placement="top">
-                <span style="padding-left:5px">
-                  <i class="el-icon-top" @click="upmove(Index,index,item)" v-if="item.pid"></i>
-                </span>
-              </el-tooltip>
-              <el-tooltip
-                effect="dark"
-                content="下移"
-                placement="top"
-                v-if="!(index === (LinkList[Index].length - 1))"
-              >
-                <span style="padding-left:5px">
-                  <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
-                </span>
-              </el-tooltip>
-              <el-tooltip
-                effect="dark"
-                content="向前合并"
-                placement="top"
-                v-if="item.pid === 0&&Index -1>-1"
-              >
-                <span style="padding-left:5px">
-                  <i class="el-icon-caret-left" @click="leftmove(Index)"></i>
-                </span>
-              </el-tooltip>
+              <template v-if="authLink">
+                <el-tooltip effect="dark" content="添加任务" placement="top">
+                  <span style="padding-left:5px">
+                    <i
+                      class="el-icon-plus"
+                      style="color:blue"
+                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
+                    ></i>
+                  </span>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="修改环节" placement="top">
+                  <span style="padding-left:5px">
+                    <i class="el-icon-edit" style="color:green" @click="showLinkForm(item)"></i>
+                  </span>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="上移" placement="top">
+                  <span style="padding-left:5px">
+                    <i class="el-icon-top" @click="upmove(Index,index,item)" v-if="item.pid"></i>
+                  </span>
+                </el-tooltip>
+                <el-tooltip
+                  effect="dark"
+                  content="下移"
+                  placement="top"
+                  v-if="!(index === (LinkList[Index].length - 1))"
+                >
+                  <span style="padding-left:5px">
+                    <i class="el-icon-bottom" @click="downmove(Index,index,item)"></i>
+                  </span>
+                </el-tooltip>
+                <el-tooltip
+                  effect="dark"
+                  content="向前合并"
+                  placement="top"
+                  v-if="item.pid === 0&&Index -1>-1"
+                >
+                  <span style="padding-left:5px">
+                    <i class="el-icon-caret-left" @click="leftmove(Index)"></i>
+                  </span>
+                </el-tooltip>
 
-              <el-tooltip
-                effect="dark"
-                content="向后合并"
-                placement="top"
-                v-if="item.pid === 0&&Index+1<LinkList.length"
-              >
-                <span style="padding-left:5px">
-                  <i class="el-icon-caret-right" @click="rightmove(Index)"></i>
-                </span>
-              </el-tooltip>
-              <el-tooltip effect="dark" content="拆分" placement="top" v-if="item.pid >0">
-                <span style="padding-left:5px">
-                  <svg-icon icon-class="unpack" @click="unpack(item)"></svg-icon>
-                </span>
-              </el-tooltip>
-              <el-tooltip effect="dark" content="删除环节" placement="top">
-                <span style="padding-left:5px">
-                  <i class="el-icon-delete" style="color:red" @click="removeLink(item,Index,index)"></i>
-                </span>
-              </el-tooltip>
+                <el-tooltip
+                  effect="dark"
+                  content="向后合并"
+                  placement="top"
+                  v-if="item.pid === 0&&Index+1<LinkList.length"
+                >
+                  <span style="padding-left:5px">
+                    <i class="el-icon-caret-right" @click="rightmove(Index)"></i>
+                  </span>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="拆分" placement="top" v-if="item.pid >0">
+                  <span style="padding-left:5px">
+                    <svg-icon icon-class="unpack" @click="unpack(item)"></svg-icon>
+                  </span>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="删除环节" placement="top">
+                  <span style="padding-left:5px">
+                    <i
+                      class="el-icon-delete"
+                      style="color:red"
+                      @click="removeLink(item,Index,index)"
+                    ></i>
+                  </span>
+                </el-tooltip>
+              </template>
             </div>
             <ul slot="description" style="width:250px;">
               <li>制作要求: {{item.content}}</li>
@@ -451,7 +457,7 @@ import { getDept, getDeptUsers } from "@/api/admin";
 import { mapState } from "vuex";
 import myMixin from "./mixins";
 import { type } from "os";
-import {getProjectJoinMeb } from "@/api/training";
+import { getProjectJoinMeb } from "@/api/training";
 export default {
   mixins: [myMixin],
   name: "links",
@@ -490,7 +496,7 @@ export default {
       trainingMenber: []
     };
   },
-  props: ["LinkList", "project", "LinkAssetList", "pro_type"],
+  props: ["LinkList", "project", "LinkAssetList", "pro_type", "authLink"],
   watch: {
     linkActiveName: {
       handler: function(newVal, oldVal) {
