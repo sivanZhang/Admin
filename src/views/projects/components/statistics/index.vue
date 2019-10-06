@@ -3,11 +3,16 @@
     <div>
       <el-row>
         <el-col :span="5" align="middle">
-          <div >
+          <div>
             <label for>项目进度</label>
           </div>
           <div style="margin-top:80px">
-            <el-progress type="circle" :percentage="projectProgress" :color="colors" :format="format"></el-progress>
+            <el-progress
+              type="circle"
+              :percentage="projectProgress"
+              :color="colors"
+              :format="format"
+            ></el-progress>
           </div>
         </el-col>
         <el-col :span="8">
@@ -27,15 +32,17 @@
     <!-- 甘特图组件 -->
     <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" />
     <el-divider />
+    <!-- 燃尽图和外包数据 -->
     <el-row>
       <el-col :span="12">
         <LineChart chart-id="line-chart1" ref="line-chart1" />
       </el-col>
       <el-col :span="12">
-        <LineChart chart-id="line-chart2" ref="line-chart2" />
+        <label for>工时统计图</label>
+        <chart chart-id="line-chart2" ref="line-chart2" />
       </el-col>
     </el-row>
-
+    <!-- 提交审核次数 -->
     <template v-if="show_inner">
       <el-divider />
       <el-row>
@@ -50,6 +57,19 @@
           <chart ref="commit-outer" chart-id="commit-outer" />
         </el-col>
       </el-row>
+      <el-divider />
+    </template>
+    <el-divider />
+    <el-row>
+      <!-- 柱状图组件 -->
+      <BarChart ref="task-count" chart-id="task-count" />
+    </el-row>
+    <template v-if="$route.query.type == 0">
+      <el-divider />
+      <el-row>
+        <!-- 柱状图组件 -->
+        <BarChart ref="grade" chart-id="grade" />
+      </el-row>
     </template>
   </div>
 </template>
@@ -59,9 +79,10 @@ import * as Ajax from "@/api/statistics";
 import Chart from "@/components/ECharts/PieChart";
 import Gantt from "@/components/Gantt";
 import LineChart from "@/components/ECharts/LineMarker";
+import BarChart from "@/components/ECharts/BarMarker";
 export default {
   name: "all-statistics",
-  components: { Chart, Gantt, LineChart },
+  components: { Chart, Gantt, LineChart, BarChart },
   data() {
     return {
       ganttLoading: false,
@@ -78,7 +99,8 @@ export default {
         { color: "#1989fa", percentage: 80 },
         { color: "#5cb87a", percentage: 100 }
       ],
-      show_inner: true
+      show_inner: true,
+      show_detail: true
     };
   },
   methods: {
@@ -195,8 +217,21 @@ export default {
               ]
             };
             this.$refs["line-chart1"].initChart(customOption);
-            this.$refs["line-chart2"].initChart("");
           }
+        }
+      );
+    },
+    //外包数据
+    exportData() {
+      Ajax.exportTask({ id: this.$route.params.id, worktime: "" }).then(
+        ({ data }) => {
+          let keys = Object.keys(data.msg);
+          // console.log(keys)
+          let chartData = keys.map(t => {
+            return { name: t, value: data.msg[t] };
+          });
+          // console.log(chartData)
+          this.$refs["line-chart2"].initChart("", chartData);
         }
       );
     },
@@ -217,6 +252,146 @@ export default {
           this.$refs["commit-outer"].initChart("", chartData2);
         }
       );
+    },
+    //统计项目成员的资产和任务信息
+    getAssetTask() {
+      Ajax.statisticMemberDetail({ project_id: this.$route.params.id }).then(
+        ({ data }) => {
+          let keys = Object.keys(data.task);
+          let keys2 = Object.keys(data.user_asset);
+          let customOption = {
+            title: {
+              text: "资产和任务分布",
+              textStyle: {
+                //---主标题内容样式
+                color: "#000"
+              },
+              padding: [0, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            },
+            tooltip: {
+              trigger: "axis",
+              axisPointer: {
+                type: "shadow"
+              }
+            },
+            legend: {
+              data: ["资产个数", "任务个数"]
+            },
+            grid: {
+              left: "3%",
+              right: "4%",
+              bottom: "3%",
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: "category",
+                data: keys,
+                axisLabel: {
+                  //---坐标轴 标签
+                  show: true, //---是否显示
+                  inside: false, //---是否朝内
+                  interval: 0,
+                  rotate: 0,
+                  margin: 5 //---刻度标签与轴线之间的距离
+                  //color:'red',				//---默认取轴线的颜色
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: "value"
+              }
+            ],
+            series: [
+              {
+                name: "资产个数",
+                type: "bar",
+                data: keys2.map(t => {
+                  return data.user_asset[t];
+                })
+              },
+              {
+                name: "任务个数",
+                type: "bar",
+                data: keys.map(t => {
+                  return data.task[t];
+                })
+              }
+            ]
+          };
+          // let chartData2 =
+          this.$refs["task-count"].initChart(customOption);
+          // this.$refs["asset-count"].initChart("", chartData2);
+        }
+      );
+    },
+    //成绩变化
+    getGradeChange() {
+      Ajax.MemberSort({ project_id: this.$route.params.id }).then(
+        ({ data }) => {
+          if(!data.sum_grade.length){
+            return;
+          }
+          let keys = Object.keys(data.sum_grade);
+          let customOption = {
+            title: {
+              text: "总成绩排名",
+              textStyle: {
+                //---主标题内容样式
+                color: "#000"
+              },
+              padding: [0, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            },
+            tooltip: {
+              trigger: "axis",
+              axisPointer: {
+                type: "shadow"
+              }
+            },
+            legend: {
+              data: ["总成绩"]
+            },
+            grid: {
+              left: "3%",
+              right: "4%",
+              bottom: "3%",
+              containLabel: true
+            },
+            xAxis: [
+              {
+                type: "category",
+                data: keys,
+                axisLabel: {
+                  //---坐标轴 标签
+                  show: true, //---是否显示
+                  inside: false, //---是否朝内
+                  interval: 0,
+                  rotate: 0,
+                  margin: 5 //---刻度标签与轴线之间的距离
+                  //color:'red',				//---默认取轴线的颜色
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: "value"
+              }
+            ],
+            series: [
+              {
+                name: "资产个数",
+                type: "bar",
+                data: keys.map(t => {
+                  return data.sum_grade[t];
+                })
+              }
+            ]
+          };
+          // let chartData2 =
+          this.$refs["grade"].initChart(customOption);
+        }
+      );
     }
   },
   created() {
@@ -227,7 +402,10 @@ export default {
     this.getAssetStatistics();
     this.getTaskStatistics();
     this.getBurnOut();
+    this.exportData();
     this.getCommitCount();
+    this.getAssetTask();
+    this.getGradeChange();
   }
 };
 </script>
