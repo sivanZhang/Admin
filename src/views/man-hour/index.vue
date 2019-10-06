@@ -20,9 +20,14 @@
         <el-table-column prop="task_count" label="任务工时"></el-table-column>
         <el-table-column prop="overtime_count" label="加班工时"></el-table-column>
         <el-table-column prop="project_count" label="总工时"></el-table-column>
-        <el-table-column label="每日工时" align="center">
+        <el-table-column label="工时详情" align="center">
           <template slot-scope="scope">
-            <el-button type="text" style="font-size:15px" icon="el-icon-time" @click="showDetail(scope.row)"></el-button>
+            <el-button
+              type="text"
+              style="font-size:15px"
+              icon="el-icon-time"
+              @click="showDetail(scope.row)"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,12 +43,79 @@
       :transfer="false"
       :mask="false"
     >
-      <el-table :data="dayManWork" v-loading="detailLoading">
-        <el-table-column label="日期">
-          <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
-        </el-table-column>
-        <el-table-column prop="work_hours" label="工时"></el-table-column>
-      </el-table>
+      <el-tabs v-model="activeName" >
+        <el-tab-pane label="每日工时" name="first">
+          <el-table
+            :data="dayManWork"
+            v-loading="detailLoading"
+            :border="false"
+            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+            :cell-style="{borderRight:0}"
+            highlight-current-row
+          >
+            <el-table-column label="日期">
+              <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
+            </el-table-column>
+            <el-table-column prop="work_hours" label="工时"></el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="任务明细" name="second">
+          <div style="overflow-x:auto">
+            <el-table
+              :data="taskList"
+              :border="false"
+              :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+              :cell-style="{borderRight:0}"
+              highlight-current-row
+            >
+              <el-table-column label="任务名称" prop="name" show-overflow-tooltip></el-table-column>
+              <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
+              <el-table-column label="制作环节" prop="dept.name"></el-table-column>
+              <el-table-column label="任务主管" prop="manager.name"></el-table-column>
+              <el-table-column label="记录工时" prop="record_hour"></el-table-column>
+              <el-table-column label="创建时间" prop="create_time" width="90px">
+                <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="开始时间" prop="start_date" width="90px">
+                <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="结束时间" prop="end_date" width="90px">
+                <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="加班明细" name="third">
+          <div style="overflow-x:auto">
+            <el-table
+              :data="overtime_list"
+              :border="false"
+              :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+              :cell-style="{borderRight:0}"
+              highlight-current-row
+            >
+              <el-table-column label="申请人" prop="creator.username"></el-table-column>
+              <el-table-column label="加班工时" prop="overtime_hour"></el-table-column>
+              <el-table-column label="加班原因" prop="reason" show-overflow-tooltip></el-table-column>
+              <el-table-column label="相关任务" prop="task" align="center">
+                <el-table-column label="任务名称" prop="task.name" show-overflow-tooltip></el-table-column>
+                <el-table-column label="制作内容" prop="task.content" show-overflow-tooltip></el-table-column>
+                <el-table-column label="所属项目" prop="task.project.name" show-overflow-tooltip></el-table-column>
+                <el-table-column label="所属镜头" prop="task.asset.name" show-overflow-tooltip></el-table-column>
+              </el-table-column>
+              <el-table-column label="创建时间" prop="creator_date" width="90px">
+                <template slot-scope="scope">{{scope.row.creator_date|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="开始时间" prop="start_time" width="90px">
+                <template slot-scope="scope">{{scope.row.start_time|dateFormat}}</template>
+              </el-table-column>
+              <el-table-column label="结束时间" prop="end_time" width="90px">
+                <template slot-scope="scope">{{scope.row.end_time|dateFormat}}</template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </Drawer>
   </div>
 </template>
@@ -59,24 +131,37 @@ export default {
   components: { Chart, Gantt },
   data() {
     return {
-      detailLoading:false,
+      detailLoading: false,
       dayManWork: [],
       currentPName: "", //点击详情选中的项目名作为抽屉Title
       showdrawer: false,
-      projectCount: [] //我的每个标准项目工时
+      projectCount: [], //我的每个标准项目工时，
+      activeName: "first",
+      taskList: [], //任务明细
+      overtime_list: [] //加班明细
     };
   },
   methods: {
     showDetail(row) {
-      this.currentPName = `${row.name} 每日工时`;
+      this.currentPName = `${row.name} 工时详情`;
       this.showdrawer = true;
-      this.detailLoading = true
+      this.detailLoading = true;
       let data = { project_day_id: row.id };
-      Ajax.getManHour(data).then(({ data }) => {
-        this.dayManWork = [...data.msg.date_list];
-      }).finally(()=>{
-        this.detailLoading = false
-      })
+      let data2 = { project_id: row.id };
+
+      Ajax.getManHour(data)
+        .then(({ data }) => {
+          this.dayManWork = [...data.msg.date_list];
+        })
+        .finally(() => {
+          this.detailLoading = false;
+        });
+      Ajax.getManHour(data2).then(({ data }) => {
+        if (data.status === 0) {
+          this.taskList = [...data.msg.task_list];
+          this.overtime_list = [...data.msg.overtime_list];
+        }
+      });
     },
     //获取工时统计并渲染饼状图
     getStatistics() {
