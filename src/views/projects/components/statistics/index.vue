@@ -55,7 +55,7 @@
 
     <el-divider />
     <!-- 甘特图组件 -->
-    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" />
+    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" :customOptions="ganttTasks" />
     <!-- 甘特图组件 -->
     <Gantt
       v-loading="ganttStatLoading"
@@ -102,14 +102,32 @@ export default {
         }
       },
       customOptions: {
+        chart: {
+          progress: {
+            bar: false
+          },
+          expander: {
+            display: true
+          }
+        },
         taskList: {
+          expander: {
+            straight: true
+          },
           //甘特图中的表格配置
           columns: [
             {
               id: 1,
               label: "人员名称",
-              value: task => (task.pid ? "" : task.label),
-              width: 200
+              value: task => {
+                if (task.parentId) {
+                  return "";
+                } else {
+                  return `<el-icon class="el-icon-arrow-right"> ${task.name}`;
+                }
+              },
+              width: 200,
+              html: true
             },
             {
               id: 2,
@@ -126,8 +144,43 @@ export default {
             },
             {
               id: 4,
-              label: "任务进度(%)",
-              value: "progress",
+              label: "任务进度",
+              value: task => `${task.progress}%`,
+              width: 120,
+              html: true
+            }
+          ]
+        }
+      },
+      ganttTasks: {
+        chart: {
+          progress: {
+            bar: false
+          },
+          expander: {
+            display: true
+          }
+        },
+        taskList: {
+          //甘特图中的表格配置
+          columns: [
+            {
+              id: 1,
+              label: "工种名称",
+              value: "label",
+              width: 200
+            },
+            {
+              id: 2,
+              label: "开始时间",
+              value: task => dayjs(task.start).format("YYYY-MM-DD"),
+              width: 120,
+              html: true
+            },
+            {
+              id: 3,
+              label: "结束时间",
+              value: task => dayjs(task.end).format("YYYY-MM-DD"),
               width: 120
             }
           ]
@@ -178,18 +231,18 @@ export default {
               type: "task",
               start: t[2] * 1000,
               end: t[3] * 1000,
+              progress: t[5] || 0,
               duration: t[4] * 60 * 60 * 1000,
-              progress: 30,
-              collapsed: false
+              label: `${t[1]} (${t[5] || 0}%)`,
+              collapsed: true,
+              name: t[1]
             };
-            if(t[7]) {
-              obj.parentId = t[7]
-            }else{
-              obj.label = t[1]
+            if (t[7]) {
+              obj.parentId = t[7];
             }
             return obj;
           });
-          console.log(arr);
+          console.log(this.ganttStatData);
         })
         .finally(() => {
           this.ganttStatLoading = false;
@@ -209,12 +262,6 @@ export default {
             start: t.start * 1000, //开始时间
             end: t.end * 1000, //结束时间
             duration: t.last * 60 * 60 * 1000 //工时
-            /* style: {
-              base: {//颜色
-                fill: "#26C6DA",
-                stroke: "#4DD0E1"
-              }
-            } */
           };
         });
       });
@@ -320,7 +367,7 @@ export default {
   position: relative;
   width: 100%;
   #gantt {
-    padding-bottom: 15px;
+    margin-bottom: 15px;
   }
 }
 </style>
