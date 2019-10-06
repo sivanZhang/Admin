@@ -33,8 +33,8 @@
     <el-calendar v-model="value" :first-day-of-week="7">
       <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
       <template slot="dateCell" slot-scope="{date, data}">
-        <div>{{data.day.split('-')[2]}}</div>
-        <h4 style="color:#ed4014;margin-top:10px">{{ isFestival(date)}}</h4>
+        <div style="padding:8px;">{{data.day.split('-')[2]}}</div>
+        <div style="background:#3F51B5;margin-top:8px;color:#fff;padding:0 8px;">{{ isFestival(date)}}</div>
       </template>
     </el-calendar>
   </div>
@@ -118,8 +118,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .el-calendar{
   margin-top: 30px;
+}
+.el-calendar-day{
+  padding: 0px!important;
 }
 </style>
