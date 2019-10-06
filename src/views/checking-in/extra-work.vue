@@ -10,12 +10,18 @@
       ></el-option>
     </el-select>
     <el-button type="primary" @click="openDialog(0)" style="margin-left:15px">申请加班</el-button>
-    <el-button type="danger" icon="el-icon-delete"  @click="deletList" style="margin-left:15px"  :disabled="this.multipleSelection.length === 0">批量删除</el-button>
-    <el-table 
-    :data="ExtraworkList" 
-    @selection-change="handleSelectionChange"
-    v-loading="tableLoading"
-    :row-key="row=>row.overtime_id"
+    <el-button
+      type="danger"
+      icon="el-icon-delete"
+      @click="deletList"
+      style="margin-left:15px"
+      :disabled="this.multipleSelection.length === 0"
+    >批量删除</el-button>
+    <el-table
+      :data="ExtraworkList"
+      @selection-change="handleSelectionChange"
+      v-loading="tableLoading"
+      :row-key="row=>row.overtime_id"
     >
       <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
       <el-table-column type="index"></el-table-column>
@@ -23,10 +29,8 @@
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
       <el-table-column prop="overtime_hour" label="加班工时(小时)"></el-table-column>
-      <el-table-column prop="overtime_date" label="申请日期">
-        <template slot-scope="scope">
-          {{scope.row.overtime_date|dateFormat}}
-        </template>
+      <el-table-column label="申请日期">
+        <template slot-scope="scope">{{scope.row.creator_date|dateFormat}}</template>
       </el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
@@ -44,13 +48,22 @@
       </el-table-column>
       <el-table-column label="操作" align="center" v-if="currentSelect">
         <template slot-scope="scope">
-           <el-tooltip effect="dark" content="修改" placement="top">
-             <el-button icon="el-icon-edit"  style="color:blue" type="text" @click="openPutDialog(scope.row)"/>
+          <el-tooltip effect="dark" content="修改" placement="top">
+            <el-button
+              icon="el-icon-edit"
+              style="color:blue"
+              type="text"
+              @click="openPutDialog(scope.row)"
+            />
           </el-tooltip>
           <el-tooltip effect="dark" content="删除" placement="top">
-             <el-button type="text" icon="el-icon-delete"
-                style="color:red" @click="deleteAppty(scope.row.overtime_id)"/>
-          </el-tooltip>    
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              style="color:red"
+              @click="deleteAppty(scope.row.overtime_id)"
+            />
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -105,10 +118,18 @@ export default {
       ApplyForm: {},
       rules: {
         overtime_hour: [
-          { required: true, message: "请输入加班时长（单位：小时）", trigger: "blur" }
+          {
+            required: true,
+            message: "请输入加班时长（单位：小时）",
+            trigger: "blur"
+          }
         ],
         reason: [
-          { required: true, message: "请选择由于哪个任务加班", trigger: "change" }
+          {
+            required: true,
+            message: "请选择由于哪个任务加班",
+            trigger: "change"
+          }
         ],
         task: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
       },
@@ -129,20 +150,22 @@ export default {
     };
   },
   methods: {
-   handleSelectionChange(val){
+    handleSelectionChange(val) {
       this.multipleSelection = val;
-     },
+    },
     //批量删除
-    deletList(){
+    deletList() {
       this.$confirm("此操作将永久删除申请,是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        const id = this.multipleSelection.map(item => item.overtime_id).join(",");
+        const id = this.multipleSelection
+          .map(item => item.overtime_id)
+          .join(",");
         deleteApply({
           method: "delete",
-          ids:id
+          ids: id
         }).then(({ data }) => {
           this.$message(data.msg);
           if (data.status === 0) {
@@ -153,7 +176,7 @@ export default {
             });
           }
         });
-      })
+      });
     },
     //加班申请  提交审核
     sunbmitApprove(overtime_id) {
@@ -187,7 +210,7 @@ export default {
                 self.submitLoading = false;
               });
           }
-          
+
           if (this.currentFormType === 0) {
             submitFn(postOvertime, self.ApplyForm);
           }
@@ -231,7 +254,7 @@ export default {
       }).then(() => {
         deleteApply({
           method: "delete",
-          ids:id
+          ids: id
         }).then(({ data }) => {
           this.$message(data.msg);
           if (data.status === 0) {
@@ -263,10 +286,10 @@ export default {
       this.tableLoading = true;
       getOvertime(params)
         .then(({ data }) => {
-                   this.ExtraworkList = [...data.msg];
+          this.ExtraworkList = [...data.msg];
         })
         .finally(() => {
-        this.tableLoading = false;
+          this.tableLoading = false;
         });
     },
     getMyTasks() {

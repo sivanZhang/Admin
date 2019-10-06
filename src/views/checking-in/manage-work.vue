@@ -1,7 +1,7 @@
 <template>
   <div id="manage-work">
-      加班调休
-      <!-- <el-table :data="leaverhourList" v-loading="tableLoading">
+    加班调休
+    <!-- <el-table :data="leaverhourList" v-loading="tableLoading">
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
@@ -14,20 +14,20 @@
           <el-button type="text" @click="openDialog(scope.row.id)">审批</el-button>
         </template>
       </el-table-column>
-    </el-table> -->
+    </el-table>-->
+    <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
   </div>
 </template>
 
 <script>
+import { updateWorkLog } from "@/api/checkingIn";
 export default {
-    name:"manage-work",
-    data(){
-        return{
-          leaverhourList:[],
-        }
-    },
-    methods:{
-
-    }
-}
+  name: "manage-work",
+  data() {
+    return {
+      leaverhourList: []
+    };
+  },
+  methods: {}
+};
 </script>

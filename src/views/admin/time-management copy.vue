@@ -1,6 +1,7 @@
 <template>
   <div id="time-management">
     <el-row>
+      {{UploadData}}
       <el-col :span="12">
         <el-switch
           style="margin-right:10px"
@@ -24,9 +25,19 @@
       <el-col :span="12">
         <el-row type="flex" justify="end">
           <el-button
+            v-if="!isUpload"
+            icon="el-icon-circle-plus"
             type="success"
-            @click="skipImpory"
+            @click="openFile"
+            :loading="btnLoading"
           >Excel导入节假日</el-button>
+          <el-button
+            v-else
+            icon="el-icon-upload"
+            :loading="btnLoading"
+            type="success"
+            @click="uploadExcel"
+          >上传Excel</el-button>
         </el-row>
       </el-col>
     </el-row>
@@ -37,32 +48,41 @@
         <h4 style="color:#ed4014;margin-top:10px">{{ isFestival(date)}}</h4>
       </template>
     </el-calendar>
+    <input
+      class="file_inp"
+      ref="file_inp"
+      style="display: none;"
+      accept=".xlsx"
+      type="file"
+      @change="importExcel"
+    />
   </div>
 </template>
 
 <script>
 import dayjs from "dayjs";
-import { getDates } from "@/api/admin";
+import { parseExcel } from "@/api/assets";
+import { getDates, uploadDates } from "@/api/admin";
 export default {
   name: "time-management",
   data() {
     return {
+      dayjs,
       rangeDate: "",
-      yearDate:new Date(),
+      yearDate: "",
       searchType: false, // 按哪种形式搜索
+      btnLoading: false,
       searchLoading: false,
-      value: new Date(), //控制日期当前显示时间
+      value: new Date(),
       UploadData: [], // 导入后的数据
-      DateList: []
+      isUpload: false, // 显示“导入”还是“上传”按钮
+      DateList: [],
     };
   },
   methods: {
     isFestival(date) {
       let obj = this.DateList.find(t => {
-        return (
-          dayjs(t.date * 1000).format("YYYYMMDD") ==
-          dayjs(date).format("YYYYMMDD")
-        );
+        return dayjs(t.day * 1000).format("YYYYMMDD") == dayjs(date).format("YYYYMMDD");
       });
       return obj ? obj.name : "";
     },
@@ -78,7 +98,7 @@ export default {
           start: dayjs(this.rangeDate[0]).format("YYYY/MM/DD"),
           end: dayjs(this.rangeDate[1]).format("YYYY/MM/DD")
         };
-        this.value = this.rangeDate[0];
+        this.value = this.rangeDate[0]
       } else {
         if (!this.yearDate) {
           this.$message.error("请选择年份");
@@ -87,39 +107,66 @@ export default {
         params = {
           year: dayjs(this.yearDate).format("YYYY")
         };
-        this.value = params.year;
+        this.value = params.year
       }
       this.searchLoading = true;
       getDates(params)
         .then(({ data }) => {
-          this.DateList = [...data.msg];
+          if(data.msg.leaveoff){
+            this.DateList = [...data.msg.leaveoff]
+          }else{
+            this.DateList = [...data.msg]
+          }
+          
         })
         .finally(() => {
           this.searchLoading = false;
         });
     },
     //打开excel文件
-    skipImpory() {
-      this.$router.push({ name: "date-import" });
+    openFile() {
+      this.$refs.file_inp.click();
+    },
+    //后端解析excel
+    importExcel(e) {
+      if (!e.target.files) {
+        return;
+      }
+      let file = e.target.files[0];
+      let Fdata = new FormData();
+      Fdata.append("file", file);
+      this.btnLoading = true;
+      parseExcel(Fdata)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.UploadData = [...data.msg];
+            this.isUpload = true;
+          } else {
+            this.$message.error(data.msg);
+          }
+        })
+        .finally(() => {
+          this.btnLoading = false;
+        });
+    },
+    //上传节假日
+    uploadExcel() {
+      this.btnLoading = true;
+      uploadDates(this.UploadData)
+        .then(({ data }) => {
+          this.$notify.info({
+            title: "消息",
+            message: data.msg
+          });
+          this.isUpload = false;
+        })
+        .finally(() => {
+          this.btnLoading = false;
+        });
     }
-  },
-  created() {
-    this.searchLoading = true;
-    getDates({
-      year: dayjs(this.yearDate).format("YYYY")
-    })
-      .then(({ data }) => {
-        this.DateList = [...data.msg];
-      })
-      .finally(() => {
-        this.searchLoading = false;
-      });
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.el-calendar{
-  margin-top: 30px;
-}
 </style>
