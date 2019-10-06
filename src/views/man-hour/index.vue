@@ -195,7 +195,12 @@ export default {
       let payload = { my_daysoff: "" };
       this.$refs["dayoff-hour"].openLoading();
       getDayOffList(payload).then(({ data }) => {
-        let Data = data.msg[0].off_count;
+        if(!data.auth.daysoff_operate){
+          let Data = data.msg[0].off_count;
+        }else{
+          return;
+        }
+        
         //console.log(data.msg)
         let chartData = [
           {
@@ -224,7 +229,7 @@ export default {
   mounted() {
     getDayOffList({ my_daysoff: "" }).then(({ data }) => {
       this.authDaysOff = data.auth.daysoff_operate;
-      console.log(this.authDaysOff);
+     // console.log(this.authDaysOff);
     });
     this.getStatistics();
   }
