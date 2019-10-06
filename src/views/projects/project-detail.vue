@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      activeName: this.$route.query.tab ? this.$route.query.tab : "tab4",
+      activeName: this.$route.query.tab ? this.$route.query.tab : "tab0",
       AssetList: [],
       asset_type: 0,
       project: {},
