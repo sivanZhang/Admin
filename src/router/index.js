@@ -25,33 +25,55 @@ meta: {
 }
  */
 
-// 涉及权限的动态加载路由
-export const asyncRoutes = [
-  {
-    path: '/task',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: {
-      title: '我的工作台',
-      icon: 'task'
-    },
-    children: [
-      {
-        path: 'approve',
-        name: 'approve',
-        component: () =>
-          import('@/views/video/my-audit'),
+//涉及权限的动态加载路由
+export const asyncRoutes = [ {
+        path: '/task',
+        component: Layout,
+        redirect: 'noRedirect',
+        // alwaysShow: true,
         meta: {
-          title: '我的审批',
-          icon: 'v2',
-          roles: 'manage_approve'
-        }
-      },
-      {
-        path: '/check-video',
-        name: 'check-video',
-        component: () =>
-          import('@/views/video/video-check'),
+            title: '审批',
+            icon: 'task',
+            roles: 'manage_approve'
+        },
+        children: [{
+                path: 'approve',
+                name: 'approve',
+                component: () =>
+                    import ('@/views/video/my-audit'),
+                meta: {
+                    title: '我的审批',
+                    icon: 'v2',
+                    roles: 'manage_approve'
+                }
+            },
+            {
+                path: 'audit-approve',
+                name: 'audit-approve',
+                component: () =>
+                    import ('@/views/video/extra-audit'),
+                meta: {
+                    title: '客户审批',
+                    icon: 'v2',
+                    roles: 'manage_approve'
+                }
+            },
+            {
+                path: '/check-video',
+                name: 'check-video',
+                component: () =>
+                    import ('@/views/video/video-check'),
+                meta: {
+                    title: '审核意见',
+                    activeMenu: '/task/approve'
+                },
+                hidden: true
+            },
+        ]
+    }, {
+        path: '/admin',
+        component: Layout,
+        redirect: 'noRedirect', //点击2级面包屑对应哪个路由，如果和path一样就不会跳转
         meta: {
           title: '审核意见',
           activeMenu: '/task/approve'
