@@ -49,8 +49,7 @@ AXIOS.interceptors.response.use(
   response => {
     const res = response
     // if the custom code is not 20000, it is judged as an error.
-    console.log('res.status', res.status);
-
+    console.log('response返回的状态码', res.status);
     if (res.status !== 200) {
       Message({
         message: res.message || 'Error',
@@ -75,28 +74,7 @@ AXIOS.interceptors.response.use(
     }
   },
   error => {
-    console.log('error.response', error.response, 'error', error);
-    /* if (!!error.response && !!error.response.status) {
-    switch (error.response.status) {
-      case 403:
-        router.replace("/403");
-        break;
-      case 404:
-        router.replace("/404");
-        break;
-    }
-  }
-  if (!!error.response && !!error.response.data.error && !!error.response.data.error.message && error.response.data.error.details) {
-    vm.$Notice.error({ title: error.response.data.error.message, desc: error.response.data.error.details, duration: 5 })
-  } else if (!!error.response && !!error.response.data.error && !!error.response.data.error.message) {
-    vm.$Notice.error({ title: window.abp.localization.localize("LoginFailed"), desc: error.response.data.error.message, duration: 5 })
-  } else if (!error.response) {
-    vm.$Notice.error({ title: window.abp.localization.localize('UnknownError'), desc: '', duration: 5 })
-  } else {
-    vm.$Notice.error({ title: error.response.status, desc: error.response.data, duration: 5 })
-  }
-  //关闭加载中的提示
-    vm.$Message.destroy(); */
+    console.log('error返回的状态码', error.response.status);
     Message({
       message: error.response.statusText,
       type: 'error',

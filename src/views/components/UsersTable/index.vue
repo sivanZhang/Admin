@@ -148,7 +148,7 @@
       :transfer="false"
       :mask="false"
       :inner="isInner"
-      title="用户自定义属性"
+      :title="drawerTitle"
     >
       <attrsBind
         :project="project"
@@ -203,6 +203,7 @@ export default {
   methods: {
     showDrawer(row) {
       this.drawer = true;
+      this.drawerTitle = row.username
       this.project = row;
       searchBind({ entity_type: 7 }).then(({ data }) => {
         this.attrsList = [...data.msg];
