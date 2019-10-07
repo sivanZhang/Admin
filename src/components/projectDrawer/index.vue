@@ -16,6 +16,7 @@
           <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
+            <el-divider />
             <attrsBind
               :project="project"
               :customAttrs="customAttrs"
