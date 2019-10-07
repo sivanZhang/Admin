@@ -703,10 +703,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio1" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+            <el-switch v-model="value1" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务名称" prop="name">
@@ -716,10 +714,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio2" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+            <el-switch v-model="value2" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务内容" prop="content">
@@ -729,10 +725,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio3" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+            <el-switch v-model="value3" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="优先级" prop="priority">
@@ -744,10 +738,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio4" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+            <el-switch v-model="value4" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务难度" prop="grade">
@@ -759,10 +751,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio5" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+            <el-switch v-model="value5" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务状态" prop="status">
@@ -779,10 +769,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio6" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+           <el-switch v-model="value6" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务执行人" prop="executorlist">
@@ -804,10 +792,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio7" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+            <el-switch v-model="value7" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务时间" prop="datetime">
@@ -825,10 +811,8 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-radio-group v-model="radio8" size="mini">
-              <el-radio-button label="是"></el-radio-button>
-              <el-radio-button label="否"></el-radio-button>
-            </el-radio-group>
+           <el-switch v-model="value8" active-color="#42d842" inactive-color="#b7b7b7"
+              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="总工时" prop="total_hour">
@@ -1010,14 +994,14 @@ export default {
       trainingMenber: [],
       mulEditDialog: false,
       updateMulTask: {},
-      radio1: "否",
-      radio2: "否",
-      radio3: "否",
-      radio4: "否",
-      radio5: "否",
-      radio6: "否",
-      radio7: "否",
-      radio8: "否"
+      value1: "否",
+      value2: "否",
+      value3: "否",
+      value4: "否",
+      value5: "否",
+      value6: "否",
+      value7: "否",
+      value8: "否",
     };
   },
   filters: {
@@ -1186,28 +1170,28 @@ export default {
         this.mulEditDialog = true;
       } else {
         let keys = [{}];
-        if (this.radio1 == "是") {
+        if (this.value1 == "是") {
           keys = [...keys, { key: "name", value: this.updateMulTask.name }];
         }
-        if (this.radio2 == "是") {
+        if (this.value2 == "是") {
           keys = [
             ...keys,
             { key: "content", value: this.updateMulTask.content }
           ];
         }
-        if (this.radio3 == "是") {
+        if (this.value3 == "是") {
           keys = [
             ...keys,
             { key: "priority", value: this.updateMulTask.priority }
           ];
         }
-        if (this.radio4 == "是") {
+        if (this.value4 == "是") {
           keys = [...keys, { key: "grade", value: this.updateMulTask.grade }];
         }
-        if (this.radio5 == "是") {
+        if (this.value5 == "是") {
           keys = [...keys, { key: "status", value: this.updateMulTask.status }];
         }
-        if (this.radio6 == "是") {
+        if (this.value6 == "是") {
           keys = [
             ...keys,
             {
@@ -1216,7 +1200,7 @@ export default {
             }
           ];
         }
-        if (this.radio7 == "是") {
+        if (this.value7 == "是") {
           keys = [
             ...keys,
             {
@@ -1229,7 +1213,7 @@ export default {
             }
           ];
         }
-        if (this.radio8 == "是") {
+        if (this.value8 == "是") {
           keys = [
             ...keys,
             { key: "total_hour", value: this.updateMulTask.total_hour }
@@ -2021,6 +2005,29 @@ export default {
     cursor: pointer;
     color: #2d8cf0;
   }
+}
+.el-switch__core {
+    height: 15px;
+    width: 33px !important;
+}
+.el-switch__core:after {
+    top: -1px;
+    left: -1px;
+    margin-right: -10px;
+    width: 14px;
+    height: 14px;
+    box-shadow: 1px 1px 1px black;
+    background-color:white;
+}
+.el-switch__label * {
+    line-height: 1;
+    font-size: 10px;
+    display: inline-block;
+}
+.el-switch.is-checked .el-switch__core::after {
+    margin-left: -14px;
+    box-shadow: 1px 1px 1px black;
+    background-color:white;
 }
 </style>
 
