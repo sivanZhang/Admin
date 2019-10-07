@@ -292,12 +292,21 @@ export default {
       this.$refs[formName].resetFields();
     },
     //单个删除插件
-    deletePlugin(id) {
-      deletePlugin({ method: "delete", ids: id }).then(({ data }) => {
-        if (data.status === 0) {
-          this.$message.success(data.msg);
-          this.searchPluginList()
-        }
+   deletePlugin(id) {
+      this.$confirm("此操作将永久删除该插件，是否继续?", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        console.log(id);
+        deletePlugin({ method: "delete", ids: id }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.searchPluginList()
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       });
     }
   }

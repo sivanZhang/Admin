@@ -29,7 +29,7 @@
       </Drawer>
       <template v-if="!trainingProject">
         <div class="item-project" v-for="(item,index) in ProjectList" :key="index">
-          <el-card shadow="hover" :body-style="{ padding: '0px' }" :class="{active1:item.status===0,active2:item.status===1,active3:item.status===3}"
+          <el-card shadow="hover" :body-style="{ padding: '0px' }" :class="{active3:item.status===3}"
 >
             <div class="dropdow">
               <el-dropdown placement="bottom" trigger="click">
