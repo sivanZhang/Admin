@@ -28,31 +28,36 @@
       </el-row>
     </div>
     <el-divider />
-    <!-- 燃尽图和外包数据 -->
+    <!-- 燃尽图 -->
     <el-row>
-      <el-col :span="12">
+      <!-- <el-col :span="12"> -->
         <LineChart chart-id="line-chart1" ref="line-chart1" />
-      </el-col>
-      <el-col :span="12">
+      <!-- </el-col> -->
+    
+    </el-row>
+    <!-- 提交审核次数和外包数据 -->
+    <template>
+      <el-divider />
+      <el-row> 
+        <template>
+          <el-col :span="8">
         <label for>工时统计图</label>
         <chart chart-id="line-chart2" ref="line-chart2" />
       </el-col>
-    </el-row>
-    <!-- 提交审核次数 -->
-    <template v-if="show_inner">
-      <el-divider />
-      <el-row>
-        <el-col :span="12">
+      </template>
+        <template v-if="show_inner">
+        <el-col :span="8">
           <label for>内网提交统计</label>
           <!-- 图表组件 -->
           <chart ref="commit-inner" chart-id="commit-inner" />
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <label for>外网提交统计</label>
           <!-- 图表组件 -->
           <chart ref="commit-outer" chart-id="commit-outer" />
         </el-col>
-      </el-row>
+       </template>
+      </el-row> 
       <el-divider />
     </template>
     <el-divider />
@@ -359,7 +364,7 @@ export default {
               case "plan_outsource":
                  return { name: '外包总计划', value: data.msg[t] };
               case "real_inner":
-                 return { name: '内部综实际', value: data.msg[t] };
+                 return { name: '内部总实际', value: data.msg[t] };
               case "real_outsource":
                  return { name: '外包总实际', value: data.msg[t] };
             }
@@ -398,9 +403,10 @@ export default {
               text: "镜头和任务分布",
               textStyle: {
                 //---主标题内容样式
-                color: "#000"
+                color: "#000",
+                // height:"50px"
               },
-              padding: [0, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+              padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
             },
             tooltip: {
               trigger: "axis",
@@ -441,6 +447,7 @@ export default {
               {
                 name: "镜头个数",
                 type: "bar",
+                barWidth:30,
                 data: keys2.map(t => {
                   return data.user_asset[t];
                 })
@@ -448,6 +455,8 @@ export default {
               {
                 name: "任务个数",
                 type: "bar",
+                barWidth:30,
+                 barMaxWidth:50,
                 data: keys.map(t => {
                   return data.task[t];
                 })
