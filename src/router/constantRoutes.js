@@ -4,7 +4,7 @@
  *  
  */
 import Layout from '@/layout'
-const constantRoutes = [
+export default [
   {
     path: '/redirect',
     component: Layout,
@@ -323,4 +323,3 @@ const constantRoutes = [
     hidden: true
   }
 ]
-export default constantRoutes

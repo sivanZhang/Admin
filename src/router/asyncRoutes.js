@@ -4,7 +4,7 @@
  *  
  */
 import Layout from '@/layout'
-const asyncRoutes = [
+export default [
   {
     path: '/task',
     component: Layout,
@@ -184,4 +184,3 @@ const asyncRoutes = [
     }]
   }
 ]
-export default asyncRoutes
