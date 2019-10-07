@@ -177,6 +177,7 @@ export const asyncRoutes = [{
     path: '/team-manager',
     component: Layout,
     redirect: '/',
+    alwaysShow: true,
     meta: {
       title: '组长工作台',
       icon: 'team-manager',
@@ -188,8 +189,18 @@ export const asyncRoutes = [{
       component: () =>
         import('@/views/team-manager'),
       meta: {
-        title: '组长工作台',
+        title: '任务分配',
         icon: 'team-manager',
+        roles: 'dept_manager'
+      }
+    },{
+      path: 'statistic-manager',
+      name: 'statistic-manager',
+      component: () =>
+        import('@/views/team-manager/statistic-manager'),
+      meta: {
+        title: '数据统计',
+        icon: 'statistic-manager',
         roles: 'dept_manager'
       }
     }]
