@@ -97,6 +97,7 @@ import dayjs from "dayjs";
 export default {
   name: "all-statistics",
   components: { Chart, Gantt, LineChart, BarChart },
+  props:["click_id"],
   data() {
     return {
       ganttStatLoading: false,
@@ -106,7 +107,7 @@ export default {
       projectProgress: 0,
       HttpParams: {
         // http传参对象
-        project_id: this.$route.params.id
+        
       },
       colors: [
         { color: "#f56c6c", percentage: 20 },
@@ -217,13 +218,14 @@ export default {
     },
     //获取项目进度
     getProjectProgress() {
-      Ajax.getProjectStatistic(this.HttpParams).then(({ data }) => {
+      Ajax.getProjectStatistic({project_id: this.click_id?this.click_id:this.$route.params.id}).then(({ data }) => {
         this.projectProgress = data.msg.replace("%", "") - 0;
       });
     },
     //获取资产状态统计  并传参调用图表组件的初始化方法
     getAssetStatistics() {
-      Ajax.getAssetStatistic(this.HttpParams).then(({ data }) => {
+      this.$refs["asset-chart"].openLoading();
+      Ajax.getAssetStatistic({project_id: this.click_id?this.click_id:this.$route.params.id}).then(({ data }) => {
         let keys = Object.keys(data.msg);
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
@@ -233,7 +235,8 @@ export default {
     },
     //获取任务状态统计  并传参调用图表组件的初始化方法
     getTaskStatistics() {
-      Ajax.getTaskStatistic(this.HttpParams).then(({ data }) => {
+      this.$refs["task-chart"].openLoading();
+      Ajax.getTaskStatistic({project_id: this.click_id?this.click_id:this.$route.params.id}).then(({ data }) => {
         let keys = Object.keys(data.msg);
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
@@ -244,7 +247,7 @@ export default {
     //获取甘特图2数据
     getganttStat() {
       this.ganttStatLoading = true;
-      Ajax.getingExecutorChart({ id: this.$route.params.id, executors: "" })
+      Ajax.getingExecutorChart({ id: this.click_id?this.click_id:this.$route.params.id, executors: "" })
         .then(({ data }) => {
           let arr = [...data.msg];
           this.ganttStatData = arr.map((t, i) => {
@@ -264,7 +267,7 @@ export default {
             }
             return obj;
           });
-          console.log(this.ganttStatData);
+          //console.log(this.ganttStatData);
         })
         .finally(() => {
           this.ganttStatLoading = false;
@@ -273,7 +276,7 @@ export default {
     //获取甘特图1数据
     getGantt() {
       this.ganttLoading = true;
-      Ajax.getGanttData({ id: this.$route.params.id }).then(({ data }) => {
+      Ajax.getGanttData({ id: this.click_id?this.click_id:this.$route.params.id }).then(({ data }) => {
         const arr = [...data.msg];
         this.ganttLoading = false;
         this.ganttData = arr.map((t, i, Arr) => {
@@ -291,7 +294,7 @@ export default {
     //获取燃尽图数据
     getBurnOut() {
       this.$refs["line-chart1"].openLoading();
-      Ajax.burnOut({ id: this.$route.params.id, bourout: "" }).then(
+      Ajax.burnOut({ id: this.click_id?this.click_id:this.$route.params.id, bourout: "" }).then(
         ({ data }) => {
           if (data.status === 0) {
             let customOption = {
@@ -353,7 +356,7 @@ export default {
     },
     //外包数据
     exportData() {
-      Ajax.exportTask({ id: this.$route.params.id, worktime: "" }).then(
+      Ajax.exportTask({ id: this.click_id?this.click_id:this.$route.params.id, worktime: "" }).then(
         ({ data }) => {
           let keys = Object.keys(data.msg);
           // console.log(keys)  
@@ -376,7 +379,7 @@ export default {
     },
     //获取项目提交次数统计数据
     getCommitCount() {
-      Ajax.proCommitCount({ project_id: this.$route.params.id }).then(
+      Ajax.proCommitCount({ project_id: this.click_id?this.click_id:this.$route.params.id }).then(
         ({ data }) => {
           if (!data.inner_num.length) {
             this.show_inner = false;
@@ -394,7 +397,7 @@ export default {
     },
     //统计项目成员的资产和任务信息
     getAssetTask() {
-      Ajax.statisticMemberDetail({ project_id: this.$route.params.id }).then(
+      Ajax.statisticMemberDetail({ project_id: this.click_id?this.click_id:this.$route.params.id }).then(
         ({ data }) => {
           let keys = Object.keys(data.task);
           let keys2 = Object.keys(data.user_asset);
@@ -471,7 +474,7 @@ export default {
     },
     //成绩变化
     getGradeChange() {
-      Ajax.MemberSort({ project_id: this.$route.params.id }).then(
+      Ajax.MemberSort({ project_id: this.click_id?this.click_id:this.$route.params.id }).then(
         ({ data }) => {
           if(!data.sum_grade.length){
             return;
@@ -538,11 +541,12 @@ export default {
     }
   },
   created() {
+    
+  },
+  mounted() {
     this.getProjectProgress();
     this.getGantt();
     this.getganttStat();
-  },
-  mounted() {
     this.getAssetStatistics();
     this.getTaskStatistics();
     this.getBurnOut();
