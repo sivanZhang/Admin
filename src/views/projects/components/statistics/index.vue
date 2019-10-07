@@ -146,10 +146,11 @@ export default {
                 if (task.parentId) {
                   return "";
                 } else {
-                  return `<el-icon class="el-icon-arrow-right"> ${task.name}`;
+                  return task.name;
                 }
               },
               width: 200,
+              expander: true,
               html: true
             },
             {
@@ -260,7 +261,7 @@ export default {
               duration: t[4] * 60 * 60 * 1000,
               label: `${t[1]} (${t[5] || 0}%)`,
               collapsed: true,
-              name: t[1]
+              name: t[1],
             };
             if (t[7]) {
               obj.parentId = t[7];
