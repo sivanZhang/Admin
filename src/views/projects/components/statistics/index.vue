@@ -74,7 +74,7 @@
 
     <el-divider />
     <!-- 甘特图组件 -->
-    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" :customOptions="ganttTasks" />
+    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" :customHeaderOption="GanttHeader" :customOptions="ganttTasks" />
     <!-- 甘特图组件 -->
     <Gantt
       v-loading="ganttStatLoading"
@@ -116,7 +116,14 @@ export default {
       ],
       show_inner: true,
       show_detail: true,
-      //甘特图2 的header配置
+      //甘特图1的header配置,
+      GanttHeader:{
+        title: {
+            label: `<h6 style='letter-spacing:initial'>项目甘特图:</h6>`,
+            html: true
+          }
+      },
+      //甘特图2 的header配置,
       customHeaderOption: {
         title: {
           label: "<h6 style='letter-spacing:initial'>人员工时统计:</h6>",
@@ -125,14 +132,6 @@ export default {
       },
       //甘特图2的配置
       customOptions: {
-        chart: {
-          progress: {
-            bar: true //是否显示任务进度上的绿色调
-          },
-          expander: {
-            display: true //有子节点的时候是否显示 “+” 图标
-          }
-        },
         taskList: {
           //甘特图中的表格配置
           columns: [
