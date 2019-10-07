@@ -4,8 +4,7 @@
  *  
  */
 import Layout from '@/layout'
-export default [
-  {
+export default [{
     path: '/task',
     component: Layout,
     redirect: 'noRedirect',
@@ -148,10 +147,6 @@ export default [
       }
     }]
   }, {
-    path: '*',
-    redirect: '/404',
-    hidden: true
-  }, {
     path: '/team-manager',
     component: Layout,
     redirect: '/',
@@ -171,7 +166,7 @@ export default [
         icon: 'team-manager',
         roles: 'dept_manager'
       }
-    },{
+    }, {
       path: 'statistic-manager',
       name: 'statistic-manager',
       component: () =>
@@ -182,5 +177,9 @@ export default [
         roles: 'dept_manager'
       }
     }]
-  }
+  }, {// 404必须在最后面
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  },
 ]
