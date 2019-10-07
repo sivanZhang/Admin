@@ -84,7 +84,7 @@
               show-checkbox
               empty-text="未创建工种"
               highlight-current
-              ref="tree"
+              ref="tree2"
               :data="DeptList"
               node-key="id"
               :props="defaultProps"
@@ -1038,7 +1038,7 @@ export default {
     },
     //给项目添加参与的工种
     addJoinDept() {
-      const add_depts_ids = this.$refs.tree
+      const add_depts_ids = this.$refs.tree2
         .getCheckedNodes()
         .map(item => item.id)
         .join(",");
@@ -1052,7 +1052,7 @@ export default {
         this.$message.success(data.msg);
         if (data.status === 0) {
           this.$emit("refresh");
-          this.$refs.tree.setCheckedKeys([]);
+          this.$refs.tree2.setCheckedKeys([]);
         }
       });
     },
