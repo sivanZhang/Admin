@@ -1,12 +1,11 @@
 <template >
-  <div id="users-table">
+  <div id="users-table" ref="drawer-parent">
     <template v-if="UserList">
       <el-table
         :data="UserList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         v-loading="tableLoading"
         style="width: 100%"
         highlight-current-row
-        @row-click="handleCurrentChange"
         @selection-change="handleSelectionChange"
         :row-key="row=>row.id"
       >
@@ -149,6 +148,7 @@
       :transfer="false"
       :mask="false"
       :inner="isInner"
+      :title="drawerTitle"
     >
       <attrsBind
         :project="project"
@@ -203,6 +203,7 @@ export default {
   methods: {
     showDrawer(row) {
       this.drawer = true;
+      this.drawerTitle = row.username
       this.project = row;
       searchBind({ entity_type: 7 }).then(({ data }) => {
         this.attrsList = [...data.msg];
@@ -277,9 +278,6 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
       this.$emit("selection", val);
-    },
-    handleCurrentChange(row, event, column) {
-      // console.log(row, event, column, event.currentTarget);
     },
     saveEdit(index, row) {
       this.$confirm("确定保存当前修改？", "注意", {

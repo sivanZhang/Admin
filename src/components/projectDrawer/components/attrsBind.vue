@@ -1,7 +1,7 @@
 <!-- 自定义属性绑定 -->
 
 <template>
-  <div id="attr_bind" style="border-top:2px #dcdee2 solid;padding-top:5px">
+  <div id="attr_bind">
     <el-button type="primary" @click="showDialog(1)" style="margin-bottom:10px" v-if="auth">自定义属性绑定</el-button>
     <div v-for="(item,index) of customAttrs" :key="index" style="padding-top:5px">
       <el-row>

@@ -87,7 +87,13 @@
       <el-button type="primary" @click="getGantt()">开始统计</el-button>
       <el-button type="primary" @click="refreshDept()">重置</el-button>
     </div>
-    <Gantt v-loading="ganttLoading" id="gantt" :gantt-data="ganttData" :customOptions="ganttTasks" />
+    <Gantt
+      v-loading="ganttLoading"
+      id="gantt"
+      :gantt-data="ganttData"
+      :customOptions="ganttTasks"
+      :customHeaderOption="GanttHeader"
+    />
     <!-- 甘特图组件 -->
     <el-divider />
     <div style="text-align:left">
@@ -133,7 +139,7 @@ export default {
       user: [],
       ganttStatLoading: false,
       ganttLoading: false,
-      ganttData: [], // 传给甘特图的数据
+      ganttData: [], // 传给甘特图1的数据
       ganttStatData: [], // 传给甘特图2的数据
       projectProgress: 0,
       HttpParams: {
@@ -148,25 +154,23 @@ export default {
       ],
       show_inner: true,
       show_detail: true,
+      //甘特图1的header配置,
+      GanttHeader:{
+        title: {
+            label: `<h6 style='letter-spacing:initial'>项目甘特图:</h6>`,
+            html: true
+          }
+      },
+      //甘特图2 的header配置,
       customHeaderOption: {
         title: {
           label: "<h6 style='letter-spacing:initial'>人员工时统计:</h6>",
           html: true
         }
       },
+      //甘特图2的配置
       customOptions: {
-        chart: {
-          progress: {
-            bar: false
-          },
-          expander: {
-            display: true
-          }
-        },
         taskList: {
-          expander: {
-            straight: true
-          },
           //甘特图中的表格配置
           columns: [
             {
@@ -176,11 +180,11 @@ export default {
                 if (task.parentId) {
                   return "";
                 } else {
-                  return `<el-icon class="el-icon-arrow-right"> ${task.name}`;
+                  return task.name;
                 }
               },
               width: 200,
-              html: true
+              expander: true,// 显示 "+" 拓展图标
             },
             {
               id: 2,
@@ -197,6 +201,18 @@ export default {
             },
             {
               id: 4,
+              label: "预设工时",
+              value: "preinstall",
+              width: 120
+            },
+            {
+              id: 5,
+              label: "实际执行工时",
+              value: "actual",
+              width: 120
+            },
+            {
+              id: 6,
               label: "任务进度",
               value: task => `${task.progress}%`,
               width: 120,
@@ -205,17 +221,9 @@ export default {
           ]
         }
       },
+      //甘特图1的配置
       ganttTasks: {
-        chart: {
-          progress: {
-            bar: false
-          },
-          expander: {
-            display: true
-          }
-        },
         taskList: {
-          //甘特图中的表格配置
           columns: [
             {
               id: 1,
@@ -328,15 +336,17 @@ export default {
               this.user.forEach(item => {
                 if (t[1] === item.name) {
                   let obj = {
-                    id: t[0],
-                    type: "task",
-                    start: t[2] * 1000,
-                    end: t[3] * 1000,
-                    progress: t[5] || 0,
-                    duration: t[4] * 60 * 60 * 1000,
-                    label: `${t[1]} (${t[5] || 0}%)`,
-                    collapsed: true,
-                    name: t[1]
+                    id: t[0], // *
+              type: "task", // * 甘特图内图形显示类型
+              start: t[2] * 1000, // *任务开始时间
+              end: t[3] * 1000,
+              progress: t[5] || 0, // *进度
+              duration: t[4] * 60 * 60 * 1000, // *工时
+              label: `${t[1]} (${t[5] || 0}%)`, // *
+              collapsed: false, // * 有子节点默认是否收缩
+              name: t[1],
+              preinstall: t[4],
+              actual: t[6]
                   };
                   if (t[7]) {
                     obj.parentId = t[7];
@@ -348,15 +358,17 @@ export default {
           } else {
             this.ganttStatData = arr.map((t, i) => {
               let obj = {
-                id: t[0],
-                type: "task",
-                start: t[2] * 1000,
-                end: t[3] * 1000,
-                progress: t[5] || 0,
-                duration: t[4] * 60 * 60 * 1000,
-                label: `${t[1]} (${t[5] || 0}%)`,
-                collapsed: true,
-                name: t[1]
+               id: t[0], // *
+              type: "task", // * 甘特图内图形显示类型
+              start: t[2] * 1000, // *任务开始时间
+              end: t[3] * 1000,
+              progress: t[5] || 0, // *进度
+              duration: t[4] * 60 * 60 * 1000, // *工时
+              label: `${t[1]} (${t[5] || 0}%)`, // *
+              collapsed: false, // * 有子节点默认是否收缩
+              name: t[1],
+              preinstall: t[4],
+              actual: t[6]
               };
               if (t[7]) {
                 obj.parentId = t[7];

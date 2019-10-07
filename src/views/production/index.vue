@@ -10,6 +10,7 @@
     </el-select>
     <el-button type="primary" @click="getProductions()">查询</el-button>
     <el-table :data="ProductionList" style="width: 100%;margin-top:30px" v-loading="tableLoading">
+      <el-table-column type="index" align="center"></el-table-column>
       <el-table-column label="作品" align="center">
         <template slot-scope="scope">
           <el-image
@@ -61,7 +62,7 @@
           <el-button
             type="text"
             style="font-size:15px"
-            @click="viewComments(scope.row.task[0].taskid)"
+            @click="viewComments(scope.row.task[0].taskid,scope.$index)"
             icon="el-icon-chat-line-round"
           ></el-button>
         </template>
@@ -79,7 +80,7 @@
       :transfer="false"
       :mask="false"
       :inner="isInner"
-      title="评论"
+      :title="drawerTitle"
     >
       <remarks
         ref="remarks"
@@ -106,6 +107,7 @@ export default {
   },
   data() {
     return {
+      drawerTitle:'',
       RemarkParams: {}, //传给remark的参数
       RemarksData: [],
       isDrawerShow: false, //是否显示drawer
@@ -145,7 +147,8 @@ export default {
   },
   methods: {
     //点击评论按钮显示评论drawer
-    viewComments(id) {
+    viewComments(id,index) {
+      this.drawerTitle = `#${index+1} 作品评论`
       this.RemarkParams = {
         id,
         entity_type: 1

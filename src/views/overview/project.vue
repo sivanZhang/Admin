@@ -1,11 +1,11 @@
 <template>
   <div id="project" style="margin:-20px">
-    <div class="container">
+    <div class="container" ref="drawer-parent">
       <Drawer
         scrollable
         closable
         draggable
-        inner
+        :inner="isInner"
         v-model="isDrawerShow"
         width="526px"
         :transfer="false"
@@ -175,10 +175,12 @@ import { queryTask } from "@/api/task";
 import Mallki from "@/components/TextHoverEffect/Mallki";
 import projectDrawer from "@/components/projectDrawer";
 import DrawerHeader from "@/components/projectDrawer/components/Header";
+import thumbtackMixin from "@/utils/thumbtack-mixin"
 import { delOneProject } from "@/api/project";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 export default {
   name: "project",
+  mixins: [thumbtackMixin], //drawer图钉效果
   components: {
     Mallki,
     projectDrawer,

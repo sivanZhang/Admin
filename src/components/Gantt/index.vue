@@ -16,8 +16,11 @@ import GanttHeader from "gantt-elastic-header";
 
 let defaultOptions = {
   chart: {
+    progress: {
+      bar: true //是否显示任务进度上的绿色调
+    },
     expander: {
-      display: false
+      display: true //有子节点的时候是否显示 “+” 图标
     }
   },
   locale: {
@@ -58,23 +61,15 @@ export default {
       type: Object
     }
   },
-  data() {
-    return {
-    };
-  },
   computed: {
-    options(){
-      return Object.assign({}, defaultOptions, this.customOptions)
+    options() {
+      return Object.assign({}, defaultOptions, this.customOptions);
     },
-    HeaderOption(){
+    HeaderOption() {
       return Object.assign(
         {},
         {
           //甘特图header部分配置
-          title: {
-            label: "<h6 style='letter-spacing:initial'>项目甘特图:</h6>",
-            html: true
-          },
           locale: {
             Now: "当前时间",
             "X-Scale": "横向尺寸",
@@ -85,9 +80,9 @@ export default {
           }
         },
         this.customHeaderOption
-      )
+      );
     }
-  },
+  }
 };
 /* const locale = {
   name: "en",
