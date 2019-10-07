@@ -87,7 +87,7 @@
                     v-for="item of PauseArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px'}"
+                    :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px'}"
                   >
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
@@ -113,7 +113,7 @@
                     v-for="item of TimeOutArr"
                     :key="item.id"
                     :data-taskid="item.id"
-                    :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px'}"
+                    :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px'}"
                   >
                      <div class="cardvalue">{{item.name}}</div>
                   <div class="feedback">{{item.feedback_counter}}个反馈</div>
