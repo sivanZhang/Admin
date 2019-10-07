@@ -31,33 +31,32 @@
     <!-- 燃尽图 -->
     <el-row>
       <!-- <el-col :span="12"> -->
-        <LineChart chart-id="line-chart1" ref="line-chart1" />
+      <LineChart chart-id="line-chart1" ref="line-chart1" />
       <!-- </el-col> -->
-    
     </el-row>
     <!-- 提交审核次数和外包数据 -->
     <template>
       <el-divider />
-      <el-row> 
+      <el-row>
         <template>
           <el-col :span="8">
-        <label for>工时统计图</label>
-        <chart chart-id="line-chart2" ref="line-chart2" />
-      </el-col>
-      </template>
+            <label for>工时统计图</label>
+            <chart chart-id="line-chart2" ref="line-chart2" />
+          </el-col>
+        </template>
         <template v-if="show_inner">
-        <el-col :span="8">
-          <label for>内网提交统计</label>
-          <!-- 图表组件 -->
-          <chart ref="commit-inner" chart-id="commit-inner" />
-        </el-col>
-        <el-col :span="8">
-          <label for>外网提交统计</label>
-          <!-- 图表组件 -->
-          <chart ref="commit-outer" chart-id="commit-outer" />
-        </el-col>
-       </template>
-      </el-row> 
+          <el-col :span="8">
+            <label for>内网提交统计</label>
+            <!-- 图表组件 -->
+            <chart ref="commit-inner" chart-id="commit-inner" />
+          </el-col>
+          <el-col :span="8">
+            <label for>外网提交统计</label>
+            <!-- 图表组件 -->
+            <chart ref="commit-outer" chart-id="commit-outer" />
+          </el-col>
+        </template>
+      </el-row>
       <el-divider />
     </template>
     <el-divider />
@@ -97,17 +96,16 @@ import dayjs from "dayjs";
 export default {
   name: "all-statistics",
   components: { Chart, Gantt, LineChart, BarChart },
-  props:["click_id"],
+  props: ["click_id"],
   data() {
     return {
       ganttStatLoading: false,
       ganttLoading: false,
-      ganttData: [], // 传给甘特图的数据
+      ganttData: [], // 传给甘特图1的数据
       ganttStatData: [], // 传给甘特图2的数据
       projectProgress: 0,
       HttpParams: {
         // http传参对象
-        
       },
       colors: [
         { color: "#f56c6c", percentage: 20 },
@@ -118,25 +116,24 @@ export default {
       ],
       show_inner: true,
       show_detail: true,
+      //甘特图2 的header配置
       customHeaderOption: {
         title: {
           label: "<h6 style='letter-spacing:initial'>人员工时统计:</h6>",
           html: true
         }
       },
+      //甘特图2的配置
       customOptions: {
         chart: {
           progress: {
-            bar: false
+            bar: true //是否显示任务进度上的绿色调
           },
           expander: {
-            display: true
+            display: true //有子节点的时候是否显示 “+” 图标
           }
         },
         taskList: {
-          expander: {
-            straight: true
-          },
           //甘特图中的表格配置
           columns: [
             {
@@ -150,8 +147,7 @@ export default {
                 }
               },
               width: 200,
-              expander: true,
-              html: true
+              expander: true,// 显示 "+" 拓展图标
             },
             {
               id: 2,
@@ -168,6 +164,18 @@ export default {
             },
             {
               id: 4,
+              label: "预设工时",
+              value: "preinstall",
+              width: 120
+            },
+            {
+              id: 5,
+              label: "实际执行工时",
+              value: "actual",
+              width: 120
+            },
+            {
+              id: 6,
               label: "任务进度",
               value: task => `${task.progress}%`,
               width: 120,
@@ -176,17 +184,9 @@ export default {
           ]
         }
       },
+      //甘特图1的配置
       ganttTasks: {
-        chart: {
-          progress: {
-            bar: false
-          },
-          expander: {
-            display: true
-          }
-        },
         taskList: {
-          //甘特图中的表格配置
           columns: [
             {
               id: 1,
@@ -219,14 +219,18 @@ export default {
     },
     //获取项目进度
     getProjectProgress() {
-      Ajax.getProjectStatistic({project_id: this.click_id?this.click_id:this.$route.params.id}).then(({ data }) => {
+      Ajax.getProjectStatistic({
+        project_id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
         this.projectProgress = data.msg.replace("%", "") - 0;
       });
     },
     //获取资产状态统计  并传参调用图表组件的初始化方法
     getAssetStatistics() {
       this.$refs["asset-chart"].openLoading();
-      Ajax.getAssetStatistic({project_id: this.click_id?this.click_id:this.$route.params.id}).then(({ data }) => {
+      Ajax.getAssetStatistic({
+        project_id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
         let keys = Object.keys(data.msg);
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
@@ -237,7 +241,9 @@ export default {
     //获取任务状态统计  并传参调用图表组件的初始化方法
     getTaskStatistics() {
       this.$refs["task-chart"].openLoading();
-      Ajax.getTaskStatistic({project_id: this.click_id?this.click_id:this.$route.params.id}).then(({ data }) => {
+      Ajax.getTaskStatistic({
+        project_id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
         let keys = Object.keys(data.msg);
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
@@ -248,27 +254,31 @@ export default {
     //获取甘特图2数据
     getganttStat() {
       this.ganttStatLoading = true;
-      Ajax.getingExecutorChart({ id: this.click_id?this.click_id:this.$route.params.id, executors: "" })
+      Ajax.getingExecutorChart({
+        id: this.click_id ? this.click_id : this.$route.params.id,
+        executors: ""
+      })
         .then(({ data }) => {
           let arr = [...data.msg];
           this.ganttStatData = arr.map((t, i) => {
             let obj = {
-              id: t[0],
-              type: "task",
-              start: t[2] * 1000,
+              id: t[0], // *
+              type: "task", // * 甘特图内图形显示类型
+              start: t[2] * 1000, // *任务开始时间
               end: t[3] * 1000,
-              progress: t[5] || 0,
-              duration: t[4] * 60 * 60 * 1000,
-              label: `${t[1]} (${t[5] || 0}%)`,
-              collapsed: true,
+              progress: t[5] || 0, // *进度
+              duration: t[4] * 60 * 60 * 1000, // *工时
+              label: `${t[1]} (${t[5] || 0}%)`, // *
+              collapsed: false, // * 有子节点默认是否收缩
               name: t[1],
+              preinstall: t[4],
+              actual: t[6]
             };
             if (t[7]) {
               obj.parentId = t[7];
             }
             return obj;
           });
-          //console.log(this.ganttStatData);
         })
         .finally(() => {
           this.ganttStatLoading = false;
@@ -277,17 +287,19 @@ export default {
     //获取甘特图1数据
     getGantt() {
       this.ganttLoading = true;
-      Ajax.getGanttData({ id: this.click_id?this.click_id:this.$route.params.id }).then(({ data }) => {
+      Ajax.getGanttData({
+        id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
         const arr = [...data.msg];
         this.ganttLoading = false;
         this.ganttData = arr.map((t, i, Arr) => {
           return {
             id: t.deptid,
             label: t.deptname,
-            type: "task", //线条样式
-            start: t.start * 1000, //开始时间
-            end: t.end * 1000, //结束时间
-            duration: t.last * 60 * 60 * 1000 //工时
+            type: "task",
+            start: t.start * 1000,
+            end: t.end * 1000,
+            duration: t.last * 60 * 60 * 1000
           };
         });
       });
@@ -295,255 +307,255 @@ export default {
     //获取燃尽图数据
     getBurnOut() {
       this.$refs["line-chart1"].openLoading();
-      Ajax.burnOut({ id: this.click_id?this.click_id:this.$route.params.id, bourout: "" }).then(
-        ({ data }) => {
-          if (data.status === 0) {
-            let customOption = {
-              title: {
-                top: 20,
-                text: "项目燃尽图",
-                textStyle: {
-                  fontWeight: 600,
-                  fontSize: 16
-                },
-                left: "left",
-                top: 0
+      Ajax.burnOut({
+        id: this.click_id ? this.click_id : this.$route.params.id,
+        bourout: ""
+      }).then(({ data }) => {
+        if (data.status === 0) {
+          let customOption = {
+            title: {
+              top: 20,
+              text: "项目燃尽图",
+              textStyle: {
+                fontWeight: 600,
+                fontSize: 16
               },
+              left: "left",
+              top: 0
+            },
+            tooltip: {
+              trigger: "axis"
+            },
+            legend: {
+              //图例
+              data: ["计划工作时长", "实际工作时长"], // 名字
               tooltip: {
-                trigger: "axis"
+                show: true
+              }
+            },
+            xAxis: [
+              {
+                type: "category",
+                boundaryGap: false,
+                data: data.dates
+              }
+            ],
+            yAxis: [
+              {
+                type: "value"
+                /* name: "(%)", */
+              }
+            ],
+            series: [
+              // 线数据
+              {
+                name: "计划工作时长",
+                type: "line",
+                smooth: true,
+                showSymbol: true,
+                data: data.plan_worktimes
               },
-              legend: {
-                //图例
-                data: ["计划工作时长", "实际工作时长"], // 名字
-                tooltip: {
-                  show: true
-                }
-              },
-              xAxis: [
-                {
-                  type: "category",
-                  boundaryGap: false,
-                  data: data.dates
-                }
-              ],
-              yAxis: [
-                {
-                  type: "value"
-                  /* name: "(%)", */
-                }
-              ],
-              series: [
-                // 线数据
-                {
-                  name: "计划工作时长",
-                  type: "line",
-                  smooth: true,
-                  showSymbol: true,
-                  data: data.plan_worktimes
-                },
-                {
-                  name: "实际工作时长",
-                  type: "line",
-                  smooth: true, // 是否曲线
-                  showSymbol: true, // 是否显示点
-                  data: data.real_worktimes
-                }
-              ]
-            };
-            this.$refs["line-chart1"].initChart(customOption);
-          }
+              {
+                name: "实际工作时长",
+                type: "line",
+                smooth: true, // 是否曲线
+                showSymbol: true, // 是否显示点
+                data: data.real_worktimes
+              }
+            ]
+          };
+          this.$refs["line-chart1"].initChart(customOption);
         }
-      );
+      });
     },
     //外包数据
     exportData() {
-      Ajax.exportTask({ id: this.click_id?this.click_id:this.$route.params.id, worktime: "" }).then(
-        ({ data }) => {
-          let keys = Object.keys(data.msg);
-          // console.log(keys)  
-          let chartData = keys.map(t => {
-            switch(t){
-              case "plan_inner":
-                 return { name: '内部总计划', value: data.msg[t] };
-              case "plan_outsource":
-                 return { name: '外包总计划', value: data.msg[t] };
-              case "real_inner":
-                 return { name: '内部总实际', value: data.msg[t] };
-              case "real_outsource":
-                 return { name: '外包总实际', value: data.msg[t] };
-            }
-          });
-          // console.log(chartData)
-          this.$refs["line-chart2"].initChart("", chartData);
-        }
-      );
+      Ajax.exportTask({
+        id: this.click_id ? this.click_id : this.$route.params.id,
+        worktime: ""
+      }).then(({ data }) => {
+        let keys = Object.keys(data.msg);
+        // console.log(keys)
+        let chartData = keys.map(t => {
+          switch (t) {
+            case "plan_inner":
+              return { name: "内部总计划", value: data.msg[t] };
+            case "plan_outsource":
+              return { name: "外包总计划", value: data.msg[t] };
+            case "real_inner":
+              return { name: "内部总实际", value: data.msg[t] };
+            case "real_outsource":
+              return { name: "外包总实际", value: data.msg[t] };
+          }
+        });
+        // console.log(chartData)
+        this.$refs["line-chart2"].initChart("", chartData);
+      });
     },
     //获取项目提交次数统计数据
     getCommitCount() {
-      Ajax.proCommitCount({ project_id: this.click_id?this.click_id:this.$route.params.id }).then(
-        ({ data }) => {
-          if (!data.inner_num.length) {
-            this.show_inner = false;
-          }
-          let chartData = data.inner_num.map(t => {
-            return { name: t.submit_name, value: t.num };
-          });
-          let chartData2 = data.out_num.map(t => {
-            return { name: t.submit_name, value: t.num };
-          });
-          this.$refs["commit-inner"].initChart("", chartData);
-          this.$refs["commit-outer"].initChart("", chartData2);
+      Ajax.proCommitCount({
+        project_id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
+        if (!data.inner_num.length) {
+          this.show_inner = false;
         }
-      );
+        let chartData = data.inner_num.map(t => {
+          return { name: t.submit_name, value: t.num };
+        });
+        let chartData2 = data.out_num.map(t => {
+          return { name: t.submit_name, value: t.num };
+        });
+        this.$refs["commit-inner"].initChart("", chartData);
+        this.$refs["commit-outer"].initChart("", chartData2);
+      });
     },
     //统计项目成员的资产和任务信息
     getAssetTask() {
-      Ajax.statisticMemberDetail({ project_id: this.click_id?this.click_id:this.$route.params.id }).then(
-        ({ data }) => {
-          let keys = Object.keys(data.task);
-          let keys2 = Object.keys(data.user_asset);
-          let customOption = {
-            title: {
-              text: "镜头和任务分布",
-              textStyle: {
-                //---主标题内容样式
-                color: "#000",
-                // height:"50px"
-              },
-              padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+      Ajax.statisticMemberDetail({
+        project_id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
+        let keys = Object.keys(data.task);
+        let keys2 = Object.keys(data.user_asset);
+        let customOption = {
+          title: {
+            text: "镜头和任务分布",
+            textStyle: {
+              //---主标题内容样式
+              color: "#000"
+              // height:"50px"
             },
-            tooltip: {
-              trigger: "axis",
-              axisPointer: {
-                type: "shadow"
+            padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow"
+            }
+          },
+          legend: {
+            data: ["镜头个数", "任务个数"]
+          },
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: "category",
+              data: keys,
+              axisLabel: {
+                //---坐标轴 标签
+                show: true, //---是否显示
+                inside: false, //---是否朝内
+                interval: 0,
+                rotate: 0,
+                margin: 5 //---刻度标签与轴线之间的距离
+                //color:'red',				//---默认取轴线的颜色
               }
+            }
+          ],
+          yAxis: [
+            {
+              type: "value"
+            }
+          ],
+          series: [
+            {
+              name: "镜头个数",
+              type: "bar",
+              barWidth: 30,
+              data: keys2.map(t => {
+                return data.user_asset[t];
+              })
             },
-            legend: {
-              data: ["镜头个数", "任务个数"]
-            },
-            grid: {
-              left: "3%",
-              right: "4%",
-              bottom: "3%",
-              containLabel: true
-            },
-            xAxis: [
-              {
-                type: "category",
-                data: keys,
-                axisLabel: {
-                  //---坐标轴 标签
-                  show: true, //---是否显示
-                  inside: false, //---是否朝内
-                  interval: 0,
-                  rotate: 0,
-                  margin: 5 //---刻度标签与轴线之间的距离
-                  //color:'red',				//---默认取轴线的颜色
-                }
-              }
-            ],
-            yAxis: [
-              {
-                type: "value"
-              }
-            ],
-            series: [
-              {
-                name: "镜头个数",
-                type: "bar",
-                barWidth:30,
-                data: keys2.map(t => {
-                  return data.user_asset[t];
-                })
-              },
-              {
-                name: "任务个数",
-                type: "bar",
-                barWidth:30,
-                 barMaxWidth:50,
-                data: keys.map(t => {
-                  return data.task[t];
-                })
-              }
-            ]
-          };
-          // let chartData2 =
-          this.$refs["task-count"].initChart(customOption);
-          // this.$refs["asset-count"].initChart("", chartData2);
-        }
-      );
+            {
+              name: "任务个数",
+              type: "bar",
+              barWidth: 30,
+              barMaxWidth: 50,
+              data: keys.map(t => {
+                return data.task[t];
+              })
+            }
+          ]
+        };
+        // let chartData2 =
+        this.$refs["task-count"].initChart(customOption);
+        // this.$refs["asset-count"].initChart("", chartData2);
+      });
     },
     //成绩变化
     getGradeChange() {
-      Ajax.MemberSort({ project_id: this.click_id?this.click_id:this.$route.params.id }).then(
-        ({ data }) => {
-          if(!data.sum_grade.length){
-            return;
-          }
-          let keys = Object.keys(data.sum_grade);
-          let customOption = {
-            title: {
-              text: "总成绩排名",
-              textStyle: {
-                //---主标题内容样式
-                color: "#000"
-              },
-              padding: [0, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
-            },
-            tooltip: {
-              trigger: "axis",
-              axisPointer: {
-                type: "shadow"
-              }
-            },
-            legend: {
-              data: ["总成绩"]
-            },
-            grid: {
-              left: "3%",
-              right: "4%",
-              bottom: "3%",
-              containLabel: true
-            },
-            xAxis: [
-              {
-                type: "category",
-                data: keys,
-                axisLabel: {
-                  //---坐标轴 标签
-                  show: true, //---是否显示
-                  inside: false, //---是否朝内
-                  interval: 0,
-                  rotate: 0,
-                  margin: 5 //---刻度标签与轴线之间的距离
-                  //color:'red',				//---默认取轴线的颜色
-                }
-              }
-            ],
-            yAxis: [
-              {
-                type: "value"
-              }
-            ],
-            series: [
-              {
-                name: "成绩",
-                type: "bar",
-                data: keys.map(t => {
-                  return data.sum_grade[t];
-                })
-              }
-            ]
-          };
-          // let chartData2 =
-          this.$refs["grade"].initChart(customOption);
+      Ajax.MemberSort({
+        project_id: this.click_id ? this.click_id : this.$route.params.id
+      }).then(({ data }) => {
+        if (!data.sum_grade.length) {
+          return;
         }
-      );
+        let keys = Object.keys(data.sum_grade);
+        let customOption = {
+          title: {
+            text: "总成绩排名",
+            textStyle: {
+              //---主标题内容样式
+              color: "#000"
+            },
+            padding: [0, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow"
+            }
+          },
+          legend: {
+            data: ["总成绩"]
+          },
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: "category",
+              data: keys,
+              axisLabel: {
+                //---坐标轴 标签
+                show: true, //---是否显示
+                inside: false, //---是否朝内
+                interval: 0,
+                rotate: 0,
+                margin: 5 //---刻度标签与轴线之间的距离
+                //color:'red',				//---默认取轴线的颜色
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: "value"
+            }
+          ],
+          series: [
+            {
+              name: "成绩",
+              type: "bar",
+              data: keys.map(t => {
+                return data.sum_grade[t];
+              })
+            }
+          ]
+        };
+        // let chartData2 =
+        this.$refs["grade"].initChart(customOption);
+      });
     }
   },
-  created() {
-    
-  },
+  created() {},
   mounted() {
     this.getProjectProgress();
     this.getGantt();
