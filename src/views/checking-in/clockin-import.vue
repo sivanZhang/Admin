@@ -139,7 +139,7 @@ export default {
               duration: 0
             });
             this.$router.push({
-              name: "manage-work"
+              name: "clock-in"
             });
           } else {
             this.$message.warning(data.msg);

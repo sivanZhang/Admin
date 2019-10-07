@@ -453,7 +453,7 @@ export const constantRoutes = [{
     redirect: 'noRedirect',
     alwaysShow: true,
     meta: {
-      title: '加班管理',
+      title: '考勤管理',
       icon: 'kq'
     },
     children: [{
@@ -484,6 +484,16 @@ export const constantRoutes = [{
         meta: {
           title: '工时管理',
           icon: 'team-manager'
+        }
+      },
+      {
+        path: 'clock-in',
+        name: 'clock-in',
+        component: () =>
+          import('@/views/checking-in/clock-in'),
+        meta: {
+          title: '打卡管理',
+          icon: 'daka'
         }
       }
     ]

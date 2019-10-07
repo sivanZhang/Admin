@@ -2,20 +2,13 @@
   <div id="manage-work" ref="drawer-parent">
     <template v-if="auth">
       <div style="padding-bottom:10px">
-        <el-row>
-          <el-col :span="18">
-          <el-button icon="el-icon-plus" type="primary" @click="openDialog(1)">添加调休表</el-button>
+        <el-button icon="el-icon-plus" type="primary" @click="openDialog(1)">添加调休表</el-button>
         <el-button
           icon="el-icon-delete"
           type="danger"
           @click="removeDayOff()"
           :disabled="this.multipleSelection.length === 0"
         >批量删除</el-button>
-        </el-col>
-         <el-col :span="6" align="right">
-            <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
-         </el-col>
-        </el-row>
       </div>
     </template>
     <el-table :data="leaverhourList" @selection-change="handleSelectionChange" :row-key="(row)=>{ return row.id}">
