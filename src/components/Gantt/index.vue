@@ -15,11 +15,6 @@ import GanttElastic from "gantt-elastic";
 import GanttHeader from "gantt-elastic-header";
 
 let defaultOptions = {
-  maxRows: 100,
-  maxHeight: 300,
-  row: {
-    height: 24
-  },
   chart: {
     expander: {
       display: false
