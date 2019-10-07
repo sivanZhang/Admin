@@ -7,7 +7,7 @@
         style="width: 100%"
         highlight-current-row
         @selection-change="handleSelectionChange"
-        :row-key="row=>row.id"
+        :row-key="({row,$index})=>$index"
       >
         <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
         <el-table-column label="头像" width="80" align="center">

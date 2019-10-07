@@ -1,13 +1,12 @@
 <!-- 提交外网审批 -->
 <template>
-  <div id="extra-audit">
+  <div id="extra-audit" ref="drawer-parent">
     <el-table
       v-loading="tableLoading"
       :data="extraList"
       style="margin-top:20px;width:100%"
       highlight-current-row
-      @row-click="taskBoardRightShow"
-    >
+      @row-click="taskBoardRightShow">
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
