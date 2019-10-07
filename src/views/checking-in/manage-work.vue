@@ -18,7 +18,7 @@
         </el-row>
       </div>
     </template>
-    <el-table :data="leaverhourList" @selection-change="handleSelectionChange">
+    <el-table :data="leaverhourList" @selection-change="handleSelectionChange" :row-key="(row)=>{ return row.id}">
       <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
       <el-table-column prop="off_user.username" label="调休人" class-name="links">
         <template slot-scope="scope">
@@ -74,7 +74,7 @@
     <el-dialog title="添加调休记录" :visible.sync="dialogShow" width="512px">
       <el-form :model="dayOffForm" label-width="110px">
         <el-form-item label="调休人" prop="off_user_id">
-          <el-select v-model="dayOffForm.off_user_id" filterable>
+          <el-select v-model="dayOffForm.off_user_id" filterable @change="userDaysOff()">
             <el-option
               v-for="(item,index) of UserList"
               :key="index"
@@ -82,6 +82,9 @@
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="用户可调休时长">
+          <span>{{allow_off}}</span>
         </el-form-item>
         <el-form-item label="调休时间">
           <el-input v-model="dayOffForm.off_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
@@ -125,6 +128,19 @@ export default {
     ...mapState("admin", ["UserList"])
   },
   methods: {
+    //获取某个用户的调休时间
+    userDaysOff(){
+      getDayOffList({user_id:this.dayOffForm.off_user_id}).then(({data})=>{
+        if(data.status === 0){
+          if(!data.msg.length){
+            this.allow_off="暂无调休"
+          }else{
+             this.allow_off = data.msg[0].off_count.allow_off_hour+"小时"
+          }
+         
+        }
+      })
+    },
     //批量删除
     handleSelectionChange(val) {
       this.multipleSelection = val;
