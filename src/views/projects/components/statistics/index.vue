@@ -446,7 +446,7 @@ export default {
                 })
               },
               {
-                name: "镜头个数",
+                name: "任务个数",
                 type: "bar",
                 data: keys.map(t => {
                   return data.task[t];

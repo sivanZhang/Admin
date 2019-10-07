@@ -44,5 +44,10 @@ export function statisticMemberDetail(params){
 }
 //成员排名
 export function MemberSort(params){
-    return AXIOS.get("/statistic/score/",{params})
+    return AXIOS.get('/statistic/score/',{params})
+}
+
+//获取执行人
+export function getingExecutorChart(params){
+  return AXIOS.get('/projects/stat/?05',{params})
 }
