@@ -1,5 +1,5 @@
 <template>
-  <div id="manage-work">
+  <div id="manage-work" ref="drawer-parent">
     <template v-if="auth">
       <div style="padding-bottom:10px">
         <el-row>
