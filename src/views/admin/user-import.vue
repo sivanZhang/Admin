@@ -133,8 +133,8 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.$notify({
-              title: "提交状态",
-              message: data.msg.join(),
+              title: data.msg,
+              message: `导入成功${data.success_num}条，失败${data.fail_num}条`,
               duration: 0,
               type: "warning"
             });
