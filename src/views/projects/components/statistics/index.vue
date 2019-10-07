@@ -351,9 +351,18 @@ export default {
       Ajax.exportTask({ id: this.$route.params.id, worktime: "" }).then(
         ({ data }) => {
           let keys = Object.keys(data.msg);
-          // console.log(keys)
+          // console.log(keys)  
           let chartData = keys.map(t => {
-            return { name: t, value: data.msg[t] };
+            switch(t){
+              case "plan_inner":
+                 return { name: '内部总计划', value: data.msg[t] };
+              case "plan_outsource":
+                 return { name: '外包总计划', value: data.msg[t] };
+              case "real_inner":
+                 return { name: '内部综实际', value: data.msg[t] };
+              case "real_outsource":
+                 return { name: '外包总实际', value: data.msg[t] };
+            }
           });
           // console.log(chartData)
           this.$refs["line-chart2"].initChart("", chartData);
