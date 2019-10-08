@@ -29,11 +29,13 @@
     </div>
     <el-divider />
     <!-- 燃尽图 -->
-    <el-row>
-      <!-- <el-col :span="12"> -->
-      <LineChart chart-id="line-chart1" ref="line-chart1" />
-      <!-- </el-col> -->
-    </el-row>
+    <template v-if="burnShow">
+      <el-row>
+        <!-- <el-col :span="12"> -->
+        <LineChart chart-id="line-chart1" ref="line-chart1" />
+        <!-- </el-col> -->
+      </el-row>
+    </template>
     <!-- 提交审核次数和外包数据 -->
     <template>
       <el-divider />
@@ -41,7 +43,7 @@
         <template>
           <el-col :span="8">
             <label for>工时统计图</label>
-            <PieNestedChart chart-id="line-chart2" ref="line-chart2" />
+            <chart chart-id="line-chart2" ref="line-chart2" />
           </el-col>
         </template>
         <template v-if="show_inner">
@@ -58,16 +60,17 @@
         </template>
       </el-row>
     </template>
-    <el-divider />
-    <el-row>
-      <!-- 柱状图组件 -->
-      <BarChart ref="task-count" chart-id="task-count" />
-    </el-row>
+    <template v-if="asssetTask">
+      <el-row>
+        <!-- 柱状图组件 -->
+        <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
+      </el-row>
+    </template>
     <template v-if="$route.query.type == 0&&showGrade">
       <el-divider />
       <el-row>
         <!-- 柱状图组件 -->
-        <BarChart ref="grade" chart-id="grade" />
+        <BarChart ref="grade" chart-id="grade" style="height:400px" />
       </el-row>
     </template>
 
@@ -136,6 +139,8 @@ export default {
   data() {
     return {
       showGrade: true,
+      asssetTask: true,
+      burnShow: true,
       deptList: [],
       deptChoose: [],
       userList: [],
@@ -326,6 +331,7 @@ export default {
     //获取甘特图2数据--人员
     getganttStat() {
       this.ganttStatLoading = true;
+      this.ganttStatData = [];
       Ajax.getingExecutorChart({
         id: this.click_id ? this.click_id : this.$route.params.id,
         executors: ""
@@ -333,7 +339,7 @@ export default {
         .then(({ data }) => {
           let arr = [...data.msg];
           if (this.user.length) {
-            this.ganttStatData = [];
+            // this.ganttStatData = [];
             arr.map((t, i) => {
               this.user.forEach(item => {
                 if (t[1] === item.name) {
@@ -358,6 +364,7 @@ export default {
               });
             });
           } else {
+            this.ganttStatData =[];
             this.ganttStatData = arr.map((t, i) => {
               let obj = {
                 id: t[0], // *
@@ -404,6 +411,7 @@ export default {
     },
     //获取甘特图1数据
     getGantt() {
+      this.ganttData =[];
       this.ganttLoading = true;
       Ajax.getGanttData({
         id: this.click_id ? this.click_id : this.$route.params.id
@@ -411,7 +419,7 @@ export default {
         const arr = [...data.msg];
         this.ganttLoading = false;
         if (this.deptChoose.length) {
-          this.ganttData = [];
+          // this.ganttData = [];
           arr.map((t, i, Arr) => {
             this.deptChoose.forEach(item => {
               if (t.deptid === item) {
@@ -428,6 +436,7 @@ export default {
             });
           });
         } else {
+          this.ganttData =[];
           arr.map((t, i, Arr) => {
             // console.log(t)
             this.ganttData.push({
@@ -452,6 +461,10 @@ export default {
         bourout: ""
       }).then(({ data }) => {
         if (data.status === 0) {
+          if (!data.dates.length) {
+            this.burnShow = false;
+            return;
+          }
           let customOption = {
             title: {
               top: 20,
@@ -514,22 +527,23 @@ export default {
         id: this.click_id ? this.click_id : this.$route.params.id,
         worktime: ""
       }).then(({ data }) => {
-        // let keys = Object.keys(data.msg);
-        // // console.log(keys)
-        // let chartData = keys.map(t => {
-        //   switch (t) {
-        //     case "plan_inner":
-        //       return { name: "内部总计划", value: data.msg[t] };
-        //     case "plan_outsource":
-        //       return { name: "外包总计划", value: data.msg[t] };
-        //     case "real_inner":
-        //       return { name: "内部总实际", value: data.msg[t] };
-        //     case "real_outsource":
-        //       return { name: "外包总实际", value: data.msg[t] };
-        //   }
-        // });
-        // // console.log(chartData)
-        this.$refs["line-chart2"].initChart("");
+        // console.log(data.msg);
+        let keys = Object.keys(data.msg);
+        // console.log(keys)
+        let chartData = keys.map(t => {
+          switch (t) {
+            case "plan_inner":
+              return { name: "内部总计划", value: data.msg[t] };
+            case "plan_outsource":
+              return { name: "外包总计划", value: data.msg[t] };
+            case "real_inner":
+              return { name: "内部总实际", value: data.msg[t] };
+            case "real_outsource":
+              return { name: "外包总实际", value: data.msg[t] };
+          }
+        });
+        // console.log(chartData)
+        this.$refs["line-chart2"].initChart("", chartData);
       });
     },
     //获取项目提交次数统计数据
@@ -555,6 +569,10 @@ export default {
       Ajax.statisticMemberDetail({
         project_id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
+        if (!data.user_id_list.length) {
+          this.asssetTask = false;
+          return;
+        }
         let keys = Object.keys(data.task);
         let keys2 = Object.keys(data.user_asset);
         let customOption = {

@@ -167,3 +167,15 @@ export function getDates(params) {
     params
   })
 }
+//正式成员的上下班时间和工时
+export function officialWorktime(data) {
+  return AXIOS.post('/wkconfig/sysconfig/', data)
+}
+//实训成员的上下班时间和工时
+export function trainingWorktime(data) {
+  return AXIOS.post('/wkconfig/sysconfig/', data)
+}
+//实训排名权重设置
+export function rankList(data) {
+  return AXIOS.post('/wkconfig/sysconfig/', data)
+}
