@@ -5,8 +5,11 @@
 </template>
 
 <script>
+import {getClockRecord} from '@/api/notice'
 export default {
-
+ created() {
+   getClockRecord()
+ },
 }
 </script>
 

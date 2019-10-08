@@ -1,6 +1,6 @@
 <!-- 实训成员 -->
 <template>
-  <div id="training">
+  <div id="training" ref="drawer-parent">
     <el-table
       ref="trainingMenber"
       :data="trainingMenber.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -8,7 +8,13 @@
       :span-method="objectSpanMethod"
     >
       <el-table-column label="所属分组" prop="name"></el-table-column>
-      <el-table-column label="实训人员" prop="username"></el-table-column>
+      <el-table-column label="实训人员">
+        <template slot-scope="scope">
+          <div @click="openRanking()" class="links">
+            {{scope.row.username}}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="学校" prop="school"></el-table-column>
       <el-table-column label="参与任务数量" prop="task_num" align="center"></el-table-column>
       <el-table-column label="考勤" align="center">
@@ -31,16 +37,31 @@
         :total="trainingMenber.length"
       ></el-pagination>
     </div>
+    <Drawer
+      scrollable
+      closable
+      draggable
+      v-model="isRankingShow"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+      :title="usernameTitle"
+    >
+    排名雷达图
+    </Drawer>
   </div>
-</template>
-
+</template>  
 <script>
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
   name: "training",
   components: {},
+  mixins: [thumbtackMixin],
   props: ["trainingMenber"],
   data() {
     return {
+      usernameTitle:'',
+      isRankingShow:false,
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [10, 20, 50, 100]
@@ -53,6 +74,10 @@ export default {
     }
   },
   methods: {
+    // 打开个人排名抽屉
+    openRanking(){
+      this.isRankingShow = true
+    },
     Group(name) {
       return this.trainingMenber.filter(item => item.name == name).length;
     },
@@ -104,4 +129,8 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+.links{
+  color: #2d8cf0;
+  cursor: pointer;
+}
 </style>
