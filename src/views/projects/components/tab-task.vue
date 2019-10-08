@@ -839,6 +839,7 @@
       :inner="isInner"
       :transfer="false"
       :mask="false"
+      draggable
     >
       <el-tabs v-model="activeName">
         <el-tab-pane label="审批记录" name="first">

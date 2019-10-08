@@ -6,7 +6,11 @@
       :data="trainingMenber.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       :span-method="objectSpanMethod"
     >
-      <el-table-column label="所属分组" prop="name"></el-table-column>
+      <el-table-column label="所属分组" prop="name">
+        <template slot-scope="scope">
+          <div @click="openTeam(scope)" class="links">{{scope.row.name}}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="实训人员">
         <template slot-scope="scope">
           <div @click="openRanking(scope.row)" class="links">{{scope.row.username}}</div>
@@ -37,24 +41,76 @@
     <Drawer
       closable
       draggable
+      scrollable
       v-model="isRankingShow"
       :transfer="false"
       :mask="false"
       :inner="isInner"
-      width="800px"
       :title="usernameTitle"
+      width="500"
     >
-      <MyCharts ref="radar" chart-id="radar-chart" />
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="个人雷达图" name="first">
+          <MyCharts ref="radar" chart-id="radar-chart" />
+        </el-tab-pane>
+        <el-tab-pane label="工作详情" name="second">工作详情</el-tab-pane>
+      </el-tabs>
+    </Drawer>
+
+    <Drawer
+      draggable
+      scrollable
+      closable
+      v-model="teamShow"
+      :mask="false"
+      :inner="isInner"
+      title="企业画像"
+      width="750"
+    >
+      <div id="training-team">
+        <el-row>
+          <el-col :span="3">
+            <h4>分组：</h4>
+          </el-col>
+          <el-col :span="8">
+            <h4>{{teamTitle}}</h4>
+          </el-col>
+          <el-col :span="2"></el-col>
+          <el-col :span="3">
+            <h4>所属学校：</h4>
+          </el-col>
+          <el-col :span="8">
+            <h4>{{teamSchool}}</h4>
+          </el-col>
+        </el-row>
+        <el-divider />
+        <el-row>
+          <el-col :span="12">
+            <label for>任务完成情况</label>
+            <PieCharts ref="team-chart" chart-id="team-chart" style="width:320px" />
+          </el-col>
+          <el-col :span="12">
+            <label for>考勤情况</label>
+          </el-col>
+        </el-row>
+        <el-divider />
+        <el-row>
+          <production />
+        </el-row>
+      </div>
     </Drawer>
   </div>
 </template>  
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import MyCharts from "@/components/ECharts/BaseECharts";
+import { trainTask } from "@/api/statistics";
+import production from "@/views/production";
+import PieCharts from "@/components/ECharts/PieChart";
 export default {
   name: "training-member",
   mixins: [thumbtackMixin],
-  components: { MyCharts },
+  components: { MyCharts, production, PieCharts },
   props: ["trainingMenber"],
   data() {
     return {
@@ -62,7 +118,11 @@ export default {
       isRankingShow: false,
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [10, 20, 50, 100]
+      pageSizeList: [10, 20, 50, 100],
+      teamShow: false,
+      teamTitle: "",
+      teamSchool: "",
+      activeName: "first"
     };
   },
   computed: {
@@ -81,7 +141,7 @@ export default {
           text: "基础雷达图"
         },
         legend: {
-          data: ["预算分配（Allocated Budget）"],
+          data: ["个人所有排名"],
           left: "center",
           bottom: "0"
         },
@@ -91,7 +151,6 @@ export default {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         radar: {
           indicator: [
@@ -115,7 +174,6 @@ export default {
         },
         series: [
           {
-            name: "预算 vs 开销（Budget vs spending）",
             type: "radar",
             areaStyle: {
               normal: {
@@ -129,7 +187,7 @@ export default {
             data: [
               {
                 value: [9, 5, 90],
-                name: "预算分配（Allocated Budget）"
+                name: "个人所有排名"
               }
             ]
           }
@@ -173,6 +231,22 @@ export default {
         };
       }
     },
+    //打开分组
+    openTeam(scope) {
+      this.teamShow = true;
+      this.teamTitle = scope.row.name;
+      this.teamSchool = scope.row.school;
+      trainTask({
+        project_id: this.$route.params.id,
+        teamid: scope.row.id
+      }).then(({ data }) => {
+        let keys = Object.keys(data.msg);
+        let chartData = keys.map(t => {
+          return { name: t, value: data.msg[t] };
+        });
+        this.$refs["team-chart"].initChart("", chartData);
+      });
+    },
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -190,7 +264,15 @@ export default {
 };
 </script>
 
+
 <style lang='scss' scoped>
+#training {
+  min-height: calc(100vh - 170px);
+}
+#training-team{
+  position: relative;
+  width: 100%;
+}
 .links {
   color: #2d8cf0;
   cursor: pointer;
