@@ -94,7 +94,7 @@
         </el-row>
         <el-divider />
         <el-row>
-          <production />
+          <production :teamId="teamId" :projectId ="projectId" ref="pro_team"/>
         </el-row>
       </div>
     </Drawer>
@@ -113,6 +113,7 @@ export default {
   props: ["trainingMenber"],
   data() {
     return {
+      projectId:this.$route.params.id,
       usernameTitle: "",
       isRankingShow: false,
       currentPage: 1,
@@ -121,7 +122,8 @@ export default {
       teamShow: false,
       teamTitle: "",
       teamSchool: "",
-      activeName: "first"
+      activeName: "first",
+      teamId:null
     };
   },
   computed: {
@@ -243,6 +245,7 @@ export default {
     //打开分组
     openTeam(scope) {
       this.teamShow = true;
+      this.teamId = scope.row.id;
       this.teamTitle = scope.row.name;
       this.teamSchool = scope.row.school;
       trainTask({
@@ -271,6 +274,9 @@ export default {
           this.$refs["checkIn-chart"].initChart("", chartData);
         }
       );
+      this.$nextTick(()=>{
+        this.$refs.pro_team.getProductions()
+      })
     },
     //分页
     handleSizeChange(val) {

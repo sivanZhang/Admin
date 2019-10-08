@@ -59,12 +59,15 @@
           </el-col>
         </template>
       </el-row>
+      <el-divider />
     </template>
     <template v-if="asssetTask">
-      <el-row>
+      <div style="margin-top:40px">
+        <el-row>
         <!-- 柱状图组件 -->
         <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
       </el-row>
+      </div>
     </template>
     <template v-if="$route.query.type == 0&&showGrade">
       <el-divider />

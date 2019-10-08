@@ -57,7 +57,7 @@
         <el-table-column label="工种名称" header-align="center" prop="task[0].link_dept_name"></el-table-column>
         <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
       </el-table-column>
-      <el-table-column label="评论" align="center">
+      <el-table-column label="评论" align="center" v-if="!teamId">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -68,7 +68,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
       <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
     </el-dialog>
@@ -105,9 +105,10 @@ export default {
   components: {
     remarks
   },
+  props: ["teamId", "projectId"],
   data() {
     return {
-      drawerTitle:'',
+      drawerTitle: "",
       RemarkParams: {}, //传给remark的参数
       RemarksData: [],
       isDrawerShow: false, //是否显示drawer
@@ -147,8 +148,8 @@ export default {
   },
   methods: {
     //点击评论按钮显示评论drawer
-    viewComments(id,index) {
-      this.drawerTitle = `#${index+1} 作品评论`
+    viewComments(id, index) {
+      this.drawerTitle = `#${index + 1} 作品评论`;
       this.RemarkParams = {
         id,
         entity_type: 1
@@ -188,13 +189,21 @@ export default {
     getProductions() {
       this.tableLoading = true;
       let params = {};
-      this.currentType && (params[this.currentType] = "");
-      this.currentAuthor && (params[this.currentAuthor] = "");
+      
+        this.currentType && (params[this.currentType] = "");
+        this.currentAuthor && (params[this.currentAuthor] = "");
       getProduction(params)
         .then(({ data }) => {
           this.ProductionList = [...data.msg];
         })
         .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    getProjectTeam(){
+      getProduction({team_id: this.teamId, project_id: this.projectId}).then(({data})=>{
+         this.ProductionList = [...data.msg];
+      }).finally(() => {
           this.tableLoading = false;
         });
     }
