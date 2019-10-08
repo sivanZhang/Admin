@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div id="gantt">
     <gantt-elastic :options="options" :tasks="ganttData">
       <gantt-header slot="header" :options="HeaderOption"></gantt-header>
     </gantt-elastic>
@@ -126,3 +126,14 @@ export default {
   }
 }; */
 </script>
+<style lang="scss">
+#gantt {
+  .gantt-elastic__header-btn-recenter {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+  .gantt-elastic__task-list-header-label {
+    text-align: left;
+  }
+}
+</style>

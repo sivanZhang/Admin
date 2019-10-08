@@ -57,7 +57,6 @@
           </el-col>
         </template>
       </el-row>
-      <el-divider />
     </template>
     <el-divider />
     <el-row>
@@ -74,18 +73,20 @@
 
     <el-divider />
     <!-- 甘特图组件 -->
-    <div style="text-align:left">
-      <span>工种</span>
-      <el-select v-model="deptChoose" multiple>
-        <el-option
-          v-for="(item,index) of deptList"
-          :key="index"
-          :label="item.name"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-      <el-button type="primary" @click="getGantt()">开始统计</el-button>
-      <el-button type="primary" @click="refreshDept()">重置</el-button>
+    <div class="gantt-header">
+      <h4>项目甘特图</h4>
+      <div class="query-parent">
+        <el-select v-model="deptChoose" multiple placeholder="筛选工种">
+          <el-option
+            v-for="(item,index) of deptList"
+            :key="index"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+        <el-button type="primary" @click="getGantt()">开始统计</el-button>
+        <el-button type="primary" @click="refreshDept()">重置</el-button>
+      </div>
     </div>
     <Gantt
       v-loading="ganttLoading"
@@ -96,22 +97,23 @@
     />
     <!-- 甘特图组件 -->
     <el-divider />
-    <div style="text-align:left">
-      <span>人员</span>
-      <el-select v-model="userChoose" multiple>
-        <el-option
-          v-for="(item,index) of userList"
-          :key="index"
-          :label="item.name"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-      <el-button type="primary" @click="userChange()">开始统计</el-button>
-      <el-button type="primary" @click="refreshUser()">重置</el-button>
+    <div class="gantt-header">
+      <h4>人员工时统计</h4>
+      <div class="query-parent">
+        <el-select v-model="userChoose" multiple laceholder="筛选人员">
+          <el-option
+            v-for="(item,index) of userList"
+            :key="index"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+        <el-button type="primary" @click="userChange()">开始统计</el-button>
+        <el-button type="primary" @click="refreshUser()">重置</el-button>
+      </div>
     </div>
     <Gantt
       v-loading="ganttStatLoading"
-      id="gantt-stat"
       :gantt-data="ganttStatData"
       :customHeaderOption="customHeaderOption"
       :customOptions="customOptions"
@@ -133,7 +135,7 @@ export default {
   props: ["click_id"],
   data() {
     return {
-      showGrade:true,
+      showGrade: true,
       deptList: [],
       deptChoose: [],
       userList: [],
@@ -159,15 +161,13 @@ export default {
       //甘特图1的header配置,
       GanttHeader: {
         title: {
-          label: `<h6 style='letter-spacing:initial'>项目甘特图:</h6>`,
-          html: true
+          label: ""
         }
       },
       //甘特图2 的header配置,
       customHeaderOption: {
         title: {
-          label: "<h6 style='letter-spacing:initial'>人员工时统计:</h6>",
-          html: true
+          label: ""
         }
       },
       //甘特图2的配置
@@ -378,7 +378,7 @@ export default {
               return obj;
             });
           }
-         // console.log(this.ganttStatData);
+          // console.log(this.ganttStatData);
         })
         .finally(() => {
           this.ganttStatLoading = false;
@@ -722,8 +722,17 @@ export default {
 #statistics {
   position: relative;
   width: 100%;
-  #gantt {
-    margin-bottom: 15px;
-  }
+}
+.el-select {
+  width: 180px;
+}
+
+.gantt-header{
+  position: relative;
+  .query-parent {
+  position: absolute;
+  bottom: -40px;
+  text-align: left;
+}
 }
 </style>
