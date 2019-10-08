@@ -60,7 +60,7 @@ export default {
           this.submitLoading = true;
           postApprove(this.ApproveForm)
             .then(({ data }) => {
-              this.$message(data.msg);
+              this.$message.success(data.msg);
               this.dialogVisible = false;
               this.getApproves();
             })

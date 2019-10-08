@@ -167,7 +167,7 @@ export default {
           method: "delete",
           ids: id
         }).then(({ data }) => {
-          this.$message(data.msg);
+          this.$message.success(data.msg);
           if (data.status === 0) {
             this.dialogVisible = false;
             this.currentSelect = 1;
@@ -183,7 +183,7 @@ export default {
       postApply({
         overtime_id
       }).then(({ data }) => {
-        this.$message(data.msg);
+        this.$message.success(data.msg);
         if (data.status === 0) {
           this.getExtrworks();
         }
@@ -198,7 +198,7 @@ export default {
             self.submitLoading = true;
             Fu(data)
               .then(({ data }) => {
-                self.$message(data.msg);
+                self.$message.success(data.msg);
                 self.resetForm("apply-form");
                 self.dialogVisible = false;
                 self.currentSelect = 1;
@@ -256,7 +256,7 @@ export default {
           method: "delete",
           ids: id
         }).then(({ data }) => {
-          this.$message(data.msg);
+          this.$message.success(data.msg);
           if (data.status === 0) {
             this.dialogVisible = false;
             this.currentSelect = 1;
