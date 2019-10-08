@@ -38,6 +38,7 @@
         :total="trainingMenber.length"
       ></el-pagination>
     </div>
+
     <Drawer
       scrollable
       closable
@@ -46,61 +47,70 @@
       :transfer="false"
       :mask="false"
       :inner="isInner"
-      :title="个人画像"
+      title="个人画像"
     >
-    <el-tabs v-model="activeName" >
-    <el-tab-pane label="个人雷达图" name="first">个人雷达图</el-tab-pane>
-    <el-tab-pane label="工作详情" name="second">工作详情</el-tab-pane>
-  </el-tabs>
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="个人雷达图" name="first">
+          个人雷达图
+          <MyCharts ref="radar" chart-id="radar-chart" />
+        </el-tab-pane>
+        <el-tab-pane label="工作详情" name="second">工作详情</el-tab-pane>
+      </el-tabs>
     </Drawer>
 
-    <div ref="drawer-father">
-      <Drawer
-        draggable
-        scrollable
-        closable
-        v-model="teamShow"
-        :mask="false"
-        :inner="isInner"
-        title="企业画像"
-        width="750"
-      >
-        <div id="training-team">
-          <el-row>
-            <el-col :span="3"><h4>分组：</h4></el-col>
-            <el-col :span="8"><h4>{{teamTitle}}</h4></el-col>
-            <el-col :span="2"></el-col>
-            <el-col :span="3"><h4>所属学校：</h4></el-col>
-            <el-col :span="8"><h4>{{teamSchool}}</h4></el-col>
-          </el-row>
-          <el-divider />
-          <el-row>
-            <el-col :span="12">
-              <label for>任务完成情况</label>
-              <Chart ref="team-chart" chart-id="team-chart" style="width:320px" />
-            </el-col>
-            <el-col :span="12">
-              <label for>考情情况</label>
-            </el-col>
-          </el-row>
-           <el-divider />
-          <el-row>
-            <production />
-          </el-row>
-        </div>
-      </Drawer>
-    </div>
+    <Drawer
+      draggable
+      scrollable
+      closable
+      v-model="teamShow"
+      :mask="false"
+      :inner="isInner"
+      title="企业画像"
+      width="750"
+    >
+      <div id="training-team">
+        <el-row>
+          <el-col :span="3">
+            <h4>分组：</h4>
+          </el-col>
+          <el-col :span="8">
+            <h4>{{teamTitle}}</h4>
+          </el-col>
+          <el-col :span="2"></el-col>
+          <el-col :span="3">
+            <h4>所属学校：</h4>
+          </el-col>
+          <el-col :span="8">
+            <h4>{{teamSchool}}</h4>
+          </el-col>
+        </el-row>
+        <el-divider />
+        <el-row>
+          <el-col :span="12">
+            <label for>任务完成情况</label>
+            <MyCharts ref="team-chart" chart-id="team-chart" style="width:320px" />
+          </el-col>
+          <el-col :span="12">
+            <label for>考勤情况</label>
+          </el-col>
+        </el-row>
+        <el-divider />
+        <el-row>
+          <production />
+        </el-row>
+      </div>
+    </Drawer>
   </div>
 </template>  
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { trainTask } from "@/api/statistics";
-import Chart from "@/components/ECharts/PieChart";
 import production from "@/views/production";
+import MyCharts from "@/components/ECharts/PieChart";
 export default {
-  name: "training",
-  components: { Chart, production },
+  name: "training-member",
   mixins: [thumbtackMixin],
+  components: { MyCharts, production },
   props: ["trainingMenber"],
   data() {
     return {
@@ -111,16 +121,16 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       teamShow: false,
       teamTitle: "",
-      teamSchool:"",
-      activeName:"first"
+      teamSchool: "",
+      activeName: "first"
     };
   },
-  watch: {},
   computed: {
     groupNum() {
       return new Set(this.trainingMenber.map(item => item.name));
     }
   },
+  created() {},
   methods: {
     // 打开个人排名抽屉
     openRanking() {
@@ -188,8 +198,7 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     }
-  },
-  created() {}
+  }
 };
 </script>
 
