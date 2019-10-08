@@ -127,6 +127,16 @@ export default [{
           icon: 'extra-approve',
         }
       },
+      {
+        path: 'menu',
+        name: 'menu',
+        component: () =>
+          import('@/views/admin/menu'),
+        meta: {
+          title: '菜单',
+          icon: 'menu',
+        }
+      },
     ]
   }, {
     path: '/material',
