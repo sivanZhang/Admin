@@ -49,22 +49,18 @@
       :title="usernameTitle"
       width="500"
     >
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="个人雷达图" name="first">
-          <MyCharts ref="radar" chart-id="radar-chart" />
-        </el-tab-pane>
-        <el-tab-pane label="工作详情" name="second">工作详情</el-tab-pane>
-      </el-tabs>
+      <MyCharts ref="radar" chart-id="radar-chart" />
     </Drawer>
 
     <Drawer
+      closable
       draggable
       scrollable
-      closable
       v-model="teamShow"
+      :transfer="false"
       :mask="false"
       :inner="isInner"
-      title="企业画像"
+      :title="usernameTitle"
       width="750"
     >
       <div id="training-team">
@@ -91,6 +87,7 @@
           </el-col>
           <el-col :span="12">
             <label for>考勤情况</label>
+            <PieCharts ref="checkIn-chart" chart-id="checkIn-chart" style="width:320px" />
           </el-col>
         </el-row>
         <el-divider />
@@ -104,7 +101,7 @@
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import MyCharts from "@/components/ECharts/BaseECharts";
-import { trainTask, getRange } from "@/api/statistics";
+import { trainTask, checkInAll, getRange } from "@/api/statistics";
 import production from "@/views/production";
 import PieCharts from "@/components/ECharts/PieChart";
 export default {
@@ -190,7 +187,12 @@ export default {
               },
               data: [
                 {
-                  value: [data.msg.score, data.msg.attendance, data.msg.submittime,data.msg.total],
+                  value: [
+                    data.msg.score,
+                    data.msg.attendance,
+                    data.msg.submittime,
+                    data.msg.total
+                  ],
                   name: "个人所有排名"
                 }
               ]
@@ -251,6 +253,22 @@ export default {
         });
         this.$refs["team-chart"].initChart("", chartData);
       });
+      checkInAll({ id: this.$route.params.id, teamid: scope.row.id }).then(
+        ({ data }) => {
+          let keys = Object.keys(data.attendance);
+          let chartData = keys.map(t => {
+            switch (t) {
+              case "leave_early":
+                return { name: "早退", value: data.attendance[t] };
+              case "come_late":
+                return { name: "迟到", value: data.attendance[t] };
+              case "normal":
+                return { name: "正常", value: data.attendance[t] };
+            }
+          });
+          this.$refs["checkIn-chart"].initChart("", chartData);
+        }
+      );
     },
     //分页
     handleSizeChange(val) {

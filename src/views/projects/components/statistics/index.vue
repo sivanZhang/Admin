@@ -64,7 +64,7 @@
       <!-- 柱状图组件 -->
       <BarChart ref="task-count" chart-id="task-count" />
     </el-row>
-    <template v-if="$route.query.type == 0">
+    <template v-if="$route.query.type == 0&&showGrade">
       <el-divider />
       <el-row>
         <!-- 柱状图组件 -->
@@ -133,6 +133,7 @@ export default {
   props: ["click_id"],
   data() {
     return {
+      showGrade:true,
       deptList: [],
       deptChoose: [],
       userList: [],
@@ -631,10 +632,13 @@ export default {
       Ajax.MemberSort({
         project_id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
-        if (!data.sum_grade.length) {
+        if (!data.sorted_grade.length) {
+          this.showGrade = false;
           return;
         }
         let keys = Object.keys(data.sum_grade);
+        // console.log("2222");
+        // console.log(keys)
         let customOption = {
           title: {
             text: "总成绩排名",
@@ -683,6 +687,8 @@ export default {
             {
               name: "成绩",
               type: "bar",
+              barWidth: 30,
+              barMaxWidth: 50,
               data: keys.map(t => {
                 return data.sum_grade[t];
               })
