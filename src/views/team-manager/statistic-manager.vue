@@ -18,7 +18,7 @@
       <el-divider />
     </div>
     <div v-if="click_id">
-      <statistics :click_id="click_id" ref="click" />
+      <statistics :click_id="click_id" ref="clickRefresh" />
     </div>
   </div>
 </template>
@@ -55,18 +55,19 @@ export default {
     // 工种单击触发事件
     handleGroupClick() {
       this.click_id = this.value1;
-      this.$refs["click"].getAssetStatistics();
-      this.$refs["click"].getTaskStatistics();
-      this.$refs["click"].getBurnOut();
-      this.$refs["click"].exportData();
-      this.$refs["click"].getCommitCount();
-      this.$refs["click"].getAssetTask();
-      this.$refs["click"].getGradeChange();
-      this.$refs["click"].getProjectProgress();
-      this.$refs["click"].getGantt();
-      this.$refs["click"].getganttStat();
-      console.log(this.click_id);
-      //   console.log(data);
+      this.$nextTick(() => {
+        this.$refs.clickRefresh.getAssetStatistics();
+        this.$refs.clickRefresh.getTaskStatistics();
+        this.$refs.clickRefresh.getBurnOut();
+        this.$refs.clickRefresh.exportData();
+        this.$refs.clickRefresh.getCommitCount();
+        this.$refs.clickRefresh.getAssetTask();
+        this.$refs.clickRefresh.getGradeChange();
+        this.$refs.clickRefresh.getProjectProgress();
+        this.$refs.clickRefresh.getGantt();
+        this.$refs.clickRefresh.getganttStat();
+      });
+      // this.$mount["click"]
     },
     //搜索
     searchGroup(value, data) {
