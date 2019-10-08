@@ -56,3 +56,8 @@ export function getingExecutorChart(params){
 export function trainTask(params){
   return AXIOS.get('/statistic/task/',{params})
 }
+
+//组内考勤统计
+export function checkInAll(params){
+  return AXIOS.get('/projects/range/?01',{params})
+}

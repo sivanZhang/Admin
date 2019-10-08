@@ -53,7 +53,7 @@
     </Drawer>
 
     <Drawer
-       closable
+      closable
       draggable
       scrollable
       v-model="teamShow"
@@ -87,6 +87,7 @@
           </el-col>
           <el-col :span="12">
             <label for>考勤情况</label>
+            <PieCharts ref="checkIn-chart" chart-id="checkIn-chart" style="width:320px" />
           </el-col>
         </el-row>
         <el-divider />
@@ -100,7 +101,7 @@
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import MyCharts from "@/components/ECharts/BaseECharts";
-import { trainTask } from "@/api/statistics";
+import { trainTask, checkInAll } from "@/api/statistics";
 import production from "@/views/production";
 import PieCharts from "@/components/ECharts/PieChart";
 export default {
@@ -242,6 +243,22 @@ export default {
         });
         this.$refs["team-chart"].initChart("", chartData);
       });
+      checkInAll({ id: this.$route.params.id, teamid: scope.row.id }).then(
+        ({ data }) => {
+          let keys = Object.keys(data.attendance);
+          let chartData = keys.map(t => {
+            switch (t) {
+              case "leave_early":
+                return { name: "早退", value: data.attendance[t] };
+              case "come_late":
+                return { name: "迟到", value: data.attendance[t] };
+              case "normal":
+                return { name: "正常", value: data.attendance[t] };
+            }
+          });
+          this.$refs["checkIn-chart"].initChart("", chartData);
+        }
+      );
     },
     //分页
     handleSizeChange(val) {
