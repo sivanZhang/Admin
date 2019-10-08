@@ -16,7 +16,7 @@
           </div>
         </el-col>
         <el-col :span="8">
-          <label for>资产状态统计</label>
+          <label for>镜头状态统计</label>
           <!-- 图表组件 -->
           <chart ref="asset-chart" chart-id="asset-chart" />
         </el-col>
@@ -46,12 +46,12 @@
         </template>
         <template v-if="show_inner">
           <el-col :span="8">
-            <label for>内网提交统计</label>
+            <label for>内审提交统计</label>
             <!-- 图表组件 -->
             <chart ref="commit-inner" chart-id="commit-inner" />
           </el-col>
           <el-col :span="8">
-            <label for>外网提交统计</label>
+            <label for>外审提交统计</label>
             <!-- 图表组件 -->
             <chart ref="commit-outer" chart-id="commit-outer" />
           </el-col>
@@ -262,7 +262,7 @@ export default {
         this.projectProgress = data.msg.replace("%", "") - 0;
       });
     },
-    //获取资产状态统计  并传参调用图表组件的初始化方法
+    //获取镜头状态统计  并传参调用图表组件的初始化方法
     getAssetStatistics() {
       this.$refs["asset-chart"].openLoading();
       Ajax.getAssetStatistic({

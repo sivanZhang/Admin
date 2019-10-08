@@ -56,7 +56,7 @@ export function numberFormat(num) {
         maximumFractionDigits: 2
     })
 }
-//资产状态
+//镜头状态
 export function assetStatus(status) {
     switch (status) {
         case 0:
