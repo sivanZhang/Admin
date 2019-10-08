@@ -29,8 +29,7 @@
       </Drawer>
       <template v-if="!trainingProject">
         <div class="item-project" v-for="(item,index) in ProjectList" :key="index">
-          <el-card shadow="hover" :body-style="{ padding: '0px' }" :class="{active3:item.status===3}"
->
+          <el-card shadow="hover" :body-style="{ padding: '0px' }" :class="{active3:item.status===3}">
             <div class="dropdow">
               <el-dropdown placement="bottom" trigger="click">
                 <el-button type="text" style="color:#333">
@@ -49,7 +48,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-            <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
+            <div class="color" :style="{backgroundColor:item.color||'transparent'}" v-if="item.status === 3"></div>
             <div slot="header" class="box-card-header">
               <router-link :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}">
                 <el-image
@@ -114,7 +113,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-            <div class="color" :style="{backgroundColor:item.color||'transparent'}"></div>
+            <div class="color" :style="{backgroundColor:item.color||'transparent'}" v-if="item.status === 3"></div>
             <div slot="header" class="box-card-header">
               <router-link :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}">
                 <el-image
