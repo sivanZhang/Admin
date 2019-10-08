@@ -5,6 +5,37 @@
  */
 import Layout from '@/layout'
 export default [{
+    path: '/team-manager',
+    component: Layout,
+    redirect: '/',
+    alwaysShow: true,
+    meta: {
+      title: '组长工作台',
+      icon: 'team-manager',
+      roles: 'dept_manager'
+    },
+    children: [{
+      path: 'team-manager',
+      name: 'team-manager',
+      component: () =>
+        import('@/views/team-manager'),
+      meta: {
+        title: '任务分配',
+        icon: 'team-manager',
+        roles: 'dept_manager'
+      }
+    }, {
+      path: 'statistic-manager',
+      name: 'statistic-manager',
+      component: () =>
+        import('@/views/team-manager/statistic-manager'),
+      meta: {
+        title: '数据统计',
+        icon: 'statistic-manager',
+        roles: 'dept_manager'
+      }
+    }]
+  }, {
     path: '/task',
     component: Layout,
     redirect: 'noRedirect',
@@ -47,6 +78,29 @@ export default [{
         hidden: true
       }
     ]
+  },
+  {
+    path: '/material',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: {
+      title: '素材库',
+      icon: 'task'
+    },
+    children: [{
+      path: 'material',
+      name: 'material',
+      component: () =>
+        import('@/views/material'),
+      meta: {
+        title: '素材库',
+        icon: 'material'
+      }
+    }]
+  }, { // 404必须在最后面
+    path: '*',
+    redirect: '/404',
+    hidden: true
   },
   {
     path: '/admin',
@@ -138,58 +192,5 @@ export default [{
         }
       },
     ]
-  }, {
-    path: '/material',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: {
-      title: '素材库',
-      icon: 'task'
-    },
-    children: [{
-      path: 'material',
-      name: 'material',
-      component: () =>
-        import('@/views/material'),
-      meta: {
-        title: '素材库',
-        icon: 'material'
-      }
-    }]
-  }, {
-    path: '/team-manager',
-    component: Layout,
-    redirect: '/',
-    alwaysShow: true,
-    meta: {
-      title: '组长工作台',
-      icon: 'team-manager',
-      roles: 'dept_manager'
-    },
-    children: [{
-      path: 'team-manager',
-      name: 'team-manager',
-      component: () =>
-        import('@/views/team-manager'),
-      meta: {
-        title: '任务分配',
-        icon: 'team-manager',
-        roles: 'dept_manager'
-      }
-    }, {
-      path: 'statistic-manager',
-      name: 'statistic-manager',
-      component: () =>
-        import('@/views/team-manager/statistic-manager'),
-      meta: {
-        title: '数据统计',
-        icon: 'statistic-manager',
-        roles: 'dept_manager'
-      }
-    }]
-  }, {// 404必须在最后面
-    path: '*',
-    redirect: '/404',
-    hidden: true
   },
 ]

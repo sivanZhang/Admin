@@ -75,6 +75,25 @@ export default [
     ]
   },
   {
+    path: '/mine',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: {
+      title: '我的工作台',
+      icon: 'task'
+    },
+    children: [{
+      path: 'task',
+      name: 'my-task',
+      component: () =>
+        import('@/views/task'),
+      meta: {
+        title: '我的任务',
+        icon: 'task'
+      }
+    }]
+  },
+  {
     path: '/projects',
     component: Layout,
     redirect: 'noRedirect',
@@ -148,25 +167,7 @@ export default [
       }
     ]
   },
-  {
-    path: '/mine',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: {
-      title: '我的工作台',
-      icon: 'task'
-    },
-    children: [{
-      path: 'task',
-      name: 'my-task',
-      component: () =>
-        import('@/views/task'),
-      meta: {
-        title: '我的任务',
-        icon: 'task'
-      }
-    }]
-  },
+  
   {
     path: '/mine',
     component: Layout,
@@ -205,45 +206,6 @@ export default [
       }
     }]
   },
-  {
-    path: '/plugin',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: {
-      title: '插件',
-      icon: 'assets'
-    },
-    children: [{
-      path: 'plugin',
-      name: 'plugin',
-      component: () =>
-        import('@/views/plugin'),
-      meta: {
-        title: '插件管理',
-        icon: 'assets'
-      }
-    }]
-  },
-  {
-    path: '/sharefiles',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: {
-      title: '共享文件',
-      icon: 'list'
-    },
-    children: [{
-      path: 'sharefiles',
-      name: 'sharefiles',
-      component: () =>
-        import('@/views/sharefiles'),
-      meta: {
-        title: '共享文件',
-        icon: 'list'
-      }
-    }]
-  },
-
   {
     path: '/checking-in',
     component: Layout,
@@ -304,6 +266,44 @@ export default [
         }
       }
     ]
+  },
+  {
+    path: '/sharefiles',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: {
+      title: '共享文件',
+      icon: 'list'
+    },
+    children: [{
+      path: 'sharefiles',
+      name: 'sharefiles',
+      component: () =>
+        import('@/views/sharefiles'),
+      meta: {
+        title: '共享文件',
+        icon: 'list'
+      }
+    }]
+  },
+  {
+    path: '/plugin',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: {
+      title: '插件',
+      icon: 'assets'
+    },
+    children: [{
+      path: 'plugin',
+      name: 'plugin',
+      component: () =>
+        import('@/views/plugin'),
+      meta: {
+        title: '插件管理',
+        icon: 'assets'
+      }
+    }]
   },
   /* {
       path: '/assetes',
