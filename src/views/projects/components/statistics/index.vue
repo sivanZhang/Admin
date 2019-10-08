@@ -41,7 +41,7 @@
         <template>
           <el-col :span="8">
             <label for>工时统计图</label>
-            <PieNestedChart chart-id="line-chart2" ref="line-chart2" />
+            <chart chart-id="line-chart2" ref="line-chart2" />
           </el-col>
         </template>
         <template v-if="show_inner">
@@ -59,16 +59,15 @@
       </el-row>
       <el-divider />
     </template>
-    <el-divider />
     <el-row>
       <!-- 柱状图组件 -->
-      <BarChart ref="task-count" chart-id="task-count" />
+      <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
     </el-row>
     <template v-if="$route.query.type == 0&&showGrade">
       <el-divider />
       <el-row>
         <!-- 柱状图组件 -->
-        <BarChart ref="grade" chart-id="grade" />
+        <BarChart ref="grade" chart-id="grade" style="height:400px" />
       </el-row>
     </template>
 
@@ -133,7 +132,7 @@ export default {
   props: ["click_id"],
   data() {
     return {
-      showGrade:true,
+      showGrade: true,
       deptList: [],
       deptChoose: [],
       userList: [],
@@ -378,7 +377,7 @@ export default {
               return obj;
             });
           }
-         // console.log(this.ganttStatData);
+          // console.log(this.ganttStatData);
         })
         .finally(() => {
           this.ganttStatLoading = false;
@@ -514,22 +513,23 @@ export default {
         id: this.click_id ? this.click_id : this.$route.params.id,
         worktime: ""
       }).then(({ data }) => {
-        // let keys = Object.keys(data.msg);
-        // // console.log(keys)
-        // let chartData = keys.map(t => {
-        //   switch (t) {
-        //     case "plan_inner":
-        //       return { name: "内部总计划", value: data.msg[t] };
-        //     case "plan_outsource":
-        //       return { name: "外包总计划", value: data.msg[t] };
-        //     case "real_inner":
-        //       return { name: "内部总实际", value: data.msg[t] };
-        //     case "real_outsource":
-        //       return { name: "外包总实际", value: data.msg[t] };
-        //   }
-        // });
-        // // console.log(chartData)
-        this.$refs["line-chart2"].initChart("");
+        console.log(data.msg);
+        let keys = Object.keys(data.msg);
+        // console.log(keys)
+        let chartData = keys.map(t => {
+          switch (t) {
+            case "plan_inner":
+              return { name: "内部总计划", value: data.msg[t] };
+            case "plan_outsource":
+              return { name: "外包总计划", value: data.msg[t] };
+            case "real_inner":
+              return { name: "内部总实际", value: data.msg[t] };
+            case "real_outsource":
+              return { name: "外包总实际", value: data.msg[t] };
+          }
+        });
+        // console.log(chartData)
+        this.$refs["line-chart2"].initChart("", chartData);
       });
     },
     //获取项目提交次数统计数据
