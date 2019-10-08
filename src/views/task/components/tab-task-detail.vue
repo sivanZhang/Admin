@@ -64,7 +64,24 @@
       <template v-if="path">
         <el-row type="flex">
           <el-col :span="5">任务输出:</el-col>
-          <el-col :span="19">{{path}}</el-col>
+          <el-col :span="19">
+             <el-image
+            v-if="path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(path)"
+            :src="$store.state.BASE_URL+path"
+            style="width: 48px;height: 27px;cursor: pointer;"
+            :preview-src-list="[$store.state.BASE_URL+path]"
+          >
+            <div slot="error">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+          </el-image>
+          <el-button
+            v-else-if="path"
+            type="text"
+            icon="el-icon-video-camera-solid"
+            @click="showVideo(path)"
+          >{{path}}</el-button>
+          </el-col>
         </el-row>
       </template>
     </el-card>
@@ -75,6 +92,9 @@
         :task-detail="item"
       />
     </template>
+    <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
+      <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -91,6 +111,12 @@ export default {
       default: false
     },
     path: String
+  },
+  data(){
+    return{
+      videoSrc: "",
+      dialogTableVisible: false, //dialog是否显示
+    }
   },
   filters: {
     filterName(obj) {
@@ -110,6 +136,17 @@ export default {
         this.$router.push({ name: "project-detail", params: { id } });
       }
     }
+  },
+  methods:{
+    //打开视频弹框，为视频src赋值
+    showVideo(path) {
+      this.videoSrc = this.$store.state.BASE_URL + path;
+      this.dialogTableVisible = true;
+    },
+     //关闭dialog回调，停止视频播放
+    endPlay() {
+      this.$refs["videoplayer"].pause();
+    },
   }
 };
 </script>
