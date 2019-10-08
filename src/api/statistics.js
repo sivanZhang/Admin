@@ -7,7 +7,7 @@ export function getProjectStatistic(params) {
     params
   })
 }
-//获取资产状态统计
+//获取镜头状态统计
 export function getAssetStatistic(params) {
   return AXIOS.get('/statistic/asset/', {
     params
