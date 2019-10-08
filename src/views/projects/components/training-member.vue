@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column label="实训人员">
         <template slot-scope="scope">
-          <div @click="openRanking(scope)" class="links">{{scope.row.username}}</div>
+          <div @click="openRanking(scope.row)" class="links">{{scope.row.username}}</div>
         </template>
       </el-table-column>
       <el-table-column label="学校" prop="school"></el-table-column>
@@ -50,6 +50,8 @@
       width="500"
     >
       <MyCharts ref="radar" chart-id="radar-chart" />
+      <el-divider />
+      <production />
     </Drawer>
 
     <Drawer
@@ -134,12 +136,12 @@ export default {
       this.usernameTitle = row.username;
       this.isRankingShow = true;
       getRange({
-        id: row.id,
+        id: this.$route.params.id,
         userid: row.userid
       }).then(({ data }) => {
         const option = {
           title: {
-            text: "基础雷达图"
+            text: "排名雷达图"
           },
           legend: {
             data: ["个人所有排名"],
