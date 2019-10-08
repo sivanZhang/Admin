@@ -51,7 +51,7 @@
     >
       <MyCharts ref="radar" chart-id="radar-chart" />
       <el-divider />
-      <production />
+      <production :teamId="teamId" :projectId ="projectId" ref="pro_user"/>
     </Drawer>
 
     <Drawer
@@ -136,6 +136,7 @@ export default {
     // 打开个人排名抽屉
     openRanking(row) {
       this.usernameTitle = row.username;
+      this.teamId = row.id;
       this.isRankingShow = true;
       getRange({
         id: this.$route.params.id,
@@ -206,6 +207,7 @@ export default {
         };
         this.$nextTick(() => {
           this.$refs.radar.initChart(option);
+          this.$refs.pro_user.getProjectTeam()
         });
       });
     },
@@ -245,7 +247,12 @@ export default {
     //打开分组
     openTeam(scope) {
       this.teamShow = true;
-      this.teamId = scope.row.id;
+      if(!scope.row.id){
+        this.teamId = "null"
+      }else{
+        this.teamId = scope.row.id;
+      }
+      
       this.teamTitle = scope.row.name;
       this.teamSchool = scope.row.school;
       trainTask({
@@ -275,7 +282,7 @@ export default {
         }
       );
       this.$nextTick(()=>{
-        this.$refs.pro_team.getProductions()
+        this.$refs.pro_team.getProjectTeam()
       })
     },
     //分页

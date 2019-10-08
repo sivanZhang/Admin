@@ -2,13 +2,20 @@
 </style>
 <template>
   <div id="my-production" ref="drawer-parent">
-    <el-select v-model="currentAuthor" placeholder="请选择">
-      <el-option v-for="item in Authors" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
-    <el-select v-model="currentType" placeholder="请选择">
-      <el-option v-for="item in Types" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
-    <el-button type="primary" @click="getProductions()">查询</el-button>
+    <template v-if="!teamId">
+      <el-select v-model="currentAuthor" placeholder="请选择">
+        <el-option
+          v-for="item in Authors"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-select v-model="currentType" placeholder="请选择">
+        <el-option v-for="item in Types" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
+      <el-button type="primary" @click="getProductions()">查询</el-button>
+    </template>
     <el-table :data="ProductionList" style="width: 100%;margin-top:30px" v-loading="tableLoading">
       <el-table-column type="index" align="center"></el-table-column>
       <el-table-column label="作品" align="center">
@@ -189,9 +196,9 @@ export default {
     getProductions() {
       this.tableLoading = true;
       let params = {};
-      
-        this.currentType && (params[this.currentType] = "");
-        this.currentAuthor && (params[this.currentAuthor] = "");
+
+      this.currentType && (params[this.currentType] = "");
+      this.currentAuthor && (params[this.currentAuthor] = "");
       getProduction(params)
         .then(({ data }) => {
           this.ProductionList = [...data.msg];
@@ -200,10 +207,12 @@ export default {
           this.tableLoading = false;
         });
     },
-    getProjectTeam(){
-      getProduction({team_id: this.teamId, project_id: this.projectId}).then(({data})=>{
-         this.ProductionList = [...data.msg];
-      }).finally(() => {
+    getProjectTeam() {
+      getProduction()
+        .then(({ data }) => {
+          this.ProductionList = [...data.msg];
+        })
+        .finally(() => {
           this.tableLoading = false;
         });
     }
