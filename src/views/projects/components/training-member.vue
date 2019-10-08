@@ -49,22 +49,18 @@
       :title="usernameTitle"
       width="500"
     >
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="个人雷达图" name="first">
-          <MyCharts ref="radar" chart-id="radar-chart" />
-        </el-tab-pane>
-        <el-tab-pane label="工作详情" name="second">工作详情</el-tab-pane>
-      </el-tabs>
+      <MyCharts ref="radar" chart-id="radar-chart" />
     </Drawer>
 
     <Drawer
+       closable
       draggable
       scrollable
-      closable
       v-model="teamShow"
+      :transfer="false"
       :mask="false"
       :inner="isInner"
-      title="企业画像"
+      :title="usernameTitle"
       width="750"
     >
       <div id="training-team">
@@ -150,7 +146,7 @@ export default {
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
-          },
+          }
         },
         radar: {
           indicator: [
@@ -269,7 +265,7 @@ export default {
 #training {
   min-height: calc(100vh - 170px);
 }
-#training-team{
+#training-team {
   position: relative;
   width: 100%;
 }
