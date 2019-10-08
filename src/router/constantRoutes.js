@@ -264,6 +264,16 @@ export default [
         }
       },
       {
+        path: 'view-extra-work',
+        name: 'view-extra-work',
+        component: () =>
+          import('@/views/checking-in/view-extra-work'),
+        meta: {
+          title: '加班查看',
+          icon: 'jbck'
+        }
+      },
+      {
         path: 'approve-extra-work',
         name: 'approve-extra-work',
         component: () =>

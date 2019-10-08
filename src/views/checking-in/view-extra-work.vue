@@ -1,6 +1,5 @@
 <template>
   <div id="extra-work">
-    <el-button type="primary" @click="openDialog(0)" style="margin-left:15px">申请加班</el-button>
     <el-button
       type="danger"
       icon="el-icon-delete"
@@ -94,7 +93,7 @@
             type="primary"
             @click="submitForm('apply-form')"
           >{{currentFormType?'提交修改':'立即创建'}}</el-button>
-          <el-button v-if="!currentFormType" @click="resetForm('apply-form')">重置</el-button>
+          
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -268,7 +267,7 @@ export default {
     getExtrworks() {
       let params = {};
       this.tableLoading = true;
-      getOvertime({myovertime: ""})
+      getOvertime({allovertime: ""})
         .then(({ data }) => {
           this.ExtraworkList = [...data.msg];
         })
