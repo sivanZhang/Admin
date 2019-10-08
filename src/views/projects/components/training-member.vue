@@ -9,7 +9,7 @@
       <el-table-column label="所属分组" prop="name"></el-table-column>
       <el-table-column label="实训人员">
         <template slot-scope="scope">
-          <div @click="openRanking()" class="links">{{scope.row.username}}</div>
+          <div @click="openRanking(scope.row)" class="links">{{scope.row.username}}</div>
         </template>
       </el-table-column>
       <el-table-column label="学校" prop="school"></el-table-column>
@@ -34,9 +34,7 @@
         :total="trainingMenber.length"
       ></el-pagination>
     </div>
-    <MyCharts ref="radar" chart-id="radar-chart" />
     <Drawer
-      scrollable
       closable
       draggable
       v-model="isRankingShow"
@@ -46,13 +44,13 @@
       width="800px"
       :title="usernameTitle"
     >
-      <!-- <MyCharts ref="radar" chart-id="radar-chart" /> -->
+      <MyCharts ref="radar" chart-id="radar-chart" />
     </Drawer>
   </div>
 </template>  
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
-import MyCharts from "@/components/ECharts/PieChart";
+import MyCharts from "@/components/ECharts/BaseECharts";
 export default {
   name: "training-member",
   mixins: [thumbtackMixin],
@@ -75,8 +73,72 @@ export default {
   created() {},
   methods: {
     // 打开个人排名抽屉
-    openRanking() {
+    openRanking(row) {
+      this.usernameTitle = row.username;
       this.isRankingShow = true;
+      const option = {
+        title: {
+          text: "基础雷达图"
+        },
+        legend: {
+          data: ["预算分配（Allocated Budget）"],
+          left: "center",
+          bottom: "0"
+        },
+        tooltip: {
+          trigger: "item",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+          },
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        radar: {
+          indicator: [
+            { name: "评分", max: 100 },
+            { name: "考勤", max: 100 },
+            { name: "提交排名", max: 100 },
+            { name: "总排名", max: 100 }
+          ],
+          radius: "66%",
+          center: ["50%", "42%"],
+          splitNumber: 5,
+          splitArea: {
+            areaStyle: {
+              opacity: 0.3,
+              shadowBlur: 45,
+              shadowColor: "rgba(0,0,0,.5)",
+              shadowOffsetX: 0,
+              shadowOffsetY: 15
+            }
+          }
+        },
+        series: [
+          {
+            name: "预算 vs 开销（Budget vs spending）",
+            type: "radar",
+            areaStyle: {
+              normal: {
+                shadowBlur: 13,
+                shadowColor: "rgba(0,0,0,.2)",
+                shadowOffsetX: 0,
+                shadowOffsetY: 10,
+                opacity: 0.3
+              }
+            },
+            data: [
+              {
+                value: [9, 5, 90],
+                name: "预算分配（Allocated Budget）"
+              }
+            ]
+          }
+        ],
+        animationDuration: 3000
+      };
+      this.$nextTick(() => {
+        this.$refs.radar.initChart(option);
+      });
     },
     Group(name) {
       return this.trainingMenber.filter(item => item.name == name).length;
