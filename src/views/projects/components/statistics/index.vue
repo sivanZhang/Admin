@@ -190,39 +190,39 @@ export default {
                   return task.name;
                 }
               },
-              width: 200,
+              width: 130,
               expander: true // 显示 "+" 拓展图标
             },
             {
               id: 2,
               label: "开始时间",
               value: task => dayjs(task.start).format("YYYY-MM-DD"),
-              width: 120,
+              width: 100,
               html: true
             },
             {
               id: 3,
               label: "结束时间",
               value: task => dayjs(task.end).format("YYYY-MM-DD"),
-              width: 120
+              width: 100
             },
             {
               id: 4,
-              label: "预设工时",
+              label: "计划工时",
               value: "preinstall",
-              width: 120
+              width: 80
             },
             {
               id: 5,
-              label: "实际执行工时",
+              label: "实际工时",
               value: "actual",
-              width: 120
+              width: 80
             },
             {
               id: 6,
-              label: "任务进度",
+              label: "进度",
               value: task => `${task.progress}%`,
-              width: 120,
+              width: 80,
               html: true
             }
           ]
@@ -236,20 +236,26 @@ export default {
               id: 1,
               label: "工种名称",
               value: "label",
-              width: 200
+              width: 150
             },
             {
               id: 2,
               label: "开始时间",
               value: task => dayjs(task.start).format("YYYY-MM-DD"),
-              width: 120,
+              width: 100,
               html: true
             },
             {
               id: 3,
               label: "结束时间",
               value: task => dayjs(task.end).format("YYYY-MM-DD"),
-              width: 120
+              width: 100
+            },
+            {
+              id: 4,
+              label: "总工时",
+              value: "manhour",
+              width: 80
             }
           ]
         }
@@ -364,7 +370,7 @@ export default {
               });
             });
           } else {
-            this.ganttStatData =[];
+            this.ganttStatData = [];
             this.ganttStatData = arr.map((t, i) => {
               let obj = {
                 id: t[0], // *
@@ -411,7 +417,7 @@ export default {
     },
     //获取甘特图1数据
     getGantt() {
-      this.ganttData =[];
+      this.ganttData = [];
       this.ganttLoading = true;
       Ajax.getGanttData({
         id: this.click_id ? this.click_id : this.$route.params.id
@@ -430,13 +436,14 @@ export default {
                   type: "task", //线条样式
                   start: t.start * 1000, //开始时间
                   end: t.end * 1000, //结束时间
-                  duration: t.last * 60 * 60 * 1000 //工时
+                  duration: t.last * 60 * 60 * 1000,
+                  manhour: t.last
                 });
               }
             });
           });
         } else {
-          this.ganttData =[];
+          this.ganttData = [];
           arr.map((t, i, Arr) => {
             // console.log(t)
             this.ganttData.push({
@@ -445,7 +452,8 @@ export default {
               type: "task", //线条样式
               start: t.start * 1000, //开始时间
               end: t.end * 1000, //结束时间
-              duration: t.last * 60 * 60 * 1000 //工时
+              duration: t.last * 60 * 60 * 1000, //工时
+              manhour: t.last
             });
           });
         }
@@ -745,12 +753,12 @@ export default {
   width: 180px;
 }
 
-.gantt-header{
+.gantt-header {
   position: relative;
   .query-parent {
-  position: absolute;
-  bottom: -40px;
-  text-align: left;
-}
+    position: absolute;
+    bottom: -40px;
+    text-align: left;
+  }
 }
 </style>
