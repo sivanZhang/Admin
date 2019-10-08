@@ -135,5 +135,8 @@ export default {
   .gantt-elastic__task-list-header-label {
     text-align: left;
   }
+  .gantt-elastic__header-label,.gantt-elastic__header-task-list-switch--wrapper{
+    font-weight: normal!important;
+  }
 }
 </style>
