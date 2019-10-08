@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column label="实训人员">
         <template slot-scope="scope">
-          <div @click="openRanking(scope.row)" class="links">{{scope.row.username}}</div>
+          <div @click="openRanking(scope)" class="links">{{scope.row.username}}</div>
         </template>
       </el-table-column>
       <el-table-column label="学校" prop="school"></el-table-column>
@@ -104,7 +104,7 @@
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import MyCharts from "@/components/ECharts/BaseECharts";
-import { trainTask } from "@/api/statistics";
+import { trainTask, getRange } from "@/api/statistics";
 import production from "@/views/production";
 import PieCharts from "@/components/ECharts/PieChart";
 export default {
@@ -136,66 +136,71 @@ export default {
     openRanking(row) {
       this.usernameTitle = row.username;
       this.isRankingShow = true;
-      const option = {
-        title: {
-          text: "基础雷达图"
-        },
-        legend: {
-          data: ["个人所有排名"],
-          left: "center",
-          bottom: "0"
-        },
-        tooltip: {
-          trigger: "item",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+      getRange({
+        id: row.id,
+        userid: row.userid
+      }).then(({ data }) => {
+        const option = {
+          title: {
+            text: "基础雷达图"
           },
-        },
-        radar: {
-          indicator: [
-            { name: "评分", max: 100 },
-            { name: "考勤", max: 100 },
-            { name: "提交排名", max: 100 },
-            { name: "总排名", max: 100 }
-          ],
-          radius: "66%",
-          center: ["50%", "42%"],
-          splitNumber: 5,
-          splitArea: {
-            areaStyle: {
-              opacity: 0.3,
-              shadowBlur: 45,
-              shadowColor: "rgba(0,0,0,.5)",
-              shadowOffsetX: 0,
-              shadowOffsetY: 15
+          legend: {
+            data: ["个人所有排名"],
+            left: "center",
+            bottom: "0"
+          },
+          tooltip: {
+            trigger: "item",
+            axisPointer: {
+              // 坐标轴指示器，坐标轴触发有效
+              type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
             }
-          }
-        },
-        series: [
-          {
-            type: "radar",
-            areaStyle: {
-              normal: {
-                shadowBlur: 13,
-                shadowColor: "rgba(0,0,0,.2)",
+          },
+          radar: {
+            indicator: [
+              { name: "评分", max: 100 },
+              { name: "考勤", max: 100 },
+              { name: "提交排名", max: 100 },
+              { name: "总排名", max: 100 }
+            ],
+            radius: "66%",
+            center: ["50%", "42%"],
+            splitNumber: 5,
+            splitArea: {
+              areaStyle: {
+                opacity: 0.3,
+                shadowBlur: 45,
+                shadowColor: "rgba(0,0,0,.5)",
                 shadowOffsetX: 0,
-                shadowOffsetY: 10,
-                opacity: 0.3
+                shadowOffsetY: 15
               }
-            },
-            data: [
-              {
-                value: [9, 5, 90],
-                name: "个人所有排名"
-              }
-            ]
-          }
-        ],
-        animationDuration: 3000
-      };
-      this.$nextTick(() => {
-        this.$refs.radar.initChart(option);
+            }
+          },
+          series: [
+            {
+              type: "radar",
+              areaStyle: {
+                normal: {
+                  shadowBlur: 13,
+                  shadowColor: "rgba(0,0,0,.2)",
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 10,
+                  opacity: 0.3
+                }
+              },
+              data: [
+                {
+                  value: [data.msg.score, data.msg.attendance, data.msg.submittime,data.msg.total],
+                  name: "个人所有排名"
+                }
+              ]
+            }
+          ],
+          animationDuration: 3000
+        };
+        this.$nextTick(() => {
+          this.$refs.radar.initChart(option);
+        });
       });
     },
     Group(name) {
@@ -269,7 +274,7 @@ export default {
 #training {
   min-height: calc(100vh - 170px);
 }
-#training-team{
+#training-team {
   position: relative;
   width: 100%;
 }

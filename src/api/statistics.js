@@ -56,3 +56,7 @@ export function getingExecutorChart(params){
 export function trainTask(params){
   return AXIOS.get('/statistic/task/',{params})
 }
+//获取个人实训画像雷达数据
+export function getRange(params){
+  return AXIOS.get('/projects/range/',{params})
+}
