@@ -41,7 +41,7 @@
         <template>
           <el-col :span="8">
             <label for>工时统计图</label>
-            <chart chart-id="line-chart2" ref="line-chart2" />
+            <PieNestedChart chart-id="line-chart2" ref="line-chart2" />
           </el-col>
         </template>
         <template v-if="show_inner">
@@ -125,10 +125,11 @@ import Chart from "@/components/ECharts/PieChart";
 import Gantt from "@/components/Gantt";
 import LineChart from "@/components/ECharts/LineMarker";
 import BarChart from "@/components/ECharts/BarMarker";
+import PieNestedChart from "@/components/ECharts/PieNestedChart";
 import dayjs from "dayjs";
 export default {
   name: "all-statistics",
-  components: { Chart, Gantt, LineChart, BarChart },
+  components: { Chart, Gantt, LineChart, BarChart, PieNestedChart },
   props: ["click_id"],
   data() {
     return {
@@ -155,11 +156,11 @@ export default {
       show_inner: true,
       show_detail: true,
       //甘特图1的header配置,
-      GanttHeader:{
+      GanttHeader: {
         title: {
-            label: `<h6 style='letter-spacing:initial'>项目甘特图:</h6>`,
-            html: true
-          }
+          label: `<h6 style='letter-spacing:initial'>项目甘特图:</h6>`,
+          html: true
+        }
       },
       //甘特图2 的header配置,
       customHeaderOption: {
@@ -184,7 +185,7 @@ export default {
                 }
               },
               width: 200,
-              expander: true,// 显示 "+" 拓展图标
+              expander: true // 显示 "+" 拓展图标
             },
             {
               id: 2,
@@ -337,16 +338,16 @@ export default {
                 if (t[1] === item.name) {
                   let obj = {
                     id: t[0], // *
-              type: "task", // * 甘特图内图形显示类型
-              start: t[2] * 1000, // *任务开始时间
-              end: t[3] * 1000,
-              progress: t[5] || 0, // *进度
-              duration: t[4] * 60 * 60 * 1000, // *工时
-              label: `${t[1]} (${t[5] || 0}%)`, // *
-              collapsed: false, // * 有子节点默认是否收缩
-              name: t[1],
-              preinstall: t[4],
-              actual: t[6]
+                    type: "task", // * 甘特图内图形显示类型
+                    start: t[2] * 1000, // *任务开始时间
+                    end: t[3] * 1000,
+                    progress: t[5] || 0, // *进度
+                    duration: t[4] * 60 * 60 * 1000, // *工时
+                    label: `${t[1]} (${t[5] || 0}%)`, // *
+                    collapsed: false, // * 有子节点默认是否收缩
+                    name: t[1],
+                    preinstall: t[4],
+                    actual: t[6]
                   };
                   if (t[7]) {
                     obj.parentId = t[7];
@@ -358,17 +359,17 @@ export default {
           } else {
             this.ganttStatData = arr.map((t, i) => {
               let obj = {
-               id: t[0], // *
-              type: "task", // * 甘特图内图形显示类型
-              start: t[2] * 1000, // *任务开始时间
-              end: t[3] * 1000,
-              progress: t[5] || 0, // *进度
-              duration: t[4] * 60 * 60 * 1000, // *工时
-              label: `${t[1]} (${t[5] || 0}%)`, // *
-              collapsed: false, // * 有子节点默认是否收缩
-              name: t[1],
-              preinstall: t[4],
-              actual: t[6]
+                id: t[0], // *
+                type: "task", // * 甘特图内图形显示类型
+                start: t[2] * 1000, // *任务开始时间
+                end: t[3] * 1000,
+                progress: t[5] || 0, // *进度
+                duration: t[4] * 60 * 60 * 1000, // *工时
+                label: `${t[1]} (${t[5] || 0}%)`, // *
+                collapsed: false, // * 有子节点默认是否收缩
+                name: t[1],
+                preinstall: t[4],
+                actual: t[6]
               };
               if (t[7]) {
                 obj.parentId = t[7];
@@ -376,7 +377,7 @@ export default {
               return obj;
             });
           }
-          console.log(this.ganttStatData);
+         // console.log(this.ganttStatData);
         })
         .finally(() => {
           this.ganttStatLoading = false;
@@ -512,22 +513,22 @@ export default {
         id: this.click_id ? this.click_id : this.$route.params.id,
         worktime: ""
       }).then(({ data }) => {
-        let keys = Object.keys(data.msg);
-        // console.log(keys)
-        let chartData = keys.map(t => {
-          switch (t) {
-            case "plan_inner":
-              return { name: "内部总计划", value: data.msg[t] };
-            case "plan_outsource":
-              return { name: "外包总计划", value: data.msg[t] };
-            case "real_inner":
-              return { name: "内部总实际", value: data.msg[t] };
-            case "real_outsource":
-              return { name: "外包总实际", value: data.msg[t] };
-          }
-        });
-        // console.log(chartData)
-        this.$refs["line-chart2"].initChart("", chartData);
+        // let keys = Object.keys(data.msg);
+        // // console.log(keys)
+        // let chartData = keys.map(t => {
+        //   switch (t) {
+        //     case "plan_inner":
+        //       return { name: "内部总计划", value: data.msg[t] };
+        //     case "plan_outsource":
+        //       return { name: "外包总计划", value: data.msg[t] };
+        //     case "real_inner":
+        //       return { name: "内部总实际", value: data.msg[t] };
+        //     case "real_outsource":
+        //       return { name: "外包总实际", value: data.msg[t] };
+        //   }
+        // });
+        // // console.log(chartData)
+        this.$refs["line-chart2"].initChart("");
       });
     },
     //获取项目提交次数统计数据

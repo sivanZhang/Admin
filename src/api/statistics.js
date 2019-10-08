@@ -51,3 +51,8 @@ export function MemberSort(params){
 export function getingExecutorChart(params){
   return AXIOS.get('/projects/stat/?05',{params})
 }
+
+//获取实训项目下某分组的任务完成情况
+export function trainTask(params){
+  return AXIOS.get('/statistic/task/',{params})
+}

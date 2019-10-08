@@ -1,10 +1,105 @@
 <!-- 实训成员 -->
+<template>
+  <div id="training" ref="drawer-parent">
+    <el-table
+      ref="trainingMenber"
+      :data="trainingMenber.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :span-method="objectSpanMethod"
+    >
+      <el-table-column label="所属分组" prop="name">
+        <template slot-scope="scope">
+          <div @click="openTeam(scope)" class="links">{{scope.row.name}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="实训人员">
+        <template slot-scope="scope">
+          <div @click="openRanking()" class="links">{{scope.row.username}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="学校" prop="school"></el-table-column>
+      <el-table-column label="参与任务数量" prop="task_num" align="center"></el-table-column>
+      <el-table-column label="考勤" align="center">
+        <el-table-column label="正常考勤" prop="normal"></el-table-column>
+        <el-table-column label="迟到次数" prop="late"></el-table-column>
+        <el-table-column label="早退次数" prop="leave_early"></el-table-column>
+        <el-table-column label="旷课次数" prop="absentee"></el-table-column>
+      </el-table-column>
+      <el-table-column label="总得分" prop="total_score"></el-table-column>
+      <el-table-column label="排名" prop="range"></el-table-column>
+    </el-table>
+    <div class="block" style="text-align: center;margin-top:10px">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="trainingMenber.length"
+      ></el-pagination>
+    </div>
+    <Drawer
+      scrollable
+      closable
+      draggable
+      v-model="isRankingShow"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+      :title="个人画像"
+    >
+    <el-tabs v-model="activeName" >
+    <el-tab-pane label="个人雷达图" name="first">个人雷达图</el-tab-pane>
+    <el-tab-pane label="工作详情" name="second">工作详情</el-tab-pane>
+  </el-tabs>
+    </Drawer>
 
+    <div ref="drawer-father">
+      <Drawer
+        draggable
+        scrollable
+        closable
+        v-model="teamShow"
+        :mask="false"
+        :inner="isInner"
+        title="企业画像"
+        width="750"
+      >
+        <div id="training-team">
+          <el-row>
+            <el-col :span="3"><h4>分组：</h4></el-col>
+            <el-col :span="8"><h4>{{teamTitle}}</h4></el-col>
+            <el-col :span="2"></el-col>
+            <el-col :span="3"><h4>所属学校：</h4></el-col>
+            <el-col :span="8"><h4>{{teamSchool}}</h4></el-col>
+          </el-row>
+          <el-divider />
+          <el-row>
+            <el-col :span="12">
+              <label for>任务完成情况</label>
+              <Chart ref="team-chart" chart-id="team-chart" style="width:320px" />
+            </el-col>
+            <el-col :span="12">
+              <label for>考情情况</label>
+            </el-col>
+          </el-row>
+           <el-divider />
+          <el-row>
+            <production />
+          </el-row>
+        </div>
+      </Drawer>
+    </div>
+  </div>
+</template>  
 <script>
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import { trainTask } from "@/api/statistics";
+import Chart from "@/components/ECharts/PieChart";
+import production from "@/views/production";
 export default {
   name: "training",
-  components: {},
+  components: { Chart, production },
   mixins: [thumbtackMixin],
   props: ["trainingMenber"],
   data() {
@@ -13,7 +108,11 @@ export default {
       isRankingShow: false,
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [10, 20, 50, 100]
+      pageSizeList: [10, 20, 50, 100],
+      teamShow: false,
+      teamTitle: "",
+      teamSchool:"",
+      activeName:"first"
     };
   },
   watch: {},
@@ -60,6 +159,22 @@ export default {
         };
       }
     },
+    //打开分组
+    openTeam(scope) {
+      this.teamShow = true;
+      this.teamTitle = scope.row.name;
+      this.teamSchool = scope.row.school;
+      trainTask({
+        project_id: this.$route.params.id,
+        teamid: scope.row.id
+      }).then(({ data }) => {
+        let keys = Object.keys(data.msg);
+        let chartData = keys.map(t => {
+          return { name: t, value: data.msg[t] };
+        });
+        this.$refs["team-chart"].initChart("", chartData);
+      });
+    },
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -77,55 +192,13 @@ export default {
   created() {}
 };
 </script>
-<template>
-  <div id="training" ref="drawer-parent">
-    <el-table
-      ref="trainingMenber"
-      :data="trainingMenber.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      :span-method="objectSpanMethod"
-    >
-      <el-table-column label="所属分组" prop="name"></el-table-column>
-      <el-table-column label="实训人员">
-        <template slot-scope="scope">
-          <div @click="openRanking()" class="links">{{scope.row.username}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="学校" prop="school"></el-table-column>
-      <el-table-column label="参与任务数量" prop="task_num" align="center"></el-table-column>
-      <el-table-column label="考勤" align="center">
-        <el-table-column label="正常考勤" prop="normal"></el-table-column>
-        <el-table-column label="迟到次数" prop="late"></el-table-column>
-        <el-table-column label="早退次数" prop="leave_early"></el-table-column>
-        <el-table-column label="旷课次数" prop="absentee"></el-table-column>
-      </el-table-column>
-      <el-table-column label="总得分" prop="total_score"></el-table-column>
-      <el-table-column label="排名" prop="range"></el-table-column>
-    </el-table>
-    <div class="block" style="text-align: center;margin-top:10px">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="pageSizeList"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="trainingMenber.length"
-      ></el-pagination>
-    </div>
-    <Drawer
-      scrollable
-      closable
-      draggable
-      v-model="isRankingShow"
-      :transfer="false"
-      :mask="false"
-      :inner="isInner"
-      :title="usernameTitle"
-    >排名雷达图</Drawer>
-  </div>
-</template>  
+
 
 <style lang='scss' scoped>
+#training-team {
+  position: relative;
+  width: 100%;
+}
 .links {
   color: #2d8cf0;
   cursor: pointer;
