@@ -40,10 +40,16 @@
     <template>
       <el-divider />
       <el-row>
-        <template>
+        <template v-if="loop">
           <el-col :span="8">
             <label for>工时统计图</label>
             <PieNestedChart chart-id="line-chart2" ref="line-chart2" />
+          </el-col>
+        </template>
+        <template v-else>
+          <el-col :span="8">
+            <label for>工时统计图</label>
+            <chart chart-id="line-chart2-loop" ref="line-chart2-loop" />
           </el-col>
         </template>
         <template v-if="show_inner">
@@ -144,6 +150,7 @@ export default {
       showGrade: true,
       asssetTask: true,
       burnShow: true,
+      loop: true,
       deptList: [],
       deptChoose: [],
       userList: [],
@@ -306,9 +313,11 @@ export default {
     },
     //获取项目参与人员
     getUser() {
-      Ajax.getProjectMember({id:this.$route.params.id,members:""}).then(({data})=>{
-        this.userList = [...data.msg]
-      })
+      Ajax.getProjectMember({ id: this.$route.params.id, members: "" }).then(
+        ({ data }) => {
+          this.userList = [...data.msg];
+        }
+      );
     },
     userChange() {
       this.user = [];
@@ -533,74 +542,98 @@ export default {
       }).then(({ data }) => {
         // console.log(data.msg);
         let keys = Object.keys(data.msg);
-
-        let obj = [
-          ...Object.keys(data.msg.plan_depts),
-          ...Object.keys(data.msg.real_depts),
-          ...Object.keys(data.msg.outsource_plan_depts),
-          ...Object.keys(data.msg.outsource_real_depts)
-        ];
-        let values = [
-          ...Object.values(data.msg.plan_depts),
-          ...Object.values(data.msg.real_depts),
-          ...Object.values(data.msg.outsource_plan_depts),
-          ...Object.values(data.msg.outsource_real_depts)
-        ];
-        let chartData = {
-          tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          legend: {
-            orient: "vertical",
-            x: "left",
-            data: obj
-          },
-          series: [
-            {
-              name: "工时",
-              type: "pie",
-              selectedMode: "single",
-              radius: [0, "30%"],
-
-              label: {
-                normal: {
-                  position: "inner"
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: keys.map(t => {
-                switch (t) {
-                  case "plan_inner":
-                    return { name: "内部总计划", value: data.msg[t] };
-                  case "plan_outsource":
-                    return { name: "外包总计划", value: data.msg[t] };
-                  case "real_inner":
-                    return { name: "内部总实际", value: data.msg[t] };
-                  case "real_outsource":
-                    return { name: "外包总实际", value: data.msg[t] };
-                }
-              })
-            },
-            {
-              name: "工时",
-              type: "pie",
-              radius: ["40%", "55%"],
-              data: obj.map((t, index) => {
-                return { name: t, value: values[index] };
-              })
+        if (
+          data.msg.plan_inner == 0 &&
+          data.msg.plan_outsource == 0 &&
+          data.msg.real_inner == 0 &&
+          data.msg.real_outsource == 0
+        ) {
+          this.loop = false;
+          let chartData_loop = keys.map(t => {
+            switch (t) {
+              case "plan_inner":
+                return { name: "内部总计划", value: data.msg[t] };
+              case "plan_outsource":
+                return { name: "外包总计划", value: data.msg[t] };
+              case "real_inner":
+                return { name: "内部总实际", value: data.msg[t] };
+              case "real_outsource":
+                return { name: "外包总实际", value: data.msg[t] };
             }
-          ]
-        };
-        // console.log(obj);
-        // console.log(values);
+          });
+         this.$nextTick(()=>{
+            this.$refs["line-chart2-loop"].initChart("", chartData_loop);
+         })
+          return;
+        } else {
+          // this.loop = true;
+          let obj = [
+            ...Object.keys(data.msg.plan_depts),
+            ...Object.keys(data.msg.real_depts),
+            ...Object.keys(data.msg.outsource_plan_depts),
+            ...Object.keys(data.msg.outsource_real_depts)
+          ];
+          let values = [
+            ...Object.values(data.msg.plan_depts),
+            ...Object.values(data.msg.real_depts),
+            ...Object.values(data.msg.outsource_plan_depts),
+            ...Object.values(data.msg.outsource_real_depts)
+          ];
+          let chartData = {
+            tooltip: {
+              trigger: "item",
+              formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+              orient: "vertical",
+              x: "left",
+              data: obj
+            },
+            series: [
+              {
+                name: "工时",
+                type: "pie",
+                selectedMode: "single",
+                radius: [0, "30%"],
 
-        // console.log(chartData)
-        this.$refs["line-chart2"].initChart(chartData);
+                label: {
+                  normal: {
+                    position: "inner"
+                  }
+                },
+                labelLine: {
+                  normal: {
+                    show: false
+                  }
+                },
+                data: keys.map(t => {
+                  switch (t) {
+                    case "plan_inner":
+                      return { name: "内部总计划", value: data.msg[t] };
+                    case "plan_outsource":
+                      return { name: "外包总计划", value: data.msg[t] };
+                    case "real_inner":
+                      return { name: "内部总实际", value: data.msg[t] };
+                    case "real_outsource":
+                      return { name: "外包总实际", value: data.msg[t] };
+                  }
+                })
+              },
+              {
+                name: "工时",
+                type: "pie",
+                radius: ["40%", "55%"],
+                data: obj.map((t, index) => {
+                  return { name: t, value: values[index] };
+                })
+              }
+            ]
+          };
+          this.$nextTick(()=>{
+            this.$refs["line-chart2"].initChart(chartData);
+          })
+          
+        }
       });
     },
     //获取项目提交次数统计数据
