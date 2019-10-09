@@ -39,7 +39,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column> -->
-      <el-table-column label="素材缩略图" header-align="center">
+      <el-table-column label="素材缩略图" align="center">
         <!-- <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column> -->
 
         <template slot-scope="scope">

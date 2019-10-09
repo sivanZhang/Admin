@@ -51,7 +51,7 @@
     >
       <MyCharts ref="radar" chart-id="radar-chart" />
       <el-divider />
-      <production :teamId="teamId" :projectId="projectId" ref="pro_user" />
+      <production :teamId="teamId" :projectId="projectId" :user_id="user_id" ref="pro_user" />
     </Drawer>
 
     <Drawer
@@ -94,7 +94,7 @@
         </el-row>
         <el-divider />
         <el-row>
-          <production :teamId="teamId" :projectId="projectId" :user_id="user_id" ref="pro_team" />
+          <production :teamId="teamId" :projectId="projectId"  ref="pro_team" />
         </el-row>
       </div>
     </Drawer>
