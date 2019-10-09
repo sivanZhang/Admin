@@ -53,7 +53,14 @@
                   type="textarea"
                   v-model="out_suggestion"
                   ref="outer-input"
-                  placeholder="提交客户审批的说明"
+                  placeholder="请输入提交客户审批的说明"
+                  style="margin-top:5px"
+                ></el-input>
+                <el-input
+                  v-if="checked"
+                  v-model="out_path"
+                  ref="outer-path"
+                  placeholder="请输入提交客户审批的路径"
                   style="margin-top:5px"
                 ></el-input>
                 <template v-if="scoreShow">
@@ -101,7 +108,8 @@ export default {
       pHeight: 0,
       submitList: [],
       currentId: null,
-      scoreShow: false
+      scoreShow: false,
+      out_path:null
     };
   },
   mounted() {
@@ -134,7 +142,8 @@ export default {
           data = {
             ...data,
             click: "",
-            out_suggestion: this.out_suggestion
+            out_suggestion: this.out_suggestion,
+            path :this.out_path
           };
         }
         if (this.scoreShow === true) {

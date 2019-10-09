@@ -6,7 +6,8 @@
       :data="extraList"
       style="margin-top:20px;width:100%"
       highlight-current-row
-      @row-click="taskBoardRightShow">
+      @row-click="taskBoardRightShow"
+    >
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" />
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
@@ -69,26 +70,21 @@
               </el-col>
             </el-row>
           </template>
-          <el-row>
-            <el-col :span="5">
-              审批说明
-            </el-col>
+          <el-row style="margin-top:10px">
+            <el-col :span="5">审批说明</el-col>
             <el-col :span="19">
               <el-input
-            type="textarea"
-            v-model="out_suggestion"
-            ref="outer-input"
-            placeholder="提交客户审批的说明"
-            style="margin-top:10px"
-          ></el-input>
+                type="textarea"
+                v-model="out_suggestion"
+                ref="outer-input"
+                placeholder="请输入提交客户审批的说明"
+              ></el-input>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="5">
-              审批路径
-            </el-col>
+          <el-row style="margin-top:10px">
+            <el-col :span="5">审批路径</el-col>
             <el-col :span="19">
-              <el-input v-model="path" ref="outer-path" placeholder="请输入审批路径" style="margin-top:10px"></el-input>
+              <el-input v-model="path" ref="outer-path" placeholder="请输入审批路径"></el-input>
             </el-col>
           </el-row>
           <div style="margin-top:10px">
@@ -250,9 +246,9 @@ export default {
       this.form_obj = {
         ...this.form_obj,
         suggestion: this.out_suggestion,
-        path:this.path
+        path: this.path
       };
-     // console.log(this.form_obj);
+      // console.log(this.form_obj);
       submitExtra(this.form_obj)
         .then(res => {
           if (res.data.status === 0) {

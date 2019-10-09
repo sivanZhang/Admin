@@ -101,6 +101,13 @@
             placeholder="提交客户审批的说明"
             style="margin-top:10px"
           ></el-input>
+          <el-input
+            v-if="checked"
+            v-model="out_path"
+            ref="outer-path"
+            placeholder="请输入提交客户审批的路径"
+            style="margin-top:5px"
+          ></el-input>
           <div style="margin-top:10px">
             <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
@@ -121,11 +128,7 @@ import {
   queryTaskRecord,
   queryTask
 } from "@/api/task";
-import {
-  getApprove,
-  postApprove,
-  getApproveDetail
-} from "@/api/video";
+import { getApprove, postApprove, getApproveDetail } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
@@ -156,7 +159,8 @@ export default {
       SelectionList: [],
       path: null,
       pro_type: null,
-      tableLoading: false
+      tableLoading: false,
+      out_path:null
     };
   },
   methods: {
@@ -236,7 +240,8 @@ export default {
         this.form_obj = {
           ...this.form_obj,
           click: "",
-          out_suggestion: this.out_suggestion
+          out_suggestion: this.out_suggestion,
+          path:this.out_path
         };
       }
       postApprove(this.form_obj)
@@ -246,7 +251,7 @@ export default {
             this.getMyTasks();
             this.isDrawerShow = false;
             this.$message.success(res.data.msg);
-          }else{
+          } else {
             this.$message.warning(res.data.msg);
           }
         })
