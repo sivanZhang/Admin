@@ -110,8 +110,8 @@
           <el-option
             v-for="(item,index) of userList"
             :key="index"
-            :label="item.name"
-            :value="item.id"
+            :label="item.username"
+            :value="item.userid"
           ></el-option>
         </el-select>
         <el-button type="primary" @click="userChange()">开始统计</el-button>
@@ -306,29 +306,22 @@ export default {
     },
     //获取项目参与人员
     getUser() {
-      Ajax.getingExecutorChart({
-        id: this.click_id ? this.click_id : this.$route.params.id,
-        executors: ""
-      }).then(({ data }) => {
-        [...data.msg].map((t, i, Arr) => {
-          if (t[7]) {
-            this.userList.push({
-              id: t[0],
-              name: t[1]
-            });
-          }
-        });
-      });
+      Ajax.getProjectMember({id:this.$route.params.id,members:""}).then(({data})=>{
+        this.userList = [...data.msg]
+      })
     },
     userChange() {
       this.user = [];
       this.userList.forEach(item => {
         this.userChoose.forEach(t => {
-          if (t === item.id) {
-            this.user.push({ name: item.name });
+          if (t === item.userid) {
+            this.user.push({ name: item.username });
           }
         });
       });
+      // console.log(this.user);
+      // this.user =Array.from(this.user);
+      // console.log(this.user)
       this.getganttStat();
     },
     //重置人员甘特图

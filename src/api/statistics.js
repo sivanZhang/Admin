@@ -82,3 +82,8 @@ export function getRange(params) {
       params
     })
   }
+
+  //获取项目参与人员
+  export function getProjectMember(params){
+    return AXIOS.get('/projects/stat/?09',{params})
+  }

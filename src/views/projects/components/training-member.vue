@@ -127,7 +127,7 @@ export default {
       activeName: "first",
       teamId: null,
       user_id:null,
-      attendanceShow:false
+      attendanceShow:true
     };
   },
   computed: {
@@ -255,7 +255,7 @@ export default {
       this.teamShow = true;
       if (!scope.row.id) {
         this.teamId = -1;
-        scope.row.id = -1
+        // scope.row.id = -1
       } else {
         this.teamId = scope.row.id;
       }
@@ -272,12 +272,12 @@ export default {
         });
         this.$refs["team-chart"].initChart("", chartData);
       });
-      checkInAll({ id: this.$route.params.id, teamid: scope.row.id }).then(
+      checkInAll({ id: this.$route.params.id, teamid: scope.row.id?scope.row.id:-1 }).then(
         ({ data }) => {
-          // if(!data.msg.length){
-          //   this.attendanceShow = true;
-          //   return;
-          // }
+          if(!data.msg.length){
+            this.attendanceShow = false;
+            return;
+          }
           let keys = Object.keys(data.attendance);
           let chartData = keys.map(t => {
             switch (t) {
