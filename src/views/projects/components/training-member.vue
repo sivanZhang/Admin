@@ -144,7 +144,7 @@ export default {
       }).then(({ data }) => {
         const option = {
           title: {
-            text: "排名雷达图"
+            text: "实训画像"
           },
           legend: {
             data: ["个人所有排名"],
