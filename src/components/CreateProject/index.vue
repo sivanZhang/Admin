@@ -30,18 +30,34 @@
           </template>
         </el-upload>
         <el-form-item label="类型">
-          <el-radio-group v-model="radio">
+          <!-- <el-radio-group v-model="radio">
             <el-radio :label="0">实训项目</el-radio>
             <el-radio :label="1">项目</el-radio>
-          </el-radio-group>
+          </el-radio-group>-->
+          <el-switch
+            v-model="radio"
+            active-value="0"
+            inactive-value="1"
+            active-text="实训项目"
+            inactive-text="标准项目"
+          ></el-switch>
         </el-form-item>
-        <el-form-item label="颜色" prop="color">
+        <el-form-item label="周期选择">
+          <el-switch
+            v-model="ProjectForm.wk_type"
+            active-value="1"
+            inactive-value="0"
+            active-text="自然日"
+            inactive-text="工作日"
+          ></el-switch>
+        </el-form-item>
+        <!-- <el-form-item label="颜色" prop="color">
           <el-color-picker
             v-model="ProjectForm.color"
             :predefine="predefineColors"
             color-format="hex"
           ></el-color-picker>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="项目名称" prop="name">
           <el-input v-model.trim="ProjectForm.name"></el-input>
         </el-form-item>
@@ -57,11 +73,13 @@
         <el-form-item label="Linux路径" prop="linux_path">
           <el-input v-model="ProjectForm.linux_path"></el-input>
         </el-form-item>
-        <el-form-item label="项目预算" prop="budget">
-          <el-input v-model="ProjectForm.budget">
-            <span slot="append">万</span>
-          </el-input>
-        </el-form-item>
+        <template v-if="radio == 1">
+          <el-form-item label="项目预算" prop="budget">
+            <el-input v-model="ProjectForm.budget">
+              <span slot="append">万</span>
+            </el-input>
+          </el-form-item>
+        </template>
         <el-form-item label="工作流" prop="region">
           <el-select v-model="ProjectForm.status" placeholder="请选择工作流">
             <el-option label="未开始" :value="0"></el-option>
@@ -251,8 +269,8 @@ export default {
       TemplateList: [],
       TemplateListName: null,
       ProjectForm: {
-        image: null,
-        color: "#409EFF"
+        image: null
+        // color: "#409EFF"
       },
       predefineColors: [
         "#ff4500",
