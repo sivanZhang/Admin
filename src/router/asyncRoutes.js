@@ -187,7 +187,7 @@ export default [{
         component: () =>
           import('@/views/admin/menu'),
         meta: {
-          title: '菜单',
+          title: '考勤时间设置',
           icon: 'menu',
         }
       },
