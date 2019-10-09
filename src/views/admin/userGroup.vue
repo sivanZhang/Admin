@@ -230,7 +230,7 @@ export default {
     openDialog(Type) {
       if (Type === 1) {
         this.dialogName = "添加用户";
-        this.dialogShow = true;
+        this.dialogShow1 = true;
       }else if (Type === 2) {
         this.dialogShow2 = true;
       } else {
@@ -278,12 +278,12 @@ export default {
             if (data.status === 0) {
               this.createLoading = false;
               this.$message.success(data.msg);
-              this.dialogShow = false;
+              this.dialogShow1 = false;
               this.getAllUserlist();
             } else {
               this.createLoading = false;
               this.$message.error(data.msg);
-              this.dialogShow = false;
+              this.dialogShow1 = false;
             }
           });
         } else {
