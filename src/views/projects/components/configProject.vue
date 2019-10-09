@@ -474,7 +474,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
- <!-- 添加阶段 -->
+    <!-- 添加阶段 -->
     <el-dialog title="添加阶段" :visible.sync="groupDialog" width="521px" top="5vh">
       <el-form :model="groupForm" label-width="90px">
         <el-form-item label="分组名称" prop="name">
@@ -699,7 +699,13 @@ import {
   searchTemplate,
   changeTemplate
 } from "@/api/status";
-import {allScene,createGroup,removeGroup,putGroup,getGroup} from "@/api/training"
+import {
+  allScene,
+  createGroup,
+  removeGroup,
+  putGroup,
+  getGroup
+} from "@/api/training";
 export default {
   name: "config-project",
   props: ["project", "configTab"],
@@ -761,18 +767,18 @@ export default {
       addMebForm: {},
       addId: null,
       labelChange: this.project.pro_type == 0 ? "实训岗位" : "参与工种",
-      groupDialog:false,
+      groupDialog: false,
       groupForm: {
         projectid: this.project.id
       },
-      group:null,
-      groups:[],
-      groupList:null,
-      groupAuth:null,
-      scene:[],
-      addSceneDialog:false,
-      addSceneForm:{},
-      sceneId:null
+      group: null,
+      groups: [],
+      groupList: null,
+      groupAuth: null,
+      scene: [],
+      addSceneDialog: false,
+      addSceneForm: {},
+      sceneId: null
     };
   },
   created() {
@@ -789,8 +795,8 @@ export default {
         if (newVal === "fourth" && this.project.pro_type === 0) {
           this.getTeam();
         }
-        if(newVal === "fifth" && this.project.pro_type === 0){
-          this.getGroupList()
+        if (newVal === "fifth" && this.project.pro_type === 0) {
+          this.getGroupList();
         }
       }
     },
@@ -803,14 +809,14 @@ export default {
   },
   methods: {
     //添加阶段
-    addGroup(Type){
+    addGroup(Type) {
       if (Type === 1) {
         this.groupDialog = true;
-        allScene({project:this.project.id,all: "all"}).then(({data})=>{
-          if(data.status === 0){
-            this.scene = [...data.msg]
+        allScene({ project: this.project.id, all: "all" }).then(({ data }) => {
+          if (data.status === 0) {
+            this.scene = [...data.msg];
           }
-        })
+        });
       } else {
         this.groupForm.assets = this.groupForm.assets
           .map(item => item)
@@ -821,8 +827,8 @@ export default {
             this.groupDialog = false;
             this.$message.success(data.msg);
             this.getGroupList();
-          }else{
-            this.$message.error(data.msg)
+          } else {
+            this.$message.error(data.msg);
           }
         });
       }
@@ -832,6 +838,11 @@ export default {
       if (Type === 1) {
         this.addSceneDialog = true;
         this.sceneId = row.id;
+        allScene({ project: this.project.id, all: "all" }).then(({ data }) => {
+          if (data.status === 0) {
+            this.scene = [...data.msg];
+          }
+        });
         //console.log(row);
       } else {
         let addScene = {
@@ -1014,20 +1025,20 @@ export default {
       });
     },
     //获取阶段
-    getGroupList(Type){
-      getGroup({projectid: this.project.id}).then(({data})=>{
-        if(data.status === 0){
-          if(Type === 1){
+    getGroupList(Type) {
+      getGroup({ projectid: this.project.id }).then(({ data }) => {
+        if (data.status === 0) {
+          if (Type === 1) {
             [...data.msg].forEach(item => {
               if (item.id === this.group.id) {
                 this.groups = item.assets;
               }
             });
           }
-           this.groupList = [...data.msg];
+          this.groupList = [...data.msg];
           this.groupAuth = data.auth.manage_asset_group;
         }
-      })
+      });
     },
     handleClick(tab, event) {
       console.log(tab, event);
