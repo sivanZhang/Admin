@@ -87,10 +87,12 @@
             <label for>任务完成情况</label>
             <PieCharts ref="team-chart" chart-id="team-chart" style="width:350px" />
           </el-col>
+          <template v-if="attendanceShow">
           <el-col :span="12">
             <label for>考勤情况</label>
             <PieCharts ref="checkIn-chart" chart-id="checkIn-chart" style="width:320px" />
           </el-col>
+          </template>
         </el-row>
         <el-divider />
         <el-row>
@@ -124,7 +126,8 @@ export default {
       teamSchool: "",
       activeName: "first",
       teamId: null,
-      user_id:null
+      user_id:null,
+      attendanceShow:false
     };
   },
   computed: {
@@ -252,6 +255,7 @@ export default {
       this.teamShow = true;
       if (!scope.row.id) {
         this.teamId = -1;
+        scope.row.id = -1
       } else {
         this.teamId = scope.row.id;
       }
@@ -270,6 +274,10 @@ export default {
       });
       checkInAll({ id: this.$route.params.id, teamid: scope.row.id }).then(
         ({ data }) => {
+          // if(!data.msg.length){
+          //   this.attendanceShow = true;
+          //   return;
+          // }
           let keys = Object.keys(data.attendance);
           let chartData = keys.map(t => {
             switch (t) {
