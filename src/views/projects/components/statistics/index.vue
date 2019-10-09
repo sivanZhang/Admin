@@ -43,7 +43,7 @@
         <template>
           <el-col :span="8">
             <label for>工时统计图</label>
-            <chart chart-id="line-chart2" ref="line-chart2" />
+            <PieNestedChart chart-id="line-chart2" ref="line-chart2" />
           </el-col>
         </template>
         <template v-if="show_inner">
@@ -64,9 +64,9 @@
     <template v-if="asssetTask">
       <div style="margin-top:40px">
         <el-row>
-        <!-- 柱状图组件 -->
-        <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
-      </el-row>
+          <!-- 柱状图组件 -->
+          <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
+        </el-row>
       </div>
     </template>
     <template v-if="$route.query.type == 0&&showGrade">
@@ -540,21 +540,74 @@ export default {
       }).then(({ data }) => {
         // console.log(data.msg);
         let keys = Object.keys(data.msg);
-        // console.log(keys)
-        let chartData = keys.map(t => {
-          switch (t) {
-            case "plan_inner":
-              return { name: "内部总计划", value: data.msg[t] };
-            case "plan_outsource":
-              return { name: "外包总计划", value: data.msg[t] };
-            case "real_inner":
-              return { name: "内部总实际", value: data.msg[t] };
-            case "real_outsource":
-              return { name: "外包总实际", value: data.msg[t] };
-          }
-        });
+
+        let obj = [
+          ...Object.keys(data.msg.plan_depts),
+          ...Object.keys(data.msg.real_depts),
+          ...Object.keys(data.msg.outsource_plan_depts),
+          ...Object.keys(data.msg.outsource_real_depts)
+        ];
+        let values = [
+          ...Object.values(data.msg.plan_depts),
+          ...Object.values(data.msg.real_depts),
+          ...Object.values(data.msg.outsource_plan_depts),
+          ...Object.values(data.msg.outsource_real_depts)
+        ];
+        let chartData = {
+          tooltip: {
+            trigger: "item",
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          legend: {
+            orient: "vertical",
+            x: "left",
+            data: obj
+          },
+          series: [
+            {
+              name: "工时",
+              type: "pie",
+              selectedMode: "single",
+              radius: [0, "30%"],
+
+              label: {
+                normal: {
+                  position: "inner"
+                }
+              },
+              labelLine: {
+                normal: {
+                  show: false
+                }
+              },
+              data: keys.map(t => {
+                switch (t) {
+                  case "plan_inner":
+                    return { name: "内部总计划", value: data.msg[t] };
+                  case "plan_outsource":
+                    return { name: "外包总计划", value: data.msg[t] };
+                  case "real_inner":
+                    return { name: "内部总实际", value: data.msg[t] };
+                  case "real_outsource":
+                    return { name: "外包总实际", value: data.msg[t] };
+                }
+              })
+            },
+            {
+              name: "工时",
+              type: "pie",
+              radius: ["40%", "55%"],
+              data: obj.map((t, index) => {
+                return { name: t, value: values[index] };
+              })
+            }
+          ]
+        };
+        // console.log(obj);
+        // console.log(values);
+
         // console.log(chartData)
-        this.$refs["line-chart2"].initChart("", chartData);
+        this.$refs["line-chart2"].initChart(chartData);
       });
     },
     //获取项目提交次数统计数据
