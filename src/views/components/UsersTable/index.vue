@@ -296,7 +296,7 @@ export default {
           userid: row.id,
           username: row.username,
           email: row.email,
-          pthone: row.phone,
+          phone: row.phone,
           isactive: row.is_active === true ? 1 : 0,
           sex: row.sex
         }).then(({ data }) => {
