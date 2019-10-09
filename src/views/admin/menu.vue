@@ -1,7 +1,7 @@
 <template>
   <div id="menu">
     <el-tabs tab-position="left" style="height: ;overflow: auto;padding-top:10px">
-      <el-tab-pane label="正式成员" style="height: auto;overflow: auto;">
+      <el-tab-pane label="内部时间配置" style="height: auto;overflow: auto;">
         <div style="display:flex">
           <div style="width:35%;padding:3px">
             <div style="display:flex">
@@ -38,13 +38,13 @@
                     placeholder="下班时间"
                     name="official_worktime_off"
                     style="width:220px"
+                   
                   />
                 </el-form-item>
                 <el-form-item label="工时" prop="official_worktime_long">
                   <el-input
                     ref="official_worktime_long"
                     v-model="saveForm.official_worktime_long"
-                    type="text"
                     placeholder="工时"
                     name="official_worktime_long"
                     style="width:220px"
@@ -58,40 +58,26 @@
               </el-form>
             </div>
           </div>
-          <!-- <div style="width:65%;padding-top:3px">
-            <el-row>
-              <el-col :span="14">
-                <el-checkbox-group v-model="counterNum">
-                  <el-checkbox label="考勤"></el-checkbox>
-                  <el-checkbox label="评分"></el-checkbox>
-                  <el-checkbox label="提交时间"></el-checkbox>
-                  <el-checkbox label="任务排名"></el-checkbox>
-                </el-checkbox-group>
-              </el-col>
-              <el-col :span="10">
-                <el-button type="primary" @click="counter(1)">总排名</el-button>
-              </el-col>
-            </el-row>
-          </div> -->
           <div style="width:65%;padding-top:3px">
             <div style="display:flex">
-              <el-table>
-                <el-table-column label="正式成员"></el-table-column>
-                <el-table-column label="考勤" align="center">
-                  <el-table-column label="上班时间" ></el-table-column>
-                  <el-table-column label="下班时间"></el-table-column>
-                  <el-table-column label="工时(小时)"></el-table-column>
-                </el-table-column>
-                <el-table-column label="评分"></el-table-column>
-                <el-table-column label="提交时间"></el-table-column>
-                <el-table-column label="任务排名"></el-table-column>
-                <el-table-column label="总排名"></el-table-column>
+              <el-table :data="official"  style="width: 100%" ref="official"
+               :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+              >
+                  <el-table-column label="上班时间" prop="official_work_on">
+                    <template slot-scope="scope">{{scope.row.official_work_on?scope.row.official_work_on:"-"}}</template>
+                  </el-table-column>
+                  <el-table-column label="下班时间" prop="official_work_off">
+                    <template slot-scope="scope">{{scope.row.official_work_off?scope.row.official_work_off:"-"}}</template>
+                  </el-table-column>
+                  <el-table-column label="工时(小时)" prop="official_work_long">
+                    <template slot-scope="scope">{{scope.row.official_work_long?scope.row.official_work_long:"-"}}</template>
+                  </el-table-column>
               </el-table>
             </div>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="实训成员">
+      <el-tab-pane label="实训时间配置">
         <div style="display:flex">
           <div style="width:35%;padding:3px">
             <div style="display:flex">
@@ -146,44 +132,38 @@
             </div>
           </div>
           <div style="width:65%;padding-top:3px">
-          <el-row>
-            <el-col :span="14">
-              <el-checkbox-group v-model="counterNum">
-                <el-checkbox label="考勤" prop="attendance"></el-checkbox>
-                <el-checkbox label="评分" prop="score"></el-checkbox>
-                <el-checkbox label="提交时间" prop="submit_time"></el-checkbox>
-                <el-checkbox label="任务排名" prop="range"></el-checkbox>
-              </el-checkbox-group>
-            </el-col>
-            <el-col :span="10">
-              <el-button type="primary" @click="counter">总排名</el-button>
-            </el-col>
-          </el-row>
-          </div>
-          <!-- <div style="width:65%;padding-top:3px">
           <div style="display:flex">
-            <el-table>
-              <el-table-column label="实训成员"></el-table-column>
-              <el-table-column label="考勤" align="center">
-                <el-table-column label="上班时间"></el-table-column>
-                <el-table-column label="下班时间"></el-table-column>
-                <el-table-column label="工时"></el-table-column>
-              </el-table-column>
-              <el-table-column label="评分"></el-table-column>
-              <el-table-column label="提交时间"></el-table-column>
-              <el-table-column label="任务排名"></el-table-column>
-              <el-table-column label="总排名"></el-table-column>
+            <el-table :data="training"  style="width: 100%" ref="training"
+             :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+            >
+               <el-table-column label="上班时间" prop="training_work_on">
+                    <template slot-scope="scope">{{scope.row.training_work_on?scope.row.training_work_on:"-"}}</template>
+                  </el-table-column>
+                  <el-table-column label="下班时间" prop="training_work_off">
+                    <template slot-scope="scope">{{scope.row.training_work_off?scope.row.training_work_off:"-"}}</template>
+                  </el-table-column>
+                  <el-table-column label="工时(小时)" prop="training_work_long">
+                    <template slot-scope="scope">{{scope.row.training_work_long?scope.row.training_work_long:"-"}}</template>
+                  </el-table-column>
             </el-table>
           </div>
-          </div>-->
+          </div>
+         
         </div>
+      </el-tab-pane>
+      <el-tab-pane label="排名权重配置">
+         <div style="display:flex">
+          <div style="width:50%;padding:3px">
+            (评分 * 权重) - (考勤 * 权重) - (提交时间 * 权重) - (任务排名 * 权重) = 总排名
+          </div>
+         </div>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
   <script>
-import { officialWorktime, trainingWorktime, rankList } from "@/api/admin";
+import { officialWorktime, trainingWorktime, rankList ,getDateList } from "@/api/admin";
 export default {
   data() {
     name = "menu";
@@ -191,6 +171,8 @@ export default {
       saveForm: {},
       saveForm1: {},
       counterNum: [],
+      official:[],
+      training:[],
       labelPosition: "right",
       saveRules: {
         official_worktime_on: [
@@ -242,16 +224,28 @@ export default {
       loading1: false
     };
   },
+  created(){
+     this.getTimeSetting()
+  },
   methods: {
-    //排名权重计算
-    counter() {
-        rankList({ training_range: "" ,...this.counterNum}).then(({ data }) => {
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-          } else {
-            this.$message.error(data.msg);
-          }
-        });
+    //工时计算
+    // changeTime(val){
+
+    //   const totalHour = 
+    //   (this.saveForm.official_worktime_off*1000 - this.saveForm.official_worktime_on*1000);
+    //   console.log(totalHour);
+    //   this.saveForm = {
+    //     ...this.saveForm,
+    //     official_worktime_long : totalHour
+    //   }
+    // },
+    
+    //获取内外部时间配置
+    getTimeSetting(){
+      getDateList().then(({ data })=>{
+        this.official = [data.official];
+        this.training = [data.training];
+      })
     },
     //成员的上下班和工时设置
     save(Type) {
@@ -260,14 +254,16 @@ export default {
         this.$refs["saveForm"].validate(valid => {
           if (valid) {
             this.loading = true;
-            officialWorktime({ official_worktime: "" }).then(({ data }) => {
+            officialWorktime({ official_worktime: "", ...this.saveForm}).then(({ data }) => {
               if (data.status === 0) {
                 this.$message.success(data.msg);
                 this.loading = false;
                 this.$refs["saveForm"].resetFields();
+                this.getTimeSetting()
               } else {
                 this.$message.error(data.msg);
               }
+              
             });
           }
         });
@@ -277,11 +273,12 @@ export default {
         this.$refs["saveForm1"].validate(valid => {
           if (valid) {
             this.loading1 = true;
-            trainingWorktime({ training_worktime: "" }).then(({ data }) => {
+            trainingWorktime({ training_worktime: "",...this.saveForm1 }).then(({ data }) => {
               if (data.status === 0) {
                 this.$message.success(data.msg);
                 this.loading1 = false;
                 this.$refs["saveForm1"].resetFields();
+                this.getTimeSetting()
               } else {
                 this.$message.error(data.msg);
               }
