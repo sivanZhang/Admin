@@ -94,7 +94,7 @@
       </template>
       <template v-else>
         <div class="item-project" v-for="(item,index) in trainingProject" :key="index">
-          <el-card shadow="hover" :body-style="{ padding: '0px' }">
+          <el-card shadow="hover" :body-style="{ padding: '0px' }" :class="{active3:item.status===3}">
             <div class="dropdow">
               <el-dropdown placement="bottom" trigger="click">
                 <el-button type="text" style="color:#333">
