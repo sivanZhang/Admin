@@ -8,7 +8,7 @@
       :disabled="this.multipleSelection.length === 0"
     >批量删除</el-button>
     <el-table
-     :data="ExtraworkList"
+     :data="ExtraworkList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       @selection-change="handleSelectionChange"
       v-loading="tableLoading"
       :row-key="row=>row.overtime_id"
@@ -69,6 +69,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="ExtraworkList.length"
+        ></el-pagination>
+      </div>
     <el-dialog title="加班申请" :visible.sync="dialogVisible" width="512px">
       <el-form :model="ApplyForm" :rules="rules" ref="apply-form" label-width="100px">
         <el-form-item label="加班时长" prop="overtime_hour">
@@ -113,6 +124,9 @@ export default {
   name: "extra-work",
   data() {
     return {
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
       multipleSelection: [],
       submitLoading: false,
       currentFormType: 0, //表单用于提交什么
@@ -142,6 +156,13 @@ export default {
     };
   },
   methods: {
+    //分页
+    handleSizeChange(val){
+       this.pageSize = val;
+    },
+     handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },

@@ -17,9 +17,9 @@
                   <el-time-select
                     v-model="saveForm.official_worktime_on"
                     :picker-options="{
-                    start:'00:00',
+                    start:'06:00',
                     step:'00:15',
-                    end:'24:00'
+                    end:'20:00'
                 }"
                     placeholder="上班时间"
                     name="official_worktime_on"
@@ -30,9 +30,9 @@
                   <el-time-select
                     v-model="saveForm.official_worktime_off"
                     :picker-options="{
-                    start:'00:00',
+                    start:'06:00',
                     step:'00:15',
-                    end:'24:00',
+                    end:'20:00',
                     minTime:saveForm.official_worktime_on
                 }"
                     placeholder="下班时间"
@@ -93,9 +93,9 @@
                   <el-time-select
                     v-model="saveForm1.training_worktime_on"
                     :picker-options="{
-                    start:'00:00',
+                    start:'06:00',
                     step:'00:15',
-                    end:'24:00'
+                    end:'20:00'
                 }"
                     placeholder="上班时间"
                     style="width:220px"
@@ -105,9 +105,9 @@
                   <el-time-select
                     v-model="saveForm1.training_worktime_off"
                     :picker-options="{
-                    start:'00:00',
+                    start:'06:00',
                     step:'00:15',
-                    end:'24:00',
+                    end:'20:00',
                     minTime:saveForm1.training_worktime_on
                 }"
                     placeholder="下班时间"
