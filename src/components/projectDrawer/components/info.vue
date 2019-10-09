@@ -86,7 +86,8 @@
             </div>
           </el-col>
         </el-row>
-        <el-row>
+       <template v-if="project.pro_type === 1">
+          <el-row>
           <el-col :span="6" class="comment">项目预算</el-col>
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
@@ -112,6 +113,7 @@
             </div>
           </el-col>
         </el-row>
+       </template>
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="15" class="comment">
