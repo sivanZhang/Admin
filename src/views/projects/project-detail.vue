@@ -137,6 +137,9 @@ export default {
     }
   },
   created() {
+    if(this.$route.query.type === 0){
+      this.activeName = "tab5"
+    }
     // if(this.$route.query.tab === "tab2"){
     //   this.activeName = "tab2"
     // }
