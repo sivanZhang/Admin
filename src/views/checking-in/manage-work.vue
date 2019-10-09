@@ -11,7 +11,11 @@
         >批量删除</el-button>
       </div>
     </template>
-    <el-table :data="leaverhourList" @selection-change="handleSelectionChange" :row-key="(row)=>{ return row.id}">
+    <el-table
+      :data="leaverhourList"
+      @selection-change="handleSelectionChange"
+      :row-key="(row)=>{ return row.id}"
+    >
       <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
       <el-table-column prop="off_user.username" label="调休人" class-name="links">
         <template slot-scope="scope">
@@ -21,6 +25,12 @@
       <el-table-column label="调休时长" prop="off_hour"></el-table-column>
       <el-table-column prop="reason" label="调休理由"></el-table-column>
       <el-table-column prop="off_count" label="调休详情" align="center">
+        <el-table-column label="开始时间">
+          <template slot-scope="scope">{{scope.row.start_time|dateTimeFormat}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间">
+          <template slot-scope="scope">{{scope.row.end_time|dateTimeFormat}}</template>
+        </el-table-column>
         <el-table-column label="总调休时间" prop="off_count.all_off_hour"></el-table-column>
         <el-table-column label="已调休时间" prop="off_count.have_off_hour"></el-table-column>
         <el-table-column label="剩余调休时间" prop="off_count.allow_off_hour"></el-table-column>
@@ -82,6 +92,14 @@
         <el-form-item label="调休时间">
           <el-input v-model="dayOffForm.off_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
         </el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker
+            v-model="dayOffForm.start_time"
+            type="datetime"
+            placeholder="选择开始时间"
+            format="yyyy/MM/dd HH:mm"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="调休原因">
           <el-input type="textarea" v-model="dayOffForm.reason"></el-input>
         </el-form-item>
@@ -90,14 +108,13 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-   
-  
   </div>
 </template>
 
 <script>
 import { getDayOffList, addDayOff, delDayOff } from "@/api/checkingIn";
 import { mapState } from "vuex";
+import dayjs from "dayjs";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 export default {
   mixins: [thumbtackMixin],
@@ -122,17 +139,18 @@ export default {
   },
   methods: {
     //获取某个用户的调休时间
-    userDaysOff(){
-      getDayOffList({user_id:this.dayOffForm.off_user_id}).then(({data})=>{
-        if(data.status === 0){
-          if(!data.msg.length){
-            this.allow_off="暂无调休"
-          }else{
-             this.allow_off = data.msg[0].off_count.allow_off_hour+"小时"
+    userDaysOff() {
+      getDayOffList({ user_id: this.dayOffForm.off_user_id }).then(
+        ({ data }) => {
+          if (data.status === 0) {
+            if (!data.msg.length) {
+              this.allow_off = "暂无调休";
+            } else {
+              this.allow_off = data.msg[0].off_count.allow_off_hour + "小时";
+            }
           }
-         
         }
-      })
+      );
     },
     //批量删除
     handleSelectionChange(val) {
@@ -187,14 +205,20 @@ export default {
       if (Type === 1) {
         this.dialogShow = true;
       } else {
+        function dataFormat(params) {
+          return dayjs(params).format("YYYY/MM/DD HH:mm:ss"); //'yyyy/mm/dd hh:mm:ss'
+        }
+        this.dayOffForm.start_time = dataFormat(this.dayOffForm.start_time);
         addDayOff(this.dayOffForm).then(({ data }) => {
           if (data.status === 0) {
             this.dialogShow = false;
             this.$message.success(data.msg);
             this.getList();
+            this.dayOffForm = [];
           } else {
             this.dialogShow = false;
             this.$message.error(data.msg);
+            this.dayOffForm = [];
           }
         });
       }

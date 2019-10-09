@@ -179,3 +179,7 @@ export function trainingWorktime(data) {
 export function rankList(data) {
   return AXIOS.post('/wkconfig/sysconfig/', data)
 }
+//获取客户部门或者外包部门、实训以及内部工时设置
+export function getDateList(params) {
+  return AXIOS.get('/wkconfig/sysconfig/', {params})
+}

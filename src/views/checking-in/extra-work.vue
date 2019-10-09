@@ -19,7 +19,15 @@
       <el-table-column prop="creator.username" label="申请人"></el-table-column>
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
+      <el-table-column label="加班详情" align="center">
+      <el-table-column label="开始时间">
+        <template slot-scope="scope">{{scope.row.start_time|dateTimeFormat}}</template>
+      </el-table-column>
+      <el-table-column label="结束时间">
+        <template slot-scope="scope">{{scope.row.end_time|dateTimeFormat}}</template>
+      </el-table-column>
       <el-table-column prop="overtime_hour" label="加班工时(小时)"></el-table-column>
+      </el-table-column>
       <el-table-column label="申请日期">
         <template slot-scope="scope">{{scope.row.creator_date|dateFormat}}</template>
       </el-table-column>
@@ -75,6 +83,14 @@
         <el-form-item label="加班时长" prop="overtime_hour">
           <el-input-number v-model="ApplyForm.overtime_hour" style="width:100%"></el-input-number>
         </el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker
+           v-model="ApplyForm.start_time" 
+           type="datetime"
+           placeholder="选择开始时间"
+           format="yyyy/MM/dd HH:mm"
+           ></el-date-picker>
+        </el-form-item>
         <el-form-item label="加班任务" prop="task">
           <el-select v-model="ApplyForm.task" placeholder="请选择由于哪个任务加班" style="width:100%">
             <el-option
@@ -109,6 +125,7 @@ import {
   deleteApply,
   putApply
 } from "@/api/checkingIn";
+import dayjs from "dayjs";
 import { getStatusTaskList } from "@/api/task";
 export default {
   name: "extra-work",
@@ -184,6 +201,10 @@ export default {
     },
     //加班申请提交
     submitForm(formName) {
+      function dataFormat(params) {
+        return dayjs(params).format("YYYY/MM/DD HH:mm:ss"); //'yyyy/mm/dd hh:mm:ss'
+      }
+      this.ApplyForm.start_time =dataFormat(this.ApplyForm.start_time);
       this.$refs[formName].validate(valid => {
         if (valid) {
           let self = this;
