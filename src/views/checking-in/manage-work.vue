@@ -104,8 +104,9 @@
           <el-input type="textarea" v-model="dayOffForm.reason"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="openDialog(2)" type="primary">立即提交</el-button>
-        </el-form-item>
+          <el-button v-if="this.offtime" @click="openDialog(2)" type="primary">立即提交</el-button>
+          <el-button v-else disabled type="primary">无可用调休时长</el-button>
+        </el-form-item> 
       </el-form>
     </el-dialog>
   </div>
@@ -131,7 +132,8 @@ export default {
       overtime_list: null,
       value1: false,
       multipleSelection: [],
-      titleSHow: ""
+      titleSHow: "",
+      offtime:null
     };
   },
   computed: {
@@ -142,6 +144,7 @@ export default {
     userDaysOff() {
       getDayOffList({ user_id: this.dayOffForm.off_user_id }).then(
         ({ data }) => {
+          this.offtime = data.msg.length;
           if (data.status === 0) {
             if (!data.msg.length) {
               this.allow_off = "暂无调休";

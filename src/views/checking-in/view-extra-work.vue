@@ -14,7 +14,7 @@
       :row-key="row=>row.overtime_id"
     >
       <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-      <el-table-column type="index"></el-table-column>
+      <el-table-column type="index" :index="indexMethod"></el-table-column>
       <el-table-column prop="creator.username" label="申请人"></el-table-column>
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
@@ -40,11 +40,8 @@
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改" placement="top">
             <el-button v-if="scope.row.overtime_status===1"
-                icon="el-icon-edit"
-                style="color:blue"
-                type="text"
-                @click="openPutDialog(scope.row)"
-                disabled="true"/>
+              disabled style="padding: 0px 0px;font-size: 10px;border-radius: 100%;border:0px;">
+              <svg-icon icon-class="disabled"/></el-button>
             <el-button v-else
                 icon="el-icon-edit"
                 style="color:blue"
@@ -54,11 +51,8 @@
           </el-tooltip>
           <el-tooltip effect="dark" content="删除" placement="top">
             <el-button v-if="scope.row.overtime_status===1"
-                type="text"
-                icon="el-icon-delete"
-                style="color:red"
-                @click="deleteAppty(scope.row.overtime_id)"
-                disabled="true"/>
+              disabled style="padding: 0px 0px;font-size: 10px;border-radius: 100%;border:0px;">
+              <svg-icon icon-class="disabled"/></el-button>
             <el-button v-else
                 type="text"
                 icon="el-icon-delete"
@@ -162,6 +156,10 @@ export default {
     },
      handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
