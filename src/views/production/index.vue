@@ -38,32 +38,29 @@
           >{{scope.row.path}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column>
-      <el-table-column label="素材" header-align="center">
-        <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column>
-        <el-table-column prop="asset.image" label="缩略图" align="center">
-          <template slot-scope="scope">
-            <el-image
-              :src="$store.state.BASE_URL+scope.row.asset.image"
-              style="width: 48px;height: 27px;cursor: pointer;"
-              :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
-            >
-              <div slot="placeholder" class="image-slot">
-                加载中
-                <span class="dot">...</span>
-              </div>
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
-              </div>
-            </el-image>
-          </template>
-        </el-table-column>
+      <!-- <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column> -->
+      <el-table-column label="素材缩略图" header-align="center">
+        <!-- <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column> -->
+
+        <template slot-scope="scope">
+          <el-image
+            :src="$store.state.BASE_URL+scope.row.asset.image"
+            style="width: 48px;height: 27px;cursor: pointer;"
+            :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+          </el-image>
+        </template>
       </el-table-column>
-      <el-table-column label="任务" header-align="center">
-        <el-table-column label="任务名称" header-align="center" prop="task[0].taskname"></el-table-column>
-        <el-table-column label="工种名称" header-align="center" prop="task[0].link_dept_name"></el-table-column>
-        <el-table-column label="所属项目" header-align="center" prop="task[0].project.name"></el-table-column>
-      </el-table-column>
+      
+      <el-table-column label="任务名称" header-align="center" prop="task[0].taskname"></el-table-column>
+      
       <el-table-column label="评论" align="center" v-if="!teamId">
         <template slot-scope="scope">
           <el-button
@@ -112,7 +109,7 @@ export default {
   components: {
     remarks
   },
-  props: ["teamId", "projectId"],
+  props: ["teamId", "projectId","user_id"],
   data() {
     return {
       drawerTitle: "",
@@ -207,14 +204,24 @@ export default {
           this.tableLoading = false;
         });
     },
+    //实验分组查看分组作品调用
     getProjectTeam() {
-      getProduction()
+      getProduction({project_id:this.projectId,team_id:this.teamId})
         .then(({ data }) => {
           this.ProductionList = [...data.msg];
         })
         .finally(() => {
           this.tableLoading = false;
         });
+    },
+    //查看个人作品调用
+    getPersonProduction(){
+      getProduction({users_id:this.user_id}).then(({data})=>{
+        this.ProductionList = [...data.msg];
+        })
+        .finally(() => {
+          this.tableLoading = false;
+      })
     }
   },
   created() {

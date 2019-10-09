@@ -51,7 +51,7 @@
     >
       <MyCharts ref="radar" chart-id="radar-chart" />
       <el-divider />
-      <production :teamId="teamId" :projectId ="projectId" ref="pro_user"/>
+      <production :teamId="teamId" :projectId="projectId" ref="pro_user" />
     </Drawer>
 
     <Drawer
@@ -85,7 +85,7 @@
         <el-row>
           <el-col :span="12">
             <label for>任务完成情况</label>
-            <PieCharts ref="team-chart" chart-id="team-chart" style="width:320px" />
+            <PieCharts ref="team-chart" chart-id="team-chart" style="width:350px" />
           </el-col>
           <el-col :span="12">
             <label for>考勤情况</label>
@@ -94,7 +94,7 @@
         </el-row>
         <el-divider />
         <el-row>
-          <production :teamId="teamId" :projectId ="projectId" ref="pro_team"/>
+          <production :teamId="teamId" :projectId="projectId" :user_id="user_id" ref="pro_team" />
         </el-row>
       </div>
     </Drawer>
@@ -113,7 +113,7 @@ export default {
   props: ["trainingMenber"],
   data() {
     return {
-      projectId:this.$route.params.id,
+      projectId: this.$route.params.id,
       usernameTitle: "",
       isRankingShow: false,
       currentPage: 1,
@@ -123,7 +123,8 @@ export default {
       teamTitle: "",
       teamSchool: "",
       activeName: "first",
-      teamId:null
+      teamId: null,
+      user_id:null
     };
   },
   computed: {
@@ -135,8 +136,10 @@ export default {
   methods: {
     // 打开个人排名抽屉
     openRanking(row) {
+      console.log(row)
       this.usernameTitle = row.username;
       this.teamId = row.id;
+      this.user_id = row.userid;
       this.isRankingShow = true;
       getRange({
         id: this.$route.params.id,
@@ -207,7 +210,7 @@ export default {
         };
         this.$nextTick(() => {
           this.$refs.radar.initChart(option);
-          this.$refs.pro_user.getProjectTeam()
+          this.$refs.pro_user.getPersonProduction();
         });
       });
     },
@@ -247,12 +250,12 @@ export default {
     //打开分组
     openTeam(scope) {
       this.teamShow = true;
-      if(!scope.row.id){
-        this.teamId = "null"
-      }else{
+      if (!scope.row.id) {
+        this.teamId = -1;
+      } else {
         this.teamId = scope.row.id;
       }
-      
+
       this.teamTitle = scope.row.name;
       this.teamSchool = scope.row.school;
       trainTask({
@@ -276,14 +279,16 @@ export default {
                 return { name: "迟到", value: data.attendance[t] };
               case "normal":
                 return { name: "正常", value: data.attendance[t] };
+              case "absence":
+                return { name: "旷课", value: data.attendance[t] };
             }
           });
           this.$refs["checkIn-chart"].initChart("", chartData);
         }
       );
-      this.$nextTick(()=>{
-        this.$refs.pro_team.getProjectTeam()
-      })
+      this.$nextTick(() => {
+        this.$refs.pro_team.getProjectTeam();
+      });
     },
     //分页
     handleSizeChange(val) {
