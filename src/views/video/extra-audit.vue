@@ -69,13 +69,28 @@
               </el-col>
             </el-row>
           </template>
-          <el-input
+          <el-row>
+            <el-col :span="5">
+              审批说明
+            </el-col>
+            <el-col :span="19">
+              <el-input
             type="textarea"
             v-model="out_suggestion"
             ref="outer-input"
             placeholder="提交客户审批的说明"
             style="margin-top:10px"
           ></el-input>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="5">
+              审批路径
+            </el-col>
+            <el-col :span="19">
+              <el-input v-model="path" ref="outer-path" placeholder="请输入审批路径" style="margin-top:10px"></el-input>
+            </el-col>
+          </el-row>
           <div style="margin-top:10px">
             <el-button type="primary" :loading="submitLoading" @click="submitApprove">提交</el-button>
           </div>
@@ -234,9 +249,10 @@ export default {
       //添加提交外网审核字段
       this.form_obj = {
         ...this.form_obj,
-        suggestion: this.out_suggestion
+        suggestion: this.out_suggestion,
+        path:this.path
       };
-      console.log(this.form_obj);
+     // console.log(this.form_obj);
       submitExtra(this.form_obj)
         .then(res => {
           if (res.data.status === 0) {
