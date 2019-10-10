@@ -9,7 +9,8 @@
       style="border:1px solid #dfe6ec;border-bottom-width:0;width: 100%"
       :stripe="true"
       :row-style="{'font-size':'14px'}"
-      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}">
+      :header-cell-style="{'font-size':'15px',background:'#eef1f6',color:'#606266'}"
+    >
       <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="65px"></el-table-column>
       <el-table-column prop="changci" label="场次" align="center"></el-table-column>
       <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
@@ -20,7 +21,11 @@
       <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
-          <el-image :src="$store.state.BASE_URL+scope.row.image" style="width:64px;height:36px" fit="cover">
+          <el-image
+            :src="$store.state.BASE_URL+scope.row.image"
+            style="width:64px;height:36px"
+            fit="cover"
+          >
             <div slot="error" class="image-slot">
               <i class="el-icon-picture" style="color:#909399"></i>
             </div>
@@ -52,28 +57,34 @@
       ></el-pagination>
     </div>
     <el-dialog title="新建" :visible.sync="isShow" width="480px" top="5vh">
-      <el-form :model="AssetForm" :rules="rules" ref="assetForm" label-width="100px" hide-required-asterisk label-position="left">
-        
-          <el-upload
-            accept="image/jpeg, image/gif, image/png"
-            ref="upload"
-            class="upload-demo"
-            :action="action"
-            :headers="headers"
-            :on-success="handleSuccess"
-            drag
-            :show-file-list="false"
-          >
-            <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
-            <template v-else>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">
-                将文件拖到此处，或
-                <em>点击上传</em>
-              </div>
-            </template>
-          </el-upload>
-        
+      <el-form
+        :model="AssetForm"
+        :rules="rules"
+        ref="assetForm"
+        label-width="100px"
+        hide-required-asterisk
+        label-position="left"
+      >
+        <el-upload
+          accept="image/jpeg, image/gif, image/png"
+          ref="upload"
+          class="upload-demo"
+          :action="action"
+          :headers="headers"
+          :on-success="handleSuccess"
+          drag
+          :show-file-list="false"
+        >
+          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+          <template v-else>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </template>
+        </el-upload>
+
         <el-form-item label="名称" prop="name">
           <el-input v-model="AssetForm.name"></el-input>
         </el-form-item>
@@ -108,7 +119,7 @@
           <el-input v-model="AssetForm['outer_version']"></el-input>
         </el-form-item>
         <el-form-item label="所属项目" prop="project">
-          <el-select filterable  v-model="AssetForm.project" placeholder="请选择所属项目">
+          <el-select filterable v-model="AssetForm.project" placeholder="请选择所属项目">
             <el-option v-for="item of ProjectList" :key="item" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -133,12 +144,14 @@ import { getToken } from "@/utils/auth";
 export default {
   neme: "asset-list",
   data() {
-    const isPro = Object.is(process.env.NODE_ENV, 'production')
+    const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
-      action:isPro?'http://tl.chidict.com:8081/appfile/appfile/':'/api/appfile/appfile/',
+      action: isPro
+        ? this.$store.state.BASE_URL + "appfile/appfile/"
+        : "/api/appfile/appfile/",
       SRC: "",
       TableData: [],
-      
+
       AssetForm: {
         priority: 0
       },
@@ -177,8 +190,7 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       headers: {
         Authorization: `JWT ${getToken()}`
-      },
-      
+      }
     };
   },
 
@@ -186,11 +198,10 @@ export default {
     ...mapState("project", ["ProjectList"])
   },
   methods: {
-    
     _getAssetList() {
       HTTP.queryAssets().then(({ data }) => {
         this.TableData = [...data.msg];
-       // console.log(this.TableData);
+        // console.log(this.TableData);
       });
     },
     deleteAssets(id) {
@@ -256,9 +267,7 @@ export default {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     }
   },
-  components: {
-    
-  },
+  components: {},
   created() {
     this._getAssetList();
   }

@@ -1,32 +1,25 @@
 <template>
   <div id="statistics" class="text-center">
-    <div>
-      <el-row>
-        <el-col :span="5" align="middle">
-          <div>
-            <label for>项目进度</label>
-          </div>
-          <div style="margin-top:80px">
-            <el-progress
-              type="circle"
-              :percentage="projectProgress"
-              :color="colors"
-              :format="format"
-            ></el-progress>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <label for>镜头状态统计</label>
-          <!-- 图表组件 -->
-          <chart ref="asset-chart" chart-id="asset-chart" />
-        </el-col>
-        <el-col :span="11">
-          <label for>任务状态统计</label>
-          <!-- 图表组件 -->
-          <chart ref="task-chart" chart-id="task-chart" />
-        </el-col>
-      </el-row>
-    </div>
+    <el-row>
+      <el-col :span="5" align="middle">
+        <div>
+          <label for>项目进度</label>
+        </div>
+        <div style="margin-top:80px">
+          <el-progress type="circle" :percentage="projectProgress" :color="colors" :format="format"></el-progress>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <label for>镜头状态统计</label>
+        <!-- 图表组件 -->
+        <chart ref="asset-chart" chart-id="asset-chart" />
+      </el-col>
+      <el-col :span="11">
+        <label for>任务状态统计</label>
+        <!-- 图表组件 -->
+        <chart ref="task-chart" chart-id="task-chart" />
+      </el-col>
+    </el-row>
     <!-- 燃尽图 -->
     <template v-if="burnShow">
       <el-divider />
@@ -35,36 +28,40 @@
         <LineChart chart-id="line-chart1" ref="line-chart1" />
         <!-- </el-col> -->
       </el-row>
-      
     </template>
     <!-- 提交审核次数和外包数据 -->
-    <template>
-      <el-divider />
+    
+
+    <el-divider />
       <el-row>
-        <template v-if="loop">
-          <el-col :span="8">
-            <label for>工时统计图</label>
-            <PieNestedChart chart-id="line-chart2" ref="line-chart2" />
-          </el-col>
-        </template>
-        <template v-else>
-          <el-col :span="8">
-            <label for>工时统计图</label>
-            <chart chart-id="line-chart2-loop" ref="line-chart2-loop" />
-          </el-col>
-        </template>
-        <template v-if="show_inner">
-          <el-col :span="8">
-            <label for>内审提交统计</label>
-            <!-- 图表组件 -->
-            <chart ref="commit-inner" chart-id="commit-inner" />
-          </el-col>
-          <el-col :span="8">
-            <label for>外审提交统计</label>
-            <!-- 图表组件 -->
-            <chart ref="commit-outer" chart-id="commit-outer" />
-          </el-col>
-        </template>
+        <el-col :span="12">
+          <label for>内部工时统计图</label>
+          <PieNestedChart
+            chart-id="line-chart2-loopInner2"
+            ref="line-chart2-loopInner2"
+            v-if="inner"
+          />
+          <chart chart-id="line-chart2-loopInner" ref="line-chart2-loopInner" v-if="!inner" />
+        </el-col>
+        <el-col :span="12">
+          <label for>外部工时统计图</label>
+          <PieNestedChart chart-id="line-chart2-loop2" ref="line-chart2-loop2" v-if="outer" />
+          <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer" />
+        </el-col>
+      </el-row>
+    <!-- 提交审核次数统计 -->
+    <template v-if="show_inner">
+      <el-row>
+        <el-col :span="12">
+          <label for>内审提交统计</label>
+          <!-- 图表组件 -->
+          <chart ref="commit-inner" chart-id="commit-inner" />
+        </el-col>
+        <el-col :span="12">
+          <label for>外审提交统计</label>
+          <!-- 图表组件 -->
+          <chart ref="commit-outer" chart-id="commit-outer" />
+        </el-col>
       </el-row>
     </template>
     <template v-if="asssetTask">
@@ -151,7 +148,8 @@ export default {
       showGrade: true,
       asssetTask: true,
       burnShow: true,
-      loop: true,
+      inner: null,
+      outer: null,
       deptList: [],
       deptChoose: [],
       userList: [],
@@ -543,42 +541,64 @@ export default {
       }).then(({ data }) => {
         // console.log(data.msg);
         let keys = Object.keys(data.msg);
+
         if (
           data.msg.plan_inner == 0 &&
           data.msg.plan_outsource == 0 &&
           data.msg.real_inner == 0 &&
           data.msg.real_outsource == 0
         ) {
-          this.loop = false;
+          //两个饼图
+          this.inner = false;
+          this.outer = false;
           let chartData_loop = keys.map(t => {
             switch (t) {
-              case "plan_inner":
-                return { name: "内部总计划", value: data.msg[t] };
               case "plan_outsource":
                 return { name: "外包总计划", value: data.msg[t] };
-              case "real_inner":
-                return { name: "内部总实际", value: data.msg[t] };
+
               case "real_outsource":
                 return { name: "外包总实际", value: data.msg[t] };
             }
           });
-         this.$nextTick(()=>{
+          let chartData_loopInner = keys.map(t => {
+            switch (t) {
+              case "plan_inner":
+                return { name: "内部总计划", value: data.msg[t] };
+
+              case "real_inner":
+                return { name: "内部总实际", value: data.msg[t] };
+            }
+          });
+          this.$nextTick(() => {
             this.$refs["line-chart2-loop"].initChart("", chartData_loop);
-         })
+            this.$refs["line-chart2-loopInner"].initChart(
+              "",
+              chartData_loopInner
+            );
+          });
           return;
-        } else {
-          // this.loop = true;
+        } else if (
+          (data.msg.plan_inner !== 0 || data.msg.real_inner !== 0) &&
+          (data.msg.plan_outsource !== 0 || data.msg.real_outsource !== 0)
+        ) {
+          //两个环形图
+          this.inner = true;
+          this.outer = true;
           let obj = [
-            ...Object.keys(data.msg.plan_depts),
-            ...Object.keys(data.msg.real_depts),
             ...Object.keys(data.msg.outsource_plan_depts),
             ...Object.keys(data.msg.outsource_real_depts)
           ];
+          let objInner = [
+            ...Object.keys(data.msg.plan_depts),
+            ...Object.keys(data.msg.real_depts)
+          ];
           let values = [
-            ...Object.values(data.msg.plan_depts),
-            ...Object.values(data.msg.real_depts),
             ...Object.values(data.msg.outsource_plan_depts),
             ...Object.values(data.msg.outsource_real_depts)
+          ];
+          let valuesInner = [
+            ...Object.values(data.msg.plan_depts),
+            ...Object.values(data.msg.real_depts)
           ];
           let chartData = {
             tooltip: {
@@ -609,12 +629,8 @@ export default {
                 },
                 data: keys.map(t => {
                   switch (t) {
-                    case "plan_inner":
-                      return { name: "内部总计划", value: data.msg[t] };
                     case "plan_outsource":
                       return { name: "外包总计划", value: data.msg[t] };
-                    case "real_inner":
-                      return { name: "内部总实际", value: data.msg[t] };
                     case "real_outsource":
                       return { name: "外包总实际", value: data.msg[t] };
                   }
@@ -630,10 +646,208 @@ export default {
               }
             ]
           };
-          this.$nextTick(()=>{
-            this.$refs["line-chart2"].initChart(chartData);
-          })
-          
+          let chartData_inner = {
+            tooltip: {
+              trigger: "item",
+              formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+              orient: "vertical",
+              x: "left",
+              data: objInner
+            },
+            series: [
+              {
+                name: "工时",
+                type: "pie",
+                selectedMode: "single",
+                radius: [0, "30%"],
+
+                label: {
+                  normal: {
+                    position: "inner"
+                  }
+                },
+                labelLine: {
+                  normal: {
+                    show: false
+                  }
+                },
+                data: keys.map(t => {
+                  switch (t) {
+                    case "plan_inner":
+                      return { name: "内部总计划", value: data.msg[t] };
+                    case "real_inner":
+                      return { name: "内部总实际", value: data.msg[t] };
+                  }
+                })
+              },
+              {
+                name: "工时",
+                type: "pie",
+                radius: ["40%", "55%"],
+                data: objInner.map((t, index) => {
+                  return { name: t, value: valuesInner[index] };
+                })
+              }
+            ]
+          };
+          this.$nextTick(() => {
+            this.$refs["line-chart2-loopInner2"].initChart(chartData_inner);
+            this.$refs["line-chart2-loop2"].initChart(chartData);
+          });
+        } else {
+          if (
+            data.msg.plan_inner == 0 &&
+            data.msg.real_inner == 0 &&
+            (data.msg.plan_outsource !== 0 || data.msg.real_outsource !== 0)
+          ) {
+            //内部为饼图，外部为环形图
+            this.inner = false;
+            this.outer = true;
+            let obj = [
+              ...Object.keys(data.msg.outsource_plan_depts),
+              ...Object.keys(data.msg.outsource_real_depts)
+            ];
+            let values = [
+              ...Object.values(data.msg.outsource_plan_depts),
+              ...Object.values(data.msg.outsource_real_depts)
+            ];
+            let chartData_loopInner = keys.map(t => {
+              switch (t) {
+                case "plan_inner":
+                  return { name: "内部总计划", value: data.msg[t] };
+
+                case "real_inner":
+                  return { name: "内部总实际", value: data.msg[t] };
+              }
+            });
+            let chartData = {
+              tooltip: {
+                trigger: "item",
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+              },
+              legend: {
+                orient: "vertical",
+                x: "left",
+                data: obj
+              },
+              series: [
+                {
+                  name: "工时",
+                  type: "pie",
+                  selectedMode: "single",
+                  radius: [0, "30%"],
+
+                  label: {
+                    normal: {
+                      position: "inner"
+                    }
+                  },
+                  labelLine: {
+                    normal: {
+                      show: false
+                    }
+                  },
+                  data: keys.map(t => {
+                    switch (t) {
+                      case "plan_outsource":
+                        return { name: "外包总计划", value: data.msg[t] };
+                      case "real_outsource":
+                        return { name: "外包总实际", value: data.msg[t] };
+                    }
+                  })
+                },
+                {
+                  name: "工时",
+                  type: "pie",
+                  radius: ["40%", "55%"],
+                  data: obj.map((t, index) => {
+                    return { name: t, value: values[index] };
+                  })
+                }
+              ]
+            };
+            this.$nextTick(() => {
+              this.$refs["line-chart2-loopInner"].initChart(
+                "",
+                chartData_loopInner
+              );
+              this.$refs["line-chart2-loop2"].initChart(chartData);
+            });
+          } else {
+            //内部为环形图，外部为饼图
+            this.inner = true;
+            this.outer = false;
+            let objInner = [
+              ...Object.keys(data.msg.plan_depts),
+              ...Object.keys(data.msg.real_depts)
+            ];
+
+            let valuesInner = [
+              ...Object.values(data.msg.plan_depts),
+              ...Object.values(data.msg.real_depts)
+            ];
+            let chartData_inner = {
+              tooltip: {
+                trigger: "item",
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+              },
+              legend: {
+                orient: "vertical",
+                x: "left",
+                data: objInner
+              },
+              series: [
+                {
+                  name: "工时",
+                  type: "pie",
+                  selectedMode: "single",
+                  radius: [0, "30%"],
+
+                  label: {
+                    normal: {
+                      position: "inner"
+                    }
+                  },
+                  labelLine: {
+                    normal: {
+                      show: false
+                    }
+                  },
+                  data: keys.map(t => {
+                    switch (t) {
+                      case "plan_inner":
+                        return { name: "内部总计划", value: data.msg[t] };
+                      case "real_inner":
+                        return { name: "内部总实际", value: data.msg[t] };
+                    }
+                  })
+                },
+                {
+                  name: "工时",
+                  type: "pie",
+                  radius: ["40%", "55%"],
+                  data: objInner.map((t, index) => {
+                    return { name: t, value: valuesInner[index] };
+                  })
+                }
+              ]
+            };
+            let chartData_loop = keys.map(t => {
+              switch (t) {
+                case "plan_outsource":
+                  return { name: "外包总计划", value: data.msg[t] };
+
+                case "real_outsource":
+                  return { name: "外包总实际", value: data.msg[t] };
+              }
+            });
+            this.$nextTick(() => {
+              this.$refs["line-chart2-loopInner2"].initChart(chartData_inner);
+              this.$refs["line-chart2-loop"].initChart("", chartData_loop);
+            });
+          }
         }
       });
     },

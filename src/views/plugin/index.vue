@@ -165,7 +165,7 @@ export default {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
       action: isPro
-        ? "http://tl.chidict.com:8081/appfile/appfile/"
+        ? this.$store.state.BASE_URL + "appfile/appfile/"
         : "/api/appfile/appfile/",
       fileList: [],
       labelPosition: "right",
@@ -242,7 +242,7 @@ export default {
       }
     },
     download(row) {
-      let data = "http://tl.chidict.com:8081/" + row.filepath;
+      let data = this.$store.state.BASE_URL + row.filepath;
       window.location.href = data;
     },
     beforeRemove(file, fileList) {

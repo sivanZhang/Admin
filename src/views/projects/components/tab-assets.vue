@@ -1762,7 +1762,7 @@ export default {
     },
     //导出Excel
     download() {
-      let data = "http://tl.chidict.com:8081/" + this.path;
+      let data = this.$store.state.BASE_URL + this.path;
       window.location.href = data;
       this.uploadVisible = false;
     },

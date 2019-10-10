@@ -37,14 +37,14 @@
           <el-row>
             <el-col :span="16">
               <div style="display:flex">
-              <h4 style="margin: 0 10px;">文件列表</h4>
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                @click="deletList"
-                style="margin-left:15px"
-                :disabled="this.multipleSelection.length === 0"
-              >批量删除</el-button>
+                <h4 style="margin: 0 10px;">文件列表</h4>
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="deletList"
+                  style="margin-left:15px"
+                  :disabled="this.multipleSelection.length === 0"
+                >批量删除</el-button>
               </div>
             </el-col>
             <el-col :span="8">
@@ -80,7 +80,7 @@
             :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-             <el-table-column type="index"></el-table-column>
+            <el-table-column type="index"></el-table-column>
             <el-table-column prop="filename" label="文件名称">
               <template slot-scope="scope">{{scope.row.filename}}</template>
             </el-table-column>
@@ -88,7 +88,7 @@
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" placement="top">
                   <div slot="content">{{scope.row.filepath}}</div>
-                <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+                  <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
                 </el-tooltip>
               </template>
 
@@ -130,7 +130,7 @@ export default {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
       action: isPro
-        ? "http://tl.chidict.com:8081/sharefiles/sharefiles/"
+        ? this.$store.state.BASE_URL + "sharefiles/sharefiles/"
         : "/api/sharefiles/sharefiles/",
       fileList: [],
       labelPosition: "right",
@@ -142,19 +142,19 @@ export default {
       loading: false,
       headers: {
         Authorization: `JWT ${getToken()}`
-      },
+      }
     };
   },
   created() {
-    this.searchFilesList()
+    this.searchFilesList();
   },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     //点击下载文件
-     download(row) {
-      let data = "http://tl.chidict.com:8081/" + row.filepath;
+    download(row) {
+      let data = this.$store.state.BASE_URL + row.filepath;
       window.location.href = data;
     },
     //批量删除
@@ -170,7 +170,7 @@ export default {
           ids: ids
         }).then(({ data }) => {
           this.$message.success(data.msg);
-          this.searchFilesList()
+          this.searchFilesList();
         });
       });
     },
@@ -186,19 +186,20 @@ export default {
         });
       }
     },
-    beforeRemove(file, fileList) {git
+    beforeRemove(file, fileList) {
+      git;
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     //监听文件上传成功
     handleSuccess(response, file, fileList) {
-        if(response.status === 0){
-           this.$message.success(response.msg);
-           this.searchFilesList()
-        }else{
-            this.$message.error(response.msg);
-        }
-         this.loading = false;
-          this.clearFiles();
+      if (response.status === 0) {
+        this.$message.success(response.msg);
+        this.searchFilesList();
+      } else {
+        this.$message.error(response.msg);
+      }
+      this.loading = false;
+      this.clearFiles();
     },
     clearFiles() {
       this.fileList = [];
@@ -208,7 +209,7 @@ export default {
       deletefile({ method: "delete", ids: id }).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-          this.searchFilesList()
+          this.searchFilesList();
         }
       });
     }

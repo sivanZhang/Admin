@@ -71,7 +71,6 @@ import iconMark from "./icons/icon-mark.png";
 import { Loading } from "element-ui";
 import ImageDraw from "@/components/ImageDraw";
 import { constants } from "crypto";
-import { drawImage } from "@/api/video";
 
 export default {
   components: { ImageDraw },

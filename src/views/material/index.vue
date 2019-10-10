@@ -93,45 +93,47 @@
           <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name?scope.row.name:"-"}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="素材分类" prop="category" >
+      <el-table-column label="素材分类" prop="category">
         <template slot-scope="scope">
           <el-select
-           v-model="categorys" 
-           multiple 
-           placeholder="请选择类型"
+            v-model="categorys"
+            multiple
+            placeholder="请选择类型"
             v-if="editing&&clickId === scope.row.id"
             @change="showEditIcon"
-           >
-             <el-option label="文本" value="1"></el-option>
-             <el-option label="图片" value="2"></el-option>
-             <el-option label="视频" value="3"></el-option>
-             <el-option label="音频" value="4"></el-option>
-             <el-option label="动漫" value="5"></el-option>
-             <el-option label="多媒体" value="6"></el-option>
+          >
+            <el-option label="文本" value="1"></el-option>
+            <el-option label="图片" value="2"></el-option>
+            <el-option label="视频" value="3"></el-option>
+            <el-option label="音频" value="4"></el-option>
+            <el-option label="动漫" value="5"></el-option>
+            <el-option label="多媒体" value="6"></el-option>
           </el-select>
-           <span v-if="!editing||clickId !== scope.row.id">
-             <el-row v-for="(item,index) of scope.row.category" :key="index">
-               <el-col>{{item.name}}</el-col>
-             </el-row> 
-             </span>
+          <span v-if="!editing||clickId !== scope.row.id">
+            <el-row v-for="(item,index) of scope.row.category" :key="index">
+              <el-col>{{item.name}}</el-col>
+            </el-row>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="项目信息" prop="project_id">
         <template slot-scope="scope">
-           <el-select 
-           v-model="scope.row.project_id" 
-           placeholder="请选择项目"
-           v-if="editing&&clickId === scope.row.id"
-           @change="showEditIcon"
-            >
-             <el-option 
-             v-for="item of ProjectList"
-             :label="item.name" 
-             :value="item.id"
-             :key="item.id"
-             ></el-option>
+          <el-select
+            v-model="scope.row.project_id"
+            placeholder="请选择项目"
+            v-if="editing&&clickId === scope.row.id"
+            @change="showEditIcon"
+          >
+            <el-option
+              v-for="item of ProjectList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
-           <span v-if="!editing||clickId !== scope.row.id">{{scope.row.project?scope.row.project:"-"}}</span>
+          <span
+            v-if="!editing||clickId !== scope.row.id"
+          >{{scope.row.project?scope.row.project:"-"}}</span>
         </template>
       </el-table-column>
       <el-table-column label="素材路径" prop="path">
@@ -246,22 +248,22 @@
         </el-form-item>
         <el-form-item label="素材分类" prop="categorys">
           <el-select v-model="materialForm.categorys" multiple placeholder="请选择类型">
-             <el-option label="文本" value="1"></el-option>
-             <el-option label="图片" value="2"></el-option>
-             <el-option label="视频" value="3"></el-option>
-             <el-option label="音频" value="4"></el-option>
-             <el-option label="动漫" value="5"></el-option>
-             <el-option label="多媒体" value="6"></el-option>
+            <el-option label="文本" value="1"></el-option>
+            <el-option label="图片" value="2"></el-option>
+            <el-option label="视频" value="3"></el-option>
+            <el-option label="音频" value="4"></el-option>
+            <el-option label="动漫" value="5"></el-option>
+            <el-option label="多媒体" value="6"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="项目信息" prop="project_id">
-          <el-select v-model="materialForm.project_id"  placeholder="请选择项目">
-             <el-option 
-             v-for="item of ProjectList"
-             :label="item.name" 
-             :value="item.id"
-             :key="item.id"
-             ></el-option>
+          <el-select v-model="materialForm.project_id" placeholder="请选择项目">
+            <el-option
+              v-for="item of ProjectList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="素材路径" prop="path">
@@ -307,12 +309,12 @@ export default {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
       action: isPro
-        ? "http://tl.chidict.com:8081/appfile/appfile/"
+        ? this.$store.state.BASE_URL + "appfile/appfile/"
         : "/api/appfile/appfile/",
       materialForm: {},
       materialList: [],
       editing: false,
-      ProjectList:[],
+      ProjectList: [],
       clickId: null,
       iconShow: false,
       dialogImg: false,
@@ -331,23 +333,25 @@ export default {
       addDialog: false,
       authRole: null,
       filterText: null,
-      categorys:[]
+      categorys: []
     };
   },
   watch: {},
   methods: {
     //获取所有项目
-    getAllProjectList(){
-      getProjects().then(({ data })=>{
+    getAllProjectList() {
+      getProjects().then(({ data }) => {
         this.ProjectList = data.msg;
-      })
+      });
     },
     //素材添加
     AddMaterial(Type) {
       if (Type === 1) {
         this.addDialog = true;
       } else {
-        this.materialForm.categorys = this.materialForm.categorys.map(item=>item).join(",");
+        this.materialForm.categorys = this.materialForm.categorys
+          .map(item => item)
+          .join(",");
         addMaterial(this.materialForm).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
@@ -417,7 +421,7 @@ export default {
     //确认修改素材
     saveMaterial(index, row) {
       this.iconShow = false;
-      
+
       let dataMaterial = {
         method: "put",
         id: row.id,
@@ -425,19 +429,24 @@ export default {
         ...this.ImgForm,
         path: row.path,
         explain: row.explain,
-        project_id:row.project_id
+        project_id: row.project_id
       };
-      if(this.categorys.length){
-        dataMaterial = {...dataMaterial,categorys:this.categorys.map(item=>item).join(",")}
-      }else{
-         dataMaterial = {...dataMaterial,categorys:row.category.map(item=>item.id).join(",")}
+      if (this.categorys.length) {
+        dataMaterial = {
+          ...dataMaterial,
+          categorys: this.categorys.map(item => item).join(",")
+        };
+      } else {
+        dataMaterial = {
+          ...dataMaterial,
+          categorys: row.category.map(item => item.id).join(",")
+        };
       }
       putMaterial(dataMaterial).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.searchMaterial();
-          this.categorys=null,
-          this.editing = false;
+          (this.categorys = null), (this.editing = false);
         } else {
           this.$message.error(data.msg);
         }
