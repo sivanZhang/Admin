@@ -22,14 +22,22 @@
                     <span style="cursor:pointer" @click="getRoleUserList(todo.id)">{{todo.name}}</span>
                   </el-col>
                   <el-col :span="3" align="center">
-                    <span style="cursor:pointer" v-if="editShow===todo.id" @click="editRole(todo)">
+                    <span
+                      style="cursor:pointer"
+                      v-if="editShow===todo.id&&todo.sort == 1"
+                      @click="editRole(todo)"
+                    >
                       <el-tooltip class="item" effect="dark" content="修改" placement="top">
                         <i class="el-icon-edit" style="color:green"></i>
                       </el-tooltip>
                     </span>
                   </el-col>
                   <el-col :span="3" align="center">
-                    <span style="cursor:pointer" v-if="editShow===todo.id" @click="delRole(todo)">
+                    <span
+                      style="cursor:pointer"
+                      v-if="editShow===todo.id&&todo.sort == 1"
+                      @click="delRole(todo)"
+                    >
                       <el-tooltip class="item" effect="dark" content="删除" placement="top">
                         <i class="el-icon-delete" style="color:red"></i>
                       </el-tooltip>
@@ -257,7 +265,7 @@ export default {
       roleAdd: {},
       editName: null,
       roleUserList: null,
-      name: null,
+      name: "",
       addMultipleSelection: [],
       delMultipleSelection: [],
       delUserMultipleSelection: [],
@@ -283,7 +291,7 @@ export default {
     optionInput: {
       handler: function(newVal, oldVal) {
         if (newVal) {
-          console.log(this.optionInput);
+          // console.log(this.optionInput);
           permissions({
             codename: newVal
           }).then(({ data }) => {
@@ -304,21 +312,23 @@ export default {
       if (Type === 1) {
         this.add_role_show = true;
       } else {
-        add_Role(this.addDeptRole).then(({ data }) => {
-          this.add_role_show = false;
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-            //角色列表
-            getRoles().then(({ data }) => {
-              this.roleList = [...data.msg];
-            });
-          }else{
-            this.$message.error(data.msg);
-          }
-        }).catch(res=>{
-          this.$message.error(data.msg);
-          this.add_role_show = false;
-        });
+        add_Role(this.addDeptRole)
+          .then(({ data }) => {
+            this.add_role_show = false;
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              //角色列表
+              getRoles().then(({ data }) => {
+                this.roleList = [...data.msg];
+              });
+            } else {
+              this.$message.error(data.msg);
+            }
+          })
+          .catch(res => {
+            this.$message.error(res.msg);
+            this.add_role_show = false;
+          });
       }
     },
     //删除角色
@@ -329,21 +339,22 @@ export default {
         type: "warning"
       }).then(() => {
         removeRole({
-        id: todo.id,
-        method: "delete"
-      }).then(({ data }) => {
-        if (data.status === 0) {
-          this.$message.success(data.msg);
-          //角色列表
+          id: todo.id,
+          method: "delete"
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            //角色列表
             getRoles().then(({ data }) => {
               this.roleList = [...data.msg];
             });
-        } else {
-          this.$message.error(data.msg);
-        }
+            this.roleUserList = [];
+            this.name = "";
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       });
-      })
-      
     },
     getList() {
       //权限列表
@@ -394,9 +405,9 @@ export default {
             this.userPermissionsList = [...data.msg];
             //console.log(this.userPermissionsList);
           });
-         this.$nextTick(()=>{
+          this.$nextTick(() => {
             this.$refs.addmultipleTable.clearSelection();
-         })
+          });
         }
       });
     },
@@ -439,8 +450,8 @@ export default {
             //console.log(this.roleUserList);
           });
           this.roleAdd = {};
-        }else{
-          this.$message.error(data.msg)
+        } else {
+          this.$message.error(data.msg);
         }
       });
     },
@@ -463,7 +474,6 @@ export default {
             this.name = data.msg.name;
             //console.log(this.roleUserList);
           });
-          
         }
       });
     },
