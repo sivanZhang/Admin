@@ -15,7 +15,7 @@ import {
   getToken
 } from '@/utils/auth'
 // create an axios instance
-let baseURL = process.env.NODE_ENV === 'development' ? process.env.VUE_APP_BASE_API : location.host
+let baseURL = process.env.NODE_ENV === 'development' ? process.env.VUE_APP_BASE_API : location.origin
 
 const AXIOS = axios.create({
   baseURL,
