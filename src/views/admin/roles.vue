@@ -394,7 +394,9 @@ export default {
             this.userPermissionsList = [...data.msg];
             //console.log(this.userPermissionsList);
           });
-          this.$refs.addmultipleTable.clearSelection();
+         this.$nextTick(()=>{
+            this.$refs.addmultipleTable.clearSelection();
+         })
         }
       });
     },
@@ -415,7 +417,6 @@ export default {
             this.userPermissionsList = [...data.msg];
             //console.log(this.userPermissionsList);
           });
-          this.delmultipleTable.clearSelection();
         }
       });
     },
@@ -429,8 +430,8 @@ export default {
         method: "put",
         add_userids: addrole
       }).then(({ data }) => {
-        this.$message.success(data.msg);
         if (data.status === 0) {
+          this.$message.success(data.msg);
           this.isShowDialog = false;
           getUsersRole({ id: this.roleid }).then(({ data }) => {
             this.roleUserList = [...data.users];
@@ -438,6 +439,8 @@ export default {
             //console.log(this.roleUserList);
           });
           this.roleAdd = {};
+        }else{
+          this.$message.error(data.msg)
         }
       });
     },
@@ -460,7 +463,7 @@ export default {
             this.name = data.msg.name;
             //console.log(this.roleUserList);
           });
-          this.delUsermultipleTable.clearSelection();
+          
         }
       });
     },
