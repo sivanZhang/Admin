@@ -76,14 +76,14 @@
           <el-row>
             <el-col :span="16">
               <div style="display:flex">
-              <h4 style="margin: 0 10px;">插件文件</h4>
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                @click="deletList"
-                style="margin-left:15px"
-                :disabled="this.multipleSelection.length === 0"
-              >批量删除</el-button>
+                <h4 style="margin: 0 10px;">插件文件</h4>
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="deletList"
+                  style="margin-left:15px"
+                  :disabled="this.multipleSelection.length === 0"
+                >批量删除</el-button>
               </div>
             </el-col>
             <el-col :span="8">
@@ -119,7 +119,7 @@
             :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-             <el-table-column type="index"></el-table-column>
+            <el-table-column type="index"></el-table-column>
             <el-table-column prop="name" label="插件名称">
               <template slot-scope="scope">{{scope.row.name}}</template>
             </el-table-column>
@@ -167,7 +167,7 @@ export default {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
       action: isPro
-        ? "http://tl.chidict.com:8081/appfile/appfile/"
+        ? this.$store.state.BASE_URL + "appfile/appfile/"
         : "/api/appfile/appfile/",
       fileList: [],
       labelPosition: "right",
@@ -208,7 +208,7 @@ export default {
   },
   created() {
     // this.show();
-    this.searchPluginList()
+    this.searchPluginList();
   },
   methods: {
     handleSelectionChange(val) {
@@ -227,7 +227,7 @@ export default {
           ids: ids
         }).then(({ data }) => {
           this.$message.success(data.msg);
-          this.searchPluginList()
+          this.searchPluginList();
         });
       });
     },
@@ -244,7 +244,7 @@ export default {
       }
     },
     download(row) {
-      let data = "http://tl.chidict.com:8081/" + row.filepath;
+      let data = this.$store.state.BASE_URL + row.filepath;
       window.location.href = data;
     },
     beforeRemove(file, fileList) {
@@ -270,7 +270,7 @@ export default {
         }
         this.loading = false;
         this.$refs["saveForm"].resetFields();
-        this.searchPluginList()
+        this.searchPluginList();
       });
     },
     clearFiles() {
@@ -292,7 +292,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     //单个删除插件
-   deletePlugin(id) {
+    deletePlugin(id) {
       this.$confirm("此操作将永久删除该插件，是否继续?", "提示", {
         confirmButtonText: "确认",
         cancelButtonText: "取消",
@@ -302,7 +302,7 @@ export default {
         deletePlugin({ method: "delete", ids: id }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            this.searchPluginList()
+            this.searchPluginList();
           } else {
             this.$message.error(data.msg);
           }

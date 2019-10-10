@@ -703,8 +703,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-switch v-model="value1" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value1"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务名称" prop="name">
@@ -714,8 +721,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-switch v-model="value2" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value2"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务内容" prop="content">
@@ -725,8 +739,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-switch v-model="value3" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value3"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="优先级" prop="priority">
@@ -738,8 +759,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-switch v-model="value4" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value4"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务难度" prop="grade">
@@ -751,8 +779,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-switch v-model="value5" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value5"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务状态" prop="status">
@@ -769,8 +804,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-           <el-switch v-model="value6" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value6"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务执行人" prop="executorlist">
@@ -792,8 +834,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-            <el-switch v-model="value7" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value7"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务时间" prop="datetime">
@@ -811,8 +860,15 @@
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
-           <el-switch v-model="value8" active-color="#42d842" inactive-color="#b7b7b7"
-              active-value="是" inactive-value="否" active-text="是" inactive-text="否"></el-switch>
+            <el-switch
+              v-model="value8"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+            ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="总工时" prop="total_hour">
@@ -1002,7 +1058,7 @@ export default {
       value5: "否",
       value6: "否",
       value7: "否",
-      value8: "否",
+      value8: "否"
     };
   },
   filters: {
@@ -1278,7 +1334,7 @@ export default {
     },
     //导出Excel
     download() {
-      let data = "http://tl.chidict.com:8081/" + this.path;
+      let data = this.$store.state.BASE_URL + this.path;
       window.location.href = data;
       this.uploadVisible = false;
     },
@@ -2008,27 +2064,27 @@ export default {
   }
 }
 .el-switch__core {
-    height: 15px;
-    width: 33px !important;
+  height: 15px;
+  width: 33px !important;
 }
 .el-switch__core:after {
-    top: -1px;
-    left: -1px;
-    margin-right: -10px;
-    width: 14px;
-    height: 14px;
-    box-shadow: 1px 1px 1px black;
-    background-color:white;
+  top: -1px;
+  left: -1px;
+  margin-right: -10px;
+  width: 14px;
+  height: 14px;
+  box-shadow: 1px 1px 1px black;
+  background-color: white;
 }
 .el-switch__label * {
-    line-height: 1;
-    font-size: 10px;
-    display: inline-block;
+  line-height: 1;
+  font-size: 10px;
+  display: inline-block;
 }
 .el-switch.is-checked .el-switch__core::after {
-    margin-left: -14px;
-    box-shadow: 1px 1px 1px black;
-    background-color:white;
+  margin-left: -14px;
+  box-shadow: 1px 1px 1px black;
+  background-color: white;
 }
 </style>
 
