@@ -15,8 +15,10 @@ import {
   getToken
 } from '@/utils/auth'
 // create an axios instance
+let baseURL = process.env.NODE_ENV === 'development' ? process.env.VUE_APP_BASE_API : location.host
+
 const AXIOS = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL,
   timeout: 0,
   transformRequest: [data => {
     return qs.stringify(data)
