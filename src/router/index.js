@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import asyncRoutes from "./asyncRoutes"
 import constantRoutes from "./constantRoutes"
+import trainingRouter from './trainingRouter'
+
 Vue.use(Router)
 const createRouter = () => new Router({
   scrollBehavior: () => ({
@@ -19,6 +21,7 @@ export {
   asyncRoutes,
   constantRoutes,
   resetRouter,
+  trainingRouter
 }
 export default router
 /**
