@@ -1,6 +1,6 @@
 <template>
   <div id="extra-work">
-    <el-button type="primary" @click="openDialog(0)" style="margin-left:15px">申请加班</el-button>
+    <el-button type="primary" @click="openDialog(0)">申请加班</el-button>
     <el-button
       type="danger"
       icon="el-icon-delete"

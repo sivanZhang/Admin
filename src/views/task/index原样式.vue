@@ -2,10 +2,10 @@
   <div id="layout_main">
     <div class="layout_main_top">
       <div class="layout_main_top_left">
-        <div class="layout_task" v-for="(item,index) of topArr" :key="index" :class="{active:changecolor==item.status}">
-          <div @click="task(item.status)">
-            <div>{{item.title}}:{{item.num}}</div>
-           <!--  <span class="layout_top_span"></span> -->
+        <div class="layout_task" v-for="(item,index) of topArr" :key="index">
+          <div @click="task(item.status)" :class="{active:changecolor==item.status}">
+            <h3>{{item.num}}</h3>
+            <span class="layout_top_span">{{item.title}}</span>
           </div>
         </div>
       </div>

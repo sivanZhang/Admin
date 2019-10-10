@@ -4,7 +4,6 @@
       type="danger"
       icon="el-icon-delete"
       @click="deletList"
-      style="margin-left:15px"
       :disabled="this.multipleSelection.length === 0"
     >批量删除</el-button>
     <el-table
