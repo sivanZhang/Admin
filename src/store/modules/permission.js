@@ -24,7 +24,7 @@ function hasPermission(route, UserRoles) {
 export function filterAsyncRoutes(routes, UserRoles) {
   let res = []
   if ('training_manager' in UserRoles && UserRoles['training_manager']) {
-    res = [...trainingRouter]
+    res = trainingRouter
     return res
   }
   routes.forEach(route => {

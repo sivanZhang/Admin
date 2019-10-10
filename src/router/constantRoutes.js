@@ -4,7 +4,8 @@
  *  
  */
 import Layout from '@/layout'
-export default [{
+export default [
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,

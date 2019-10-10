@@ -4,14 +4,12 @@
  *  
  */
 import Layout from '@/layout'
-export default [
-  {
+export default [{
     path: '/',
     component: Layout,
     redirect: {
-      name: 'overview/training'
-    },
-    alwaysShow: true,
+        name: 'overview-training'
+      },
     meta: {
       title: '概览',
       icon: 'gailan'
@@ -27,5 +25,9 @@ export default [
       },
     }]
   },
-
+  { // 404必须在最后面
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  },
 ]

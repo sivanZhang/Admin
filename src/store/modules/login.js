@@ -80,8 +80,6 @@ const actions = {
                 root: true
             })
             resetRouter()
-                // commit('SET_USERINFO', null)
-                // removeUserInfo()
             resolve()
         })
     },
