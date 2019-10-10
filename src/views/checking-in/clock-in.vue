@@ -2,8 +2,7 @@
   <div>
     <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
     <el-divider />
-    <el-card>
-      <el-table
+    <el-table
       :data="clockRed"
     >
       <el-table-column prop="user_name" label="用户名"></el-table-column>
@@ -17,7 +16,6 @@
         <template slot-scope="scope">{{scope.row.leave|dateHMSFormat}}</template>
       </el-table-column>
     </el-table>
-    </el-card>
   </div>
 </template>
 

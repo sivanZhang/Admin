@@ -1,25 +1,26 @@
 <!-- 数据统计 -->
 <template>
   <div id="statistic-manager">
-    <div style="width:300px">
-      <el-row>
-        <el-col :span="4" style="padding-top:5px">项目：</el-col>
-        <el-col :span="20">
-          <el-select v-model="value1" @change="handleGroupClick">
-            <el-option
-              v-for="(item,index) of projectList"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-col>
-      </el-row>
-      <el-divider />
-    </div>
-    <div v-if="click_id">
-      <statistics :click_id="click_id" ref="clickRefresh" />
-    </div>
+    <ElCard>
+      <template slot="header">
+        <label for>项目：</label>
+        <el-select v-model="value1" @change="handleGroupClick">
+          <el-option
+            v-for="(item,index) of projectList"
+            :key="index"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </template>
+
+      <div v-if="click_id">
+        <statistics :click_id="click_id" ref="clickRefresh" />
+      </div>
+      <div class="text-center">
+        选择项目查看
+      </div>
+    </ElCard>
   </div>
 </template>
 

@@ -5,8 +5,8 @@
         <el-switch
           style="margin-right:10px"
           v-model="searchType"
-          active-color="#13ce66"
-          inactive-color="#ff9900"
+          active-color="#2d8cf0"
+          inactive-color="#2d8cf0"
           active-text="起止日期"
           inactive-text="年份"
         ></el-switch>

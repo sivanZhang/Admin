@@ -2,76 +2,83 @@
 </style>
 <template>
   <div id="my-production" ref="drawer-parent">
-    <template v-if="!teamId">
-      <el-select v-model="currentAuthor" placeholder="请选择">
-        <el-option
-          v-for="item in Authors"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-select v-model="currentType" placeholder="请选择">
-        <el-option v-for="item in Types" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-      <el-button type="primary" @click="getProductions()">查询</el-button>
-    </template>
-    <el-table :data="ProductionList" style="width: 100%;margin-top:30px" v-loading="tableLoading">
-      <el-table-column type="index" align="center"></el-table-column>
-      <el-table-column label="作品" align="center">
-        <template slot-scope="scope">
-          <el-image
-            v-if="scope.row.path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(scope.row.path)"
-            :src="$store.state.BASE_URL+scope.row.path"
-            style="width: 48px;height: 27px;cursor: pointer;"
-            :preview-src-list="[$store.state.BASE_URL+scope.row.path]"
-          >
-            <div slot="error">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
-          </el-image>
-          <el-button
-            v-else-if="scope.row.path"
-            type="text"
-            icon="el-icon-video-camera-solid"
-            @click="showVideo(scope.row.path)"
-          >{{scope.row.path}}</el-button>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column> -->
-      <el-table-column label="素材缩略图" align="center">
-        <!-- <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column> -->
+    <el-card>
+      <template v-if="!teamId" slot="header">
+        <el-select v-model="currentAuthor" placeholder="请选择" style="width:120px">
+          <el-option
+            v-for="item in Authors"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-select v-model="currentType" placeholder="请选择" style="width:120px">
+          <el-option
+            v-for="item in Types"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-button type="primary" @click="getProductions()">查询</el-button>
+      </template>
+      <el-table :data="ProductionList" v-loading="tableLoading">
+        <el-table-column type="index" align="center"></el-table-column>
+        <el-table-column label="作品" align="center">
+          <template slot-scope="scope">
+            <el-image
+              v-if="scope.row.path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(scope.row.path)"
+              :src="$store.state.BASE_URL+scope.row.path"
+              style="width: 48px;height: 27px;cursor: pointer;"
+              :preview-src-list="[$store.state.BASE_URL+scope.row.path]"
+            >
+              <div slot="error">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+            <el-button
+              v-else-if="scope.row.path"
+              type="text"
+              icon="el-icon-video-camera-solid"
+              @click="showVideo(scope.row.path)"
+            >{{scope.row.path}}</el-button>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column> -->
+        <el-table-column label="素材缩略图" align="center">
+          <!-- <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column> -->
 
-        <template slot-scope="scope">
-          <el-image
-            :src="$store.state.BASE_URL+scope.row.asset.image"
-            style="width: 48px;height: 27px;cursor: pointer;"
-            :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
-          >
-            <div slot="placeholder" class="image-slot">
-              加载中
-              <span class="dot">...</span>
-            </div>
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
-          </el-image>
-        </template>
-      </el-table-column>
-      
-      <el-table-column label="任务名称" header-align="center" prop="task[0].taskname"></el-table-column>
-      
-      <el-table-column label="评论" align="center" v-if="!teamId">
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            style="font-size:15px"
-            @click="viewComments(scope.row.task[0].taskid,scope.$index)"
-            icon="el-icon-chat-line-round"
-          ></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+          <template slot-scope="scope">
+            <el-image
+              :src="$store.state.BASE_URL+scope.row.asset.image"
+              style="width: 48px;height: 27px;cursor: pointer;"
+              :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="任务名称" header-align="center" prop="task[0].taskname"></el-table-column>
+
+        <el-table-column label="评论" align="center" v-if="!teamId">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              style="font-size:15px"
+              @click="viewComments(scope.row.task[0].taskid,scope.$index)"
+              icon="el-icon-chat-line-round"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
 
     <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
       <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
@@ -109,7 +116,7 @@ export default {
   components: {
     remarks
   },
-  props: ["teamId", "projectId","user_id"],
+  props: ["teamId", "projectId", "user_id"],
   data() {
     return {
       drawerTitle: "",
@@ -206,7 +213,7 @@ export default {
     },
     //实验分组查看分组作品调用
     getProjectTeam() {
-      getProduction({project_id:this.projectId,team_id:this.teamId})
+      getProduction({ project_id: this.projectId, team_id: this.teamId })
         .then(({ data }) => {
           this.ProductionList = [...data.msg];
         })
@@ -215,13 +222,14 @@ export default {
         });
     },
     //查看个人作品调用
-    getPersonProduction(){
-      getProduction({users_id:this.user_id}).then(({data})=>{
-        this.ProductionList = [...data.msg];
+    getPersonProduction() {
+      getProduction({ users_id: this.user_id })
+        .then(({ data }) => {
+          this.ProductionList = [...data.msg];
         })
         .finally(() => {
           this.tableLoading = false;
-      })
+        });
     }
   },
   created() {

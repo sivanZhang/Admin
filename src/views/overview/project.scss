@@ -1,5 +1,4 @@
     #project {
-       
        .active3{
            border: 1px solid #C64b2b;
        }
@@ -33,7 +32,6 @@
             @media screen and (max-width: 1500px) {
                 .item-project {
                     width: 25%;
-                    margin: 15px 0;
                     display: flex;
                     justify-content: center;
                 }
@@ -41,14 +39,13 @@
             @media screen and (min-width: 1500px) {
                 .item-project {
                     width: 20%;
-                    margin: 15px 0;
                     display: flex;
                     justify-content: center;
                 }
             }
             .el-card {
                 position: relative;
-                margin: 15px 5px;
+                margin: 0 5px 30px 5px;
                 width: 300px;
                 .el-card__header {
                     padding: 0px !important;

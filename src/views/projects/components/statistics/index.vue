@@ -27,14 +27,15 @@
         </el-col>
       </el-row>
     </div>
-    <el-divider />
     <!-- 燃尽图 -->
     <template v-if="burnShow">
+      <el-divider />
       <el-row>
         <!-- <el-col :span="12"> -->
         <LineChart chart-id="line-chart1" ref="line-chart1" />
         <!-- </el-col> -->
       </el-row>
+      
     </template>
     <!-- 提交审核次数和外包数据 -->
     <template>
@@ -65,9 +66,9 @@
           </el-col>
         </template>
       </el-row>
-      <el-divider />
     </template>
     <template v-if="asssetTask">
+      <el-divider />
       <div style="margin-top:40px">
         <el-row>
           <!-- 柱状图组件 -->

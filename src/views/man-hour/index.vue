@@ -1,21 +1,18 @@
 <style lang="scss" scoped>
-.el-card {
-  margin-top: 30px;
-}
 </style>
 <template>
   <div ref="drawer-parent">
-    <template v-if="!authDaysOff">
-      <div style="display:flex">
+    
+    <el-card>
+      <template v-if="!authDaysOff">
+      <div style="display:flex" slot="header">
         <chart ref="man-hour" chart-id="man-hour" />
         <chart ref="dayoff-hour" chart-id="dayoff-hour" />
       </div>
     </template>
     <template v-else>
-      <chart ref="man-hour" chart-id="man-hour" />
+      <chart slot="header" ref="man-hour" chart-id="man-hour" />
     </template>
-    <el-card shadow="never">
-      <div slot="header">项目工时列表</div>
       <el-table :data="projectCount">
         <el-table-column prop="name" label="项目名称"></el-table-column>
         <el-table-column prop="creator_name" label="创建者"></el-table-column>
@@ -56,9 +53,7 @@
           <el-table
             :data="dayManWork"
             v-loading="detailLoading"
-            :border="false"
-            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-            :cell-style="{borderRight:0}"
+            border
             highlight-current-row
           >
             <el-table-column label="日期">
@@ -71,9 +66,7 @@
           <div style="overflow-x:auto">
             <el-table
               :data="taskList"
-              :border="false"
-              :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-              :cell-style="{borderRight:0}"
+              border
               highlight-current-row
             >
               <el-table-column label="任务名称" prop="name" show-overflow-tooltip></el-table-column>
@@ -98,8 +91,6 @@
             <el-table
               :data="overtime_list"
               :border="false"
-              :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-              :cell-style="{borderRight:0}"
               highlight-current-row
             >
               <el-table-column label="申请人" prop="creator.username"></el-table-column>

@@ -1,5 +1,5 @@
 <template>
-  <div id="project" style="margin:-20px">
+  <div id="project">
     <div class="container" ref="drawer-parent">
       <Drawer
         scrollable
