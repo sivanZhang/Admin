@@ -4,7 +4,8 @@
  *  
  */
 import Layout from '@/layout'
-export default [{
+export default function asyncRoutes(params) {
+  return [{
     path: '/',
     component: Layout,
     redirect: {
@@ -384,3 +385,4 @@ export default [{
     hidden: true
   },
 ]
+}

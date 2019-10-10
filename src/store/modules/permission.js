@@ -27,20 +27,14 @@ function judgeTraining(UserRoles) {
  */
 export function filterAsyncRoutes(routes, UserRoles) {
   let res = []
-  if ('training_manager' in UserRoles && UserRoles['training_manager']) {
-    res = trainingRouter
-    return res
-  }
   routes.forEach(route => {
     if (hasPermission(route, UserRoles)) {
       const copy = JSON.parse(JSON.stringify(route))
       //此处因为component 不能被深拷贝
-      copy.component = () =>
-        import(v.component)
-      if (copy.children) {
-        copy.children = filterAsyncRoutes(copy.children, UserRoles)
+      if (route.children) {
+        route.children = filterAsyncRoutes(route.children, UserRoles)
       }
-      res.push(copy)
+      res.push(route)
     }
   })
   return res
@@ -69,15 +63,13 @@ const actions = {
       let accessedRoutes = []
       if(judgeTraining(UserRoles)){
         accessedRoutes = [...trainingRouter]
-        commit('SET_ROUTES', accessedRoutes)
+        
+      }else{
+        accessedRoutes = filterAsyncRoutes(asyncRoutes(), UserRoles)
+      }
+      commit('SET_ROUTES', accessedRoutes)
         router.addRoutes(accessedRoutes)
         resolve(accessedRoutes)
-      }else{
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, UserRoles)
-        commit('SET_ROUTES', accessedRoutes)
-        router.addRoutes(asyncRoutes)
-        resolve(accessedRoutes)
-      }
       
       //accessedRoutes有权限的路由
      
