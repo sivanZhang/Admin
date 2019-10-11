@@ -77,7 +77,7 @@
           <div style="width:50%;padding:5px ">
             <div style="display:flex">
               <h4>工种列表</h4>
-              <el-button type="primary" style="margin: 0 10px" @click="addJoinDept">批量添加</el-button>
+              <el-button type="primary" style="margin: 0 10px" @click="addJoinDept" v-if="auth">批量添加</el-button>
             </div>
             <el-tree
               class="filter-tree"
@@ -95,7 +95,7 @@
           <div style="width:50%;border-left:2px soild #999999;padding:5px ">
             <div style="display:flex">
               <h4>当前项目参与的工种列表</h4>
-              <el-button type="danger" style="margin: 0 10px" @click="delJoinDept">批量删除</el-button>
+              <el-button type="danger" style="margin: 0 10px" @click="delJoinDept" v-if="auth">批量删除</el-button>
             </div>
             <el-tree
               class="filter-tree"
@@ -114,7 +114,7 @@
       </el-tab-pane>
       <el-tab-pane label="状态配置" name="third" @click="getStatus" style="height:auto;overflow:auto;">
         <div style="display:flex">
-          <div style="width: 50%;">
+          <div style="width: 50%;" v-if="auth">
             <h4 style="margin: 0 10px;">状态列表</h4>
             <div class="box">
               <el-row>
@@ -193,7 +193,7 @@
               </el-row>
               <el-row v-for="item of pause" :key="item" class="minstatus-name">
                 <el-col :span="12">{{item|taskMinStatus}}</el-col>
-                <el-col :span="12" align="right" class="col">
+                <el-col :span="12" align="right" class="col" v-if="auth">
                   <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                     <span @click="delStatus(item)">
                       <i class="el-icon-minus" style="color:red"></i>
@@ -206,7 +206,7 @@
               </el-row>
               <el-row v-for="item of notstart" :key="item" class="minstatus-name">
                 <el-col :span="12">{{item|taskMinStatus}}</el-col>
-                <el-col :span="12" align="right" class="col">
+                <el-col :span="12" align="right" class="col"  v-if="auth">
                   <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                     <span @click="delStatus(item)">
                       <i class="el-icon-minus" style="color:red"></i>
@@ -219,7 +219,7 @@
               </el-row>
               <el-row v-for="item of conducting" :key="item" class="minstatus-name">
                 <el-col :span="12">{{item|taskMinStatus}}</el-col>
-                <el-col :span="12" align="right" class="col">
+                <el-col :span="12" align="right" class="col"  v-if="auth">
                   <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                     <span @click="delStatus(item)">
                       <i class="el-icon-minus" style="color:red"></i>
@@ -232,7 +232,7 @@
               </el-row>
               <el-row v-for="item of approving" :key="item" class="minstatus-name">
                 <el-col :span="12">{{item|taskMinStatus}}</el-col>
-                <el-col :span="12" align="right" class="col">
+                <el-col :span="12" align="right" class="col"  v-if="auth">
                   <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                     <span @click="delStatus(item)">
                       <i class="el-icon-minus" style="color:red"></i>
@@ -246,7 +246,7 @@
               </el-row>
               <el-row v-for="item of finish" :key="item" class="minstatus-name">
                 <el-col :span="12">{{item|taskMinStatus}}</el-col>
-                <el-col :span="12" align="right" class="col">
+                <el-col :span="12" align="right" class="col"  v-if="auth">
                   <el-tooltip class="item" effect="dark" content="移除项目状态" placement="top">
                     <span @click="delStatus(item)">
                       <i class="el-icon-minus" style="color:red"></i>
@@ -322,8 +322,8 @@
                 :border="true"
               >
                 <el-table-column label="成员名称" prop="name"></el-table-column>
-                <el-table-column label="操作">
-                  <template slot-scope="scope" v-if="teamAuth">
+                <el-table-column label="操作" v-if="teamAuth">
+                  <template slot-scope="scope" >
                     <el-tooltip effect="dark" content="删除" placement="top">
                       <el-button
                         type="text"
@@ -417,8 +417,8 @@
                     </el-image>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作">
-                  <template slot-scope="scope" v-if="groupAuth">
+                <el-table-column label="操作" v-if="groupAuth">
+                  <template slot-scope="scope" >
                     <el-tooltip effect="dark" content="删除" placement="top">
                       <el-button
                         type="text"
@@ -708,7 +708,7 @@ import {
 } from "@/api/training";
 export default {
   name: "config-project",
-  props: ["project", "configTab"],
+  props: ["project", "configTab","auth"],
   components: {},
   data() {
     return {

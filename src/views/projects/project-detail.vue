@@ -41,7 +41,7 @@
         <statistics />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
-        <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" />
+        <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" :auth="auth"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -75,7 +75,8 @@ export default {
       assetId: null,
       assetJump: null,
       trainingMenber: [],
-      groupType: ""
+      groupType: "",
+      auth:null
     };
   },
   watch: {
@@ -118,6 +119,7 @@ export default {
         // this.activeName = "tab5";
         getTrainingProject({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
+          this.auth = data.auth.manage_project;
         });
         getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
           ({ data }) => {
@@ -137,6 +139,7 @@ export default {
       } else {
         getProjects({ id: this.$route.params.id }).then(({ data }) => {
           this.project = data.msg;
+          this.auth = data.auth.manage_project;
         });
       }
     },
