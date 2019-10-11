@@ -13,6 +13,7 @@
                     icon="el-icon-delete"
                     @click="deletList"
                     :disabled="this.multipleSelection.length === 0"
+                    v-show="auth"
                   >批量删除</el-button>
                 </div>
               </el-col>
@@ -81,7 +82,7 @@
           </div>
         </el-card>
       </ElCol>
-      <ElCol :span="8">
+      <ElCol :span="8" v-show="auth">
         <el-card>
           <h4 slot="header">创建插件</h4>
           <div style="display:flex;margin-top:20px">
@@ -201,7 +202,8 @@ export default {
       headers: {
         Authorization: `JWT ${getToken()}`
       },
-      dateNow: new Date().toLocaleDateString()
+      dateNow: new Date().toLocaleDateString(),
+      auth:null
     };
   },
   created() {
@@ -234,10 +236,12 @@ export default {
       if (Type === 1 && this.filterText) {
         searchPlugin({ name: this.filterText }).then(({ data }) => {
           this.tableData = [...data.msg];
+          this.auth = data.auth.can_manage_plugin
         });
       } else {
         searchPlugin().then(({ data }) => {
           this.tableData = [...data.msg];
+          this.auth = data.auth.can_manage_plugin
         });
       }
     },
