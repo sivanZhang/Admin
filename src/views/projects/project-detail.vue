@@ -15,6 +15,8 @@
           :assetJump="assetJump"
           :assetId="assetId"
           @jumpName="jumpName"
+          :groupType="groupType"
+          @getGroup ="getGroupAuth"
         >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
@@ -28,9 +30,11 @@
           :assetJump="assetJump"
           :assetId="assetId"
           @jumpName="jumpName"
+          :groupType="groupType"
+          @getGroup ="getGroupAuth"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2" >
+      <el-tab-pane label="任务" name="tab2">
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="数据统计" name="tab4" lazy>
@@ -70,7 +74,8 @@ export default {
       configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first",
       assetId: null,
       assetJump: null,
-      trainingMenber: []
+      trainingMenber: [],
+      groupType: ""
     };
   },
   watch: {
@@ -83,11 +88,11 @@ export default {
     //     }
     //   }
     // },
-    activeName:{
-      handler:function(newVal,oldVal){
-        if(newVal === "tab2"){
-          this.$refs["tab-task"].getTasks()
-          this.getAssetList()
+    activeName: {
+      handler: function(newVal, oldVal) {
+        if (newVal === "tab2") {
+          this.$refs["tab-task"].getTasks();
+          this.getAssetList();
         }
       }
     }
@@ -134,11 +139,17 @@ export default {
           this.project = data.msg;
         });
       }
+    },
+    getGroupAuth() {
+      this.groupType = this.$route.query.type;
     }
   },
   created() {
-    if(this.$route.query.type === 0){
-      this.activeName = "tab5"
+    if (this.$route.query.type === 0) {
+      this.activeName = "tab5";
+      this.groupType = "0";
+    } else {
+      this.groupType ="1";
     }
     // if(this.$route.query.tab === "tab2"){
     //   this.activeName = "tab2"

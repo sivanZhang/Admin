@@ -380,13 +380,17 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="实训阶段" prop="groups" v-show="groupType" width="120px">
-          <template slot-scope="scope">
-            <el-row v-for="(item,index) of scope.row.groups" :key="index">
-              <el-col>{{item}}</el-col>
-            </el-row>
-          </template>
-        </el-table-column>
+
+        <template v-if="groupType == 0?true:false">
+          <el-table-column label="实训阶段" prop="groups" width="120px">
+            <template slot-scope="scope">
+              <el-row v-for="(item,index) of scope.row.groups" :key="index">
+                <el-col>{{item}}</el-col>
+              </el-row>
+            </template>
+          </el-table-column>
+        </template>
+
         <el-table-column
           prop="name"
           label="镜头号"
@@ -1284,7 +1288,7 @@ export default {
       materialShow: false,
       materialEstdate: new Date().toLocaleDateString(),
       pro_type: null,
-      groupType: this.$route.query.type === 0 ? true : false,
+
       authAsset: null
     };
   },
@@ -1395,6 +1399,9 @@ export default {
     drawerType: {
       //侧边栏为资产还是镜头
       default: ""
+    },
+    groupType: {
+      default:null
     }
   },
   methods: {
@@ -1863,6 +1870,7 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
+
             this.AssetList.forEach(item => {
               if (!item.link.length) {
                 this.LinkAssetList.push(item);
@@ -2222,6 +2230,7 @@ export default {
     }
   },
   created() {
+    this.$emit("getGroup");
     this.getAuth();
     this.getAssetList();
     this.getProjectAllStatus();
