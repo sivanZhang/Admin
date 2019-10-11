@@ -26,6 +26,7 @@
           <el-button
             type="success"
             @click="skipImpory"
+            v-show="authDate"
           >Excel导入节假日</el-button>
         </el-row>
       </el-col>
@@ -53,7 +54,8 @@ export default {
       searchLoading: false,
       value: new Date(), //控制日期当前显示时间
       UploadData: [], // 导入后的数据
-      DateList: []
+      DateList: [],
+      authDate:null
     };
   },
   methods: {
@@ -110,6 +112,7 @@ export default {
     })
       .then(({ data }) => {
         this.DateList = [...data.msg];
+        this.authDate = data.auth.can_manage_wktime_state
       })
       .finally(() => {
         this.searchLoading = false;
