@@ -34,8 +34,44 @@
         v-show="$refs.tableTemplate?$refs.tableTemplate.tableData.length : false"
         size="mini"
       >删除已选</el-button>
+        <el-button
+        icon="el-icon-document"
+        type="success"
+        @click="openExplain()"
+        class="pan-btn green-btn"
+        size="mini"
+      >导入说明</el-button>
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
+     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="420px">
+      <div>
+            <div>
+          <h4>用户名：</h4>
+          <div>规定长度，不符合要求则会返回“长度过长”或“长度为0”；</div>
+          <div>不得重复用户名，否则返回“此用户名已被使用”。</div>
+        </div>
+        <div>
+          <h4>邮箱：</h4>
+          <div>规定格式，不符合格式则返回“email格式错误”；</div>
+          <div>不得重复邮箱，否则返回“此邮箱已被使用”。</div>
+        </div>
+        <div>
+          <h4>手机号码：</h4>
+          <div>规定格式，不符合格式则返回“phone格式错误”；</div>
+          <div>不得重复号码，否则返回“此号码已被使用”。</div>
+        </div>
+        <div>
+          <h4>部门：</h4>
+          <div>若用户所属部门不存在，则返回“未能找到该对应工种”。</div>
+        </div>
+        <div>
+          <h4>是否启用：</h4>
+          <div>规定格式，只能为0和1，（0：未使用，1：使用中）；</div>
+          <div>若输入的不是数字，则返回“isactive字段只能为数字”；</div>
+          <div>若输入的数字不为0或1，则返回“isactive字段只能为0或1”。</div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -48,6 +84,7 @@ export default {
   data() {
     const isPro = Object.is(process.env.NODE_ENV, "production");
     return {
+      dialogVisible: false,
       uploadLoading: false,
       uploadDisabled: true,
       requiredKeysMap: {
@@ -76,6 +113,10 @@ export default {
   },
   components: { ImportTableTemplate },
   methods: {
+     //导入说明
+    openExplain() {
+      this.dialogVisible = true;
+    },
     //点击隐藏的上传文件按钮
     openFile() {
       this.$refs.file_inp.click();
