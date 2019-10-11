@@ -102,12 +102,12 @@
             v-if="editing&&clickId === scope.row.id"
             @change="showEditIcon"
           >
-            <el-option label="文本" value="1"></el-option>
-            <el-option label="图片" value="2"></el-option>
-            <el-option label="视频" value="3"></el-option>
-            <el-option label="音频" value="4"></el-option>
-            <el-option label="动漫" value="5"></el-option>
-            <el-option label="多媒体" value="6"></el-option>
+            <el-option
+              v-for="item of CategorysList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
           <span v-if="!editing||clickId !== scope.row.id">
             <el-row v-for="(item,index) of scope.row.category" :key="index">
@@ -247,14 +247,24 @@
           <el-input v-model="materialForm.name"></el-input>
         </el-form-item>
         <el-form-item label="素材分类" prop="categorys">
-          <el-select v-model="materialForm.categorys" multiple placeholder="请选择类型">
-            <el-option label="文本" value="1"></el-option>
-            <el-option label="图片" value="2"></el-option>
-            <el-option label="视频" value="3"></el-option>
-            <el-option label="音频" value="4"></el-option>
-            <el-option label="动漫" value="5"></el-option>
-            <el-option label="多媒体" value="6"></el-option>
-          </el-select>
+          <el-row>
+            <el-col :span="14">
+              <el-select
+                v-model="materialForm.categorys"
+                multiple
+                :filterable="true"
+                allow-create
+                placeholder="请选择类型"
+              >
+                <el-option
+                  v-for="item of CategorysList"
+                  :label="item.name"
+                  :value="item.name"
+                  :key="item.id"
+                ></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="项目信息" prop="project_id">
           <el-select v-model="materialForm.project_id" placeholder="请选择项目">
@@ -315,6 +325,7 @@ export default {
       materialList: [],
       editing: false,
       ProjectList: [],
+      CategorysList: [],
       clickId: null,
       iconShow: false,
       dialogImg: false,
@@ -503,6 +514,9 @@ export default {
         getMaterial().then(({ data }) => {
           if (data.status === 0) {
             this.materialList = [...data.msg];
+            this.materialList.map(item => {
+              this.CategorysList = item.all_categorys;
+            });
             this.authRole = data.auth.can_manage_material_state;
           }
 
