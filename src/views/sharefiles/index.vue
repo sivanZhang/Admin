@@ -44,6 +44,7 @@
                   @click="deletList"
                   style="margin-left:15px"
                   :disabled="this.multipleSelection.length === 0"
+                  v-show="auth"
                 >批量删除</el-button>
               </div>
             </el-col>
@@ -102,7 +103,7 @@
             <el-table-column prop="username" label="提交人">
               <template slot-scope="scope">{{scope.row.username}}</template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" v-if="auth">
               <template slot-scope="scope">
                 <el-tooltip effect="dark" content="删除" placement="top">
                   <el-button
@@ -142,7 +143,8 @@ export default {
       loading: false,
       headers: {
         Authorization: `JWT ${getToken()}`
-      }
+      },
+      auth:null
     };
   },
   created() {
@@ -179,10 +181,12 @@ export default {
       if (Type === 1 && this.filterText) {
         searchfileList({ filename: this.filterText }).then(({ data }) => {
           this.tableData = [...data.msg];
+          this.auth =data.auth.can_manage_sharefile
         });
       } else {
         searchfileList().then(({ data }) => {
           this.tableData = [...data.msg];
+          this.auth =data.auth.can_manage_sharefile
         });
       }
     },
