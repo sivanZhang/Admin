@@ -17,7 +17,7 @@
       <div v-if="click_id">
         <statistics :click_id="click_id" ref="clickRefresh" />
       </div>
-      <div class="text-center">
+      <div v-else class="text-center">
         选择项目查看
       </div>
     </ElCard>

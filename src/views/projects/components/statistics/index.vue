@@ -30,25 +30,24 @@
       </el-row>
     </template>
     <!-- 提交审核次数和外包数据 -->
-    
 
     <el-divider />
-      <el-row>
-        <el-col :span="12">
-          <label for>内部工时统计图</label>
-          <PieNestedChart
-            chart-id="line-chart2-loopInner2"
-            ref="line-chart2-loopInner2"
-            v-if="inner"
-          />
-          <chart chart-id="line-chart2-loopInner" ref="line-chart2-loopInner" v-if="!inner" />
-        </el-col>
-        <el-col :span="12">
-          <label for>外部工时统计图</label>
-          <PieNestedChart chart-id="line-chart2-loop2" ref="line-chart2-loop2" v-if="outer" />
-          <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer" />
-        </el-col>
-      </el-row>
+    <el-row>
+      <el-col :span="12">
+        <label for>内部工时统计图</label>
+        <PieNestedChart
+          chart-id="line-chart2-loopInner2"
+          ref="line-chart2-loopInner2"
+          v-if="inner"
+        />
+        <chart chart-id="line-chart2-loopInner" ref="line-chart2-loopInner" v-if="!inner" />
+      </el-col>
+      <el-col :span="12">
+        <label for>外部工时统计图</label>
+        <PieNestedChart chart-id="line-chart2-loop2" ref="line-chart2-loop2" v-if="outer" />
+        <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer" />
+      </el-col>
+    </el-row>
     <!-- 提交审核次数统计 -->
     <template v-if="show_inner">
       <el-row>
@@ -401,19 +400,7 @@ export default {
           this.ganttStatLoading = false;
         });
     },
-    //获取项目的部门信息
-    getDept() {
-      Ajax.getGanttData({
-        id: this.click_id ? this.click_id : this.$route.params.id
-      }).then(({ data }) => {
-        this.deptList = [...data.msg].map((t, i, Arr) => {
-          return {
-            id: t.deptid,
-            name: t.deptname
-          };
-        });
-      });
-    },
+
     //重置部门甘特图
     refreshDept() {
       this.deptChoose = [];
@@ -427,7 +414,15 @@ export default {
         id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
         const arr = [...data.msg];
+        //获取项目的部门信息
+        this.deptList = arr.map(t => {
+          return {
+            id: t.deptid,
+            name: t.deptname
+          };
+        });
         this.ganttLoading = false;
+
         if (this.deptChoose.length) {
           // this.ganttData = [];
           arr.map((t, i, Arr) => {
@@ -1024,7 +1019,6 @@ export default {
     }
   },
   created() {
-    this.getDept();
     this.getUser();
   },
   mounted() {

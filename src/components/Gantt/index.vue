@@ -55,7 +55,8 @@ export default {
       required: true
     },
     customHeaderOption: {
-      type: Object
+      type: Object,
+      default:{}
     },
     customOptions: {
       type: Object

@@ -1,6 +1,76 @@
 <template>
   <div id="plugin">
     <ElRow :gutter="15">
+      <ElCol :span="8" v-show="auth">
+        <el-card>
+          <h4 slot="header">创建插件</h4>
+          <div style="display:flex;margin-top:20px">
+            <el-form
+              ref="saveForm"
+              :label-position="labelPosition"
+              label-width="100px"
+              :model="saveForm"
+              :rules="saveRules"
+              class="save-form"
+            >
+              <el-form-item label="插件名称" prop="name">
+                <el-input
+                  ref="name"
+                  v-model="saveForm.name"
+                  placeholder="插件名称"
+                  name="name"
+                  type="text"
+                  style="width:220px"
+                />
+              </el-form-item>
+              <el-form-item label="适用软件" prop="software">
+                <el-input
+                  ref="software"
+                  v-model="saveForm.software"
+                  type="text"
+                  placeholder="适用软件"
+                  name="software"
+                  style="width:220px"
+                />
+              </el-form-item>
+              <el-form-item label="插件版本" prop="version">
+                <el-input
+                  ref="version"
+                  v-model="saveForm.version"
+                  type="text"
+                  placeholder="版本号"
+                  name="version"
+                  style="width:220px"
+                />
+              </el-form-item>
+              <el-form-item label="发布日期" prop="pubdate">
+                <span>{{dateNow}}</span>
+              </el-form-item>
+              <el-form-item label="插件文件" prop="filepath">
+                <el-upload
+                  class="upload-demo"
+                  ref="upload"
+                  accept="file"
+                  :multiple="false"
+                  :action="action"
+                  :headers="headers"
+                  :on-success="handleSuccess"
+                  :before-remove="beforeRemove"
+                  :file-list="fileList"
+                  :clearFiles="clearFiles"
+                  :limit="1"
+                >
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+              </el-form-item>
+              <el-form-item>
+                <el-button :loading="loading" type="primary" @click="save">立即创建</el-button>
+                <el-button @click="resetForm('saveForm')">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-card>
+      </ElCol>
       <ElCol :span="16">
         <el-card>
           <h4 slot="header">插件列表</h4>
@@ -82,77 +152,6 @@
           </div>
         </el-card>
       </ElCol>
-      <ElCol :span="8" v-show="auth">
-        <el-card>
-          <h4 slot="header">创建插件</h4>
-          <div style="display:flex;margin-top:20px">
-            <el-form
-              ref="saveForm"
-              :label-position="labelPosition"
-              label-width="100px"
-              :model="saveForm"
-              :rules="saveRules"
-              class="save-form"
-            >
-              <el-form-item label="插件名称" prop="name">
-                <el-input
-                  ref="name"
-                  v-model="saveForm.name"
-                  placeholder="插件名称"
-                  name="name"
-                  type="text"
-                  style="width:220px"
-                />
-              </el-form-item>
-              <el-form-item label="适用软件" prop="software">
-                <el-input
-                  ref="software"
-                  v-model="saveForm.software"
-                  type="text"
-                  placeholder="适用软件"
-                  name="software"
-                  style="width:220px"
-                />
-              </el-form-item>
-              <el-form-item label="插件版本" prop="version">
-                <el-input
-                  ref="version"
-                  v-model="saveForm.version"
-                  type="text"
-                  placeholder="版本号"
-                  name="version"
-                  style="width:220px"
-                />
-              </el-form-item>
-              <el-form-item label="发布日期" prop="pubdate">
-                <span>{{dateNow}}</span>
-              </el-form-item>
-              <el-form-item label="插件文件" prop="filepath">
-                <el-upload
-                  class="upload-demo"
-                  ref="upload"
-                  accept="file"
-                  :multiple="false"
-                  :action="action"
-                  :headers="headers"
-                  :on-success="handleSuccess"
-                  :before-remove="beforeRemove"
-                  :file-list="fileList"
-                  :clearFiles="clearFiles"
-                  :limit="1"
-                >
-                  <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
-              </el-form-item>
-              <el-form-item>
-                <el-button :loading="loading" type="primary" @click="save">立即创建</el-button>
-                <el-button @click="resetForm('saveForm')">重置</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-card>
-      </ElCol>
-      
     </ElRow>
   </div>
 </template>
@@ -203,7 +202,7 @@ export default {
         Authorization: `JWT ${getToken()}`
       },
       dateNow: new Date().toLocaleDateString(),
-      auth:null
+      auth: null
     };
   },
   created() {
@@ -236,12 +235,12 @@ export default {
       if (Type === 1 && this.filterText) {
         searchPlugin({ name: this.filterText }).then(({ data }) => {
           this.tableData = [...data.msg];
-          this.auth = data.auth.can_manage_plugin
+          this.auth = data.auth.can_manage_plugin;
         });
       } else {
         searchPlugin().then(({ data }) => {
           this.tableData = [...data.msg];
-          this.auth = data.auth.can_manage_plugin
+          this.auth = data.auth.can_manage_plugin;
         });
       }
     },
