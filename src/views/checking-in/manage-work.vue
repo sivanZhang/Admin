@@ -86,8 +86,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户可调休时长">
-          <span>{{allow_off}}</span>
+        <el-form-item label="可调休时长">
+          <span style="font-size:12px">{{allow_off}}</span>
         </el-form-item>
         <el-form-item label="调休时间">
           <el-input v-model="dayOffForm.off_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
