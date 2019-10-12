@@ -1,7 +1,6 @@
 <template>
-  <div id="app" class="el-scrollbar__wrap">
+  <div id="app">
     <router-view />
-    <el-backtop target=".el-scrollbar__wrap" />
   </div>
 </template>
 

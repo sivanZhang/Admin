@@ -29,8 +29,6 @@ export function filterAsyncRoutes(routes, UserRoles) {
   let res = []
   routes.forEach(route => {
     if (hasPermission(route, UserRoles)) {
-      const copy = JSON.parse(JSON.stringify(route))
-      //此处因为component 不能被深拷贝
       if (route.children) {
         route.children = filterAsyncRoutes(route.children, UserRoles)
       }
@@ -61,19 +59,19 @@ const actions = {
     let UserRoles = rootState.login.userInfo.auth
     return new Promise(resolve => {
       let accessedRoutes = []
-      if(judgeTraining(UserRoles)){
+      if (judgeTraining(UserRoles)) {
         accessedRoutes = [...trainingRouter]
-        
-      }else{
+
+      } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes(), UserRoles)
       }
       commit('SET_ROUTES', accessedRoutes)
-        router.addRoutes(accessedRoutes)
-        resolve(accessedRoutes)
-      
+      router.addRoutes(accessedRoutes)
+      resolve(accessedRoutes)
+
       //accessedRoutes有权限的路由
-     
-     
+
+
     })
   }
 }
