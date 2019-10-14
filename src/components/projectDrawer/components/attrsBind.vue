@@ -334,7 +334,7 @@ export default {
   created() {
     authAttr().then(({data})=>{
       if(data.status === 0){
-        this.auth = data.auth.can_manage_attr
+        this.auth = data.auth.manage_attr
       }
     })
   }
