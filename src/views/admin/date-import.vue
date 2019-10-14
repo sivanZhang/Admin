@@ -60,7 +60,7 @@
               "yyyy-mm-dd"&nbsp;&nbsp;"yyyymmdd"&nbsp;&nbsp;"yyyy年mm月dd日"；不符合要求则返回“日期是必填字段”；</div>
           <div style="padding-top:2px"><span span style="font-weight:bold">调休：</span>如果是调休日期的话，该字段值为“调休”，否则返回“调休是必填字段”；</div>
           <div style="padding-top:2px;font-size:12px">
-          <div style="padding-top:2px"><span style="font-weight:bold">注意：</span>以上必填字段都按要求绑定成功的话，则会返回“导入成功”以及“成功数量”和“失败数量”;</div>
+          <div style="padding-top:2px"><span style="font-weight:bold">注意：</span>以上必填字段都按要求绑定成功的话，则会返回“导入成功”以及“成功数量”和“失败数量”。</div>
           </div>
         </div>
       </div>
