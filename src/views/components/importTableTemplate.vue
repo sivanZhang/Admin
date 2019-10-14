@@ -143,6 +143,7 @@ export default {
       LinkList: [[]], //提交时绑定links字段的数组 一个数组代表一列数据的link
       SelectDept: [], //工种数组
       tempDept: null, //选中的dept
+      bindLinks: [{}],
       radio: 1,
       LinkKeys: [
         {
@@ -212,7 +213,7 @@ export default {
     //绑定工种字段
     linkChanged(value) {
       let _self = this;
-      let lastLabel;
+      let lastLabel = "";
       this.LinkKeys.forEach(item => {
         if (item.value === value) {
           lastLabel = item.label;
@@ -221,7 +222,7 @@ export default {
       let deptLabel;
       function changeList(arr) {
         for (const item of arr) {
-          if (item.value == _self.tempDept[_self.tempDept.length - 1]) {
+          if (item.value === _self.tempDept[_self.tempDept.length - 1]) {
             deptLabel = item.label;
           } else if (item["children"] && item["children"].length) {
             changeList(item["children"]);
@@ -229,14 +230,49 @@ export default {
         }
       }
       changeList(this.SelectDept);
+      //缓存已选择的 keys
+      this.hasBindLinkKey[this.selectCurrentCol.index] = value;
+      let tempLinkKeyIndexs = []; // 每一项是绑定了link字段的index
+      this.hasBindLinkKey.forEach((t, i) => {
+        t && tempLinkKeyIndexs.push(i);
+      });
+      this.dealDatas.forEach((t, i) => {
+        if (!this.LinkList[i]) {
+          this.LinkList.splice(i, 0, []);
+        } //如果没有数组创建数组
+        tempLinkKeyIndexs.forEach((e, j) => {
+          let linkIndex;
+          let bl;
+          this.LinkList[i].forEach((lt, k) => {
+            //tl代表一个环节
+            if (lt.dept === this.tempDept[this.tempDept.length - 1]) {
+              // this.tempDept[this.tempDept.length - 1 当前选中的dept
+              linkIndex = k;
+              bl = true;
+            } else {
+              bl = false;
+            }
+          });
+          if (bl) {
+            //如果已经创建了该环节的数据
+            this.LinkList[i][linkIndex] = {
+              ...this.LinkList[i][linkIndex],
+              [this.hasBindLinkKey[e]]: t[e]
+            };
+          } else {
+            this.LinkList[i].push({
+              dept: this.tempDept[this.tempDept.length - 1],
+              [this.hasBindLinkKey[e]]: t[e]
+            });
+          }
+        });
+      });
       //this.selectCurrentCol点击的列的信息
       let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
       this.tableCols[this.selectCurrentCol.index].label =
         //大写英文字母 + 传过来的中文字段
         label.split(",")[0] + "," + "[" + deptLabel + "]" + lastLabel;
       this.tableCols[this.selectCurrentCol.index].name = value;
-      //缓存已选择的 keys
-      this.hasBindLinkKey[this.selectCurrentCol.index] = value;
       this.hasBindKey[this.selectCurrentCol.index] = null;
       if (this.tempDept) {
         //如果已经选择过工种
@@ -326,41 +362,7 @@ export default {
         }
         values.push(value);
       }
-      let tempLinkKeyIndexs = []; // 每一项是绑定了link字段的index
-      this.hasBindLinkKey.forEach((t, i) => {
-        t && tempLinkKeyIndexs.push(i);
-      });
-      this.dealDatas.forEach((t, i) => {
-        if (!this.LinkList[i]) {
-          this.LinkList.splice(i, 0, []);
-        } //如果没有数组创建数组
-        tempLinkKeyIndexs.forEach((e, j) => {
-          let linkIndex;
-          let bl;
-          this.LinkList[i].forEach((lt, k) => {
-            if (lt.dept === this.tempDept[this.tempDept.length - 1]) {
-              // this.tempDept[this.tempDept.length - 1 当前选中的dept
-              linkIndex = k;
-              bl = true;
-            } else {
-              bl = false;
-            }
-          });
 
-          if (bl) {
-            //如果已经创建了该环节的数据
-            this.LinkList[i][linkIndex] = {
-              ...this.LinkList[i][linkIndex],
-              [this.hasBindLinkKey[e]]: t[e]
-            };
-          } else {
-            this.LinkList[i].push({
-              dept: this.tempDept[this.tempDept.length - 1],
-              [this.hasBindLinkKey[e]]: t[e]
-            });
-          }
-        });
-      });
       //如果有绑定环节     把传递的数据加Link字段  并且把环节数组对象放到每一列中
       if (this.LinkList[0].length) {
         bindKeys.push("links");
