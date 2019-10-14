@@ -1,7 +1,10 @@
 <template>
   <div>
-    <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
-    <el-divider />
+    <div v-if="$store.state.login.userInfo.auth.manage_attendance">
+      <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
+      <el-divider />
+    </div>
+
     <el-col :span="8">
       <el-row>
         <el-col :span="10">
@@ -29,7 +32,7 @@
     <el-date-picker v-model="value2" type="datetime" placeholder="请选择下班时间" style="width:150px"></el-date-picker>
 
     <el-button @click="clockRecord(3)" slot="append" icon="el-icon-search" style="color:gray" />
-    <el-button @click="clockRecord()" type="primary" >重置</el-button>
+    <el-button @click="clockRecord()" type="primary">重置</el-button>
     <el-card>
       <el-table :data="clockRed">
         <el-table-column prop="user_name" label="用户名"></el-table-column>

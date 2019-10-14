@@ -40,8 +40,34 @@
         v-show="$refs.tableTemplate?$refs.tableTemplate.tableData.length : false"
         size="mini"
       >删除已选</el-button>
+        <span
+        style="padding-left:15px;font-size:12px;color:#808080;cursor: pointer;"
+        @click="openExplain()"
+      >
+        使用帮助:
+        <svg-icon icon-class="wenhao" />
+      </span>
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
+     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
+       <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+        <div style="font-size:12px">
+          <h3 >必填字段：</h3>
+          <div style="padding-top:2px;padding-top:5px">
+            <span style="font-weight:bold">用户名：</span>不符合要求则返回“用户名是必填字段”；
+          </div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">日期：</span>格式仅为“yyyy/mm/dd”，不符合要求则返回“日期是必填字段”；
+          </div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">上班打卡时间：</span>格式为“HH:mm”，不符合要求则返回“上班打卡时间是必填字段”；
+          </div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">下班打卡时间：</span>格式为“HH:mm”，不符合要求则返回“下班打卡时间是必填字段”。
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -53,6 +79,7 @@ export default {
   neme: "asset-import",
   data() {
     return {
+      dialogVisible: false,
       uploadLoading: false,
       uploadDisabled: true,
       requiredKeysMap: {
@@ -67,6 +94,10 @@ export default {
   },
   components: { ImportTableTemplate },
   methods: {
+    //导入说明
+    openExplain() {
+      this.dialogVisible = true;
+    },
     //点击隐藏的上传文件按钮
     openFile() {
       this.$refs.file_inp.click();

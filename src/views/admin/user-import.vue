@@ -51,6 +51,7 @@
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
       <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
         <div style="font-size:12px">
+          <h3>必填字段</h3>
           <h4>用户名：</h4>
           <div style="padding-top:2px">规定长度，不符合要求则返回“长度过长”或“长度为0”；</div>
           <div style="padding-top:2px">不得重复用户名，否则返回“此用户名已被使用”。</div>

@@ -1,7 +1,7 @@
 <!-- 属性 -->
 <template>
   <div id="attrs">
-    <div style="padding-bottom:10px">
+    <div style="padding-bottom:10px" v-if="auth">
       <el-row>
         <el-col>
           <el-button icon="el-icon-plus" type="primary" @click="showDialog(1)">自定义属性</el-button>
@@ -268,7 +268,7 @@ export default {
       }
     };
   },
-  props: ["attrsList", "tableLoading"],
+  props: ["attrsList", "tableLoading","auth"],
   watch: {},
   methods: {
     bindSubmit(){
