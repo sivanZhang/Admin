@@ -307,3 +307,22 @@ export function entityFilter(entity) {
             break
     }
 }
+//迟到状态
+export function lateStatus(status) {
+    switch (status) {
+        case 0:
+            return '否'
+            break
+        case 1:
+            return '是'
+            break    
+    }
+}
+//早退状态
+export function earlyStatus(data) {
+    switch (data) {
+        case 1:
+            return '是'
+            break
+    }
+}

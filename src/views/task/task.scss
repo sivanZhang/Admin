@@ -37,6 +37,11 @@ $linkCorlor:#2d8cf0;
     .tab-task {
         min-height: calc(100vh - 294px)
     }
+    a, a:focus, a:hover {
+        cursor: pointer;
+        color: #2d8cf0 !important;
+        text-decoration: underline !important;
+    }
     .layout_task {
         padding: 6px 12px;
         display: inline-flex;
