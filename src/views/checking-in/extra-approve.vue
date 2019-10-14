@@ -1,11 +1,11 @@
 <!-- 加班审批 -->
 <template>
   <div id="extra-approve">
-    <template v-if="!extraTemplate.length">
+    <template v-if="!extraTemplate.length&&$store.state.login.userInfo.auth.manage_overtime_template">
       <el-button type="primary" @click="addTemplate(1)">添加模板</el-button>
     </template>
     <template v-else>
-      <div style="width:400px">
+      <div style="width:400px" v-if="$store.state.login.userInfo.auth.manage_overtime_template">
         <el-row style="padding:10px">
           <el-col :span="12">
             <el-button type="success" @click="editTemplate(1)">修改模板</el-button>

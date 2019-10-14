@@ -3,7 +3,7 @@
     <el-tabs tab-position="left" style="height: ;overflow: auto;padding-top:10px">
       <el-tab-pane label="外审系统配置" style="height: auto;overflow: auto;">
         <div style="display:flex">
-          <div style="width:50%;padding:5px">
+          <div style="width:50%;padding:5px" v-if="$store.state.login.userInfo.auth.admin_management">
             <div style="display:flex">
               <el-form
                 ref="saveForm"
@@ -60,7 +60,7 @@
       </el-tab-pane>
       <el-tab-pane label="客户部门绑定" style="height: auto;overflow: auto;">
         <div style="display:flex">
-          <div style="width: 50%;">
+          <div style="width: 50%;" v-if="$store.state.login.userInfo.auth.admin_management">
             <h4 style="margin: 0 10px;">部门列表</h4>
             <div class="box">
               <el-row v-for="(item,index) in DeptList" :key="index" class="list-name">
@@ -88,7 +88,7 @@
       </el-tab-pane>
       <el-tab-pane label="外包部门绑定" style="height: auto;overflow: auto;">
         <div style="display:flex">
-          <div style="width: 50%;">
+          <div style="width: 50%;" v-if="$store.state.login.userInfo.auth.admin_management">
             <h4 style="margin: 0 10px;">部门列表</h4>
             <div class="box">
               <el-row v-for="(item,index) in DeptList" :key="index" class="list-name">

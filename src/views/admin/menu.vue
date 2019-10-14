@@ -3,7 +3,7 @@
     <el-tabs tab-position="left" style="height: ;overflow: auto;padding-top:10px">
       <el-tab-pane label="内部时间配置" style="height: auto;overflow: auto;">
         <div style="display:flex">
-          <div style="width:35%;padding:3px">
+          <div style="width:35%;padding:3px" v-if="$store.state.login.userInfo.auth.admin_management">
             <div style="display:flex">
               <el-form
                 ref="saveForm"
@@ -79,7 +79,7 @@
       </el-tab-pane>
       <el-tab-pane label="实训时间配置">
         <div style="display:flex">
-          <div style="width:35%;padding:3px">
+          <div style="width:35%;padding:3px" v-if="$store.state.login.userInfo.auth.admin_management">
             <div style="display:flex">
               <el-form
                 ref="saveForm1"

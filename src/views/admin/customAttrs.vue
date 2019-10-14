@@ -3,7 +3,7 @@
   <div id="customAttrs">
     <el-tabs v-model="activeName" >
       <el-tab-pane label="属性" name="tab0" lazy>
-        <attrs :attrsList="attrsList" :tableLoading="tableLoading" @refresh-attrs="getAttrs" @bindSearch="bindSearch"/>
+        <attrs :attrsList="attrsList" :auth="auth" :tableLoading="tableLoading" @refresh-attrs="getAttrs" @bindSearch="bindSearch"/>
       </el-tab-pane>
       <el-tab-pane label="实体属性" name="tab1" lazy>
         <attrsEntity :attrsEntityList="attrsEntityList" :tableLoading="tableLoading" @refresh-attrsEntity="getAttrsEntity" :attr_entity="attr_entity"/>
@@ -28,7 +28,8 @@ export default {
       attrsList: [],
       attrsEntityList:[],
      attr_entity:null,
-      tableLoading: false
+      tableLoading: false,
+      auth:null
     };
   },
   watch: {
@@ -55,6 +56,7 @@ export default {
       HTTP.getAttrsList().then(({ data }) => {
         if (data.status === 0) {
           this.attrsList = [...data.msg];
+          this.auth = data.auth.manage_attr;
           this.tableLoading = false;
         }
       });
