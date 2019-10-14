@@ -47,15 +47,16 @@
       <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
         <div style="font-size:12px">
           <h4>必填字段：</h4>
-          <div style="padding-top:2px">镜头号：不符合要求则返回“镜头号是必填字段”；</div>
+          <div style="padding-top:2px">镜头号：如果某行镜头号为空的话，镜头不会创建，导入失败统计数自动增加一条；</div>
           <div style="padding-top:2px">制作内容：不符合要求则返回“制作内容是必填字段”。</div>
         </div>
         <div style="padding-top:2px;font-size:12px">
           <h4 >非必填字段：</h4>
-          <div style="padding-top:2px">
-            开始日期，结束日期，缩略图，路径，内部版本号，外部版本号，优先级，
-            难度等级，场次，帧数，帧数范围，画面调整信息，变速信息，集数，备注，这些字段可以选填或者不填。
-          </div>
+          <div style="padding-top:2px"> 开始日期，结束日期  缩略图，路径，内部版本号，外部版本号，优先级，
+            难度等级，场次，帧数，帧数范围，画面调整信息，变速信息，集数，备注，这些字段可以选填或者不填。 </div>
+          <div style="padding-top:2px">开始日期，结束日期：支持的日期格式为：yyyy.mm.dd  yyyy/mm/dd  yyyy-mm-dd  yyyymmdd yyyy年mm月dd日。</div>
+          <div style="padding-top:2px">帧数：如果字段值不是帧数时，镜头创建失败。</div>
+         
         </div>
       </div>
     </el-dialog>
