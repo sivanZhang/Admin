@@ -52,10 +52,16 @@
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
        <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
         <div style="font-size:12px">
-          <h4 >必填字段：</h4>
-          <div style="padding-top:2px">节假日名：不符合要求则返回“节假日名是必填字段”；</div>
-          <div style="padding-top:2px">日期：不符合要求则返回“日期是必填字段”；</div>
-          <div style="padding-top:2px">调休：不符合要求则返回“调休是必填字段”；</div>
+          <h3 >必填字段</h3>
+          <div style="padding-top:2px">
+            <span span style="font-weight:bold">节假日名：</span>不符合要求则返回“节假日名是必填字段”；
+          </div>
+          <div style="padding-top:2px"><span style="font-weight:bold">日期：</span>格式可为 "yyyy.mm.dd" &nbsp;&nbsp; "yyyy/mm/dd"&nbsp;&nbsp;
+              "yyyy-mm-dd"&nbsp;&nbsp;"yyyymmdd"&nbsp;&nbsp;"yyyy年mm月dd日"；不符合要求则返回“日期是必填字段”；</div>
+          <div style="padding-top:2px"><span span style="font-weight:bold">调休：</span>如果是调休日期的话，该字段值为“调休”，否则返回“调休是必填字段”；</div>
+          <div style="padding-top:2px;font-size:12px">
+          <div style="padding-top:2px"><span style="font-weight:bold">注意：</span>以上必填字段都按要求绑定成功的话，则会返回“导入成功”以及“成功数量”和“失败数量”;</div>
+          </div>
         </div>
       </div>
     </el-dialog>
