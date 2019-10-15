@@ -9,13 +9,23 @@ export default function asyncRoutes(params) {
       path: '/',
       component: Layout,
       redirect: {
-        name: 'overview-project'
+        name: 'home-page'
       },
       meta: {
         title: '概览',
         icon: 'gailan'
       },
-      children: [{
+      children: [
+        {
+          path: '/overview/home-page',
+          name: 'home-page',
+          component: () =>
+            import('@/views/overview/home-page'),
+          meta: {
+            title: '个人首页',
+            icon: 'home'
+          }
+        },{
           path: '/overview/project',
           name: 'overview-project',
           component: () =>
