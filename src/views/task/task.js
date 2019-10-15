@@ -262,7 +262,8 @@ export default {
             this.isDialogShow = true;
             this.TaskRecord = Object.assign({}, {
                 task_id: obj.id,
-                type: 0
+                type: 0,
+                date: new Date().toLocaleDateString()
             });
 
         },
@@ -293,7 +294,8 @@ export default {
             this.activeRow = {...row };
             this.TaskRecord = Object.assign({}, {
                 task_id: row.task.id,
-                type: 0
+                type: 0,
+                date: new Date().toLocaleDateString()
             });
             this.logsLoading = true;
             this.$refs['taskApprovelog'].getApproveLog(row.task.id);
