@@ -33,10 +33,10 @@ export default {
 <template>
   <el-row id="home-page" :gutter="15">
     <el-col :span="6">
-      <MyTask :my-task-list="MyTaskList"/>
+      <MyTask :my-task-list="MyTaskList" :target-more="()=>$router.push({name:'my-task'})"/>
     </el-col>
     <el-col :span="6">
-      <MyManWork/>
+      <MyManWork :my-tasks="MyTaskList"/>
     </el-col>
     <el-col :span="6">
       <el-card header="我的审核"></el-card>

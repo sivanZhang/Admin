@@ -2,20 +2,48 @@
   <el-card>
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span>我的工时</span>
-      <el-button type="text">填报工时</el-button>
+      <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
     <MyCharts ref="radar" chart-id="radar-chart" />
-    <el-divider />
-    <el-row>
-      <el-col :span="12">本周：{{weekHour.total_count}}</el-col>
-      <el-col :span="12">本月：{{monthHour.total_count}}</el-col>
-    </el-row>
+    <!-- <el-row>
+      <el-col :span="12">本周工时(h)：{{weekHour.total_count}}</el-col>
+      <el-col :span="12">本月工时(h)：{{monthHour.total_count}}</el-col>
+    </el-row>-->
+    <el-table :data="workhouerlist">
+      <el-table-column prop="time" label="时间" align="center"></el-table-column>
+      <el-table-column label="任务工时" prop="task_count" align="center"></el-table-column>
+      <el-table-column label="加班工时" prop="overtime_count" align="center"></el-table-column>
+      <el-table-column label="总工时" prop="total_count" align="center"></el-table-column>
+    </el-table>
+    <el-dialog :visible.sync="isDialogShow" width="460px">
+      <h4 slot="title">工时填报</h4>
+      <el-form :model="TaskForm" label-width="80px" label-position="left" :rules="rules" ref="taskForm">
+        <el-form-item label="选择任务" prop="task_id">
+          <el-select v-model="TaskForm.task_id" placeholder="请选择填报任务" style="width:180px">
+            <el-option
+              v-for="item in myTasks"
+              :key="item.task.id"
+              :label="item.task.name"
+              :value="item.task.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="工时 ( h )" prop="labor_hour">
+          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" style="width:180px"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isDialogShow = false">取 消</el-button>
+        <el-button type="primary" @click="submitWorkHourFrom" :loading="submitLoading">提交</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
 <script>
 import MyCharts from "@/components/ECharts/BaseECharts";
 import { getMyManHour } from "@/api/manHour";
+import { addTaskRecord } from "@/api/task";
 import AXIOS from "@/utils/request";
 import dayjs from "dayjs";
 let option = {
@@ -24,16 +52,16 @@ let option = {
   },
   series: [
     {
-      name: "今日工时",
+      name: "工时",
       type: "gauge",
       min: 0,
-      max: 12,
-      splitNumber: 12,
+      max: 16,
+      splitNumber: 16,
       axisLine: {
         // 坐标轴线
         lineStyle: {
           // 属性lineStyle控制线条样式
-          color: [[0.333, "#91c7ae"], [0.666, "#63869e"], [1, "#c23531"]],
+          color: [[0.25, "#91c7ae"], [0.5, "#63869e"], [1, "#c23531"]],
           width: 8
         }
       },
@@ -65,11 +93,51 @@ export default {
   components: {
     MyCharts
   },
+  props: {
+    myTasks: {
+      type: Array,
+      default: []
+    }
+  },
   data() {
-      return {
-          weekHour:{},
-          monthHour:{}
-      }
+    return {
+      TaskForm: {
+        type: 0,
+        date: dayjs().format("YYYY/MM/DD"),
+        task_id: null,
+        labor_hour: 0
+      },
+      rules: {
+        labor_hour: [
+          { required: true, message: "请输入工时", trigger: "blur" }
+        ],
+        task_id: [
+          { required: true, message: "请选择任务", trigger: "blur" }
+        ]
+      },
+      weekHour: {},
+      monthHour: {},
+      isDialogShow: false,
+      submitLoading:false
+    };
+  },
+  computed: {
+    workhouerlist() {
+      return [
+        {
+          time: "近一周",
+          task_count: this.weekHour.task_count,
+          overtime_count: this.weekHour.overtime_count,
+          total_count: this.weekHour.total_count
+        },
+        {
+          time: "近一月",
+          task_count: this.monthHour.task_count,
+          overtime_count: this.monthHour.overtime_count,
+          total_count: this.monthHour.total_count
+        }
+      ];
+    }
   },
   mounted() {
     this.getMyWorkHours();
@@ -77,31 +145,51 @@ export default {
   methods: {
     getMyWorkHours() {
       let today = dayjs().format("YYYY/MM/DD");
-      let params = { total_count: '', end: today };
+      let params = { total_count: "", end: today };
       //查询当天
       getMyManHour({ ...params, start: today }).then(({ data }) => {
-        option.series[0].data = [{ value: data.overtime_count, name: "今日(h)" }];
+        option.series[0].data = [{ value: data.total_count, name: "今日(h)" }];
         this.$refs.radar.initChart(option);
       });
-        //查询近一周
-        getMyManHour({
-          ...params,
-          start: dayjs()
-            .subtract(1, "week")
-            .format("YYYY/MM/DD")
-        }).then(({ data }) => {
-            this.weekHour = {...data}
-        });
-        //查询近一年
-        getMyManHour({
-          ...params,
-          start: dayjs()
-            .subtract(1, "month")
-            .format("YYYY/MM/DD")
-        }).then(({ data }) => {
-            this.monthHour ={
-                ...data
-            }
+      //查询近一周
+      getMyManHour({
+        ...params,
+        start: dayjs()
+          .subtract(1, "week")
+          .format("YYYY/MM/DD")
+      }).then(({ data }) => {
+        this.weekHour = { ...data };
+      });
+      //查询近一年
+      getMyManHour({
+        ...params,
+        start: dayjs()
+          .subtract(1, "month")
+          .format("YYYY/MM/DD")
+      }).then(({ data }) => {
+        this.monthHour = {
+          ...data
+        };
+      });
+    },
+    submitWorkHourFrom() {
+      this.$refs['taskForm'].validate((valid) => {
+          if (valid) {
+            this.submitLoading = true
+            addTaskRecord(this.TaskForm).then(({data})=>{
+              if(data.status===0){
+                this.getMyWorkHours()
+                this.$message.success(data.msg)
+                this.isDialogShow = false
+              }else{
+                this.$message.warning(data.msg)
+              }
+            }).finally(()=>{
+              this.submitLoading = false
+            })
+          } else {
+            return false;
+          }
         });
     }
   }
