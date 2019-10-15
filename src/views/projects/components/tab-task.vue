@@ -302,7 +302,7 @@
           width="120px"
           sortable="custom"
           column-key="priority"
-          :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}, {text: '高难度', value: '3'}]"
+          :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
         ></el-table-column>
         <el-table-column
           prop="grade"
