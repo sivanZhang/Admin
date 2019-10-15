@@ -40,12 +40,13 @@
         v-show="$refs.tableTemplate?$refs.tableTemplate.tableData.length : false"
         size="mini"
       >删除已选</el-button>
-      <span 
-      style="padding-left:15px;font-size:12px;color:#808080;cursor: pointer;"
-       @click="openExplain()">
-       使用帮助:
-       <svg-icon icon-class="wenhao" />
-       </span>
+      <span
+        style="padding-left:15px;font-size:12px;color:#808080;cursor: pointer;"
+        @click="openExplain()"
+      >
+        使用帮助:
+        <svg-icon icon-class="wenhao" />
+      </span>
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
@@ -57,12 +58,12 @@
           <div style="padding-top:2px">不得重复用户名，否则返回“此用户名已被使用”。</div>
         </div>
         <div style="padding-top:2px;font-size:12px">
-          <h4 >邮箱：</h4>
+          <h4>邮箱：</h4>
           <div style="padding-top:2px">规定格式，不符合格式则返回“email格式错误”；</div>
           <div style="padding-top:2px">不得重复邮箱，否则返回“此邮箱已被使用”。</div>
         </div>
         <div style="padding-top:2px;font-size:12px">
-          <h4 >手机号码：</h4>
+          <h4>手机号码：</h4>
           <div style="padding-top:2px">规定格式，不符合格式则返回“phone格式错误”；</div>
           <div style="padding-top:2px">不得重复号码，否则返回“此号码已被使用”。</div>
         </div>
@@ -70,7 +71,7 @@
           <h4>部门：</h4>
           <div style="padding-top:2px">若用户所属部门不存在，则返回“未能找到该对应工种”。</div>
         </div>
-       <div style="padding-top:2px;font-size:12px">
+        <div style="padding-top:2px;font-size:12px">
           <h4>是否启用：</h4>
           <div style="padding-top:2px">规定格式，只能为0和1，（0：未使用，1：使用中）；</div>
           <div style="padding-top:2px">若输入的不是数字，则返回“isactive字段只能为数字”；</div>
@@ -84,7 +85,7 @@
 <script>
 import { uploadUsers } from "@/api/admin";
 import XLSX from "xlsx";
-import ImportTableTemplate from "@/views/components/importUserTable";
+import ImportTableTemplate from "@/views/components/BaseImportTemplate";
 export default {
   neme: "asset-import",
   data() {
@@ -174,8 +175,8 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.$notify({
-              title: data.msg,
-              message: `导入成功${data.success_num}条，失败${data.fail_num}条`,
+              title: `用户导入成功${data.success_num}条，失败${data.fail_num}条`,
+              message: data.msg.join(),
               duration: 0,
               type: "warning"
             });

@@ -71,7 +71,7 @@
 <script>
 import { uploadDates } from "@/api/admin";
 import XLSX from "xlsx";
-import ImportTableTemplate from "@/views/components/importUserTable";
+import ImportTableTemplate from "@/views/components/BaseImportTemplate";
 export default {
   neme: "asset-import",
   data() {

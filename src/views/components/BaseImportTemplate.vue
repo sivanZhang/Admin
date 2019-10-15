@@ -37,13 +37,21 @@
             </template>
             <template slot-scope="scope">
               <el-input
-                v-if="scope.row.isEdit"
+                v-if="scope.row.isEdit  && index!=0"
                 size="small"
                 v-model="scope.row[col.prop]"
                 placeholder="请输入内容"
                 v-on:blur="inputblur"
               ></el-input>
-              <span v-if="!scope.row.isEdit">{{scope.row[col.prop]}}</span>
+              <span
+                v-if="!scope.row.isEdit && !isImage(scope.row[col.prop])"
+              >{{scope.row[col.prop]}}</span>
+              <el-image
+                v-if="isImage(scope.row[col.prop])"
+                :src="$store.state.BASE_URL+scope.row[col.prop]"
+                fit="cover"
+                style="width:80px;height:45px"
+              ></el-image>
             </template>
           </el-table-column>
         </template>
@@ -69,24 +77,23 @@
         </el-col>
       </el-row>
       <div style="margin-top:20px">
-        <el-button type="danger" @click="deleteCol" :loading="isDeleteCol">删除本列</el-button>
+        <el-button type="danger" @click="deleteCol">删除本列</el-button>
         <el-button type="warning" @click="cancelMapping">清空字段</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "ImportTableTemplate",
   data() {
     return {
-      isDeleteCol: false, //删除列的加载状态
       isShowOptionBar: false,
       dialogVisible: false, //弹出框控制
       assemblingData: {},
       tableLoading: false,
       tableLoadingText: "",
-      dealDatas: {}, //原始数据
       keysMap: [], //绑定字段所需要的数据
       allKeysMap: [], //用来缓存的字段
       dealKeys: [], //原始keys
@@ -94,11 +101,15 @@ export default {
       tableData: [], //表格数据 [{},{},{}]
       selectKey: null,
       selectCurrentCol: { label: "" }, //选中的当前列
-      hasBindKey: [], //已经绑定key
+      BoundkeyCol: [], //已绑定字段列的存储
       selection: []
     };
   },
   methods: {
+    //是否为图片正则
+    isImage(str) {
+      return /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(str);
+    },
     //点击表格头
     handelClickHeader({ column, $index }) {
       if (this.tableCols[column.index]) {
@@ -109,17 +120,12 @@ export default {
     },
     //删除列
     deleteCol() {
-      this.isDeleteCol = true;
-      this.dealDatas.forEach(t => {
-        t.splice(this.selectCurrentCol.index, 1);
-      });
       this.tableCols.splice(this.selectCurrentCol.index, 1);
-      this.hasBindKey.splice(this.selectCurrentCol.index, 1);
-      this.isDeleteCol = false;
-      this.dialogVisible = false;
+        this.cancelBind();
+        this.dialogVisible = false;
     },
     //缓存勾选中的行
-    selected(e) {
+    selected(e, j) {
       this.selection = [...e];
     },
     //删除勾选的行
@@ -130,24 +136,50 @@ export default {
       this.tableData = this.tableData.filter((t, i) => {
         return !this.selection.includes(t);
       });
+
       this.selection = [];
     },
-    openLoading(msg) {
-      this.tableLoading = true;
-      this.tableLoadingText = msg;
+    /**
+     * 绑定资产字段
+     */
+    changeHandlerRadio(value) {
+      let isBind = this.BoundkeyCol.findIndex(t => t.field === value);
+
+      if (isBind < 0) {
+        //this.selectCurrentCol点击的列的信息
+        let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
+        this.tableCols[this.selectCurrentCol.index].label =
+          //大写英文字母 + 传过来的中文字段
+          label.split(",")[0] + "," + this.allKeysMap[value];
+        this.tableCols[this.selectCurrentCol.index].name = value;
+        //缓存已选择的 keys
+        this.BoundkeyCol.push({
+          Node: this.selectCurrentCol.property,
+          field: value
+        });
+        this.dialogVisible = false;
+      } else {
+        this.$message.error("该字段已有绑定过");
+      }
     },
-    closeLoading() {
-      this.tableLoading = false;
+    //取消绑定
+    cancelMapping() {
+      this.cancelBind();
+      let label = this.tableCols[this.selectCurrentCol.index].label;
+      this.tableCols[this.selectCurrentCol.index].label =
+        label.split(",")[0] + ",未绑定字段";
+      this.tableCols[this.selectCurrentCol.index].name = "";
+      this.dialogVisible = false;
     },
     //导入后初始化
     initData(data) {
       //表格数据 = 空
-      this.hasBindKey = [];
+      this.BoundkeyCol = [];
       this.tableData = [];
       this.tableLoading = true;
       this.tableLoadingText = "数据组装中";
       //原始数据= [[],[],[],[]]
-      this.dealDatas = data.datas;
+      const dealDatas = data.datas;
       //绑定字段= {}
       this.allKeysMap = { ...data.requiredKeysMap, ...data.keysMap };
       this.keysMap = [
@@ -168,7 +200,7 @@ export default {
       for (let key in this.allKeysMap) {
         this.dealKeys.push(key);
       }
-      this.getTableHeader(data.reset);
+      this.getTableHeader(data.reset, dealDatas);
     },
     //获取传递的数据
     getAssemblingData() {
@@ -176,23 +208,19 @@ export default {
       /**
        * 已经绑定列的下下标
        */
-      let tempKeyIndexs = [];
-      let bindKeys = [];
-      for (let i = 0; i < this.hasBindKey.length; i++) {
-        if (this.hasBindKey[i]) {
-          bindKeys.push(this.hasBindKey[i]);
-          tempKeyIndexs.push(i);
-        }
-      }
-      let values = [];
-      for (let i = 0; i < this.dealDatas.length; i++) {
+      let bindKeys = new Set(),
+        values = [];
+      //绑定的镜头赋值
+      this.tableData.forEach((t, i) => {
         let value = [];
-        let tableRowData = this.dealDatas[i];
-        for (let j = 0; j < tempKeyIndexs.length; j++) {
-          value.push(tableRowData[tempKeyIndexs[j]]);
-        }
+        this.BoundkeyCol.forEach((assetItem, assetIndex) => {
+          bindKeys.add(assetItem.field);
+          value.push(this.tableData[i][assetItem.Node]);
+        });
         values.push(value);
-      }
+      });
+      bindKeys = [...bindKeys];
+      //如果有绑定环节
       this.assemblingData.keys = bindKeys;
       this.assemblingData.values = values;
       //必填字段验证
@@ -207,14 +235,14 @@ export default {
     /**
      * 组装表格头  bl = 是否重置表格
      */
-    getTableHeader(bl) {
+    getTableHeader(bl, dealDatas) {
       this.tableCols = [];
       //加载中文字
       this.tableLoadingText = "数据组装表头中";
       //
-      if (this.dealDatas.length > 0) {
+      if (dealDatas.length > 0) {
         this.tableLoading = true;
-        let firstData = this.dealDatas[0];
+        let firstData = dealDatas[0];
         //用第一列原始data进行循环
         for (let i = 0; i < firstData.length; i++) {
           this.letterIndex = 65 + i;
@@ -228,7 +256,7 @@ export default {
         }
         this.isShowOptionBar = true;
         //开始组装数据
-        this.getTableData();
+        this.getTableData(dealDatas);
       } else {
         this.tableLoading = false;
         this.isShowOptionBar = false;
@@ -237,9 +265,9 @@ export default {
       }
     },
     //转化成el tabale用的数据格式
-    getTableData() {
+    getTableData(dealDatas) {
       this.tableLoadingText = "数据组装数据中";
-      this.dealDatas.forEach((t, i) => {
+      dealDatas.forEach((t, i) => {
         let data = {};
         t.forEach((ct, ci) => {
           data["node" + ci] = t[ci];
@@ -249,34 +277,6 @@ export default {
       });
       this.tableLoading = false;
     },
-    /**
-     * 单击单元格选中事件
-     */
-    changeHandlerRadio(value) {
-      if (this.hasBindKey.indexOf(value) < 0) {
-        //this.selectCurrentCol点击的列的信息
-        let label = this.tableCols[this.selectCurrentCol.index].label; //label是选中列的lable为了截取ABCD.....
-        this.tableCols[this.selectCurrentCol.index].label =
-          //大写英文字母 + 传过来的中文字段
-          label.split(",")[0] + "," + this.allKeysMap[value];
-        this.tableCols[this.selectCurrentCol.index].name = value;
-        //缓存已选择的 keys
-        this.hasBindKey[this.selectCurrentCol.index] = value;
-        this.dialogVisible = false;
-      } else {
-        this.$message.error("该字段已有绑定过");
-      }
-    },
-    //取消绑定
-    cancelMapping() {
-      let label = this.tableCols[this.selectCurrentCol.index].label;
-      this.tableCols[this.selectCurrentCol.index].label =
-        label.split(",")[0] + ",未绑定字段";
-      this.tableCols[this.selectCurrentCol.index].name = "";
-      this.hasBindKey[this.selectCurrentCol.index] = null;
-      this.hasBindLinkKey[this.selectCurrentCol.index] = null;
-      this.dialogVisible = false;
-    },
     dblhandleCurrentChange(row, column, cell, event) {
       row.isEdit = true;
     },
@@ -285,6 +285,21 @@ export default {
       tableD.forEach(function(item) {
         item.isEdit = false;
       });
+    },
+    //取消绑定某列的镜头字段
+    cancelBind() {
+      this.BoundkeyCol.forEach((t, i, arr) => {
+        if (t.Node === this.selectCurrentCol.property) {
+          arr.splice(i, 1);
+        }
+      });
+    },
+    openLoading(msg) {
+      this.tableLoading = true;
+      this.tableLoadingText = msg;
+    },
+    closeLoading() {
+      this.tableLoading = false;
     }
   }
 };

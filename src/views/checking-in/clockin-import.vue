@@ -74,7 +74,7 @@
 <script>
 import { clockIn } from "@/api/notice";
 import XLSX from "xlsx";
-import ImportTableTemplate from "@/views/components/importUserTable";
+import ImportTableTemplate from "@/views/components/BaseImportTemplate";
 export default {
   neme: "asset-import",
   data() {
