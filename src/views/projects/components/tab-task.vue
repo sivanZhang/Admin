@@ -1441,7 +1441,7 @@ export default {
 
       this.TaskForm = {
         ...this.TaskForm,
-        total_hour: 8 * totalHour
+        total_hour: 8 * totalHour +8
       };
     },
     changeTime2(val) {
