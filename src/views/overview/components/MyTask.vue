@@ -11,12 +11,11 @@
       </el-badge>
       <el-button @click="props.targetMore" type="text">查看更多</el-button>
     </el-row>
-    <!-- <el-table :data="props.myTaskList.filter((t,i)=>i<5)" :show-header="false">
-      <el-table-column prop="task.name" label="任务名称"></el-table-column>
-    </el-table> -->
-
     <ul class="list">
-      <li class="item" v-for="item of props.myTaskList" :key="item.task.id">{{item.task.name}}</li>
+      <li class="item" v-for="item of props.myTaskList" :key="item.task.id">
+        {{item.task.name}}
+        <div class="message">{{item.task.content}}</div>
+      </li>
     </ul>
     <div v-show="props.myTaskList.length>5">...</div>
   </el-card>
@@ -24,8 +23,16 @@
 <style lang="scss" scoped>
 .list {
   list-style-position: inside;
-  .item{
+  .item {
     padding-bottom: 8px;
+    .message {
+      overflow: hidden; //超出的隐藏
+      text-overflow: ellipsis; //省略号
+      white-space: nowrap; //强制一行显示
+      font-size: 12px;
+      color: #909399;
+      padding-left: 20px;
+    }
   }
 }
 </style>
