@@ -3,6 +3,17 @@
     <!-- 项目消息栏 -->
     <template v-if="project && project.entity_type === 4">
       <div>
+        <el-row v-if="configImg == 'img'">
+          <el-col :span="6" class="comment">缩略图</el-col>
+          <el-col :span="15" class="comment">
+            <el-image
+              class="mini-image"
+              :src="project.image?$store.state.BASE_URL+project.image:''"
+              fit="cover"
+              style="width:100px;height:100px"
+            ></el-image>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
           <el-col :span="15" class="comment">
@@ -31,6 +42,24 @@
         <el-row>
           <el-col :span="6" class="comment">项目编码</el-col>
           <el-col :span="15" class="comment">{{project.code}}</el-col>
+        </el-row>
+        <el-row v-if="configImg == 'img'">
+          <el-col :span="6" class="comment">制作要求</el-col>
+          <el-col :span="15" class="comment">
+            <div @mouseover="showEdit25=true" @mouseleave="showEdit25 = false">
+              <span v-if="!editing25">{{project.requirement?project.requirement:"-"}}</span>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit25"
+                @click="edit(24)"
+              ></i>
+            </div>
+            <div v-if="editing25">
+              <el-input type="textarea" ref="input" class="input" v-model="requirement" @keyup.enter="save(24)" style="width:300px"/>
+              <el-button @click="save(24)" type="primary">修改</el-button>
+            </div>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Windows路径</el-col>
@@ -86,34 +115,34 @@
             </div>
           </el-col>
         </el-row>
-       <template v-if="project.pro_type === 1">
+        <template v-if="project.pro_type === 1">
           <el-row>
-          <el-col :span="6" class="comment">项目预算</el-col>
-          <el-col :span="15" class="comment">
-            <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
-              <span v-if="!editing2">¥{{project.budget|numberFormat}}万元</span>
-              <i
-                class="el-icon-edit"
-                style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit2"
-                @click="edit(1)"
-              ></i>
-            </div>
-            <div v-if="editing2">
-              ¥
-              <input
-                type="text"
-                ref="input"
-                class="input"
-                value="project.budget"
-                v-model="budget"
-                @keyup.enter="save(1)"
-              />万元
-              <el-button @click="save(1)" type="primary">修改</el-button>
-            </div>
-          </el-col>
-        </el-row>
-       </template>
+            <el-col :span="6" class="comment">项目预算</el-col>
+            <el-col :span="15" class="comment">
+              <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
+                <span v-if="!editing2">¥{{project.budget|numberFormat}}万元</span>
+                <i
+                  class="el-icon-edit"
+                  style="color:blue"
+                  v-if="$store.state.login.userInfo.auth.manage_project&&showEdit2"
+                  @click="edit(1)"
+                ></i>
+              </div>
+              <div v-if="editing2">
+                ¥
+                <input
+                  type="text"
+                  ref="input"
+                  class="input"
+                  value="project.budget"
+                  v-model="budget"
+                  @keyup.enter="save(1)"
+                />万元
+                <el-button @click="save(1)" type="primary">修改</el-button>
+              </div>
+            </el-col>
+          </el-row>
+        </template>
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="15" class="comment">
@@ -282,7 +311,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false">
               <span v-if="!editing15">{{project.name}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(14)" v-if="showEdit15&&authAsset" ></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(14)"
+                v-if="showEdit15&&authAsset"
+              ></i>
             </div>
             <div v-if="editing15">
               <input
@@ -306,7 +340,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
               <span v-if="!editing4">{{project.path?project.path:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit4&&authAsset" @click="edit(3)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit4&&authAsset"
+                @click="edit(3)"
+              ></i>
             </div>
             <div v-if="editing4">
               <input
@@ -330,7 +369,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit18=true" @mouseleave="showEdit18 = false">
               <span v-if="!editing18">{{project.priority |Priority}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit18&&authAsset" @click="edit(17)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit18&&authAsset"
+                @click="edit(17)"
+              ></i>
             </div>
             <div v-if="editing18">
               <el-select
@@ -352,7 +396,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
               <span v-if="!editing19">{{project.level |Level}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit19&&authAsset" @click="edit(18)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit19&&authAsset"
+                @click="edit(18)"
+              ></i>
             </div>
             <div v-if="editing19">
               <el-select
@@ -376,7 +425,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit11=true" @mouseleave="showEdit11 = false">
               <span v-if="!editing11">{{project.start_date|dateFormat}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit11&&authAsset" @click="edit(10)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit11&&authAsset"
+                @click="edit(10)"
+              ></i>
             </div>
             <div v-if="editing11">
               <el-date-picker
@@ -395,7 +449,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit12=true" @mouseleave="showEdit12 = false">
               <span v-if="!editing12">{{project.end_date|dateFormat}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit12&&authAsset" @click="edit(11)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit12&&authAsset"
+                @click="edit(11)"
+              ></i>
             </div>
             <div v-if="editing12">
               <!-- $store.state.login.userInfo -->
@@ -415,7 +474,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false">
               <span v-if="!editing16">{{project.frame?project.frame:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(15)" v-if="showEdit16&&authAsset"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(15)"
+                v-if="showEdit16&&authAsset"
+              ></i>
             </div>
             <div v-if="editing16">
               <input
@@ -435,7 +499,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false">
               <span v-if="!editing17">{{project.episode?project.episode:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(16)" v-if="showEdit17&&authAsset"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(16)"
+                v-if="showEdit17&&authAsset"
+              ></i>
             </div>
             <div v-if="editing17">
               <input
@@ -463,7 +532,12 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false">
               <span v-if="!editing20">{{project.report?project.report:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit20&&authAsset" @click="edit(19)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit20&&authAsset"
+                @click="edit(19)"
+              ></i>
             </div>
             <div v-if="editing20">
               <input
@@ -483,7 +557,12 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false">
               <span v-if="!editing21">{{project.retime?project.retime:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit21&&authAsset" @click="edit(20)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit21&&authAsset"
+                @click="edit(20)"
+              ></i>
             </div>
             <div v-if="editing21">
               <input
@@ -503,7 +582,12 @@
           <el-col :span="15" class="comment">
             <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false">
               <span v-if="!editing22">{{project.frame_range?project.frame_range:"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit22&&authAsset" @click="edit(21)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit22&&authAsset"
+                @click="edit(21)"
+              ></i>
             </div>
             <div v-if="editing22">
               <input
@@ -523,7 +607,12 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit24=true" @mouseleave="showEdit24 = false">
               <span v-if="!editing24">{{project.pro_reference}}</span>
-              <i class="el-icon-edit" style="color:blue" @click="edit(23)" v-if="showEdit24&&authAsset"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                @click="edit(23)"
+                v-if="showEdit24&&authAsset"
+              ></i>
             </div>
             <div v-if="editing24">
               <input
@@ -544,7 +633,12 @@
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
               <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
               <span v-else v-show="!project.remark">{{"-"}}</span>
-              <i class="el-icon-edit" style="color:blue" v-if="showEdit10&&authAsset" @click="edit(9)"></i>
+              <i
+                class="el-icon-edit"
+                style="color:blue"
+                v-if="showEdit10&&authAsset"
+                @click="edit(9)"
+              ></i>
             </div>
 
             <div v-if="editing10" style="display:flex">
@@ -566,7 +660,7 @@ import { mapState } from "vuex";
 import { returnStatement } from "@babel/types";
 import { constants } from "crypto";
 export default {
-  props: ["project","authAsset"],
+  props: ["project", "authAsset", "configImg"],
   name: "info",
   data() {
     return {
@@ -593,7 +687,8 @@ export default {
       editing21: false,
       editing22: false,
       editing23: false,
-      editing24:false,
+      editing24: false,
+      editing25:false,
       name: null,
       budget: null,
       charger: null,
@@ -619,7 +714,8 @@ export default {
       retime: null,
       frame_range: null,
       school: null,
-      reference:null,
+      reference: null,
+      requirement:null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -643,7 +739,8 @@ export default {
       showEdit21: false,
       showEdit22: false,
       showEdit23: false,
-      showEdit24:false,
+      showEdit24: false,
+      showEdit25:false,
       clientList: null
     };
   },
@@ -847,6 +944,13 @@ export default {
           this.$refs.input.focus();
         });
       }
+      if (Type === 24) {
+        this.showEdit25 = false;
+        this.editing25 = true;
+        this.$nextTick(() => {
+          this.$refs.input.focus();
+        });
+      }
     },
     save(Type) {
       function dataFormat(params) {
@@ -944,6 +1048,14 @@ export default {
           school: this.school
         };
       }
+      if (Type === 24) {
+        this.editing25 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          requirement: this.requirement
+        };
+      }
 
       putProjects(data)
         .then(({ data }) => {
@@ -992,6 +1104,10 @@ export default {
             if (Type === 22) {
               this.project.school = this.school;
               this.school = null;
+            }
+             if (Type === 24) {
+              this.project.requirement = this.requirement;
+              this.requirement = null;
             }
           }
         })
@@ -1174,7 +1290,6 @@ export default {
         }
         this.$emit("refresh_assetList");
       });
-      
     }
   }
 };

@@ -2,6 +2,9 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
+      <el-tab-pane label="制作环节" name="tab6" lazy>
+        <info :project="project" configImg = "img"/>
+      </el-tab-pane>
       <template v-if="project.pro_type === 0">
         <el-tab-pane label="实训成员" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
@@ -41,7 +44,7 @@
         <statistics />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
-        <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" :auth="auth"/>
+        <configProject  @refresh="getProjectDetail" :configTab="configTab" :auth="auth"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -56,6 +59,7 @@ import training from "./components/training-member";
 import { getProjects } from "@/api/project";
 import { getTrainingProject, getProjectJoinMeb } from "@/api/training";
 import statistics from "./components/statistics";
+import info from "@/components/projectDrawer/components/info";
 export default {
   name: "project-detail",
   components: {
@@ -63,15 +67,16 @@ export default {
     tabAssets,
     configProject,
     statistics,
-    training
+    training,
+    info
   },
   data() {
     return {
-      activeName: this.$route.query.tab ? this.$route.query.tab : "tab0",
+      activeName: this.$route.query.tab ? this.$route.query.tab : "tab6",
       AssetList: [],
       asset_type: 0,
       project: {},
-      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "first",
+      configTab: this.$route.query.tab2 ? this.$route.query.tab2 : "second",
       assetId: null,
       assetJump: null,
       trainingMenber: [],
@@ -149,7 +154,7 @@ export default {
   },
   created() {
     if (this.$route.query.type === 0) {
-      this.activeName = "tab5";
+     // this.activeName = "tab5";
       this.groupType = "0";
     } else {
       this.groupType ="1";

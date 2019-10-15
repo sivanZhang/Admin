@@ -10,7 +10,7 @@
       v-model="activeName"
       @tab-click="handleClick"
     >
-      <el-tab-pane label="项目详情" name="first" style="height: auto;overflow: auto;">
+      <!-- <el-tab-pane label="项目详情" name="first" style="height: auto;overflow: auto;">
         <div style="width:50%">
           <el-row>
             <el-col :span="6" class="comment">缩略图</el-col>
@@ -71,7 +71,7 @@
             <el-col :span="15" class="comment">{{client.client_name?client.client_name:"-"}}</el-col>
           </el-row>
         </div>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane :label="labelChange" name="second" style="height: auto;overflow: auto;">
         <div style="display:flex">
           <div style="width:50%;padding:5px ">
@@ -712,7 +712,7 @@ export default {
   components: {},
   data() {
     return {
-      activeName: this.configTab ? this.configTab : "first",
+      activeName: this.configTab ? this.configTab : "second",
       defaultProps: {
         children: "children",
         label: "name"
