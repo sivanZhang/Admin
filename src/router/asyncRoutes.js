@@ -12,12 +12,12 @@ export default function asyncRoutes(params) {
         name: 'home-page'
       },
       meta: {
-        title: '概览',
+        breadcrumb: false,
+        title: '',
         icon: 'gailan'
       },
-      children: [
-        {
-          path: '/overview/home-page',
+      children: [{
+          path: 'home-page',
           name: 'home-page',
           component: () =>
             import('@/views/overview/home-page'),
@@ -25,8 +25,20 @@ export default function asyncRoutes(params) {
             title: '个人首页',
             icon: 'home'
           }
-        },{
-          path: '/overview/project',
+        },
+      ]
+    }, , {
+      path: '/overview',
+      component: Layout,
+      redirect: {
+        name: 'home-page'
+      },
+      meta: {
+        title: '概览',
+        icon: 'gailan'
+      },
+      children: [ {
+          path: 'project',
           name: 'overview-project',
           component: () =>
             import('@/views/overview/project'),
@@ -36,7 +48,7 @@ export default function asyncRoutes(params) {
           }
         },
         {
-          path: '/overview/training',
+          path: 'training',
           name: 'overview-training',
           component: () =>
             import('@/views/training/training-project'),

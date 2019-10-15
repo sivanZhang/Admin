@@ -5,3 +5,8 @@ export function getManHour(params) {
         params
     })
 }
+export function getMyManHour(params) {
+    return AXIOS.get('/overtime/workhour/?03', {
+        params
+    })
+}
