@@ -44,7 +44,7 @@
         <statistics />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
-        <configProject  @refresh="getProjectDetail" :configTab="configTab" :auth="auth"/>
+        <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" :auth="auth"/>
       </el-tab-pane>
     </el-tabs>
   </div>
