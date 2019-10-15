@@ -5,7 +5,7 @@
       <div>
         <el-row v-if="configImg == 'img'">
           <el-col :span="6" class="comment">缩略图</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <el-image
               class="mini-image"
               :src="project.image?$store.state.BASE_URL+project.image:''"
@@ -16,7 +16,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit=true" @mouseleave="showEdit = false">
               <span v-if="!editing">{{project.name}}</span>
               <i
@@ -41,13 +41,14 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">项目编码</el-col>
-          <el-col :span="15" class="comment">{{project.code}}</el-col>
+          <el-col :span="18" class="comment">{{project.code}}</el-col>
         </el-row>
         <el-row v-if="configImg == 'img'">
           <el-col :span="6" class="comment">制作要求</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit25=true" @mouseleave="showEdit25 = false">
-              <span v-if="!editing25">{{project.requirement?project.requirement:"-"}}</span>
+              <span v-if="!editing25&&project.requirement" v-html="project.requirement"></span>
+              <span v-else v-show="!project.requirement&&!editing25">{{"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
@@ -56,14 +57,21 @@
               ></i>
             </div>
             <div v-if="editing25">
-              <el-input type="textarea" ref="input" class="input" v-model="requirement" @keyup.enter="save(24)" style="width:300px"/>
+              <el-input
+                type="textarea"
+                ref="input"
+                class="input"
+                v-model="requirement"
+                @keyup.enter="save(24)"
+                style="width:300px"
+              />
               <el-button @click="save(24)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Windows路径</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit7=true" @mouseleave="showEdit7 = false">
               <span v-if="!editing7">{{project.Windows?project.Windows:"-"}}</span>
               <i
@@ -81,7 +89,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Mac路径</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit8=true" @mouseleave="showEdit8 = false">
               <span v-if="!editing8">{{project.Mac?project.Mac:"-"}}</span>
               <i
@@ -99,7 +107,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Linux路径</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit9=true" @mouseleave="showEdit9 = false">
               <span v-if="!editing9">{{project.Linux?project.Linux:"-"}}</span>
               <i
@@ -118,7 +126,7 @@
         <template v-if="project.pro_type === 1">
           <el-row>
             <el-col :span="6" class="comment">项目预算</el-col>
-            <el-col :span="15" class="comment">
+            <el-col :span="18" class="comment">
               <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
                 <span v-if="!editing2">¥{{project.budget|numberFormat}}万元</span>
                 <i
@@ -145,7 +153,7 @@
         </template>
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit3=true" @mouseleave="showEdit3 = false">
               <span v-if="!editing3">{{project.charger_name}}</span>
               <i
@@ -176,7 +184,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">工作流</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit6=true" @mouseleave="showEdit6 = false">
               <span v-if="!editing6">{{project.status|projectStatus}}</span>
               <i
@@ -250,7 +258,7 @@
         <template v-if="project.pro_type === 1">
           <el-row>
             <el-col :span="6" class="comment">客户信息</el-col>
-            <el-col :span="15" class="comment">
+            <el-col :span="18" class="comment">
               <div @mouseover="showEdit5=true" @mouseleave="showEdit5 = false">
                 <span v-if="!editing5">{{project.client.client_name?project.client.client_name:"-"}}</span>
                 <i
@@ -277,7 +285,7 @@
         <template v-else>
           <el-row>
             <el-col :span="6" class="comment">所属学校</el-col>
-            <el-col :span="15" class="comment">
+            <el-col :span="18" class="comment">
               <div @mouseover="showEdit23=true" @mouseleave="showEdit23 = false">
                 <span v-if="!editing23">{{project.school?project.school:"-"}}</span>
                 <i
@@ -529,7 +537,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">画面调整信息</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false">
               <span v-if="!editing20">{{project.report?project.report:"-"}}</span>
               <i
@@ -554,7 +562,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">变速信息</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false">
               <span v-if="!editing21">{{project.retime?project.retime:"-"}}</span>
               <i
@@ -579,7 +587,7 @@
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">帧数范围</el-col>
-          <el-col :span="15" class="comment">
+          <el-col :span="18" class="comment">
             <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false">
               <span v-if="!editing22">{{project.frame_range?project.frame_range:"-"}}</span>
               <i
@@ -632,7 +640,7 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
               <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
-              <span v-else v-show="!project.remark">{{"-"}}</span>
+              <span v-else v-show="!editing10&&!project.remark">{{"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
@@ -688,7 +696,7 @@ export default {
       editing22: false,
       editing23: false,
       editing24: false,
-      editing25:false,
+      editing25: false,
       name: null,
       budget: null,
       charger: null,
@@ -715,7 +723,7 @@ export default {
       frame_range: null,
       school: null,
       reference: null,
-      requirement:null,
+      requirement: null,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -740,7 +748,7 @@ export default {
       showEdit22: false,
       showEdit23: false,
       showEdit24: false,
-      showEdit25:false,
+      showEdit25: false,
       clientList: null
     };
   },
@@ -1054,6 +1062,9 @@ export default {
           method: "put",
           id: this.project.id,
           requirement: this.requirement
+            .replace(/\r\n/g, "<br/>")
+            .replace(/\n/g, "<br/>")
+            .replace(/\s/g, "&nbsp;")
         };
       }
 
@@ -1105,8 +1116,11 @@ export default {
               this.project.school = this.school;
               this.school = null;
             }
-             if (Type === 24) {
-              this.project.requirement = this.requirement;
+            if (Type === 24) {
+              this.project.requirement = this.requirement
+                .replace(/\r\n/g, "<br/>")
+                .replace(/\n/g, "<br/>")
+                .replace(/\s/g, "&nbsp;");
               this.requirement = null;
             }
           }
