@@ -345,6 +345,7 @@
         @filter-change="filterHandler"
         @sort-change="sortFilter"
         :border="false"
+        @cell-dblclick="editCell"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
@@ -406,13 +407,15 @@
               size="small"
               v-model="scope.row.name"
               placeholder="请输入镜头号"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.name?scope.row.name:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
               @click="show(scope.row.id)"
             >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
@@ -429,13 +432,15 @@
               size="small"
               v-model="scope.row.session"
               placeholder="请输入场次"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol=='session')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.session?scope.row.session:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol!='session')"
             >{{scope.row.session?scope.row.session:"-"}}</span>
           </template>
         </el-table-column>
@@ -451,13 +456,15 @@
               size="small"
               v-model="scope.row.episode"
               placeholder="请输入集数"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'episode')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.episode?scope.row.episode:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'episode')"
             >{{scope.row.episode?scope.row.episode:"-"}}</span>
           </template>
         </el-table-column>
@@ -468,12 +475,16 @@
               size="small"
               v-model="scope.row.frame"
               placeholder="请输入帧数"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.frame?scope.row.frame:"-"}}</span>
             </el-input>
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.frame?scope.row.frame:"-"}}</span>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame')"
+            >{{scope.row.frame?scope.row.frame:"-"}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -488,13 +499,15 @@
               size="small"
               v-model="scope.row.frame_range"
               placeholder="请输入帧数范围"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame_range')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame_range')"
             >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
           </template>
         </el-table-column>
@@ -511,13 +524,15 @@
               size="small"
               v-model="scope.row.pro_reference"
               placeholder="请输入制作参考内容"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'reference')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'reference')"
             >{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
           </template>
         </el-table-column>
@@ -528,13 +543,15 @@
               size="small"
               v-model="scope.row.report"
               placeholder="请输入画面调整信息"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'report')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.report?scope.row.report:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
             >{{scope.row.report?scope.row.report:"-"}}</span>
           </template>
         </el-table-column>
@@ -544,13 +561,15 @@
               size="small"
               v-model="scope.row.retime"
               placeholder="请输入变速信息"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'retime')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.retime?scope.row.retime:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'retime')"
             >{{scope.row.retime?scope.row.retime:"-"}}</span>
           </template>
         </el-table-column>
@@ -575,13 +594,15 @@
               size="small"
               v-model="scope.row.content"
               placeholder="请输入制作内容"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.content?scope.row.content:"-"}}</span>
             </el-input>
             <span
-              v-if="!editing||clickId !== scope.row.id"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
@@ -599,13 +620,16 @@
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.priority"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'priority')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <el-option label="正常" :value="0"></el-option>
               <el-option label="优先" :value="1"></el-option>
             </el-select>
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.priority|Priority}}</span>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'priority')"
+            >{{scope.row.priority|Priority}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -623,8 +647,10 @@
             <el-select
               v-model="scope.row.level"
               placeholder="请选择难度等级"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'level')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              
             >
               <el-option
                 v-for="item of LevelList"
@@ -633,7 +659,9 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.level|Level}}</span>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'level')"
+            >{{scope.row.level|Level}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="id" label="资产ID" v-if="show_id" align="left"></el-table-column>
@@ -652,19 +680,15 @@
           <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
         <el-table-column label="小状态" prop="small_status">
-          <!-- /*
-            approving:[],
-      conducting:[],
-      finish:[],
-      notstart:[],
-      pause:[]
-          */-->
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
               placeholder="请选择状态"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'small_status')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+             
+            
             >
               <div v-if="scope.row.status === 0">
                 <el-option
@@ -708,7 +732,9 @@
               </div>
             </el-select>
 
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.small_status|taskMinStatus}}</span>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'small_status')"
+            >{{scope.row.small_status|taskMinStatus}}</span>
           </template>
         </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
@@ -751,11 +777,15 @@
             <el-date-picker
               v-model="start_date"
               type="date"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'start_date')"
+              @change="showEditIcon(scope.$index,scope.row)"
+             
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
               placeholder="选择开始日期"
             />
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.start_date|dateFormat}}</span>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'start_date')"
+            >{{scope.row.start_date|dateFormat}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -771,11 +801,15 @@
             <el-date-picker
               v-model="end_date"
               type="date"
-              v-if="editing&&clickId === scope.row.id"
-              @change="showEditIcon"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
               placeholder="选择结束日期"
             />
-            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.end_date|dateFormat}}</span>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
+            >{{scope.row.end_date|dateFormat}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -802,12 +836,16 @@
               size="small"
               v-model="scope.row.remark"
               placeholder="请输入备注"
-              v-if="editing&&clickId === scope.row.id"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'remark')"
               @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <p v-html="scope.row.remark"></p>
             </el-input>
-            <span v-if="!editing||clickId !== scope.row.id">
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'remark')"
+            >
               <p v-html="scope.row.remark"></p>
             </span>
           </template>
@@ -1288,8 +1326,10 @@ export default {
       materialShow: false,
       materialEstdate: new Date().toLocaleDateString(),
       pro_type: null,
-
-      authAsset: null
+      authAsset: null,
+      dbCell: false,
+      cellId: null,
+      cellCol: null
     };
   },
   watch: {
@@ -1401,10 +1441,61 @@ export default {
       default: ""
     },
     groupType: {
-      default:null
+      default: null
     }
   },
   methods: {
+    //双击修改单元格获取焦点
+    editCell(row, column, cell, event) {
+      if (column.label == "镜头号") {
+        this.cellCol = "name";
+      }
+      if (column.label == "场次") {
+        this.cellCol = "session";
+      }
+      if (column.label == "集数") {
+        this.cellCol = "episode";
+      }
+      if (column.label == "帧数") {
+        this.cellCol = "frame";
+      }
+      if (column.label == "帧数范围") {
+        this.cellCol = "frame_range";
+      }
+      if (column.label == "制作参考") {
+        this.cellCol = "reference";
+      }
+      if (column.label == "画面调整信息") {
+        this.cellCol = "report";
+      }
+      if (column.label == "变速信息") {
+        this.cellCol = "retime";
+      }
+      if (column.label == "制作内容") {
+        this.cellCol = "content";
+      }
+      if (column.label == "优先级") {
+        this.cellCol = "priority";
+      }
+      if (column.label == "难度等级") {
+        this.cellCol = "level";
+      }
+      if (column.label == "小状态") {
+        this.cellCol = "small_status";
+      }
+      if (column.label == "开始日期") {
+        this.cellCol = "start_date";
+      }
+      if (column.label == "结束日期") {
+        this.cellCol = "end_date";
+      }
+      if (column.label == "备注") {
+        this.cellCol = "remark";
+      }
+      this.dbCell = true;
+      this.cellId = row.id;
+    },
+
     //添加进素材库
     pushMaterial(Type, id) {
       if (Type === 1) {
@@ -1654,9 +1745,12 @@ export default {
       // console.log(row, event, column, event.currentTarget);
     },
     //是否显示行内修改框
-    showEditIcon() {
+    showEditIcon(index,row) {
       this.iconShow = true;
       this.rowClick = true;
+      if(this.cellCol == 'priority'||this.cellCol == 'level'||this.cellCol == 'small_status' ||this.cellCol =='start_date'||this.cellCol == 'end_date'){
+        this.saveEdit(index,row)
+      }
     },
     //修改资产
     editOneAsset(row) {
@@ -1695,6 +1789,7 @@ export default {
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       this.iconShow = false;
+      this.dbCell = false;
       let payload = {
         id: row.id,
         priority: row.priority,
