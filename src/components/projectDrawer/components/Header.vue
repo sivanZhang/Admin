@@ -10,7 +10,9 @@
           <el-col :span="21">
             <div>
               <span class="project-name">
-                <router-link :to="`/projects/project-detail/${project.id}`">{{project.name}}</router-link>
+                <router-link
+                  :to="{name:'project-detail',params:{id:project.id},query:{type:project.pro_type}}"
+                >{{project.name}}</router-link>
               </span>
             </div>
             <div>
@@ -18,7 +20,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20" type="flex" align="top" class="header-body" >
+        <el-row :gutter="20" type="flex" align="top" class="header-body">
           <el-col :span="9">
             <el-upload
               accept="image/jpeg, image/gif, image/png"
@@ -30,19 +32,19 @@
               drag
               :show-file-list="false"
             >
-            <el-tooltip class="item" effect="dark" content="拖动至此处可替换图片" placement="top">
-              <el-image v-if="SRC" :src="SRC" fit="cover"  style="width: 160px;height: 100px;"></el-image>
-              
-              <template v-else>
-                <div style="padding-top:15px">
-                  <i class="el-icon-upload"></i>
-                <div class="el-upload__text">
-                  拖入图片，或
-                  <em>点击上传</em>
-                </div>
-                </div>
-              </template>
-            </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="拖动至此处可替换图片" placement="top">
+                <el-image v-if="SRC" :src="SRC" fit="cover" style="width: 160px;height: 100px;"></el-image>
+
+                <template v-else>
+                  <div style="padding-top:15px">
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">
+                      拖入图片，或
+                      <em>点击上传</em>
+                    </div>
+                  </div>
+                </template>
+              </el-tooltip>
             </el-upload>
           </el-col>
           <el-col :span="15">
@@ -141,9 +143,10 @@ export default {
   },
   watch: {
     project(val) {
-      this.SRC = this.project && this.project.image
+      this.SRC =
+        this.project && this.project.image
           ? this.$store.state.BASE_URL + this.project.image
-          : ""
+          : "";
     }
   },
   methods: {
@@ -212,7 +215,7 @@ export default {
   }
 }
 .header-body {
-  padding-top:10px;
+  padding-top: 10px;
   .mini-image {
     cursor: pointer;
     overflow: hidden;

@@ -2,7 +2,7 @@
   <div id="deptlist">
     
     <div v-if="project">
-      <router-link  :to="{path:`/projects/project-detail/${project.id}`,query:{tab:'tab3',tab2:'second',type:'0'}}">
+      <router-link  :to="{path:`/projects/project-detail/${project.id}`,query:{type:project.pro_type,tab:'tab3',tab2:'second'}}">
         <el-button type="primary" icon="el-icon-edit">编辑参与工种</el-button>
       </router-link>
 
