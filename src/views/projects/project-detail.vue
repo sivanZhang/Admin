@@ -2,7 +2,7 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="制作环节" name="tab6" lazy>
+      <el-tab-pane label="制作要求" name="tab6" lazy>
         <info :project="project" configImg = "img"/>
       </el-tab-pane>
       <template v-if="project.pro_type === 0">
