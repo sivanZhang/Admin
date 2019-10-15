@@ -136,7 +136,7 @@
                   <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" v-if="auth">
                 <template slot-scope="scope">
                   <el-tooltip effect="dark" content="删除" placement="top">
                     <el-button
