@@ -218,7 +218,7 @@
             <template slot-scope="scope">
               <router-link
                 style="cursor: pointer;"
-                :to="`/projects/project-detail/${scope.row.project.id}`"
+                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
               >{{scope.row.project.name}}</router-link>
             </template>
           </el-table-column>
@@ -271,7 +271,9 @@
           <el-table-column label="截止日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column prop="total_hour" header-align="left" label="预设时间（小时）"></el-table-column>
+          <el-table-column  prop="total_hour" header-align="left" label="预设时间（小时）" width="80px;">
+           <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
+           </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>

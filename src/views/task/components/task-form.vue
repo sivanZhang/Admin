@@ -25,6 +25,10 @@
       <el-form-item label="工时" prop="labor_hour">
         <el-input-number v-model="TaskRecord.labor_hour" :min="1"></el-input-number>
       </el-form-item>
+      <el-form-item label="日期" prop="date">
+        <el-date-picker v-model="TaskRecord.date" type="date" placeholder="选择日期" value-format="yyyy/MM/dd"
+        style="width:130px"></el-date-picker>
+         </el-form-item>
     </el-form>
     <el-row type="flex" justify="end">
       <el-button @click="cancel">取消</el-button>

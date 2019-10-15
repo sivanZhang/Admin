@@ -22,7 +22,7 @@
       <el-table-column label="所属项目" show-overflow-tooltip>
         <template slot-scope="scope">
           <router-link
-            :to="`/projects/project-detail/${scope.row.project.id}`"
+            :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
           >{{scope.row.project.name}}</router-link>
         </template>
       </el-table-column>

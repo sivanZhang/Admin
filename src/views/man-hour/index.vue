@@ -14,6 +14,25 @@
       <chart slot="header" ref="man-hour" chart-id="man-hour" />
     </template>
       <el-table :data="projectCount">
+         <!-- <el-table-column type="selection" width="55px"></el-table-column> -->
+        <el-table-column label="缩略图" align="center" width="80px;" v-if="show_image">
+          <template slot-scope="scope">
+            <el-image
+              :src="$store.state.BASE_URL+scope.row.image"
+              style="width: 40px;height: 27px;cursor: pointer;"
+              :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
+              v-if="!editing||clickId !== scope.row.id"
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="项目名称"></el-table-column>
         <el-table-column prop="creator_name" label="创建者"></el-table-column>
         <el-table-column label="开始日期">
@@ -139,7 +158,10 @@ export default {
       activeName: "first",
       taskList: [], //任务明细
       overtime_list: [], //加班明细
-      authDaysOff: null
+      authDaysOff: null,
+      show_image:true,
+      editing:false,
+      clickId:null
     };
   },
   methods: {

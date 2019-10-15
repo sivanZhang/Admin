@@ -1,10 +1,7 @@
 <template>
   <div>
-    <div v-if="$store.state.login.userInfo.auth.manage_attendance">
-      <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
-      <el-divider />
-    </div>
-
+    <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
+    <el-divider />
     <el-col :span="8">
       <el-row>
         <el-col :span="10">
@@ -20,7 +17,7 @@
     <el-select v-model="value" placeholder="请选择部门" style="margin-left:-110px;width:150px">
       <el-option v-for="item of deptList" :label="item.name" :value="item.name" :key="item.id"></el-option>
     </el-select>
-    <el-button @click="clockRecord(2)" slot="append" icon="el-icon-search" style="color:gray" />
+    <el-button @click="clockRecord(2)" slot="append" icon="el-icon-search"  style="color:gray;margin-left:-5px" />
     <el-button @click="clockRecord()" type="primary" style="margin-left: 10px">重置</el-button>
 
     <el-date-picker
@@ -29,10 +26,11 @@
       placeholder="请选择上班时间"
       style="width:150px;margin-left:50px"
     ></el-date-picker>
-    <el-date-picker v-model="value2" type="datetime" placeholder="请选择下班时间" style="width:150px"></el-date-picker>
+    <el-date-picker v-model="value2" type="datetime" placeholder="请选择下班时间" style="width:150px;margin-left:-5px"></el-date-picker>
 
-    <el-button @click="clockRecord(3)" slot="append" icon="el-icon-search" style="color:gray" />
-    <el-button @click="clockRecord()" type="primary">重置</el-button>
+    <el-button @click="clockRecord(3)" slot="append" icon="el-icon-search" style="color:gray;margin-left:-5px" />
+    <el-button @click="clockRecord()" type="primary" >重置</el-button>
+   
     <el-card>
       <el-table :data="clockRed">
         <el-table-column prop="user_name" label="用户名"></el-table-column>
@@ -115,6 +113,7 @@ export default {
       } else {
         getClockRecord().then(({ data }) => {
           this.clockRed = [...data.msg];
+
         });
       }
     }

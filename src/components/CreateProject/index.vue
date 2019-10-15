@@ -140,7 +140,8 @@
       </el-row>
       <el-row style="padding-top:20px;padding-bottom:30px;">
         <el-col align="center">
-          <router-link :to="`/projects/project-detail/${id}`">
+          <router-link 
+          :to="{name:'project-detail',params:{id:id},query:{type:radio}}">
             <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
           </router-link>
 
