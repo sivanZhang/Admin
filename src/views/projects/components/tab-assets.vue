@@ -168,9 +168,7 @@
               v-model="filterText"
               @keyup.enter.native="getAssetList()"
               style="width:300px"
-            >
-              
-            </el-input>
+            ></el-input>
             <el-select
               v-show="chooseSel"
               v-model="colSel2"
@@ -198,9 +196,8 @@
             <el-button
               v-show="!timeSel"
               @click="getAssetList()"
-              
               icon="el-icon-search"
-              type="primary"
+              type="text"
               style="margin-top:-1px"
             />
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
@@ -316,8 +313,10 @@
                       </el-form-item>
                     </el-col>
                   </el-row>
-                  <el-row align="right">
-                    <el-button type="primary" @click="MulSel()">筛选</el-button>
+                  <el-row>
+                    <el-col align="right">
+                      <el-button type="primary" @click="MulSel()">筛选</el-button>
+                    </el-col>
                   </el-row>
                 </el-form>
                 <el-button slot="reference" type="primary" style="margin-left: 15px">筛选</el-button>
@@ -1834,8 +1833,8 @@ export default {
       this.$router.push({
         name: "asset-import",
         params: { id: this.$route.params.id },
-        query:{
-          type : this.drawerType
+        query: {
+          type: this.drawerType
         }
       });
     },
