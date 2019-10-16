@@ -228,8 +228,7 @@
                 v-model="keyword"
                 @keyup.enter.native="task(changecolor)"
                 style="width:300px"
-              >
-              </el-input>
+              ></el-input>
               <el-select
                 v-show="chooseSel"
                 v-model="colSel2"
@@ -246,22 +245,18 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
+              <div v-if="timeSel" style="width:280px;display:flex;">
+                <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
+                <span style="text-align:center;padding-top:3px">至</span>
+                <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
+              </div>
               <el-button
-                v-show="!timeSel"
                 @click="task(changecolor)"
                 slot="append"
                 icon="el-icon-search"
                 type="primary"
                 style="margin-top:-1px"
               />
-              <el-date-picker
-                v-if="timeSel"
-                v-model="timeSelection"
-                type="date"
-                placeholder="选择日期"
-                @change="task(changecolor)"
-                style="width:300px"
-              ></el-date-picker>
               <el-button @click="reTask(changecolor)" style="margin-left: 15px" type="primary">重置</el-button>
             </div>
           </el-col>

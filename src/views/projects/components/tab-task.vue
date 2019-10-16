@@ -108,17 +108,12 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-
-            <el-date-picker
-              v-if="timeSel"
-              v-model="timeSelection"
-              type="date"
-              placeholder="选择日期"
-              @change="getTasks()"
-              style="width:300px"
-            ></el-date-picker>
+            <div v-if="timeSel" style="width:280px;display:flex;">
+              <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
+              <span style="text-align:center;padding-top:3px">至</span>
+              <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
+            </div>
             <el-button
-              v-show="!timeSel"
               @click="getTasks()"
               slot="append"
               icon="el-icon-search"
@@ -1039,6 +1034,7 @@ export default {
       colSel2: [],
       timeSel: false,
       timeSelection: "",
+      timeSelection2: "",
       visible2: false,
       sortSelForm: {},
       linkstart: null,
@@ -1207,6 +1203,8 @@ export default {
           this.colShow = false;
           this.chooseSel = false;
           this.timeSel = true;
+          this.timeSelection = "";
+          this.timeSelection2 = "";
         } else {
           this.colShow = true;
           this.timeSel = false;
@@ -1928,6 +1926,7 @@ export default {
       }
       if (type === 1) {
         this.keyword = "";
+        this.colSel = "name";
         this.colSel2 = [];
         this.timeSelection = "";
       }
@@ -1956,12 +1955,37 @@ export default {
         data = { ...data, content: this.keyword };
         this.name = { content: this.keyword };
       }
-      if (this.colSel == "start_date" && this.timeSelection) {
-        data = { ...data, start: DateFormat(this.timeSelection) };
+      if (this.colSel == "start_date") {
+        if (!this.timeSelection && this.timeSelection2) {
+          data = { ...data, start: "" + "," + DateFormat(this.timeSelection2) };
+        } else if (this.timeSelection && !this.timeSelection2) {
+          data = { ...data, start: DateFormat(this.timeSelection) + "," + "" };
+        } else {
+          data = {
+            ...data,
+            start:
+              DateFormat(this.timeSelection) +
+              "," +
+              DateFormat(this.timeSelection2)
+          };
+        }
+
         this.name = { start_date: DateFormat(this.timeSelection) };
       }
-      if (this.colSel == "end_date" && this.timeSelection) {
-        data = { ...data, end: DateFormat(this.timeSelection) };
+      if (this.colSel == "end_date") {
+        if (!this.timeSelection && this.timeSelection2) {
+          data = { ...data, end: "" + "," + DateFormat(this.timeSelection2) };
+        } else if (this.timeSelection && !this.timeSelection2) {
+          data = { ...data, end: DateFormat(this.timeSelection) + "," + "" };
+        } else {
+          data = {
+            ...data,
+            end:
+              DateFormat(this.timeSelection) +
+              "," +
+              DateFormat(this.timeSelection2)
+          };
+        }
         this.name = { end_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
