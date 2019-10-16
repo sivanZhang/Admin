@@ -12,6 +12,7 @@ import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import dayjs from "dayjs";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -168,6 +169,7 @@ export default {
       colSel2: [],
       timeSel: false,
       timeSelection: "",
+      timeSelection2: "",
     };
   },
   watch: {
@@ -192,12 +194,16 @@ export default {
           this.colShow = false;
           this.chooseSel = false;
           this.timeSel = true;
+          this.timeSelection = "";
+          this.timeSelection2 = "";
         } else {
           this.colShow = true;
           this.timeSel = false;
           this.chooseSel = false;
           this.colSel2 = [];
           this.columnSelect2 = [];
+          this.timeSelection = "";
+          this.timeSelection2 = "";
         }
       }
     }
@@ -212,7 +218,7 @@ export default {
       };
 
       function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
+        return dayjs(dateVal).format("YYYY/MM/DD")
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (this.colSel == "name" && this.keyword) {
@@ -220,27 +226,49 @@ export default {
           ...data,
           name: this.keyword
         };
-        this.name = {
-          name: this.keyword
-        };
+
       }
-      if (this.colSel == "start_date" && this.timeSelection) {
-        data = {
-          ...data,
-          start_date: DateFormat(this.timeSelection)
-        };
-        this.name = {
-          start_date: DateFormat(this.timeSelection)
-        };
+      if (this.colSel == "start_date") {
+        if (!this.timeSelection && this.timeSelection2) {
+          data = {
+            ...data,
+            start: "" + "," + DateFormat(this.timeSelection2)
+          };
+        } else if (this.timeSelection && !this.timeSelection2) {
+          data = {
+            ...data,
+            start: DateFormat(this.timeSelection) + "," + ""
+          };
+        } else {
+          data = {
+            ...data,
+            start: DateFormat(this.timeSelection) +
+              "," +
+              DateFormat(this.timeSelection2)
+          };
+        }
+
       }
-      if (this.colSel == "end_date" && this.timeSelection) {
-        data = {
-          ...data,
-          end_date: DateFormat(this.timeSelection)
-        };
-        this.name = {
-          end_date: DateFormat(this.timeSelection)
-        };
+      if (this.colSel == "end_date") {
+        if (!this.timeSelection && this.timeSelection2) {
+          data = {
+            ...data,
+            end: "" + "," + DateFormat(this.timeSelection2)
+          };
+        } else if (this.timeSelection && !this.timeSelection2) {
+          data = {
+            ...data,
+            end: DateFormat(this.timeSelection) + "," + ""
+          };
+        } else {
+          data = {
+            ...data,
+            end: DateFormat(this.timeSelection) +
+              "," +
+              DateFormat(this.timeSelection2)
+          };
+        }
+
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "priority") {
@@ -263,8 +291,10 @@ export default {
     //筛选重置
     reTask(status) {
       this.keyword = "";
+      this.colSel = "name";
       this.colSel2 = [];
       this.timeSelection = "";
+      this.timeSelection2 = "";
       let data = {
         mytask: null,
         status: status

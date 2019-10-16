@@ -90,15 +90,13 @@
               placeholder="输入关键字搜索"
               v-model="keyword"
               @keyup.enter.native="getTasks()"
-              style="width:360px"
-            >
-              <el-button @click="getTasks()" slot="append" icon="el-icon-search" />
-            </el-input>
+              style="width:300px"
+            ></el-input>
             <el-select
               v-show="chooseSel"
               v-model="colSel2"
               placeholder="请选择"
-              style="width:130px;margin-top:1px"
+              style="width:300px;margin-top:1px"
               multiple
               filterable
               @keyup.enter.native="getTasks()"
@@ -110,22 +108,18 @@
                 :value="item.value"
               ></el-option>
             </el-select>
+            <div v-if="timeSel" style="width:280px;display:flex;">
+              <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
+              <span style="text-align:center;padding-top:3px">至</span>
+              <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
+            </div>
             <el-button
-              v-show="chooseSel"
               @click="getTasks()"
               slot="append"
               icon="el-icon-search"
               type="primary"
               style="margin-top:-1px"
             />
-            <el-date-picker
-              v-if="timeSel"
-              v-model="timeSelection"
-              type="date"
-              placeholder="选择日期"
-              @change="getTasks()"
-              style="width:130px"
-            ></el-date-picker>
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
@@ -249,7 +243,7 @@
           </template>
         </el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
@@ -927,6 +921,7 @@ import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
+import dayjs from "dayjs";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -1039,6 +1034,7 @@ export default {
       colSel2: [],
       timeSel: false,
       timeSelection: "",
+      timeSelection2: "",
       visible2: false,
       sortSelForm: {},
       linkstart: null,
@@ -1207,6 +1203,8 @@ export default {
           this.colShow = false;
           this.chooseSel = false;
           this.timeSel = true;
+          this.timeSelection = "";
+          this.timeSelection2 = "";
         } else {
           this.colShow = true;
           this.timeSel = false;
@@ -1441,7 +1439,7 @@ export default {
 
       this.TaskForm = {
         ...this.TaskForm,
-        total_hour: 8 * totalHour +8
+        total_hour: 8 * totalHour + 8
       };
     },
     changeTime2(val) {
@@ -1923,11 +1921,12 @@ export default {
     //获取任务列表
     getTasks(type) {
       function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
+        return dayjs(dateVal).format("YYYY/MM/DD");
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (type === 1) {
         this.keyword = "";
+        this.colSel = "name";
         this.colSel2 = [];
         this.timeSelection = "";
       }
@@ -1956,12 +1955,37 @@ export default {
         data = { ...data, content: this.keyword };
         this.name = { content: this.keyword };
       }
-      if (this.colSel == "start_date" && this.timeSelection) {
-        payload = { ...payload, start_date: DateFormat(this.timeSelection) };
+      if (this.colSel == "start_date") {
+        if (!this.timeSelection && this.timeSelection2) {
+          data = { ...data, start: "" + "," + DateFormat(this.timeSelection2) };
+        } else if (this.timeSelection && !this.timeSelection2) {
+          data = { ...data, start: DateFormat(this.timeSelection) + "," + "" };
+        } else {
+          data = {
+            ...data,
+            start:
+              DateFormat(this.timeSelection) +
+              "," +
+              DateFormat(this.timeSelection2)
+          };
+        }
+
         this.name = { start_date: DateFormat(this.timeSelection) };
       }
-      if (this.colSel == "end_date" && this.timeSelection) {
-        payload = { ...payload, end_date: DateFormat(this.timeSelection) };
+      if (this.colSel == "end_date") {
+        if (!this.timeSelection && this.timeSelection2) {
+          data = { ...data, end: "" + "," + DateFormat(this.timeSelection2) };
+        } else if (this.timeSelection && !this.timeSelection2) {
+          data = { ...data, end: DateFormat(this.timeSelection) + "," + "" };
+        } else {
+          data = {
+            ...data,
+            end:
+              DateFormat(this.timeSelection) +
+              "," +
+              DateFormat(this.timeSelection2)
+          };
+        }
         this.name = { end_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
