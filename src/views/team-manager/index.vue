@@ -80,6 +80,19 @@
           <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-count="pageCount"
+            :total="total"
+            style="margin-top:10px"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="已分配镜头" name="second">
         <el-table
@@ -145,6 +158,19 @@
           <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-count="pageCount2"
+            :total="total2"
+            style="margin-top:10px"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
     </el-tabs>
 
@@ -297,10 +323,26 @@ export default {
       linkstart: null,
       linkend: null,
       assetId: null,
-      assetName: null
+      assetName: null,
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
+      total: 0,
+      total2: 0,
+      pageCount: 0,
+      pageCount2: 0,
+
     };
   },
-  watch: {},
+  watch: {
+    activeName:{
+      handler:function(newVal,oldVal){
+        if(newVal){
+          this.getScene()
+        }
+      }
+    }
+  },
   methods: {
     //展示添加任务表单
     showTaskForm(link_id, dept_id, content, date_and_user) {
@@ -402,10 +444,30 @@ export default {
       //console.log(this.multipleSelection.length);
     },
     getScene() {
-      allocationScene().then(({ data }) => {
+      let payload = {
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+      allocationScene(payload).then(({ data }) => {
         this.sceneNeed = [...data.need];
         this.sceneUnneed = [...data.not_need];
+        if(this.activeName == "first"){
+          this.total = data.need_page.count;
+            this.pageCount = data.need_page.page_count;
+        }else{
+          this.total2 = data.not_need_page.count;
+            this.pageCount2 = data.not_need_page.page_count;
+        }
       });
+    },
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.getScene();
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.getScene();
     },
     //难度等级格式化显示
     Level: function(row, column) {
