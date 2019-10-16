@@ -62,10 +62,10 @@
                 ref="input"
                 class="input"
                 v-model="requirement"
-                @keyup.enter="save(24)"
+                @keyup.enter="save3(24)"
                 style="width:300px"
               />
-              <el-button @click="save(24)" type="primary">修改</el-button>
+              <el-button @click="save3(24)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -661,7 +661,7 @@
 </template>
 
 <script>
-import { putProjects } from "@/api/project";
+import { putProjects,updateRequirement } from "@/api/project";
 import { getClientList } from "@/api/admin";
 import { editAssets } from "@/api/assets";
 import { mapState } from "vuex";
@@ -1056,18 +1056,6 @@ export default {
           school: this.school
         };
       }
-      if (Type === 24) {
-        this.editing25 = false;
-        data = {
-          method: "put",
-          id: this.project.id,
-          requirement: this.requirement
-            .replace(/\r\n/g, "<br/>")
-            .replace(/\n/g, "<br/>")
-            .replace(/\s/g, "&nbsp;")
-        };
-      }
-
       putProjects(data)
         .then(({ data }) => {
           if (data.status === 0) {
@@ -1115,13 +1103,6 @@ export default {
             if (Type === 22) {
               this.project.school = this.school;
               this.school = null;
-            }
-            if (Type === 24) {
-              this.project.requirement = this.requirement
-                .replace(/\r\n/g, "<br/>")
-                .replace(/\n/g, "<br/>")
-                .replace(/\s/g, "&nbsp;");
-              this.requirement = null;
             }
           }
         })
@@ -1304,6 +1285,33 @@ export default {
         }
         this.$emit("refresh_assetList");
       });
+    },
+    save3(Type){
+      if (Type === 24) {
+        let data = {};
+        this.editing25 = false;
+        data = {
+          method: "put",
+          id: this.project.id,
+          requirement: this.requirement
+            .replace(/\r\n/g, "<br/>")
+            .replace(/\n/g, "<br/>")
+            .replace(/\s/g, "&nbsp;")
+        };
+        updateRequirement(data).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.project.requirement = this.requirement
+              .replace(/\r\n/g, "<br/>")
+              .replace(/\n/g, "<br/>")
+              .replace(/\s/g, "&nbsp;");
+            this.requirement = null;
+          }else{
+            this.$message.error(data.msg)
+          }
+          
+        });
+      }
     }
   }
 };

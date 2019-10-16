@@ -41,4 +41,8 @@ export function delTeam(data) {
 export function getTeamList(params) {
   return AXIOS.get('/projects/team/', { params })
 }
+//修改项目的制作内容
+export function updateRequirement(data){
+  return AXIOS.post("/projects/projects/",data)
+}
 
