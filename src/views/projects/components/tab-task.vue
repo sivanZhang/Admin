@@ -90,15 +90,13 @@
               placeholder="输入关键字搜索"
               v-model="keyword"
               @keyup.enter.native="getTasks()"
-              style="width:360px"
-            >
-              <el-button @click="getTasks()" slot="append" icon="el-icon-search" />
-            </el-input>
+              style="width:300px"
+            ></el-input>
             <el-select
               v-show="chooseSel"
               v-model="colSel2"
               placeholder="请选择"
-              style="width:130px;margin-top:1px"
+              style="width:300px;margin-top:1px"
               multiple
               filterable
               @keyup.enter.native="getTasks()"
@@ -110,22 +108,23 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-button
-              v-show="chooseSel"
-              @click="getTasks()"
-              slot="append"
-              icon="el-icon-search"
-              type="primary"
-              style="margin-top:-1px"
-            />
+
             <el-date-picker
               v-if="timeSel"
               v-model="timeSelection"
               type="date"
               placeholder="选择日期"
               @change="getTasks()"
-              style="width:130px"
+              style="width:300px"
             ></el-date-picker>
+            <el-button
+              v-show="!timeSel"
+              @click="getTasks()"
+              slot="append"
+              icon="el-icon-search"
+              type="primary"
+              style="margin-top:-1px"
+            />
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
@@ -1442,7 +1441,7 @@ export default {
 
       this.TaskForm = {
         ...this.TaskForm,
-        total_hour: 8 * totalHour +8
+        total_hour: 8 * totalHour + 8
       };
     },
     changeTime2(val) {
@@ -1924,7 +1923,7 @@ export default {
     //获取任务列表
     getTasks(type) {
       function DateFormat(dateVal) {
-       return  dayjs(dateVal).format("YYYY/MM/DD")
+        return dayjs(dateVal).format("YYYY/MM/DD");
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (type === 1) {

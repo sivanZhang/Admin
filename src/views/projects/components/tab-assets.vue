@@ -167,20 +167,15 @@
               placeholder="输入关键字搜索"
               v-model="filterText"
               @keyup.enter.native="getAssetList()"
-              style="width:360px"
+              style="width:300px"
             >
-              <el-button
-                @click="getAssetList()"
-                slot="append"
-                icon="el-icon-search"
-                type="primary"
-              />
+              
             </el-input>
             <el-select
               v-show="chooseSel"
               v-model="colSel2"
               placeholder="请选择"
-              style="width:130px;margin-top:1px"
+              style="width:300px;margin-top:1px"
               multiple
               filterable
               @change="getAssetList()"
@@ -198,17 +193,16 @@
               type="date"
               placeholder="选择日期"
               @change="getAssetList()"
-              style="width:130px"
+              style="width:300px"
             ></el-date-picker>
             <el-button
-              v-show="chooseSel"
+              v-show="!timeSel"
               @click="getAssetList()"
-              slot="append"
+              
               icon="el-icon-search"
               type="primary"
               style="margin-top:-1px"
             />
-
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
