@@ -1,6 +1,6 @@
 <template>
   <div id="approve-extra">
-    <el-table :data="ApproveList" v-loading="tableLoading">
+    <el-table :data="ApproveOverTime" v-loading="tableLoading">
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import { getApprove, postApprove } from "@/api/checkingIn";
+import { postApprove } from "@/api/checkingIn";
+import { mapState } from "vuex";
 export default {
   name: "approve-extra-work",
   data() {
     return {
       ApproveForm: {},
-      ApproveList: [],
       tableLoading: false,
       submitLoading: false,
       dialogVisible: false,
@@ -51,6 +51,9 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    ...mapState("approve", ["ApproveOverTime"])
   },
   methods: {
     //加班申请的审核
@@ -89,10 +92,7 @@ export default {
     },
     getApproves() {
       this.tableLoading = true;
-      getApprove()
-        .then(({ data }) => {
-          this.ApproveList = [...data.msg];
-        })
+      this.$store.dispatch("approve/get_ApproveOverTime")
         .finally(() => {
           this.tableLoading = false;
         });

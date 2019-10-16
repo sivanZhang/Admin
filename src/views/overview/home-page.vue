@@ -2,11 +2,13 @@
 import { getStatusTaskList } from "@/api/task";
 import MyTask from "./components/MyTask";
 import MyManWork from "./components/MyManWork";
+import MyApprove from "./components/MyApprove";
 export default {
   name: "home-page",
   components: {
     MyTask,
-    MyManWork
+    MyManWork,
+    MyApprove
   },
   data() {
     return {
@@ -39,7 +41,7 @@ export default {
       <MyManWork :my-tasks="MyTaskList"/>
     </el-col>
     <el-col :span="6">
-      <el-card header="我的审核"></el-card>
+      <MyApprove/>
     </el-col>
     <el-col :span="6">
       <el-card header="我的消息"></el-card>

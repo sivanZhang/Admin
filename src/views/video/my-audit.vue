@@ -128,12 +128,13 @@ import {
   queryTaskRecord,
   queryTask
 } from "@/api/task";
-import { getApprove, postApprove, getApproveDetail } from "@/api/video";
+import { postApprove, getApproveDetail } from "@/api/video";
 import taskForm from "@/views/task/components/task-form";
 import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import { mapState } from "vuex";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -148,7 +149,6 @@ export default {
       checked: false,
       submitLoading: false,
       form_obj: {},
-      AuditList: [],
       isDrawerShow: false,
       TaskRecord: {},
       detailLoading: false,
@@ -160,8 +160,11 @@ export default {
       path: null,
       pro_type: null,
       tableLoading: false,
-      out_path:null
+      out_path: null
     };
+  },
+  computed: {
+    ...mapState("approve", ["AuditList"])
   },
   methods: {
     //表格中选中任务
@@ -241,13 +244,12 @@ export default {
           ...this.form_obj,
           click: "",
           out_suggestion: this.out_suggestion,
-          path:this.out_path
+          path: this.out_path
         };
       }
       postApprove(this.form_obj)
         .then(res => {
           if (res.data.status === 0) {
-            this.AuditList = [];
             this.getMyTasks();
             this.isDrawerShow = false;
             this.$message.success(res.data.msg);
@@ -260,26 +262,11 @@ export default {
         });
     },
     //http获取‘我的任务’
-    async getMyTasks() {
-      //getApprove
-      /* await queryMyTask({
-        user: this.$store.state.login.userInfo.id
-      }).then(({ data }) => {
-        [...data.msg].forEach(item => {
-          this.AuditList.push(item.task);
-        });
-      }); */
+    getMyTasks() {
       this.tableLoading = true;
-
-      await getApprove()
-        .then(({ data }) => {
-          [...data.msg].forEach(item => {
-            this.AuditList.push(item);
-          });
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
+      this.$store.dispatch("approve/get_Approve").finally(() => {
+        this.tableLoading = false;
+      });
     }
     //添加任务执行记录
     /* addRecord() {

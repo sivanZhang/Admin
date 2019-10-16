@@ -22,7 +22,7 @@ export function putApply(data) {
     return AXIOS.post('/overtime/overtime/?put', data)
 }
 //获取加班申请审批列表
-export function getApprove(params) {
+export function getOverTimeApprove(params) {
     return AXIOS.get('/overtime/submit/', {
         params
     })
