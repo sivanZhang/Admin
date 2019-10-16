@@ -13,7 +13,7 @@
     </el-row>
     <ul class="list">
       <li class="item" v-for="item of props.myTaskList.filter((t,i)=>1<10)" :key="item.task.id">
-        {{item.task.name}}
+        {{item.task.name}}222222222222222222222222222222222qwewqewqewqewqewqew
         <div class="message">{{item.task.start_date | dateFormat}} - {{item.task.end_date|dateFormat}}</div>
         <div class="message">{{item.task.content}}</div>
       </li>
@@ -26,6 +26,9 @@
   list-style-position: inside;
   .item {
     padding-bottom: 8px;
+    overflow: hidden; //超出的隐藏
+      text-overflow: ellipsis; //省略号
+      white-space: nowrap; //强制一行显示
     .message {
       overflow: hidden; //超出的隐藏
       text-overflow: ellipsis; //省略号

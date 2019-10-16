@@ -20,7 +20,7 @@
             <el-row style="f5ont-size:20px"></el-row>
             <el-col>{{loginMessage.msg}}</el-col>
             <el-row style="padding-top:10px">
-              <el-col :span="4" >邮箱：</el-col>
+              <el-col :span="4">邮箱：</el-col>
               <el-col :span="20">{{loginMessage.email}}</el-col>
             </el-row>
             <el-row style="padding-top:10px">
@@ -126,7 +126,8 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="通知" name="fourth">
-          <noticeDetail :notice="notice" @getNoticeDetail="getNoticeDetail"></noticeDetail>
+          <noticeDetail :notice="Notice" @getNoticeDetail="getNoticeDetail"></noticeDetail>
+          {{Notice}}222
         </el-tab-pane>
         <el-tab-pane label="个人资料" name="fifth">
           <NoticeInfo :userInfo="userInfo" />
@@ -160,6 +161,7 @@ import * as HTTP from "@/api/notice";
 import { getUserPermission, getUserRole } from "@/api/login";
 import noticeDetail from "./components/notice-detail";
 import NoticeInfo from "./components/user-info";
+import { mapState } from "vuex";
 export default {
   name: "Notice",
   created() {
@@ -174,12 +176,10 @@ export default {
     return {
       value1: false,
       id: this.$store.state.login.userInfo.id,
-      notice: [],
       active: null,
       multipleSelection: [],
       activeName: "fourth",
       loginMessage: this.$store.state.login.userInfo,
-      unreadCount: null,
       userPermission: null,
       userRole: null,
       userInfo: this.$store.state.login.userInfo,
@@ -189,6 +189,9 @@ export default {
       clockClose: false,
       dateHour: new Date().getHours()
     };
+  },
+  computed: {
+    ...mapState("notice", ["Notice", "unreadCount"])
   },
   watch: {
     date: {
@@ -231,7 +234,7 @@ export default {
       if (this.dateHour >= 18) {
         data = { status: 1 };
         this.clockClose = true;
-        this.active = 2
+        this.active = 2;
       }
       HTTP.clockIn(data)
         .then(({ data }) => {
@@ -302,9 +305,8 @@ export default {
     },
     //获取当前用户收到的通知
     getNoticeDetail() {
-      HTTP.noticeDetail(this.id).then(({ data }) => {
-        this.notice = [...data.msg];
-        this.unreadCount = data.unread_count;
+      this.$store.dispatch("notice/get_Notice", {
+        userid: this.$store.state.login.userInfo.id
       });
     },
 

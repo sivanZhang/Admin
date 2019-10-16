@@ -3,17 +3,23 @@ import { getStatusTaskList } from "@/api/task";
 import MyTask from "./components/MyTask";
 import MyManWork from "./components/MyManWork";
 import MyApprove from "./components/MyApprove";
+import noticeDetail from "@/components/Notice/components/notice-detail";
+import { mapState } from "vuex";
 export default {
   name: "home-page",
   components: {
     MyTask,
     MyManWork,
-    MyApprove
+    MyApprove,
+    noticeDetail
   },
   data() {
     return {
       MyTaskList: []
     };
+  },
+  computed: {
+    ...mapState("notice", ["Notice", "unreadCount"])
   },
   created() {
     this.getMyTasks();
@@ -26,6 +32,11 @@ export default {
         status: 2
       }).then(({ data }) => {
         this.MyTaskList = [...data.msg];
+      });
+    },
+    getNoticeDetail() {
+      this.$store.dispatch("notice/get_Notice", {
+        userid: this.$store.state.login.userInfo.id
       });
     },
   }
@@ -44,7 +55,9 @@ export default {
       <MyApprove/>
     </el-col>
     <el-col :span="6">
-      <el-card header="我的消息"></el-card>
+      <el-card header="我的消息">
+        <noticeDetail :notice="Notice" @getNoticeDetail="getNoticeDetail"></noticeDetail>
+      </el-card>
     </el-col>
     <el-col :span="6">
       <el-card header="组长"></el-card>
