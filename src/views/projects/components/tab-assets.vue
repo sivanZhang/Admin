@@ -1833,7 +1833,10 @@ export default {
     targetdownload() {
       this.$router.push({
         name: "asset-import",
-        params: { id: this.$route.params.id }
+        params: { id: this.$route.params.id },
+        query:{
+          type : this.drawerType
+        }
       });
     },
     //跳转导出页面dialog

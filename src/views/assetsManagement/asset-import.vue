@@ -153,12 +153,14 @@ export default {
           if (data.msg) {
             this.$message.warning(data.msg);
           } else {
+            let label = this.$route.qurey.type?'资产':'镜头';
             this.$notify.info({
               title: "导入结果",
-              message: `资产/镜头导入成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条;
-               环节导入成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条;
-               任务导入成功${data.create_link.task_success_num}条、失败${data.create_link.task_failure_num}条`,
               duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `<div>${label}导入成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条</div>
+              <div>环节导入成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条</div>
+              <div> 任务导入成功${data.create_link.task_success_num}条、失败${data.create_link.task_failure_num}条</div>`
             });
             this.$router.push({
               name: "project-detail",
