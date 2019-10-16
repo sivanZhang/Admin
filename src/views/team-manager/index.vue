@@ -15,6 +15,13 @@
         >
           <el-table-column type="selection" :reserve-selection="true" align="right"></el-table-column>
           <el-table-column type="index"></el-table-column>
+          <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <router-link
+                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
+              >{{scope.row.project.name}}</router-link>
+            </template>
+          </el-table-column>
           <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
             <template slot-scope="scope">
               <span @click="showDrawer(scope.row)">{{scope.row.name}}</span>
@@ -73,6 +80,19 @@
           <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-count="pageCount"
+            :total="total"
+            style="margin-top:10px"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="已分配镜头" name="second">
         <el-table
@@ -86,6 +106,13 @@
           :border="false"
         >
           <el-table-column type="index"></el-table-column>
+          <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <router-link
+                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
+              >{{scope.row.project.name}}</router-link>
+            </template>
+          </el-table-column>
           <el-table-column label="镜头号" prop="name" show-overflow-tooltip></el-table-column>
           <el-table-column label="缩略图" prop="image">
             <template slot-scope="scope">
@@ -118,21 +145,32 @@
           <el-table-column prop="level" label="难度等级">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
-         <el-table-column label="执行人" prop="executor_list">
-           <template slot-scope="scope">
-             <el-row v-for="(item,index) of scope.row.executor_list" :key="index">
-               <el-col>
-                 {{item.name}}
-               </el-col>
-             </el-row>
-           </template>
-         </el-table-column>
+          <el-table-column label="执行人" prop="executor_list">
+            <template slot-scope="scope">
+              <el-row v-for="(item,index) of scope.row.executor_list" :key="index">
+                <el-col>{{item.name}}</el-col>
+              </el-row>
+            </template>
+          </el-table-column>
           <el-table-column label="创建日期" align="left" width="160px" prop="date">
             <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
           </el-table-column>
           <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-count="pageCount2"
+            :total="total2"
+            style="margin-top:10px"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
     </el-tabs>
 
@@ -155,21 +193,21 @@
           :key="Index"
         >
           <el-step v-for="item of todo" :key="item.link_id" status="process" style="width:250px">
-            <div
-              slot="title"
-              style="font-size:14px;display:flex;justify-content:flex-start"
-            >{{item.dept.name}}
-            <template v-if="deptList.filter(todo=>{  return todo.id === item.dept.id}).length">
-              <el-tooltip effect="dark" content="添加任务" placement="top">
-                <span style="padding-left:5px">
-                  <i
-                    class="el-icon-plus"
-                    style="color:blue"
-                    @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
-                  ></i>
-                </span>
-              </el-tooltip>
-            </template>
+            <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
+              {{item.dept.name}}
+              <template
+                v-if="deptList.filter(todo=>{  return todo.id === item.dept.id}).length"
+              >
+                <el-tooltip effect="dark" content="添加任务" placement="top">
+                  <span style="padding-left:5px">
+                    <i
+                      class="el-icon-plus"
+                      style="color:blue"
+                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
+                    ></i>
+                  </span>
+                </el-tooltip>
+              </template>
             </div>
             <ul slot="description" style="width:250px;">
               <li>制作要求: {{item.content}}</li>
@@ -183,7 +221,7 @@
       </div>
     </Drawer>
 
-     <!-- 添加任务 -->
+    <!-- 添加任务 -->
     <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="512px" center :modal="false">
       <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="100px">
         <el-form-item label="任务名称" prop="name">
@@ -265,7 +303,7 @@ import { getLinks } from "@/api/links";
 import { getDept } from "@/api/admin";
 import { addTask } from "@/api/task";
 export default {
-  mixins: [myMixin,thumbtackMixin],
+  mixins: [myMixin, thumbtackMixin],
   name: "team-manager",
   components: {},
   data() {
@@ -277,18 +315,34 @@ export default {
       value1: false,
       deptUser: [],
       link: null,
-      deptList:this.$store.state.login.userInfo.dept,
-       DeptUsers: [],
-       isCreateTaskShow: false,
-       createTaskLoading: false,
+      deptList: this.$store.state.login.userInfo.dept,
+      DeptUsers: [],
+      isCreateTaskShow: false,
+      createTaskLoading: false,
       TaskForm: {},
       linkstart: null,
       linkend: null,
-      assetId:null,
-      assetName:null
+      assetId: null,
+      assetName: null,
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
+      total: 0,
+      total2: 0,
+      pageCount: 0,
+      pageCount2: 0,
+
     };
   },
-  watch: {},
+  watch: {
+    activeName:{
+      handler:function(newVal,oldVal){
+        if(newVal){
+          this.getScene()
+        }
+      }
+    }
+  },
   methods: {
     //展示添加任务表单
     showTaskForm(link_id, dept_id, content, date_and_user) {
@@ -363,7 +417,7 @@ export default {
                 this.cancelTask();
                 this.isDialogShow = false;
                 this.value1 = false;
-                this.getScene()
+                this.getScene();
               }
             })
             .catch(err => {
@@ -390,10 +444,30 @@ export default {
       //console.log(this.multipleSelection.length);
     },
     getScene() {
-      allocationScene().then(({ data }) => {
+      let payload = {
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+      allocationScene(payload).then(({ data }) => {
         this.sceneNeed = [...data.need];
         this.sceneUnneed = [...data.not_need];
+        if(this.activeName == "first"){
+          this.total = data.need_page.count;
+            this.pageCount = data.need_page.page_count;
+        }else{
+          this.total2 = data.not_need_page.count;
+            this.pageCount2 = data.not_need_page.page_count;
+        }
       });
+    },
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.getScene();
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.getScene();
     },
     //难度等级格式化显示
     Level: function(row, column) {

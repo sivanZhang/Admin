@@ -70,13 +70,13 @@
           </el-popover>
         </el-col>
         <el-col :span="11" style="text-align:right">
-          <div style="display:flex;justify-content:flex-end">
+          <div style="display:flex;justify-content:flex-end;text-align:bottom">
             <el-select
               v-model="colSel"
               placeholder="请选择"
-              style="width:130px;"
+              style="width:130px"
               filterable
-              slot="prepend"
+              size="mini"
             >
               <el-option
                 v-for="item in columnSelect"
@@ -89,6 +89,7 @@
               v-if="colShow"
               placeholder="输入关键字搜索"
               v-model="keyword"
+               size="mini"
               @keyup.enter.native="getTasks()"
               style="width:300px"
             ></el-input>
@@ -100,6 +101,7 @@
               multiple
               filterable
               @keyup.enter.native="getTasks()"
+               size="mini"
             >
               <el-option
                 v-for="item in columnSelect2"
@@ -109,17 +111,11 @@
               ></el-option>
             </el-select>
             <div v-if="timeSel" style="width:280px;display:flex;">
-              <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"  size="mini"></el-date-picker>
               <span style="text-align:center;padding-top:3px">至</span>
-              <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"  size="mini"></el-date-picker>
             </div>
-            <el-button
-              @click="getTasks()"
-              slot="append"
-              icon="el-icon-search"
-              type="text"
-              style="margin-top:-1px"
-            />
+            <el-button @click="task(changecolor)" size="mini" icon="el-icon-search" type="primary" style="height:27.99px"/>
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
@@ -220,14 +216,14 @@
                   </el-row>
                   <el-row>
                     <el-col align="right">
-                      <el-button type="primary" @click="MulSel()">筛选</el-button>
+                      <el-button type="primary" @click="MulSel()" >筛选</el-button>
                     </el-col>
                   </el-row>
                 </el-form>
-                <el-button slot="reference" type="primary" style="margin-left: 15px">筛选</el-button>
+                <el-button slot="reference" type="primary" style="margin-left: 15px" size="mini">筛选</el-button>
               </el-popover>
             </el-tooltip>
-            <el-button @click="getTasks(1)" style="margin-left: 15px" type="primary">重置</el-button>
+            <el-button @click="getTasks(1)" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
           </div>
         </el-col>
       </el-row>
@@ -893,7 +889,7 @@
       </el-form>
     </el-dialog>
     <Drawer
-      :title="titleDialog"
+      :title="任务"
       scrollable
       closable
       v-model="showdrawer"
