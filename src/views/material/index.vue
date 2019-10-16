@@ -37,7 +37,7 @@
     </div>
     <el-table
       ref="materialList"
-      :data="materialList"
+      :data="materialList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="{borderRight:0}"
       highlight-current-row
@@ -206,6 +206,17 @@
         </el-table-column>
       </template>
     </el-table>
+         <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="materialList.length"
+        ></el-pagination>
+      </div>
     <!-- 修改素材时更改图片 -->
     <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
       <el-form
@@ -246,7 +257,7 @@
         <el-form-item label="素材名称" prop="name">
           <el-input v-model="materialForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="素材分类" prop="categorys">
+        <el-form-item label="添加分类" prop="categorys">
           <el-row>
             <el-col :span="14">
               <el-select
@@ -263,6 +274,11 @@
                   :key="item.id"
                 ></el-option>
               </el-select>
+            </el-col>
+            <el-col :span="10">
+              <el-tooltip effect="dark" content="删除分类" placement="top">
+             <el-button  type="text" style="color:red" icon="el-icon-delete" @click="deletCategory"></el-button>
+             </el-tooltip>
             </el-col>
           </el-row>
         </el-form-item>
@@ -344,16 +360,49 @@ export default {
       addDialog: false,
       authRole: null,
       filterText: null,
-      categorys: []
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
+      categorys: [],
     };
   },
   watch: {},
   methods: {
+   //分页
+    handleSizeChange(val){
+       this.pageSize = val;
+    },
+     handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
     //获取所有项目
     getAllProjectList() {
       getProjects().then(({ data }) => {
         this.ProjectList = data.msg;
       });
+    },
+        //删除素材分类
+    deletCategory(){
+      let categoryid = [];
+      this.CategorysList.map(item => {
+        this.materialForm.categorys.map(ct =>{
+          if (item.name == ct){
+             categoryid.push(item.id);
+        }  
+        }) 
+          })
+      delMaterial({category_ids:String(categoryid),method: "delete"}).then(({ data })=>{
+        if(data.status === 0){
+          this.$message.success(data.msg);
+          this.category = [];
+          this.searchMaterial();
+          this.materialForm.categorys=[]
+        }
+      })
     },
     //素材添加
     AddMaterial(Type) {
