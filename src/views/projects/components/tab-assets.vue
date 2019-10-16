@@ -168,7 +168,9 @@
               v-model="filterText"
               @keyup.enter.native="getAssetList()"
               style="width:300px"
-            ></el-input>
+            >
+             
+            </el-input>
             <el-select
               v-show="chooseSel"
               v-model="colSel2"
@@ -194,11 +196,10 @@
               style="width:300px"
             ></el-date-picker>
             <el-button
-              v-show="!timeSel"
               @click="getAssetList()"
               icon="el-icon-search"
-              type="text"
-              style="margin-top:-1px"
+              type="primary"
+              style="height:27.99px"
             />
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">

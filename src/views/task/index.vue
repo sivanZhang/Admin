@@ -250,14 +250,8 @@
                 <span style="text-align:center;padding-top:3px">至</span>
                 <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
               </div>
-              <el-button
-                @click="task(changecolor)"
-                slot="append"
-                icon="el-icon-search"
-                type="primary"
-                style="margin-top:-1px"
-              />
-              <el-button @click="reTask(changecolor)" style="margin-left: 15px" type="primary">重置</el-button>
+              <el-button @click="task(changecolor)" icon="el-icon-search" style="height:27.99px" type="primary"/>
+              <el-button @click="reTask(changecolor)" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
             </div>
           </el-col>
         </el-row>
