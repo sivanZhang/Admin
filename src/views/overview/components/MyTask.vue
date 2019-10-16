@@ -13,7 +13,7 @@
     </el-row>
     <ul class="list">
       <li class="item" v-for="item of props.myTaskList.filter((t,i)=>1<10)" :key="item.task.id">
-        {{item.task.name}}222222222222222222222222222222222qwewqewqewqewqewqew
+        {{item.task.name}}
         <div class="message">{{item.task.start_date | dateFormat}} - {{item.task.end_date|dateFormat}}</div>
         <div class="message">{{item.task.content}}</div>
       </li>
