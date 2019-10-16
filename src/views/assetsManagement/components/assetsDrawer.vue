@@ -63,22 +63,44 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="相关版本" name="fifth">
+          <el-tab-pane label="历史版本" name="fifth">
             <el-table
-              :data="assetVersion"
-              style="width: 100%"
-              border
-              :stripe="true"
+            :data="historyVersion"
+            style="width:100%"
+            border
+             :stripe="true"
               :row-style="{'font-size':'13px'}"
               :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
               highlight-current-row
-              row-class-name="hover"
-            >
-              <el-table-column prop="current_version" label="版本号" show-overflow-tooltip></el-table-column>
-              <el-table-column prop="path" label="审核路径"></el-table-column>
-              <el-table-column prop="date" label="更新时间">
-                <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
+              :span-method="objectSpanMethod"
+              >
+              <el-table-column prop="link_content" label="环节内容" show-overflow-tooltip></el-table-column>
+               <el-table-column prop="task_name" label="任务名称" show-overflow-tooltip></el-table-column>
+               <el-table-column prop="task_content" label="任务内容" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="version.current_version" label="版本号" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  <span style="color:#C64b2b"  v-if="scope.row.end == true">
+                  {{scope.row.version.current_version}}
+                  </span>
+                  <span v-else>{{scope.row.version.current_version}}</span>
+                </template>
               </el-table-column>
+              <el-table-column prop="out_path" label="审核路径" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="version.date" width="130" label="更新时间">
+                <template slot-scope="scope">{{scope.row.version.date|dateTimeFormat}}</template>
+              </el-table-column>
+               <el-table-column prop="end" label="修改" >
+                <template slot-scope="scope">
+                  <el-tooltip content="修改为最终状态" placement="top">
+                    <el-button
+                      @click="openAssetDetail(scope.row)"
+                      icon="el-icon-edit"
+                      type="text"
+                      style="color:blue"
+                    />
+                  </el-tooltip>
+                </template>
+               </el-table-column>
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="sixth">
@@ -105,7 +127,7 @@ import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import { addLinks, getLinks } from "@/api/links";
-import { getVersion } from "@/api/assets";
+import { getVersion, getHistoryVersion ,getAssetsEndStatus } from "@/api/assets";
 import { getAssetTaskList } from "@/api/task";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
@@ -128,7 +150,8 @@ export default {
       LinkList: [],
       authLink:null,
       assetVersion: null,
-      assetTaskList: null
+      assetTaskList: null,
+      historyVersion:[]
     };
   },
   watch: {
@@ -142,7 +165,74 @@ export default {
     }
   },
   components: { remarks, info, links, approveLog, attrsBind },
+  computed:{
+    groupNum() {
+      return new Set(this.historyVersion.map(item => item.name));
+    }
+  },
   methods: {
+    LinkGroup(name) {
+      return this.historyVersion.filter(item => item.link_content == name).length;
+    },
+    TaskGroup(name) {
+      return this.historyVersion.filter(item => item.task_name == name).length;
+    },
+    TaskContentGroup(name) {
+      return this.historyVersion.filter(item => item.task_content == name).length;
+    },
+    NameLen(name) {
+      const tmp = Array.from(this.groupNum);
+      const index = tmp.indexOf(name);
+      let len = 0;
+      for (let i = 0; i < index; i++) {
+        len += this.Group(tmp[i]);
+      }
+      return len;
+    },
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const len = this.LinkGroup(row.link_content);
+        const lenName = this.NameLen(row.link_content);
+        if (rowIndex === lenName) {
+          return {
+            rowspan: len,
+            colspan: 1
+          };
+        } else
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+      }
+      if (columnIndex === 1) {
+        const len = this.TaskGroup(row.task_name);
+        const lenName = this.NameLen(row.task_name);
+        if (rowIndex === lenName) {
+          return {
+            rowspan: len,
+            colspan: 1
+          };
+        } else
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+      }
+      if (columnIndex === 2) {
+        const len = this.TaskContentGroup(row.task_content);
+        const lenName = this.NameLen(row.task_content);
+        if (rowIndex === lenName) {
+          return {
+            rowspan: len,
+            colspan: 1
+          };
+        } else
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+      }
+    },
     updateRemark(){
       this.$emit("refreshRemark")
     },
@@ -167,6 +257,24 @@ export default {
       }).then(({ data }) => {
         this.assetVersion = [...data.msg];
       });
+      getHistoryVersion({asset_id: this.project.id}).then(({ data }) => {
+        this.historyVersion = [...data.msg];
+      });
+    },
+    ////资产的最终状态修改
+    openAssetDetail(row){
+      getAssetsEndStatus({
+        asset_id:this.project.id,
+        task_id:row.task_id,
+        out_path:row.out_path}).then(({ data })=>{
+        if(data.status === 0){
+        this.$message.success(data.msg);
+        this.getAssetVersion()
+        }else  {
+          this.$message.warning(data.msg)
+        }
+      })
+
     },
     getAssetApproveLog() {
       this.$refs["approvelogs"].getAssetAppooveList(this.project.id);
