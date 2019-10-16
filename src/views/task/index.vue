@@ -36,8 +36,8 @@
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#59e0e8',color:'#fff',padding:'5px'}"
                   >
-                  <div class="cardvalue">{{item.name}}</div>
-                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                    <div class="cardvalue">{{item.name}}</div>
+                    <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
               </div>
@@ -63,8 +63,8 @@
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#589BAD',color:'#fff',padding:'5px'}"
                   >
-                     <div class="cardvalue">{{item.name}}</div>
-                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                    <div class="cardvalue">{{item.name}}</div>
+                    <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
               </div>
@@ -89,8 +89,8 @@
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px'}"
                   >
-                     <div class="cardvalue">{{item.name}}</div>
-                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                    <div class="cardvalue">{{item.name}}</div>
+                    <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
               </div>
@@ -115,8 +115,8 @@
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px'}"
                   >
-                     <div class="cardvalue">{{item.name}}</div>
-                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                    <div class="cardvalue">{{item.name}}</div>
+                    <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
               </div>
@@ -126,7 +126,7 @@
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">审核中</el-col>
                 </el-row>
-                 <div class="board-column-content">
+                <div class="board-column-content">
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of ApproveingArr"
@@ -134,18 +134,18 @@
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#2D5637',color:'#fff',padding:'5px'}"
                   >
-                     <div class="cardvalue">{{item.name}}</div>
-                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                    <div class="cardvalue">{{item.name}}</div>
+                    <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
-                 </div> 
+                </div>
               </div>
             </el-col>
             <el-col>
-               <div class="project-warp" style="background-color:#eeeeee">
+              <div class="project-warp" style="background-color:#eeeeee">
                 <el-row type="flex" align="middle">
                   <el-col tag="h4" :span="24">完成</el-col>
                 </el-row>
-                 <div class="board-column-content">
+                <div class="board-column-content">
                   <el-card
                     :style="{margin:'10px 0'}"
                     v-for="item of FinishedArr"
@@ -154,9 +154,9 @@
                     :body-style="{backgroundColor:'#2f5c85',color:'#fff',padding:'5px'}"
                   >
                     <div class="cardvalue">{{item.name}}</div>
-                  <div class="feedback">{{item.feedback_counter}}个反馈</div>
+                    <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
-                 </div>
+                </div>
               </div>
             </el-col>
           </el-row>
@@ -205,6 +205,67 @@
             </el-tab-pane>
           </el-tabs>
         </Drawer>
+        <el-row style="padding-bottom:10px">
+          <el-col style="text-align:right">
+            <div style="display:flex;justify-content:flex-end">
+              <el-select
+                v-model="colSel"
+                placeholder="请选择"
+                style="width:130px;"
+                filterable
+                slot="prepend"
+              >
+                <el-option
+                  v-for="item in columnSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <el-input
+                v-if="colShow"
+                placeholder="输入关键字搜索"
+                v-model="keyword"
+                @keyup.enter.native="task(changecolor)"
+                style="width:300px"
+              >
+              </el-input>
+              <el-select
+                v-show="chooseSel"
+                v-model="colSel2"
+                placeholder="请选择"
+                style="width:300px;margin-top:1px"
+                multiple
+                filterable
+                @keyup.enter.native="task(changecolor)"
+              >
+                <el-option
+                  v-for="item in columnSelect2"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <el-button
+                v-show="!timeSel"
+                @click="task(changecolor)"
+                slot="append"
+                icon="el-icon-search"
+                type="primary"
+                style="margin-top:-1px"
+              />
+              <el-date-picker
+                v-if="timeSel"
+                v-model="timeSelection"
+                type="date"
+                placeholder="选择日期"
+                @change="task(changecolor)"
+                style="width:300px"
+              ></el-date-picker>
+              <el-button @click="reTask(changecolor)" style="margin-left: 15px" type="primary">重置</el-button>
+            </div>
+          </el-col>
+        </el-row>
         <el-table
           :data="MyTaskList1"
           highlight-current-row
@@ -271,9 +332,9 @@
           <el-table-column label="截止日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column  prop="total_hour" header-align="left" label="预设时间（小时）" width="80px;">
-           <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
-           </el-table-column>
+          <el-table-column prop="total_hour" header-align="left" label="预设时间（小时）" width="80px;">
+            <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
+          </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
