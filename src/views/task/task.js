@@ -13,6 +13,7 @@ import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import dayjs from "dayjs";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -213,7 +214,7 @@ export default {
       };
 
       function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
+        return  dayjs(dateVal).format("YYYY/MM/DD")
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (this.colSel == "name" && this.keyword) {
@@ -221,27 +222,21 @@ export default {
           ...data,
           name: this.keyword
         };
-        this.name = {
-          name: this.keyword
-        };
+
       }
       if (this.colSel == "start_date" && this.timeSelection) {
         data = {
           ...data,
-          start_date: DateFormat(this.timeSelection)
+          start: DateFormat(this.timeSelection)
         };
-        this.name = {
-          start_date: DateFormat(this.timeSelection)
-        };
+
       }
       if (this.colSel == "end_date" && this.timeSelection) {
         data = {
           ...data,
-          end_date: DateFormat(this.timeSelection)
+          end: DateFormat(this.timeSelection)
         };
-        this.name = {
-          end_date: DateFormat(this.timeSelection)
-        };
+
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "priority") {

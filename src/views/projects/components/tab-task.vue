@@ -927,6 +927,7 @@ import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
+import dayjs from "dayjs";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -1923,7 +1924,7 @@ export default {
     //获取任务列表
     getTasks(type) {
       function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
+       return  dayjs(dateVal).format("YYYY/MM/DD")
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (type === 1) {
@@ -1957,11 +1958,11 @@ export default {
         this.name = { content: this.keyword };
       }
       if (this.colSel == "start_date" && this.timeSelection) {
-        payload = { ...payload, start_date: DateFormat(this.timeSelection) };
+        data = { ...data, start: DateFormat(this.timeSelection) };
         this.name = { start_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel == "end_date" && this.timeSelection) {
-        payload = { ...payload, end_date: DateFormat(this.timeSelection) };
+        data = { ...data, end: DateFormat(this.timeSelection) };
         this.name = { end_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
