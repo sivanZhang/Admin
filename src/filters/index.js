@@ -87,6 +87,34 @@ export function Priority(priority) {
             break
     }
 }
+//任务优先级
+  export function taskPriority(priority) {
+    switch (priority) {
+      case 0:
+        return "低级";
+        break;
+      case 1:
+        return "中级";
+        break;
+      case 2:
+        return "高级";
+        break;
+    }
+  }
+    //任务难度等级显示
+    export function taskgrade(grade) {
+        switch (grade) {
+          case 0:
+            return "简单";
+            break;
+          case 1:
+            return "标准";
+            break;
+          case 2:
+            return "困难";
+            break;
+        }
+      }
 //难度等级
 export function Level(level) {
     switch (level) {

@@ -238,6 +238,7 @@
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         :cell-style="{borderRight:0}"
         border
+        cell-class-name="demo"
         :row-key="row=>row.id"
         v-loading="tableLoading"
         @filter-change="filterHandler"
@@ -303,9 +304,19 @@
           v-if="show_priority"
           width="120px"
           sortable="custom"
+          align="center"
           column-key="priority"
           :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
-        ></el-table-column>
+        >
+         <template slot-scope="scope" >
+           <div style="backgroundColor:#C64b2b;color:#FFF"   v-if="scope.row.priority === 2">
+           {{scope.row.priority|taskPriority}}
+           </div>
+           <div style="backgroundColor:'transparent'"   v-else>
+           {{scope.row.priority|taskPriority}}
+           </div>
+         </template>
+        </el-table-column>
         <el-table-column
           prop="grade"
           label="难度等级"
@@ -313,9 +324,19 @@
           v-if="show_grade"
           width="120px"
           sortable="custom"
+          align="center"
           column-key="grade"
           :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
-        ></el-table-column>
+        >
+         <template slot-scope="scope" >
+           <div style="backgroundColor:#C64b2b;color:#FFF"   v-if="scope.row.grade === 2">
+           {{scope.row.grade|taskgrade}}
+           </div>
+           <div style="backgroundColor:'transparent'"   v-else>
+           {{scope.row.grade|taskgrade}}
+           </div>
+         </template>
+        </el-table-column>
         <el-table-column
           label="状态"
           prop="status"
@@ -889,7 +910,7 @@
       </el-form>
     </el-dialog>
     <Drawer
-      :title="任务"
+      title="任务"
       scrollable
       closable
       v-model="showdrawer"
@@ -978,7 +999,7 @@ export default {
       show_grade: true,
       show_status: true,
       show_executor: true,
-      show_creator_name: true,
+      show_creator_name: false,
       show_create_time: true,
       show_start_date: true,
       show_end_date: true,
@@ -2113,6 +2134,14 @@ export default {
   .links {
     cursor: pointer;
     color: #2d8cf0;
+  }
+}
+.demo{
+  padding: 0px !important;
+  height: 100px;
+  .cell{
+    padding:inherit;
+    line-height: 100px;
   }
 }
 .el-switch__core {
