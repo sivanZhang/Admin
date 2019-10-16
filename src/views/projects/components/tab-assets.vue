@@ -650,7 +650,6 @@
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'level')"
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-              
             >
               <el-option
                 v-for="item of LevelList"
@@ -687,8 +686,6 @@
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'small_status')"
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-             
-            
             >
               <div v-if="scope.row.status === 0">
                 <el-option
@@ -779,7 +776,6 @@
               type="date"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'start_date')"
               @change="showEditIcon(scope.$index,scope.row)"
-             
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
               placeholder="选择开始日期"
             />
@@ -803,7 +799,6 @@
               type="date"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
               @change="showEditIcon(scope.$index,scope.row)"
-              
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
               placeholder="选择结束日期"
             />
@@ -1447,53 +1442,55 @@ export default {
   methods: {
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
-      if (column.label == "镜头号") {
-        this.cellCol = "name";
+      if (this.authAsset) {
+        if (column.label == "镜头号") {
+          this.cellCol = "name";
+        }
+        if (column.label == "场次") {
+          this.cellCol = "session";
+        }
+        if (column.label == "集数") {
+          this.cellCol = "episode";
+        }
+        if (column.label == "帧数") {
+          this.cellCol = "frame";
+        }
+        if (column.label == "帧数范围") {
+          this.cellCol = "frame_range";
+        }
+        if (column.label == "制作参考") {
+          this.cellCol = "reference";
+        }
+        if (column.label == "画面调整信息") {
+          this.cellCol = "report";
+        }
+        if (column.label == "变速信息") {
+          this.cellCol = "retime";
+        }
+        if (column.label == "制作内容") {
+          this.cellCol = "content";
+        }
+        if (column.label == "优先级") {
+          this.cellCol = "priority";
+        }
+        if (column.label == "难度等级") {
+          this.cellCol = "level";
+        }
+        if (column.label == "小状态") {
+          this.cellCol = "small_status";
+        }
+        if (column.label == "开始日期") {
+          this.cellCol = "start_date";
+        }
+        if (column.label == "结束日期") {
+          this.cellCol = "end_date";
+        }
+        if (column.label == "备注") {
+          this.cellCol = "remark";
+        }
+        this.dbCell = true;
+        this.cellId = row.id;
       }
-      if (column.label == "场次") {
-        this.cellCol = "session";
-      }
-      if (column.label == "集数") {
-        this.cellCol = "episode";
-      }
-      if (column.label == "帧数") {
-        this.cellCol = "frame";
-      }
-      if (column.label == "帧数范围") {
-        this.cellCol = "frame_range";
-      }
-      if (column.label == "制作参考") {
-        this.cellCol = "reference";
-      }
-      if (column.label == "画面调整信息") {
-        this.cellCol = "report";
-      }
-      if (column.label == "变速信息") {
-        this.cellCol = "retime";
-      }
-      if (column.label == "制作内容") {
-        this.cellCol = "content";
-      }
-      if (column.label == "优先级") {
-        this.cellCol = "priority";
-      }
-      if (column.label == "难度等级") {
-        this.cellCol = "level";
-      }
-      if (column.label == "小状态") {
-        this.cellCol = "small_status";
-      }
-      if (column.label == "开始日期") {
-        this.cellCol = "start_date";
-      }
-      if (column.label == "结束日期") {
-        this.cellCol = "end_date";
-      }
-      if (column.label == "备注") {
-        this.cellCol = "remark";
-      }
-      this.dbCell = true;
-      this.cellId = row.id;
     },
 
     //添加进素材库
@@ -1745,11 +1742,17 @@ export default {
       // console.log(row, event, column, event.currentTarget);
     },
     //是否显示行内修改框
-    showEditIcon(index,row) {
+    showEditIcon(index, row) {
       this.iconShow = true;
       this.rowClick = true;
-      if(this.cellCol == 'priority'||this.cellCol == 'level'||this.cellCol == 'small_status' ||this.cellCol =='start_date'||this.cellCol == 'end_date'){
-        this.saveEdit(index,row)
+      if (
+        this.cellCol == "priority" ||
+        this.cellCol == "level" ||
+        this.cellCol == "small_status" ||
+        this.cellCol == "start_date" ||
+        this.cellCol == "end_date"
+      ) {
+        this.saveEdit(index, row);
       }
     },
     //修改资产
