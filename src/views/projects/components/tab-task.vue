@@ -236,9 +236,8 @@
         @selection-change="handleSelectionChange"
         :stripe="true"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-        :cell-style="{borderRight:0}"
+        :cell-style="cellStyle"
         border
-        cell-class-name="demo"
         :row-key="row=>row.id"
         v-loading="tableLoading"
         @filter-change="filterHandler"
@@ -1245,6 +1244,26 @@ export default {
     }
   },
   methods: {
+    cellStyle({row,column,rowIndex,columnIndex}){
+      if (column.property == "priority") {
+        switch (row.priority) {
+          case 2:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            }
+        }
+      }else if(column.property == "grade"){
+        switch (row.grade) {
+          case 2:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            }
+        }
+      }
+      return {borderRight: 0}
+    },
     //批量修改任务
     mulEditTasks(Type) {
       function dataFormat(params) {
@@ -2136,14 +2155,7 @@ export default {
     color: #2d8cf0;
   }
 }
-.demo{
-  padding: 0px !important;
-  height: 100px;
-  .cell{
-    padding:inherit;
-    line-height: 100px;
-  }
-}
+
 .el-switch__core {
   height: 15px;
   width: 33px !important;

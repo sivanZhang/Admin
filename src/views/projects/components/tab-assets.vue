@@ -168,9 +168,7 @@
               v-model="filterText"
               @keyup.enter.native="getAssetList()"
               style="width:300px"
-            >
-             
-            </el-input>
+            ></el-input>
             <el-select
               v-show="chooseSel"
               v-model="colSel2"
@@ -331,7 +329,7 @@
         ref="assetTable"
         :data="AssetList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-        :cell-style="{borderRight:0}"
+        :cell-style="cellStyle"
         highlight-current-row
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
@@ -604,8 +602,8 @@
           prop="priority"
           label="优先级"
           :formatter="Priority"
-          align="left"
-          width="100px"
+          align="center"
+          width="120px"
           v-if="show_priority"
           sortable="custom"
           column-key="priority"
@@ -630,7 +628,7 @@
           prop="level"
           label="难度等级"
           :formatter="Level"
-          align="left"
+          align="center"
           v-if="show_level"
           width="120px"
           sortable="custom"
@@ -1153,7 +1151,7 @@ export default {
       show_priority: true,
       show_level: true,
       show_id: false,
-      show_creator_name: true,
+      show_creator_name: false,
       show_creator_id: false,
       show_status: true,
       show_link: true,
@@ -1434,6 +1432,26 @@ export default {
     }
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (column.property == "priority") {
+        switch (row.priority) {
+          case 1:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            }
+        }
+      }else if(column.property == "level"){
+        switch (row.level) {
+          case 3:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            }
+        }
+      }
+      return {borderRight: 0}
+    },
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
       if (this.authAsset) {
