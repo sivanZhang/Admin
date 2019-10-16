@@ -49,17 +49,20 @@
           <h3>必填字段</h3>
           <div style="padding-top:2px">
             <span style="font-weight:bold">镜头号：</span>
-            不符合要求则返回“镜头号是必填字段”；</div>
+            不符合要求则返回“镜头号是必填字段”；
+          </div>
           <div style="padding-top:2px">
             <span style="font-weight:bold">制作内容：</span>
-            不符合要求则返回“制作内容是必填字段”。</div>
+            不符合要求则返回“制作内容是必填字段”。
+          </div>
         </div>
         <div style="padding-top:3px;font-size:12px">
           <h3>非必填字段</h3>
           <div style="padding-top:2px">
             <span style="font-weight:bold">
-            开始日期，结束日期，缩略图，路径，内部版本号，外部版本号，优先级，
-            难度等级，场次，帧数，帧数范围，画面调整信息，变速信息，集数，备注，</span>这些字段可以选填或者不填。
+              开始日期，结束日期，缩略图，路径，内部版本号，外部版本号，优先级，
+              难度等级，场次，帧数，帧数范围，画面调整信息，变速信息，集数，备注，
+            </span>这些字段可以选填或者不填。
           </div>
         </div>
       </div>
@@ -150,11 +153,12 @@ export default {
           if (data.msg) {
             this.$message.warning(data.msg);
           } else {
-            this.$notify({
-              title: "提交状态",
-              message: `资产/镜头创建成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条; 环节创建成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条`,
+            this.$notify.info({
+              title: "导入结果",
+              message: `资产/镜头导入成功${data.create_asset.success_num}条、失败${data.create_asset.failure_num}条;
+               环节导入成功${data.create_link.success_num}条、失败${data.create_link.failure_num}条;
+               任务导入成功${data.create_link.task_success_num}条、失败${data.create_link.task_failure_num}条`,
               duration: 0,
-              type: "warning"
             });
             this.$router.push({
               name: "project-detail",

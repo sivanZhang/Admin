@@ -273,7 +273,7 @@
           @row-click="taskBoardRightShow"
           style="width: 100%;"
         >
-          <el-table-column type="index" label="序号" align="left" width="80"></el-table-column>
+          <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
             <template slot-scope="scope">
@@ -297,7 +297,7 @@
             label="任务内容"
             show-overflow-tooltip
           ></el-table-column>
-          <el-table-column label="任务状态" header-align="left" width="120px">
+          <el-table-column label="任务状态" width="120px">
             <template slot-scope="scope">
               <div
                 v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6"
@@ -316,7 +316,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div v-else>{{scope.row.task.status|taskStatus}}</div>
+              <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
             </template>
           </el-table-column>
           <el-table-column label="优先级" header-align="left">

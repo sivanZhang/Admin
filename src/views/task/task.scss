@@ -1,5 +1,13 @@
 $linkCorlor:#2d8cf0;
 #layout_main {
+    .el-table{
+        .el-input__inner{
+            border: 0;
+            padding-left: 0;
+            background: transparent;
+            color:$linkCorlor ;
+        }
+    }
     .fold-icon {
         text-align: right;
         cursor: pointer;
