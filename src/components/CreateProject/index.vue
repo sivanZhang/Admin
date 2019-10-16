@@ -64,6 +64,9 @@
         <el-form-item label="项目编码" prop="code">
           <el-input v-model="ProjectForm.code"></el-input>
         </el-form-item>
+        <el-form-item label="制作要求" prop="requirement">
+          <el-input v-model="ProjectForm.requirement" type="textarea"></el-input>
+        </el-form-item>
         <el-form-item label="Windows路径" prop="windows_path">
           <el-input v-model="ProjectForm.windows_path"></el-input>
         </el-form-item>
@@ -140,8 +143,7 @@
       </el-row>
       <el-row style="padding-top:20px;padding-bottom:30px;">
         <el-col align="center">
-          <router-link 
-          :to="{name:'project-detail',params:{id:id},query:{type:radio}}">
+          <router-link :to="{name:'project-detail',params:{id:id},query:{type:radio}}">
             <el-button type="primary" @click="cancel1()" style="margin-right:20px">前往项目</el-button>
           </router-link>
 
@@ -393,11 +395,18 @@ export default {
       this.$refs["projectForm"].validate(valid => {
         if (valid) {
           // console.log(this.ProjectForm)
+           if (this.ProjectForm.requirement) {
+            this.ProjectForm.requirement = this.ProjectForm.requirement
+              .replace(/\r\n/g, "<br/>")
+              .replace(/\n/g, "<br/>")
+              .replace(/\s/g, "&nbsp;");
+          }
           let Data = {
             ...this.ProjectForm,
             start: this.ProjectForm.datetime[0].toLocaleDateString(),
             end: this.ProjectForm.datetime[1].toLocaleDateString()
           };
+         
           if (this.templateid) {
             Data = { ...Data, templateid: this.templateid };
           }
