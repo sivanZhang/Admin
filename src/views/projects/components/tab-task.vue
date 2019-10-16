@@ -248,7 +248,7 @@
           </template>
         </el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
