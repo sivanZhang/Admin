@@ -117,7 +117,7 @@
               @click="getTasks()"
               slot="append"
               icon="el-icon-search"
-              type="primary"
+              type="text"
               style="margin-top:-1px"
             />
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
@@ -189,27 +189,39 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="开始日期" prop="start_date">
-                        <el-date-picker
-                          v-model="sortSelForm.start_date"
-                          type="date"
-                          placeholder="选择日期"
-                        ></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="结束日期" prop="end_date">
-                        <el-date-picker
-                          v-model="sortSelForm.end_date"
-                          type="date"
-                          placeholder="选择日期"
-                        ></el-date-picker>
-                      </el-form-item>
-                    </el-col>
+                    <el-form-item label="开始日期" prop="start">
+                      <div style="display:flex">
+                        <el-col :span="11">
+                          <el-date-picker v-model="sortSelForm.start" type="date"></el-date-picker>
+                        </el-col>
+                        <el-col :span="2" align="center">
+                          <span style="padding-top:3px">至</span>
+                        </el-col>
+                        <el-col :span="11" align="right">
+                          <el-date-picker v-model="sortSelForm.start2" type="date"></el-date-picker>
+                        </el-col>
+                      </div>
+                    </el-form-item>
                   </el-row>
-                  <el-row align="right">
-                    <el-button type="primary" @click="MulSel()">筛选</el-button>
+                  <el-row>
+                    <el-form-item label="结束日期" prop="end">
+                      <div style="display:flex">
+                        <el-col :span="11">
+                          <el-date-picker v-model="sortSelForm.end" type="date"></el-date-picker>
+                        </el-col>
+                        <el-col :span="2" align="center">
+                          <span style="padding-top:3px">至</span>
+                        </el-col>
+                        <el-col :span="11" align="right">
+                          <el-date-picker v-model="sortSelForm.end2" type="date"></el-date-picker>
+                        </el-col>
+                      </div>
+                    </el-form-item>
+                  </el-row>
+                  <el-row>
+                    <el-col align="right">
+                      <el-button type="primary" @click="MulSel()">筛选</el-button>
+                    </el-col>
                   </el-row>
                 </el-form>
                 <el-button slot="reference" type="primary" style="margin-left: 15px">筛选</el-button>
@@ -881,7 +893,7 @@
       </el-form>
     </el-dialog>
     <Drawer
-      title="任务"
+      :title="titleDialog"
       scrollable
       closable
       v-model="showdrawer"
@@ -1369,11 +1381,31 @@ export default {
           this.sortSelForm.status = "[" + String(this.sortSelForm.status) + "]";
         }
       }
-      if (this.sortSelForm.start_date) {
-        this.sortSelForm.start_date = dateFormat(this.sortSelForm.start);
+      if (this.sortSelForm.start || this.sortSelForm.start2) {
+        if (this.sortSelForm.start && !this.sortSelForm.start2) {
+          this.sortSelForm.start =
+            dateFormat(this.sortSelForm.start) + "," + "";
+        } else if (!this.sortSelForm.start && this.sortSelForm.start2) {
+          this.sortSelForm.start =
+            "" + "," + dateFormat(this.sortSelForm.start2);
+        } else {
+          this.sortSelForm.start =
+            dateFormat(this.sortSelForm.start) +
+            "," +
+            dateFormat(this.sortSelForm.start2);
+        }
       }
-      if (this.sortSelForm.end_date) {
-        this.sortSelForm.end_date = dateFormat(this.sortSelForm.end);
+      if (this.sortSelForm.end || this.sortSelForm.end2) {
+        if (this.sortSelForm.end && !this.sortSelForm.end2) {
+          this.sortSelForm.end = dateFormat(this.sortSelForm.end) + "," + "";
+        } else if (!this.sortSelForm.end && this.sortSelForm.end2) {
+          this.sortSelForm.end = "" + "," + dateFormat(this.sortSelForm.end2);
+        } else {
+          this.sortSelForm.end =
+            dateFormat(this.sortSelForm.end) +
+            "," +
+            dateFormat(this.sortSelForm.end2);
+        }
       }
       let data = {
         ...this.sortSelForm,
