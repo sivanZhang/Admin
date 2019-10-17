@@ -2,19 +2,39 @@
 </style>
 <template>
   <div ref="drawer-parent">
-    
     <el-card>
+      <template slot="header">
+        <el-select v-model="value" placeholder="请选择" style="width:110px" @change="getStatistics()">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </template>
+      <template slot="header" v-if="this.value == 5">
+        <el-date-picker
+          v-model="value1"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width:200px;"
+          @change="getStatistics()"
+        ></el-date-picker>
+      </template>
       <template v-if="!authDaysOff">
-      <div style="display:flex" slot="header">
-        <chart ref="man-hour" chart-id="man-hour" />
-        <chart ref="dayoff-hour" chart-id="dayoff-hour" />
-      </div>
-    </template>
-    <template v-else>
-      <chart slot="header" ref="man-hour" chart-id="man-hour" />
-    </template>
+        <div style="display:flex" slot="header">
+          <chart ref="man-hour" chart-id="man-hour" />
+          <chart ref="dayoff-hour" chart-id="dayoff-hour" />
+        </div>
+      </template>
+      <template v-else>
+        <chart slot="header" ref="man-hour" chart-id="man-hour" />
+      </template>
       <el-table :data="projectCount">
-         <!-- <el-table-column type="selection" width="55px"></el-table-column> -->
+        <!-- <el-table-column type="selection" width="55px"></el-table-column> -->
         <el-table-column label="缩略图" align="center" width="80px;" v-if="show_image">
           <template slot-scope="scope">
             <el-image
@@ -69,12 +89,7 @@
     >
       <el-tabs v-model="activeName">
         <el-tab-pane label="每日工时" name="first">
-          <el-table
-            :data="dayManWork"
-            v-loading="detailLoading"
-            border
-            highlight-current-row
-          >
+          <el-table :data="dayManWork" v-loading="detailLoading" border highlight-current-row>
             <el-table-column label="日期">
               <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
             </el-table-column>
@@ -83,11 +98,7 @@
         </el-tab-pane>
         <el-tab-pane label="任务明细" name="second">
           <div style="overflow-x:auto">
-            <el-table
-              :data="taskList"
-              border
-              highlight-current-row
-            >
+            <el-table :data="taskList" border highlight-current-row>
               <el-table-column label="任务名称" prop="name" show-overflow-tooltip></el-table-column>
               <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
               <el-table-column label="制作环节" prop="dept.name"></el-table-column>
@@ -107,11 +118,7 @@
         </el-tab-pane>
         <el-tab-pane label="加班明细" name="third">
           <div style="overflow-x:auto">
-            <el-table
-              :data="overtime_list"
-              :border="false"
-              highlight-current-row
-            >
+            <el-table :data="overtime_list" :border="false" highlight-current-row>
               <el-table-column label="申请人" prop="creator.username"></el-table-column>
               <el-table-column label="加班工时" prop="overtime_hour"></el-table-column>
               <el-table-column label="加班原因" prop="reason" show-overflow-tooltip></el-table-column>
@@ -159,9 +166,35 @@ export default {
       taskList: [], //任务明细
       overtime_list: [], //加班明细
       authDaysOff: null,
-      show_image:true,
-      editing:false,
-      clickId:null
+      show_image: true,
+      editing: false,
+      clickId: null,
+      startTime: "",
+      endTime: "",
+      options: [
+        {
+          value: "1",
+          label: "本周工时"
+        },
+        {
+          value: "2",
+          label: "本月工时"
+        },
+        {
+          value: "3",
+          label: "最近30天"
+        },
+        {
+          value: "4",
+          label: "最近90天"
+        },
+        {
+          value: "5",
+          label: "自定义时间"
+        }
+      ],
+      value: "1",
+      value1: ""
     };
   },
   methods: {
@@ -187,46 +220,154 @@ export default {
       });
     },
     //获取工时和调休统计并渲染饼状图
-    getStatistics() {
-      let data = { total_count: "" };
+    // getStatistics() {
+    //   let data = { total_count: "" };
 
-      this.$refs["man-hour"].openLoading();
+    //   this.$refs["man-hour"].openLoading();
 
-      Ajax.getManHour(data).then(({ data }) => {
-        let chartData = [
-          {
-            name: "任务工时",
-            value: data.task_count
-          },
-          {
-            name: "加班工时",
-            value: data.overtime_count
-          }
-        ];
-        this.$refs["man-hour"].initChart("工时统计", chartData);
-      });
+    //   Ajax.getManHour(data).then(({ data }) => {
+    //     let chartData = [
+    //       {
+    //         name: "任务工时",
+    //         value: data.task_count
+    //       },
+    //       {
+    //         name: "加班工时",
+    //         value: data.overtime_count
+    //       }
+    //     ];
+    //     this.$refs["man-hour"].initChart("工时统计", chartData);
+    //   });
+    getStatistics(value) {
+      var now = new Date(); //当前日期
+      var nowDayOfWeek = now.getDay(); //今天本周的第几天
+      var nowDay = now.getDate(); //当前日
+      var nowMonth = now.getMonth(); //当前月
+      var nowYear = now.getFullYear(); //当前年
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/卖萌/dd hh:mm:ss'
+      }
+      if (this.value == 1) {
+        let data = {
+          total_count: "",
+          start: (this.startTime = new Date(nowYear,nowMonth,nowDay - nowDayOfWeek).toLocaleDateString()),
+          end: (this.endTime = now.toLocaleDateString())
+        };
+        this.$refs["man-hour"].openLoading();
+        Ajax.getMyManHour(data).then(({ data }) => {
+          let chartData = [
+            {
+              name: "任务工时",
+              value: data.task_count
+            },
+            {
+              name: "加班工时",
+              value: data.overtime_count
+            }
+          ];
+          this.$refs["man-hour"].initChart("工时统计", chartData);
+        });
+      } else if (this.value == 2) {
+        let data = {
+          total_count: "",
+          start: (this.startTime = new Date(nowYear,nowMonth,1).toLocaleDateString()),
+          end: (this.endTime = new Date().toLocaleDateString())
+        };
+        this.$refs["man-hour"].openLoading();
+        Ajax.getMyManHour(data).then(({ data }) => {
+          let chartData = [
+            {
+              name: "任务工时",
+              value: data.task_count
+            },
+            {
+              name: "加班工时",
+              value: data.overtime_count
+            }
+          ];
+          this.$refs["man-hour"].initChart("工时统计", chartData);
+        });
+      } else if (this.value == 3) {
+        let data = {
+          total_count: "",
+          start: (this.startTime = new Date(nowYear,nowMonth - 1,nowDay).toLocaleDateString()),
+          end: (this.endTime = new Date().toLocaleDateString())
+        };
+        this.$refs["man-hour"].openLoading();
+        Ajax.getMyManHour(data).then(({ data }) => {
+          let chartData = [
+            {
+              name: "任务工时",
+              value: data.task_count
+            },
+            {
+              name: "加班工时",
+              value: data.overtime_count
+            }
+          ];
+          this.$refs["man-hour"].initChart("工时统计", chartData);
+        });
+      } else if (this.value == 4) {
+        let data = {
+          total_count: "",
+          start: (this.startTime = new Date(nowYear,nowMonth - 3,nowDay).toLocaleDateString()),
+          end: (this.endTime = new Date().toLocaleDateString())
+        };
+        this.$refs["man-hour"].openLoading();
+        Ajax.getMyManHour(data).then(({ data }) => {
+          let chartData = [
+            {
+              name: "任务工时",
+              value: data.task_count
+            },
+            {
+              name: "加班工时",
+              value: data.overtime_count
+            }
+          ];
+          this.$refs["man-hour"].initChart("工时统计", chartData);
+        });
+      } else {
+        let data = {
+          total_count: "",
+          start: (this.startTime = dataFormat(this.value1[0])),
+          end: (this.endTime = dataFormat(this.value1[1]))
+        };
+        this.$refs["man-hour"].openLoading();
+        Ajax.getMyManHour(data).then(({ data }) => {
+          let chartData = [
+            {
+              name: "任务工时",
+              value: data.task_count
+            },
+            {
+              name: "加班工时",
+              value: data.overtime_count
+            }
+          ];
+          this.$refs["man-hour"].initChart("工时统计", chartData);
+        });
+      }
       let payload = { my_daysoff: "" };
-      this.$refs["dayoff-hour"].openLoading();
+      //this.$refs["dayoff-hour"].openLoading();
       getDayOffList(payload).then(({ data }) => {
-        if(!data.auth.daysoff_operate){
+        if (!data.auth.daysoff_operate) {
           let Data = data.msg[0].off_count;
           //console.log(data.msg)
-        let chartData = [
-          {
-            name: "已调休时长",
-            value: Data.have_off_hour
-          },
-          {
-            name: "可调休时长",
-            value: Data.allow_off_hour
-          }
-        ];
-        this.$refs["dayoff-hour"].initChart("调休统计", chartData);
-        }else{
+          let chartData = [
+            {
+              name: "已调休时长",
+              value: Data.have_off_hour
+            },
+            {
+              name: "可调休时长",
+              value: Data.allow_off_hour
+            }
+          ];
+          this.$refs["dayoff-hour"].initChart("调休统计", chartData);
+        } else {
           return;
         }
-        
-        
       });
     },
 
@@ -243,7 +384,7 @@ export default {
   mounted() {
     getDayOffList({ my_daysoff: "" }).then(({ data }) => {
       this.authDaysOff = data.auth.daysoff_operate;
-     // console.log(this.authDaysOff);
+      // console.log(this.authDaysOff);
     });
     this.getStatistics();
   }
