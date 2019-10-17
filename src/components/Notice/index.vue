@@ -6,10 +6,11 @@
       scrollable
       closable
       height="500"
-      v-model="value1"
+      v-model="isShowCard"
       width="526"
       :mask-style="{backgroundColor: 'transparent'}"
       :transfer="false"
+      @on-close="drawerClose"
     >
       <div id="notice-header" style="border-bottom:1px soild #999999">
         <el-row>
@@ -127,7 +128,6 @@
         </el-tab-pane>
         <el-tab-pane label="通知" name="fourth">
           <noticeDetail :notice="Notice" @getNoticeDetail="getNoticeDetail"></noticeDetail>
-          {{Notice}}222
         </el-tab-pane>
         <el-tab-pane label="个人资料" name="fifth">
           <NoticeInfo :userInfo="userInfo" />
@@ -174,7 +174,6 @@ export default {
   },
   data() {
     return {
-      value1: false,
       id: this.$store.state.login.userInfo.id,
       active: null,
       multipleSelection: [],
@@ -191,7 +190,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("notice", ["Notice", "unreadCount"])
+    ...mapState("notice", ["Notice", "unreadCount", "isShowCard"])
   },
   watch: {
     date: {
@@ -283,8 +282,11 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+    drawerClose() {
+      this.$store.commit("notice/SET_CARDSHOW", false);
+    },
     show() {
-      this.value1 = true;
+      this.$store.commit("notice/SET_CARDSHOW", true);
       getUserPermission().then(({ data }) => {
         if (data.msg) {
           this.userPermission = null;

@@ -7,18 +7,18 @@
         :max="99"
         class="item"
       >
-        <span style="padding-right: 10px;">我的任务</span>
+        <span style="padding-right: 10px;"><svg-icon icon-class="cairenwu"/> 我的任务</span>
       </el-badge>
       <el-button @click="props.targetMore" type="text">查看更多</el-button>
     </el-row>
     <ul class="list">
-      <li class="item" v-for="item of props.myTaskList.filter((t,i)=>1<10)" :key="item.task.id">
+      <li class="item" v-for="item of props.myTaskList.filter((t,i)=>1<5)" :key="item.task.id">
         {{item.task.name}}
         <div class="message">{{item.task.start_date | dateFormat}} - {{item.task.end_date|dateFormat}}</div>
         <div class="message">{{item.task.content}}</div>
       </li>
     </ul>
-    <div v-show="props.myTaskList.length>10">...</div>
+    <div v-show="props.myTaskList.length>5">...</div>
   </el-card>
 </template>
 <style lang="scss" scoped>

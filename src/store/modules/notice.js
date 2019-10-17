@@ -6,7 +6,8 @@ import {
 } from "@/api/checkingIn";
 const state = {
   Notice: null, //我的审批任务列表
-  unreadCount: null
+  unreadCount: null,
+  isShowCard:false,
 }
 
 const mutations = {
@@ -15,6 +16,9 @@ const mutations = {
   },
   SET_UnreadCount: (state, num) => {
     state.unreadCount = num
+  },
+  SET_CARDSHOW: (state, bl) => {
+    state.isShowCard = bl
   },
 }
 

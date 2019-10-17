@@ -2,7 +2,7 @@
   <el-card>
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <el-badge :value="sceneNeed.length" :hidden="!sceneNeed.length" :max="99" class="item">
-        <span style="padding-right: 10px;">待分配镜头</span>
+        <span style="padding-right: 10px;"><svg-icon icon-class="caifenpei"/> 待分配镜头</span>
       </el-badge>
       <el-button @click="$router.push({name:'team-manager'})" type="text">查看更多</el-button>
     </el-row>

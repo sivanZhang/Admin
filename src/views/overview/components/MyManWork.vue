@@ -1,7 +1,9 @@
 <template>
   <el-card>
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
-      <span>我的工时</span>
+      <span>
+        <svg-icon icon-class="caigongshi" />我的工时
+      </span>
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
     <MyCharts ref="radar" chart-id="radar-chart" />
@@ -10,16 +12,22 @@
       <el-col :span="12">本月工时(h)：{{monthHour.total_count}}</el-col>
     </el-row>-->
     <el-table :data="workhouerlist">
-      <el-table-column prop="time" label="时间" align="center"></el-table-column>
-      <el-table-column label="任务工时" prop="task_count" align="center"></el-table-column>
-      <el-table-column label="加班工时" prop="overtime_count" align="center"></el-table-column>
-      <el-table-column label="总工时" prop="total_count" align="center"></el-table-column>
+      <el-table-column prop="time" label="时间" width="60"></el-table-column>
+      <el-table-column label="任务工时" prop="task_count"></el-table-column>
+      <el-table-column label="加班工时" prop="overtime_count"></el-table-column>
+      <el-table-column label="总工时" prop="total_count"  width="60"></el-table-column>
     </el-table>
     <el-dialog :visible.sync="isDialogShow" width="460px">
       <h4 slot="title">工时填报</h4>
-      <el-form :model="TaskForm" label-width="80px" label-position="left" :rules="rules" ref="taskForm">
+      <el-form
+        :model="TaskForm"
+        label-width="80px"
+        label-position="left"
+        :rules="rules"
+        ref="taskForm"
+      >
         <el-form-item label="选择任务" prop="task_id">
-          <el-select v-model="TaskForm.task_id" placeholder="请选择填报任务" style="width:180px">
+          <el-select v-model="TaskForm.task_id" placeholder="请选择填报任务">
             <el-option
               v-for="item in myTasks"
               :key="item.task.id"
@@ -28,8 +36,39 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="工时 ( h )" prop="labor_hour">
-          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" style="width:180px"></el-input-number>
+
+        <el-form-item label="标题" prop="title">
+          <el-input type="text" v-model="TaskForm.title"></el-input>
+        </el-form-item>
+        <el-form-item label="完成内容" prop="content">
+          <el-input type="textarea" v-model="TaskForm.content"></el-input>
+        </el-form-item>
+        <el-form-item label="完成进度" prop="content">
+          <el-row type="flex" align="middle">
+            <el-col :span="10">
+              <el-input-number v-model="TaskForm.schedule" :min="0" :max="100" :step="10"></el-input-number>
+            </el-col>
+            <el-col :span="14">
+              <el-progress
+                :percentage="TaskForm.schedule"
+                :color="customColors"
+                :text-inside="true"
+                :stroke-width="20"
+              ></el-progress>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="工时 (h)" prop="labor_hour">
+          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时"></el-input-number>
+        </el-form-item>
+        <el-form-item label="日期" prop="date">
+          <el-date-picker
+            v-model="TaskForm.date"
+            type="date"
+            placeholder="选择日期"
+            value-format="yyyy/MM/dd"
+            style="width:130px"
+          ></el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -111,14 +150,34 @@ export default {
         labor_hour: [
           { required: true, message: "请输入工时", trigger: "blur" }
         ],
-        task_id: [
-          { required: true, message: "请选择任务", trigger: "blur" }
-        ]
+        task_id: [{ required: true, message: "请选择任务", trigger: "blur" }]
       },
       weekHour: {},
       monthHour: {},
       isDialogShow: false,
-      submitLoading:false
+      submitLoading: false,
+      customColors: [
+        {
+          color: "#f56c6c",
+          percentage: 20
+        },
+        {
+          color: "#e6a23c",
+          percentage: 40
+        },
+        {
+          color: "#6f7ad3",
+          percentage: 60
+        },
+        {
+          color: "#1989fa",
+          percentage: 80
+        },
+        {
+          color: "#5cb87a",
+          percentage: 100
+        }
+      ]
     };
   },
   computed: {
@@ -173,24 +232,26 @@ export default {
       });
     },
     submitWorkHourFrom() {
-      this.$refs['taskForm'].validate((valid) => {
-          if (valid) {
-            this.submitLoading = true
-            addTaskRecord(this.TaskForm).then(({data})=>{
-              if(data.status===0){
-                this.getMyWorkHours()
-                this.$message.success(data.msg)
-                this.isDialogShow = false
-              }else{
-                this.$message.warning(data.msg)
+      this.$refs["taskForm"].validate(valid => {
+        if (valid) {
+          this.submitLoading = true;
+          addTaskRecord(this.TaskForm)
+            .then(({ data }) => {
+              if (data.status === 0) {
+                this.getMyWorkHours();
+                this.$message.success(data.msg);
+                this.isDialogShow = false;
+              } else {
+                this.$message.warning(data.msg);
               }
-            }).finally(()=>{
-              this.submitLoading = false
             })
-          } else {
-            return false;
-          }
-        });
+            .finally(() => {
+              this.submitLoading = false;
+            });
+        } else {
+          return false;
+        }
+      });
     }
   }
 };
