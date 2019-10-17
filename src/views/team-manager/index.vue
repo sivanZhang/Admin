@@ -10,11 +10,10 @@
           :cell-style="{borderRight:0}"
           highlight-current-row
           @selection-change="handleSelectionChange"
-          :row-key="(row)=>{ return row.id}"
           :border="false"
+          v-loading="tableLoading"
         >
-          <el-table-column type="selection" :reserve-selection="true" align="right"></el-table-column>
-          <el-table-column type="index"></el-table-column>
+          <el-table-column type="index" :index="indexMethod"></el-table-column>
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
@@ -102,10 +101,10 @@
           :cell-style="{borderRight:0}"
           highlight-current-row
           @selection-change="handleSelectionChange"
-          :row-key="(row)=>{ return row.id}"
           :border="false"
+           v-loading="tableLoading"
         >
-          <el-table-column type="index"></el-table-column>
+          <el-table-column type="index" :index="indexMethod"></el-table-column>
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
@@ -162,9 +161,9 @@
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="pageSizeList"
-            :page-size="pageSize"
+            :current-page="currentPage2"
+            :page-sizes="pageSizeList2"
+            :page-size="pageSize2"
             layout="total, sizes, prev, pager, next, jumper"
             :page-count="pageCount2"
             :total="total2"
@@ -175,6 +174,7 @@
     </el-tabs>
 
     <Drawer
+    ref="drawer"
       scrollable
       closable
       v-model="value1"
@@ -327,18 +327,21 @@ export default {
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
+      currentPage2: 1,
+      pageSize2: 20,
+      pageSizeList2: [20, 30, 50, 100],
       total: 0,
       total2: 0,
       pageCount: 0,
       pageCount2: 0,
-
+      tableLoading: false //表格加载状态
     };
   },
   watch: {
-    activeName:{
-      handler:function(newVal,oldVal){
-        if(newVal){
-          this.getScene()
+    activeName: {
+      handler: function(newVal, oldVal) {
+        if (newVal) {
+          this.getScene();
         }
       }
     }
@@ -444,30 +447,50 @@ export default {
       //console.log(this.multipleSelection.length);
     },
     getScene() {
+      this.sceneNeed = [];
+      this.sceneUnneed =[];
       let payload = {
-        pagenum: this.pageSize,
-        page: this.currentPage
+        pagenum: this.activeName=="first"?this.pageSize:this.pageSize2,
+        page: this.activeName=="first"?this.currentPage:this.currentPage2
       };
+      this.tableLoading = true;
       allocationScene(payload).then(({ data }) => {
-        this.sceneNeed = [...data.need];
-        this.sceneUnneed = [...data.not_need];
-        if(this.activeName == "first"){
+       
+        
+        if (this.activeName == "first") {
+           this.sceneNeed = [...data.need];
           this.total = data.need_page.count;
-            this.pageCount = data.need_page.page_count;
-        }else{
+          this.pageCount = data.need_page.page_count;
+        } else {
+          this.sceneUnneed = [...data.not_need];
           this.total2 = data.not_need_page.count;
-            this.pageCount2 = data.not_need_page.page_count;
+          this.pageCount2 = data.not_need_page.page_count;
         }
+
+        this.tableLoading = false;
       });
     },
     //分页
     handleSizeChange(val) {
-      this.pageSize = val;
+      if (this.activeName == "first") {
+        this.pageSize = val;
+      } else {
+        this.pageSize2 = val;
+      }
+
       this.getScene();
     },
     handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
+      if (this.activeName == "first") {
+        this.currentPage = currentPage;
+      } else {
+        this.currentPage2 = currentPage;
+      }
       this.getScene();
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
     },
     //难度等级格式化显示
     Level: function(row, column) {
