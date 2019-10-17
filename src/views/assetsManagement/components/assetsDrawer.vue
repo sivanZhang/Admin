@@ -203,8 +203,7 @@ export default {
             rowspan: 0,
             colspan: 0
           };
-      }
-      if (columnIndex === 1) {
+      } else if (columnIndex === 1) {
         const len = this.TaskGroup(row.task_name);
         const lenName = this.NameLen(row.task_name);
         if (rowIndex === lenName) {
@@ -217,8 +216,7 @@ export default {
             rowspan: 0,
             colspan: 0
           };
-      }
-      if (columnIndex === 2) {
+      } else if (columnIndex === 2) {
         const len = this.TaskContentGroup(row.task_content);
         const lenName = this.NameLen(row.task_content);
         if (rowIndex === lenName) {
@@ -231,6 +229,11 @@ export default {
             rowspan: 0,
             colspan: 0
           };
+      }else {
+        return {
+          rowspan: 1,
+          colspan: 1
+        };
       }
     },
     updateRemark(){
