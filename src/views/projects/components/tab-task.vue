@@ -115,7 +115,7 @@
               <span style="text-align:center;padding-top:3px">至</span>
               <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"  size="mini"></el-date-picker>
             </div>
-            <el-button @click="task(changecolor)" size="mini" icon="el-icon-search" type="primary" style="height:27.99px"/>
+            <el-button @click="getTasks()" size="mini" icon="el-icon-search" type="primary" style="height:27.99px"/>
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
