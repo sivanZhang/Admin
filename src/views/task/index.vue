@@ -264,6 +264,23 @@
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
+          <el-table-column label="缩略图"  v-if="show_project_image" >
+          <template slot-scope="scope" >
+            <el-image
+              :src="$store.state.BASE_URL+scope.row.asset.image"
+              style="width: 48px;height: 27px;"
+              :preview-src-list= [$store.state.BASE_URL+scope.row.asset.image]
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link

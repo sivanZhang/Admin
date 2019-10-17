@@ -30,6 +30,7 @@ export default {
         name: ''
       },
       detailLoading: false,
+      show_project_image:true,
       logsLoading: false,
       LogList: [],
       isDrag: false,
