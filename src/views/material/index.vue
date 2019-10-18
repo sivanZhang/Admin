@@ -421,6 +421,8 @@ export default {
             this.searchMaterial();
           } else {
             this.$message.error(data.msg);
+            this.materialForm = {};
+            this.searchMaterial();
           }
         });
       }
