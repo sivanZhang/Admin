@@ -386,7 +386,7 @@
 
         <el-table-column
           prop="name"
-          label="镜头号"
+          :label="labelName"
           align="left"
           width="120px"
           show-overflow-tooltip
@@ -398,7 +398,7 @@
             <el-input
               size="small"
               v-model="scope.row.name"
-              placeholder="请输入镜头号"
+              placeholder="请输入"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
               @change="showEditIcon"
               @blur="saveEdit(scope.$index,scope.row)"
@@ -416,7 +416,7 @@
           prop="session"
           label="场次"
           align="center"
-          v-if="show_session"
+          v-if="show_session&&notShow == 'true'?true:false"
           sortable="custom"
         >
           <template slot-scope="scope">
@@ -440,7 +440,7 @@
           prop="episode"
           label="集数"
           align="center"
-          v-if="show_episode"
+          v-if="show_episode&&notShow == 'true'?true:false"
           sortable="custom"
         >
           <template slot-scope="scope">
@@ -461,7 +461,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="frame" label="帧数" align="left" v-if="show_frame" sortable="custom">
+        <el-table-column prop="frame" label="帧数" align="left" v-if="show_frame&&notShow == 'true'?true:false" sortable="custom">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -484,7 +484,7 @@
           label="帧数范围"
           align="left"
           width="120px"
-          v-if="show_frame_range"
+          v-if="show_frame_range&&notShow == 'true'?true:false"
         >
           <template slot-scope="scope">
             <el-input
@@ -1073,6 +1073,7 @@ export default {
   neme: "asset-list",
   data() {
     return {
+      labelName: this.notShow == "true"?"镜头号":"资产名称",
       uploadVisible: false,
       materialForm: {},
       matrialId: null,
@@ -1429,6 +1430,9 @@ export default {
     },
     groupType: {
       default: null
+    },
+    notShow:{
+      type: String
     }
   },
   methods: {

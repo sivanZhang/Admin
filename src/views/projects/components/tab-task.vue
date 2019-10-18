@@ -55,6 +55,9 @@
               <el-checkbox v-model="show_executor">执行人</el-checkbox>
             </el-col>
             <el-col :span="12">
+              <el-checkbox v-model="show_schedule">任务进度</el-checkbox>
+            </el-col>
+            <el-col :span="12">
               <el-checkbox v-model="show_create_time">创建日期</el-checkbox>
             </el-col>
             <el-col :span="12">
@@ -354,6 +357,15 @@
         <el-table-column label="执行人" show-overflow-tooltip v-if="show_executor">
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
+         <el-table-column
+          label="任务进度"
+          width="100px"
+          align="center"
+          v-if="show_schedule"
+          prop="schedule"
+        >
+          <template slot-scope="scope">{{scope.row.schedule}}</template>
+        </el-table-column>
         <el-table-column
           label="创建日期"
           width="100px"
@@ -381,7 +393,7 @@
         >
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hour" label="预设时间（小时）" width="130px" v-if="show_total_hour"></el-table-column>
+        <el-table-column prop="total_hour" align="center" label="预设时间（小时）" width="130px" v-if="show_total_hour"></el-table-column>
         <el-table-column label="操作" align="center" v-if="authTask">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">
@@ -1003,6 +1015,7 @@ export default {
       show_start_date: true,
       show_end_date: true,
       show_total_hour: true,
+      show_schedule:true,
       filterStatus: [],
       filterPriority: [],
       filterGrade: [],

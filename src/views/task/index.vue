@@ -164,6 +164,7 @@
       </el-tab-pane>
       <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
         <Drawer
+        ref="drawer-father"
           scrollable
           v-model="isDrawerShow"
           width="512px"
@@ -180,6 +181,9 @@
                 :asset="Asset"
                 :detailLoading="detailLoading"
               />
+            </el-tab-pane>
+            <el-tab-pane label="历史版本">
+              <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion"/>
             </el-tab-pane>
             <el-tab-pane label="执行记录">
               <tabLog :loglist="LogList" :logsLoading="logsLoading" />
@@ -264,6 +268,23 @@
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
+          <el-table-column label="缩略图"  v-if="show_project_image" >
+          <template slot-scope="scope" >
+            <el-image
+              :src="$store.state.BASE_URL+scope.row.asset.image"
+              style="width: 48px;height: 27px;"
+              :preview-src-list= [$store.state.BASE_URL+scope.row.asset.image]
+            >
+              <div slot="placeholder" class="image-slot">
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
@@ -311,9 +332,11 @@
           <el-table-column label="优先级" header-align="left">
             <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
           </el-table-column>
-
-          <el-table-column label="创建日期" header-align="left">
+          <!-- <el-table-column label="创建日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
+          </el-table-column> -->
+          <el-table-column label="任务进度" header-align="left">
+            <template slot-scope="scope">{{scope.row.task.schedule}}</template>
           </el-table-column>
           <el-table-column label="开始日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>

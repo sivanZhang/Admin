@@ -1,37 +1,53 @@
 <template>
   <div>
-    <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
-    <el-divider />
-    <el-col :span="8">
-      <el-row>
-        <el-col :span="10">
-          <el-input v-model="filterText" placeholder="请输入用户名" @keyup.enter.native="clockRecord(1)">
-            <el-button @click="clockRecord(1)" slot="append" icon="el-icon-search" type="primary" />
-          </el-input>
-        </el-col>
-        <el-col :span="8">
-          <el-button @click="clockRecord()" type="primary" style="margin-left: 15px">重置</el-button>
-        </el-col>
-      </el-row>
-    </el-col>
-    <el-select v-model="value" placeholder="请选择部门" style="margin-left:-110px;width:150px">
-      <el-option v-for="item of deptList" :label="item.name" :value="item.name" :key="item.id"></el-option>
+    <el-row>
+      <el-col :span="14">
+    <el-button
+      type="primary"
+      @click="$router.push({name:'clockin-import'})"
+      style="margin-right:700px"
+    >打卡记录上传</el-button>
+      </el-col>
+      <el-col :span="10">
+    <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable size="mini">
+      <el-option
+        v-for="item of columnSelect"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      ></el-option>
     </el-select>
-    <el-button @click="clockRecord(2)" slot="append" icon="el-icon-search"  style="color:gray;margin-left:-5px" />
-    <el-button @click="clockRecord()" type="primary" style="margin-left: 10px">重置</el-button>
-
+    <el-input
+      v-if="colShow"
+      placeholder="请输入用户名"
+      v-model="keyword"
+      size="mini"
+      @keyup.enter.native="clockRecord(changecolor)"
+      style="width:200px"
+    ></el-input>
+    <el-select
+      @keyup.enter.native="clockRecord()"
+      v-show="chooseSel"
+      v-model="colSel2"
+      placeholder="请选择部门"
+      style="width:200px"
+    >
+      <el-option v-for="item in columnSelect2" :key="item.id" :label="item.name" :value="item.id"></el-option>
+    </el-select>
     <el-date-picker
-      v-model="value1"
-      type="datetime"
-      placeholder="请选择上班时间"
-      style="width:150px;margin-left:50px"
+      style="width:330px"
+      v-if="timeSel"
+      v-model="timeSelection"
+      type="daterange"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
     ></el-date-picker>
-    <el-date-picker v-model="value2" type="datetime" placeholder="请选择下班时间" style="width:150px;margin-left:-5px"></el-date-picker>
-
-    <el-button @click="clockRecord(3)" slot="append" icon="el-icon-search" style="color:gray;margin-left:-5px" />
-    <el-button @click="clockRecord()" type="primary" >重置</el-button>
-   
-    <el-card>
+    <el-button @click="clockRecord()" icon="el-icon-search" style="height:27.99px" type="primary" />
+    <el-button @click="clockRecord2()" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
+      </el-col>
+    </el-row>
+    <el-card style="margin-top: 10px">
       <el-table :data="clockRed">
         <el-table-column prop="user_name" label="用户名"></el-table-column>
         <el-table-column prop="date" label="打卡日期">
@@ -64,58 +80,107 @@ import dayjs from "dayjs";
 export default {
   data() {
     return {
+      colSel: "name",
+      colShow: true,
+      keyword: "",
+      chooseSel: false,
+      columnSelect2: [],
+      colSel2: [],
+      timeSel: false,
+      timeSelection: "",
+      columnSelect: [
+        {
+          value: "name",
+          label: "用户名"
+        },
+        {
+          value: "dept",
+          label: "部门"
+        },
+        {
+          value: "date",
+          label: "打卡日期"
+        }
+      ],
       filterText: "",
-      value: null,
       clockRed: null,
       deptList: [],
       value1: "",
       value2: "",
       startTime: null,
-      endTime: null
+      endTime: null,
+      changecolor: 1
     };
   },
-  //  computed: {
-  //   ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
-  // },
+  watch: {
+    colSel: {
+      handler: function(newVal, oldVal) {
+        if (newVal == "dept") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          this.columnSelect2 = this.deptList;
+        } else if (newVal == "date") {
+          this.colShow = false;
+          this.chooseSel = false;
+          this.timeSel = true;
+          this.timeSelection = "";
+        } else {
+          this.colShow = true;
+          this.timeSel = false;
+          this.chooseSel = false;
+          this.colSel2 = [];
+          this.columnSelect2 = [];
+        }
+      }
+    }
+  },
+
   created() {
     this.getDeptList();
-    this.clockRecord();
+    this.clockRecord2();
   },
   methods: {
     getDeptList() {
       getDept().then(({ data }) => {
         this.deptList = [...data.msg];
-        //console.log(this.deptList)
       });
     },
-    clockRecord(Type) {
-      if (Type === 1 && this.filterText) {
-        getClockRecord({ name: this.filterText }).then(({ data }) => {
-          this.clockRed = [...data.msg];
-        });
-      } else if (Type === 2) {
-        getClockRecord({ dept: this.value }).then(({ data }) => {
-          this.clockRed = [...data.msg];
-          console.log(this.clockRed);
-        });
-      } else if (Type === 3) {
-        function dataFormat(params) {
-          return dayjs(params).format("YYYY/MM/DD HH:mm:ss"); //'yyyy/mm/dd hh:mm:ss'
-        }
-        this.startTime = dataFormat(this.value1);
-        this.endTime = dataFormat(this.value2);
-        getClockRecord({ start: this.startTime, end: this.endTime }).then(
-          ({ data }) => {
-            this.clockRed = [...data.msg];
-            // console.log(this.clockRed);
-          }
-        );
-      } else {
-        getClockRecord().then(({ data }) => {
-          this.clockRed = [...data.msg];
-
-        });
+    //点击筛选任务
+    clockRecord() {
+      let data = {};
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
       }
+      if (this.colSel == "name" && this.keyword) {
+        data = {
+          ...data,
+          name: this.keyword
+        };
+      }
+      if (this.colSel == "dept") {
+        //  console.log(this.colSel2)
+        data = {
+          ...data,
+          dept: this.colSel2
+        };
+      }
+      if (this.colSel == "date") {
+        data = {
+          ...data,
+          start: DateFormat(this.timeSelection[0]),
+          end: DateFormat(this.timeSelection[1])
+        };
+      }
+
+      getClockRecord(data).then(({ data }) => {
+        this.clockRed = [...data.msg];
+      });
+    },
+    clockRecord2() {
+      getClockRecord().then(({ data }) => {
+        this.clockRed = [...data.msg];
+      });
     }
   }
 };

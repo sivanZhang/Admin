@@ -89,6 +89,16 @@ export default function asyncRoutes(params) {
           icon: 'statistic-manager',
           roles: 'dept_manager'
         }
+      }, {
+        path: 'remember-time',
+        name: 'remember-time',
+        component: () =>
+          import('@/views/team-manager/memberTime'),
+        meta: {
+          title: '人员工时',
+          icon: 'statistic-manager',
+          roles: 'dept_manager'
+        }
       }]
     },
     {

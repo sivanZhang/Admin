@@ -22,6 +22,7 @@
           @jumpName="jumpName"
           :groupType="groupType"
           @getGroup ="getGroupAuth"
+          notShow = "true"
         >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
@@ -37,6 +38,7 @@
           @jumpName="jumpName"
           :groupType="groupType"
           @getGroup ="getGroupAuth"
+          notShow = "false"
         />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2">

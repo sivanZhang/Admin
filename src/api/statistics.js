@@ -76,14 +76,23 @@ export function getRange(params) {
     params
   })
 }
-  //组内考勤统计
-  export function checkInAll(params) {
-    return AXIOS.get('/projects/range/?01', {
-      params
-    })
-  }
+//组内考勤统计
+export function checkInAll(params) {
+  return AXIOS.get('/projects/range/?01', {
+    params
+  })
+}
 
-  //获取项目参与人员
-  export function getProjectMember(params){
-    return AXIOS.get('/projects/stat/?09',{params})
-  }
+//获取项目参与人员
+export function getProjectMember(params) {
+  return AXIOS.get('/projects/stat/?09', {
+    params
+  })
+}
+
+//获取人员工时
+export function getMemberTime(params) {
+  return AXIOS.get('/task/freetime/', {
+    params
+  })
+}

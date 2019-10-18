@@ -427,6 +427,8 @@ export default {
                 this.$store.dispatch("project/get_Projects");
               }
               this.$emit("update:isShow", false);
+            }else{
+              this.$message.error(data.msg);
             }
           });
         } else {
