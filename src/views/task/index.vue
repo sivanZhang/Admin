@@ -164,6 +164,7 @@
       </el-tab-pane>
       <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
         <Drawer
+        ref="drawer-father"
           scrollable
           v-model="isDrawerShow"
           width="512px"
