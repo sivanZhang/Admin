@@ -462,7 +462,7 @@ export default {
     },
     //获取燃尽图数据
     getBurnOut() {
-      this.$refs["line-chart1"].openLoading();
+      // this.$refs["line-chart1"].openLoading();
       Ajax.burnOut({
         id: this.click_id ? this.click_id : this.$route.params.id,
         bourout: ""
