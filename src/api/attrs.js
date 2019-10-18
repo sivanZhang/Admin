@@ -20,8 +20,8 @@ export function createAttrs(data){
     return AXIOS.post('/attrs/attrs/',data)
 }
 // 获取属性列表
-export function getAttrsList(){
-    return AXIOS.get('/attrs/attrs/?list')
+export function getAttrsList(params){
+    return AXIOS.get('/attrs/attrs/?list',{params})
 }
 //属性实体解绑
 export function  attrsEntityUnbind(data){
