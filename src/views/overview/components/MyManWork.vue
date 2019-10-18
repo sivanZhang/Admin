@@ -93,27 +93,23 @@ let option = {
       name: "工时",
       type: "gauge",
       min: 0,
-      max: 16,
-      splitNumber: 16,
+      max: 24,
+      splitNumber: 12,//max/splitNumber每个刻度代表多少
       axisLine: {
         // 坐标轴线
         lineStyle: {
           // 属性lineStyle控制线条样式
-          color: [[0.25, "#91c7ae"], [0.5, "#63869e"], [1, "#c23531"]],
-          width: 8
+          color: [[0.167, "#91c7ae"], [0.334, "#63869e"], [1, "#c23531"]],
+          width: 7
         }
       },
       axisTick: {
         // 坐标轴小标记
-        length: 15, // 属性length控制线长
-        lineStyle: {
-          // 属性lineStyle控制线条样式
-          color: "auto"
-        }
+        length: 0, // 属性length控制线长
       },
       splitLine: {
         // 分隔线
-        length: 20, // 属性length控制线长
+        length: 14, // 属性length控制线长
         lineStyle: {
           // 属性lineStyle（详见lineStyle）控制线条样式
           color: "auto"
@@ -121,8 +117,7 @@ let option = {
       },
       title: {
         // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-        fontWeight: "bolder",
-        fontSize: 18
+        fontSize: 14
       }
     }
   ]
