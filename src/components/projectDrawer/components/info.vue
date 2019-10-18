@@ -4,13 +4,13 @@
     <template v-if="project && project.entity_type === 4">
       <div>
         <el-row v-if="configImg == 'img'">
-          <el-col :span="6" class="comment">缩略图</el-col>
+          <!-- <el-col :span="6" class="comment">缩略图</el-col> -->
           <el-col :span="18" class="comment">
             <el-image
               class="mini-image"
               :src="project.image?$store.state.BASE_URL+project.image:''"
               fit="cover"
-              style="width:100px;height:100px"
+              style="height:121.5px;width:181.7px;margin-bottom:5px"
             ></el-image>
           </el-col>
         </el-row>
