@@ -15,7 +15,7 @@
       </template>
 
       <div v-if="value1">
-        <HotChart chart-id="line-chart1" ref="line-chart1" height="500px" weight="" />
+        <HotChart chart-id="line-chart1" ref="line-chart1" height="500px"  />
       </div>
       <div v-else class="text-center">选择部门查看</div>
     </ElCard>
@@ -84,8 +84,8 @@ export default {
           animation: false,
           grid: {
             height: "50%",
-            left:"2%",
-            right:"2%",
+            left:"5%",
+            right:"5%",
             y: "10%"
           },
           xAxis: {

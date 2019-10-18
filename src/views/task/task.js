@@ -5,11 +5,15 @@ import {
   queryTask,
   getStatusTaskList
 } from "@/api/task";
+import {
+  getHistoryVersion
+} from "@/api/assets";
 import draggable from "vuedraggable"
 import taskForm from './components/task-form'
 import tabLog from "./components/tab-log"
 import tabApprove from "./components/tab-approve"
 import tabTaskDtail from "./components/tab-task-detail"
+import history from "@/views/task/components/tab-history"
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import dayjs from "dayjs";
@@ -21,7 +25,8 @@ export default {
     taskForm,
     tabLog,
     tabTaskDtail,
-    approveLog
+    approveLog,
+    history
   },
   data() {
     return {
@@ -30,7 +35,7 @@ export default {
         name: ''
       },
       detailLoading: false,
-      show_project_image:true,
+      show_project_image: true,
       logsLoading: false,
       LogList: [],
       isDrag: false,
@@ -171,6 +176,9 @@ export default {
       timeSel: false,
       timeSelection: "",
       timeSelection2: "",
+      historyVersion: [],
+      project: null,
+      assetId: null
     };
   },
   watch: {
@@ -433,6 +441,8 @@ export default {
     },
     //是否显示任务板右侧
     taskBoardRightShow(row) {
+      this.project = row.project.id;
+      this.assetId = row.asset.id;
       this.isDrawerShow = true;
 
       this.activeRow = {
@@ -443,6 +453,7 @@ export default {
         type: 0,
         date: new Date().toLocaleDateString()
       });
+
       this.logsLoading = true;
       this.$refs['taskApprovelog'].getApproveLog(row.task.id);
       queryTaskRecord({
@@ -470,7 +481,25 @@ export default {
       }).catch(() => {
         this.detailLoading = false;
       });
+      getHistoryVersion({
+        asset_id: row.asset.id
+      }).then(({
+        data
+      }) => {
+        this.historyVersion = [...data.msg]
 
+      })
+
+    },
+    getAssetVersion() {
+      getHistoryVersion({
+        asset_id: this.assetId
+      }).then(({
+        data
+      }) => {
+        this.historyVersion = [...data.msg]
+
+      })
 
     },
     //http获取‘我的任务’

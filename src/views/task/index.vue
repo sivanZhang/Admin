@@ -181,6 +181,9 @@
                 :detailLoading="detailLoading"
               />
             </el-tab-pane>
+            <el-tab-pane label="历史版本">
+              <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion"/>
+            </el-tab-pane>
             <el-tab-pane label="执行记录">
               <tabLog :loglist="LogList" :logsLoading="logsLoading" />
             </el-tab-pane>
