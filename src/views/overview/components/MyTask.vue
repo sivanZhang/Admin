@@ -11,6 +11,20 @@
       </el-badge>
       <el-button @click="props.targetMore" type="text">查看更多</el-button>
     </el-row>
+    <div class="navs">
+      <div>
+        1
+        <br />高优先级
+      </div>
+      <div>
+        1
+        <br />困难
+      </div>
+      <div>
+        1
+        <br />即将超期
+      </div>
+    </div>
     <ul class="list">
       <li
         class="item"
@@ -30,6 +44,22 @@
   </el-card>
 </template>
 <style lang="scss" scoped>
+.navs {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin-bottom: 10px;
+  & > div {
+    flex: 1;
+    cursor: pointer;
+    &:hover {
+      color: #2d8cf0;
+    }
+    & + div {
+      border-left: 1px solid #dcdfe6;
+    }
+  }
+}
 .list {
   list-style-position: inside;
 

@@ -62,7 +62,7 @@ export default function asyncRoutes(params) {
     {
       path: '/team-manager',
       component: Layout,
-      redirect: '/',
+      redirect: 'noRedirect',
       alwaysShow: true,
       meta: {
         title: '组长工作台',

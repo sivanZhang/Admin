@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card shadow="hover">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span>
         我的工时

@@ -168,7 +168,7 @@ export default {
   <div id="home-page">
     <el-row :gutter="16">
       <el-col :span="4">
-        <el-card>
+        <el-card shadow="hover">
           <el-row
             slot="header"
             type="flex"
@@ -177,7 +177,6 @@ export default {
             class="card-header"
           >
             <span>我的信息</span>
-            <!-- <el-button type="text" @click="isDialogShow = true">填报工时</el-button> -->
           </el-row>
           <div class="card-item">
             <div class="labels">
@@ -210,7 +209,7 @@ export default {
           <div>
             <div class="labels">
               <el-badge :value="unreadCount" :hidden="!unreadCount" :max="99" class="item">
-                <span>消 息</span>
+                <span style="padding-right:8px">消 息</span>
               </el-badge>
             </div>
 
@@ -231,6 +230,37 @@ export default {
                     <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link>
                   </template>
                 </el-table-column>
+                <el-table-column label="紧急程度" align="center" width="60">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      v-if="scope.row.urgency_level == 0"
+                      class="item"
+                      effect="dark"
+                      content="一般"
+                      placement="top"
+                    >
+                      <svg-icon v-if="scope.row.urgency_level == 0" icon-class="urgency1"></svg-icon>
+                    </el-tooltip>
+                    <el-tooltip
+                      v-if="scope.row.urgency_level == 1"
+                      class="item"
+                      effect="dark"
+                      content="紧急"
+                      placement="top"
+                    >
+                      <svg-icon v-if="scope.row.urgency_level == 1" icon-class="urgency2"></svg-icon>
+                    </el-tooltip>
+                    <el-tooltip
+                      v-if="scope.row.urgency_level == 2"
+                      class="item"
+                      effect="dark"
+                      content="特急"
+                      placement="top"
+                    >
+                      <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
               </el-table>
               <el-button
                 v-show="unreadList.length>5"
@@ -247,21 +277,21 @@ export default {
         </el-card>
       </el-col>
       <!-- <svg-icon icon-class="caitongzhi" />-->
-      <el-col :span="5">
+      <el-col :span="4">
         <MyTask
           :my-task-list="MyTaskList"
           :target-more="()=>$router.push({name:'my-task'})"
           :show-drawer="taskBoardRightShow"
         />
       </el-col>
-      <el-col :span="5">
+      <el-col :span="8">
         <MyManWork :my-tasks="MyTaskList" class="card" />
       </el-col>
 
-      <el-col :span="5">
+      <el-col :span="4">
         <MyApprove />
       </el-col>
-      <el-col :span="5">
+      <el-col :span="4">
         <MyAllocation />
       </el-col>
     </el-row>

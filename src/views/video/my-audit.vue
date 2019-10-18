@@ -42,7 +42,7 @@
         <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
       </el-table-column>
       <!-- 、工种、 -->
-
+      
       <el-table-column label="开始日期">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
