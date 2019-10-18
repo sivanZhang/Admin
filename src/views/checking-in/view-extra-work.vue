@@ -1,36 +1,51 @@
 <template>
   <div id="extra-work">
-  <el-col :span="8">
-      <el-row>
-        <el-col :span="10">
-          <el-input v-model="filterText" placeholder="请输入申请人" @keyup.enter.native="getExtrworks(1)">
-            <el-button @click=" getExtrworks(1)" slot="append" icon="el-icon-search" type="primary" />
-          </el-input>
-        </el-col>
-        <el-col :span="8">
-          <el-button @click="getExtrworks()" type="primary" style="margin-left: 15px">重置</el-button>
-        </el-col>
-      </el-row>
-    </el-col>
-       <el-date-picker
-      v-model="value1"
-      type="date"
-      placeholder="输入申请日期"
-      style="width:150px">
-      </el-date-picker>
-    <el-button @click="getExtrworks(2)" slot="append" icon="el-icon-search" style="color:gray" />
-    <el-button @click="getExtrworks()" type="primary" >重置</el-button>
-    
+    <el-select
+      v-model="colSel"
+      placeholder="请选择"
+      style="width:100px;margin-left:750px"
+      filterable
+      size="mini"
+    >
+      <el-option
+        v-for="item of columnSelect"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+    <el-input
+      v-if="colShow"
+      placeholder="输入用户名"
+      v-model="keyword"
+      size="mini"
+      @keyup.enter.native="getExtrworks()"
+      style="width:200px"
+    ></el-input>
+    <el-date-picker
+      style="width:230px"
+      v-if="timeSel"
+      v-model="timeSelection"
+      type="daterange"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+    ></el-date-picker>
+    <el-button @click="getExtrworks()" icon="el-icon-search" style="height:27.99px" type="primary" />
+    <el-button @click="getExtrworks2()" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
     <el-table
-     :data="ExtraworkList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="ExtraworkList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       @selection-change="handleSelectionChange"
       v-loading="tableLoading"
       :row-key="row=>row.overtime_id"
     >
-
       <el-table-column type="index" :index="indexMethod"></el-table-column>
       <el-table-column prop="creator.username" label="申请人"></el-table-column>
-      <el-table-column prop="creator.depts" label="部门" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="creator.depts" label="部门">
+        <template slot-scope="scope">
+          <div v-for="(todo,index) of scope.row.creator.depts" :key="index">{{todo}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="taskname" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
       <el-table-column prop="overtime_hour" label="加班工时(小时)"></el-table-column>
@@ -53,16 +68,16 @@
       </el-table-column>
     </el-table>
     <div class="block" style="text-align: right">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="pageSizeList"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="ExtraworkList.length"
-        ></el-pagination>
-      </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="ExtraworkList.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -80,6 +95,21 @@ export default {
   name: "extra-work",
   data() {
     return {
+      colSel: "name",
+      colShow: true,
+      keyword: "",
+      timeSel: false,
+      timeSelection: "",
+      columnSelect: [
+        {
+          value: "name",
+          label: "用户名"
+        },
+        {
+          value: "date",
+          label: "申请日期"
+        }
+      ],
       startDay: null,
       value1: "",
       filterText: "",
@@ -87,19 +117,33 @@ export default {
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
       multipleSelection: [],
-      myTasks: null,
       ApplyForm: {},
       tableLoading: false,
       ExtraworkList: [],
-      currentSelect: 1,
+      currentSelect: 1
     };
   },
+  watch: {
+    colSel: {
+      handler: function(newVal, oldVal) {
+        if (newVal == "date") {
+          this.colShow = false;
+          this.timeSel = true;
+          this.timeSelection = "";
+        } else {
+          this.colShow = true;
+          this.timeSel = false;
+        }
+      }
+    }
+  },
+
   methods: {
     //分页
-    handleSizeChange(val){
-       this.pageSize = val;
+    handleSizeChange(val) {
+      this.pageSize = val;
     },
-     handleCurrentChange(currentPage) {
+    handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
@@ -109,50 +153,47 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    
+
     //监听下拉框改变
     handleSelectLChange() {
       this.getExtrworks();
     },
-    //获取 加班申请列表
-    getExtrworks(Type) {
-      if (Type === 1 && this.filterText) {
-         getOvertime({allovertime: "", username: this.filterText }).then(({ data }) => {
-          this.ExtraworkList = [...data.msg];
-         });
-        }else if (Type === 2) {
-        function dataFormat(params) {
-          return dayjs(params).format("YYYY/MM/DD"); //'yyyy/mm/dd'
-        }
-        this.startDay = dataFormat(this.value1);
+    //获取加班申请列表
+    getExtrworks() {
+      let data = {};
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+      }
+      if (this.colSel == "name" && this.keyword) {
+        data = {
+          ...data,
+          allovertime: "",
+          username: this.keyword
+        };
+      }
+      if (this.colSel == "date") {
+        data = {
+          ...data,
+          allovertime: "",
+          start: DateFormat(this.timeSelection[0]),
+          end: DateFormat(this.timeSelection[1])
+        };
+      }
 
-         getOvertime({allovertime: "",date: this.startDay}).then(({ data }) => {
-          this.ExtraworkList = [...data.msg];
-          // console.log(this.ExtraworkList);
-        });
-        } else{
-      // let params = {};
-      this.tableLoading = true;
-      getOvertime({allovertime: ""})
-        .then(({ data }) => {
-          this.ExtraworkList = [...data.msg];           
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
-    };
+      getOvertime(data).then(({ data }) => {
+        this.ExtraworkList = [...data.msg];
+      });
     },
-
-
-    getMyTasks() {
-      getStatusTaskList().then(({ data }) => {
-        this.myTasks = [...data.msg];
+    getExtrworks2() {
+      let params = {};
+      // this.tableLoading = true;
+      getOvertime({ allovertime: "" }).then(({ data }) => {
+        this.ExtraworkList = [...data.msg];
       });
     }
   },
   created() {
-    this.getExtrworks();
-    this.getMyTasks();
+    this.getExtrworks2();
   }
 };
 </script>
