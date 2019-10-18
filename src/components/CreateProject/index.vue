@@ -438,10 +438,14 @@ export default {
     },
     //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
     handleSuccess(response, file, fileList) {
-      this.SRC = this.$store.state.BASE_URL + response.msg;
-      this.ProjectForm["image"] = response.msg;
-      this.ProjectForm.image_id = response.id;
-    }
+      if(response.status == 0){   
+        this.SRC = this.$store.state.BASE_URL + response.msg;
+        this.ProjectForm["image"] = response.msg;
+        this.ProjectForm.image_id = response.id;
+      }else{
+        this.$message.error(response.msg);
+      }
+    },
   },
   created() {
     !this.UserList && this.$store.dispatch("admin/get_UserList");

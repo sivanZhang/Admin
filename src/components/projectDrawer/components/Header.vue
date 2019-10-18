@@ -152,8 +152,9 @@ export default {
   methods: {
     //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
     handleSuccess(response, file, fileList) {
-      this.SRC = this.$store.state.BASE_URL + response.msg;
-      const data = {
+      if(response.status == 0){
+        this.SRC = this.$store.state.BASE_URL + response.msg;
+        const data = {
         image: response.msg,
         image_id: response.id,
         method: "put",
@@ -167,6 +168,10 @@ export default {
           this.$store.dispatch("project/get_Projects");
         }
       });
+      } else {
+        this.$message.error(response.msg)
+      }
+     
     }
   }
 };

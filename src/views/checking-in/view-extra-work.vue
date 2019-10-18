@@ -3,7 +3,7 @@
     <el-select
       v-model="colSel"
       placeholder="请选择"
-      style="width:100px;margin-left:750px"
+      style="width:100px;margin-left:600px"
       filterable
       size="mini"
     >
@@ -23,7 +23,7 @@
       style="width:200px"
     ></el-input>
     <el-date-picker
-      style="width:230px"
+      style="width:360px"
       v-if="timeSel"
       v-model="timeSelection"
       type="daterange"

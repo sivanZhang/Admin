@@ -1,50 +1,64 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="14">
-    <el-button
-      type="primary"
-      @click="$router.push({name:'clockin-import'})"
-      style="margin-right:700px"
-    >打卡记录上传</el-button>
+      <el-col :span="12">
+        <el-button
+          type="primary"
+          @click="$router.push({name:'clockin-import'})"
+          style="margin-right:700px"
+        >打卡记录上传</el-button>
       </el-col>
-      <el-col :span="10">
-    <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable size="mini">
-      <el-option
-        v-for="item of columnSelect"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      ></el-option>
-    </el-select>
-    <el-input
-      v-if="colShow"
-      placeholder="请输入用户名"
-      v-model="keyword"
-      size="mini"
-      @keyup.enter.native="clockRecord(changecolor)"
-      style="width:200px"
-    ></el-input>
-    <el-select
-      @keyup.enter.native="clockRecord()"
-      v-show="chooseSel"
-      v-model="colSel2"
-      placeholder="请选择部门"
-      style="width:200px"
-    >
-      <el-option v-for="item in columnSelect2" :key="item.id" :label="item.name" :value="item.id"></el-option>
-    </el-select>
-    <el-date-picker
-      style="width:330px"
-      v-if="timeSel"
-      v-model="timeSelection"
-      type="daterange"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-    ></el-date-picker>
-    <el-button @click="clockRecord()" icon="el-icon-search" style="height:27.99px" type="primary" />
-    <el-button @click="clockRecord2()" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
+      <el-col :span="12">
+        <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable size="mini">
+          <el-option
+            v-for="item of columnSelect"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-input
+          v-if="colShow"
+          placeholder="请输入用户名"
+          v-model="keyword"
+          size="mini"
+          @keyup.enter.native="clockRecord(changecolor)"
+          style="width:200px"
+        ></el-input>
+        <el-select
+          @keyup.enter.native="clockRecord()"
+          v-show="chooseSel"
+          v-model="colSel2"
+          placeholder="请选择部门"
+          style="width:200px"
+        >
+          <el-option
+            v-for="item in columnSelect2"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+        <el-date-picker
+          style="width:360px"
+          v-if="timeSel"
+          v-model="timeSelection"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+        <el-button
+          @click="clockRecord()"
+          icon="el-icon-search"
+          style="height:27.99px"
+          type="primary"
+        />
+        <el-button
+          @click="clockRecord2()"
+          style="margin-left: 15px;height:27.99px"
+          type="primary"
+        >重置</el-button>
       </el-col>
     </el-row>
     <el-card style="margin-top: 10px">

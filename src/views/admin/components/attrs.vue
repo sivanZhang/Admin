@@ -3,8 +3,29 @@
   <div id="attrs">
     <div style="padding-bottom:10px" v-if="auth">
       <el-row>
-        <el-col>
+        <el-col :span="18">
           <el-button icon="el-icon-plus" type="primary" @click="showDialog(1)">自定义属性</el-button>
+        </el-col>
+         <el-col :span="6">
+          <el-row>
+            <el-col :span="16">
+              <el-input
+                v-model="filterText"
+                placeholder="请输入属性名称"
+                @keyup.enter.native="searchAttrs(1)"
+              >
+                <el-button
+                  @click="searchAttrs(1)"
+                  slot="append"
+                  icon="el-icon-search"
+                  type="primary"
+                />
+              </el-input>
+            </el-col>
+            <el-col :span="8">
+              <el-button @click="searchAttrs()" type="primary" style="margin-left: 15px">重置</el-button>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
     </div>
@@ -219,6 +240,7 @@ export default {
       clickId: null,
       iconShow: false,
       isDialog: false,
+      filterText: null,
       attrsForm: {},
       attrsTypeList: [
         {
@@ -246,6 +268,7 @@ export default {
       selectForm: [{}],
       selection: {},
       defailtList: [],
+      attrsList: [],
       isDialog2: false,
       bindForm: {},
       entityType: [
@@ -268,9 +291,28 @@ export default {
       }
     };
   },
-  props: ["attrsList", "tableLoading","auth"],
+  props: [ "tableLoading","auth"],
   watch: {},
+  created() {
+    this.searchAttrs();
+  },
   methods: {
+    //查询属性
+    searchAttrs(Type){
+      if(Type == 1 && this.filterText){
+      HTTP.getAttrsList({name: this.filterText}).then(({ data }) => {
+        if (data.status === 0) {
+          this.attrsList = [...data.msg];
+        }
+      });
+      } else {
+         HTTP.getAttrsList().then(({ data }) => {
+        if (data.status === 0) {
+          this.attrsList = [...data.msg];
+        }
+      });
+      }
+    },
     bindSubmit(){
        this.$refs["bindForm"].validate(valid => {
         if (valid) {
@@ -417,7 +459,6 @@ export default {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     }
   },
-  created() {}
 };
 </script>
 <style lang='scss' scoped>
