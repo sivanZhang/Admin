@@ -2,7 +2,7 @@
   <el-card>
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span>
-        <svg-icon icon-class="caigongshi" />我的工时
+        我的工时
       </span>
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
@@ -12,10 +12,10 @@
       <el-col :span="12">本月工时(h)：{{monthHour.total_count}}</el-col>
     </el-row>-->
     <el-table :data="workhouerlist">
-      <el-table-column prop="time" label="时间" width="60"></el-table-column>
+      <el-table-column prop="time" label="时间"></el-table-column>
       <el-table-column label="任务工时" prop="task_count"></el-table-column>
       <el-table-column label="加班工时" prop="overtime_count"></el-table-column>
-      <el-table-column label="总工时" prop="total_count"  width="60"></el-table-column>
+      <el-table-column label="总工时" prop="total_count"></el-table-column>
     </el-table>
     <el-dialog :visible.sync="isDialogShow" width="460px">
       <h4 slot="title">工时填报</h4>
@@ -67,7 +67,6 @@
             type="date"
             placeholder="选择日期"
             value-format="yyyy/MM/dd"
-            style="width:130px"
           ></el-date-picker>
         </el-form-item>
       </el-form>

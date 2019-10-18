@@ -1,11 +1,22 @@
 <script>
-import { getStatusTaskList } from "@/api/task";
 import MyTask from "./components/MyTask";
 import MyManWork from "./components/MyManWork";
 import MyApprove from "./components/MyApprove";
 import noticeDetail from "@/components/Notice/components/notice-detail";
 import MyAllocation from "./components/MyAllocation";
+import taskForm from "@/views/task/components/task-form";
+import tabLog from "@/views/task/components/tab-log";
+import tabApprove from "@/views/task/components/tab-approve";
+import tabTaskDtail from "@/views/task/components/tab-task-detail";
+import approveLog from "@/views/components/approve-log";
 import { mapState } from "vuex";
+import {
+  addTaskRecord,
+  putTaskRecord,
+  queryTaskRecord,
+  queryTask,
+  getStatusTaskList
+} from "@/api/task";
 export default {
   name: "home-page",
   components: {
@@ -13,11 +24,30 @@ export default {
     MyManWork,
     MyApprove,
     noticeDetail,
-    MyAllocation
+    MyAllocation,
+    //任务侧边栏相关
+    taskForm,
+    tabLog,
+    tabTaskDtail,
+    approveLog,
+    tabApprove
   },
   data() {
     return {
       MyTaskList: [],
+      //任务侧边栏相关
+      isDrawerShow: false,
+      TaskDetail: {
+        name: ""
+      },
+      Link: "",
+      Asset: "",
+      detailLoading: false,
+      LogList: [],
+      logsLoading: false,
+      TaskRecord: [],
+      createLoading: false,
+      activeRow: {} //点击任务列表选中的列的数据
     };
   },
   computed: {
@@ -35,6 +65,70 @@ export default {
     this.getMyTasks();
   },
   methods: {
+    cancel() {
+      this.isDialogShow = false;
+    },
+    addRecord() {
+      this.createLoading = true;
+
+      addTaskRecord(this.TaskRecord)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.$message.success(res.data.msg);
+            this.getMyTasks();
+          } else {
+            this.$message.warning(res.data.msg);
+          }
+          this.isDialogShow = false;
+          this.createLoading = false;
+          this.isDrawerShow = false;
+        })
+        .catch(err => {
+          this.createLoading = false;
+        });
+    },
+    taskBoardRightShow(row) {
+      this.isDrawerShow = true;
+
+      this.activeRow = {
+        ...row
+      };
+      this.TaskRecord = Object.assign(
+        {},
+        {
+          task_id: row.task.id,
+          type: 0,
+          date: new Date().toLocaleDateString()
+        }
+      );
+      this.logsLoading = true;
+      this.$refs["taskApprovelog"].getApproveLog(row.task.id);
+      queryTaskRecord({
+        task_id: row.task.id
+      })
+        .then(({ data }) => {
+          this.LogList = [...data.msg];
+          this.logsLoading = false;
+        })
+        .catch(() => {
+          this.logsLoading = false;
+        });
+      this.detailLoading = true;
+      queryTask({
+        id: row.task.id
+      })
+        .then(({ data }) => {
+          this.TaskDetail = {
+            ...data.msg
+          };
+          this.Asset = this.TaskDetail.asset;
+          this.Link = this.TaskDetail.link_dept_name;
+          this.detailLoading = false;
+        })
+        .catch(() => {
+          this.detailLoading = false;
+        });
+    },
     //修改是否已读
     updateIsRead(row) {
       console.log(row);
@@ -72,12 +166,22 @@ export default {
 
 <template>
   <div id="home-page">
-    <el-card body-style="margin-bottom:15px;">
-      <el-row :gutter="16">
-        <el-col :span="4">
+    <el-row :gutter="16">
+      <el-col :span="4">
+        <el-card>
+          <el-row
+            slot="header"
+            type="flex"
+            justify="space-between"
+            align="middle"
+            class="card-header"
+          >
+            <span>我的信息</span>
+            <!-- <el-button type="text" @click="isDialogShow = true">填报工时</el-button> -->
+          </el-row>
           <div class="card-item">
             <div class="labels">
-              <el-avatar>{{userInfo.username | avatarFormat}}</el-avatar>
+              <el-avatar size="small">{{userInfo.username | avatarFormat}}</el-avatar>
             </div>
             <div class="content">
               {{userInfo.username}}
@@ -103,20 +207,15 @@ export default {
               >{{item.name}}</router-link>
             </div>
           </div>
-          <div class="card-item message">
+          <div>
             <div class="labels">
-              <span>消 息</span>
-              <!-- <el-badge
-                :value="unreadCount"
-                :hidden="!unreadCount"
-                :max="99"
-                class="item"
-              >
-                
-              </el-badge>-->
+              <el-badge :value="unreadCount" :hidden="!unreadCount" :max="99" class="item">
+                <span>消 息</span>
+              </el-badge>
             </div>
+
             <div class="content">
-              <!--  <el-table
+              <el-table
                 :data="unreadList.filter((t,i)=>i<5)"
                 style="width: 100%"
                 ref="multipleTable"
@@ -132,53 +231,98 @@ export default {
                     <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link>
                   </template>
                 </el-table-column>
-              </el-table>-->
-              <!-- <el-button v-show="unreadList.length>5" @click="$store.commit('notice/SET_CARDSHOW', true)" type="text">查看更多</el-button> -->
+              </el-table>
               <el-button
+                v-show="unreadList.length>5"
+                @click="$store.commit('notice/SET_CARDSHOW', true)"
+                type="text"
+              >查看更多</el-button>
+              <!-- <el-button
                 @click="$store.commit('notice/SET_CARDSHOW', true)"
                 type="text"
                 style="color:#ed4014"
-              >{{unreadCount}} 条未读 <el-icon class="el-icon-position"/></el-button>
+              >{{unreadCount}} 条未读 <el-icon class="el-icon-position"/></el-button>-->
             </div>
           </div>
-        </el-col>
-        <!-- <svg-icon icon-class="caitongzhi" />-->
-        <el-col :span="5">
-          <MyTask :my-task-list="MyTaskList" :target-more="()=>$router.push({name:'my-task'})" />
-        </el-col>
-        <el-col :span="5">
-          <MyManWork :my-tasks="MyTaskList" class="card" />
-        </el-col>
-        
-        <el-col :span="5">
-          <MyApprove />
-        </el-col>
-        <el-col :span="5">
-          <MyAllocation />
-        </el-col>
-      </el-row>
-    </el-card>
+        </el-card>
+      </el-col>
+      <!-- <svg-icon icon-class="caitongzhi" />-->
+      <el-col :span="5">
+        <MyTask
+          :my-task-list="MyTaskList"
+          :target-more="()=>$router.push({name:'my-task'})"
+          :show-drawer="taskBoardRightShow"
+        />
+      </el-col>
+      <el-col :span="5">
+        <MyManWork :my-tasks="MyTaskList" class="card" />
+      </el-col>
+
+      <el-col :span="5">
+        <MyApprove />
+      </el-col>
+      <el-col :span="5">
+        <MyAllocation />
+      </el-col>
+    </el-row>
+    <Drawer
+      scrollable
+      v-model="isDrawerShow"
+      width="512px"
+      inner
+      :mask-style="{backgroundColor: 'transparent'}"
+      :transfer="false"
+      draggable
+    >
+      <el-tabs>
+        <el-tab-pane label="任务详情">
+          <tabTaskDtail
+            :taskdetail="TaskDetail"
+            :link="Link"
+            :asset="Asset"
+            :detailLoading="detailLoading"
+          />
+        </el-tab-pane>
+        <el-tab-pane label="执行记录">
+          <tabLog :loglist="LogList" :logsLoading="logsLoading" />
+        </el-tab-pane>
+        <el-tab-pane label="执行任务">
+          <task-form
+            :task-record.sync="TaskRecord"
+            :createLoading="createLoading"
+            @addRecord="addRecord"
+            @cancel="cancel"
+          />
+        </el-tab-pane>
+        <el-tab-pane label="提交审核">
+          <tab-approve
+            v-if="activeRow.task && activeRow.task.status === 2"
+            :row="activeRow"
+            @refresh="getMyTasks"
+          />
+          <div v-else style="display:flex;justify-content:center">任务状态不是进行中</div>
+        </el-tab-pane>
+        <el-tab-pane label="审批记录">
+          <approve-log ref="taskApprovelog" />
+        </el-tab-pane>
+      </el-tabs>
+    </Drawer>
   </div>
 </template>
 
 <style lang="scss">
 #home-page {
-  .card {
-  }
+  font-size: 12px;
   .card-item {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
     margin-bottom: 12px;
-    &.message {
-      align-items: flex-start;
-    }
-    .labels {
-      width: 80px;
-      text-align: center;
-      vertical-align: middle;
-      color: #909399;
-    }
+  }
+  .labels {
+    vertical-align: middle;
+    color: #909399;
+    width: 60px;
+    flex: 0 0 40px;
   }
   .label {
     width: 200px;
