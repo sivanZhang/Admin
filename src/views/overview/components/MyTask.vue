@@ -15,10 +15,10 @@
         {{myTaskList.filter(t=>t.task.grade==2).length}}
         <br />困难
       </div>
-      <div>
+      <div @click="targetMore('expire')">
         1
         <br />即将超期
-      </div>
+      </div>    
     </div>
     <ul class="list">
       <li

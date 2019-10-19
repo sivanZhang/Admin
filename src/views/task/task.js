@@ -173,8 +173,7 @@ export default {
           label: "难度等级"
         },
       ],
-      columnSelect2: [
-        {
+      columnSelect2: [{
           value: 0,
           label: "低级"
         },
@@ -231,7 +230,7 @@ export default {
         case 'grade':
           data = {
             ...data,
-            grade: this.currentGrade
+            grade: JSON.stringify(this.currentGrade)
           }
           break;
         case 'start_date':
@@ -606,9 +605,16 @@ export default {
         this.colSel = 'grade'
         this.currentGrade = 2
         break
+      case 'expire':
+          this.colSel = 'end_date'
+          this.timeSelection = dayjs(new Date).subtract(1,'day')
+          this.timeSelection2 = dayjs(new Date)
+      break
     }
     this.$nextTick(() => {
       this.task(2);
+      //清空store中的 state.mine.keyword
+      this.$store.commit("mine/SET_KEYWORD",'')
     })
   },
 };

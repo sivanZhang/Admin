@@ -260,13 +260,21 @@
                 <span style="text-align:center;padding-top:3px">至</span>
                 <el-date-picker style="width:130px" v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
               </div>
-              <el-select v-if="colSel === 'grade'" v-model="currentGrade" placeholder="选择任务难度等级" style="width:200px">
+              <el-select
+                v-if="colSel === 'grade'"
+                v-model="currentGrade"
+                placeholder="选择任务难度等级"
+                multiple
+                filterable
+                style="width:200px"
+                @keyup.enter.native="task(changecolor)"
+              >
                 <el-option
-                  v-for="item of GradeList"
+                  v-for="item in GradeList"
                   :key="item.value"
-                  :value="item.value"
                   :label="item.label"
-                />
+                  :value="item.value"
+                ></el-option>
               </el-select>
               <el-button
                 @click="task(changecolor)"

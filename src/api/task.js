@@ -65,3 +65,4 @@ export function mulCreateTasks(data){
 export function mulPutTasks(data){
     return AXIOS.post('/task/task/?02',data)
 }
+//
