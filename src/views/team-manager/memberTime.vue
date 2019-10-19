@@ -15,7 +15,12 @@
       </template>
 
       <div v-if="value1">
-        <HotChart chart-id="line-chart1" ref="line-chart1" height="500px"  />
+        <HotChart chart-id="line-chart1" ref="line-chart1" height="500px" />
+        <el-row>
+          <el-col align="right">
+            <label for align="right">注：此图展示员工近30天的每日任务量</label>
+          </el-col>
+        </el-row>
       </div>
       <div v-else class="text-center">选择部门查看</div>
     </ElCard>
@@ -45,14 +50,14 @@ export default {
       this.dateList = [];
       this.userDate = [];
       this.dataCellList = [];
-      let payload = { dept_id: this.value1,day:30 };
+      let payload = { dept_id: this.value1, day: 30 };
       function dataFormat(params) {
         if (params) {
-        params *= 1000
-        return dayjs(params).format("YYYY/MM/DD")
-    } else {
-        return ''
-    }
+          params *= 1000;
+          return dayjs(params).format("YYYY/MM/DD");
+        } else {
+          return "";
+        }
       }
       getMemberTime(payload).then(({ data }) => {
         [...data.msg].map((item, Ind) => {
@@ -61,15 +66,15 @@ export default {
             this.dataCellList.push([Ind, ind, todo.task_num]);
           });
         });
-        this.dataCellList = this.dataCellList.map(function (item) {
-    return [item[1], item[0], item[2] || '-'];
-});
+        this.dataCellList = this.dataCellList.map(function(item) {
+          return [item[1], item[0], item[2] || "-"];
+        });
         [...data.msg][0].work.map(item => {
           this.dateList.push(dataFormat(item.day));
         });
-      
+
         let chartData = {
-            title: {
+          title: {
             text: "制作人员任务统计",
             textStyle: {
               //---主标题内容样式
@@ -84,8 +89,8 @@ export default {
           animation: false,
           grid: {
             height: "50%",
-            left:"5%",
-            right:"5%",
+            left: "5%",
+            right: "5%",
             y: "10%"
           },
           xAxis: {
@@ -117,7 +122,8 @@ export default {
               data: this.dataCellList,
               label: {
                 normal: {
-                  show: true
+                  show: true,
+                  color: "#000000"
                 }
               },
               itemStyle: {
@@ -133,11 +139,10 @@ export default {
           this.$refs["line-chart1"].initChart(chartData);
         });
       });
-    },
-   
+    }
   },
   created() {
-      this.getFreeTime()
+    this.getFreeTime();
   }
 };
 </script>
