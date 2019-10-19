@@ -17,8 +17,13 @@
       <div v-if="value1">
         <HotChart chart-id="line-chart1" ref="line-chart1" height="500px" />
         <el-row>
-          <el-col align="right">
+          <el-col  align="right">
             <label for align="right">注：此图展示员工近30天的每日任务量</label>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col align="right">
+            <label for align="right">灰色代表空闲时间</label>
           </el-col>
         </el-row>
       </div>
@@ -97,7 +102,7 @@ export default {
             type: "category",
             data: this.dateList,
             splitArea: {
-              show: true
+              show: false
             }
           },
           yAxis: {
