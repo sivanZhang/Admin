@@ -342,7 +342,7 @@
             <div
               class="tags-view-item"
               v-if="showMulChoose.start&&selStart"
-              :class="showMulChoose.user?'active':''"
+              :class="showMulChoose.start?'active':''"
             >
               开始日期：{{showMulChoose.start}}
               <span
@@ -362,8 +362,6 @@
               />
             </div>
           </scroll-pane>
-          <el-tag v-if="showMulChoose.start" style="margin-left:10px"></el-tag>
-          <el-tag v-if="showMulChoose.end" style="margin-left:10px"></el-tag>
         </div>
       </el-row>
       <el-table
@@ -1392,7 +1390,7 @@ export default {
               }
             ];
             break;
-          case "start_date" || "end_date":
+          case "start_date":
             this.colShow = false;
             this.timeSelection = "";
             this.timeSelection2 = "";
