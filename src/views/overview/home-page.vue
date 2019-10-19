@@ -163,7 +163,6 @@ export default {
   }
 };
 </script>
-
 <template>
   <div id="home-page">
     <el-row :gutter="16">
@@ -280,8 +279,7 @@ export default {
       <el-col :span="4">
         <MyTask
           :my-task-list="MyTaskList"
-          :target-more="()=>$router.push({name:'my-task'})"
-          :show-drawer="taskBoardRightShow"
+          @show-drawer="taskBoardRightShow"
         />
       </el-col>
       <el-col :span="8">

@@ -1,23 +1,18 @@
-<template functional>
+<template>
   <el-card shadow="hover">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
-      <el-badge
-        :value="props.myTaskList.length"
-        :hidden="!props.myTaskList.length"
-        :max="99"
-        class="item"
-      >
+      <el-badge :value="myTaskList.length" :hidden="!myTaskList.length" :max="99" class="item">
         <span style="padding-right: 10px;">我的任务</span>
       </el-badge>
-      <el-button @click="props.targetMore" type="text">查看更多</el-button>
+      <el-button @click="targetMore" type="text">查看更多</el-button>
     </el-row>
     <div class="navs">
-      <div>
-        1
+      <div @click="targetMore('priority')">
+        {{myTaskList.filter(t=>t.task.priority==2).length}}
         <br />高优先级
       </div>
-      <div>
-        1
+      <div @click="targetMore('grade')">
+        {{myTaskList.filter(t=>t.task.grade==2).length}}
         <br />困难
       </div>
       <div>
@@ -28,9 +23,9 @@
     <ul class="list">
       <li
         class="item"
-        v-for="item of props.myTaskList.filter((t,i)=>1<5)"
+        v-for="item of myTaskList.filter((t,i)=>1<5)"
         :key="item.task.id"
-        @click="props.showDrawer(item)"
+        @click="showDrawer(item)"
         style="cursor: pointer;"
       >
         {{item.task.name}}
@@ -40,9 +35,30 @@
         <div class="message">{{item.task.content}}</div>
       </li>
     </ul>
-    <div v-show="props.myTaskList.length>5">...</div>
+    <div v-show="myTaskList.length>5">...</div>
   </el-card>
 </template>
+<script>
+export default {
+  props: {
+    myTaskList: {
+      type: Array
+    }
+  },
+  methods: {
+    showDrawer(item) {
+      this.$emit("show-drawer", item);
+    },
+    //使跳转我的任务页面后，自动筛选
+    targetMore(type) {
+      if (type) {
+        this.$store.commit("mine/SET_KEYWORD", type);
+      }
+      this.$router.push({ name: "my-task" });
+    }
+  }
+};
+</script>
 <style lang="scss" scoped>
 .navs {
   display: flex;

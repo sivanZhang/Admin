@@ -158,7 +158,7 @@ export default {
         },
         {
           value: "priority",
-          label: "优先级"
+          label: "优先等级"
         },
         {
           value: "start_date",
@@ -167,55 +167,47 @@ export default {
         {
           value: "end_date",
           label: "截止日期"
+        },
+        {
+          value: "grade",
+          label: "难度等级"
+        },
+      ],
+      columnSelect2: [
+        {
+          value: 0,
+          label: "低级"
+        },
+        {
+          value: 1,
+          label: "中级"
+        },
+        {
+          value: 2,
+          label: "高级"
         }
       ],
-      colShow: true,
-      chooseSel: false,
-      columnSelect2: [],
       colSel2: [],
-      timeSel: false,
       timeSelection: "",
       timeSelection2: "",
       historyVersion: [],
       project: null,
-      assetId: null
+      assetId: null,
+      currentGrade: null,
+      GradeList: [{
+          label: '简单',
+          value: 0
+        },
+        {
+          label: '标准',
+          value: 1
+        },
+        {
+          label: '困难',
+          value: 2
+        },
+      ]
     };
-  },
-  watch: {
-    colSel: {
-      handler: function (newVal, oldVal) {
-        //console.log(newVal);
-        if (newVal === "priority") {
-          this.colShow = false;
-          this.timeSel = false;
-          this.chooseSel = true;
-          this.colSel2 = [0];
-          this.columnSelect2 = [{
-              value: 0,
-              label: "正常"
-            },
-            {
-              value: 1,
-              label: "优先"
-            }
-          ];
-        } else if (newVal == "start_date" || newVal == "end_date") {
-          this.colShow = false;
-          this.chooseSel = false;
-          this.timeSel = true;
-          this.timeSelection = "";
-          this.timeSelection2 = "";
-        } else {
-          this.colShow = true;
-          this.timeSel = false;
-          this.chooseSel = false;
-          this.colSel2 = [];
-          this.columnSelect2 = [];
-          this.timeSelection = "";
-          this.timeSelection2 = "";
-        }
-      }
-    }
   },
   methods: {
     //点击筛选任务
@@ -228,68 +220,76 @@ export default {
 
       function DateFormat(dateVal) {
         return dayjs(dateVal).format("YYYY/MM/DD")
-        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
-      if (this.colSel == "name" && this.keyword) {
-        data = {
-          ...data,
-          name: this.keyword
-        };
+      switch (this.colSel) {
+        case 'name':
+          this.keyword && (data = {
+            ...data,
+            name: this.keyword
+          })
+          break;
+        case 'grade':
+          data = {
+            ...data,
+            grade: this.currentGrade
+          }
+          break;
+        case 'start_date':
+          if (!this.timeSelection && this.timeSelection2) {
+            data = {
+              ...data,
+              start: "" + "," + DateFormat(this.timeSelection2)
+            };
+          } else if (this.timeSelection && !this.timeSelection2) {
+            data = {
+              ...data,
+              start: DateFormat(this.timeSelection) + "," + ""
+            };
+          } else {
+            data = {
+              ...data,
+              start: DateFormat(this.timeSelection) +
+                "," +
+                DateFormat(this.timeSelection2)
+            };
+          }
+          break;
+        case 'end_date':
+          if (!this.timeSelection && this.timeSelection2) {
+            data = {
+              ...data,
+              end: "" + "," + DateFormat(this.timeSelection2)
+            };
+          } else if (this.timeSelection && !this.timeSelection2) {
+            data = {
+              ...data,
+              end: DateFormat(this.timeSelection) + "," + ""
+            };
+          } else {
+            data = {
+              ...data,
+              end: DateFormat(this.timeSelection) +
+                "," +
+                DateFormat(this.timeSelection2)
+            };
+          }
+          break;
+        case 'priority':
+          if (this.colSel2.length) {
+            data = {
+              ...data,
+              priority: JSON.stringify(this.colSel2)
+            };
+            this.name = {
+              priority: JSON.stringify(this.colSel2)
+            };
+          }
+          break
+      }
 
-      }
-      if (this.colSel == "start_date") {
-        if (!this.timeSelection && this.timeSelection2) {
-          data = {
-            ...data,
-            start: "" + "," + DateFormat(this.timeSelection2)
-          };
-        } else if (this.timeSelection && !this.timeSelection2) {
-          data = {
-            ...data,
-            start: DateFormat(this.timeSelection) + "," + ""
-          };
-        } else {
-          data = {
-            ...data,
-            start: DateFormat(this.timeSelection) +
-              "," +
-              DateFormat(this.timeSelection2)
-          };
-        }
 
-      }
-      if (this.colSel == "end_date") {
-        if (!this.timeSelection && this.timeSelection2) {
-          data = {
-            ...data,
-            end: "" + "," + DateFormat(this.timeSelection2)
-          };
-        } else if (this.timeSelection && !this.timeSelection2) {
-          data = {
-            ...data,
-            end: DateFormat(this.timeSelection) + "," + ""
-          };
-        } else {
-          data = {
-            ...data,
-            end: DateFormat(this.timeSelection) +
-              "," +
-              DateFormat(this.timeSelection2)
-          };
-        }
 
-      }
-      if (this.colSel2.length > 0) {
-        if (this.colSel == "priority") {
-          data = {
-            ...data,
-            priority: "[" + String(this.colSel2) + "]"
-          };
-          this.name = {
-            priority: "[" + String(this.colSel2) + "]"
-          };
-        }
-      }
+
       getStatusTaskList(data).then(({
         data
       }) => {
@@ -305,6 +305,7 @@ export default {
       this.timeSelection = "";
       this.timeSelection2 = "";
       let data = {
+        /*  */
         mytask: null,
         status: status
       };
@@ -318,8 +319,6 @@ export default {
     },
     //表格中的快捷下拉切换任务状态
     statusChange(status, row) {
-      //  console.log('row', row);
-
       let loading = this.$loading({
         fullscreen: true
       });
@@ -360,7 +359,7 @@ export default {
       if (e.to.dataset.arr === e.from.dataset.arr) {
         return false
       }
-      let status
+      let status = -1
       switch (e.to.dataset.arr) {
         case 'PauseArr':
           status = 0
@@ -380,9 +379,6 @@ export default {
         case 'TimeOutArr':
           status = 5
           break;
-          // case 'PassArr':
-          //     status = 6
-          //     break;
       }
       let loading = this.$loading({
         fullscreen: true
@@ -503,21 +499,12 @@ export default {
 
     },
     //http获取‘我的任务’
-    async getMyTasks(Type) {
-      let data = {
-        mytask: null,
-      };
-      await getStatusTaskList(data).then(({
+    async getMyTasks() {
+      await getStatusTaskList().then(({
         data
       }) => {
-        // [...data.msg].forEach(item => {
-        //         this.MyTaskList.push(item.task)
-        //     })
         this.MyTaskList = [...data.msg];
-
         this.resetTasks()
-
-
       });
 
     },
@@ -608,7 +595,20 @@ export default {
     }
   },
   created() {
-    this.getMyTasks(1);
-    this.task(2);
+    this.getMyTasks(1)
+    //首页中传递过来的字段
+    switch (this.$store.state.mine.keyword) {
+      case 'priority':
+        this.colSel = 'priority'
+        this.colSel2 = [2]
+        break;
+      case 'grade':
+        this.colSel = 'grade'
+        this.currentGrade = 2
+        break
+    }
+    this.$nextTick(() => {
+      this.task(2);
+    })
   },
 };

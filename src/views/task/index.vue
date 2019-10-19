@@ -164,7 +164,7 @@
       </el-tab-pane>
       <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
         <Drawer
-        ref="drawer-father"
+          ref="drawer-father"
           scrollable
           v-model="isDrawerShow"
           width="512px"
@@ -183,7 +183,11 @@
               />
             </el-tab-pane>
             <el-tab-pane label="历史版本">
-              <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion"/>
+              <history
+                :historyVersion="historyVersion"
+                :project="project"
+                @Version="getAssetVersion"
+              />
             </el-tab-pane>
             <el-tab-pane label="执行记录">
               <tabLog :loglist="LogList" :logsLoading="logsLoading" />
@@ -215,7 +219,7 @@
               <el-select
                 v-model="colSel"
                 placeholder="请选择"
-                style="width:130px;"
+                style="width:120px;margin-right:5px;"
                 filterable
                 slot="prepend"
               >
@@ -227,19 +231,19 @@
                 ></el-option>
               </el-select>
               <el-input
-                v-if="colShow"
+                v-if="colSel === 'name'"
                 placeholder="输入关键字搜索"
                 v-model="keyword"
                 @keyup.enter.native="task(changecolor)"
-                style="width:300px"
+                style="width:200px"
               ></el-input>
               <el-select
-                v-show="chooseSel"
+                v-if="colSel === 'priority'"
                 v-model="colSel2"
                 placeholder="请选择"
-                style="width:300px;margin-top:1px"
                 multiple
                 filterable
+                style="width:200px"
                 @keyup.enter.native="task(changecolor)"
               >
                 <el-option
@@ -249,13 +253,31 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              <div v-if="timeSel" style="width:280px;display:flex;">
-                <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
+              <div
+                v-if="colSel === 'start_date' || colSel === 'end_date'"
+              >
+                <el-date-picker style="width:130px" v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
                 <span style="text-align:center;padding-top:3px">至</span>
-                <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker style="width:130px" v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
               </div>
-              <el-button @click="task(changecolor)" icon="el-icon-search" style="height:27.99px" type="primary"/>
-              <el-button @click="reTask(changecolor)" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
+              <el-select v-if="colSel === 'grade'" v-model="currentGrade" placeholder="选择任务难度等级" style="width:200px">
+                <el-option
+                  v-for="item of GradeList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                />
+              </el-select>
+              <el-button
+                @click="task(changecolor)"
+                type="primary"
+                style="margin-left:5px">
+                查询
+              </el-button>
+              <el-button
+                @click="reTask(changecolor)"
+                type="primary"
+              >重置</el-button>
             </div>
           </el-col>
         </el-row>
@@ -268,23 +290,22 @@
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
-          <el-table-column label="缩略图"  v-if="show_project_image" width="75px">
-          <template slot-scope="scope" >
-            <el-image
-              :src="$store.state.BASE_URL+scope.row.asset.image"
-              
-              :preview-src-list= [$store.state.BASE_URL+scope.row.asset.image]
-            >
-              <div slot="placeholder" class="image-slot">
-                加载中
-                <span class="dot">...</span>
-              </div>
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
-              </div>
-            </el-image>
-          </template>
-        </el-table-column>
+          <el-table-column label="缩略图" v-if="show_project_image" width="75px">
+            <template slot-scope="scope">
+              <el-image
+                :src="$store.state.BASE_URL+scope.row.asset.image"
+                :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span class="dot">...</span>
+                </div>
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture" style="color:#909399"></i>
+                </div>
+              </el-image>
+            </template>
+          </el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
@@ -330,11 +351,11 @@
             </template>
           </el-table-column>
           <el-table-column label="优先级" header-align="left">
-            <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
+            <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
           </el-table-column>
           <!-- <el-table-column label="创建日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
-          </el-table-column> -->
+          </el-table-column>-->
           <el-table-column label="任务进度" header-align="left">
             <template slot-scope="scope">{{scope.row.task.schedule}}%</template>
           </el-table-column>
