@@ -93,7 +93,7 @@
             </div>
           </template>
         </el-tab-pane>
-        <el-tab-pane label="版本" name="second">版本</el-tab-pane>
+        <!-- <el-tab-pane label="版本" name="second">版本</el-tab-pane> -->
         <el-tab-pane label="角色" name="third">
           <template v-if="userRole">
             <el-row>
