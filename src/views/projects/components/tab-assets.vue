@@ -1912,72 +1912,73 @@ export default {
         page: this.currentPage
       };
       if (this.colSel == "name" && this.filterText) {
-        payload = { ...payload, name: this.filterText };
+        payload = { ...payload, name: this.filterText,page:1,pagenum:20 };
+        
         this.name = { name: this.filterText };
       }
       if (this.colSel == "inner_version" && this.filterText) {
-        payload = { ...payload, inner_version: this.filterText };
+        payload = { ...payload, inner_version: this.filterText,page:1,pagenum:20 };
         this.name = { inner_version: this.filterText };
       }
       if (this.colSel == "session" && this.filterText) {
-        payload = { ...payload, session: this.filterText };
+        payload = { ...payload, session: this.filterText ,page:1,pagenum:20};
         this.name = { session: this.filterText };
       }
       if (this.colSel == "frame" && this.filterText) {
-        payload = { ...payload, frame: this.filterText };
+        payload = { ...payload, frame: this.filterText ,page:1,pagenum:20};
         this.name = { frame: this.filterText };
       }
       if (this.colSel == "episode" && this.filterText) {
-        payload = { ...payload, episode: this.filterText };
+        payload = { ...payload, episode: this.filterText ,page:1,pagenum:20};
         this.name = { episode: this.filterText };
       }
       if (this.colSel == "content" && this.filterText) {
-        payload = { ...payload, content: this.filterText };
+        payload = { ...payload, content: this.filterText ,page:1,pagenum:20};
         this.name = { content: this.filterText };
       }
       if (this.colSel == "remark" && this.filterText) {
-        payload = { ...payload, remark: this.filterText };
+        payload = { ...payload, remark: this.filterText ,page:1,pagenum:20};
         this.name = { remark: this.filterText };
       }
       if (this.colSel == "report" && this.filterText) {
-        payload = { ...payload, report: this.filterText };
+        payload = { ...payload, report: this.filterText ,page:1,pagenum:20};
         this.name = { report: this.filterText };
       }
       if (this.colSel == "retime" && this.filterText) {
-        payload = { ...payload, retime: this.filterText };
+        payload = { ...payload, retime: this.filterText,page:1,pagenum:20 };
         this.name = { retime: this.filterText };
       }
       if (this.colSel == "frame_range" && this.filterText) {
-        payload = { ...payload, frame_range: this.filterText };
+        payload = { ...payload, frame_range: this.filterText,page:1,pagenum:20 };
         this.name = { frame_range: this.filterText };
       }
       if (this.colSel == "reference" && this.filterText) {
-        payload = { ...payload, reference: this.filterText };
+        payload = { ...payload, reference: this.filterText,page:1,pagenum:20 };
         this.name = { reference: this.filterTextd };
       }
       if (this.colSel == "creator" && this.filterText) {
-        payload = { ...payload, creator: this.filterText };
+        payload = { ...payload, creator: this.filterText ,page:1,pagenum:20};
         this.name = { creator: this.filterText };
       }
       if (this.colSel == "start" && this.timeSelection) {
-        payload = { ...payload, start: DateFormat(this.timeSelection) };
+        payload = { ...payload, start: DateFormat(this.timeSelection),page:1,pagenum:20 };
         this.name = { start: DateFormat(this.timeSelection) };
       }
       if (this.colSel == "end" && this.timeSelection) {
-        payload = { ...payload, end: DateFormat(this.timeSelection) };
+        payload = { ...payload, end: DateFormat(this.timeSelection),page:1,pagenum:20 };
         this.name = { end: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "status") {
-          payload = { ...payload, status: "[" + String(this.colSel2) + "]" };
+          payload = { ...payload, status: "[" + String(this.colSel2) + "]",page:1,pagenum:20 };
           this.name = { status: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "level") {
-          payload = { ...payload, level: "[" + String(this.colSel2) + "]" };
+          payload = { ...payload, level: "[" + String(this.colSel2) + "]" ,page:1,pagenum:20};
           this.name = { level: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "priority") {
-          payload = { ...payload, priority: "[" + String(this.colSel2) + "]" };
+          payload = { ...payload, priority: "[" + String(this.colSel2) + "]" ,page:1,pagenum:20};
           this.name = { priority: "[" + String(this.colSel2) + "]" };
         }
       }

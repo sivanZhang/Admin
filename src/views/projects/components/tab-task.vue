@@ -92,7 +92,7 @@
               v-if="colShow"
               placeholder="输入关键字搜索"
               v-model="keyword"
-               size="mini"
+              size="mini"
               @keyup.enter.native="getTasks()"
               style="width:300px"
             ></el-input>
@@ -104,7 +104,7 @@
               multiple
               filterable
               @keyup.enter.native="getTasks()"
-               size="mini"
+              size="mini"
             >
               <el-option
                 v-for="item in columnSelect2"
@@ -114,11 +114,17 @@
               ></el-option>
             </el-select>
             <div v-if="timeSel" style="width:280px;display:flex;">
-              <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期"  size="mini"></el-date-picker>
+              <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期" size="mini"></el-date-picker>
               <span style="text-align:center;padding-top:3px">至</span>
-              <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期"  size="mini"></el-date-picker>
+              <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期" size="mini"></el-date-picker>
             </div>
-            <el-button @click="getTasks()" size="mini" icon="el-icon-search" type="primary" style="height:27.99px"/>
+            <el-button
+              @click="getTasks()"
+              size="mini"
+              icon="el-icon-search"
+              type="primary"
+              style="height:27.99px"
+            />
             <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
               <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
                 <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
@@ -219,7 +225,7 @@
                   </el-row>
                   <el-row>
                     <el-col align="right">
-                      <el-button type="primary" @click="MulSel()" >筛选</el-button>
+                      <el-button type="primary" @click="MulSel()">筛选</el-button>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -310,14 +316,13 @@
           column-key="priority"
           :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
         >
-         <template slot-scope="scope" >
-           <div style="backgroundColor:#C64b2b;color:#FFF"   v-if="scope.row.priority === 2">
-           {{scope.row.priority|taskPriority}}
-           </div>
-           <div style="backgroundColor:'transparent'"   v-else>
-           {{scope.row.priority|taskPriority}}
-           </div>
-         </template>
+          <template slot-scope="scope">
+            <div
+              style="backgroundColor:#C64b2b;color:#FFF"
+              v-if="scope.row.priority === 2"
+            >{{scope.row.priority|taskPriority}}</div>
+            <div style="backgroundColor:'transparent'" v-else>{{scope.row.priority|taskPriority}}</div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="grade"
@@ -330,14 +335,13 @@
           column-key="grade"
           :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
         >
-         <template slot-scope="scope" >
-           <div style="backgroundColor:#C64b2b;color:#FFF"   v-if="scope.row.grade === 2">
-           {{scope.row.grade|taskgrade}}
-           </div>
-           <div style="backgroundColor:'transparent'"   v-else>
-           {{scope.row.grade|taskgrade}}
-           </div>
-         </template>
+          <template slot-scope="scope">
+            <div
+              style="backgroundColor:#C64b2b;color:#FFF"
+              v-if="scope.row.grade === 2"
+            >{{scope.row.grade|taskgrade}}</div>
+            <div style="backgroundColor:'transparent'" v-else>{{scope.row.grade|taskgrade}}</div>
+          </template>
         </el-table-column>
         <el-table-column
           label="状态"
@@ -357,7 +361,7 @@
         <el-table-column label="执行人" show-overflow-tooltip v-if="show_executor">
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
-         <el-table-column
+        <el-table-column
           label="任务进度"
           width="100px"
           align="center"
@@ -393,7 +397,13 @@
         >
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hour" align="center" label="预设时间（小时）" width="130px" v-if="show_total_hour"></el-table-column>
+        <el-table-column
+          prop="total_hour"
+          align="center"
+          label="预设时间（小时）"
+          width="130px"
+          v-if="show_total_hour"
+        ></el-table-column>
         <el-table-column label="操作" align="center" v-if="authTask">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">
@@ -1015,7 +1025,7 @@ export default {
       show_start_date: true,
       show_end_date: true,
       show_total_hour: true,
-      show_schedule:true,
+      show_schedule: true,
       filterStatus: [],
       filterPriority: [],
       filterGrade: [],
@@ -1257,25 +1267,25 @@ export default {
     }
   },
   methods: {
-    cellStyle({row,column,rowIndex,columnIndex}){
+    cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
         switch (row.priority) {
           case 2:
             return {
               background: "#C64b2b",
               color: "#FFFFFF"
-            }
+            };
         }
-      }else if(column.property == "grade"){
+      } else if (column.property == "grade") {
         switch (row.grade) {
           case 2:
             return {
               background: "#C64b2b",
               color: "#FFFFFF"
-            }
+            };
         }
       }
-      return {borderRight: 0}
+      return { borderRight: 0 };
     },
     //批量修改任务
     mulEditTasks(Type) {
@@ -2017,69 +2027,112 @@ export default {
         page: this.currentPage
       };
       if (this.colSel == "name" && this.keyword) {
-        data = { ...data, name: this.keyword };
+        data = { ...data, name: this.keyword, page: 1, pagenum: 20 };
         this.name = { name: this.keyword };
       }
       if (this.colSel == "dept" && this.keyword) {
-        data = { ...data, dept: this.keyword };
+        data = { ...data, dept: this.keyword, page: 1, pagenum: 20 };
         this.name = { dept: this.keyword };
       }
       if (this.colSel == "content" && this.keyword) {
-        data = { ...data, content: this.keyword };
+        data = { ...data, content: this.keyword, page: 1, pagenum: 20 };
         this.name = { content: this.keyword };
       }
       if (this.colSel == "user" && this.keyword) {
-        data = { ...data, user: this.keyword };
+        data = { ...data, user: this.keyword, page: 1, pagenum: 20 };
         this.name = { user: this.keyword };
       }
       if (this.colSel == "total_hour" && this.keyword) {
-        data = { ...data, content: this.keyword };
+        data = { ...data, content: this.keyword, page: 1, pagenum: 20 };
         this.name = { content: this.keyword };
       }
       if (this.colSel == "start_date") {
         if (!this.timeSelection && this.timeSelection2) {
-          data = { ...data, start: "" + "," + DateFormat(this.timeSelection2) };
+          data = {
+            ...data,
+            start: "" + "," + DateFormat(this.timeSelection2),
+            page: 1,
+            pagenum: 20
+          };
         } else if (this.timeSelection && !this.timeSelection2) {
-          data = { ...data, start: DateFormat(this.timeSelection) + "," + "" };
+          data = {
+            ...data,
+            start: DateFormat(this.timeSelection) + "," + "",
+            page: 1,
+            pagenum: 20
+          };
         } else {
           data = {
             ...data,
             start:
               DateFormat(this.timeSelection) +
               "," +
-              DateFormat(this.timeSelection2)
+              DateFormat(this.timeSelection2),
+            page: 1,
+            pagenum: 20
           };
         }
 
-        this.name = { start_date: DateFormat(this.timeSelection) };
+        this.name = {
+          start_date: DateFormat(this.timeSelection),
+          page: 1,
+          pagenum: 20
+        };
       }
       if (this.colSel == "end_date") {
         if (!this.timeSelection && this.timeSelection2) {
-          data = { ...data, end: "" + "," + DateFormat(this.timeSelection2) };
+          data = {
+            ...data,
+            end: "" + "," + DateFormat(this.timeSelection2),
+            page: 1,
+            pagenum: 20
+          };
         } else if (this.timeSelection && !this.timeSelection2) {
-          data = { ...data, end: DateFormat(this.timeSelection) + "," + "" };
+          data = {
+            ...data,
+            end: DateFormat(this.timeSelection) + "," + "",
+            page: 1,
+            pagenum: 20
+          };
         } else {
           data = {
             ...data,
             end:
               DateFormat(this.timeSelection) +
               "," +
-              DateFormat(this.timeSelection2)
+              DateFormat(this.timeSelection2),
+            page: 1,
+            pagenum: 20
           };
         }
         this.name = { end_date: DateFormat(this.timeSelection) };
       }
       if (this.colSel2.length > 0) {
         if (this.colSel == "priority") {
-          data = { ...data, priority: "[" + String(this.colSel2) + "]" };
+          data = {
+            ...data,
+            priority: "[" + String(this.colSel2) + "]",
+            page: 1,
+            pagenum: 20
+          };
           this.name = { priority: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "status") {
-          data = { ...data, status: "[" + String(this.colSel2) + "]" };
+          data = {
+            ...data,
+            status: "[" + String(this.colSel2) + "]",
+            page: 1,
+            pagenum: 20
+          };
           this.name = { status: "[" + String(this.colSel2) + "]" };
         }
         if (this.colSel == "grade") {
-          data = { ...data, grade: "[" + String(this.colSel2) + "]" };
+          data = {
+            ...data,
+            grade: "[" + String(this.colSel2) + "]",
+            page: 1,
+            pagenum: 20
+          };
           this.name = { grade: "[" + String(this.colSel2) + "]" };
         }
       }
