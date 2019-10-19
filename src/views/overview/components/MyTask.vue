@@ -8,15 +8,15 @@
     </el-row>
     <div class="navs">
       <div @click="targetMore('priority')">
-        {{myTaskList.filter(t=>t.task.priority==2).length}}
+        {{TaskCount.high}}
         <br />高优先级
       </div>
       <div @click="targetMore('grade')">
-        {{myTaskList.filter(t=>t.task.grade==2).length}}
+        {{TaskCount.difficult}}
         <br />困难
       </div>
       <div @click="targetMore('expire')">
-        1
+        {{TaskCount.outdate}}
         <br />即将超期
       </div>    
     </div>
@@ -39,13 +39,27 @@
   </el-card>
 </template>
 <script>
+import {getHomepageMyTask} from '@/api/task'
 export default {
   props: {
     myTaskList: {
       type: Array
     }
   },
+  data() {
+    return {
+      TaskCount:{}
+    }
+  },
+  created() {
+    this.getTaskCount()
+  },
   methods: {
+    getTaskCount(){
+      getHomepageMyTask().then(({data})=>{
+         this.TaskCount = data.msg
+      })
+    },
     showDrawer(item) {
       this.$emit("show-drawer", item);
     },

@@ -65,4 +65,7 @@ export function mulCreateTasks(data){
 export function mulPutTasks(data){
     return AXIOS.post('/task/task/?02',data)
 }
-//
+//首页特定任务统计
+export function getHomepageMyTask(params){
+    return AXIOS.get('/task/stat/?mytask&homepage=2',{params})
+}
