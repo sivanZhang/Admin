@@ -10,7 +10,7 @@
               :project="project"
               :LinkList="LinkList"
               @refresh="getLinkList"
-              @refresh_assetList="getAssetList"             
+              @refresh_assetList="getAssetList"
               :LinkAssetList="LinkAssetList"
               :pro_type="pro_type"
               :authLink="authLink"
@@ -31,20 +31,12 @@
               highlight-current-row
               row-class-name="hover"
             >
-              <el-table-column label="任务ID" prop="id" align="left"></el-table-column>
-              <el-table-column label="名称" prop="name" align="left"></el-table-column>
-              <el-table-column
-                label="制作环节"
-                prop="link_dept_name"
-                align="left"
-                show-overflow-tooltip
-              ></el-table-column>
-              <el-table-column label="制作内容" prop="content" align="left" show-overflow-tooltip></el-table-column>
-              <el-table-column label="结束时间" align="left" width="90px">
-                <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
-              </el-table-column>
+              <el-table-column label="任务ID" prop="task_id" align="left"></el-table-column>
+              <el-table-column label="名称" prop="task_name" align="left"></el-table-column>
+              <el-table-column label="任务内容" prop="task_content" align="left" show-overflow-tooltip></el-table-column>
+              <el-table-column label="提交路径" align="left" prop="path"></el-table-column>
               <el-table-column label="完成时间" align="left" width="90px">
-                <!-- <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template> -->
+                <template slot-scope="scope">{{scope.row.end_time|dateFormat}}</template>
               </el-table-column>
               <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
@@ -61,13 +53,17 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="历史版本" name="fifth">
-            <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion"/>
+            <history
+              :historyVersion="historyVersion"
+              :project="project"
+              @Version="getAssetVersion"
+            />
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="sixth">
             <approve-log ref="approvelogs" :project="project" task_or_project="project" />
           </el-tab-pane>
           <el-tab-pane label="信息" name="seventh">
-            <info :project="project" @refresh_assetList="getAssetList" :authAsset="authAsset"/>
+            <info :project="project" @refresh_assetList="getAssetList" :authAsset="authAsset" />
             <attrsBind
               :project="project"
               :customAttrs="customAttrs"
@@ -86,7 +82,7 @@
 import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
-import history from "@/views/task/components/tab-history"
+import history from "@/views/task/components/tab-history";
 import { addLinks, getLinks } from "@/api/links";
 import { getVersion, getHistoryVersion } from "@/api/assets";
 import { getAssetTaskList } from "@/api/task";
@@ -109,7 +105,7 @@ export default {
     return {
       activeTab: this.assetJump ? this.assetJump : "first",
       LinkList: [],
-      authLink:null,
+      authLink: null,
       assetVersion: null,
       assetTaskList: null,
       historyVersion: []
@@ -125,12 +121,11 @@ export default {
       }
     }
   },
-  components: { remarks, info, links, approveLog, attrsBind,history },
-  
+  components: { remarks, info, links, approveLog, attrsBind, history },
+
   methods: {
-   
-    updateRemark(){
-      this.$emit("refreshRemark")
+    updateRemark() {
+      this.$emit("refreshRemark");
     },
     NewcustomAttrs() {
       this.$emit("refresh_customAttrs");
@@ -144,7 +139,7 @@ export default {
         asset
       }).then(res => {
         this.LinkList = [...res.data.msg];
-        this.authLink = res.data.auth.can_manage_link
+        this.authLink = res.data.auth.can_manage_link;
       });
     },
     getAssetVersion() {
@@ -153,7 +148,7 @@ export default {
       }).then(({ data }) => {
         this.assetVersion = [...data.msg];
       });
-      getHistoryVersion({asset_id: this.project.id}).then(({ data }) => {
+      getHistoryVersion({ asset_id: this.project.id }).then(({ data }) => {
         this.historyVersion = [...data.msg];
       });
     },
@@ -180,8 +175,8 @@ export default {
       this.$emit("jumpName", "tab2");
     }
   },
-  created(){
-    this.getAssetTask(this.$route.query.asset)
+  created() {
+    this.getAssetTask(this.$route.query.asset);
   }
 };
 </script>
