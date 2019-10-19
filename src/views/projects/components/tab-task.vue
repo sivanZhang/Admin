@@ -142,7 +142,7 @@
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="任务内容" prop="content">
+                      <el-form-item label="制作内容" prop="content">
                         <el-input v-model="sortSelForm.content"></el-input>
                       </el-form-item>
                     </el-col>
@@ -159,7 +159,6 @@
                           <el-option label="低级" :value="0"></el-option>
                           <el-option label="中级" :value="1"></el-option>
                           <el-option label="高级" :value="2"></el-option>
-                          <el-option label="高难度" :value="3"></el-option>
                         </el-select>
                       </el-form-item>
                     </el-col>
@@ -229,12 +228,143 @@
                     </el-col>
                   </el-row>
                 </el-form>
-                <el-button slot="reference" type="primary" style="margin-left: 15px" size="mini">筛选</el-button>
+                <el-button
+                  slot="reference"
+                  type="primary"
+                  style="margin-left: 15px"
+                  size="mini"
+                  @click="showMul()"
+                >筛选</el-button>
               </el-popover>
             </el-tooltip>
             <el-button @click="getTasks(1)" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
           </div>
         </el-col>
+      </el-row>
+      <el-row v-if="mulChoose">
+        <div
+          style="display:flex;padding-top:10px;overflow-x:auto;height:45px"
+          class="tags-view-container"
+        >
+          <label for style="width:80px">筛选条件：</label>
+          <scroll-pane class="tags-view-wrapper">
+            <div
+              class="tags-view-item"
+              :class="showMulChoose.name?'active':''"
+              v-if="showMulChoose.name&&selShowName"
+            >
+              任务：{{showMulChoose.name}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('name')"
+              />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.dept&&selShowDept"
+              :class="showMulChoose.dept?'active':''"
+            >
+              制作环节：{{showMulChoose.dept}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('dept')"
+              />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.content&&selShowContent"
+              :class="showMulChoose.content?'active':''"
+            >
+              制作内容：{{showMulChoose.content}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('content')"
+              />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.user&&selShowUser"
+              :class="showMulChoose.user?'active':''"
+            >
+              创建人：{{showMulChoose.user}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('user')"
+              />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.priority&&selShowPriority"
+              :class="showMulChoose.priority?'active':''"
+             
+            >
+              优先级：
+              <span v-for="(item,index) of showMulChoose.priority" :key="index">
+                <span style="margin-left:5px">{{item|taskPriority}}</span>
+              </span>
+              <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('priority')" />
+            </div>
+              <div
+              class="tags-view-item"
+              v-if="showMulChoose.grade&&selShowGrade"
+              :class="showMulChoose.grade?'active':''"
+              
+            >
+              任务难度：
+            <span v-for="(item,index) of showMulChoose.grade" :key="index">
+              <span style="padding-left:5px">{{item|taskgrade}}</span>
+            </span>
+              <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('grade')" />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.status&&selShowStatus"
+              :class="showMulChoose.status?'active':''"
+  
+            >
+              状态：
+            <span v-for="(item,index) of showMulChoose.status" :key="index">
+              <span style="padding-left:5px">{{item|taskStatus}}</span>
+            </span>
+              <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('status')" />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.total_hour&&selTolHour"
+              :class="showMulChoose.user?'active':''"
+            >
+              总工时：{{showMulChoose.total_hour}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('total_hour')"
+              />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.start&&selStart"
+              :class="showMulChoose.user?'active':''"
+            >
+              开始日期：{{showMulChoose.start}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('start')"
+              />
+            </div>
+            <div
+              class="tags-view-item"
+              v-if="showMulChoose.end&&selEnd"
+              :class="showMulChoose.end?'active':''"
+            >
+              结束日期：{{showMulChoose.end}}
+              <span
+                class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag('end')"
+              />
+            </div>
+          </scroll-pane>
+          <el-tag v-if="showMulChoose.start" style="margin-left:10px"></el-tag>
+          <el-tag v-if="showMulChoose.end" style="margin-left:10px"></el-tag>
+        </div>
       </el-row>
       <el-table
         :data="TaskList"
@@ -972,11 +1102,22 @@ import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
 import dayjs from "dayjs";
+import ScrollPane from "@/layout/components/TagsView/ScrollPane";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
   data() {
     return {
+      selShowName: true,
+      selShowDept: true,
+      selShowContent:true,
+      selShowUser:true,
+      selShowPriority:true,
+      selShowGrade:true,
+      selShowStatus:true,
+      selTolHour:true,
+      selStart:true,
+      selEnd:true,
       authTask: null,
       uploadVisible: false,
       activeTab: "first",
@@ -1045,7 +1186,7 @@ export default {
         },
         {
           value: "content",
-          label: "任务内容"
+          label: "制作内容"
         },
         {
           value: "priority",
@@ -1105,7 +1246,9 @@ export default {
       value5: "否",
       value6: "否",
       value7: "否",
-      value8: "否"
+      value8: "否",
+      showMulChoose: [],
+      mulChoose: false
     };
   },
   filters: {
@@ -1129,7 +1272,8 @@ export default {
   },
   components: {
     approveLog,
-    attrsBind
+    attrsBind,
+    ScrollPane
   },
   props: {
     AssetList: {
@@ -1267,6 +1411,73 @@ export default {
     }
   },
   methods: {
+    //删除筛选条件，剩余条件再搜索
+    closeSelectedTag(tag) {
+      if (tag == "name") {
+        delete this.sortSelForm.name;
+        this.selShowName = false;
+      }
+      if (tag == "dept") {
+        delete this.sortSelForm.dept;
+        this.selShowDept = false;
+      }
+      if (tag == "content") {
+        delete this.sortSelForm.content;
+        this.selShowContent = false;
+      }
+      if (tag == "user") {
+        delete this.sortSelForm.user;
+        this.selShowUser = false;
+      }
+      if (tag == "priority") {
+        delete this.sortSelForm.priority;
+        this.selShowPriority = false;
+      }
+      if (tag == "grade") {
+        delete this.sortSelForm.grade;
+        this.selShowGrade = false;
+      }
+      if (tag == "status") {
+        delete this.sortSelForm.status;
+        this.selShowStatus = false;
+      }
+      if (tag == "total_hour") {
+        delete this.sortSelForm.total_hour;
+        this.selTolHour = false;
+      }
+      if (tag == "start") {
+        delete this.sortSelForm.start;
+        this.selStart = false;
+      }
+      if (tag == "end") {
+        delete this.sortSelForm.end;
+        this.selEnd = false;
+      }
+      let data = {
+        ...this.sortSelForm,
+        project: this.$route.params.id,
+        pagenum: 20,
+        page: 1
+      };
+      this.multiSelect = this.sortSelForm;
+      this.tableLoading = true;
+
+      HTTP.queryTask(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.TaskList = [...data.msg];
+            this.authTask = data.auth.manage_task;
+            this.total = data.count;
+            this.pageCount = data.page_count;
+            this.visible2 = false;
+          }
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+          this.visible2 = false;
+        });
+    },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
         switch (row.priority) {
@@ -1411,17 +1622,50 @@ export default {
       //  this.download();
       this.uploadVisible = false;
     },
+    showMul() {
+      this.sortSelForm = {};
+      this.mulChoose = false;
+      this.showMulChoose = [];
+      this.selShowName=true;
+      this.selShowDept=true;
+      this.selShowContent=true;
+      this.selShowUser=true;
+      this.selShowPriority=true;
+      this.selShowGrade=true;
+      this.selShowStatus=true;
+      this.selTolHour=true;
+      this.selStart=true;
+      this.selEnd=true;
+    },
     //多条件筛选
     MulSel() {
+
+      this.mulChoose = true;
       this.visible2 = false;
       function dateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
+        return new dayjs(dateVal).format("YYYY/MM/DD");
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
+      if (this.sortSelForm.name) {
+        this.showMulChoose.name = this.sortSelForm.name;
+      }
+      if (this.sortSelForm.dept) {
+        this.showMulChoose.dept = this.sortSelForm.dept;
+      }
+      if (this.sortSelForm.content) {
+        this.showMulChoose.content = this.sortSelForm.content;
+      }
+      if (this.sortSelForm.user) {
+        this.showMulChoose.user = this.sortSelForm.user;
+      }
+      if (this.sortSelForm.total_hour) {
+        this.showMulChoose.total_hour = this.sortSelForm.total_hour;
       }
       if (this.sortSelForm.grade) {
         if (this.sortSelForm.grade.length === 0) {
           delete this.sortSelForm.grade;
         } else {
+          this.showMulChoose.grade = this.sortSelForm.grade;
           this.sortSelForm.grade = "[" + String(this.sortSelForm.grade) + "]";
         }
       }
@@ -1429,6 +1673,7 @@ export default {
         if (this.sortSelForm.priority.length === 0) {
           delete this.sortSelForm.priority;
         } else {
+          this.showMulChoose.priority = this.sortSelForm.priority;
           this.sortSelForm.priority =
             "[" + String(this.sortSelForm.priority) + "]";
         }
@@ -1437,43 +1682,59 @@ export default {
         if (this.sortSelForm.status.length === 0) {
           delete this.sortSelForm.status;
         } else {
+          this.showMulChoose.status = this.sortSelForm.status;
           this.sortSelForm.status = "[" + String(this.sortSelForm.status) + "]";
         }
       }
       if (this.sortSelForm.start || this.sortSelForm.start2) {
         if (this.sortSelForm.start && !this.sortSelForm.start2) {
+          this.showMulChoose.start = dateFormat(this.sortSelForm.start);
           this.sortSelForm.start =
             dateFormat(this.sortSelForm.start) + "," + "";
         } else if (!this.sortSelForm.start && this.sortSelForm.start2) {
+          this.showMulChoose.start = dateFormat(this.sortSelForm.start2);
           this.sortSelForm.start =
             "" + "," + dateFormat(this.sortSelForm.start2);
         } else {
+          this.showMulChoose.start =
+            dateFormat(this.sortSelForm.start) +
+            "至" +
+            dateFormat(this.sortSelForm.start2);
           this.sortSelForm.start =
             dateFormat(this.sortSelForm.start) +
             "," +
             dateFormat(this.sortSelForm.start2);
         }
+        delete this.sortSelForm.start2;
       }
       if (this.sortSelForm.end || this.sortSelForm.end2) {
         if (this.sortSelForm.end && !this.sortSelForm.end2) {
+          this.showMulChoose.end = dateFormat(this.sortSelForm.end);
           this.sortSelForm.end = dateFormat(this.sortSelForm.end) + "," + "";
         } else if (!this.sortSelForm.end && this.sortSelForm.end2) {
+          this.showMulChoose.end = dateFormat(this.sortSelForm.end2);
           this.sortSelForm.end = "" + "," + dateFormat(this.sortSelForm.end2);
         } else {
+          this.showMulChoose.end =
+            dateFormat(this.sortSelForm.end) +
+            "至" +
+            dateFormat(this.sortSelForm.end2);
           this.sortSelForm.end =
             dateFormat(this.sortSelForm.end) +
             "," +
             dateFormat(this.sortSelForm.end2);
         }
+        delete this.sortSelForm.end2;
       }
       let data = {
         ...this.sortSelForm,
         project: this.$route.params.id,
-        pagenum: this.pageSize,
-        page: this.currentPage
+        pagenum: 20,
+        page: 1
       };
       this.multiSelect = this.sortSelForm;
       this.tableLoading = true;
+
       HTTP.queryTask(data)
         .then(({ data }) => {
           if (data.status === 0) {
@@ -1482,14 +1743,12 @@ export default {
             this.total = data.count;
             this.pageCount = data.page_count;
             this.visible2 = false;
-            this.sortSelForm = {};
           }
           this.tableLoading = false;
         })
         .catch(err => {
           this.tableLoading = false;
           this.visible2 = false;
-          this.sortSelForm = {};
         });
     },
     changeAsset(val) {
@@ -2020,6 +2279,8 @@ export default {
         this.colSel = "name";
         this.colSel2 = [];
         this.timeSelection = "";
+        this.showMulChoose = {};
+        this.mulChoose = false;
       }
       let data = {
         project: this.$route.params.id,
@@ -2168,6 +2429,7 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     },
+
     //优先级格式化显示
     Priority: function(row, column) {
       switch (row.priority) {
@@ -2212,7 +2474,73 @@ export default {
   }
 };
 </script>
-
+<style lang="scss" scope>
+.tags-view-container {
+  height: 34px;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #d8dce5;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+  .tags-view-wrapper {
+    .tags-view-item {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      height: 26px;
+      line-height: 26px;
+      border: 1px solid #d8dce5;
+      color: #495060;
+      background: #fff;
+      padding: 0 8px;
+      font-size: 12px;
+      margin-left: 5px;
+      margin-top: 4px;
+      &:first-of-type {
+        margin-left: 15px;
+      }
+      &:last-of-type {
+        margin-right: 15px;
+      }
+      &.active {
+        background-color: #42b983;
+        color: #fff;
+        border-color: #42b983;
+        &::before {
+          content: "";
+          background: #fff;
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          position: relative;
+          margin-right: 2px;
+        }
+      }
+    }
+  }
+  .contextmenu {
+    margin: 0;
+    background: #fff;
+    z-index: 3000;
+    position: absolute;
+    list-style-type: none;
+    padding: 5px 0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
+    li {
+      margin: 0;
+      padding: 7px 16px;
+      cursor: pointer;
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+}
+</style>
 <style lang="scss">
 #task {
   min-height: calc(100vh - 199px);
