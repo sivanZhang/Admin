@@ -303,6 +303,7 @@ export default {
       HTTP.getAttrsList({name: this.filterText}).then(({ data }) => {
         if (data.status === 0) {
           this.attrsList = [...data.msg];
+          //复位分页的当前页
           this.currentPage = 1;
         }
       });
