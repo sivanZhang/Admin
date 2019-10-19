@@ -21,7 +21,7 @@
           </el-tab-pane>
           <el-tab-pane label="相关任务" name="third">
             <el-table
-              ref="assetTable"
+              ref="assetTaskList"
               :data="assetTaskList"
               style="width: 100%"
               border
@@ -32,10 +32,10 @@
               row-class-name="hover"
             >
               <el-table-column label="任务ID" prop="task_id" align="left"></el-table-column>
-              <el-table-column label="名称" prop="task_name" align="left"></el-table-column>
+              <el-table-column label="名称" prop="task_name" align="left" show-overflow-tooltip></el-table-column>
               <el-table-column label="任务内容" prop="task_content" align="left" show-overflow-tooltip></el-table-column>
-              <el-table-column label="提交路径" align="left" prop="path"></el-table-column>
-              <el-table-column label="完成时间" align="left" width="90px">
+              <el-table-column label="提交路径" align="left" prop="path" width="120px"></el-table-column>
+              <el-table-column label="完成时间" align="left" width="120px">
                 <template slot-scope="scope">{{scope.row.end_time|dateFormat}}</template>
               </el-table-column>
               <el-table-column label="操作" align="center">
