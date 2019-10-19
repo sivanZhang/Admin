@@ -97,7 +97,7 @@
               style="width:300px"
             ></el-input>
             <el-select
-              v-show="chooseSel"
+              v-if="colSel === 'status' || colSel === 'grade'||colSel === 'priority'"
               v-model="colSel2"
               placeholder="请选择"
               style="width:300px;margin-top:1px"
@@ -113,7 +113,10 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <div v-if="timeSel" style="width:280px;display:flex;">
+            <div
+              v-if="colSel === 'start_date' || colSel === 'end_date'"
+              style="width:280px;display:flex;"
+            >
               <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期" size="mini"></el-date-picker>
               <span style="text-align:center;padding-top:3px">至</span>
               <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期" size="mini"></el-date-picker>
@@ -296,7 +299,6 @@
               class="tags-view-item"
               v-if="showMulChoose.priority&&selShowPriority"
               :class="showMulChoose.priority?'active':''"
-             
             >
               优先级：
               <span v-for="(item,index) of showMulChoose.priority" :key="index">
@@ -304,28 +306,26 @@
               </span>
               <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('priority')" />
             </div>
-              <div
+            <div
               class="tags-view-item"
               v-if="showMulChoose.grade&&selShowGrade"
               :class="showMulChoose.grade?'active':''"
-              
             >
               任务难度：
-            <span v-for="(item,index) of showMulChoose.grade" :key="index">
-              <span style="padding-left:5px">{{item|taskgrade}}</span>
-            </span>
+              <span v-for="(item,index) of showMulChoose.grade" :key="index">
+                <span style="padding-left:5px">{{item|taskgrade}}</span>
+              </span>
               <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('grade')" />
             </div>
             <div
               class="tags-view-item"
               v-if="showMulChoose.status&&selShowStatus"
               :class="showMulChoose.status?'active':''"
-  
             >
               状态：
-            <span v-for="(item,index) of showMulChoose.status" :key="index">
-              <span style="padding-left:5px">{{item|taskStatus}}</span>
-            </span>
+              <span v-for="(item,index) of showMulChoose.status" :key="index">
+                <span style="padding-left:5px">{{item|taskStatus}}</span>
+              </span>
               <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('status')" />
             </div>
             <div
@@ -1110,14 +1110,14 @@ export default {
     return {
       selShowName: true,
       selShowDept: true,
-      selShowContent:true,
-      selShowUser:true,
-      selShowPriority:true,
-      selShowGrade:true,
-      selShowStatus:true,
-      selTolHour:true,
-      selStart:true,
-      selEnd:true,
+      selShowContent: true,
+      selShowUser: true,
+      selShowPriority: true,
+      selShowGrade: true,
+      selShowStatus: true,
+      selTolHour: true,
+      selStart: true,
+      selEnd: true,
       authTask: null,
       uploadVisible: false,
       activeTab: "first",
@@ -1316,96 +1316,96 @@ export default {
     colSel: {
       handler: function(newVal, oldVal) {
         //console.log(newVal);
-        if (newVal === "status") {
-          this.colShow = false;
-          this.timeSel = false;
-          this.chooseSel = true;
-          // console.log(this.colShow, this.chooseSel);
-          this.colSel2 = [1];
-          this.columnSelect2 = [
-            {
-              value: 0,
-              label: "暂停"
-            },
-            {
-              value: 1,
-              label: "未开始"
-            },
-            {
-              value: 2,
-              label: "进行中"
-            },
-            {
-              value: 3,
-              label: "审核中"
-            },
-            {
-              value: 4,
-              label: "完成"
-            },
-            {
-              value: 5,
-              label: "超时"
-            },
-            {
-              value: 6,
-              label: "审核通过"
-            }
-          ];
-        } else if (newVal === "grade") {
-          this.colShow = false;
-          this.timeSel = false;
-          this.chooseSel = true;
-          this.colSel2 = [1];
-          this.columnSelect2 = [
-            {
-              value: 0,
-              label: "简单"
-            },
-            {
-              value: 1,
-              label: "标准"
-            },
-            {
-              value: 2,
-              label: "困难"
-            }
-          ];
-        } else if (newVal === "priority") {
-          this.colShow = false;
-          this.timeSel = false;
-          this.chooseSel = true;
-          this.colSel2 = [0];
-          this.columnSelect2 = [
-            {
-              value: 0,
-              label: "低级"
-            },
-            {
-              value: 1,
-              label: "中级"
-            },
-            {
-              value: 2,
-              label: "高级"
-            },
-            {
-              value: 3,
-              label: "高难度"
-            }
-          ];
-        } else if (newVal == "start_date" || newVal == "end_date") {
-          this.colShow = false;
-          this.chooseSel = false;
-          this.timeSel = true;
-          this.timeSelection = "";
-          this.timeSelection2 = "";
-        } else {
-          this.colShow = true;
-          this.timeSel = false;
-          this.chooseSel = false;
-          this.colSel2 = [];
-          this.columnSelect2 = [];
+        switch (newVal) {
+          case "status":
+            this.colShow = false;
+            // console.log(this.colShow, this.chooseSel);
+            this.colSel2 = [1];
+            this.columnSelect2 = [
+              {
+                value: 0,
+                label: "暂停"
+              },
+              {
+                value: 1,
+                label: "未开始"
+              },
+              {
+                value: 2,
+                label: "进行中"
+              },
+              {
+                value: 3,
+                label: "审核中"
+              },
+              {
+                value: 4,
+                label: "完成"
+              },
+              {
+                value: 5,
+                label: "超时"
+              },
+              {
+                value: 6,
+                label: "审核通过"
+              }
+            ];
+            break;
+          case "grade":
+            this.colShow = false;
+            this.colSel2 = [1];
+            this.columnSelect2 = [
+              {
+                value: 0,
+                label: "简单"
+              },
+              {
+                value: 1,
+                label: "标准"
+              },
+              {
+                value: 2,
+                label: "困难"
+              }
+            ];
+            break;
+          case "priority":
+            this.colShow = false;
+            this.colSel2 = [0];
+            this.columnSelect2 = [
+              {
+                value: 0,
+                label: "低级"
+              },
+              {
+                value: 1,
+                label: "中级"
+              },
+              {
+                value: 2,
+                label: "高级"
+              },
+              {
+                value: 3,
+                label: "高难度"
+              }
+            ];
+            break;
+          case "start_date" || "end_date":
+            this.colShow = false;
+            this.timeSelection = "";
+            this.timeSelection2 = "";
+            break;
+          case "end_date":
+            this.colShow = false;
+            this.timeSelection = "";
+            this.timeSelection2 = "";
+            break;
+          default:
+            this.colShow = true;
+            this.colSel2 = [];
+            this.columnSelect2 = [];
         }
       }
     }
@@ -1413,46 +1413,49 @@ export default {
   methods: {
     //删除筛选条件，剩余条件再搜索
     closeSelectedTag(tag) {
-      if (tag == "name") {
-        delete this.sortSelForm.name;
-        this.selShowName = false;
+      switch (tag) {
+        case "name":
+          delete this.sortSelForm.name;
+          this.selShowName = false;
+          break;
+        case "dept":
+          delete this.sortSelForm.dept;
+          this.selShowDept = false;
+          break;
+        case "content":
+          delete this.sortSelForm.content;
+          this.selShowContent = false;
+          break;
+        case "user":
+          delete this.sortSelForm.user;
+          this.selShowUser = false;
+          break;
+        case "priority":
+          delete this.sortSelForm.priority;
+          this.selShowPriority = false;
+          break;
+        case "grade":
+          delete this.sortSelForm.grade;
+          this.selShowGrade = false;
+          break;
+        case "status":
+          delete this.sortSelForm.status;
+          this.selShowStatus = false;
+          break;
+        case "total_hour":
+          delete this.sortSelForm.total_hour;
+          this.selTolHour = false;
+          break;
+        case "start":
+          delete this.sortSelForm.start;
+          this.selStart = false;
+          break;
+        case "end":
+          delete this.sortSelForm.end;
+          this.selEnd = false;
+          break;
       }
-      if (tag == "dept") {
-        delete this.sortSelForm.dept;
-        this.selShowDept = false;
-      }
-      if (tag == "content") {
-        delete this.sortSelForm.content;
-        this.selShowContent = false;
-      }
-      if (tag == "user") {
-        delete this.sortSelForm.user;
-        this.selShowUser = false;
-      }
-      if (tag == "priority") {
-        delete this.sortSelForm.priority;
-        this.selShowPriority = false;
-      }
-      if (tag == "grade") {
-        delete this.sortSelForm.grade;
-        this.selShowGrade = false;
-      }
-      if (tag == "status") {
-        delete this.sortSelForm.status;
-        this.selShowStatus = false;
-      }
-      if (tag == "total_hour") {
-        delete this.sortSelForm.total_hour;
-        this.selTolHour = false;
-      }
-      if (tag == "start") {
-        delete this.sortSelForm.start;
-        this.selStart = false;
-      }
-      if (tag == "end") {
-        delete this.sortSelForm.end;
-        this.selEnd = false;
-      }
+
       let data = {
         ...this.sortSelForm,
         project: this.$route.params.id,
@@ -1626,20 +1629,19 @@ export default {
       this.sortSelForm = {};
       this.mulChoose = false;
       this.showMulChoose = [];
-      this.selShowName=true;
-      this.selShowDept=true;
-      this.selShowContent=true;
-      this.selShowUser=true;
-      this.selShowPriority=true;
-      this.selShowGrade=true;
-      this.selShowStatus=true;
-      this.selTolHour=true;
-      this.selStart=true;
-      this.selEnd=true;
+      this.selShowName = true;
+      this.selShowDept = true;
+      this.selShowContent = true;
+      this.selShowUser = true;
+      this.selShowPriority = true;
+      this.selShowGrade = true;
+      this.selShowStatus = true;
+      this.selTolHour = true;
+      this.selStart = true;
+      this.selEnd = true;
     },
     //多条件筛选
     MulSel() {
-
       this.mulChoose = true;
       this.visible2 = false;
       function dateFormat(dateVal) {
@@ -2287,115 +2289,124 @@ export default {
         pagenum: this.pageSize,
         page: this.currentPage
       };
-      if (this.colSel == "name" && this.keyword) {
-        data = { ...data, name: this.keyword, page: 1, pagenum: 20 };
-        this.name = { name: this.keyword };
-      }
-      if (this.colSel == "dept" && this.keyword) {
-        data = { ...data, dept: this.keyword, page: 1, pagenum: 20 };
-        this.name = { dept: this.keyword };
-      }
-      if (this.colSel == "content" && this.keyword) {
-        data = { ...data, content: this.keyword, page: 1, pagenum: 20 };
-        this.name = { content: this.keyword };
-      }
-      if (this.colSel == "user" && this.keyword) {
-        data = { ...data, user: this.keyword, page: 1, pagenum: 20 };
-        this.name = { user: this.keyword };
-      }
-      if (this.colSel == "total_hour" && this.keyword) {
-        data = { ...data, content: this.keyword, page: 1, pagenum: 20 };
-        this.name = { content: this.keyword };
-      }
-      if (this.colSel == "start_date") {
-        if (!this.timeSelection && this.timeSelection2) {
-          data = {
-            ...data,
-            start: "" + "," + DateFormat(this.timeSelection2),
-            page: 1,
-            pagenum: 20
-          };
-        } else if (this.timeSelection && !this.timeSelection2) {
-          data = {
-            ...data,
-            start: DateFormat(this.timeSelection) + "," + "",
-            page: 1,
-            pagenum: 20
-          };
-        } else {
-          data = {
-            ...data,
-            start:
-              DateFormat(this.timeSelection) +
-              "," +
-              DateFormat(this.timeSelection2),
-            page: 1,
-            pagenum: 20
-          };
-        }
+      switch (this.colSel) {
+        case "name":
+          this.keyword &&
+            (data = { ...data, name: this.keyword, page: 1, pagenum: 20 });
+          this.name = { name: this.keyword };
+          break;
+        case "dept":
+          this.keyword &&
+            (data = { ...data, dept: this.keyword, page: 1, pagenum: 20 });
+          this.name = { dept: this.keyword };
+          break;
+        case "content":
+          this.keyword &&
+            (data = { ...data, content: this.keyword, page: 1, pagenum: 20 });
+          this.name = { content: this.keyword };
+          break;
+        case "user":
+          this.keyword &&
+            (data = { ...data, user: this.keyword, page: 1, pagenum: 20 });
+          this.name = { user: this.keyword };
+          break;
+        case "total_hour":
+          this.keyword &&
+            (data = { ...data, content: this.keyword, page: 1, pagenum: 20 });
+          this.name = { total_hour: this.keyword };
+          break;
+        case "start_date":
+          if (!this.timeSelection && this.timeSelection2) {
+            data = {
+              ...data,
+              start: "" + "," + DateFormat(this.timeSelection2),
+              page: 1,
+              pagenum: 20
+            };
+          } else if (this.timeSelection && !this.timeSelection2) {
+            data = {
+              ...data,
+              start: DateFormat(this.timeSelection) + "," + "",
+              page: 1,
+              pagenum: 20
+            };
+          } else {
+            data = {
+              ...data,
+              start:
+                DateFormat(this.timeSelection) +
+                "," +
+                DateFormat(this.timeSelection2),
+              page: 1,
+              pagenum: 20
+            };
+          }
 
-        this.name = {
-          start_date: DateFormat(this.timeSelection),
-          page: 1,
-          pagenum: 20
-        };
-      }
-      if (this.colSel == "end_date") {
-        if (!this.timeSelection && this.timeSelection2) {
-          data = {
-            ...data,
-            end: "" + "," + DateFormat(this.timeSelection2),
-            page: 1,
-            pagenum: 20
+          this.name = {
+            start_date: DateFormat(this.timeSelection)
           };
-        } else if (this.timeSelection && !this.timeSelection2) {
-          data = {
-            ...data,
-            end: DateFormat(this.timeSelection) + "," + "",
-            page: 1,
-            pagenum: 20
-          };
-        } else {
-          data = {
-            ...data,
-            end:
-              DateFormat(this.timeSelection) +
-              "," +
-              DateFormat(this.timeSelection2),
-            page: 1,
-            pagenum: 20
-          };
-        }
-        this.name = { end_date: DateFormat(this.timeSelection) };
-      }
-      if (this.colSel2.length > 0) {
-        if (this.colSel == "priority") {
-          data = {
-            ...data,
-            priority: "[" + String(this.colSel2) + "]",
-            page: 1,
-            pagenum: 20
-          };
-          this.name = { priority: "[" + String(this.colSel2) + "]" };
-        }
-        if (this.colSel == "status") {
-          data = {
-            ...data,
-            status: "[" + String(this.colSel2) + "]",
-            page: 1,
-            pagenum: 20
-          };
-          this.name = { status: "[" + String(this.colSel2) + "]" };
-        }
-        if (this.colSel == "grade") {
-          data = {
-            ...data,
-            grade: "[" + String(this.colSel2) + "]",
-            page: 1,
-            pagenum: 20
-          };
-          this.name = { grade: "[" + String(this.colSel2) + "]" };
-        }
+          break;
+        case "end_date":
+          if (!this.timeSelection && this.timeSelection2) {
+            data = {
+              ...data,
+              end: "" + "," + DateFormat(this.timeSelection2),
+              page: 1,
+              pagenum: 20
+            };
+          } else if (this.timeSelection && !this.timeSelection2) {
+            data = {
+              ...data,
+              end: DateFormat(this.timeSelection) + "," + "",
+              page: 1,
+              pagenum: 20
+            };
+          } else {
+            data = {
+              ...data,
+              end:
+                DateFormat(this.timeSelection) +
+                "," +
+                DateFormat(this.timeSelection2),
+              page: 1,
+              pagenum: 20
+            };
+          }
+          this.name = { end_date: DateFormat(this.timeSelection) };
+          break;
+        case "priority":
+          if (this.colSel2.length) {
+            data = {
+              ...data,
+              priority: "[" + String(this.colSel2) + "]",
+              page: 1,
+              pagenum: 20
+            };
+            this.name = { priority: "[" + String(this.colSel2) + "]" };
+          }
+          break;
+        case "status":
+          if (this.colSel2.length) {
+            data = {
+              ...data,
+              status: "[" + String(this.colSel2) + "]",
+              page: 1,
+              pagenum: 20
+            };
+            this.name = { status: "[" + String(this.colSel2) + "]" };
+          }
+          break;
+        case "grade":
+          if (this.colSel2.length) {
+            data = {
+              ...data,
+              grade: "[" + String(this.colSel2) + "]",
+              page: 1,
+              pagenum: 20
+            };
+            this.name = { grade: "[" + String(this.colSel2) + "]" };
+          }
+          break;
       }
 
       this.tableLoading = true;
