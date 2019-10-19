@@ -6,6 +6,23 @@
       </el-badge>
       <el-button @click="targetMore" type="text">查看更多</el-button>
     </el-row>
+    <el-divider content-position="left">审批反馈</el-divider>
+
+    
+    <section class="feedback" v-for="(item,index) of FeedbackList" :key="index">
+      <div class="name">{{item.task}}</div>
+      <div class="msg">
+        <div :style="{color:item.result?'#19be6b':'#ed4014'}">
+          {{item.result?'通过':'未通过'}}
+        </div>
+      </div>
+      <div class="date">{{item.date|dateFormat}}</div>
+      <div>
+        意见 : {{item.suggestion}}
+      </div>
+    </section>
+
+    <el-divider content-position="left">任务列表</el-divider>
     <div class="navs">
       <div @click="targetMore('priority')">
         {{TaskCount.high}}
@@ -18,7 +35,7 @@
       <div @click="targetMore('expire')">
         {{TaskCount.outdate}}
         <br />即将超期
-      </div>    
+      </div>
     </div>
     <ul class="list">
       <li
@@ -39,7 +56,7 @@
   </el-card>
 </template>
 <script>
-import {getHomepageMyTask} from '@/api/task'
+import { getHomepageMyTask, getFeedback } from "@/api/task";
 export default {
   props: {
     myTaskList: {
@@ -48,17 +65,21 @@ export default {
   },
   data() {
     return {
-      TaskCount:{}
-    }
+      TaskCount: {},
+      FeedbackList: []
+    };
   },
   created() {
-    this.getTaskCount()
+    this.getTaskCount();
+    getFeedback().then(res => {
+      this.FeedbackList = [...res.data.msg];
+    });
   },
   methods: {
-    getTaskCount(){
-      getHomepageMyTask().then(({data})=>{
-         this.TaskCount = data.msg
-      })
+    getTaskCount() {
+      getHomepageMyTask().then(({ data }) => {
+        this.TaskCount = data.msg;
+      });
     },
     showDrawer(item) {
       this.$emit("show-drawer", item);
@@ -74,6 +95,38 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@mixin mustInLine {
+  overflow: hidden; //超出的隐藏
+  text-overflow: ellipsis; //省略号
+  white-space: nowrap; //强制一行显示
+}
+$border: 1px solid #dcdfe6;
+$linkColor: #2d8cf0;
+.feedback {
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  .name {
+    width: 100%;
+    @include mustInLine;
+    /* cursor: pointer;
+    &:hover {
+      color: $linkColor;
+    } */
+  }
+  .date{
+    flex:0 0 50%;
+    color: #909399;
+    text-align: right;
+  }
+  .msg{
+    flex:0 0 50%;
+  }
+  & + .feedback {
+    border-top: $border;
+  }
+}
 .navs {
   display: flex;
   justify-content: space-between;
@@ -83,10 +136,10 @@ export default {
     flex: 1;
     cursor: pointer;
     &:hover {
-      color: #2d8cf0;
+      color: $linkColor;
     }
     & + div {
-      border-left: 1px solid #dcdfe6;
+      border-left: 1px solid $border;
     }
   }
 }
@@ -96,15 +149,11 @@ export default {
   .item {
     padding-bottom: 8px;
     &:hover {
-      color: #2d8cf0;
+      color: $linkColor;
     }
-    overflow: hidden; //超出的隐藏
-    text-overflow: ellipsis; //省略号
-    white-space: nowrap; //强制一行显示
+    @include mustInLine;
     .message {
-      overflow: hidden; //超出的隐藏
-      text-overflow: ellipsis; //省略号
-      white-space: nowrap; //强制一行显示
+      @include mustInLine;
       font-size: 12px;
       color: #909399;
       padding-left: 20px;
