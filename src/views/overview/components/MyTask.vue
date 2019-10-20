@@ -10,7 +10,7 @@
 
     
     <section class="feedback" v-for="(item,index) of FeedbackList" :key="index">
-      <div class="name">{{item.task}}</div>
+      <div class="name" @click="showDrawer(item)">{{item.task.name}}</div>
       <div class="msg">
         <div :style="{color:item.result?'#19be6b':'#ed4014'}">
           {{item.result?'通过':'未通过'}}
@@ -110,10 +110,10 @@ $linkColor: #2d8cf0;
   .name {
     width: 100%;
     @include mustInLine;
-    /* cursor: pointer;
+    cursor: pointer;
     &:hover {
       color: $linkColor;
-    } */
+    }
   }
   .date{
     flex:0 0 50%;

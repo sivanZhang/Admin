@@ -27,7 +27,7 @@
         <el-table-column label="作品" align="center">
           <template slot-scope="scope">
             <el-image
-              v-if="scope.row.path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(scope.row.path)"
+              v-if="scope.row.path && isImagePath(scope.row.path)"
               :src="$store.state.BASE_URL+scope.row.path"
               style="width: 55px;height: 33px;cursor: pointer; display:block;"
               :preview-src-list="[$store.state.BASE_URL+scope.row.path]"
@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
-              style="width: 55px;height: 33px;cursor: pointer; display:block;"
+              style="width: 55px;height: 33px;cursor: pointer; display:inline-block;"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
             >
               <div slot="placeholder" class="image-slot">
@@ -72,7 +72,7 @@
             <el-button
               type="text"
               style="font-size:15px"
-              @click="viewComments(scope.row.task[0].taskid,scope.$index)"
+              @click="viewComments(scope.row,scope.$index)"
               icon="el-icon-chat-line-round"
             ></el-button>
           </template>
@@ -92,7 +92,25 @@
       :mask="false"
       :inner="isInner"
       :title="drawerTitle"
+      @on-close="handelDrawerClose"
     >
+      <el-image
+        v-if="inDrawerPath && isImagePath(inDrawerPath)"
+        :src="$store.state.BASE_URL+inDrawerPath"
+        style="width: 100%;height: 228px;cursor: pointer; display:block;"
+        :preview-src-list="[$store.state.BASE_URL+inDrawerPath]"
+      >
+        <div slot="error">
+          <i class="el-icon-picture" style="color:#909399"></i>
+        </div>
+      </el-image>
+      <video
+        v-else-if="inDrawerPath"
+        ref="drawer-player"
+        :src="$store.state.BASE_URL+inDrawerPath"
+        controls
+        width="100%"
+      ></video>
       <remarks
         ref="remarks"
         :project="RemarkParams"
@@ -124,6 +142,7 @@ export default {
       RemarksData: [],
       isDrawerShow: false, //是否显示drawer
       videoSrc: "",
+      inDrawerPath: "",
       dialogTableVisible: false, //dialog是否显示
       tableLoading: false, //table的加载效果
       ProductionList: [], //table的数据
@@ -158,15 +177,24 @@ export default {
     };
   },
   methods: {
+    handelDrawerClose(){
+       this.$refs["drawer-player"].pause();
+       this.inDrawerPath = ''
+    },
+    isImagePath(path) {
+      let reg = /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/;
+      return reg.test(path);
+    },
     //点击评论按钮显示评论drawer
-    viewComments(id, index) {
+    viewComments(row, index) {
+      this.inDrawerPath = row.path;
       this.drawerTitle = `#${index + 1} 作品评论`;
       this.RemarkParams = {
-        id,
+        id: row.task[0].taskid,
         entity_type: 1
       };
       const msg = {
-        appid: id,
+        appid: row.task[0].taskid,
         apptype: 1
       };
       getRemark(msg).then(({ data }) => {
