@@ -381,10 +381,50 @@
         @sort-change="sortFilter"
       >
         <!-- default-expand-all -->
-        <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-        <el-table-column label="任务ID" class-name="links" prop="id" width="100px" sortable="custom">
-          <template slot-scope="scope">
-            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+        <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
+      <el-table-column width="30px" >
+        <template slot-scope="scope">
+          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+         <el-card 
+            v-if="scope.row.status === 0"
+            :style="{width:'30px',backgroundColor:'#F9ce8c'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+           <el-card 
+            v-if="scope.row.status === 1"
+            :style="{width:'30px',backgroundColor:'#59e0e8'}"
+            ></el-card> 
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+            <el-card 
+            v-if="scope.row.status === 2"
+            :style="{width:'30px',backgroundColor:'#589BAD'}"
+            ></el-card> 
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+            <el-card 
+            v-if="scope.row.status === 3"
+            :style="{width:'30px',backgroundColor:'#2D5637'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+            <el-card 
+            v-if="scope.row.status === 4"
+            :style="{width:'30px',backgroundColor:'#2f5c85'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+            <el-card 
+            v-if="scope.row.status === 5"
+            :style="{width:'30px',backgroundColor:'#C64b2b'}"
+            ></el-card>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+        <el-table-column label="任务ID" class-name="links"  prop="id" width="90px" sortable="custom">
+          <template slot-scope="scope" >
+            <span  @click="showDrawer(scope.row)" >{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column label="缩略图" v-if="show_project_image">
@@ -421,7 +461,7 @@
         >
           <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
         </el-table-column>
-        <el-table-column label="制作内容" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
+        <el-table-column label="制作内容"  align="center" width="400px" prop="content" show-overflow-tooltip v-if="show_content"></el-table-column>
 
         <el-table-column
           label="镜头号"
