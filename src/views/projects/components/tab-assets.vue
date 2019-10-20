@@ -8,7 +8,7 @@
               <slot name="add">添加资产</slot>
             </el-button>
             <el-button icon="el-icon-download" type="primary" @click="targetdownload">
-              <slot name="import">资产导入</slot>
+              <slot name="import">资产导入</slot> 
             </el-button>
             <el-button icon="el-icon-upload2" type="success" @click="targetUpload">
               <slot name="upload">资产导出</slot>
@@ -531,6 +531,46 @@
         @cell-dblclick="editCell"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+        <el-table-column width="30px" >
+        <template slot-scope="scope">
+          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+         <el-card 
+            v-if="scope.row.status === 0"
+            :style="{width:'30px',backgroundColor:'#F9ce8c'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+           <el-card 
+            v-if="scope.row.status === 1"
+            :style="{width:'30px',backgroundColor:'#59e0e8'}"
+            ></el-card> 
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+            <el-card 
+            v-if="scope.row.status === 2"
+            :style="{width:'30px',backgroundColor:'#589BAD'}"
+            ></el-card> 
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+            <el-card 
+            v-if="scope.row.status === 3"
+            :style="{width:'30px',backgroundColor:'#2D5637'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+            <el-card 
+            v-if="scope.row.status === 4"
+            :style="{width:'30px',backgroundColor:'#2f5c85'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+            <el-card 
+            v-if="scope.row.status === 5"
+            :style="{width:'30px',backgroundColor:'#C64b2b'}"
+            ></el-card>
+          </el-tooltip>
+        </template>
+      </el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
         <el-table-column label="缩略图" align="center" v-if="show_image">
           <template slot-scope="scope">
@@ -740,7 +780,7 @@
               <span>{{scope.row.report?scope.row.report:"-"}}</span>
             </el-input>
             <span
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
+              v-i9f="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
             >{{scope.row.report?scope.row.report:"-"}}</span>
           </template>
         </el-table-column>
@@ -774,7 +814,8 @@
         <el-table-column
           prop="content"
           label="制作内容"
-          align="left"
+          align="center"
+          width="400px"
           show-overflow-tooltip
           v-if="show_content"
         >
