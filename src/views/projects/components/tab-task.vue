@@ -1383,10 +1383,6 @@ export default {
               {
                 value: 2,
                 label: "高级"
-              },
-              {
-                value: 3,
-                label: "高难度"
               }
             ];
             break;
