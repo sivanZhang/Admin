@@ -405,7 +405,7 @@
                   <template slot-scope="scope">
                     <el-image
                       :src="$store.state.BASE_URL+scope.row.image"
-                      style="width: 48px;height: 27px;"
+                      style="width: 55px;height: 33px;cursor: pointer; display:block;"
                     >
                       <div slot="placeholder" class="image-slot">
                         加载中

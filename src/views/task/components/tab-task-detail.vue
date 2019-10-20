@@ -68,7 +68,7 @@
              <el-image
             v-if="path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(path)"
             :src="$store.state.BASE_URL+path"
-            style="width: 48px;height: 27px;cursor: pointer;"
+            style="width: 55px;height: 33px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+path]"
           >
             <div slot="error">

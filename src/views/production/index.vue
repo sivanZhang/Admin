@@ -29,7 +29,7 @@
             <el-image
               v-if="scope.row.path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(scope.row.path)"
               :src="$store.state.BASE_URL+scope.row.path"
-              style="width: 48px;height: 27px;cursor: pointer;"
+              style="width: 55px;height: 33px;cursor: pointer; display:block;"
               :preview-src-list="[$store.state.BASE_URL+scope.row.path]"
             >
               <div slot="error">
@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
-              style="width: 48px;height: 27px;cursor: pointer;"
+              style="width: 55px;height: 33px;cursor: pointer; display:block;"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
             >
               <div slot="placeholder" class="image-slot">

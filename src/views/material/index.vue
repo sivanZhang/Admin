@@ -51,7 +51,7 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 48px;height: 27px;cursor: pointer;"
+            style="width: 55px;height: 33px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
             v-if="!editing||clickId !== scope.row.id"
           >
@@ -65,7 +65,7 @@
           </el-image>
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 48px;height: 27px;"
+            style="width: 55px;height: 33px;cursor: pointer; display:block;"
             @click.native="img(scope.row)"
             v-if="editing&&clickId === scope.row.id"
           >
