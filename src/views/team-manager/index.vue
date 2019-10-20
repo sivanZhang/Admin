@@ -1,6 +1,6 @@
 <!-- 组长任务分配 -->
 <template>
-  <div id="team-manager">
+  <div id="team-manager" ref="drawer-parent">
     <el-tabs v-model="activeName">
       <el-tab-pane label="未分配镜头" name="first">
         <el-table

@@ -153,7 +153,7 @@ export default {
           if (data.msg) {
             this.$message.warning(data.msg);
           } else {
-            let label = this.$route.qurey.type?'资产':'镜头';
+            let label = this.$route.query.type==='scene'?'镜头':'资产'
             this.$notify.info({
               title: "导入结果",
               duration: 0,
