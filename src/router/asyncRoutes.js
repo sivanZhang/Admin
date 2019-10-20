@@ -188,7 +188,18 @@ export default function asyncRoutes(params) {
             icon: 'v2',
             roles: 'manage_approve'
           }
+        },{
+          path: 'dailies',
+          name: 'dailies',
+          component: () =>
+            import('@/views/video/dailies'),
+          meta: {
+            title: 'dailies',
+            icon: 'v2',
+            // roles: 'manage_approve'
+          }
         },
+
         {
           path: '/check-video',
           name: 'check-video',

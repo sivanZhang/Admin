@@ -91,3 +91,7 @@ export function getFeedback(params = {
     params
   })
 }
+//查看任务dailies
+export function getTaskDailies(){
+  return AXIOS.get('/task/task/?dailies')
+}
