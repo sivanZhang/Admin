@@ -218,8 +218,6 @@ export default {
     filterCondition(showMulChoose, sortSelForm) {
       this.showMulChoose = showMulChoose;
       this.sortSelForm = sortSelForm;
-      console.log("assetFilter");
-      console.log(this.sortSelForm);
     },
     closeSelectedTag(tag) {
       switch (tag) {
@@ -289,7 +287,27 @@ export default {
           this.selEnd = false;
           break;
       }
-      this.$emit("refresh_close", this.sortSelForm);
+      this.$emit("refresh_close", this.sortSelForm, 1);
+    },
+    showMul() {
+      this.selShowName = true;
+      this.selShowSession = true;
+      this.selShowEpisode = true;
+      this.selShowInner = true;
+      this.selShowFrame = true;
+      this.selShowRange = true;
+      this.selShowRetime = true;
+      this.selShowReport = true;
+      this.selShowContent = true;
+      this.selShowCreator = true;
+      this.selShowRemark = true;
+      this.selShowPriority = true;
+      this.selShowLevel = true;
+      this.selShowStatus = true;
+      this.selStart = true;
+      this.selEnd = true;
+      this.showMulChoose = [];
+      this.sortSelForm = {};
     }
   },
   created() {}

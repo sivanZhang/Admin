@@ -89,15 +89,6 @@ export default {
     };
   },
   watch: {
-    // project: {
-    //   handler: function(newVal, oldVal) {
-    //     if (newVal) {
-    //       if (newVal.pro_type === 0) {
-    //         this.activeName = "tab5";
-    //       }
-    //     }
-    //   }
-    // },
     activeName: {
       handler: function(newVal, oldVal) {
         if (newVal === "tab2") {
@@ -185,7 +176,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (from.name == "asset-import") {
-        vm.$refs["scene"].getAssetList();
+        vm.$refs["scene"].getAssetList(2);
       }
     });
   }

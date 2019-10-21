@@ -8,7 +8,7 @@
               <slot name="add">添加资产</slot>
             </el-button>
             <el-button icon="el-icon-download" type="primary" @click="targetdownload">
-              <slot name="import">资产导入</slot> 
+              <slot name="import">资产导入</slot>
             </el-button>
             <el-button icon="el-icon-upload2" type="success" @click="targetUpload">
               <slot name="upload">资产导出</slot>
@@ -101,52 +101,15 @@
         </el-col>
         <el-col :span="10" align="right">
           <el-row type="flex" justify="end">
-            <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
-              <el-option
-                v-for="item in columnSelect"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <el-input
-              v-if="colShow"
-              placeholder="输入关键字搜索"
-              v-model="filterText"
-              @keyup.enter.native="getAssetList()"
-              style="width:300px"
-            ></el-input>
-            <el-select
-              v-if="colSel === 'status' || colSel === 'level'||colSel === 'priority'"
-              v-model="colSel2"
-              placeholder="请选择"
-              style="width:300px;margin-top:1px"
-              multiple
-              filterable
-              @change="getAssetList()"
-            >
-              <el-option
-                v-for="item in columnSelect2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <el-date-picker
-              v-if="colSel === 'start' || colSel === 'end'"
-              v-model="timeSelection"
-              type="date"
-              placeholder="选择日期"
-              @change="getAssetList()"
-              style="width:300px"
-            ></el-date-picker>
-            <el-button
-              @click="getAssetList()"
-              icon="el-icon-search"
-              type="primary"
-              style="height:27.99px"
+            <!-- 单条件筛选 -->
+            <assetSel ref="assetSel" @refreshAssetList="getAssetList" />
+            <!-- 多条件筛选 -->
+            <assetMulSel
+              ref="assetMulSel"
+              @refresh_sortMul="MulSel"
+              @filterCondition="filterCondition"
+              @selRefresh="selRefresh"
             />
-            <assetMulSel @refresh_sortMul="MulSel" @filterCondition="filterCondition" />
             <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
           </el-row>
         </el-col>
@@ -167,46 +130,46 @@
         @cell-dblclick="editCell"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
-        <el-table-column width="30px" >
-        <template slot-scope="scope">
-          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
-         <el-card 
-            v-if="scope.row.status === 0"
-            :style="{width:'30px',backgroundColor:'#F9ce8c'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
-           <el-card 
-            v-if="scope.row.status === 1"
-            :style="{width:'30px',backgroundColor:'#59e0e8'}"
-            ></el-card> 
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
-            <el-card 
-            v-if="scope.row.status === 2"
-            :style="{width:'30px',backgroundColor:'#589BAD'}"
-            ></el-card> 
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
-            <el-card 
-            v-if="scope.row.status === 3"
-            :style="{width:'30px',backgroundColor:'#2D5637'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
-            <el-card 
-            v-if="scope.row.status === 4"
-            :style="{width:'30px',backgroundColor:'#2f5c85'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
-            <el-card 
-            v-if="scope.row.status === 5"
-            :style="{width:'30px',backgroundColor:'#C64b2b'}"
-            ></el-card>
-          </el-tooltip>
-        </template>
-      </el-table-column>
+        <el-table-column width="30px">
+          <template slot-scope="scope">
+            <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+              <el-card
+                v-if="scope.row.status === 0"
+                :style="{width:'13px',backgroundColor:'#F9ce8c'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+              <el-card
+                v-if="scope.row.status === 1"
+                :style="{width:'13px',backgroundColor:'#59e0e8'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+              <el-card
+                v-if="scope.row.status === 2"
+                :style="{width:'13px',backgroundColor:'#589BAD'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+              <el-card
+                v-if="scope.row.status === 3"
+                :style="{width:'13px',backgroundColor:'#2D5637'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+              <el-card
+                v-if="scope.row.status === 4"
+                :style="{width:'13px',backgroundColor:'#2f5c85'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+              <el-card
+                v-if="scope.row.status === 5"
+                :style="{width:'13px',backgroundColor:'#C64b2b'}"
+              ></el-card>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
         <el-table-column label="缩略图" align="center" v-if="show_image">
           <template slot-scope="scope">
@@ -911,7 +874,7 @@
         :project="project"
         :RemarksData="RemarksData"
         @refreshRemark="updateRemark()"
-        @refresh_assetList="getAssetList"
+        @refresh_assetList="getAssetList(2)"
         ref="assetsDrawer"
         :assetJump="assetJump"
         :LinkAssetList="LinkAssetList"
@@ -938,20 +901,19 @@ import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getProjectStatus } from "@/api/status";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { addMaterial } from "@/api/material";
-import ScrollPane from "@/layout/components/TagsView/ScrollPane";
-
 import assetMulSel from "@/views/projects/components/mulConditionSel/assetMulSel";
 import assetFilter from "@/views/projects/components/filterCondition/assetFilter";
 import assetSortMul from "@/views/projects/components/sortMul/assetSortMul";
+import assetSel from "@/views/projects/components/oneConditionSel/assetSel";
 export default {
   mixins: [thumbtackMixin],
   components: {
     assetsDrawer,
     Header,
-    ScrollPane,
     assetMulSel,
     assetFilter,
-    assetSortMul
+    assetSortMul,
+    assetSel
   },
   neme: "asset-list",
   data() {
@@ -1011,7 +973,6 @@ export default {
         Authorization: `JWT ${getToken()}`
       },
       multipleSelection: [],
-      filterText: "",
       dialogTitle: "",
       DialogName: null,
       editing: false,
@@ -1051,89 +1012,10 @@ export default {
       filterPriority: [],
       filterLevel: [],
       sort: null,
-
       path: null,
-
-      columnSelect: [
-        {
-          value: "name",
-          label: "镜头号"
-        },
-        {
-          value: "session",
-          label: "场次"
-        },
-        {
-          value: "episode",
-          label: "集数"
-        },
-        {
-          value: "frame",
-          label: "帧数"
-        },
-        {
-          value: "frame_range",
-          label: "帧数范围"
-        },
-        {
-          value: "reference",
-          label: "制作参考"
-        },
-        {
-          value: "report",
-          label: "画面调整信息"
-        },
-        {
-          value: "retime",
-          label: "变速信息"
-        },
-        {
-          value: "inner_version",
-          label: "版本号"
-        },
-        {
-          value: "content",
-          label: "制作内容"
-        },
-        {
-          value: "priority",
-          label: "优先级"
-        },
-        {
-          value: "level",
-          label: "难度等级"
-        },
-        {
-          value: "creator",
-          label: "创建人"
-        },
-        {
-          value: "status",
-          label: "状态"
-        },
-        {
-          value: "start",
-          label: "开始日期"
-        },
-        {
-          value: "end",
-          label: "结束日期"
-        },
-        {
-          value: "remark",
-          label: "备注"
-        }
-      ],
-      colSel: "name",
       multiSelect: [],
       name: "",
-      colShow: true,
-      chooseSel: false,
-      columnSelect2: [],
-      colSel2: [],
-      timeSel: false,
-      timeSelection: "",
-      approving: [],
+      pproving: [],
       conducting: [],
       finish: [],
       notstart: [],
@@ -1149,98 +1031,20 @@ export default {
       dbCell: false,
       cellId: null,
       cellCol: null,
-      mulChoose: false
+      cutType: -1, //分页类型
+      oneSel: null, //保存单列筛选的条件
+      sortSelForm: {}, //保存多列筛选条件
+      valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
+      sortfilter: null, //保存单列排序的条件
+      sortMulFilter: null //保存多列排序的条件
     };
   },
   watch: {
-    colSel: {
+    assetId: {
       handler: function(newVal, oldVal) {
-        //console.log(newVal);
-        switch (newVal) {
-          case "status":
-            this.colShow = false;
-            this.colSel2 = [1];
-            this.columnSelect2 = [
-              {
-                value: 0,
-                label: "暂停"
-              },
-              {
-                value: 1,
-                label: "未开始"
-              },
-              {
-                value: 2,
-                label: "进行中"
-              },
-              {
-                value: 3,
-                label: "审核中"
-              },
-              {
-                value: 4,
-                label: "完成"
-              }
-            ];
-            break;
-          case "level":
-            this.colShow = false;
-            this.colSel2 = [1];
-            this.columnSelect2 = [
-              {
-                value: 0,
-                label: "简单"
-              },
-              {
-                value: 1,
-                label: "标准"
-              },
-              {
-                value: 2,
-                label: "复杂"
-              },
-              {
-                value: 3,
-                label: "高难度"
-              }
-            ];
-            break;
-          case "priority":
-            this.colShow = false;
-            this.colSel2 = [0];
-            this.columnSelect2 = [
-              {
-                value: 0,
-                label: "正常"
-              },
-              {
-                value: 1,
-                label: "优先"
-              }
-            ];
-            break;
-          case "start":
-            this.colShow = false;
-            this.timeSelection = "";
-            this.timeSelection2 = "";
-            break;
-          case "end":
-            this.colShow = false;
-            this.timeSelection = "";
-            this.timeSelection2 = "";
-            break;
-          default:
-            this.colShow = true;
-            this.colSel2 = [];
-            this.columnSelect2 = [];
+        if (newVal) {
+          this.show(Number(newVal));
         }
-      }
-    }
-  },
-  assetId: {
-    handler: function(newVal, oldVal) {
-      if (newVal) {
-        this.show(Number(newVal));
       }
     }
   },
@@ -1269,18 +1073,29 @@ export default {
     }
   },
   methods: {
+    //重置筛选条件展示
+    selRefresh() {
+      this.$refs["assetFilter"].showMul();
+    },
     //筛选条件展示
     filterCondition(showMulChoose, sortSelForm) {
       this.$refs["assetFilter"].filterCondition(showMulChoose, sortSelForm);
     },
     //删除筛选条件，剩余条件再搜索
-    closeSelectedTag(sortSelForm) {
+    closeSelectedTag(sortSelForm, Type) {
+      this.cutType = 2;
+      this.sortSelForm = sortSelForm;
       let data = {
         ...sortSelForm,
-        project: this.$route.params.id,
-        pagenum: 20,
-        page: 1
+        project: this.$route.params.id
       };
+      if (Type === 1) {
+        //正常请求
+        data = { ...data, pagenum: 20, page: 1 };
+      } else {
+        //处理分页
+        data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+      }
       this.multiSelect = sortSelForm;
       this.tableLoading = true;
       HTTP.queryAssets(data)
@@ -1289,13 +1104,13 @@ export default {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
-            // this.sortSelForm = {};
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
         .catch(err => {
-          // this.sortSelForm = {};
-          // this.visible2 = false
           this.tableLoading = false;
         });
     },
@@ -1322,51 +1137,53 @@ export default {
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
       if (this.authAsset) {
-        if (column.label == "镜头号") {
-          this.cellCol = "name";
+        switch (column.label) {
+          case "镜头号":
+            this.cellCol = "name";
+            break;
+          case "场次":
+            this.cellCol = "session";
+            break;
+          case "集数":
+            this.cellCol = "episode";
+            break;
+          case "帧数":
+            this.cellCol = "frame";
+            break;
+          case "帧数范围":
+            this.cellCol = "frame_range";
+            break;
+          case "制作参考":
+            this.cellCol = "reference";
+            break;
+          case "画面调整信息":
+            this.cellCol = "report";
+            break;
+          case "变速信息":
+            this.cellCol = "retime";
+            break;
+          case "制作内容":
+            this.cellCol = "content";
+          case "优先级":
+            this.cellCol = "priority";
+            break;
+          case "难度等级":
+            this.cellCol = "level";
+            break;
+          case "小状态":
+            this.cellCol = "small_status";
+            break;
+          case "开始日期":
+            this.cellCol = "start_date";
+            break;
+          case "结束日期":
+            this.cellCol = "end_date";
+            break;
+          case "备注":
+            this.cellCol = "remark";
+            break;
         }
-        if (column.label == "场次") {
-          this.cellCol = "session";
-        }
-        if (column.label == "集数") {
-          this.cellCol = "episode";
-        }
-        if (column.label == "帧数") {
-          this.cellCol = "frame";
-        }
-        if (column.label == "帧数范围") {
-          this.cellCol = "frame_range";
-        }
-        if (column.label == "制作参考") {
-          this.cellCol = "reference";
-        }
-        if (column.label == "画面调整信息") {
-          this.cellCol = "report";
-        }
-        if (column.label == "变速信息") {
-          this.cellCol = "retime";
-        }
-        if (column.label == "制作内容") {
-          this.cellCol = "content";
-        }
-        if (column.label == "优先级") {
-          this.cellCol = "priority";
-        }
-        if (column.label == "难度等级") {
-          this.cellCol = "level";
-        }
-        if (column.label == "小状态") {
-          this.cellCol = "small_status";
-        }
-        if (column.label == "开始日期") {
-          this.cellCol = "start_date";
-        }
-        if (column.label == "结束日期") {
-          this.cellCol = "end_date";
-        }
-        if (column.label == "备注") {
-          this.cellCol = "remark";
-        }
+
         this.dbCell = true;
         this.cellId = row.id;
       }
@@ -1398,20 +1215,30 @@ export default {
       this.$emit("jumpName", val);
     },
     // 单条件排序
-    sortFilter({ column, prop, order }) {
+    sortFilter({ column, prop, order }, Type) {
+      this.sortfilter = { column, prop, order };
+      this.cutType = 3;
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: this.pageSize,
-        page: this.currentPage,
         sort: order === "descending" ? "-" + prop : prop
       };
+      if (Type === 1) {
+        //正常请求
+        payload = { ...payload, pagenum: 20, page: 1 };
+      } else {
+        //处理分页
+        payload = { ...payload, pagenum: this.pageSize, page: this.currentPage };
+      }
       HTTP.queryAssets(payload)
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
@@ -1420,20 +1247,35 @@ export default {
         });
     },
     //多条件排序
-    sortMul(sort) {
+    sortMul(sort, Type) {
+      this.sortMulFilter = sort;
+      this.cutType = 6;
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: 20,
-        page: 1,
         sort: sort
       };
+      if (Type === 1) {
+        //正常请求
+        payload = { ...payload,...sort, pagenum: 20, page: 1 };
+      } else {
+        //处理分页
+        payload = {
+          ...payload,
+          ...sort,
+          pagenum: this.pageSize,
+          page: this.currentPage
+        };
+      }
       HTTP.queryAssets(payload)
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
+            // if (Type === 1) {
+            //   this.currentPage = 1;
+            // }
           }
           this.tableLoading = false;
         })
@@ -1441,17 +1283,17 @@ export default {
           this.tableLoading = false;
         });
     },
-    //单条件筛选（状态、优先级、难度等级）
-    filterHandler(val) {
+    //table表内筛选（状态、难度等级、优先级）
+    filterHandler(val, Type) {
+      this.valSel = val;
+      this.cutType = 4;
       if (val.status) {
         this.filterStatus = [];
         this.filterStatus = [...val.status];
         this.filterStatus.forEach((item, index) => {
           item = Number(item);
-          //  console.log("item", item);
           this.filterStatus[index] = item;
         });
-        //console.log(this.filterStatus);
       }
       if (val.priority) {
         this.filterPriority = [...val.priority];
@@ -1459,7 +1301,6 @@ export default {
           item = Number(item);
           this.filterPriority[index] = item;
         });
-        //console.log(this.filterPriority)
       }
       if (val.level) {
         this.filterLevel = [...val.level];
@@ -1467,14 +1308,22 @@ export default {
           item = Number(item);
           this.filterLevel[index] = item;
         });
-        //console.log(this.filterLevel)
       }
       let payload = {
         project: this.$route.params.id,
-        asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: this.pageSize,
-        page: this.currentPage
+        asset_type: this.drawerType === "scene" ? 0 : 1
       };
+      if (Type === 1) {
+        //正常请求
+        payload = { ...payload, pagenum: 20, page: 1 };
+      } else {
+        //处理分页
+        payload = {
+          ...payload,
+          pagenum: this.pageSize,
+          page: this.currentPage
+        };
+      }
       if (this.filterStatus.length) {
         payload = { ...payload, status: "[" + String(this.filterStatus) + "]" };
       }
@@ -1494,6 +1343,9 @@ export default {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
@@ -1502,14 +1354,21 @@ export default {
         });
     },
     //多条件筛选
-    MulSel(sortSelForm) {
+    MulSel(sortSelForm, Type) {
+      this.cutType = 1;
+      this.sortSelForm = sortSelForm;
       let data = {
         ...sortSelForm,
         project: this.$route.params.id,
-        asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: 20,
-        page: 1
+        asset_type: this.drawerType === "scene" ? 0 : 1
       };
+      if (Type === 1) {
+        //正常筛选
+        data = { ...data, pagenum: 20, page: 1 };
+      } else {
+        //处理分页
+        data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+      }
       this.multiSelect = sortSelForm;
       this.tableLoading = true;
       HTTP.queryAssets(data)
@@ -1518,6 +1377,9 @@ export default {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
@@ -1525,7 +1387,6 @@ export default {
           this.tableLoading = false;
         });
     },
-
     img(row) {
       this.dialogImg = true;
       this.row = row;
@@ -1626,7 +1487,7 @@ export default {
       HTTP.editAssets(payload).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-          this.getAssetList();
+          this.getAssetList(2);
           this.editing = false;
         } else {
           this.$message.error(data.msg);
@@ -1680,154 +1541,49 @@ export default {
       this.uploadVisible = false;
     },
     //获取资产或者镜头列表，type=1时表示重置（包括单条件筛选）
-    getAssetList(type) {
-      function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
-        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-      }
-      if (type === 1) {
-        this.filterText = "";
-        this.colSel2 = [];
-        this.timeSelection = "";
-      }
+    getAssetList(type, oneSel, name) {
+      this.name = name;
+      this.oneSel = oneSel;
       let payload = {
         project: this.$route.params.id,
-        asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: this.pageSize,
-        page: this.currentPage
+        asset_type: this.drawerType === "scene" ? 0 : 1
       };
-      if (this.colSel == "name" && this.filterText) {
-        payload = { ...payload, name: this.filterText, page: 1, pagenum: 20 };
-
-        this.name = { name: this.filterText };
-      }
-      if (this.colSel == "inner_version" && this.filterText) {
-        payload = {
-          ...payload,
-          inner_version: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { inner_version: this.filterText };
-      }
-      if (this.colSel == "session" && this.filterText) {
-        payload = {
-          ...payload,
-          session: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { session: this.filterText };
-      }
-      if (this.colSel == "frame" && this.filterText) {
-        payload = { ...payload, frame: this.filterText, page: 1, pagenum: 20 };
-        this.name = { frame: this.filterText };
-      }
-      if (this.colSel == "episode" && this.filterText) {
-        payload = {
-          ...payload,
-          episode: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { episode: this.filterText };
-      }
-      if (this.colSel == "content" && this.filterText) {
-        payload = {
-          ...payload,
-          content: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { content: this.filterText };
-      }
-      if (this.colSel == "remark" && this.filterText) {
-        payload = { ...payload, remark: this.filterText, page: 1, pagenum: 20 };
-        this.name = { remark: this.filterText };
-      }
-      if (this.colSel == "report" && this.filterText) {
-        payload = { ...payload, report: this.filterText, page: 1, pagenum: 20 };
-        this.name = { report: this.filterText };
-      }
-      if (this.colSel == "retime" && this.filterText) {
-        payload = { ...payload, retime: this.filterText, page: 1, pagenum: 20 };
-        this.name = { retime: this.filterText };
-      }
-      if (this.colSel == "frame_range" && this.filterText) {
-        payload = {
-          ...payload,
-          frame_range: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { frame_range: this.filterText };
-      }
-      if (this.colSel == "reference" && this.filterText) {
-        payload = {
-          ...payload,
-          reference: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { reference: this.filterTextd };
-      }
-      if (this.colSel == "creator" && this.filterText) {
-        payload = {
-          ...payload,
-          creator: this.filterText,
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { creator: this.filterText };
-      }
-      if (this.colSel == "start" && this.timeSelection) {
-        payload = {
-          ...payload,
-          start: DateFormat(this.timeSelection),
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { start: DateFormat(this.timeSelection) };
-      }
-      if (this.colSel == "end" && this.timeSelection) {
-        payload = {
-          ...payload,
-          end: DateFormat(this.timeSelection),
-          page: 1,
-          pagenum: 20
-        };
-        this.name = { end: DateFormat(this.timeSelection) };
-      }
-      if (this.colSel2.length > 0) {
-        if (this.colSel == "status") {
+      switch (type) {
+        case 1: //重置
+          this.cutType = -1;
+          this.currentPage = 1;
+          this.$refs["assetFilter"].showMul(); //重置筛选条件展示
+          this.$refs["assetSel"].refreshOneSel(); //重置单条件筛选
+          this.sortfilter = null; //重置多条件筛选存储的条件
+          this.valSel = null; //重置table表内筛选（状态、难度等级、优先级）存储的条件
+          this.oneSel = null; //重置单条件排序存储的条件
+          this.sortMulFilter = null; //重置多条件排序存储的条件
+          payload = { ...payload, pagenum: 20, page: 1 };
+          break;
+        case 2: //正常查询
+          payload = { ...payload, pagenum: 20, page: 1 };
+          break;
+        case 3: //单条件筛选查询
+          this.cutType = 5;
           payload = {
             ...payload,
-            status: "[" + String(this.colSel2) + "]",
-            page: 1,
-            pagenum: 20
+            ...oneSel,
+            pagenum: this.pageSize,
+            page: this.currentPage
           };
-          this.name = { status: "[" + String(this.colSel2) + "]" };
-        }
-        if (this.colSel == "level") {
+          break;
+        case 4: //单条件筛选下的分页
           payload = {
             ...payload,
-            level: "[" + String(this.colSel2) + "]",
-            page: 1,
-            pagenum: 20
+            ...oneSel,
+            pagenum: this.pageSize,
+            page: this.currentPage
           };
-          this.name = { level: "[" + String(this.colSel2) + "]" };
-        }
-        if (this.colSel == "priority") {
-          payload = {
-            ...payload,
-            priority: "[" + String(this.colSel2) + "]",
-            page: 1,
-            pagenum: 20
-          };
-          this.name = { priority: "[" + String(this.colSel2) + "]" };
-        }
+          break;
+        case -1: //正常查询下的分页
+          payload = { ...payload, pagenum: this.pageSize, page: this.currentPage };
+          break;
       }
-
       this.tableLoading = true;
       HTTP.queryAssets(payload)
         .then(({ data }) => {
@@ -1861,7 +1617,6 @@ export default {
       getProjectStatus({ project_id: this.$route.params.id }).then(
         ({ data }) => {
           if (data.status === 0) this.projectStatus = [...data.msg];
-          // console.log(this.projectStatus);
           this.projectStatus.forEach((item, index) => {
             switch (item) {
               case 0:
@@ -1950,13 +1705,11 @@ export default {
                 break;
             }
           });
-          // console.log(this.pause);
         }
       );
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      //console.log(this.multipleSelection.length);
     },
     updateRemark() {
       getRemark({
@@ -1968,21 +1721,17 @@ export default {
     },
     //展示侧栏
     show(id) {
-      // this.remarkId = id;
       this.value1 = true;
       this.pro_type = this.$route.query.type;
-      //console.log(this.pro_type)
       HTTP.queryAssets({ id }).then(({ data }) => {
         this.project = { ...[...data.msg][0], id };
       });
       this.$refs.assetsDrawer.getLinkList(id);
-      // this.$refs.assetsDrawer.getAssetVersion(id);
       this.$refs.assetsDrawer.getAssetTask(id);
       const msg = {
         appid: id,
         apptype: 5
       };
-
       getRemark(msg).then(({ data }) => {
         this.RemarksData = [...data.msg];
       });
@@ -1991,8 +1740,6 @@ export default {
       });
       getAttrsEntityList({ entity_id: id, entity_type: 5 }).then(({ data }) => {
         this.customAttrs = [...data.msg];
-        // console.log("mmmm");
-        // console.log(this.customAttrs);
         this.attrsTypeNum = 5;
       });
     },
@@ -2019,12 +1766,11 @@ export default {
         HTTP.deleteAssets({ id }).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.getAssetList();
+            this.getAssetList(2);
           }
         });
       });
     },
-
     //批量删除资产
     delMulAssets() {
       this.$confirm("此操作将永久删除资产, 是否继续?", "提示", {
@@ -2037,36 +1783,10 @@ export default {
         HTTP.deleteAssets({ ids }).then(({ data }) => {
           this.$message.success(data.msg);
           if (data.status === 0) {
-            this.getAssetList();
+            this.getAssetList(2);
           }
         });
       });
-    },
-    //展示要修改的资产表单（不用了）
-    showAssetForm(Type, row) {
-      this.DialogName = Type;
-
-      if (Type === 1) {
-        this.AssetForm = {
-          priority: 0
-        };
-        this.SRC = "";
-        this.dialogTitle = "新建";
-      }
-      if (Type === 2) {
-        this.dialogTitle = "修改资产";
-        this.SRC = this.$store.state.BASE_URL + row.image;
-        this.AssetForm = {
-          image: row.image,
-          name: row.name,
-          path: row.path,
-          priority: row.priority,
-          level: row.level,
-          id: row.id,
-          remark: row.remark
-        };
-      }
-      this.isShow = true;
     },
     cancel() {
       this.isShow = false;
@@ -2103,7 +1823,7 @@ export default {
                 this.createLoading = false;
                 this.$message.success(data.msg);
                 if (data.status === 0) {
-                  this.getAssetList();
+                  this.getAssetList(2);
                   this.AssetForm = Object.assign(
                     {},
                     {
@@ -2125,7 +1845,7 @@ export default {
               .then(({ data }) => {
                 if (data.status === 0) {
                   this.$message.success(data.msg);
-                  this.getAssetList();
+                  this.getAssetList(2);
                   this.isShow = false;
                 } else {
                   this.$message.error(data.msg);
@@ -2141,7 +1861,6 @@ export default {
       });
       this.DialogName = null;
     },
-
     //监听图片上传成功
     handleSuccess(response, file, fileList) {
       this.SRC = this.$store.state.BASE_URL + response.msg;
@@ -2153,11 +1872,53 @@ export default {
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getAssetList();
+      switch (this.cutType) {
+        case 1:
+          this.MulSel(this.sortSelForm, 2); //多条件筛选分页查看
+          break;
+        case 2:
+          this.closeSelectedTag(this.sortSelForm, 2); //剩余筛选条件再筛选分页查看
+          break;
+        case 3:
+          this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
+          break;
+        case 4:
+          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          break;
+        case 5:
+          this.getAssetList(4, this.oneSel); //单条件筛选下的分页
+          break;
+        case 6:
+          this.sortMul(this.sortMulFilter, 2); //多条件排序下的分页
+        case -1:
+          this.getAssetList(-1); //正常请求后分页
+          break;
+      }
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
-      this.getAssetList();
+       switch (this.cutType) {
+        case 1:
+          this.MulSel(this.sortSelForm, 2); //多条件筛选分页查看
+          break;
+        case 2:
+          this.closeSelectedTag(this.sortSelForm, 2); //剩余筛选条件再筛选分页查看
+          break;
+        case 3:
+          this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
+          break;
+        case 4:
+          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          break;
+        case 5:
+          this.getAssetList(4, this.oneSel); //单条件筛选下的分页
+          break;
+        case 6:
+          this.sortMul(this.sortMulFilter, 2); //多条件排序下的分页
+        case -1:
+          this.getAssetList(-1); //正常请求后分页
+          break;
+      }
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
@@ -2195,7 +1956,7 @@ export default {
   created() {
     this.$emit("getGroup");
     this.getAuth();
-    this.getAssetList();
+    this.getAssetList(2);
     this.getProjectAllStatus();
     if (this.assetId) {
       this.value1 = true;

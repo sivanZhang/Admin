@@ -215,29 +215,14 @@ export default {
         this.showMulChoose.end = dateFormat(this.sortSelForm.end);
         this.sortSelForm.end = dateFormat(this.sortSelForm.end);
       }
-      this.$emit("refresh_sortMul",this.sortSelForm);
+      this.$emit("refresh_sortMul",this.sortSelForm,1);
       this.$emit("filterCondition",this.showMulChoose,this.sortSelForm)
     },
      showMul() {
       this.sortSelForm = {};
       this.mulChoose = false;
       this.showMulChoose = [];
-      // this.selShowName = true;
-      // this.selShowSession = true;
-      // this.selShowEpisode = true;
-      // this.selShowInner = true;
-      // this.selShowFrame = true;
-      // this.selShowRange = true;
-      // this.selShowRetime = true;
-      // this.selShowReport = true;
-      // this.selShowContent = true;
-      // this.selShowCreator = true;
-      // this.selShowRemark = true;
-      // this.selShowPriority = true;
-      // this.selShowLevel = true;
-      // this.selShowStatus = true;
-      // this.selStart = true;
-      // this.selEnd = true;
+      this.$emit("selRefresh")
     },
   },
   created() {}
