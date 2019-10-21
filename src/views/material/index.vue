@@ -2,8 +2,8 @@
 <template>
   <div id="material">
     <div style="padding-bottom:10px" v-if="authRole">
-      <el-row>
-        <el-col :span="16">
+     <el-row>
+        <el-col :span="15"> 
           <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
           <el-button
             type="danger"
@@ -12,28 +12,48 @@
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button>
         </el-col>
-        <el-col :span="8">
-          <el-row>
-            <el-col :span="16">
-              <el-input
-                v-model="filterText"
-                placeholder="请输入素材名称"
-                @keyup.enter.native="searchMaterial(1)"
-              >
-                <el-button
-                  @click="searchMaterial(1)"
-                  slot="append"
-                  icon="el-icon-search"
-                  type="primary"
-                />
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-button @click="searchMaterial()" type="primary" style="margin-left: 15px">重置</el-button>
-            </el-col>
-          </el-row>
-        </el-col>
+        <el-col :span="9">     
+       <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable size="mini">
+          <el-option
+          v-for="item in columnSelect"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+          </el-option>
+      </el-select>
+      <el-input
+              v-if="colShow"
+              v-model="keyword"
+              size="mini"
+              placeholder="请输入关键字"
+              @keyup.enter.native="searchMaterial()"
+              style="width:200px" 
+      ></el-input>
+      <el-select
+      @keyup.enter.native="searchMaterial()"
+      v-show="chooseSel"
+      v-model="colSel2"
+      placeholder="请选择"
+      style="width:200px"
+    >
+      <el-option
+       v-for="item in columnSelect2" 
+      :label="item.name"
+      :value="item.name"
+      :key="item.id"
+       ></el-option>
+    </el-select>
+     <el-date-picker
+      v-if="timeSel"
+      v-model="timeSelection"
+      type="date"
+      placeholder="选择日期">
+     </el-date-picker>
+      <el-button @click="searchMaterial()" icon="el-icon-search" style="height:27.99px" type="primary" />
+      <el-button @click="searchMaterial2()" type="primary" style="margin-left: 15px">重置</el-button>
+      </el-col>
       </el-row>
+      
     </div>
     <el-table
       ref="materialList"
@@ -51,7 +71,7 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 48px;height: 27px;cursor: pointer;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
             v-if="!editing||clickId !== scope.row.id"
           >
@@ -65,7 +85,7 @@
           </el-image>
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 48px;height: 27px;"
             @click.native="img(scope.row)"
             v-if="editing&&clickId === scope.row.id"
           >
@@ -364,9 +384,67 @@ export default {
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
       categorys: [],
+      colSel: "name",
+      colShow: true,
+      keyword: "",
+     columnSelect: [
+        {
+          value: "name",
+          label: "素材名称"
+        },
+        {
+          value: "sort",
+          label: "素材分类"
+        },
+        {
+          value: "itemInfo",
+          label: "项目信息"
+        },
+        {
+          value: "explain",
+          label: "素材说明"
+        },
+        {
+          value: "date",
+          label: "创建时间"
+        }
+      ],
+      chooseSel: false,
+      columnSelect2: [],
+      colSel2: [],
+      timeSel: false,
+      timeSelection: "",
     };
   },
-  watch: {},
+  watch: {
+     colSel: {
+      handler: function(newVal, oldVal) {
+        if (newVal == "sort") {
+          this.colShow = false;
+          this.timeSel = false;
+          this.chooseSel = true;
+          this.columnSelect2 = this.CategorysList;
+        } else if (newVal == "itemInfo") {
+          this.colShow = false;
+         this.timeSel = false;
+          this.chooseSel = true;
+          this.columnSelect2 = this.ProjectList;
+        } else if (newVal == "date") {
+          this.colShow = false;
+          this.chooseSel = false;
+          this.timeSel = true;
+          this.timeSelection = "";
+        }
+        else {
+          this.colShow = true;
+          this.timeSel = false;
+          this.chooseSel = false;
+           this.colSel2 = [];
+          this.columnSelect2 = [];
+        }
+      }
+    }
+  },
   methods: {
    //分页
     handleSizeChange(val){
@@ -551,33 +629,83 @@ export default {
       });
     },
     //查询素材库
-    searchMaterial(Type) {
-      if (Type === 1 && this.filterText) {
-        getMaterial({ name: this.filterText }).then(({ data }) => {
-          if (data.status === 0) {
-            this.materialList = [...data.msg];
-            this.authRole = data.auth.can_manage_material_state;
-          }
-
-          //console.log(this.materialList)
-        });
-      } else {
-        getMaterial().then(({ data }) => {
-          if (data.status === 0) {
-            this.materialList = [...data.msg];
-            this.materialList.map(item => {
-              this.CategorysList = item.all_categorys;
-            });
-            this.authRole = data.auth.can_manage_material_state;
-          }
-
-          //console.log(this.materialList)
-        });
+    searchMaterial(){
+      let data = {};
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+         }
+        if (this.colSel == "name" && this.keyword) {
+        data = {
+          ...data,
+          name: this.keyword
+        };
       }
+       if (this.colSel == "sort") {
+        data = {
+          ...data,
+          category: this.colSel2
+        };
+      }
+     if (this.colSel == "itemInfo") {
+        data = {
+          ...data,
+         peoject: this.colSel2
+        };
+      } 
+      if (this.colSel == "explain") {
+        data = {
+          ...data,
+         explain: this.keyword
+        };
+      } 
+     if (this.colSel == "date") {
+        data = {
+          ...data,
+          date: DateFormat(this.timeSelection),
+        };
+      }
+       getMaterial(data).then(({ data }) => {
+        this.materialList = [...data.msg];
+        this.authRole = data.auth.can_manage_material_state;
+      });
+    },
+   searchMaterial2() {
+      getMaterial().then(({ data }) => {
+         this.materialList= [...data.msg];
+         this.materialList.map(item => {
+               this.CategorysList = item.all_categorys;
+             });
+         this.authRole = data.auth.can_manage_material_state;
+      });
     }
+    // searchMaterial(Type) {
+    //   if (Type === 1 && this.filterText) {
+    //     getMaterial({ name: this.filterText }).then(({ data }) => {
+    //       if (data.status === 0) {
+    //         this.materialList = [...data.msg];
+    //         this.authRole = data.auth.can_manage_material_state;
+    //       }
+
+    //       //console.log(this.materialList)
+    //     });
+    //   } else {
+    //     getMaterial().then(({ data }) => {
+    //       if (data.status === 0) {
+    //         this.materialList = [...data.msg];
+    //         this.materialList.map(item => {
+    //           this.CategorysList = item.all_categorys;
+    //         });
+    //         this.authRole = data.auth.can_manage_material_state;
+    //       }
+
+    //       //console.log(this.materialList)
+    //     });
+    //   }
+    // }
   },
   created() {
-    this.searchMaterial();
+    //this.searchMaterial();
+    this.searchMaterial2();
     this.getAllProjectList();
   }
 };
