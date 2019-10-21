@@ -191,8 +191,6 @@ export default {
           this.selEnd = false;
           break;
       }
-      this.multiSelect = this.sortSelForm;
-      this.tableLoading = true;
       this.$emit("refresh_close", this.sortSelForm,1);
     },
     //重置筛选条件

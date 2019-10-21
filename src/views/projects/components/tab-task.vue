@@ -1166,8 +1166,6 @@ export default {
             this.$message.error(data.msg);
           }
         });
-        // console.log(data);
-        // console.log(keys);
       }
     },
     //获取实训分组
@@ -1175,7 +1173,6 @@ export default {
       getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
         ({ data }) => {
           this.trainingMenber = [...data.msg];
-          // console.log(this.trainingMenber);
         }
       );
     },
@@ -1243,6 +1240,9 @@ export default {
             this.total = data.count;
             this.pageCount = data.page_count;
             this.visible2 = false;
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
@@ -1278,6 +1278,9 @@ export default {
             this.authTask = data.auth.manage_task;
             this.total = data.count;
             this.pageCount = data.page_count;
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
@@ -1769,6 +1772,9 @@ export default {
             this.authTask = data.auth.manage_task;
             this.total = data.count;
             this.pageCount = data.page_count;
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
           }
           this.tableLoading = false;
         })
@@ -1783,9 +1789,6 @@ export default {
       let data = {
         project: this.$route.params.id
       };
-      function DateFormat(dateVal) {
-        return dayjs(dateVal).format("YYYY/MM/DD");
-      }
       switch (type) {
         case 1: //重置
           this.cutType = -1;
@@ -1793,6 +1796,8 @@ export default {
           this.$refs["taskSel"].refreshOneSel(); //重置单条件筛选
           this.sortfilter = null; //重置多条件筛选存储的条件
           this.valSel = null; //重置table表内筛选（状态、难度等级、优先级）存储的条件
+          this.oneSel = null;//重置单条件排序存储的条件
+          this.currentPage = 1
           data = { ...data, pagenum: 20, page: 1 };
           break;
         case 2: //正常查询
