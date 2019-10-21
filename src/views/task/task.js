@@ -606,15 +606,15 @@ export default {
         this.currentGrade = [2]
         break
       case 'expire':
-          this.colSel = 'end_date'
-          this.timeSelection = dayjs(new Date).subtract(1,'day')
-          this.timeSelection2 = dayjs(new Date)
-      break
+        this.colSel = 'end_date'
+        this.timeSelection = dayjs(new Date).subtract(1, 'day')
+        this.timeSelection2 = dayjs(new Date)
+        break
     }
     this.$nextTick(() => {
       this.task(2);
       //清空store中的 state.mine.keyword
-      this.$store.commit("mine/SET_KEYWORD",'')
+      this.$store.commit("mine/SET_KEYWORD", '')
     })
   },
 };
