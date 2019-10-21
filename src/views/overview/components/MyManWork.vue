@@ -117,7 +117,7 @@ let option = {
       },
       title: {
         // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-        fontSize: 14
+        fontSize: 12
       }
     }
   ]

@@ -276,17 +276,17 @@ export default {
         </el-card>
       </el-col>
       <!-- <svg-icon icon-class="caitongzhi" />-->
-      <el-col :span="4">
+      <el-col :span="5">
         <MyTask
           :my-task-list="MyTaskList"
           @show-drawer="taskBoardRightShow"
         />
       </el-col>
-      <el-col :span="8">
+      <el-col :span="6">
         <MyManWork :my-tasks="MyTaskList" class="card" />
       </el-col>
 
-      <el-col :span="4">
+      <el-col :span="5">
         <MyApprove />
       </el-col>
       <el-col :span="4">
