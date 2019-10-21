@@ -27,9 +27,9 @@
       <el-table-column prop="version.date" width="130" label="更新时间">
         <template slot-scope="scope">{{scope.row.version.date|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column prop="end" label="修改" v-if="$store.state.login.userInfo.auth.can_manage_asset_history">
+      <el-table-column prop="end" label="设定" v-if="$store.state.login.userInfo.auth.can_manage_asset_history">
         <template slot-scope="scope">
-          <el-tooltip content="修改为最终状态" placement="top">
+          <el-tooltip content="设定为最终状态" placement="top">
             <el-button
               @click="openAssetDetail(scope.row)"
               icon="el-icon-edit"

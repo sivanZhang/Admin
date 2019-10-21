@@ -200,17 +200,19 @@
                 @cancel="cancel"
               />
             </el-tab-pane>
-            <el-tab-pane label="提交审核">
+            <el-tab-pane label="审核">
               <tab-approve
                 v-if="activeRow.task && activeRow.task.status === 2"
                 :row="activeRow"
                 @refresh="getMyTasks"
               />
               <div v-else style="display:flex;justify-content:center">任务状态不是进行中</div>
-            </el-tab-pane>
-            <el-tab-pane label="审批记录">
+              <div style="padding-bottom:5px;font-weight:bold">历史审批：</div>
               <approve-log ref="taskApprovelog" />
             </el-tab-pane>
+            <!-- <el-tab-pane label="审批记录">
+              <approve-log ref="taskApprovelog" />
+            </el-tab-pane> -->
           </el-tabs>
         </Drawer>
         <el-row style="padding-bottom:10px">

@@ -1,7 +1,7 @@
 <template>
   <el-form :model="formInline" label-position="left" label-width="100px">
-    <el-form-item label="路径">
-      <el-input v-model="formInline.path" placeholder="要审核的路径"></el-input>
+    <el-form-item label="待审批成果路径:">
+      <el-input v-model="formInline.path" placeholder="请输入待审核的成功文件所在路径..."></el-input>
     </el-form-item>
     <el-form-item class="text-right">
       <el-button type="primary" @click="submitForm">提交</el-button>
