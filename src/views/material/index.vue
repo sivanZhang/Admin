@@ -649,7 +649,7 @@ export default {
      if (this.colSel == "itemInfo") {
         data = {
           ...data,
-         peoject: this.colSel2
+         project: this.colSel2
         };
       } 
       if (this.colSel == "explain") {
