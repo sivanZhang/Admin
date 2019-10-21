@@ -18,7 +18,7 @@
       style="width:300px"
     ></el-input>
     <el-select
-      v-if="colSel === 'status' || colSel === 'grade'||colSel === 'priority'"
+      v-if="colSel === 'status' || colSel === 'grade'||colSel === 'priority'||colSel === 'executor_ids'"
       v-model="colSel2"
       placeholder="请选择"
       style="width:300px;margin-top:1px"
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { getProjectMember } from "@/api/statistics";
 export default {
   name: "taskSel",
   components: {},
@@ -77,6 +78,10 @@ export default {
         {
           value: "grade",
           label: "任务难度"
+        },
+        {
+          value: "executor_ids",
+          label: "执行人"
         },
         {
           value: "user",
@@ -183,6 +188,21 @@ export default {
                 label: "高级"
               }
             ];
+            break;
+          case "executor_ids":
+            this.colShow = false;
+           // this.colSel2 = [0];
+           // this.columnSelect2=[];
+            getProjectMember({ id: this.$route.params.id, members: "" }).then(
+              ({ data }) => {
+                [...data.msg].map(item => {
+                  this.columnSelect2.push({
+                    value: item.userid,
+                    label: item.username
+                  });
+                });
+              }
+            );
             break;
           case "start_date":
             this.colShow = false;
@@ -300,6 +320,14 @@ export default {
             this.name = { grade: "[" + String(this.colSel2) + "]" };
           }
           break;
+        case 'executor_ids':
+          if(this.colSel2.length){
+            data = {
+              ...data,
+              executor_ids: "[" + String(this.colSel2) + "]"
+            };
+            this.name = { executor_ids: "[" + String(this.colSel2) + "]" };
+          }
       }
       this.$emit("refreshTaskList", 3, data, this.name);
     },
