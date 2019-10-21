@@ -41,7 +41,7 @@
       <el-table-column
         prop="priority"
         label="优先级"
-        :formatter="Priority"
+     
         width="120px"
         sortable="custom"
         align="center"
@@ -54,7 +54,7 @@
           <div style="backgroundColor:'transparent'" v-else>{{scope.row.priority|taskPriority}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="grade" label="难度等级" :formatter="Grade" width="120px" align="center">
+      <el-table-column prop="grade" label="难度等级"  width="120px" align="center">
         <template slot-scope="scope">
           <div
             style="backgroundColor:#C64b2b;color:#FFF"
@@ -86,6 +86,17 @@
       </el-table-column>
       <el-table-column prop="total_hour" align="center" label="预设时间（小时）" width="130px"></el-table-column>
     </el-table>
+    <div class="block" style="text-align: right;margin-top:10px">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dailies.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -97,7 +108,10 @@ export default {
   data() {
     return {
       dailies: [],
-      tableLoading: false
+      tableLoading: false,
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [10, 20, 50, 100],
     };
   },
   watch: {},
@@ -118,17 +132,20 @@ export default {
     }
   },
   methods: {
+    //获取dailies列表
     getDailies() {
       this.tableLoading = true;
       getTaskDailies()
         .then(({ data }) => {
           this.dailies = [...data.msg];
           this.tableLoading = false;
+          this.currentPage = 1;
         })
         .catch(res => {
           this.tableLoading = false;
         });
     },
+    //状态
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
         switch (row.priority) {
@@ -149,6 +166,19 @@ export default {
       }
       return { borderRight: 0 };
     },
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      //console.log(this.pagesize);
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      //console.log(this.currentPage);
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
+    }
   },
   created() {
     this.getDailies();
