@@ -1,38 +1,53 @@
 <template>
   <div id="extra-work">
-    <el-select
-      v-model="colSel"
-      placeholder="请选择"
-      style="width:100px;margin-left:600px"
-      filterable
-      size="mini"
-    >
-      <el-option
-        v-for="item of columnSelect"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      ></el-option>
-    </el-select>
-    <el-input
-      v-if="colShow"
-      placeholder="输入用户名"
-      v-model="keyword"
-      size="mini"
-      @keyup.enter.native="getExtrworks()"
-      style="width:200px"
-    ></el-input>
-    <el-date-picker
-      style="width:360px"
-      v-if="timeSel"
-      v-model="timeSelection"
-      type="daterange"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-    ></el-date-picker>
-    <el-button @click="getExtrworks()" icon="el-icon-search" style="height:27.99px" type="primary" />
-    <el-button @click="getExtrworks2()" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
+    <el-row>
+      <el-col align="right">
+        <el-row type="flex" justify="end">
+          <el-select
+            v-model="colSel"
+            placeholder="请选择"
+            style="width:100px;margin-left:600px"
+            filterable
+            size="mini"
+          >
+            <el-option
+              v-for="item of columnSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-input
+            v-if="colShow"
+            placeholder="输入用户名"
+            v-model="keyword"
+            size="mini"
+            @keyup.enter.native="getExtrworks()"
+            style="width:360px"
+          ></el-input>
+          <el-date-picker
+            style="width:360px"
+            v-if="timeSel"
+            v-model="timeSelection"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+          <el-button
+            @click="getExtrworks()"
+            icon="el-icon-search"
+            style="height:27.99px"
+            type="primary"
+          />
+          <el-button
+            @click="getExtrworks2()"
+            style="margin-left: 15px;height:27.99px"
+            type="primary"
+          >重置</el-button>
+        </el-row>
+      </el-col>
+    </el-row>
     <el-table
       :data="ExtraworkList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       @selection-change="handleSelectionChange"
@@ -182,6 +197,7 @@ export default {
 
       getOvertime(data).then(({ data }) => {
         this.ExtraworkList = [...data.msg];
+        this.currentPage = 1;
       });
     },
     getExtrworks2() {
@@ -189,6 +205,7 @@ export default {
       // this.tableLoading = true;
       getOvertime({ allovertime: "" }).then(({ data }) => {
         this.ExtraworkList = [...data.msg];
+        this.currentPage = 1;
       });
     }
   },

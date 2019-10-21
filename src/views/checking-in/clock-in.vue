@@ -2,59 +2,70 @@
   <div>
     <el-row>
       <el-col :span="12">
-    <el-button
-      type="primary"
-      @click="$router.push({name:'clockin-import'})"
-      style="margin-right:700px"
-    >打卡记录上传</el-button>
+        <el-button type="primary" @click="$router.push({name:'clockin-import'})">打卡记录上传</el-button>
       </el-col>
-      <el-col :span="12">
-    <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable size="mini">
-      <el-option
-        v-for="item of columnSelect"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      ></el-option>
-    </el-select>
-    <el-input
-      v-if="colShow"
-      placeholder="请输入用户名"
-      v-model="keyword"
-      size="mini"
-      @keyup.enter.native="clockRecord()"
-      style="width:200px"
-    ></el-input>
-    <el-select
-      @keyup.enter.native="clockRecord()"
-      v-show="chooseSel"
-      v-model="colSel2"
-      placeholder="请选择部门"
-      style="width:200px"
-    >
-      <el-option v-for="item in columnSelect2" :key="item.id" :label="item.name" :value="item.id"></el-option>
-    </el-select>
-    <el-date-picker
-      style="width:360px"
-      v-if="timeSel"
-      v-model="timeSelection"
-      type="daterange"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-    ></el-date-picker>
-    <el-button @click="clockRecord()" icon="el-icon-search" style="height:27.99px" type="primary" />
-    <el-button @click="clockRecord2()" style="margin-left: 15px;height:27.99px" type="primary">重置</el-button>
+      <el-col :span="12" align="right">
+        <el-row type="flex" justify="end">
+          <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable>
+            <el-option
+              v-for="item of columnSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-input
+            v-if="colShow"
+            placeholder="请输入用户名"
+            v-model="keyword"
+            @keyup.enter.native="clockRecord()"
+            style="width:360px"
+          ></el-input>
+          <el-select
+            @keyup.enter.native="clockRecord()"
+            v-show="chooseSel"
+            v-model="colSel2"
+            placeholder="请选择部门"
+            style="width:360px"
+          >
+            <el-option
+              v-for="item in columnSelect2"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+          <el-date-picker
+            style="width:360px"
+            v-if="timeSel"
+            v-model="timeSelection"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+          <el-button
+            @click="clockRecord()"
+            icon="el-icon-search"
+            style="height:27.99px"
+            type="primary"
+          />
+          <el-button
+            @click="clockRecord2()"
+            style="margin-left: 15px;height:27.99px"
+            type="primary"
+          >重置</el-button>
+        </el-row>
       </el-col>
     </el-row>
     <el-card style="margin-top: 10px">
       <el-table :data="clockRed">
         <el-table-column prop="user_name" label="用户名"></el-table-column>
-         <el-table-column prop="user_depts" label="部门">
-        <template slot-scope="scope">
-          <div v-for="(todo,index) of scope.row.user_depts" :key="index">{{todo}}</div>
-        </template>
-      </el-table-column>
+        <el-table-column prop="user_depts" label="部门">
+          <template slot-scope="scope">
+            <div v-for="(todo,index) of scope.row.user_depts" :key="index">{{todo}}</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="date" label="打卡日期">
           <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
         </el-table-column>
@@ -112,7 +123,7 @@ export default {
       value1: "",
       value2: "",
       startTime: null,
-      endTime: null,
+      endTime: null
     };
   },
   watch: {
@@ -132,8 +143,8 @@ export default {
           this.colShow = true;
           this.timeSel = false;
           this.chooseSel = false;
-        //  this.colSel2 = [];
-       //   this.columnSelect2 = [];
+          //  this.colSel2 = [];
+          //   this.columnSelect2 = [];
         }
       }
     }

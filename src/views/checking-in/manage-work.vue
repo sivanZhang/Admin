@@ -36,7 +36,7 @@
         <el-table-column label="剩余调休时间" prop="off_count.allow_off_hour"></el-table-column>
       </el-table-column>
       <template v-if="auth">
-        <el-table-column label="操作">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"

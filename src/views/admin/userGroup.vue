@@ -9,7 +9,7 @@
               <el-radio-button :label="2">未分组</el-radio-button>
             </el-radio-group>
             <el-input
-              placeholder="输入关键字搜索"
+              placeholder="输入用户名搜索"
               v-model="filterText"
               prefix-icon="el-icon-search"
               style="width:200px;margin-right:10px"

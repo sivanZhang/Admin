@@ -2,8 +2,8 @@
 <template>
   <div id="material">
     <div style="padding-bottom:10px" v-if="authRole">
-     <el-row>
-        <el-col :span="15"> 
+      <el-row>
+        <el-col :span="15">
           <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
           <el-button
             type="danger"
@@ -12,48 +12,55 @@
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button>
         </el-col>
-        <el-col :span="9">     
-       <el-select v-model="colSel" placeholder="请选择" style="width:100px" filterable size="mini">
-          <el-option
-          v-for="item in columnSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-          </el-option>
-      </el-select>
-      <el-input
+        <el-col :span="9">
+          <el-row type="flex" justify="end">
+            <el-select
+              v-model="colSel"
+              placeholder="请选择"
+              style="width:100px"
+              filterable
+              size="mini"
+            >
+              <el-option
+                v-for="item in columnSelect"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <el-input
               v-if="colShow"
               v-model="keyword"
               size="mini"
               placeholder="请输入关键字"
               @keyup.enter.native="searchMaterial()"
-              style="width:200px" 
-      ></el-input>
-      <el-select
-      @keyup.enter.native="searchMaterial()"
-      v-show="chooseSel"
-      v-model="colSel2"
-      placeholder="请选择"
-      style="width:200px"
-    >
-      <el-option
-       v-for="item in columnSelect2" 
-      :label="item.name"
-      :value="item.name"
-      :key="item.id"
-       ></el-option>
-    </el-select>
-     <el-date-picker
-      v-if="timeSel"
-      v-model="timeSelection"
-      type="date"
-      placeholder="选择日期">
-     </el-date-picker>
-      <el-button @click="searchMaterial()" icon="el-icon-search" style="height:27.99px" type="primary" />
-      <el-button @click="searchMaterial2()" type="primary" style="margin-left: 15px">重置</el-button>
-      </el-col>
+              style="width:200px"
+            ></el-input>
+            <el-select
+              @keyup.enter.native="searchMaterial()"
+              v-show="chooseSel"
+              v-model="colSel2"
+              placeholder="请选择"
+              style="width:200px"
+            >
+              <el-option
+                v-for="item in columnSelect2"
+                :label="item.name"
+                :value="item.name"
+                :key="item.id"
+              ></el-option>
+            </el-select>
+            <el-date-picker v-if="timeSel" v-model="timeSelection" type="date" placeholder="选择日期" style="width:200px"></el-date-picker>
+            <el-button
+              @click="searchMaterial()"
+              icon="el-icon-search"
+              style="height:27.99px"
+              type="primary"
+            />
+            <el-button @click="searchMaterial2()" type="primary" style="margin-left: 15px">重置</el-button>
+          </el-row>
+        </el-col>
       </el-row>
-      
     </div>
     <el-table
       ref="materialList"
@@ -226,17 +233,17 @@
         </el-table-column>
       </template>
     </el-table>
-         <div class="block" style="text-align: right">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="pageSizeList"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="materialList.length"
-        ></el-pagination>
-      </div>
+    <div class="block" style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="materialList.length"
+      ></el-pagination>
+    </div>
     <!-- 修改素材时更改图片 -->
     <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
       <el-form
@@ -297,8 +304,13 @@
             </el-col>
             <el-col :span="10">
               <el-tooltip effect="dark" content="删除分类" placement="top">
-             <el-button  type="text" style="color:red" icon="el-icon-delete" @click="deletCategory"></el-button>
-             </el-tooltip>
+                <el-button
+                  type="text"
+                  style="color:red"
+                  icon="el-icon-delete"
+                  @click="deletCategory"
+                ></el-button>
+              </el-tooltip>
             </el-col>
           </el-row>
         </el-form-item>
@@ -387,7 +399,7 @@ export default {
       colSel: "name",
       colShow: true,
       keyword: "",
-     columnSelect: [
+      columnSelect: [
         {
           value: "name",
           label: "素材名称"
@@ -413,11 +425,11 @@ export default {
       columnSelect2: [],
       colSel2: [],
       timeSel: false,
-      timeSelection: "",
+      timeSelection: ""
     };
   },
   watch: {
-     colSel: {
+    colSel: {
       handler: function(newVal, oldVal) {
         if (newVal == "sort") {
           this.colShow = false;
@@ -426,7 +438,7 @@ export default {
           this.columnSelect2 = this.CategorysList;
         } else if (newVal == "itemInfo") {
           this.colShow = false;
-         this.timeSel = false;
+          this.timeSel = false;
           this.chooseSel = true;
           this.columnSelect2 = this.ProjectList;
         } else if (newVal == "date") {
@@ -434,23 +446,22 @@ export default {
           this.chooseSel = false;
           this.timeSel = true;
           this.timeSelection = "";
-        }
-        else {
+        } else {
           this.colShow = true;
           this.timeSel = false;
           this.chooseSel = false;
-           this.colSel2 = [];
+          this.colSel2 = [];
           this.columnSelect2 = [];
         }
       }
     }
   },
   methods: {
-   //分页
-    handleSizeChange(val){
-       this.pageSize = val;
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
     },
-     handleCurrentChange(currentPage) {
+    handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
@@ -463,24 +474,26 @@ export default {
         this.ProjectList = data.msg;
       });
     },
-        //删除素材分类
-    deletCategory(){
+    //删除素材分类
+    deletCategory() {
       let categoryid = [];
       this.CategorysList.map(item => {
-        this.materialForm.categorys.map(ct =>{
-          if (item.name == ct){
-             categoryid.push(item.id);
-        }  
-        }) 
-          })
-      delMaterial({category_ids:String(categoryid),method: "delete"}).then(({ data })=>{
-        if(data.status === 0){
-          this.$message.success(data.msg);
-          this.category = [];
-          this.searchMaterial();
-          this.materialForm.categorys=[]
+        this.materialForm.categorys.map(ct => {
+          if (item.name == ct) {
+            categoryid.push(item.id);
+          }
+        });
+      });
+      delMaterial({ category_ids: String(categoryid), method: "delete" }).then(
+        ({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.category = [];
+            this.searchMaterial();
+            this.materialForm.categorys = [];
+          }
         }
-      })
+      );
     },
     //素材添加
     AddMaterial(Type) {
@@ -629,79 +642,58 @@ export default {
       });
     },
     //查询素材库
-    searchMaterial(){
+    searchMaterial() {
       let data = {};
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
-         }
-        if (this.colSel == "name" && this.keyword) {
+      }
+      if (this.colSel == "name" && this.keyword) {
         data = {
           ...data,
           name: this.keyword
         };
       }
-       if (this.colSel == "sort") {
+      if (this.colSel == "sort") {
         data = {
           ...data,
           category: this.colSel2
         };
       }
-     if (this.colSel == "itemInfo") {
+      if (this.colSel == "itemInfo") {
         data = {
           ...data,
-         peoject: this.colSel2
+          peoject: this.colSel2
         };
-      } 
+      }
       if (this.colSel == "explain") {
         data = {
           ...data,
-         explain: this.keyword
-        };
-      } 
-     if (this.colSel == "date") {
-        data = {
-          ...data,
-          date: DateFormat(this.timeSelection),
+          explain: this.keyword
         };
       }
-       getMaterial(data).then(({ data }) => {
+      if (this.colSel == "date") {
+        data = {
+          ...data,
+          date: DateFormat(this.timeSelection)
+        };
+      }
+      getMaterial(data).then(({ data }) => {
         this.materialList = [...data.msg];
         this.authRole = data.auth.can_manage_material_state;
+        this.currentPage = 1
       });
     },
-   searchMaterial2() {
+    searchMaterial2() {
       getMaterial().then(({ data }) => {
-         this.materialList= [...data.msg];
-         this.materialList.map(item => {
-               this.CategorysList = item.all_categorys;
-             });
-         this.authRole = data.auth.can_manage_material_state;
+        this.materialList = [...data.msg];
+        this.materialList.map(item => {
+          this.CategorysList = item.all_categorys;
+        });
+        this.authRole = data.auth.can_manage_material_state;
+        this.currentPage = 1
       });
     }
-    // searchMaterial(Type) {
-    //   if (Type === 1 && this.filterText) {
-    //     getMaterial({ name: this.filterText }).then(({ data }) => {
-    //       if (data.status === 0) {
-    //         this.materialList = [...data.msg];
-    //         this.authRole = data.auth.can_manage_material_state;
-    //       }
-
-    //       //console.log(this.materialList)
-    //     });
-    //   } else {
-    //     getMaterial().then(({ data }) => {
-    //       if (data.status === 0) {
-    //         this.materialList = [...data.msg];
-    //         this.materialList.map(item => {
-    //           this.CategorysList = item.all_categorys;
-    //         });
-    //         this.authRole = data.auth.can_manage_material_state;
-    //       }
-
-    //       //console.log(this.materialList)
-    //     });
-    //   }
-    // }
+    
   },
   created() {
     //this.searchMaterial();
