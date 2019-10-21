@@ -1101,6 +1101,9 @@ import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
 import dayjs from "dayjs";
 import ScrollPane from "@/layout/components/TagsView/ScrollPane";
+
+import taskMulSel from "@/views/projects/components/mulConditionSel/taskMulSel"
+import taskFilter from "@/views/projects/components/filterCondition/taskFilter"
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -1271,7 +1274,10 @@ export default {
   components: {
     approveLog,
     attrsBind,
-    ScrollPane
+    ScrollPane,
+    
+    taskMulSel,
+    taskFilter
   },
   props: {
     AssetList: {

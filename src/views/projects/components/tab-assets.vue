@@ -95,62 +95,9 @@
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting">展示列</el-button>
           </el-popover>
-          <el-popover
-            v-model="visible"
-            placement="bottom"
-            width="400"
-            trigger="click"
-            style="margin-left:15px"
-          >
-            <el-row type="flex" align="middle" v-for="(item,index) of FormList" :key="index">
-              <el-col :span="4">
-                <el-button type="text" icon="el-icon-plus" @click="before(index)">前置</el-button>
-                <el-avatar>{{index+1}}</el-avatar>
-                <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
-              </el-col>
-              <el-col :span="18">
-                <el-form :model="item">
-                  <el-form-item
-                    label="列名"
-                    prop="columnName"
-                    :rules="[{ required: true, message: '请输入列名', trigger: 'blur' }]"
-                  >
-                    <el-select v-model="item.column" placeholder="请选择">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item
-                    label="排序方式"
-                    prop="order"
-                    :rules="[{required:true,message:'请选择排序方式',trigger:'blur'}]"
-                  >
-                    <el-radio-group v-model="item.order">
-                      <el-radio :label="0">正序</el-radio>
-                      <el-radio :label="1">逆序</el-radio>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-form>
-                <el-divider />
-              </el-col>
-              <el-col :span="4" align="center">
-                <el-tooltip effect="dark" content="删除" placement="top">
-                  <span>
-                    <i class="el-icon-delete" style="color:red" @click="deleteLink(index)"></i>
-                  </span>
-                </el-tooltip>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="end">
-              <el-button @click="cancelSort">取消</el-button>
-              <el-button type="primary" @click="sortMul()">立即排序</el-button>
-            </el-row>
-            <el-button slot="reference" type="primary" icon="el-icon-sort">多列排序</el-button>
-          </el-popover>
+          <template>
+            <assetSortMul @refresh="sortMul" style="margin-left:15px;width:100px" />
+          </template>
         </el-col>
         <el-col :span="10" align="right">
           <el-row type="flex" justify="end">
@@ -199,323 +146,12 @@
               type="primary"
               style="height:27.99px"
             />
-            <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
-              <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
-                <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="镜头号" prop="name">
-                        <el-input v-model="sortSelForm.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="场次" prop="session">
-                        <el-input v-model="sortSelForm.session"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="集数" prop="episode">
-                        <el-input v-model="sortSelForm.episode"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="版本号" prop="inner_version">
-                        <el-input v-model="sortSelForm.inner_version"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="帧数" prop="frame">
-                        <el-input v-model="sortSelForm.frame"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="帧数范围" prop="frame_range">
-                        <el-input v-model="sortSelForm.frame_range"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="变速信息" prop="retime">
-                        <el-input v-model="sortSelForm.retime"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="画面调整" prop="report">
-                        <el-input v-model="sortSelForm.report"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="制作内容" prop="content">
-                        <el-input v-model="sortSelForm.content"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="创建人" prop="creator">
-                        <el-input v-model="sortSelForm.creator"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="难度等级" prop="level">
-                        <el-select v-model="sortSelForm.level" multiple placeholder="请选择">
-                          <el-option label="简单" :value="0"></el-option>
-                          <el-option label="标准" :value="1"></el-option>
-                          <el-option label="复杂" :value="2"></el-option>
-                          <el-option label="高难度" :value="3"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="优先级" prop="priority">
-                        <el-select v-model="sortSelForm.priority" multiple placeholder="请选择">
-                          <el-option label="正常" :value="0"></el-option>
-                          <el-option label="优先" :value="1"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="状态" prop="status">
-                        <el-select v-model="sortSelForm.status" multiple placeholder="请选择">
-                          <el-option label="暂停" :value="0"></el-option>
-                          <el-option label="未开始" :value="1"></el-option>
-                          <el-option label="进行中" :value="2"></el-option>
-                          <el-option label="审核中" :value="3"></el-option>
-                          <el-option label="完成" :value="4"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="备注" prop="remark">
-                        <el-input v-model="sortSelForm.remark"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12">
-                      <el-form-item label="开始日期" prop="start">
-                        <el-date-picker v-model="sortSelForm.start" type="date" placeholder="选择日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="结束日期" prop="end">
-                        <el-date-picker v-model="sortSelForm.end" type="date" placeholder="选择日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col align="right">
-                      <el-button type="primary" @click="MulSel()">筛选</el-button>
-                    </el-col>
-                  </el-row>
-                </el-form>
-                <el-button
-                  slot="reference"
-                  type="primary"
-                  style="margin-left: 15px"
-                  @click="showMul()"
-                >筛选</el-button>
-              </el-popover>
-            </el-tooltip>
+            <assetMulSel @refresh_sortMul="MulSel" @filterCondition="filterCondition" />
             <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
           </el-row>
         </el-col>
       </el-row>
-      <el-row v-if="mulChoose">
-        <div
-          style="display:flex;padding-top:10px;overflow-x:auto;height:45px"
-          class="tags-view-container"
-        >
-          <label for style="width:80px">筛选条件：</label>
-          <scroll-pane class="tags-view-wrapper">
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.name?'active':''"
-              v-if="showMulChoose.name&&selShowName"
-            >
-              镜头号：{{showMulChoose.name}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('name')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.session?'active':''"
-              v-if="showMulChoose.session&&selShowSession"
-            >
-              场次：{{showMulChoose.session}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('session')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.episode?'active':''"
-              v-if="showMulChoose.episode&&selShowEpisode"
-            >
-              集数：{{showMulChoose.episode}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('episode')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.inner_version?'active':''"
-              v-if="showMulChoose.inner_version&&selShowInner"
-            >
-              版本号：{{showMulChoose.inner_version}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('inner_version')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.frame?'active':''"
-              v-if="showMulChoose.frame&&selShowFrame"
-            >
-              帧数：{{showMulChoose.frame}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('frame')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.frame_range?'active':''"
-              v-if="showMulChoose.frame_range&&selShowRange"
-            >
-              帧数范围：{{showMulChoose.frame_range}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('frame_range')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.retime?'active':''"
-              v-if="showMulChoose.retime&&selShowRetime"
-            >
-              变速信息：{{showMulChoose.retime}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('retime')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.report?'active':''"
-              v-if="showMulChoose.report&&selShowReport"
-            >
-              画面调整：{{showMulChoose.report}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('report')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.content?'active':''"
-              v-if="showMulChoose.content&&selShowContent"
-            >
-              制作内容：{{showMulChoose.content}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('content')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.creator?'active':''"
-              v-if="showMulChoose.creator&&selShowCreator"
-            >
-              创建人：{{showMulChoose.creator}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('creator')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              :class="showMulChoose.remark?'active':''"
-              v-if="showMulChoose.remark&&selShowRemark"
-            >
-              备注：{{showMulChoose.remark}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('remark')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              v-if="showMulChoose.priority&&selShowPriority"
-              :class="showMulChoose.priority?'active':''"
-            >
-              优先级：
-              <span v-for="(item,index) of showMulChoose.priority" :key="index">
-                <span style="margin-left:5px">{{item|Priority}}</span>
-              </span>
-              <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('priority')" />
-            </div>
-            <div
-              class="tags-view-item"
-              v-if="showMulChoose.level&&selShowLevel"
-              :class="showMulChoose.level?'active':''"
-            >
-              难度等级：
-              <span v-for="(item,index) of showMulChoose.level" :key="index">
-                <span style="padding-left:5px">{{item|Level}}</span>
-              </span>
-              <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('level')" />
-            </div>
-            <div
-              class="tags-view-item"
-              v-if="showMulChoose.status&&selShowStatus"
-              :class="showMulChoose.status?'active':''"
-            >
-              状态：
-              <span v-for="(item,index) of showMulChoose.status" :key="index">
-                <span style="padding-left:5px">{{item|assetStatus}}</span>
-              </span>
-              <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('status')" />
-            </div>
-            <div
-              class="tags-view-item"
-              v-if="showMulChoose.start&&selStart"
-              :class="showMulChoose.start?'active':''"
-            >
-              开始日期：{{showMulChoose.start}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('start')"
-              />
-            </div>
-            <div
-              class="tags-view-item"
-              v-if="showMulChoose.end&&selEnd"
-              :class="showMulChoose.end?'active':''"
-            >
-              结束日期：{{showMulChoose.end}}
-              <span
-                class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag('end')"
-              />
-            </div>
-          </scroll-pane>
-        </div>
-      </el-row>
+      <assetFilter ref="assetFilter" @refresh_close="closeSelectedTag" />
       <el-table
         ref="assetTable"
         :data="AssetList"
@@ -1262,32 +898,23 @@ import { getProjectStatus } from "@/api/status";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { addMaterial } from "@/api/material";
 import ScrollPane from "@/layout/components/TagsView/ScrollPane";
+
+import assetMulSel from "@/views/projects/components/mulConditionSel/assetMulSel";
+import assetFilter from "@/views/projects/components/filterCondition/assetFilter";
+import assetSortMul from "@/views/projects/components/sortMul/assetSortMul";
 export default {
   mixins: [thumbtackMixin],
   components: {
     assetsDrawer,
     Header,
-    ScrollPane
+    ScrollPane,
+    assetMulSel,
+    assetFilter,
+    assetSortMul
   },
   neme: "asset-list",
   data() {
     return {
-      selShowName: true,
-      selShowSession: true,
-      selShowEpisode: true,
-      selShowInner: true,
-      selShowFrame: true,
-      selShowRange: true,
-      selShowRetime: true,
-      selShowReport: true,
-      selShowContent: true,
-      selShowCreator: true,
-      selShowRemark: true,
-      selShowPriority: true,
-      selShowLevel: true,
-      selShowStatus: true,
-      selStart: true,
-      selEnd: true,
       labelName: this.notShow == "true" ? "镜头号" : "资产名称",
       uploadVisible: false,
       materialForm: {},
@@ -1383,59 +1010,9 @@ export default {
       filterPriority: [],
       filterLevel: [],
       sort: null,
-      FormList: [{}],
+
       path: null,
-      options: [
-        {
-          value: "session",
-          label: "场次"
-        },
-        {
-          value: "episode",
-          label: "集数"
-        },
-        {
-          value: "name",
-          label: "镜头号"
-        },
-        {
-          value: "frame",
-          label: "帧数"
-        },
-        {
-          value: "inner_version",
-          label: "版本号"
-        },
-        {
-          value: "priority",
-          label: "优先级"
-        },
-        {
-          value: "level",
-          label: "难度等级"
-        },
-        {
-          value: "status",
-          label: "状态"
-        },
-        {
-          value: "date",
-          label: "创建日期"
-        },
-        {
-          value: "start_date",
-          label: "开始日期"
-        },
-        {
-          value: "end_date",
-          label: "结束日期"
-        },
-        {
-          value: "total_end_date",
-          label: "计划截止日期"
-        }
-      ],
-      visible: false,
+
       columnSelect: [
         {
           value: "name",
@@ -1515,8 +1092,6 @@ export default {
       colSel2: [],
       timeSel: false,
       timeSelection: "",
-      visible2: false,
-      sortSelForm: {},
       approving: [],
       conducting: [],
       finish: [],
@@ -1533,7 +1108,6 @@ export default {
       dbCell: false,
       cellId: null,
       cellCol: null,
-      showMulChoose: [],
       mulChoose: false
     };
   },
@@ -1654,104 +1228,19 @@ export default {
     }
   },
   methods: {
-    showMul() {
-      this.sortSelForm = {};
-      this.mulChoose = false;
-      this.showMulChoose = [];
-      this.selShowName = true;
-      this.selShowSession = true;
-      this.selShowEpisode = true;
-      this.selShowInner = true;
-      this.selShowFrame = true;
-      this.selShowRange = true;
-      this.selShowRetime = true;
-      this.selShowReport = true;
-      this.selShowContent = true;
-      this.selShowCreator = true;
-      this.selShowRemark = true;
-      this.selShowPriority = true;
-      this.selShowLevel = true;
-      this.selShowStatus = true;
-      this.selStart = true;
-      this.selEnd = true;
+    //筛选条件展示
+    filterCondition(showMulChoose, sortSelForm) {
+      this.$refs["assetFilter"].filterCondition(showMulChoose, sortSelForm);
     },
     //删除筛选条件，剩余条件再搜索
-    closeSelectedTag(tag) {
-      switch (tag) {
-        case "name":
-          delete this.sortSelForm.name;
-          this.selShowName = false;
-          break;
-        case "session":
-          delete this.sortSelForm.session;
-          this.selShowSession = false;
-          break;
-        case "episode":
-          delete this.sortSelForm.episode;
-          this.selShowEpisode = false;
-          break;
-        case "inner_version":
-          delete this.sortSelForm.inner_version;
-          this.selShowInner = false;
-          break;
-        case "frame":
-          delete this.sortSelForm.frame;
-          this.selShowFrame = false;
-          break;
-        case "frame_range":
-          delete this.sortSelForm.frame_range;
-          this.selShowRange = false;
-          break;
-        case "retime":
-          delete this.sortSelForm.retime;
-          this.selShowRetime = false;
-          break;
-        case "report":
-          delete this.sortSelForm.report;
-          this.selShowReport = false;
-          break;
-        case "content":
-          delete this.sortSelForm.content;
-          this.selShowContent = false;
-          break;
-        case "creator":
-          delete this.sortSelForm.creator;
-          this.selShowCreator = false;
-          break;
-        case "remark":
-          delete this.sortSelForm.remark;
-          this.selShowRemark = false;
-          break;
-        case "priority":
-          delete this.sortSelForm.priority;
-          this.selShowPriority = false;
-          break;
-        case "level":
-          delete this.sortSelForm.level;
-          this.selShowLevel = false;
-          break;
-        case "status":
-          delete this.sortSelForm.status;
-          this.selShowStatus = false;
-          break;
-        
-        case "start":
-          delete this.sortSelForm.start;
-          this.selStart = false;
-          break;
-        case "end":
-          delete this.sortSelForm.end;
-          this.selEnd = false;
-          break;
-      }
-
+    closeSelectedTag(sortSelForm) {
       let data = {
-        ...this.sortSelForm,
+        ...sortSelForm,
         project: this.$route.params.id,
         pagenum: 20,
         page: 1
       };
-      this.multiSelect = this.sortSelForm;
+      this.multiSelect = sortSelForm;
       this.tableLoading = true;
       HTTP.queryAssets(data)
         .then(({ data }) => {
@@ -1867,18 +1356,6 @@ export default {
     jumpName(val) {
       this.$emit("jumpName", val);
     },
-    //创建环节时，前置
-    before(ind) {
-      this.FormList.splice(ind, 0, {});
-    },
-    //创建环节时，后置
-    after(ind) {
-      this.FormList.splice(ind + 1, 0, {});
-    },
-    //创建环节时，删除
-    deleteLink(index) {
-      if (index !== 0) this.FormList.splice(index, 1);
-    },
     // 单条件排序
     sortFilter({ column, prop, order }) {
       let payload = {
@@ -1902,37 +1379,12 @@ export default {
         });
     },
     //多条件排序
-    sortMul() {
-      this.visible = false;
-
-      let hash = {};
-
-      this.FormList = this.FormList.reduce(function(arr, current) {
-        hash[current.id] ? "" : (hash[current.id] = true && arr.push(current));
-
-        return arr;
-      }, []);
-
-      //console.log(this.FormList);
-      this.FormList.forEach((item, index) => {
-        if (item.order === 1) {
-          this.FormList[index] = Object.assign({}, this.FormList[index], {
-            column: "-" + item.column
-          });
-        } else {
-          this.FormList[index] = Object.assign({}, this.FormList[index], {
-            column: item.column
-          });
-        }
-      });
-      // console.log(this.FormList);
-      let sort = this.FormList.map(item => item.column).join(",");
-      //console.log(sort);
+    sortMul(sort) {
       let payload = {
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
-        pagenum: this.pageSize,
-        page: this.currentPage,
+        pagenum: 20,
+        page: 1,
         sort: sort
       };
       HTTP.queryAssets(payload)
@@ -1947,7 +1399,6 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
-      this.FormList = [{}];
     },
     //单条件筛选（状态、优先级、难度等级）
     filterHandler(val) {
@@ -2010,88 +1461,15 @@ export default {
         });
     },
     //多条件筛选
-    MulSel() {
-      this.mulChoose = true;
-      this.visible2 = false;
-      function dateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
-        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-      }
-      if (this.sortSelForm.name) {
-        this.showMulChoose.name = this.sortSelForm.name;
-      }
-      if (this.sortSelForm.session) {
-        this.showMulChoose.session = this.sortSelForm.session;
-      }
-      if (this.sortSelForm.episode) {
-        this.showMulChoose.episode = this.sortSelForm.episode;
-      }
-      if (this.sortSelForm.inner_version) {
-        this.showMulChoose.inner_version = this.sortSelForm.inner_version;
-      }
-      if (this.sortSelForm.frame) {
-        this.showMulChoose.frame = this.sortSelForm.frame;
-      }
-      if (this.sortSelForm.frame_range) {
-        this.showMulChoose.frame_range = this.sortSelForm.frame_range;
-      }
-      if (this.sortSelForm.retime) {
-        this.showMulChoose.retime = this.sortSelForm.retime;
-      }
-      if (this.sortSelForm.report) {
-        this.showMulChoose.report = this.sortSelForm.report;
-      }
-      if (this.sortSelForm.content) {
-        this.showMulChoose.content = this.sortSelForm.content;
-      }
-      if (this.sortSelForm.creator) {
-        this.showMulChoose.creator = this.sortSelForm.creator;
-      }
-      if (this.sortSelForm.remark) {
-        this.showMulChoose.remark = this.sortSelForm.remark;
-      }
-      if (this.sortSelForm.level) {
-        if (this.sortSelForm.level.length === 0) {
-          delete this.sortSelForm.level;
-        } else {
-          this.showMulChoose.level = this.sortSelForm.level;
-          this.sortSelForm.level = "[" + String(this.sortSelForm.level) + "]";
-        }
-      }
-      if (this.sortSelForm.priority) {
-        if (this.sortSelForm.priority.length === 0) {
-          delete this.sortSelForm.priority;
-        } else {
-          this.showMulChoose.priority = this.sortSelForm.priority;
-          this.sortSelForm.priority =
-            "[" + String(this.sortSelForm.priority) + "]";
-        }
-      }
-      if (this.sortSelForm.status) {
-        if (this.sortSelForm.status.length === 0) {
-          delete this.sortSelForm.status;
-        } else {
-          this.showMulChoose.status = this.sortSelForm.status;
-          this.sortSelForm.status = "[" + String(this.sortSelForm.status) + "]";
-        }
-      }
-      if (this.sortSelForm.start) {
-        this.showMulChoose.start = dateFormat(this.sortSelForm.start);
-        this.sortSelForm.start = dateFormat(this.sortSelForm.start);
-      }
-      if (this.sortSelForm.end) {
-        this.showMulChoose.end = dateFormat(this.sortSelForm.end);
-        this.sortSelForm.end = dateFormat(this.sortSelForm.end);
-      }
-      console.log(this.sortSelForm)
+    MulSel(sortSelForm) {
       let data = {
-        ...this.sortSelForm,
+        ...sortSelForm,
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         pagenum: 20,
         page: 1
       };
-      this.multiSelect = this.sortSelForm;
+      this.multiSelect = sortSelForm;
       this.tableLoading = true;
       HTTP.queryAssets(data)
         .then(({ data }) => {
@@ -2099,21 +1477,14 @@ export default {
             this.AssetList = [...data.msg];
             this.total = data.count;
             this.pageCount = data.page_count;
-            // this.sortSelForm = {};
           }
           this.tableLoading = false;
         })
         .catch(err => {
-          // this.sortSelForm = {};
-          // this.visible2 = false
           this.tableLoading = false;
         });
     },
-    //清空排序
-    cancelSort() {
-      this.visible = false;
-      this.FormList = [{}];
-    },
+
     img(row) {
       this.dialogImg = true;
       this.row = row;
@@ -2802,73 +2173,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scope>
-.tags-view-container {
-  height: 34px;
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
-  .tags-view-wrapper {
-    .tags-view-item {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
-      padding: 0 8px;
-      font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
-      &:first-of-type {
-        margin-left: 15px;
-      }
-      &:last-of-type {
-        margin-right: 15px;
-      }
-      &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
-        &::before {
-          content: "";
-          background: #fff;
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
-        }
-      }
-    }
-  }
-  .contextmenu {
-    margin: 0;
-    background: #fff;
-    z-index: 3000;
-    position: absolute;
-    list-style-type: none;
-    padding: 5px 0;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
-    li {
-      margin: 0;
-      padding: 7px 16px;
-      cursor: pointer;
-      &:hover {
-        background: #eee;
-      }
-    }
-  }
-}
-</style>
+
 <style lang="scss">
 #tab-assets {
   min-height: calc(100vh - 199px);
