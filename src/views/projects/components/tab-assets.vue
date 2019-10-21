@@ -416,7 +416,7 @@
               <span>{{scope.row.report?scope.row.report:"-"}}</span>
             </el-input>
             <span
-              v-i9f="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
             >{{scope.row.report?scope.row.report:"-"}}</span>
           </template>
         </el-table-column>
