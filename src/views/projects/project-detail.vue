@@ -101,7 +101,7 @@ export default {
     activeName: {
       handler: function(newVal, oldVal) {
         if (newVal === "tab2") {
-          this.$refs["tab-task"].getTasks();
+          this.$refs["tab-task"].getTasks(2);
           this.getAssetList();
         }
       }

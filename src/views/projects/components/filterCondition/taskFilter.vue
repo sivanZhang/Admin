@@ -1,6 +1,123 @@
 <!-- 任务多条件筛选时的筛选条件 -->
 <template>
-  <div id="taskFilter"></div>
+  <div
+    style="display:flex;padding-top:10px;overflow-x:auto;height:45px"
+    class="tags-view-container"
+  >
+    <label for style="width:80px">筛选条件：</label>
+    <scroll-pane class="tags-view-wrapper">
+      <div
+        class="tags-view-item"
+        :class="showMulChoose.name?'active':''"
+        v-if="showMulChoose.name&&selShowName"
+      >
+        任务：{{showMulChoose.name}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('name')"
+        />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.dept&&selShowDept"
+        :class="showMulChoose.dept?'active':''"
+      >
+        制作环节：{{showMulChoose.dept}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('dept')"
+        />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.content&&selShowContent"
+        :class="showMulChoose.content?'active':''"
+      >
+        制作内容：{{showMulChoose.content}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('content')"
+        />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.user&&selShowUser"
+        :class="showMulChoose.user?'active':''"
+      >
+        创建人：{{showMulChoose.user}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('user')"
+        />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.priority&&selShowPriority"
+        :class="showMulChoose.priority?'active':''"
+      >
+        优先级：
+        <span v-for="(item,index) of showMulChoose.priority" :key="index">
+          <span style="margin-left:5px">{{item|taskPriority}}</span>
+        </span>
+        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('priority')" />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.grade&&selShowGrade"
+        :class="showMulChoose.grade?'active':''"
+      >
+        任务难度：
+        <span v-for="(item,index) of showMulChoose.grade" :key="index">
+          <span style="padding-left:5px">{{item|taskgrade}}</span>
+        </span>
+        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('grade')" />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.status&&selShowStatus"
+        :class="showMulChoose.status?'active':''"
+      >
+        状态：
+        <span v-for="(item,index) of showMulChoose.status" :key="index">
+          <span style="padding-left:5px">{{item|taskStatus}}</span>
+        </span>
+        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag('status')" />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.total_hour&&selTolHour"
+        :class="showMulChoose.user?'active':''"
+      >
+        总工时：{{showMulChoose.total_hour}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('total_hour')"
+        />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.start&&selStart"
+        :class="showMulChoose.start?'active':''"
+      >
+        开始日期：{{showMulChoose.start}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('start')"
+        />
+      </div>
+      <div
+        class="tags-view-item"
+        v-if="showMulChoose.end&&selEnd"
+        :class="showMulChoose.end?'active':''"
+      >
+        结束日期：{{showMulChoose.end}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('end')"
+        />
+      </div>
+    </scroll-pane>
+  </div>
 </template>
 
 <script>
@@ -9,10 +126,91 @@ export default {
   name: "taskFilter",
   components: { ScrollPane },
   data() {
-    return {};
+    return {
+      selShowName: true,
+      selShowDept: true,
+      selShowContent: true,
+      selShowUser: true,
+      selShowPriority: true,
+      selShowGrade: true,
+      selShowStatus: true,
+      selTolHour: true,
+      selStart: true,
+      selEnd: true,
+      showMulChoose: [],
+      sortSelForm: {}
+    };
   },
   watch: {},
-  methods: {},
+  methods: {
+    filterCondition(showMulChoose, sortSelForm) {
+      this.showMulChoose = showMulChoose;
+      this.sortSelForm = sortSelForm;
+    },
+    //删除筛选条件，剩余条件再搜索
+    closeSelectedTag(tag) {
+      switch (tag) {
+        case "name":
+          delete this.sortSelForm.name;
+          this.selShowName = false;
+          break;
+        case "dept":
+          delete this.sortSelForm.dept;
+          this.selShowDept = false;
+          break;
+        case "content":
+          delete this.sortSelForm.content;
+          this.selShowContent = false;
+          break;
+        case "user":
+          delete this.sortSelForm.user;
+          this.selShowUser = false;
+          break;
+        case "priority":
+          delete this.sortSelForm.priority;
+          this.selShowPriority = false;
+          break;
+        case "grade":
+          delete this.sortSelForm.grade;
+          this.selShowGrade = false;
+          break;
+        case "status":
+          delete this.sortSelForm.status;
+          this.selShowStatus = false;
+          break;
+        case "total_hour":
+          delete this.sortSelForm.total_hour;
+          this.selTolHour = false;
+          break;
+        case "start":
+          delete this.sortSelForm.start;
+          this.selStart = false;
+          break;
+        case "end":
+          delete this.sortSelForm.end;
+          this.selEnd = false;
+          break;
+      }
+      this.multiSelect = this.sortSelForm;
+      this.tableLoading = true;
+      this.$emit("refresh_close", this.sortSelForm,1);
+    },
+    //重置筛选条件
+    showMul(){
+      this.selShowName=true;
+      this.selShowDept=true;
+      this.selShowContent=true;
+      this.selShowUser=true;
+      this.selShowPriority=true;
+      this.selShowGrade=true;
+      this.selShowStatus=true;
+     this. selTolHour=true;
+      this.selStart=true;
+      this.selEnd=true;
+      this.showMulChoose=[],
+      this.sortSelForm={}
+    }
+  },
   created() {}
 };
 </script>
