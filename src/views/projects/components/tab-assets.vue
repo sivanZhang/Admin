@@ -507,7 +507,7 @@
         >
           <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
         </el-table-column>
-        <el-table-column label="小状态" prop="small_status">
+        <el-table-column label="小状态" prop="small_status" width="120px">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
@@ -726,72 +726,7 @@
         ></el-pagination>
       </div>
     </div>
-    <!-- 旧版资产修改（利用弹框修改） -->
-    <el-dialog :title="dialogTitle" :visible.sync="isShow" width="480px" top="5vh">
-      <el-form
-        :model="AssetForm"
-        :rules="rules"
-        ref="assetForm"
-        label-width="100px"
-        hide-required-asterisk
-        label-position="left"
-      >
-        <el-upload
-          accept="image/jpeg, image/gif, image/png"
-          ref="upload"
-          class="upload-demo"
-          action="/api/appfile/appfile/"
-          :headers="headers"
-          :on-success="handleSuccess"
-          drag
-          :show-file-list="false"
-        >
-          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
-          <template v-else>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或
-              <em>点击上传</em>
-            </div>
-          </template>
-        </el-upload>
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="AssetForm.name" @input="change($event)"></el-input>
-        </el-form-item>
-        <el-form-item label="存放路径" prop="path">
-          <el-input v-model="AssetForm.path" @input="change($event)"></el-input>
-        </el-form-item>
-        <el-form-item label="优先等级" prop="priority">
-          <!-- <el-input v-model="AssetForm.code"></el-input> -->
-          <el-radio v-model="AssetForm.priority" :label="0">正常</el-radio>
-          <el-radio v-model="AssetForm.priority" :label="1">优先</el-radio>
-        </el-form-item>
-        <el-form-item label="难度等级" prop="level">
-          <el-select v-model="AssetForm.level" placeholder="请选择难度等级">
-            <el-option
-              v-for="item of LevelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" v-model="AssetForm.remark"></el-input>
-        </el-form-item>
-        <!-- <el-form-item label="所属团队" prop="team">
-          <el-input v-model="AssetForm.category"></el-input>
-        </el-form-item>-->
-        <el-form-item>
-          <el-button @click="cancel">取消</el-button>
-          <el-button
-            :loading="buttonStates.createLoading"
-            type="primary"
-            @click="addAsset"
-          >{{DialogName===1?'立即创建':'立即修改'}}</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+  
     <!-- 资产修改时上传图片 -->
     <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
       <el-form
@@ -905,6 +840,7 @@ import assetMulSel from "@/views/projects/components/mulConditionSel/assetMulSel
 import assetFilter from "@/views/projects/components/filterCondition/assetFilter";
 import assetSortMul from "@/views/projects/components/sortMul/assetSortMul";
 import assetSel from "@/views/projects/components/oneConditionSel/assetSel";
+import {editSmallStatus} from "@/api/status"
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -1444,8 +1380,6 @@ export default {
             ? new Date(dateFormat(row.end_date))
             : "";
       }
-      // console.log("edit");
-      // console.log(index);
     },
     //行内修改资产保存
     saveEdit(index, row) {
@@ -1471,9 +1405,12 @@ export default {
         frame_range: row.frame_range,
         start: DateFormat(this.start_date),
         end: DateFormat(this.end_date),
-        small_status: row.small_status,
         reference: row.pro_reference
       };
+      let smallStatus = {}
+      if(row.small_status){
+        smallStatus = {small_status_id: row.small_status,asset_id:row.id}
+      }
       if (payload.start === "Invalid Date") {
         delete payload.start;
       }
@@ -1483,8 +1420,11 @@ export default {
       if (!payload.small_status) {
         delete payload.small_status;
       }
-      //console.log(payload)
       HTTP.editAssets(payload).then(({ data }) => {
+        if(smallStatus){
+          editSmallStatus(smallStatus).then(({data})=>{
+          })
+        }
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.getAssetList(2);

@@ -94,6 +94,10 @@ export default {
         if (newVal === "tab2") {
           this.$refs["tab-task"].getTasks(2);
           this.getAssetList();
+        }else if(newVal === "tab0"){
+          this.$refs['scene'].getAssetList(2)
+        }else if(newVal === "tab1"){
+          this.$refs['scene2'].getAssetList(2)
         }
       }
     }

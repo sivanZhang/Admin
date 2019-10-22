@@ -68,3 +68,7 @@ export function changeTemplate(params) {
         }],
     })
 }
+//资产小状态修改
+export function editSmallStatus(data){
+    return AXIOS.post('/assets/status/',data)
+}
