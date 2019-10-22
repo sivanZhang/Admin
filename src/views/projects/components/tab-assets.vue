@@ -128,8 +128,15 @@
         @sort-change="sortFilter"
         :border="false"
         @cell-dblclick="editCell"
+        @expand-change="expandShow"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+        <el-table-column type="expand" prop="expand" width="20px">
+          <template slot-scope="props" >
+            <taskTable ref="taskTable" v-if="props.row.task_num != 0" style="margin-left:20px"/>
+            <label for v-else >此镜头暂无任务</label>
+          </template>
+        </el-table-column>
         <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
@@ -242,6 +249,7 @@
             >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
+        <el-table-column label="任务数量" prop="task_num"></el-table-column>
         <el-table-column
           prop="session"
           label="场次"
@@ -726,7 +734,7 @@
         ></el-pagination>
       </div>
     </div>
-  
+
     <!-- 资产修改时上传图片 -->
     <el-dialog title="上传图片" :visible.sync="dialogImg" width="480px" top="5vh">
       <el-form
@@ -840,7 +848,8 @@ import assetMulSel from "@/views/projects/components/mulConditionSel/assetMulSel
 import assetFilter from "@/views/projects/components/filterCondition/assetFilter";
 import assetSortMul from "@/views/projects/components/sortMul/assetSortMul";
 import assetSel from "@/views/projects/components/oneConditionSel/assetSel";
-import {editSmallStatus} from "@/api/status"
+import taskTable from "@/views/projects/components/taskTable";
+import { editSmallStatus } from "@/api/status";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -849,11 +858,13 @@ export default {
     assetMulSel,
     assetFilter,
     assetSortMul,
-    assetSel
+    assetSel,
+    taskTable
   },
   neme: "asset-list",
   data() {
     return {
+      tableTask: [], //资产的任务
       labelName: this.notShow == "true" ? "镜头号" : "资产名称",
       uploadVisible: false,
       materialForm: {},
@@ -951,7 +962,7 @@ export default {
       path: null,
       multiSelect: [],
       name: "",
-      pproving: [],
+      approving: [],
       conducting: [],
       finish: [],
       notstart: [],
@@ -1009,6 +1020,18 @@ export default {
     }
   },
   methods: {
+    //展示资产的任务
+    expandShow(row, expandedRows) {
+      if (Object.keys(expandedRows).length) {
+        if (row.task_num != 0) {
+          this.$nextTick(() => {
+            this.$refs["taskTable"].getTaskList(row.id);
+          });
+        }
+      } else {
+        return;
+      }
+    },
     //重置筛选条件展示
     selRefresh() {
       this.$refs["assetFilter"].showMul();
@@ -1051,6 +1074,8 @@ export default {
         });
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
+      //console.log({ row, column, rowIndex, columnIndex })
+      
       if (column.property == "priority") {
         switch (row.priority) {
           case 1:
@@ -1164,7 +1189,11 @@ export default {
         payload = { ...payload, pagenum: 20, page: 1 };
       } else {
         //处理分页
-        payload = { ...payload, pagenum: this.pageSize, page: this.currentPage };
+        payload = {
+          ...payload,
+          pagenum: this.pageSize,
+          page: this.currentPage
+        };
       }
       HTTP.queryAssets(payload)
         .then(({ data }) => {
@@ -1193,7 +1222,7 @@ export default {
       };
       if (Type === 1) {
         //正常请求
-        payload = { ...payload,...sort, pagenum: 20, page: 1 };
+        payload = { ...payload, ...sort, pagenum: 20, page: 1 };
       } else {
         //处理分页
         payload = {
@@ -1407,9 +1436,9 @@ export default {
         end: DateFormat(this.end_date),
         reference: row.pro_reference
       };
-      let smallStatus = {}
-      if(row.small_status){
-        smallStatus = {small_status_id: row.small_status,asset_id:row.id}
+      let smallStatus = {};
+      if (row.small_status) {
+        smallStatus = { small_status_id: row.small_status, asset_id: row.id };
       }
       if (payload.start === "Invalid Date") {
         delete payload.start;
@@ -1421,9 +1450,8 @@ export default {
         delete payload.small_status;
       }
       HTTP.editAssets(payload).then(({ data }) => {
-        if(smallStatus){
-          editSmallStatus(smallStatus).then(({data})=>{
-          })
+        if (smallStatus) {
+          editSmallStatus(smallStatus).then(({ data }) => {});
         }
         if (data.status === 0) {
           this.$message.success(data.msg);
@@ -1521,7 +1549,11 @@ export default {
           };
           break;
         case -1: //正常查询下的分页
-          payload = { ...payload, pagenum: this.pageSize, page: this.currentPage };
+          payload = {
+            ...payload,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          };
           break;
       }
       this.tableLoading = true;
@@ -1837,7 +1869,7 @@ export default {
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
-       switch (this.cutType) {
+      switch (this.cutType) {
         case 1:
           this.MulSel(this.sortSelForm, 2); //多条件筛选分页查看
           break;
@@ -1932,5 +1964,9 @@ svg-icon {
   height: 22px;
   vertical-align: 10px;
   padding-right: 10px;
+}
+.el-table__expanded-cell{
+  padding-top:0px !important;
+  padding-bottom:0px !important
 }
 </style>

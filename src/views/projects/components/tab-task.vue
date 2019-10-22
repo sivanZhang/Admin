@@ -216,11 +216,7 @@
           :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
         >
           <template slot-scope="scope">
-            <div
-              style="backgroundColor:#C64b2b;color:#FFF"
-              v-if="scope.row.priority === 2"
-            >{{scope.row.priority|taskPriority}}</div>
-            <div style="backgroundColor:'transparent'" v-else>{{scope.row.priority|taskPriority}}</div>
+            {{scope.row.priority|taskPriority}}
           </template>
         </el-table-column>
         <el-table-column
@@ -235,11 +231,7 @@
           :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
         >
           <template slot-scope="scope">
-            <div
-              style="backgroundColor:#C64b2b;color:#FFF"
-              v-if="scope.row.grade === 2"
-            >{{scope.row.grade|taskgrade}}</div>
-            <div style="backgroundColor:'transparent'" v-else>{{scope.row.grade|taskgrade}}</div>
+          {{scope.row.grade|taskgrade}}
           </template>
         </el-table-column>
         <el-table-column

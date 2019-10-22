@@ -95,7 +95,10 @@ export default {
           this.$refs["tab-task"].getTasks(2);
           this.getAssetList();
         }else if(newVal === "tab0"){
-          this.$refs['scene'].getAssetList(2)
+          this.$nextTick(()=>{
+            this.$refs['scene'].getAssetList(2)
+          })
+          
         }else if(newVal === "tab1"){
           this.$refs['scene2'].getAssetList(2)
         }
@@ -136,8 +139,6 @@ export default {
                 });
               });
             });
-            // console.log("1111");
-            // console.log(this.trainingMenber)
           }
         );
       } else {
@@ -158,11 +159,7 @@ export default {
     } else {
       this.groupType ="1";
     }
-    // if(this.$route.query.tab === "tab2"){
-    //   this.activeName = "tab2"
-    // }
-    // console.log(this.$route.query.tab);
-    this.getAssetList();
+    // this.getAssetList();
     this.getProjectDetail();
     if (this.$route.query.asset_type && this.$route.query.asset_type === "1") {
       this.activeName = "tab1";
@@ -174,7 +171,6 @@ export default {
     }
     this.assetId = this.$route.query.asset;
 
-    //console.log(this.assetId);
   },
   //每次路由从批量上传进入，会刷新
   beforeRouteEnter(to, from, next) {

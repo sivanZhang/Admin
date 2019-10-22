@@ -95,3 +95,7 @@ export function getFeedback(params = {
 export function getTaskDailies(){
   return AXIOS.get('/task/task/?dailies')
 }
+//查看资产的任务
+export function getAssetTask(params){
+  return AXIOS.get('/task/asset_task/',{params})
+}
