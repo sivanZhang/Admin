@@ -436,7 +436,7 @@ export default {
     },
     //是否显示任务板右侧
     taskBoardRightShow(row) {
-      this.project = row.project.id;
+      this.project = row.project;
       this.assetId = row.asset.id;
       this.isDrawerShow = true;
 
@@ -607,8 +607,8 @@ export default {
         break
       case 'expire':
         this.colSel = 'end_date'
-        this.timeSelection = dayjs(new Date).subtract(1, 'day')
-        this.timeSelection2 = dayjs(new Date)
+        this.timeSelection = dayjs(new Date)
+        this.timeSelection2 = dayjs(new Date).add(1, 'day')
         break
     }
     this.$nextTick(() => {

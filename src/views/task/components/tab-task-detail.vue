@@ -16,10 +16,6 @@
         <el-col :span="19">{{taskdetail.creator|filterName}}</el-col>
       </el-row>
       <el-row type="flex">
-        <el-col :span="5">负&nbsp;&nbsp;责&nbsp;&nbsp;人:</el-col>
-        <el-col :span="19">{{taskdetail.manager|filterName}}</el-col>
-      </el-row>
-      <el-row type="flex">
         <el-col :span="5">执&nbsp;&nbsp;行&nbsp;&nbsp;者:</el-col>
         <el-col :span="19">{{taskdetail.executor|executorFilter}}</el-col>
       </el-row>
