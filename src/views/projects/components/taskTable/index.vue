@@ -2,7 +2,7 @@
 <template>
     <el-table
       :data="tableTask"
-      style="width:100%;padding-top:0px"
+      style="width:80%;padding-top:0px"
       highlight-current-row
       :tree-props="{ children: 'sub_task' }"
        default-expand-all
@@ -53,7 +53,7 @@
         </template>
       </el-table-column>
       <el-table-column label="任务ID" prop="id" width="90px"></el-table-column>
-      <el-table-column label="缩略图">
+      <el-table-column label="缩略图" width="100px">
         <template slot-scope="scope" v-if="!scope.row.pid">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset.image"
@@ -70,14 +70,14 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="name" label="任务" width="100px"></el-table-column>
       <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
         <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
       </el-table-column>
-      <el-table-column label="制作内容" align="left" width="400px" prop="content" show-overflow-tooltip></el-table-column>
-      <el-table-column label="镜头号" show-overflow-tooltip prop="asset" width="90pxs">
+      <el-table-column label="制作内容" align="left" width="300px" prop="content" show-overflow-tooltip></el-table-column>
+      <!-- <el-table-column label="镜头号" show-overflow-tooltip prop="asset" width="90pxs">
         <template slot-scope="scope">{{scope.row.asset.name}}</template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="priority" label="优先级" width="120px" align="center">
         <template slot-scope="scope">{{scope.row.priority|taskPriority}}</template>
       </el-table-column>
@@ -87,10 +87,10 @@
       <el-table-column label="状态" prop="status" width="90px">
         <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
       </el-table-column>
-      <el-table-column label="创建者" prop="user" link_dept_name>
+      <el-table-column label="创建者" prop="user" width="200px">
         <template slot-scope="scope">{{scope.row.creator.name}}</template>
       </el-table-column>
-      <el-table-column label="执行人" show-overflow-tooltip>
+      <el-table-column label="执行人" show-overflow-tooltip width="200px">
         <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
       </el-table-column>
       <el-table-column label="任务进度" width="100px" align="center" prop="schedule">
@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { getAssetTask } from "@/api/task";
+import { queryTask } from "@/api/task";
 export default {
   name: "taskTable",
   components: {},
@@ -139,8 +139,8 @@ export default {
   },
   methods: {
     getTaskList(id) {
-      getAssetTask({
-        asset_id: id
+      queryTask({
+        lens_id: id
       }).then(({ data }) => {
         this.tableTask = [...data.msg];
   

@@ -131,8 +131,8 @@
         @expand-change="expandShow"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
-        <el-table-column type="expand" prop="expand" width="20px">
-          <template slot-scope="props" >
+        <el-table-column type="expand" prop="expand" width="20px" >
+          <template slot-scope="props"  >
             <taskTable ref="taskTable" v-if="props.row.task_num != 0" style="margin-left:20px"/>
             <label for v-else >此镜头暂无任务</label>
           </template>
@@ -225,7 +225,7 @@
           prop="name"
           :label="labelName"
           align="left"
-          width="120px"
+          width="85px"
           show-overflow-tooltip
           v-if="show_name"
           sortable="custom"
@@ -1967,6 +1967,7 @@ svg-icon {
 }
 .el-table__expanded-cell{
   padding-top:0px !important;
-  padding-bottom:0px !important
+  padding-bottom:0px !important;
+  padding-right:70px !important
 }
 </style>
