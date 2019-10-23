@@ -360,6 +360,9 @@
               <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
             </template>
           </el-table-column>
+           <el-table-column label="难度等级" header-align="left">
+            <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
+          </el-table-column>
           <el-table-column label="优先级" header-align="left">
             <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
           </el-table-column>

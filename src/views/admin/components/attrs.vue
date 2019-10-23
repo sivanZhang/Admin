@@ -1,28 +1,73 @@
 <!-- 属性 -->
 <template>
   <div id="attrs">
-    <div style="padding-bottom:10px" v-if="auth">
-      <el-row>
-        <el-col :span="18">
-          <el-button icon="el-icon-plus" type="primary" @click="showDialog(1)">自定义属性</el-button>
-        </el-col>
-         <el-col :span="6">
+    <div style="padding-bottom:10px" >
+      <el-row :gutter="15">
+        <el-col :span="15" v-if="auth">
           <el-row>
-            <el-col :span="16">
-              <el-input
-                v-model="filterText"
-                placeholder="请输入属性名称"
-                @keyup.enter.native="searchAttrs(1)"
-              >
-                <el-button
-                  @click="searchAttrs(1)"
-                  slot="append"
-                  icon="el-icon-search"
-                  type="primary"
-                />
-              </el-input>
+            <el-col :span="4">
+              <el-button icon="el-icon-plus" type="primary" @click="showDialog(1)">自定义属性</el-button>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="4">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                @click="mulDelMaterial()"
+                :disabled="this.multipleSelection.length === 0"
+              >批量删除</el-button>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="9" style="float:right">
+          <el-row type="flex" justify="end">
+            <el-col :span="15">
+              <el-row>
+                <el-col :span="9" >
+                  <el-select
+                    v-model="colSel"
+                    placeholder="请选择"
+                    style="width:100px"
+                    filterable
+                    size="mini"
+                  >
+                    <el-option
+                      v-for="item in columnSelect"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="15">
+                  <el-input
+                    v-if="colShow"
+                    v-model="filterText"
+                    placeholder="请输入关键字"
+                    @keyup.enter.native="searchMulAttrs()"
+                  >
+                  </el-input>
+                  <el-select
+                    v-show="chooseSel"
+                    v-model="colSel2"
+                    placeholder="请选择属性类型"
+                  >
+                    <el-option
+                      v-for="item in attrsTypeList"
+                      :label="item.type"
+                      :value="item.value"
+                      :key="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+            </el-col>
+
+            <el-col :span="9">
+              <el-button
+              @click="searchMulAttrs()"
+              icon="el-icon-search"
+              type="primary"
+            />
               <el-button @click="searchAttrs()" type="primary" style="margin-left: 15px">重置</el-button>
             </el-col>
           </el-row>
@@ -31,83 +76,87 @@
     </div>
     <div style="padding:15px;border: 1px solid #dfe6ec;">
       <el-table
-      ref="attrsList"
-      :data="attrsList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      highlight-current-row
-      v-loading="tableLoading">
-      <el-table-column type="index" align="center" :index="indexMethod"></el-table-column>
-      <el-table-column label="属性名" prop="name">
-        <template slot-scope="scope">
-          <el-input
-            size="small"
-            v-model="scope.row.name"
-            placeholder="请输入属性名"
-            v-if="editing&&clickId === scope.row.id"
-            @change="showEditIcon"
-          >
-            <span>{{scope.row.name}}</span>
-          </el-input>
-          <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="属性类型" prop="type">
-        <template slot-scope="scope">{{scope.row.type|attrsFilter}}</template>
-      </el-table-column>
-      <el-table-column label="属性值" prop="value"></el-table-column>
-      <el-table-column label="默认值" prop="default"></el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="属性绑定" placement="top">
-            <el-button
-              icon="el-icon-plus"
-              style="color:blue"
-              type="text"
-              @click="showDialog(2,scope.row)"
-              v-if="!editing||clickId !== scope.row.id"
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="修改" placement="top">
-            <el-button
-              icon="el-icon-edit"
-              style="color:green"
-              type="text"
-              @click="putAttrts(scope.row,1)"
-              v-if="!editing||clickId !== scope.row.id"
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="确认" placement="top">
-            <el-button
+        ref="attrsList"
+        :data="attrsList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        highlight-current-row
+        v-loading="tableLoading"
+        :row-key="(row)=>{ return row.id}"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" :reserve-selection="true" align="left" v-if="auth"></el-table-column>
+        <el-table-column type="index" align="center" :index="indexMethod"></el-table-column>
+        <el-table-column label="属性名" prop="name">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.name"
+              placeholder="请输入属性名"
               v-if="editing&&clickId === scope.row.id"
-              type="text"
-              icon="el-icon-check"
-              style="color:green"
-              @click="putAttrts(scope.row,2)"
-            />
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="删除" placement="top">
-            <el-button
-              icon="el-icon-delete"
-              style="color:red"
-              type="text"
-              @click="removeAttrs(scope.row.id)"
-            ></el-button>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block" style="text-align: center;margin-top:10px">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="pageSizeList"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="attrsList.length"
-      ></el-pagination>
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.name}}</span>
+            </el-input>
+            <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="属性类型" prop="type">
+          <template slot-scope="scope">{{scope.row.type|attrsFilter}}</template>
+        </el-table-column>
+        <el-table-column label="属性值" prop="value"></el-table-column>
+        <el-table-column label="默认值" prop="default"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="属性绑定" placement="top">
+              <el-button
+                icon="el-icon-plus"
+                style="color:blue"
+                type="text"
+                @click="showDialog(2,scope.row)"
+                v-if="!editing||clickId !== scope.row.id"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="修改" placement="top" v-if="auth">
+              <el-button
+                icon="el-icon-edit"
+                style="color:green"
+                type="text"
+                @click="putAttrts(scope.row,1)"
+                v-if="!editing||clickId !== scope.row.id"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="确认" placement="top" v-if="auth">
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="text"
+                icon="el-icon-check"
+                style="color:green"
+                @click="putAttrts(scope.row,2)"
+              />
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除" placement="top" v-if="auth">
+              <el-button
+                icon="el-icon-delete"
+                style="color:red"
+                type="text"
+                @click="removeAttrs(scope.row.id)"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="block" style="text-align: center;margin-top:10px">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="attrsList.length"
+        ></el-pagination>
+      </div>
     </div>
-    </div>
-    
+
     <!-- 添加自定义属性 -->
     <el-dialog :visible.sync="isDialog" width="512px" top="5vh" title="添加自定义属性">
       <el-form
@@ -205,10 +254,10 @@
     <!-- 给实体绑定属性值 -->
     <el-dialog title="实体类别绑定" :visible.sync="isDialog2" width="512px" top="5vh">
       <el-form :model="bindForm" label-width="90px" :rules="rules" ref="bindForm">
-        <el-form-item label="属性名称" prop="attr_id" >
-          <el-input v-model="attrName" disabled ></el-input>
+        <el-form-item label="属性名称" prop="attr_id">
+          <el-input v-model="attrName" disabled></el-input>
         </el-form-item>
-        <el-form-item label="实体类别" prop="entity_type" >
+        <el-form-item label="实体类别" prop="entity_type">
           <el-select v-model="bindForm.entity_type">
             <el-option
               v-for="(item,index) of entityType"
@@ -242,6 +291,30 @@ export default {
       isDialog: false,
       filterText: null,
       attrsForm: {},
+      multipleSelection: [],
+      colSel: "name",
+      colSel2: [],
+      colShow: true,
+      chooseSel: false,
+      columnSelect2: [],
+      columnSelect: [
+        {
+          value: "name",
+          label: "属性名称"
+        },
+        {
+          value: "type",
+          label: "属性类型"
+        },
+        {
+          value: "value",
+          label: "属性值"
+        },
+        {
+          value: "default",
+          label: "默认值"
+        }
+      ],
       attrsTypeList: [
         {
           type: "NUMBER（数字）",
@@ -285,52 +358,123 @@ export default {
           value: 5
         }
       ],
-      attrName:null,
-      rules:{
-        entity_type: [{ required: true, message: "请选择实体类别", trigger: "blur" }],
+      attrName: null,
+      rules: {
+        entity_type: [
+          { required: true, message: "请选择实体类别", trigger: "blur" }
+        ]
       }
     };
   },
-  props: [ "tableLoading","auth"],
-  watch: {},
+  props: ["tableLoading", "auth"],
+  watch: {
+    colSel: {
+      handler: function(newVal, oldVal) {
+        if (newVal == "type") {
+          this.colShow = false;
+          this.chooseSel = true;
+        } else if (newVal == "value") {
+          this.colShow = true;
+          this.chooseSel = false;
+        } else if (newVal == "default") {
+          this.colShow = true;
+          this.chooseSel = false;
+        } else {
+          this.colShow = true;
+          this.chooseSel = false;
+          // this.colSel2 = [];
+          // this.columnSelect2 = [];
+        }
+      }
+    }
+  },
   created() {
     this.searchAttrs();
   },
   methods: {
-    //查询属性
-    searchAttrs(Type){
-      if(Type == 1 && this.filterText){
-      HTTP.getAttrsList({name: this.filterText}).then(({ data }) => {
-        if (data.status === 0) {
-          this.attrsList = [...data.msg];
-          //复位分页的当前页
-          this.currentPage = 1;
-        }
+    //批量删除
+    mulDelMaterial() {
+      console.log(this.multipleSelection)
+      const ids = this.multipleSelection.map(item => item.id);
+      this.$confirm("此操作将永久删除属性, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        HTTP.delMulAttrs({
+          
+          ids: ids
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.$emit("refresh-attrs");
+            this.searchAttrs();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       });
-      } else {
-         HTTP.getAttrsList().then(({ data }) => {
-        if (data.status === 0) {
-          this.attrsList = [...data.msg];
-        }
-      });
-      }
     },
-    bindSubmit(){
-       this.$refs["bindForm"].validate(valid => {
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    //多字段查询属性
+    searchMulAttrs() {
+      let data = {};
+      if (this.colSel == "name" && this.filterText) {
+        data = {
+          ...data,
+          name: this.filterText
+        };
+      }
+      if (this.colSel == "type") {
+        data = {
+          ...data,
+          type: this.colSel2
+        };
+      }
+      if (this.colSel == "value") {
+        data = {
+          ...data,
+          value: this.filterText
+        };
+      }
+      if (this.colSel == "default") {
+        data = {
+          ...data,
+          default: this.filterText
+        };
+      }
+      HTTP.getMulAttrs(data).then(({ data }) => {
+        this.attrsList = [...data.msg];
+        
+        // this.authRole = data.auth.can_manage_material_state;
+        this.currentPage = 1;
+      });
+    },
+    searchAttrs() {
+        HTTP.getAttrsList().then(({ data }) => {
+          if (data.status === 0) {
+            this.attrsList = [...data.msg];
+          }
+        });
+    },
+    bindSubmit() {
+      this.$refs["bindForm"].validate(valid => {
         if (valid) {
-           // console.log(this.bindForm)
-      HTTP.attrsEntityBind(this.bindForm).then(({data})=>{
-        this.isDialog2 = false;
-          this.bindForm = {}
-        if(data.status === 0){
-          this.$message.success(data.msg);
-          this.$emit("bindSearch")
-        }else{
-          this.$message.error(data.msg)
+          // console.log(this.bindForm)
+          HTTP.attrsEntityBind(this.bindForm).then(({ data }) => {
+            this.isDialog2 = false;
+            this.bindForm = {};
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.$emit("bindSearch");
+            } else {
+              this.$message.error(data.msg);
+            }
+          });
         }
-      })
-        }})
-    
+      });
     },
     submitForm() {
       function dateFormat(dateVal) {
@@ -338,7 +482,7 @@ export default {
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
       if (this.attrsForm.type === 5) {
-      //  console.log(this.selectForm);
+        //  console.log(this.selectForm);
         this.attrsForm.value =
           "{" +
           '"selectway":' +
@@ -390,7 +534,7 @@ export default {
       if (Type === 2 && row) {
         this.isDialog2 = true;
         this.attrName = row.name;
-        this.bindForm.attr_id = row.id
+        this.bindForm.attr_id = row.id;
       }
     },
     //是否显示行内修改框
@@ -417,11 +561,11 @@ export default {
               this.$message.success(data.msg);
               this.$emit("refresh-attrs");
               this.editing = false;
-              thsi.iconShow = false
+              thsi.iconShow = false;
             } else {
               this.$message.error(data.msg);
               this.editing = false;
-              this.iconShow = false
+              this.iconShow = false;
             }
           })
           .catch(res => {});
@@ -441,6 +585,7 @@ export default {
           if (data.status === 0) {
             this.$message.success(data.msg);
             this.$emit("refresh-attrs");
+            this.searchAttrs();
           } else {
             this.$message.error(data.msg);
           }
@@ -460,7 +605,7 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     }
-  },
+  }
 };
 </script>
 <style lang='scss' scoped>

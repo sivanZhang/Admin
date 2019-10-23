@@ -1,9 +1,9 @@
 <!-- 素材库 -->
 <template>
   <div id="material">
-    <div style="padding-bottom:10px" v-if="authRole">
+    <div style="padding-bottom:10px" >
       <el-row>
-        <el-col :span="15">
+        <el-col :span="15" v-if="authRole">
           <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
           <el-button
             type="danger"
@@ -12,7 +12,7 @@
             :disabled="this.multipleSelection.length === 0"
           >批量删除</el-button>
         </el-col>
-        <el-col :span="9">
+        <el-col :span="9" style="float:right">
           <el-row type="flex" justify="end">
             <el-select
               v-model="colSel"

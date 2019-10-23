@@ -3,6 +3,22 @@ import AXIOS from '@/utils/request'
 export function delAttrs(data){
     return AXIOS.post('/attrs/attrs/?delete',data)
 }
+//批量删除属性
+export function delMulAttrs(data){
+    data = {...data,method: "delete"}
+    return AXIOS.post('/attrs/attrs/',data,{
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          transformRequest: [params => {
+            return JSON.stringify(params)
+          }],
+    })    
+}
+//全字段搜索属性
+export function getMulAttrs(params){
+    return AXIOS.get('/attrs/attrs/',{params})
+}
 //修改属性实体
 export function updateAttrsEntity(data){
     return AXIOS.post('/attrs/instance/?01',data)
