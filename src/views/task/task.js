@@ -209,6 +209,27 @@ export default {
     };
   },
   methods: {
+       //表内单元格样式（状态、优先级改变背景色）
+       cellStyle({ row, column, rowIndex, columnIndex }) {
+        if (column.property == "task.priority") {
+          switch (row.task.priority) {
+            case 2:
+              return {
+                background: "#C64b2b",
+                color: "#FFFFFF"
+              };
+          }
+        } else if (column.property == "task.grade") {
+          switch (row.task.grade) {
+            case 2:
+              return {
+                background: "#C64b2b",
+                color: "#FFFFFF"
+              };
+          }
+        }
+        return { borderRight: 0 };
+      },
     //点击筛选任务
     task(status) {
       this.changecolor = status;

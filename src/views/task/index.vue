@@ -297,6 +297,7 @@
           border
           @row-click="taskBoardRightShow"
           style="width: 100%;"
+          :cell-style="cellStyle"
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
@@ -360,10 +361,10 @@
               <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
             </template>
           </el-table-column>
-           <el-table-column label="难度等级" header-align="left">
+           <el-table-column label="难度等级" header-align="left" prop="task.grade">
             <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
           </el-table-column>
-          <el-table-column label="优先级" header-align="left">
+          <el-table-column label="优先级" header-align="left" prop="task.priority">
             <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
           </el-table-column>
           <!-- <el-table-column label="创建日期" header-align="left">
