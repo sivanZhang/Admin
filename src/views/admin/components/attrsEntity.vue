@@ -59,7 +59,7 @@
       >
         <template slot-scope="scope">{{scope.row.entity_type|entityFilter}}</template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="auth">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="修改" placement="top">
             <el-button
@@ -113,7 +113,7 @@ import {
 export default {
   name: "attrs-entity",
   components: {},
-  props: ["attrsEntityList", "tableLoading", "attr_entity"],
+  props: ["attrsEntityList", "tableLoading", "attr_entity","auth"],
   data() {
     return {
       currentPage: 1,

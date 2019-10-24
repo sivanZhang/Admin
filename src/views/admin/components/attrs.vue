@@ -104,8 +104,8 @@
         </el-table-column>
         <el-table-column label="属性值" prop="value"></el-table-column>
         <el-table-column label="默认值" prop="default"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
+        <el-table-column label="操作" v-if="auth" >
+          <template slot-scope="scope" >
             <el-tooltip class="item" effect="dark" content="属性绑定" placement="top">
               <el-button
                 icon="el-icon-plus"
@@ -115,7 +115,7 @@
                 v-if="!editing||clickId !== scope.row.id"
               ></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="修改" placement="top" v-if="auth">
+            <el-tooltip class="item" effect="dark" content="修改" placement="top">
               <el-button
                 icon="el-icon-edit"
                 style="color:green"
@@ -124,7 +124,7 @@
                 v-if="!editing||clickId !== scope.row.id"
               ></el-button>
             </el-tooltip>
-            <el-tooltip effect="dark" content="确认" placement="top" v-if="auth">
+            <el-tooltip effect="dark" content="确认" placement="top">
               <el-button
                 v-if="editing&&clickId === scope.row.id"
                 type="text"
@@ -133,7 +133,7 @@
                 @click="putAttrts(scope.row,2)"
               />
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top" v-if="auth">
+            <el-tooltip class="item" effect="dark" content="删除" placement="top">
               <el-button
                 icon="el-icon-delete"
                 style="color:red"
