@@ -55,7 +55,7 @@
     >
       <el-tabs>
         <el-tab-pane label="任务详情" lazy>
-          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" :path="path" />
+          <tabTaskDtail ref="taskDetail" :detailLoading="detailLoading" :path="path" />
         </el-tab-pane>
         <el-tab-pane label="审批记录">
           <approve-log ref="approvelogs" />
@@ -182,6 +182,7 @@ export default {
           this.logsLoading = false;
         });
       this.detailLoading = true;
+      this.$refs['taskDetail'].getDetail(row.task.id);
       queryTask({
         id: row.task.id
       })
@@ -197,48 +198,48 @@ export default {
         });
     },
     //是否显示任务板右侧
-    taskBoardRightShow(row) {
-      this.isDrawerShow = true;
-      this.TaskRecord = Object.assign(
-        {},
-        {
-          task_id: row.task.id,
-          type: 0
-        }
-      );
-      this.logsLoading = true;
-      queryTaskRecord({
-        task_id: row.task.id
-      })
-        .then(({ data }) => {
-          this.LogList = [...data.msg];
-          this.logsLoading = false;
-        })
-        .catch(() => {
-          this.logsLoading = false;
-        });
-      this.detailLoading = true;
-      queryTask({
-        id: row.task.id
-      })
-        .then(({ data }) => {
-          this.TaskDetail = {
-            ...data.msg
-          };
-          this.pro_type = data.msg.project.pro_type;
-          this.detailLoading = false;
-        })
-        .catch(() => {
-          this.detailLoading = false;
-        });
-      this.form_obj = Object.assign(
-        {},
-        {
-          approve_id: row.approve_id
-        }
-      );
-      this.$refs["approvelogs"].getApproveLog(row.task.id);
-    },
+    // taskBoardRightShow(row) {
+    //   this.isDrawerShow = true;
+    //   this.TaskRecord = Object.assign(
+    //     {},
+    //     {
+    //       task_id: row.task.id,
+    //       type: 0
+    //     }
+    //   );
+    //   this.logsLoading = true;
+    //   queryTaskRecord({
+    //     task_id: row.task.id
+    //   })
+    //     .then(({ data }) => {
+    //       this.LogList = [...data.msg];
+    //       this.logsLoading = false;
+    //     })
+    //     .catch(() => {
+    //       this.logsLoading = false;
+    //     });
+    //   this.detailLoading = true;
+    //   queryTask({
+    //     id: row.task.id
+    //   })
+    //     .then(({ data }) => {
+    //       this.TaskDetail = {
+    //         ...data.msg
+    //       };
+    //       this.pro_type = data.msg.project.pro_type;
+    //       this.detailLoading = false;
+    //     })
+    //     .catch(() => {
+    //       this.detailLoading = false;
+    //     });
+    //   this.form_obj = Object.assign(
+    //     {},
+    //     {
+    //       approve_id: row.approve_id
+    //     }
+    //   );
+    //   this.$refs["approvelogs"].getApproveLog(row.task.id);
+    // },
     submitApprove() {
       this.submitLoading = true;
 

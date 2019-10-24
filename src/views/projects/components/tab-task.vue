@@ -215,9 +215,7 @@
           column-key="priority"
           :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
         >
-          <template slot-scope="scope">
-            {{scope.row.priority|taskPriority}}
-          </template>
+          <template slot-scope="scope">{{scope.row.priority|taskPriority}}</template>
         </el-table-column>
         <el-table-column
           prop="grade"
@@ -230,9 +228,7 @@
           column-key="grade"
           :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
         >
-          <template slot-scope="scope">
-          {{scope.row.grade|taskgrade}}
-          </template>
+          <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
         </el-table-column>
         <el-table-column
           label="状态"
@@ -833,7 +829,22 @@
       draggable
     >
       <el-tabs v-model="activeName">
-        <el-tab-pane label="审批记录" name="first">
+        <el-tab-pane label="任务详情" name="first">
+          <tabTaskDtail
+            :taskdetail="TaskDetail"
+            :link="Link"
+            :asset="Asset"
+            :detailLoading="detailLoading"
+            ref="taskdetail"
+          />
+        </el-tab-pane>
+        <el-tab-pane label="历史版本" name="third">
+          <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion" />
+        </el-tab-pane>
+        <el-tab-pane label="执行记录" name="fifth">
+          <tabLog :loglist="LogList" :logsLoading="logsLoading" />
+        </el-tab-pane>
+        <el-tab-pane label="审批记录">
           <approve-log ref="approvelogs" />
         </el-tab-pane>
         <el-tab-pane label="自定义属性" name="second">
@@ -855,7 +866,7 @@ import { Transform } from "stream";
 import myMixin from "./mixins";
 import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
-import { queryAssets } from "@/api/assets";
+import { queryAssets, getHistoryVersion } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
@@ -866,6 +877,9 @@ import dayjs from "dayjs";
 import taskMulSel from "@/views/projects/components/mulConditionSel/taskMulSel";
 import taskFilter from "@/views/projects/components/filterCondition/taskFilter";
 import taskSel from "@/views/projects/components/oneConditionSel/taskSel";
+import tabTaskDtail from "@/views/task/components/tab-task-detail";
+import history from "@/views/task/components/tab-history";
+import tabLog from "@/views/task/components/tab-log";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
@@ -874,6 +888,16 @@ export default {
       authTask: null,
       uploadVisible: false,
       activeTab: "first",
+      TaskDetail: {
+        //name: ''
+      },
+      Asset: "",
+      Link: "",
+      detailLoading: false,
+      historyVersion: [],
+      project: null,
+      logsLoading: false,
+      LogList: [],
       tableLoading: false, //表格加载状态
       total: 0,
       pageCount: 0,
@@ -978,7 +1002,10 @@ export default {
     attrsBind,
     taskMulSel,
     taskFilter,
-    taskSel
+    taskSel,
+    tabLog,
+    tabTaskDtail,
+    history
   },
   props: {
     AssetList: {
@@ -1307,8 +1334,10 @@ export default {
     },
     // handleTabClick(tab, event) {},
     showDrawer(item) {
+      // console.log(item);
       this.showdrawer = true;
-      this.project = item;
+      this.project = item.project;
+      this.assetId = item.asset.id;
       searchBind({ entity_type: 1 }).then(({ data }) => {
         this.attrsList = [...data.msg];
       });
@@ -1318,8 +1347,30 @@ export default {
           this.attrsTypeNum = 1;
         }
       );
-      // console.log(item);
+      this.detailLoading = true;
+
+      this.$refs["taskdetail"].getDetail(item.id,"taskLook");
+
+      getHistoryVersion({ asset_id: item.asset.id }).then(({ data }) => {
+        this.historyVersion = [...data.msg];
+      });
+      this.logsLoading = true;
+      HTTP.queryTaskRecord({ task_id: item.id })
+        .then(({ data }) => {
+          this.LogList = [...data.msg];
+          this.logsLoading = false;
+        })
+        .catch(() => {
+          this.logsLoading = false;
+        });
       this.$refs["approvelogs"].getApproveLog(item.id);
+    },
+    getAssetVersion() {
+      getHistoryVersion({
+        asset_id: this.assetId
+      }).then(({ data }) => {
+        this.historyVersion = [...data.msg];
+      });
     },
     NewcustomAttrs() {
       getAttrsEntityList({ entity_id: this.project.id, entity_type: 1 }).then(
@@ -1788,8 +1839,8 @@ export default {
           this.$refs["taskSel"].refreshOneSel(); //重置单条件筛选
           this.sortfilter = null; //重置多条件筛选存储的条件
           this.valSel = null; //重置table表内筛选（状态、难度等级、优先级）存储的条件
-          this.oneSel = null;//重置单条件排序存储的条件
-          this.currentPage = 1
+          this.oneSel = null; //重置单条件排序存储的条件
+          this.currentPage = 1;
           data = { ...data, pagenum: 20, page: 1 };
           break;
         case 2: //正常查询

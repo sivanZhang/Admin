@@ -65,7 +65,7 @@
       </el-tab-pane>
       <el-tab-pane label="任务详情" name="second" disabled lazy>
         <detail
-          :TaskDetail="TaskDetail"
+          ref="Detail"
           :LogList="LogList"
           :detailLoading="detailLoading"
           :logsLoading="logsLoading"
@@ -182,18 +182,22 @@ export default {
           this.logsLoading = false;
         });
       this.detailLoading = true;
-      queryTask({
-        id: row.task.id
+      this.$nextTick(()=>{
+         this.$refs['Detail'].getTaskDetail(row.task.id);
       })
-        .then(({ data }) => {
-          this.TaskDetail = {
-            ...data.msg
-          };
-          this.detailLoading = false;
-        })
-        .catch(() => {
-          this.detailLoading = false;
-        });
+     
+      // queryTask({
+      //   id: row.task.id
+      // })
+      //   .then(({ data }) => {
+      //     this.TaskDetail = {
+      //       ...data.msg
+      //     };
+      //     this.detailLoading = false;
+      //   })
+      //   .catch(() => {
+      //     this.detailLoading = false;
+      //   });
       this.activeName = "second";
     }
   },

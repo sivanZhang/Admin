@@ -114,20 +114,21 @@ export default {
           this.logsLoading = false;
         });
       this.detailLoading = true;
-      queryTask({
-        id: row.task.id
-      })
-        .then(({ data }) => {
-          this.TaskDetail = {
-            ...data.msg
-          };
-          this.Asset = this.TaskDetail.asset;
-          this.Link = this.TaskDetail.link_dept_name;
-          this.detailLoading = false;
-        })
-        .catch(() => {
-          this.detailLoading = false;
-        });
+      this.$refs['taskDetail'].getDetail(row.task.id);
+      // queryTask({
+      //   id: row.task.id
+      // })
+      //   .then(({ data }) => {
+      //     this.TaskDetail = {
+      //       ...data.msg
+      //     };
+      //     this.Asset = this.TaskDetail.asset;
+      //     this.Link = this.TaskDetail.link_dept_name;
+      //     this.detailLoading = false;
+      //   })
+      //   .catch(() => {
+      //     this.detailLoading = false;
+      //   });
     },
     //修改是否已读
     updateIsRead(row) {
@@ -305,7 +306,7 @@ export default {
       <el-tabs>
         <el-tab-pane label="任务详情">
           <tabTaskDtail
-            :taskdetail="TaskDetail"
+            ref="taskDetail"
             :link="Link"
             :asset="Asset"
             :detailLoading="detailLoading"

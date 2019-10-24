@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="task-ditail" v-loading="detailLoading">
+    <el-card class="task-ditail">
       <h4 slot="header" class="clearfix">
         <el-row type="flex">
           <el-col :span="5">任务名称:</el-col>
@@ -29,9 +29,7 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属项目:</el-col>
-        <el-col :span="19" @click="target(taskdetail.project)">
-          {{taskdetail.project|filterName}}
-        </el-col>
+        <el-col :span="19" @click="target(taskdetail.project)">{{taskdetail.project|filterName}}</el-col>
       </el-row>
       <el-row type="flex">
         <el-col :span="5">所属资产:</el-col>
@@ -61,58 +59,60 @@
         <el-row type="flex">
           <el-col :span="5">任务输出:</el-col>
           <el-col :span="19">
-             <el-image
-            v-if="path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(path)"
-            :src="$store.state.BASE_URL+path"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
-            :preview-src-list="[$store.state.BASE_URL+path]"
-          >
-            <div slot="error">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
-          </el-image>
-          <el-button
-            v-else-if="path"
-            type="text"
-            icon="el-icon-video-camera-solid"
-            @click="showVideo(path)"
-          >{{path}}</el-button>
+            <el-image
+              v-if="path && /(.*)\.(jpg|bmp|gif|ico|pcx|jpeg|tif|png|raw|tga)$/.test(path)"
+              :src="$store.state.BASE_URL+path"
+              style="width: 55px;height: 33px;cursor: pointer; display:block;"
+              :preview-src-list="[$store.state.BASE_URL+path]"
+            >
+              <div slot="error">
+                <i class="el-icon-picture" style="color:#909399"></i>
+              </div>
+            </el-image>
+            <el-button
+              v-else-if="path"
+              type="text"
+              icon="el-icon-video-camera-solid"
+              @click="showVideo(path)"
+            >{{path}}</el-button>
           </el-col>
         </el-row>
       </template>
     </el-card>
-    <template v-if="taskdetail.sub_task && taskdetail.sub_task.length">
+    <!-- <template v-if="taskdetail.sub_task && taskdetail.sub_task.length">
       <task-ditail
         v-for="(item, index) in taskdetail.sub_task.length"
         :key="index"
         :task-detail="item"
       />
-    </template>
+    </template> -->
     <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
       <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
     </el-dialog>
   </div>
 </template>
 <script>
+import{queryTask} from "@/api/task";
 export default {
   name: "task-ditail",
   props: {
     // asset: {
     //   name:String
     // },
-    link:String,
-    taskdetail: Object,
+    link: String,
+    // taskdetail: Object,
     detailLoading: {
       type: Boolean,
       default: false
     },
     path: String
   },
-  data(){
-    return{
+  data() {
+    return {
+      taskdetail: [],
       videoSrc: "",
-      dialogTableVisible: false, //dialog是否显示
-    }
+      dialogTableVisible: false //dialog是否显示
+    };
   },
   filters: {
     filterName(obj) {
@@ -127,22 +127,39 @@ export default {
           .join();
       }
     },
-    target({id}) {
+    target({ id }) {
       if (id) {
         this.$router.push({ name: "project-detail", params: { id } });
       }
     }
   },
-  methods:{
+  methods: {
     //打开视频弹框，为视频src赋值
     showVideo(path) {
       this.videoSrc = this.$store.state.BASE_URL + path;
       this.dialogTableVisible = true;
     },
-     //关闭dialog回调，停止视频播放
+    //关闭dialog回调，停止视频播放
     endPlay() {
       this.$refs["videoplayer"].pause();
     },
+    getDetail(id,taskLook) {
+      queryTask({ id: id })
+        .then(({ data }) => {
+          this.taskdetail = {...data.msg};
+          if(taskLook){
+            this.taskdetail.sub_task = []
+          }
+          // this.Asset = this.TaskDetail.asset;
+          // this.Link = this.TaskDetail.link_dept_name;
+          // this.detailLoading = false;
+        })
+        .catch(() => {
+          console.log("catch");
+          
+          // this.detailLoading = false;
+        });
+    }
   }
 };
 </script>

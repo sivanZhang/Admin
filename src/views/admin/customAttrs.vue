@@ -6,7 +6,7 @@
         <attrs :attrsList="attrsList" :auth="auth" :tableLoading="tableLoading" @refresh-attrs="getAttrs" @bindSearch="bindSearch"/>
       </el-tab-pane>
       <el-tab-pane label="实体属性" name="tab1" lazy>
-        <attrsEntity :attrsEntityList="attrsEntityList" :tableLoading="tableLoading" @refresh-attrsEntity="getAttrsEntity" :attr_entity="attr_entity"/>
+        <attrsEntity :attrsEntityList="attrsEntityList" :auth="auth1" :tableLoading="tableLoading" @refresh-attrsEntity="getAttrsEntity" :attr_entity="attr_entity"/>
       </el-tab-pane>
       <el-tab-pane label="绑定属性" name="tab2" lazy>
        <attrsEntity :attrsEntityList="attrsEntityList" :auth="auth1" :tableLoading="tableLoading" @refresh-Entity="getBindList" :attr_entity="attr_entity"/>
@@ -75,8 +75,6 @@ export default {
     getBindList(){
       HTTP.searchBind().then(({data})=>{
         if(data.status === 0){
-          console.log(("ooooooooo"));
-          console.log(data);
           this.auth1 = data.auth.can_manage_attrsbind;
           this.attrsEntityList = [...data.msg];
           this.attr_entity = 1

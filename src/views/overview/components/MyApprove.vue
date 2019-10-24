@@ -53,7 +53,7 @@
     >
       <el-tabs>
         <el-tab-pane label="任务详情" lazy>
-          <tabTaskDtail :taskdetail="TaskDetail" :detailLoading="detailLoading" :path="path" />
+          <tabTaskDtail ref="taskDetail" :detailLoading="detailLoading" :path="path" />
         </el-tab-pane>
         <el-tab-pane label="审批记录">
           <approve-log ref="approvelogs" />
@@ -181,13 +181,14 @@ export default {
           this.logsLoading = false;
         });
       this.detailLoading = true;
+      this.$refs["taskDetail"].getDetail(row.task.id);
       queryTask({
         id: row.task.id
       })
         .then(({ data }) => {
-          this.TaskDetail = {
-            ...data.msg
-          };
+          // this.TaskDetail = {
+          //   ...data.msg
+          // };
           this.pro_type = data.msg.project.pro_type;
           this.detailLoading = false;
         })
