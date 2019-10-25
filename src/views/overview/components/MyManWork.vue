@@ -7,8 +7,12 @@
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
     <MyCharts ref="radar" chart-id="radar-chart" />
-    <div id="tip" style="font-size:13px;margin-left:95px;margin-bottom:15px;margin-top:-50px;color:red" v-if="this.totalCount < 8">感谢您的付出.</div>
-    <div id="tip" style="font-size:13px;margin-left:105px;margin-bottom:15px;margin-top:-50px;color:red" v-if="this.totalCount >= 8">辛苦了.</div>
+    <div id="tip" 
+    style="font-size:13px;margin-left:115px;margin-bottom:15px;margin-top:-80px;color:red" 
+    v-if="this.totalCount <= 8">感谢您的付出.</div>
+    <div id="tip" 
+    style="font-size:13px;margin-left:135px;margin-bottom:15px;margin-top:-80px;color:red"
+     v-if="this.totalCount > 8">辛苦了.</div>
     <!-- <el-row>
       <el-col :span="12">本周工时(h)：{{weekHour.total_count}}</el-col>
       <el-col :span="12">本月工时(h)：{{monthHour.total_count}}</el-col>
