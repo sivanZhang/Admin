@@ -2,7 +2,6 @@
   <div class="video-cont">
     <div id="videoSliderList">
       <el-button
-        size="mini"
         v-for="(item,index) in selectProjects"
         :key="index"
         :type="currentPlayId==item.task.id?'success':''"
@@ -80,87 +79,74 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item, index) {
-      if (e) {//&& item.path
-        let url;
-        switch (index) {
-          case 0:
-            url = "47HK2MpfKwqx1510325093.mp4";
-            break;
-          case 0:
-            url = "banner02.mp4";
-            break;
-          case 0:
-            url = "47HK2MpfKwqx1510325093.mp4";
-            break;
-          default:
-            url = "sEzdz3fIXgqc1512572926.mp4";
-            break;
-        }
+      if (e) {
         item = {
           ...item,
-          url
+          url: this.$store.state.BASE_URL + item.path //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
         };
-        //videoImage:`${this.$store.state.BASE_URL}${item.asset.image}`
         this.selectProjects.push(item);
-      } /* else if (e && !item.path) {
-        e = false;
-        this.$message.warning("镜头路径为空");
-      } */ else {
+      } else {
         this.selectProjects = this.selectProjects.filter(t => {
           return t.task.id !== item.task.id;
         });
       }
     },
-    addVideoList() {}
   }
 };
 </script>
 <style lang="scss" scoped>
-.el-divider{
+@mixin scrollX {
+  overflow-x: scroll;
+  overflow-y: visible;
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 5px;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+.el-divider {
   margin: 20px 0 10px;
 }
 #videoSliderList {
   display: block;
   white-space: nowrap;
   width: 100%;
-  height: 50px;
-  overflow: auto;
-  /* li {
-    width: 20%;
-    display: inline-block;
-    margin: 10px 2%;
-    .color-slider {
-      display: block;
-      width: 100%;
-      height: 25px;
-      background: red;
-      cursor: pointer;
-      text-align: center;
-      color: #fff;
-      line-height: 25px;
-    }
-    .on {
-      background: #67c23a;
-    }
-  } */
+  height: 60px;
+  @include scrollX;
 }
 .video-cont {
   width: 100%;
   height: 100%;
   .list {
-    list-style: none;
+    display: flex;
     padding: 10px;
     margin: 0;
-    overflow: hidden;
-    height: 100%;
     height: calc(100% - 90px);
-    display: flex;
+    width: 100%;
+    list-style: none;
+    @include scrollX;
     .item {
-      width: 19%;
+      flex: 0 0 20%;
       border: 1px dotted #ddd;
       margin: 0 0.5%;
       background: #fff;
       padding: 10px;
+      overflow: hidden; //超出的隐藏
+      text-overflow: ellipsis; //省略号
       .el-image {
         width: 100%;
         height: 90px;
