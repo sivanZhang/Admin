@@ -137,46 +137,6 @@
             <label for v-else >此镜头暂无任务</label>
           </template>
         </el-table-column>
-        <el-table-column width="30px">
-          <template slot-scope="scope">
-            <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
-              <el-card
-                v-if="scope.row.status === 0"
-                :style="{width:'13px',backgroundColor:'#F9ce8c'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
-              <el-card
-                v-if="scope.row.status === 1"
-                :style="{width:'13px',backgroundColor:'#59e0e8'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
-              <el-card
-                v-if="scope.row.status === 2"
-                :style="{width:'13px',backgroundColor:'#589BAD'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
-              <el-card
-                v-if="scope.row.status === 3"
-                :style="{width:'13px',backgroundColor:'#2D5637'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：完成" placement="top">
-              <el-card
-                v-if="scope.row.status === 4"
-                :style="{width:'13px',backgroundColor:'#2f5c85'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：超时" placement="top">
-              <el-card
-                v-if="scope.row.status === 5"
-                :style="{width:'13px',backgroundColor:'#C64b2b'}"
-              ></el-card>
-            </el-tooltip>
-          </template>
-        </el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
         <el-table-column label="缩略图" align="center" v-if="show_image">
           <template slot-scope="scope">
@@ -209,6 +169,60 @@
               </div>
             </el-image>
           </template>
+        </el-table-column>
+         <el-table-column width="30px"  >
+          <template slot-scope="scope">
+            <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+              <el-card 
+                v-if="scope.row.status === 0"
+                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+             
+            >  </el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+              <el-card 
+                v-if="scope.row.status === 1"
+               :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
+               
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+              <el-card
+                v-if="scope.row.status === 2"
+               :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+              <el-card
+                v-if="scope.row.status === 3"
+                :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+              <el-card
+                v-if="scope.row.status === 4"
+                :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
+              ></el-card>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+              <el-card
+                v-if="scope.row.status === 5"
+                :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
+              ></el-card>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="状态"
+          prop="status"
+          v-if="show_status"
+          width="90px"
+          align="left"
+          sortable="custom"
+          column-key="status"
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
+        >
+          <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
         </el-table-column>
 
         <template v-if="groupType == 0?true:false">
