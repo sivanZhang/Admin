@@ -224,7 +224,62 @@
         >
           <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
         </el-table-column>
+         <el-table-column label="小状态" prop="small_status" width="120px">
+          <template slot-scope="scope">
+            <el-select
+              v-model="scope.row.small_status"
+              placeholder="请选择状态"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'small_status')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <div v-if="scope.row.status === 0">
+                <el-option
+                  v-for="item of pause"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 1">
+                <el-option
+                  v-for="item of notstart"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 2">
+                <el-option
+                  v-for="item of conducting"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 3">
+                <el-option
+                  v-for="item of approving"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+              <div v-if="scope.row.status === 4">
+                <el-option
+                  v-for="item of finish"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.id"
+                ></el-option>
+              </div>
+            </el-select>
 
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'small_status')"
+            >{{scope.row.small_status|taskMinStatus}}</span>
+          </template>
+        </el-table-column>
         <template v-if="groupType == 0?true:false">
           <el-table-column label="实训阶段" prop="groups" width="120px">
             <template slot-scope="scope">
@@ -239,7 +294,7 @@
           prop="name"
           :label="labelName"
           align="left"
-          width="85px"
+          width="120px"
           show-overflow-tooltip
           v-if="show_name"
           sortable="custom"
@@ -435,7 +490,7 @@
         <el-table-column
           prop="content"
           label="制作内容"
-          align="center"
+          align="left"
           width="400px"
           show-overflow-tooltip
           v-if="show_content"
@@ -517,74 +572,6 @@
         <el-table-column prop="id" label="资产ID" v-if="show_id" align="left"></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="show_creator_id" align="left"></el-table-column>
-        <el-table-column
-          prop="status"
-          label="状态"
-          align="left"
-          width="90px"
-          v-if="show_status"
-          sortable="custom"
-          column-key="status"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
-        >
-          <template slot-scope="scope">{{scope.row.status|assetStatus}}</template>
-        </el-table-column>
-        <el-table-column label="小状态" prop="small_status" width="120px">
-          <template slot-scope="scope">
-            <el-select
-              v-model="scope.row.small_status"
-              placeholder="请选择状态"
-              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'small_status')"
-              @change="showEditIcon(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-            >
-              <div v-if="scope.row.status === 0">
-                <el-option
-                  v-for="item of pause"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.id"
-                ></el-option>
-              </div>
-              <div v-if="scope.row.status === 1">
-                <el-option
-                  v-for="item of notstart"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.id"
-                ></el-option>
-              </div>
-              <div v-if="scope.row.status === 2">
-                <el-option
-                  v-for="item of conducting"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.id"
-                ></el-option>
-              </div>
-              <div v-if="scope.row.status === 3">
-                <el-option
-                  v-for="item of approving"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.id"
-                ></el-option>
-              </div>
-              <div v-if="scope.row.status === 4">
-                <el-option
-                  v-for="item of finish"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.id"
-                ></el-option>
-              </div>
-            </el-select>
-
-            <span
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'small_status')"
-            >{{scope.row.small_status|taskMinStatus}}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">

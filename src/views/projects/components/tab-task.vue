@@ -245,18 +245,6 @@
         >
           <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
         </el-table-column>
-        <el-table-column
-          label="状态"
-          prop="status"
-          v-if="show_status"
-          width="90px"
-          align="left"
-          sortable="custom"
-          column-key="status"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
-        >
-          <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
-        </el-table-column>
         <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
         </el-table-column>
