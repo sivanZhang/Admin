@@ -200,8 +200,7 @@ export default {
       }, 1000);
     },
     initNextVideo(index, videoProjects) {
-      //this.initNextVideoUrl=videoProject;
-      console.log(index);
+      console.log(index,videoProjects,'next');
       this.currentProjectIndex = index;
       this.projectLists = videoProjects;
     },

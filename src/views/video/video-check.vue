@@ -193,6 +193,9 @@ export default {
           this.pWidth,
           this.pHeight
         );
+        if (projectList[1]===null) {
+          projectList[1]=projectList[0]
+        }
         this.$refs.videoPlayer.initNextVideo(index, projectList);
       }
     },
