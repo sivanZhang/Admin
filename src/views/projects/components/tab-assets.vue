@@ -2050,4 +2050,7 @@ svg-icon {
   padding-bottom:0px !important;
   padding-right:70px !important
 }
+ .el-card{
+   border-radius:0px;
+ }
 </style>

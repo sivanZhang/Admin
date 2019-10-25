@@ -128,26 +128,24 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column width="30px"  >
+        <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
-              <el-card 
+              <el-card
                 v-if="scope.row.status === 0"
-                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
-             
-            >  </el-card>
+                :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+              ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
-              <el-card 
+              <el-card
                 v-if="scope.row.status === 1"
-               :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
-               
+                :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
               <el-card
                 v-if="scope.row.status === 2"
-               :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
@@ -1352,7 +1350,7 @@ export default {
       );
       this.detailLoading = true;
 
-      this.$refs["taskdetail"].getDetail(item.id,"taskLook");
+      this.$refs["taskdetail"].getDetail(item.id, "taskLook");
 
       getHistoryVersion({ asset_id: item.asset.id }).then(({ data }) => {
         this.historyVersion = [...data.msg];
@@ -2012,7 +2010,10 @@ export default {
   background-color: white;
 }
 .el-table--mini td {
-    padding: 0px 0;
- }
+  padding: 0px 0;
+}
+.el-card {
+  border-radius: 0px;
+}
 </style>
 
