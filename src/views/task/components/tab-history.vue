@@ -9,7 +9,6 @@
       :row-style="{'font-size':'13px'}"
       :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
       highlight-current-row
-      :span-method="objectSpanMethod"
     >
       <el-table-column prop="link_content" label="环节内容" show-overflow-tooltip></el-table-column>
       <el-table-column prop="task_name" label="任务名称" show-overflow-tooltip></el-table-column>
@@ -52,85 +51,12 @@ export default {
   data() {
     return {};
   },
-
-  computed: {
-    groupNum() {
-      return new Set(this.historyVersion.map(item => item.name));
-    }
-  },
   watch: {},
   methods: {
     getVersion() {
       getHistoryVersion({ asset_id: this.project.id }).then(({ data }) => {
         this.historyVersion = [...data.msg];
       });
-    },
-    LinkGroup(name) {
-      return this.historyVersion.filter(item => item.link_content == name)
-        .length;
-    },
-    TaskGroup(name) {
-      return this.historyVersion.filter(item => item.task_name == name).length;
-    },
-    TaskContentGroup(name) {
-      return this.historyVersion.filter(item => item.task_content == name)
-        .length;
-    },
-    NameLen(name) {
-      const tmp = Array.from(this.groupNum);
-      const index = tmp.indexOf(name);
-      let len = 0;
-      for (let i = 0; i < index; i++) {
-        len += this.Group(tmp[i]);
-      }
-      return len;
-    },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        const len = this.LinkGroup(row.link_content);
-        const lenName = this.NameLen(row.link_content);
-        if (rowIndex === lenName) {
-          return {
-            rowspan: len,
-            colspan: 1
-          };
-        } else
-          return {
-            rowspan: 0,
-            colspan: 0
-          };
-      } else if (columnIndex === 1) {
-        const len = this.TaskGroup(row.task_name);
-        const lenName = this.NameLen(row.task_name);
-        if (rowIndex === lenName) {
-          return {
-            rowspan: len,
-            colspan: 1
-          };
-        } else
-          return {
-            rowspan: 0,
-            colspan: 0
-          };
-      } else if (columnIndex === 2) {
-        const len = this.TaskContentGroup(row.task_content);
-        const lenName = this.NameLen(row.task_content);
-        if (rowIndex === lenName) {
-          return {
-            rowspan: len,
-            colspan: 1
-          };
-        } else
-          return {
-            rowspan: 0,
-            colspan: 0
-          };
-      } else {
-        return {
-          rowspan: 1,
-          colspan: 1
-        };
-      }
     },
     //资产的最终状态修改
     openAssetDetail(row) {
