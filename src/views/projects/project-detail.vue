@@ -41,7 +41,7 @@
           notShow = "false"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2">
+      <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       <el-tab-pane label="数据统计" name="tab4" lazy>
@@ -61,7 +61,7 @@ import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
 import training from "./components/training-member";
 import { getProjects } from "@/api/project";
-import { getTrainingProject, getProjectJoinMeb } from "@/api/training";
+import { getTrainingProject, getProjectJoinMeb ,allScene} from "@/api/training";
 import statistics from "./components/statistics";
 import info from "@/components/projectDrawer/components/info";
 export default {
@@ -88,23 +88,23 @@ export default {
       auth:null
     };
   },
-  watch: {
-    activeName: {
-      handler: function(newVal, oldVal) {
-        if (newVal === "tab2") {
-          this.$refs["tab-task"].getTasks(2);
-          this.getAssetList();
-        }else if(newVal === "tab0"){
-          this.$nextTick(()=>{
-            this.$refs['scene'].getAssetList(2)
-          })
+  // watch: {
+  //   activeName: {
+  //     handler: function(newVal, oldVal) {
+  //       if (newVal === "tab2") {
+  //         this.$refs["tab-task"].getTasks(2);
+  //         this.getAssetList();
+  //       }else if(newVal === "tab0"){
+  //         this.$nextTick(()=>{
+  //           this.$refs['scene'].getAssetList(2)
+  //         })
           
-        }else if(newVal === "tab1"){
-          this.$refs['scene2'].getAssetList(2)
-        }
-      }
-    }
-  },
+  //       }else if(newVal === "tab1"){
+  //         this.$refs['scene2'].getAssetList(2)
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
     jumpName(val) {
       this.activeName = val;
@@ -112,9 +112,9 @@ export default {
     getAssetList() {
       let payload = {
         project: this.$route.params.id,
-        sort: "date"
+        all: ""
       };
-      queryAssets(payload).then(({ data }) => {
+      allScene(payload).then(({ data }) => {
         if (data.status === 0) {
           this.AssetList = [...data.msg];
         }
@@ -159,7 +159,7 @@ export default {
     } else {
       this.groupType ="1";
     }
-    // this.getAssetList();
+    this.getAssetList();
     this.getProjectDetail();
     if (this.$route.query.asset_type && this.$route.query.asset_type === "1") {
       this.activeName = "tab1";
