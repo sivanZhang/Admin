@@ -306,9 +306,9 @@ export default {
                 value: data.overtime_count
               }
             ];
-            this.$nextTick(()=>{
+           
               this.$refs["man-hour"].initChart("工时统计", chartData);
-            })
+          
           }
         });
       
@@ -356,6 +356,8 @@ export default {
     this.getDayOff();
   },
   mounted() {
+    this.getStatistics(1);
+    this.getDayOff();
     // getDayOffList({ my_daysoff: "" }).then(({ data }) => {
     //   // console.log(this.authDaysOff);
     // });
