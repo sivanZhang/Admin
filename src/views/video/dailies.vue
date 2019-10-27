@@ -38,14 +38,7 @@
       <el-table-column label="镜头号" show-overflow-tooltip prop="asset" width="90pxs">
         <template slot-scope="scope">{{scope.row.asset.name}}</template>
       </el-table-column>
-      <el-table-column
-        prop="priority"
-        label="优先级"
-     
-        width="120px"
-        sortable="custom"
-        align="center"
-      >
+      <el-table-column prop="priority" label="优先级" width="120px" sortable="custom" align="center">
         <template slot-scope="scope">
           <div
             style="backgroundColor:#C64b2b;color:#FFF"
@@ -54,7 +47,7 @@
           <div style="backgroundColor:'transparent'" v-else>{{scope.row.priority|taskPriority}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="grade" label="难度等级"  width="120px" align="center">
+      <el-table-column prop="grade" label="难度等级" width="120px" align="center">
         <template slot-scope="scope">
           <div
             style="backgroundColor:#C64b2b;color:#FFF"
@@ -63,16 +56,19 @@
           <div style="backgroundColor:'transparent'" v-else>{{scope.row.grade|taskgrade}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" width="90px" align="left">
-        <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
+      <el-table-column label="状态" prop="status" width="160px" align="left">
+        <template slot-scope="scope">
+          {{scope.row.status|taskStatus}}
+          <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
+        </template>
       </el-table-column>
-      <el-table-column label="创建者" prop="user" >
+      <el-table-column label="创建者" prop="user">
         <template slot-scope="scope">{{scope.row.creator.name}}</template>
       </el-table-column>
       <el-table-column label="执行人" show-overflow-tooltip>
         <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
       </el-table-column>
-      <el-table-column label="任务进度" width="100px" align="center" prop="schedule">
+      <!-- <el-table-column label="任务进度" width="100px" align="center" prop="schedule">
         <template slot-scope="scope">
             <el-progress
               :text-inside="true"
@@ -80,7 +76,7 @@
               :percentage="scope.row.schedule"       
             ></el-progress>
           </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="创建日期" width="100px" prop="date">
         <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
       </el-table-column>
@@ -117,11 +113,11 @@ export default {
       tableLoading: false,
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [10, 20, 50, 100],
+      pageSizeList: [10, 20, 50, 100]
     };
   },
   watch: {},
-   filters: {
+  filters: {
     executorFilter(val) {
       let arr = [];
       val.forEach(item => {
