@@ -180,7 +180,7 @@
         >
           <template slot-scope="scope">
             {{scope.row.status|taskStatus}}
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress></template>
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress></template>
           
         </el-table-column>
 
