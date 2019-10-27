@@ -483,6 +483,10 @@ export default {
         this.logsLoading = false;
       });
       this.detailLoading = true;
+      this.$nextTick(()=>{
+        this.$refs['taskDetail'].getDetail(row.task.id);
+      });
+      
       queryTask({
         id: row.task.id,
       }).then(({

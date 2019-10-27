@@ -176,6 +176,7 @@
           <el-tabs>
             <el-tab-pane label="任务详情">
               <tabTaskDtail
+                ref="taskDetail"
                 :taskdetail="TaskDetail"
                 :link="Link"
                 :asset="Asset"
@@ -212,7 +213,7 @@
             </el-tab-pane>
             <!-- <el-tab-pane label="审批记录">
               <approve-log ref="taskApprovelog" />
-            </el-tab-pane> -->
+            </el-tab-pane>-->
           </el-tabs>
         </Drawer>
         <el-row style="padding-bottom:10px">
@@ -255,12 +256,20 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              <div
-                v-if="colSel === 'start_date' || colSel === 'end_date'"
-              >
-                <el-date-picker style="width:130px" v-model="timeSelection" type="date" placeholder="选择日期"></el-date-picker>
+              <div v-if="colSel === 'start_date' || colSel === 'end_date'">
+                <el-date-picker
+                  style="width:130px"
+                  v-model="timeSelection"
+                  type="date"
+                  placeholder="选择日期"
+                ></el-date-picker>
                 <span style="text-align:center;padding-top:3px">至</span>
-                <el-date-picker style="width:130px" v-model="timeSelection2" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker
+                  style="width:130px"
+                  v-model="timeSelection2"
+                  type="date"
+                  placeholder="选择日期"
+                ></el-date-picker>
               </div>
               <el-select
                 v-if="colSel === 'grade'"
@@ -278,16 +287,8 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              <el-button
-                @click="task(changecolor)"
-                type="primary"
-                style="margin-left:5px">
-                查询
-              </el-button>
-              <el-button
-                @click="reTask(changecolor)"
-                type="primary"
-              >重置</el-button>
+              <el-button @click="task(changecolor)" type="primary" style="margin-left:5px">查询</el-button>
+              <el-button @click="reTask(changecolor)" type="primary">重置</el-button>
             </div>
           </el-col>
         </el-row>
@@ -361,7 +362,7 @@
               <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
             </template>
           </el-table-column>
-           <el-table-column label="难度等级" header-align="left" prop="task.grade">
+          <el-table-column label="难度等级" header-align="left" prop="task.grade">
             <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
           </el-table-column>
           <el-table-column label="优先级" header-align="left" prop="task.priority">
