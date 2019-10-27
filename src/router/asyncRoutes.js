@@ -194,7 +194,7 @@ export default function asyncRoutes(params) {
           component: () =>
             import('@/views/video/dailies'),
           meta: {
-            title: 'dailies',
+            title: 'To Dailies',
             icon: 'v2',
             // roles: 'manage_approve'
           }
