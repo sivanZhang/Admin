@@ -306,8 +306,10 @@ export default {
                 value: data.overtime_count
               }
             ];
-           
+           this.$nextTick(()=>{
               this.$refs["man-hour"].initChart("工时统计", chartData);
+           })
+             
           
           }
         });
