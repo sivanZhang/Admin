@@ -30,9 +30,9 @@
             <el-col :span="12">
               <el-checkbox v-model="show_content">制作内容</el-checkbox>
             </el-col>
-            <el-col :span="12">
+            <!-- <el-col :span="12">
               <el-checkbox v-model="show_project_name">所属项目</el-checkbox>
-            </el-col>
+            </el-col>-->
             <el-col :span="12">
               <el-checkbox v-model="show_project_image">缩略图</el-checkbox>
             </el-col>
@@ -1973,6 +1973,7 @@ export default {
     } else {
       this.formatList();
     }
+  
   }
 };
 </script>
