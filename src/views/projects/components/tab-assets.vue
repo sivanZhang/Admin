@@ -43,10 +43,10 @@
               <el-checkbox v-model="show_frame_range">帧数范围</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_report" v-if="notShow">画面调整信息</el-checkbox>
+              <el-checkbox v-model="show_report" v-if="(notShow == 'true' ?true:false)">画面调整信息</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_retime" v-if="notShow">变速信息</el-checkbox>
+              <el-checkbox v-model="show_retime" v-if="(notShow == 'true' ?true:false)">变速信息</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_inner_version">版本号</el-checkbox>
@@ -442,7 +442,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="report" label="画面调整信息" align="left" width="120px" v-if="show_report&&notShow">
+        <el-table-column prop="report" label="画面调整信息" align="left" width="120px" v-if="show_report&&(notShow == 'true' ?true:false)">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -460,7 +460,7 @@
             >{{scope.row.report?scope.row.report:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="retime" label="变速信息" align="left" width="120px" v-if="show_retime&&notShow">
+        <el-table-column prop="retime" label="变速信息" align="left" width="120px" v-if="show_retime&&(notShow == 'true' ?true:false)">
           <template slot-scope="scope">
             <el-input
               size="small"
