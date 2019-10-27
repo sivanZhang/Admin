@@ -376,7 +376,7 @@
           <el-table-column label="任务进度" header-align="left">
             <template slot-scope="scope">{{scope.row.task.schedule}}%</template>
           </el-table-column>
-          <el-table-column lang="提交次数" prop="task.submit_num"></el-table-column>
+          <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
           <el-table-column label="开始日期" header-align="left" width="100px">
             <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
           </el-table-column>
