@@ -84,7 +84,7 @@ import info from "@/components/projectDrawer/components/info";
 import links from "@/views/projects/components/links";
 import history from "@/views/task/components/tab-history";
 import { addLinks, getLinks } from "@/api/links";
-import { getVersion, getHistoryVersion } from "@/api/assets";
+import { getHistoryVersion } from "@/api/assets";
 import { getAssetTaskList } from "@/api/task";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
@@ -106,7 +106,7 @@ export default {
       activeTab: this.assetJump ? this.assetJump : "first",
       LinkList: [],
       authLink: null,
-      assetVersion: null,
+     
       assetTaskList: null,
       historyVersion: []
     };
@@ -142,12 +142,12 @@ export default {
         this.authLink = res.data.auth.can_manage_link;
       });
     },
-    getAssetVersion() {
-      getVersion({
-        asset_id: this.project.id
-      }).then(({ data }) => {
-        this.assetVersion = [...data.msg];
-      });
+    getAssetVersion(id) {
+      // getVersion({
+      //   asset_id: id?id:this.project.id
+      // }).then(({ data }) => {
+      //   this.assetVersion = [...data.msg];
+      // });
       getHistoryVersion({ asset_id: this.project.id }).then(({ data }) => {
         this.historyVersion = [...data.msg];
       });
