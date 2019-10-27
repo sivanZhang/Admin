@@ -217,6 +217,8 @@
         >
           <template slot-scope="scope">{{scope.row.asset.name}}</template>
         </el-table-column>
+        <el-table-column label="集数" prop="episode"></el-table-column>
+        <el-table-column label="场次" prop="session"></el-table-column>
         <el-table-column
           prop="priority"
           label="优先级"
@@ -257,13 +259,10 @@
           prop="schedule"
         >
           <template slot-scope="scope">
-            <el-progress
-              :text-inside="true"
-              :stroke-width="18"
-              :percentage="scope.row.schedule"       
-            ></el-progress>
+            <el-progress :text-inside="true" :stroke-width="18" :percentage="scope.row.schedule"></el-progress>
           </template>
         </el-table-column>
+        <el-table-column lang="提交次数" prop="submit_num"></el-table-column>
         <el-table-column
           label="创建日期"
           width="100px"
@@ -290,6 +289,9 @@
           sortable="custom"
         >
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="最后提交时间" header-align="left" width="100px">
+          <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
         <el-table-column
           prop="total_hour"

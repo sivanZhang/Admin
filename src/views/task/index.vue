@@ -164,7 +164,7 @@
       </el-tab-pane>
       <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
         <Drawer
-          ref="drawer-father"
+          ref="drawer"
           scrollable
           v-model="isDrawerShow"
           width="512px"
@@ -327,6 +327,8 @@
             </template>
           </el-table-column>
           <el-table-column prop="asset.name" label="镜头" header-align="left" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="asset.episode" label="集数"></el-table-column>
+          <el-table-column prop="asset.session" label="场次"></el-table-column>
           <el-table-column
             prop="task.dept.name"
             label="制作环节"
@@ -374,11 +376,15 @@
           <el-table-column label="任务进度" header-align="left">
             <template slot-scope="scope">{{scope.row.task.schedule}}%</template>
           </el-table-column>
-          <el-table-column label="开始日期" header-align="left">
+          <el-table-column lang="提交次数" prop="task.submit_num"></el-table-column>
+          <el-table-column label="开始日期" header-align="left" width="100px">
             <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
           </el-table-column>
-          <el-table-column label="截止日期" header-align="left">
+          <el-table-column label="截止日期" header-align="left" width="100px">
             <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
+          </el-table-column>
+          <el-table-column label="最后提交时间" header-align="left" width="100px">
+            <template slot-scope="scope">{{scope.row.task.latest_submit_time|dateFormat}}</template>
           </el-table-column>
           <el-table-column prop="total_hour" header-align="left" label="预设时间（小时）" width="80px;">
             <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
