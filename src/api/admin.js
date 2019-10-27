@@ -183,3 +183,8 @@ export function rankList(data) {
 export function getDateList(params) {
   return AXIOS.get('/wkconfig/sysconfig/', {params})
 }
+
+//手动同步外网数据
+export function getOutDataList(){
+  return AXIOS.post('/task/timing/')
+}

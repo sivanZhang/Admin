@@ -3,7 +3,10 @@
     <el-tabs tab-position="left" style="height: ;overflow: auto;padding-top:10px">
       <el-tab-pane label="外审系统配置" style="height: auto;overflow: auto;">
         <div style="display:flex">
-          <div style="width:50%;padding:5px" v-if="$store.state.login.userInfo.auth.admin_management">
+          <div
+            style="width:50%;padding:5px"
+            v-if="$store.state.login.userInfo.auth.admin_management"
+          >
             <div style="display:flex">
               <el-form
                 ref="saveForm"
@@ -53,6 +56,9 @@
               <el-row>
                 <el-col :span="4">端口号：</el-col>
                 <el-col :span="20">{{port}}</el-col>
+              </el-row>
+              <el-row  style="padding-top:20px">
+                <el-button type="primary" @click="getOutData">手动同步外审系统数据</el-button>
               </el-row>
             </div>
           </div>
@@ -123,7 +129,8 @@ import {
   bindClientDept,
   getClientDept,
   bindIP,
-  searchIP
+  searchIP,
+  getOutDataList
 } from "@/api/admin";
 import { mapState } from "vuex";
 export default {
@@ -185,6 +192,16 @@ export default {
     });
   },
   methods: {
+    //手动同步外网数据
+    getOutData() {
+      getOutDataList().then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
     //ip和端口绑定
     save() {
       this.$refs["saveForm"].validate(valid => {
@@ -197,12 +214,11 @@ export default {
             }
             this.loading = false;
             this.$refs["saveForm"].resetFields();
-          }); 
-        }else {
+          });
+        } else {
           return false;
         }
       });
-     
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
