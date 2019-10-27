@@ -262,7 +262,7 @@
             <el-progress :text-inside="true" :stroke-width="18" :percentage="scope.row.schedule"></el-progress>
           </template>
         </el-table-column>
-        <el-table-column lang="提交次数" prop="submit_num"></el-table-column>
+        <el-table-column label="提交次数" prop="submit_num"></el-table-column>
         <el-table-column
           label="创建日期"
           width="100px"
