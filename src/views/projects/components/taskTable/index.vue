@@ -94,7 +94,13 @@
         <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
       </el-table-column>
       <el-table-column label="任务进度" width="100px" align="center" prop="schedule">
-        <template slot-scope="scope">{{scope.row.schedule}}%</template>
+        <template slot-scope="scope">
+            <el-progress
+              :text-inside="true"
+              :stroke-width="18"
+              :percentage="scope.row.schedule"       
+            ></el-progress>
+          </template>
       </el-table-column>
       <el-table-column label="创建日期" width="100px" prop="date" sortable="custom">
         <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>

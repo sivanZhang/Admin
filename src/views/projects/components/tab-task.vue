@@ -256,7 +256,13 @@
           v-if="show_schedule"
           prop="schedule"
         >
-          <template slot-scope="scope">{{scope.row.schedule}}%</template>
+          <template slot-scope="scope">
+            <el-progress
+              :text-inside="true"
+              :stroke-width="18"
+              :percentage="scope.row.schedule"       
+            ></el-progress>
+          </template>
         </el-table-column>
         <el-table-column
           label="创建日期"
@@ -1973,7 +1979,6 @@ export default {
     } else {
       this.formatList();
     }
-  
   }
 };
 </script>
