@@ -299,6 +299,8 @@
           @row-click="taskBoardRightShow"
           style="width: 100%;"
           :cell-style="cellStyle"
+          @sort-change="sortFilter"
+          :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
@@ -342,7 +344,7 @@
             label="任务内容"
             show-overflow-tooltip
           ></el-table-column>
-          <el-table-column label="任务状态" width="120px">
+          <el-table-column label="任务状态" width="120px" sortable="custom">
             <template slot-scope="scope">
               <div
                 v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6"

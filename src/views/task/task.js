@@ -55,6 +55,7 @@ export default {
       isDialogShow: false,
       MyTaskList: [],
       MyTaskList1: [],
+      // Allnum:[],
       DraftArr: [],
       InProgressArr: [],
       TimeOutArr: [],
@@ -205,116 +206,295 @@ export default {
           label: '困难',
           value: 2
         },
-      ]
+      ],
+      sortfilter: null, //保存单列排序的条件
     };
   },
   methods: {
-       //表内单元格样式（状态、优先级改变背景色）
-       cellStyle({ row, column, rowIndex, columnIndex }) {
-        if (column.property == "task.priority") {
-          switch (row.task.priority) {
-            case 2:
-              return {
-                background: "#C64b2b",
-                color: "#FFFFFF"
-              };
-          }
-        } else if (column.property == "task.grade") {
-          switch (row.task.grade) {
-            case 2:
-              return {
-                background: "#C64b2b",
-                color: "#FFFFFF"
-              };
-          }
+    //单条件排序
+    sortFilter({
+      column,
+      prop,
+      order
+    }) {
+      this.sortfilter = {
+        column,
+        prop,
+        order
+      };
+      let data = {
+        mytask: null,
+        sort: order === "descending" ? 0 : 1
+      };
+      getStatusTaskList(data).then(({
+        data
+      }) => {
+        if (data.status === 0) {
+          this.MyTaskList1 = [...data.msg];
         }
-        return { borderRight: 0 };
-      },
+      })
+    },
+    //表内单元格样式（状态、优先级改变背景色）
+    cellStyle({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
+      if (column.property == "task.priority") {
+        switch (row.task.priority) {
+          case 2:
+            return {
+              background: "#C64b2b",
+                color: "#FFFFFF"
+            };
+        }
+      } else if (column.property == "task.grade") {
+        switch (row.task.grade) {
+          case 2:
+            return {
+              background: "#C64b2b",
+                color: "#FFFFFF"
+            };
+        }
+      }
+      return {
+        borderRight: 0
+      };
+    },
     //点击筛选任务
     task(status) {
       this.changecolor = status;
-      let data = {
-        mytask: null,
-        status: status
-      };
 
       function DateFormat(dateVal) {
         return dayjs(dateVal).format("YYYY/MM/DD")
       }
-      switch (this.colSel) {
-        case 'name':
-          this.keyword && (data = {
-            ...data,
-            name: this.keyword
-          })
-          break;
-        case 'grade':
-          data = {
-            ...data,
-            grade: JSON.stringify(this.currentGrade)
-          }
-          break;
-        case 'start_date':
-          if (!this.timeSelection && this.timeSelection2) {
+      if (status == 6) {
+        let data = {
+          mytask: null,
+          status: "[0,1,2,5]"
+        };
+        switch (this.colSel) {
+          case 'name':
+            this.keyword && (data = {
+              ...data,
+              name: this.keyword
+            })
+            break;
+          case 'grade':
             data = {
               ...data,
-              start: "" + "," + DateFormat(this.timeSelection2)
-            };
-          } else if (this.timeSelection && !this.timeSelection2) {
+              grade: JSON.stringify(this.currentGrade)
+            }
+            break;
+          case 'start_date':
+            if (!this.timeSelection && this.timeSelection2) {
+              data = {
+                ...data,
+                start: "" + "," + DateFormat(this.timeSelection2)
+              };
+            } else if (this.timeSelection && !this.timeSelection2) {
+              data = {
+                ...data,
+                start: DateFormat(this.timeSelection) + "," + ""
+              };
+            } else {
+              data = {
+                ...data,
+                start: DateFormat(this.timeSelection) +
+                  "," +
+                  DateFormat(this.timeSelection2)
+              };
+            }
+            break;
+          case 'end_date':
+            if (!this.timeSelection && this.timeSelection2) {
+              data = {
+                ...data,
+                end: "" + "," + DateFormat(this.timeSelection2)
+              };
+            } else if (this.timeSelection && !this.timeSelection2) {
+              data = {
+                ...data,
+                end: DateFormat(this.timeSelection) + "," + ""
+              };
+            } else {
+              data = {
+                ...data,
+                end: DateFormat(this.timeSelection) +
+                  "," +
+                  DateFormat(this.timeSelection2)
+              };
+            }
+            break;
+          case 'priority':
+            if (this.colSel2.length) {
+              data = {
+                ...data,
+                priority: JSON.stringify(this.colSel2)
+              };
+              this.name = {
+                priority: JSON.stringify(this.colSel2)
+              };
+            }
+            break
+        };
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          this.MyTaskList1 = [...data.msg];
+        })
+      } else if (status == null) {
+        let data = {
+          mytask: null,
+          status: "[0,1,2,3,4,5]"
+        };
+        switch (this.colSel) {
+          case 'name':
+            this.keyword && (data = {
+              ...data,
+              name: this.keyword
+            })
+            break;
+          case 'grade':
             data = {
               ...data,
-              start: DateFormat(this.timeSelection) + "," + ""
-            };
-          } else {
+              grade: JSON.stringify(this.currentGrade)
+            }
+            break;
+          case 'start_date':
+            if (!this.timeSelection && this.timeSelection2) {
+              data = {
+                ...data,
+                start: "" + "," + DateFormat(this.timeSelection2)
+              };
+            } else if (this.timeSelection && !this.timeSelection2) {
+              data = {
+                ...data,
+                start: DateFormat(this.timeSelection) + "," + ""
+              };
+            } else {
+              data = {
+                ...data,
+                start: DateFormat(this.timeSelection) +
+                  "," +
+                  DateFormat(this.timeSelection2)
+              };
+            }
+            break;
+          case 'end_date':
+            if (!this.timeSelection && this.timeSelection2) {
+              data = {
+                ...data,
+                end: "" + "," + DateFormat(this.timeSelection2)
+              };
+            } else if (this.timeSelection && !this.timeSelection2) {
+              data = {
+                ...data,
+                end: DateFormat(this.timeSelection) + "," + ""
+              };
+            } else {
+              data = {
+                ...data,
+                end: DateFormat(this.timeSelection) +
+                  "," +
+                  DateFormat(this.timeSelection2)
+              };
+            }
+            break;
+          case 'priority':
+            if (this.colSel2.length) {
+              data = {
+                ...data,
+                priority: JSON.stringify(this.colSel2)
+              };
+              this.name = {
+                priority: JSON.stringify(this.colSel2)
+              };
+            }
+            break
+        };
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          this.MyTaskList1 = [...data.msg];
+        })
+      } else {
+        let data = {
+          mytask: null,
+          status: "[" + status + "]"
+        };
+        switch (this.colSel) {
+          case 'name':
+            this.keyword && (data = {
+              ...data,
+              name: this.keyword
+            })
+            break;
+          case 'grade':
             data = {
               ...data,
-              start: DateFormat(this.timeSelection) +
-                "," +
-                DateFormat(this.timeSelection2)
-            };
-          }
-          break;
-        case 'end_date':
-          if (!this.timeSelection && this.timeSelection2) {
-            data = {
-              ...data,
-              end: "" + "," + DateFormat(this.timeSelection2)
-            };
-          } else if (this.timeSelection && !this.timeSelection2) {
-            data = {
-              ...data,
-              end: DateFormat(this.timeSelection) + "," + ""
-            };
-          } else {
-            data = {
-              ...data,
-              end: DateFormat(this.timeSelection) +
-                "," +
-                DateFormat(this.timeSelection2)
-            };
-          }
-          break;
-        case 'priority':
-          if (this.colSel2.length) {
-            data = {
-              ...data,
-              priority: JSON.stringify(this.colSel2)
-            };
-            this.name = {
-              priority: JSON.stringify(this.colSel2)
-            };
-          }
-          break
+              grade: JSON.stringify(this.currentGrade)
+            }
+            break;
+          case 'start_date':
+            if (!this.timeSelection && this.timeSelection2) {
+              data = {
+                ...data,
+                start: "" + "," + DateFormat(this.timeSelection2)
+              };
+            } else if (this.timeSelection && !this.timeSelection2) {
+              data = {
+                ...data,
+                start: DateFormat(this.timeSelection) + "," + ""
+              };
+            } else {
+              data = {
+                ...data,
+                start: DateFormat(this.timeSelection) +
+                  "," +
+                  DateFormat(this.timeSelection2)
+              };
+            }
+            break;
+          case 'end_date':
+            if (!this.timeSelection && this.timeSelection2) {
+              data = {
+                ...data,
+                end: "" + "," + DateFormat(this.timeSelection2)
+              };
+            } else if (this.timeSelection && !this.timeSelection2) {
+              data = {
+                ...data,
+                end: DateFormat(this.timeSelection) + "," + ""
+              };
+            } else {
+              data = {
+                ...data,
+                end: DateFormat(this.timeSelection) +
+                  "," +
+                  DateFormat(this.timeSelection2)
+              };
+            }
+            break;
+          case 'priority':
+            if (this.colSel2.length) {
+              data = {
+                ...data,
+                priority: JSON.stringify(this.colSel2)
+              };
+              this.name = {
+                priority: JSON.stringify(this.colSel2)
+              };
+            }
+            break
+        };
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          this.MyTaskList1 = [...data.msg];
+        })
       }
-
-
-
-
-      getStatusTaskList(data).then(({
-        data
-      }) => {
-        this.MyTaskList1 = [...data.msg];
-      })
 
     },
     //筛选重置
@@ -324,18 +504,38 @@ export default {
       this.colSel2 = [];
       this.timeSelection = "";
       this.timeSelection2 = "";
-      let data = {
-        /*  */
-        mytask: null,
-        status: status
-      };
+      if (status == 6) {
+        let data = {
+          mytask: null,
+          status: "[0,1,2,5]"
+        };
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          this.MyTaskList1 = [...data.msg];
 
-      getStatusTaskList(data).then(({
-        data
-      }) => {
-        this.MyTaskList1 = [...data.msg];
-
-      })
+        })
+      } else if (status == null) {
+        let data = {
+          mytask: null,
+          status: "[0,1,2,3,4,5]"
+        };
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          this.MyTaskList1 = [...data.msg];
+        })
+      } else {
+        let data = {
+          mytask: null,
+          status: "[" + status + "]"
+        };
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          this.MyTaskList1 = [...data.msg];
+        })
+      }
     },
     //表格中的快捷下拉切换任务状态
     statusChange(status, row) {
@@ -483,10 +683,10 @@ export default {
         this.logsLoading = false;
       });
       this.detailLoading = true;
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.$refs['taskDetail'].getDetail(row.task.id);
       });
-      
+
       queryTask({
         id: row.task.id,
       }).then(({
@@ -608,6 +808,11 @@ export default {
           title: '完成',
           status: 4,
           num: this.FinishedArr.length
+        },
+        {
+          title: '未完成',
+          status: 6,
+          num: this.DraftArr.length + this.InProgressArr.length + this.PauseArr.length + this.TimeOutArr.length
         }
 
         // {
@@ -637,7 +842,7 @@ export default {
         break
     }
     this.$nextTick(() => {
-      this.task(2);
+      this.task(6);
       //清空store中的 state.mine.keyword
       this.$store.commit("mine/SET_KEYWORD", '')
     })

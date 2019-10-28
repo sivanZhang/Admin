@@ -151,7 +151,7 @@ export default {
     getMyTasks() {
       getStatusTaskList({
         mytask: null,
-        status: 2
+        status: "2"
       }).then(({ data }) => {
         this.MyTaskList = [...data.msg];
       });
