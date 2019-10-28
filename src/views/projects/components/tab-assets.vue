@@ -565,7 +565,7 @@
           width="120px"
           sortable="custom"
           column-key="level"
-          :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '复杂', value: '2'}, {text: '高难度', value: '3'}]"
+          :filters="[{text: 'C', value: '0'}, {text: 'B', value: '1'}, {text: 'A', value: '2'}, {text: 'A+', value: '3'}]"
         >
           <template slot-scope="scope">
             <el-select

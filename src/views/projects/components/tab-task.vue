@@ -244,7 +244,7 @@
           sortable="custom"
           align="center"
           column-key="grade"
-          :filters="[{text: '简单', value: '0'}, {text: '标准', value: '1'}, {text: '困难', value: '2'}]"
+          :filters="[{text: 'C', value: '0'}, {text: 'B', value: '1'}, {text: 'A', value: '2'}]"
         >
           <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
         </el-table-column>
