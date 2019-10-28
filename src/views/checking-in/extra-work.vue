@@ -17,7 +17,7 @@
       <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
       <el-table-column type="index" :index="indexMethod"></el-table-column>
       <el-table-column prop="creator.username" label="申请人"></el-table-column>
-      <el-table-column prop="task.name" label="加班任务"></el-table-column>
+      <el-table-column prop="taskname" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
       <el-table-column label="加班详情" align="center">
       <el-table-column label="开始时间">

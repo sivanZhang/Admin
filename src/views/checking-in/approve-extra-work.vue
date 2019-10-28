@@ -3,10 +3,19 @@
     <el-table :data="ApproveOverTime" v-loading="tableLoading">
       <el-table-column type="index"></el-table-column>
       <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
+      <el-table-column prop="application_date" label="申请日期">
+        <template slot-scope="scope">
+          {{scope.row.application_date|dateFormat}}
+        </template>
+      </el-table-column>
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
       <el-table-column prop="reason" label="加班原因"></el-table-column>
+      <el-table-column prop="start_date" label="加班开始日期">
+          <template slot-scope="scope">
+          {{scope.row.start_date|dateTimeFormat}}
+        </template>
+      </el-table-column>
       <el-table-column prop="overtime_hour" label="加班工时"></el-table-column>
-      <el-table-column prop="level" label="审批等级"></el-table-column>
       <el-table-column prop="approver.username" label="审批人"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
