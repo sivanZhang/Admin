@@ -193,20 +193,20 @@ export default {
     ...mapState("notice", ["Notice", "unreadCount", "isShowCard"])
   },
   watch: {
-    date: {
-      handler: function(newVal, oldVal) {
-        if (newVal) {
-          if (this.dateHour > 9 && this.dateHour < 18) {
-            this.clockClose = true;
-          } else {
-            this.clockClose = false;
-          }
-          //console.log(this.dateHour)
-          //this.clockClose = true
-          // console.log(newVal)
-        }
-      }
-    }
+    // date: {
+    //   handler: function(newVal, oldVal) {
+    //     if (newVal) {
+    //       if (this.dateHour > 9 && this.dateHour < 18) {
+    //         this.clockClose = true;
+    //       } else {
+    //         this.clockClose = false;
+    //       }
+    //       //console.log(this.dateHour)
+    //       //this.clockClose = true
+    //       // console.log(newVal)
+    //     }
+    //   }
+    // }
   },
   mounted: function() {
     //定时器，用于每秒刷新页面
@@ -225,16 +225,16 @@ export default {
     //打卡
     clock() {
       if (this.active++ > 2) this.active = 0;
-      let data = {};
+      let data = {status:""};
       //console.log(this.dateHour);
-      if (this.dateHour < 9) {
-        data = { status: 0 };
-      }
-      if (this.dateHour >= 18) {
-        data = { status: 1 };
-        this.clockClose = true;
-        this.active = 2;
-      }
+      // if (this.dateHour < 9) {
+      //   data = { status: 0 };
+      // }
+      // if (this.dateHour >= 18) {
+      //   data = { status: 1 };
+      //   this.clockClose = true;
+      //   this.active = 2;
+      // }
       HTTP.clockIn(data)
         .then(({ data }) => {
           if (data.status === 0) {
