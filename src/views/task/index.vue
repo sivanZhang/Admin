@@ -9,6 +9,7 @@
           </div>
         </div>
       </div>
+      <div style="padding-top:25px;padding-left:0px;font-size:12px">未完成包括：未开始、进行中、超时、暂停中的任务</div>
     </div>
     <el-divider></el-divider>
     <el-tabs type="border-card" v-model="activeTab">

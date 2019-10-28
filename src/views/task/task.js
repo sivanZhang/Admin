@@ -780,6 +780,11 @@ export default {
           num: this.MyTaskList.length
         },
         {
+          title: '未完成',
+          status: 6,
+          num: this.DraftArr.length + this.InProgressArr.length + this.PauseArr.length + this.TimeOutArr.length
+        },
+        {
           title: '未开始',
           status: 1,
           num: this.DraftArr.length
@@ -808,11 +813,6 @@ export default {
           title: '完成',
           status: 4,
           num: this.FinishedArr.length
-        },
-        {
-          title: '未完成',
-          status: 6,
-          num: this.DraftArr.length + this.InProgressArr.length + this.PauseArr.length + this.TimeOutArr.length
         }
 
         // {
