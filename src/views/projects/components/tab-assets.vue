@@ -120,6 +120,7 @@
         :data="AssetList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         :cell-style="cellStyle"
+        :row-style="{height:50}"
         highlight-current-row
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
@@ -131,10 +132,10 @@
         @expand-change="expandShow"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
-        <el-table-column type="expand" prop="expand" width="20px" >
-          <template slot-scope="props"  >
-            <taskTable ref="taskTable" v-if="props.row.task_num != 0" style="margin-left:20px"/>
-            <label for v-else >此镜头暂无任务</label>
+        <el-table-column type="expand" prop="expand" width="20px">
+          <template slot-scope="props">
+            <taskTable ref="taskTable" v-if="props.row.task_num != 0" style="margin-left:20px" />
+            <label for v-else>此镜头暂无任务</label>
           </template>
         </el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
@@ -170,26 +171,24 @@
             </el-image>
           </template>
         </el-table-column>
-         <el-table-column width="30px"  >
+        <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
-              <el-card 
+              <el-card
                 v-if="scope.row.status === 0"
-                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
-             
-            >  </el-card>
+                :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+              ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
-              <el-card 
+              <el-card
                 v-if="scope.row.status === 1"
-               :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
-               
+                :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
               <el-card
                 v-if="scope.row.status === 2"
-               :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
@@ -224,10 +223,14 @@
         >
           <template slot-scope="scope">
             {{scope.row.status|taskStatus}}
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress>
-            </template>
+            <el-progress
+              :stroke-width="12"
+              :percentage="scope.row.schedule"
+              v-if="scope.row.status != 3 && scope.row.status != 4"
+            ></el-progress>
+          </template>
         </el-table-column>
-         <el-table-column label="小状态" prop="small_status" width="120px">
+        <el-table-column label="小状态" prop="small_status" width="120px">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
@@ -445,7 +448,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="report" label="画面调整信息" align="left" width="120px" v-if="show_report&&(notShow == 'true' ?true:false)">
+        <el-table-column
+          prop="report"
+          label="画面调整信息"
+          align="left"
+          width="120px"
+          v-if="show_report&&(notShow == 'true' ?true:false)"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -463,7 +472,13 @@
             >{{scope.row.report?scope.row.report:"-"}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="retime" label="变速信息" align="left" width="120px" v-if="show_retime&&(notShow == 'true' ?true:false)">
+        <el-table-column
+          prop="retime"
+          label="变速信息"
+          align="left"
+          width="120px"
+          v-if="show_retime&&(notShow == 'true' ?true:false)"
+        >
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -793,7 +808,11 @@
         </el-form-item>-->
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
-          <el-button :loading="buttonStates.createLoading" type="primary" @click="addAsset">{{DialogName===1?'立即创建':'立即修改'}}</el-button>
+          <el-button
+            :loading="buttonStates.createLoading"
+            type="primary"
+            @click="addAsset"
+          >{{DialogName===1?'立即创建':'立即修改'}}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -1082,24 +1101,23 @@ export default {
     }
   },
   methods: {
-       //展示要修改的资产表单
-      showAssetForm(Type,row) {
+    //展示要修改的资产表单
+    showAssetForm(Type, row) {
       this.DialogName = Type;
-      if(Type === 1){
+      if (Type === 1) {
         this.dialogTitle = "新建资产";
       }
-      if(Type === 2){
+      if (Type === 2) {
         this.dialogTitle = "修改资产";
         this.SRC = this.$store.state.BASE_URL + row.image;
-        this.AssetForm={
-          image:row.image,
-          name:row.name,
-          path:row.path,
-          priority:row.priority,
-          level:row.level,
-          id:row.id
+        this.AssetForm = {
+          image: row.image,
+          name: row.name,
+          path: row.path,
+          priority: row.priority,
+          level: row.level,
+          id: row.id
         };
-
       }
       this.isShow = true;
     },
@@ -1158,7 +1176,7 @@ export default {
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       //console.log({ row, column, rowIndex, columnIndex })
-      
+
       if (column.property == "priority") {
         switch (row.priority) {
           case 1:
@@ -2027,7 +2045,6 @@ export default {
         this.RemarksData = [...data.msg];
       });
     }
-    
   }
 };
 </script>
@@ -2049,12 +2066,12 @@ svg-icon {
   vertical-align: 10px;
   padding-right: 10px;
 }
-.el-table__expanded-cell{
-  padding-top:0px !important;
-  padding-bottom:0px !important;
-  padding-right:70px !important
+.el-table__expanded-cell {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-right: 70px !important;
 }
- .el-card{
-   border-radius:0px;
- }
+.el-card {
+  border-radius: 0px;
+}
 </style>
