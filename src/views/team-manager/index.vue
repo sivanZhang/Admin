@@ -7,11 +7,12 @@
           ref="sceneNeed"
           :data="sceneNeed"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-          :cell-style="{borderRight:0}"
+          :row-style="{height:50}"
           highlight-current-row
           @selection-change="handleSelectionChange"
           :border="false"
           v-loading="tableLoading"
+          :cell-style="cellStyle"
         >
           <el-table-column type="index" :index="indexMethod"></el-table-column>
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
@@ -98,11 +99,12 @@
           ref="sceneUnneed"
           :data="sceneUnneed"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-          :cell-style="{borderRight:0}"
+          :cell-style="cellStyle"
+          :row-style="{height:50}"
           highlight-current-row
           @selection-change="handleSelectionChange"
           :border="false"
-           v-loading="tableLoading"
+          v-loading="tableLoading"
         >
           <el-table-column type="index" :index="indexMethod"></el-table-column>
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
@@ -174,7 +176,7 @@
     </el-tabs>
 
     <Drawer
-    ref="drawer"
+      ref="drawer"
       scrollable
       closable
       v-model="value1"
@@ -338,15 +340,37 @@ export default {
     };
   },
   watch: {
-    activeName: {
-      handler: function(newVal, oldVal) {
-        if (newVal) {
-          this.getScene();
-        }
-      }
-    }
+    // activeName: {
+    //   handler: function(newVal, oldVal) {
+    //     if (newVal) {
+    //       this.getScene();
+    //     }
+    //   }
+    // }
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      //console.log({ row, column, rowIndex, columnIndex })
+
+      if (column.property == "priority") {
+        switch (row.priority) {
+          case 1:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            };
+        }
+      } else if (column.property == "level") {
+        switch (row.level) {
+          case 3:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            };
+        }
+      }
+      return { borderRight: 0 };
+    },
     //展示添加任务表单
     showTaskForm(link_id, dept_id, content, date_and_user) {
       getDept({
@@ -448,24 +472,22 @@ export default {
     },
     getScene() {
       this.sceneNeed = [];
-      this.sceneUnneed =[];
+      this.sceneUnneed = [];
       let payload = {
-        pagenum: this.activeName=="first"?this.pageSize:this.pageSize2,
-        page: this.activeName=="first"?this.currentPage:this.currentPage2
+        pagenum: this.activeName == "first" ? this.pageSize : this.pageSize2,
+        page: this.activeName == "first" ? this.currentPage : this.currentPage2
       };
       this.tableLoading = true;
       allocationScene(payload).then(({ data }) => {
-       
         
-        if (this.activeName == "first") {
-           this.sceneNeed = [...data.need];
+          this.sceneNeed = [...data.need];
           this.total = data.need_page.count;
           this.pageCount = data.need_page.page_count;
-        } else {
+        
           this.sceneUnneed = [...data.not_need];
           this.total2 = data.not_need_page.count;
           this.pageCount2 = data.not_need_page.page_count;
-        }
+        
 
         this.tableLoading = false;
       });
