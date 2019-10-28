@@ -547,3 +547,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped src="./profession.scss">
 </style>
+<style lang="scss">
+.el-tree-node__content{
+  border-bottom:2px solid  #dfe6ec;
+  height:35px;
+}
+</style>  

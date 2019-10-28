@@ -599,3 +599,21 @@ export default {
   display: none;
 }
 </style>
+<style lang="scss">
+.el-row{
+  border-bottom:2px solid  #dfe6ec;
+  // padding-top:2px;
+  // padding-bottom:2px;
+  height:35px;
+}
+.nav-title.el-row.is-align-middle.el-row--flex{
+  border:0px;
+}
+.role-list.el-row.is-align-center{
+  border:0px;
+}
+#roles .role-list[data-v-2f617953] {
+    padding-bottom: 0px;
+    
+}
+</style>
