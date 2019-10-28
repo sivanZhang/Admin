@@ -5,10 +5,7 @@
       :data="dailies"
       style="margin-top:15px;width:100%"
       highlight-current-row
-      :stripe="true"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="cellStyle"
-      border
       v-loading="tableLoading"
     >
       <el-table-column label="任务ID" prop="id" width="100px"></el-table-column>
@@ -38,7 +35,7 @@
       <el-table-column label="镜头号" show-overflow-tooltip prop="asset" width="90pxs">
         <template slot-scope="scope">{{scope.row.asset.name}}</template>
       </el-table-column>
-      <el-table-column prop="priority" label="优先级" width="120px" sortable="custom" align="center">
+      <el-table-column prop="priority" label="优先级" width="120px" align="center">
         <template slot-scope="scope">
           <div
             style="backgroundColor:#C64b2b;color:#FFF"
@@ -166,7 +163,7 @@ export default {
             };
         }
       }
-      return { borderRight: 0 };
+     
     },
     //分页
     handleSizeChange(val) {

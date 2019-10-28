@@ -6,10 +6,14 @@
       :data="extraList"
       style="margin-top:20px;width:100%"
       highlight-current-row
-      @row-click="taskBoardRightShow"
+      :cell-style="cellStyle"
     >
       <el-table-column type="index" label="序号" align="center" />
-      <el-table-column prop="task.id" label="任务ID" align="center" />
+      <el-table-column prop="task.id" label="任务ID" align="center" class-name="links">
+        <template slot-scope="scope">
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
       <el-table-column label="所属项目" show-overflow-tooltip>
         <template slot-scope="scope">
@@ -18,30 +22,106 @@
           >{{scope.row.project.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="asset.name" label="所属资产" show-overflow-tooltip></el-table-column>
+      <el-table-column label="项目缩略图"  width="120px">
+        <template slot-scope="scope">
+          <el-image
+            :src="$store.state.BASE_URL+scope.row.project.image"
+            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            :preview-src-list="[$store.state.BASE_URL+scope.row.project.image]"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="asset_name" label="所属资产" show-overflow-tooltip></el-table-column>
+      <el-table-column label="资产缩略图"  width="120px">
+        <template slot-scope="scope">
+          <el-image
+            :src="$store.state.BASE_URL+scope.row.asset_image"
+            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            :preview-src-list="[$store.state.BASE_URL+scope.row.asset_image]"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="user.username" label="提交人"></el-table-column>
       <el-table-column prop="task.dept.name" label="工种"></el-table-column>
-      <el-table-column label="提交日期">
+      <el-table-column label="提交日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
       <el-table-column prop="task.content" label="任务内容" show-overflow-tooltip></el-table-column>
+      <el-table-column width="30px">
+        <template slot-scope="scope">
+          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 0"
+              :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 1"
+              :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 2"
+              :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 3"
+              :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 4"
+              :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 5"
+              :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
+            ></el-card>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="任务状态">
         <template slot-scope="scope">{{scope.row.task.status|taskStatus}}</template>
       </el-table-column>
 
-      <el-table-column prop="task.executor" label="任务执行人"></el-table-column>
-      <el-table-column label="优先级">
-        <template slot-scope="scope">{{scope.row.task.priority|Priority}}</template>
+      <el-table-column prop="task.task_executors" label="任务执行人" width="120px">
+        <template slot-scope="scope">
+          <div v-for="item of scope.row.task.task_executors" :key="item.id">{{item.user_name}}</div>
+        </template>
       </el-table-column>
-      <!-- 、工种、 -->
-
-      <el-table-column label="开始日期">
+      <el-table-column label="优先级" align="center">
+        <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
+      </el-table-column>
+      <el-table-column label="开始日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="end_date" label="截止日期">
+      <el-table-column prop="end_date" label="截止日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.total_hour" label="预设时间（小时）"></el-table-column>
+      <el-table-column prop="task.total_hour" label="预设时间（小时）" width="150px"></el-table-column>
     </el-table>
 
     <Drawer
@@ -150,6 +230,27 @@ export default {
   },
   watch: {},
   methods: {
+    //状态
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (column.property == "priority") {
+        switch (row.priority) {
+          case 2:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            };
+        }
+      } else if (column.property == "grade") {
+        switch (row.grade) {
+          case 2:
+            return {
+              background: "#C64b2b",
+              color: "#FFFFFF"
+            };
+        }
+      }
+    
+    },
     async getApproveList() {
       this.tableLoading = true;
       await getExtraApproveList()
@@ -161,18 +262,18 @@ export default {
         });
     },
     //是否显示任务板右侧
-    taskBoardRightShow(row) {
+    taskBoardRightShow(id) {
       this.isDrawerShow = true;
       this.TaskRecord = Object.assign(
         {},
         {
-          task_id: row.task.id,
+          task_id: id,
           type: 0
         }
       );
       this.logsLoading = true;
       queryTaskRecord({
-        task_id: row.task.id
+        task_id: id
       })
         .then(({ data }) => {
           this.LogList = [...data.msg];
@@ -182,9 +283,9 @@ export default {
           this.logsLoading = false;
         });
       this.detailLoading = true;
-      this.$refs['taskDetail'].getDetail(row.task.id);
+      this.$refs["taskDetail"].getDetail(id);
       queryTask({
-        id: row.task.id
+        id: id
       })
         .then(({ data }) => {
           this.TaskDetail = {
@@ -247,7 +348,7 @@ export default {
       this.form_obj = {
         ...this.form_obj,
         suggestion: this.out_suggestion,
-        path: this.path
+        path: this.path,
       };
       // console.log(this.form_obj);
       submitExtra(this.form_obj)
@@ -271,5 +372,14 @@ export default {
   }
 };
 </script>
-<style lang='scss' scoped>
+<style lang='scss' >
+#extra-audit {
+  .links {
+    cursor: pointer;
+    color: #2d8cf0;
+  }
+  .el-card {
+    border-radius: 0px;
+  }
+}
 </style>
