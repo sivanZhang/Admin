@@ -225,6 +225,9 @@ export default {
   methods: {
     getTasks() {
       let data = {};
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+      }
       switch (this.colSel) {
         case "name":
           this.keyword &&
