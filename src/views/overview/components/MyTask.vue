@@ -30,7 +30,7 @@
       </div>
       <div @click="targetMore('grade')">
         {{TaskCount.difficult}}
-        <br />困难
+        <br />A+&nbsp; A&nbsp; A-
       </div>
       <div @click="targetMore('expire')">
         {{TaskCount.outdate}}

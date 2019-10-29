@@ -408,9 +408,17 @@
             <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
           </el-form-item>
           <el-form-item label="任务难度" prop="grade">
-            <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
-            <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
-            <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="0">A+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="1">A</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="2">A-</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="3">B+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="4">B</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="5">B-</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="6">C+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="7">C</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="8">D+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="9">D</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="10">E</el-radio>
           </el-form-item>
           <el-form-item label="任务状态" prop="status">
             <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -499,9 +507,17 @@
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
-          <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="0">A+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="1">A</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="2">A-</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="3">B+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="4">B</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="5">B-</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="6">C+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="7">C</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="8">D+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="9">D</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="10">E</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -717,9 +733,17 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务难度" prop="grade">
-              <el-radio v-model="updateMulTask.grade" :label="0">简单</el-radio>
-              <el-radio v-model="updateMulTask.grade" :label="1">标准</el-radio>
-              <el-radio v-model="updateMulTask.grade" :label="2">困难</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+          <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -1589,6 +1613,7 @@ export default {
           this.dialogTitle = "修改任务";
           this.TaskForm = {
             ...this.ActiveRow,
+            grade: 1,
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)) > 0
                 ? new Date(dateFormat(this.ActiveRow.start_date))

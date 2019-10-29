@@ -240,9 +240,17 @@
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
-          <el-radio v-model="TaskForm.grade" :label="0">简单</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="1">标准</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="2">困难</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="0">A+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="1">A</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="2">A-</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="3">B+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="4">B</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="5">B-</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="6">C+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="7">C</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="8">D+</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="9">D</el-radio>
+          <el-radio v-model="TaskForm.grade" :label="10">E</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -384,7 +392,7 @@ export default {
         {},
         {
           priority: 0,
-          grade: 0,
+          grade: 1,
           asset: this.assetId,
           project: this.$route.params.id,
           link_id,

@@ -720,7 +720,7 @@ export default {
         break;
       case 'grade':
         this.colSel = 'grade'
-        this.currentGrade = [2]
+        this.currentGrade = [0,1,2]
         break
       case 'expire':
         this.colSel = 'end_date'
