@@ -158,20 +158,48 @@ export default {
       isShow: false,
       LevelList: [
         {
-          label: "简单",
+          label: "A+",
           value: 0
         },
         {
-          label: "标准",
+          label: "A",
           value: 1
         },
         {
-          label: "复杂",
+          label: "A-",
           value: 2
         },
         {
-          label: "高难度",
+          label: "B+",
           value: 3
+        },
+        {
+          label: "B",
+          value: 4
+        },
+        {
+          label: "B-",
+          value: 5
+        },
+        {
+          label: "C+",
+          value: 6
+        },
+        {
+          label: "C",
+          value: 7
+        },
+        {
+          label: "D+",
+          value: 8
+        },
+        {
+          label: "D",
+          value: 9
+        },
+        {
+          label: "E",
+          value: 10
         }
       ],
       rules: {

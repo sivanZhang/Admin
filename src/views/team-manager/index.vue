@@ -392,7 +392,7 @@ export default {
         {},
         {
           priority: 0,
-          grade: 1,
+          grade: 7,
           asset: this.assetId,
           project: this.$route.params.id,
           link_id,
@@ -526,17 +526,38 @@ export default {
     Level: function(row, column) {
       switch (row.level) {
         case 0:
-          return "简单";
-          break;
-        case 1:
-          return "标准";
-          break;
-        case 2:
-          return "复杂";
-          break;
-        case 3:
-          return "高难度";
-          break;
+            return "A+";
+            break;
+          case 1:
+            return "A";
+            break;
+          case 2:
+            return "A-";
+            break;
+          case 3:
+            return "B+";
+            break;
+          case 4:
+            return "B";
+            break;
+          case 5:
+            return "B-";
+            break;
+          case 6:
+            return "C+";
+            break;
+          case 7:
+            return "C";
+            break;
+          case 8:
+            return "D+";
+            break;
+          case 9:
+            return "D";
+            break;
+          case 10:
+            return "E";
+            break;
       }
     },
     //优先级格式化显示

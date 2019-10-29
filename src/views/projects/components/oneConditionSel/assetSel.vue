@@ -126,7 +126,7 @@ export default {
       colSel2: [],
       timeSelection: "",
       name: "",
-      filterText: "",
+      filterText: ""
     };
   },
   watch: {
@@ -165,20 +165,48 @@ export default {
             this.colSel2 = [1];
             this.columnSelect2 = [
               {
-                value: 0,
-                label: "简单"
+                label: "A+",
+                value: 0
               },
               {
-                value: 1,
-                label: "标准"
+                label: "A",
+                value: 1
               },
               {
-                value: 2,
-                label: "复杂"
+                label: "A-",
+                value: 2
               },
               {
-                value: 3,
-                label: "高难度"
+                label: "B+",
+                value: 3
+              },
+              {
+                label: "B",
+                value: 4
+              },
+              {
+                label: "B-",
+                value: 5
+              },
+              {
+                label: "C+",
+                value: 6
+              },
+              {
+                label: "C",
+                value: 7
+              },
+              {
+                label: "D+",
+                value: 8
+              },
+              {
+                label: "D",
+                value: 9
+              },
+              {
+                label: "E",
+                value: 10
               }
             ];
             break;
@@ -215,11 +243,11 @@ export default {
     }
   },
   methods: {
-    getAssetList(){
+    getAssetList() {
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
       }
-      let payload = {}
+      let payload = {};
       switch (this.colSel) {
         case "name":
           this.filterText &&

@@ -658,10 +658,17 @@
     <el-dialog title="批量修改任务" :visible.sync="mulEditDialog" width="620px" center :modal="false">
       <el-form :model="updateMulTask" label-width="90px">
         <el-row>
-          <el-col :span="6" align="center">
+          <el-col :span="20" style="padding-left:35px">
+            <el-row>
+              <el-col :span="8">
             <h4 style="padding-bottom:10px">是否修改</h4>
+              </el-col>
+              <el-col :span="16">
+            <div style="font-size:12px"><span style="font-weight:bold">任务难度:</span>A+ ----> E 难---->易，默认为中等等级</div>
+              </el-col>
+            </el-row>
           </el-col>
-          <el-col :span="18" align="center"></el-col>
+          <!-- <el-col :span="4" align="center"></el-col> -->
         </el-row>
         <el-row>
           <el-col :span="6" align="center">
@@ -1535,7 +1542,7 @@ export default {
       });
       this.TaskForm = {
         priority: 0,
-        grade: 1
+        grade: 7
       };
     },
     before() {
@@ -1573,7 +1580,7 @@ export default {
           this.dialogTitle = "创建任务";
           this.TaskForm = {
             priority: 0,
-            grade: 1
+            grade: 7
           };
           break;
         case 2:
@@ -1587,7 +1594,7 @@ export default {
 
           this.TaskForm = {
             priority: 0,
-            grade: 1,
+            grade: 7,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
             datetime: [
@@ -1613,7 +1620,7 @@ export default {
           this.dialogTitle = "修改任务";
           this.TaskForm = {
             ...this.ActiveRow,
-            grade: 1,
+            grade: 7,
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)) > 0
                 ? new Date(dateFormat(this.ActiveRow.start_date))

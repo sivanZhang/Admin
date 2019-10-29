@@ -139,25 +139,42 @@ export function Priority(priority) {
             break;
         }
       }
-//难度等级
+//资产难度等级
 export function Level(level) {
     switch (level) {
         case 0:
-            return "C";
-            // return '简单'
-            break
-        case 1:
-            return "B";
-            // return '标准'
-            break
-        case 2:
-            return "A";
-            // return '复杂'
-            break
-        case 3:
             return "A+";
-            // return '高难度'
-            break
+            break;
+          case 1:
+            return "A";
+            break;
+          case 2:
+            return "A-";
+            break;
+          case 3:
+            return "B+";
+            break;
+          case 4:
+            return "B";
+            break;
+          case 5:
+            return "B-";
+            break;
+          case 6:
+            return "C+";
+            break;
+          case 7:
+            return "C";
+            break;
+          case 8:
+            return "D+";
+            break;
+          case 9:
+            return "D";
+            break;
+          case 10:
+            return "E";
+            break;
     }
 }
 //通知是否已读
