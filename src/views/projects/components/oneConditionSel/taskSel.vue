@@ -158,16 +158,48 @@ export default {
             this.colSel2 = [1];
             this.columnSelect2 = [
               {
-                value: 0,
-                label: "简单"
+                label: "A+",
+                value: 0
               },
               {
-                value: 1,
-                label: "标准"
+                label: "A",
+                value: 1
               },
               {
-                value: 2,
-                label: "困难"
+                label: "A-",
+                value: 2
+              },
+              {
+                label: "B+",
+                value: 3
+              },
+              {
+                label: "B",
+                value: 4
+              },
+              {
+                label: "B-",
+                value: 5
+              },
+              {
+                label: "C+",
+                value: 6
+              },
+              {
+                label: "C",
+                value: 7
+              },
+              {
+                label: "D+",
+                value: 8
+              },
+              {
+                label: "D",
+                value: 9
+              },
+              {
+                label: "E",
+                value: 10
               }
             ];
             break;
@@ -191,8 +223,8 @@ export default {
             break;
           case "executor_ids":
             this.colShow = false;
-           // this.colSel2 = [0];
-           // this.columnSelect2=[];
+            // this.colSel2 = [0];
+            // this.columnSelect2=[];
             getProjectMember({ id: this.$route.params.id, members: "" }).then(
               ({ data }) => {
                 [...data.msg].map(item => {
@@ -323,8 +355,8 @@ export default {
             this.name = { grade: "[" + String(this.colSel2) + "]" };
           }
           break;
-        case 'executor_ids':
-          if(this.colSel2.length){
+        case "executor_ids":
+          if (this.colSel2.length) {
             data = {
               ...data,
               executor_ids: "[" + String(this.colSel2) + "]"
