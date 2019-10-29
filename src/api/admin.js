@@ -186,5 +186,5 @@ export function getDateList(params) {
 
 //手动同步外网数据
 export function getOutDataList(){
-  return AXIOS.post('/task/timing/')
+  return AXIOS.post('/approve/fromclient/')
 }
