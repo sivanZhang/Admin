@@ -96,3 +96,9 @@ export function getMemberTime(params) {
     params
   })
 }
+// 资产实际耗时与计划耗时top10
+export function assetTime(params) {
+  return AXIOS.get('/assets/assettime/', {
+    params
+  })
+}
