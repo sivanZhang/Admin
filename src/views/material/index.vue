@@ -1,7 +1,7 @@
 <!-- 素材库 -->
 <template>
   <div id="material">
-    <div style="padding-bottom:10px" >
+    <div style="padding-bottom:10px">
       <el-row>
         <el-col :span="15" v-if="authRole">
           <el-button type="primary" icon="el-icon-plus" @click="AddMaterial(1)">素材添加</el-button>
@@ -50,7 +50,13 @@
                 :key="item.id"
               ></el-option>
             </el-select>
-            <el-date-picker v-if="timeSel" v-model="timeSelection" type="date" placeholder="选择日期" style="width:200px"></el-date-picker>
+            <el-date-picker
+              v-if="timeSel"
+              v-model="timeSelection"
+              type="date"
+              placeholder="选择日期"
+              style="width:200px"
+            ></el-date-picker>
             <el-button
               @click="searchMaterial()"
               icon="el-icon-search"
@@ -74,11 +80,11 @@
     >
       <el-table-column type="selection" :reserve-selection="true" align="left"></el-table-column>
       <el-table-column type="index"></el-table-column>
-      <el-table-column label="缩略图" prop="image">
+      <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 48px;height: 27px;cursor: pointer;"
+            style="width: 55px;height: 33px;cursor: pointer"
             :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
             v-if="!editing||clickId !== scope.row.id"
           >
@@ -92,7 +98,7 @@
           </el-image>
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 48px;height: 27px;"
+            style="width: 55px;height: 33px;cursor: pointer;"
             @click.native="img(scope.row)"
             v-if="editing&&clickId === scope.row.id"
           >
@@ -143,6 +149,23 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="项目缩略图" prop="project_image">
+        <template slot-scope="scope">
+          <el-image
+            :src="$store.state.BASE_URL+scope.row.project_image"
+            style="width: 55px;height: 33px;cursor: pointer"
+            :preview-src-list="[$store.state.BASE_URL+scope.row.project_image]"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span class="dot">...</span>
+            </div>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture" style="color:#909399"></i>
+            </div>
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="项目信息" prop="project_id">
         <template slot-scope="scope">
           <el-select
@@ -163,6 +186,7 @@
           >{{scope.row.project?scope.row.project:"-"}}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="素材路径" prop="path">
         <template slot-scope="scope">
           <el-input
@@ -662,7 +686,7 @@ export default {
       if (this.colSel == "itemInfo") {
         data = {
           ...data,
-         project: this.colSel2
+          project: this.colSel2
         };
       }
       if (this.colSel == "explain") {
@@ -680,7 +704,7 @@ export default {
       getMaterial(data).then(({ data }) => {
         this.materialList = [...data.msg];
         this.authRole = data.auth.can_manage_material_state;
-        this.currentPage = 1
+        this.currentPage = 1;
       });
     },
     searchMaterial2() {
@@ -690,10 +714,9 @@ export default {
           this.CategorysList = item.all_categorys;
         });
         this.authRole = data.auth.can_manage_material_state;
-        this.currentPage = 1
+        this.currentPage = 1;
       });
     }
-    
   },
   created() {
     //this.searchMaterial();
