@@ -117,7 +117,7 @@
       </el-table-column>
       <el-table-column prop="task.task_executors" label="任务执行人" width="120px">
         <template slot-scope="scope">
-          <div v-for="item of scope.row.task.task_executors" :key="item.id">{{item.user_name}}</div>
+          <div v-for="(item,index) of scope.row.task.task_executors" :key="index">{{item.user_name}}</div>
         </template>
       </el-table-column>
       <el-table-column label="优先级" prop="priority">

@@ -11,7 +11,7 @@
       <el-table-column type="index" label="序号" align="center" />
       <el-table-column prop="task.id" label="任务ID" align="center" class-name="links">
         <template slot-scope="scope">
-          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
+          <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
@@ -109,7 +109,7 @@
 
       <el-table-column prop="task.task_executors" label="任务执行人" width="120px">
         <template slot-scope="scope">
-          <div v-for="item of scope.row.task.task_executors" :key="item.id">{{item.user_name}}</div>
+          <div v-for="(item,index) of scope.row.task.task_executors" :key="index">{{item.user_name}}</div>
         </template>
       </el-table-column>
       <el-table-column label="优先级" align="center">
@@ -262,55 +262,18 @@ export default {
         });
     },
     //是否显示任务板右侧
-    taskBoardRightShow(id) {
-      this.isDrawerShow = true;
-      this.TaskRecord = Object.assign(
-        {},
-        {
-          task_id: id,
-          type: 0
-        }
-      );
-      this.logsLoading = true;
-      queryTaskRecord({
-        task_id: id
-      })
-        .then(({ data }) => {
-          this.LogList = [...data.msg];
-          this.logsLoading = false;
-        })
-        .catch(() => {
-          this.logsLoading = false;
-        });
-      this.detailLoading = true;
-      this.$refs["taskDetail"].getDetail(id);
-      queryTask({
-        id: id
-      })
-        .then(({ data }) => {
-          this.TaskDetail = {
-            ...data.msg
-          };
-          this.pro_type = data.msg.project.pro_type;
-          this.detailLoading = false;
-        })
-        .catch(() => {
-          this.detailLoading = false;
-        });
-    },
-    //是否显示任务板右侧
-    // taskBoardRightShow(row) {
+    // taskBoardRightShow(id) {
     //   this.isDrawerShow = true;
     //   this.TaskRecord = Object.assign(
     //     {},
     //     {
-    //       task_id: row.task.id,
+    //       task_id: id,
     //       type: 0
     //     }
     //   );
     //   this.logsLoading = true;
     //   queryTaskRecord({
-    //     task_id: row.task.id
+    //     task_id: id
     //   })
     //     .then(({ data }) => {
     //       this.LogList = [...data.msg];
@@ -320,8 +283,9 @@ export default {
     //       this.logsLoading = false;
     //     });
     //   this.detailLoading = true;
+    //   this.$refs["taskDetail"].getDetail(id);
     //   queryTask({
-    //     id: row.task.id
+    //     id: id
     //   })
     //     .then(({ data }) => {
     //       this.TaskDetail = {
@@ -333,14 +297,50 @@ export default {
     //     .catch(() => {
     //       this.detailLoading = false;
     //     });
-    //   this.form_obj = Object.assign(
-    //     {},
-    //     {
-    //       approve_id: row.approve_id
-    //     }
-    //   );
-    //   this.$refs["approvelogs"].getApproveLog(row.task.id);
     // },
+    //是否显示任务板右侧
+    taskBoardRightShow(row) {
+      this.isDrawerShow = true;
+      this.TaskRecord = Object.assign(
+        {},
+        {
+          task_id: row.task.id,
+          type: 0
+        }
+      );
+      this.logsLoading = true;
+      queryTaskRecord({
+        task_id: row.task.id
+      })
+        .then(({ data }) => {
+          this.LogList = [...data.msg];
+          this.logsLoading = false;
+        })
+        .catch(() => {
+          this.logsLoading = false;
+        });
+      this.detailLoading = true;
+      queryTask({
+        id: row.task.id
+      })
+        .then(({ data }) => {
+          this.TaskDetail = {
+            ...data.msg
+          };
+          this.pro_type = data.msg.project.pro_type;
+          this.detailLoading = false;
+        })
+        .catch(() => {
+          this.detailLoading = false;
+        });
+      this.form_obj = Object.assign(
+        {},
+        {
+          approve_id: row.approve_id
+        }
+      );
+      this.$refs["approvelogs"].getApproveLog(row.task.id);
+    },
     submitApprove() {
       this.submitLoading = true;
 
@@ -349,6 +349,7 @@ export default {
         ...this.form_obj,
         suggestion: this.out_suggestion,
         path: this.path,
+        
       };
       // console.log(this.form_obj);
       submitExtra(this.form_obj)
