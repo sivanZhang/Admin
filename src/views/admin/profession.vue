@@ -1,18 +1,14 @@
 <template>
   <div id="profession">
-    <el-container>
-      <el-container>
-        <transition name="el-zoom-in-center">
-          <el-aside
-            width="240px"
-            style="border-right:1px solid #ddd;padding: 0 5px; margin-right:20px"
-          >
+    <ElRow :gutter="24">
+      <ElCol :span="6">
+        <el-card>
+          <h4 slot="header">部门与工种</h4>
+          <div>
             <el-row type="flex" align="middle" class="nav-title" v-if="DeptAuth">
-              <el-button @click="openGroupForm('add')" type="success">添加工种</el-button>
+              <el-button @click="openGroupForm('add')" type="success" style="width:100%">添加工种</el-button>
             </el-row>
-
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
-
             <el-tree
               class="filter-tree"
               empty-text="未创建工种"
@@ -27,7 +23,6 @@
             >
               <span class="custom-tree-node" slot-scope="{ node, data }">
                 <span style="margin-right:6px;">{{node.label}}</span>
-
                 <span class="iconWarp">
                   <i
                     class="el-icon-plus"
@@ -36,7 +31,6 @@
                     title="添加子工种"
                     v-if="DeptAuth"
                   ></i>
-
                   <i
                     class="el-icon-delete"
                     @click="removeGroup(data)"
@@ -47,60 +41,73 @@
                 </span>
               </span>
             </el-tree>
-          </el-aside>
-        </transition>
-
-        <el-main>
-          <div class="t-header">
-            <el-row type="flex" align="middle">
-              <el-col :span="12" >
-                <el-button @click="openGroupForm('update')" type="primary" v-if="DeptAuth" :disabled="showList">修改工种信息</el-button>
-
-                <el-button @click="openChangeMember(1)" type="primary" v-if="DeptAuth" :disabled="showList">添加成员</el-button>
-
-                <el-button @click="openChangeMember(0)" type="danger" v-if="DeptAuth" :disabled="showList">删除成员</el-button>
-
-                <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button>
-              </el-col>
-
-              <el-col :span="6">
-                <label for>工种名称</label>
-                ： {{ActiveGroup?ActiveGroup.name:'--'}}
-              </el-col>
-
-              <el-col :span="6">
-                <label for>工种负责人</label>
-                ：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
-              </el-col>
-            </el-row>
           </div>
+        </el-card>
+      </ElCol>
+      <ElCol :span="18">
+        <el-card>
+          <h4 slot="header">相关操作</h4>
+          <div>
+            <div class="t-header">
+              <el-row type="flex" align="middle">
+                <el-col :span="12">
+                  <el-button
+                    @click="openGroupForm('update')"
+                    type="primary"
+                    v-if="DeptAuth"
+                    :disabled="showList"
+                  >修改工种信息</el-button>
+                  <el-button
+                    @click="openChangeMember(1)"
+                    type="primary"
+                    v-if="DeptAuth"
+                    :disabled="showList"
+                  >添加成员</el-button>
+                  <el-button
+                    @click="openChangeMember(0)"
+                    type="danger"
+                    v-if="DeptAuth"
+                    :disabled="showList"
+                  >删除成员</el-button>
+                  <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button>
+                </el-col>
+                <el-col :span="6">
+                  <label for>工种名称</label>
+                  ： {{ActiveGroup?ActiveGroup.name:'--'}}
+                </el-col>
 
-          <users-table :UserList="GroupUsers" :table-loading="tableLoading" @jump="jumpChange"></users-table>
-        </el-main>
-        <!-- 右击侧栏展示审批流程 -->
-        <template v-if="isDrawerShow">
-          <Drawer scrollable
-            :title="activeTemplate.name+'的审批流程'"
-            v-model="isDrawerShow"
-            width="512px"
-            inner
-            :mask-style="{backgroundColor: 'transparent'}"
-            :transfer="false"
-          >
-            <links
-              :LinkTemplateList="LinkTemplateList"
-              :deptId="activeTemplate.id"
-              :deptName="activeTemplate.name"
-              @refresh="show(ActiveGroup)"
-              :DeptAuth="DeptAuth"
-            ></links>
-          </Drawer>
-        </template>
-
-        <!-- 添加用户组弹出框 -->
-      </el-container>
-    </el-container>
-
+                <el-col :span="6">
+                  <label for>工种负责人</label>
+                  ：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
+                </el-col>
+              </el-row>
+            </div>
+            <users-table :UserList="GroupUsers" :table-loading="tableLoading" @jump="jumpChange"></users-table>
+          </div>
+        </el-card>
+      </ElCol>
+    </ElRow>
+    <!-- 右击侧栏展示审批流程 -->
+    <template v-if="isDrawerShow">
+      <Drawer
+        scrollable
+        :title="activeTemplate.name+'的审批流程'"
+        v-model="isDrawerShow"
+        width="512px"
+        inner
+        :mask-style="{backgroundColor: 'transparent'}"
+        :transfer="false"
+      >
+        <links
+          :LinkTemplateList="LinkTemplateList"
+          :deptId="activeTemplate.id"
+          :deptName="activeTemplate.name"
+          @refresh="show(ActiveGroup)"
+          :DeptAuth="DeptAuth"
+        ></links>
+      </Drawer>
+    </template>
+    <!-- 添加用户组弹出框 -->
     <el-dialog :title="DialogType.title" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="GroupForm" ref="GroupForm" :rules="GroupRules">
         <el-form-item label="工种名" label-width="20%" prop="name">
@@ -216,8 +223,7 @@ export default {
 
         memberEditLoading: false
       },
-      showList:true
-      
+      showList: true
     };
   },
   computed: {
@@ -226,24 +232,23 @@ export default {
         active: this.isActive && !this.error
       };
     },
-    ...mapState("admin", ["UserList", "DeptList","DeptAuth"])
+    ...mapState("admin", ["UserList", "DeptList", "DeptAuth"])
   },
   methods: {
-    jumpChange(val){
-      console.log(val); 
+    jumpChange(val) {
+      console.log(val);
       getDept({
         id: val
-      }).then(({ data }) => {
-        const msg=data.msg;
-        this.handleGroupClick(msg);
-      }).catch(err=>{
-        
       })
+        .then(({ data }) => {
+          const msg = data.msg;
+          this.handleGroupClick(msg);
+        })
+        .catch(err => {});
     },
     //http获取“用户组”列表
     getDeptList() {
       this.$store.dispatch("admin/get_DeptList");
-      
     },
     async changeMember() {
       if (!this.SelectMembers.length) {
@@ -338,7 +343,7 @@ export default {
     // 单击流程审批按钮触发事件
     show(ActiveGroup) {
       this.activeTemplate = ActiveGroup;
-     console.log(this.activeTemplate.id);
+      console.log(this.activeTemplate.id);
       this.isDrawerShow = true;
       getWKTemplate({
         dept: this.activeTemplate.id
@@ -353,15 +358,17 @@ export default {
     handleGroupClick(data) {
       this.showList = false;
       this.ActiveGroup = { ...data };
-      this.tableLoading = true
+      this.tableLoading = true;
       getDept({
         id: data.id
-      }).then(({ data }) => {
-        this.GroupUsers = [...data.users];
-        this.tableLoading = false
-      }).catch(err=>{
-        this.tableLoading = false
       })
+        .then(({ data }) => {
+          this.GroupUsers = [...data.users];
+          this.tableLoading = false;
+        })
+        .catch(err => {
+          this.tableLoading = false;
+        });
     },
 
     appendGroup() {
@@ -439,8 +446,8 @@ export default {
             this.$message.success(data.msg);
 
             this.getDeptList();
-            this.ActiveGroup=null;
-            this.GroupUsers=[];
+            this.ActiveGroup = null;
+            this.GroupUsers = [];
           } else {
             this.$message.error(data.msg);
           }
@@ -512,28 +519,27 @@ export default {
       this.dialogFormVisible = true;
       this.$refs["GroupForm"].resetFields();
     },
-    pageRouter(){
+    pageRouter() {
       console.log(this.$route.query.id);
       getDept({
         id: this.$route.query.id
-      }).then(({ data }) => {
-        const msg=data.msg;
-        this.handleGroupClick(msg)
-      }).catch(err=>{
-        
       })
+        .then(({ data }) => {
+          const msg = data.msg;
+          this.handleGroupClick(msg);
+        })
+        .catch(err => {});
     }
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
-    },
-    
+    }
   },
   created() {
     this.getDeptList();
-    if(this.$route.query.id){
-      this.pageRouter()
+    if (this.$route.query.id) {
+      this.pageRouter();
     }
   },
 
@@ -548,8 +554,10 @@ export default {
 <style lang="scss" scoped src="./profession.scss">
 </style>
 <style lang="scss">
-.el-tree-node__content{
-  border-bottom:2px solid  #dfe6ec;
-  height:35px;
+.el-tree-node__content {
+  border-bottom: 1px solid #dfe6ec;
+  height: 35px;
+  font:12px;
+  
 }
 </style>  
