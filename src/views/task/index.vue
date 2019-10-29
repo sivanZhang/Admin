@@ -302,6 +302,7 @@
           :cell-style="cellStyle"
           @sort-change="sortFilter"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+          :row-style="{height:50}"
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
           <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
@@ -330,22 +331,47 @@
             </template>
           </el-table-column>
           <el-table-column prop="asset.name" label="镜头" header-align="left" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="asset.episode" label="集数"></el-table-column>
-          <el-table-column prop="asset.session" label="场次"></el-table-column>
-          <el-table-column
-            prop="task.dept.name"
-            label="制作环节"
-            header-align="left"
-            show-overflow-tooltip
-          ></el-table-column>
-          <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
-          <el-table-column
-            prop="task.content"
-            header-align="left"
-            label="任务内容"
-            show-overflow-tooltip
-          ></el-table-column>
-          <el-table-column label="任务状态" width="120px" sortable="custom">
+          <el-table-column width="30px">
+            <template slot-scope="scope">
+              <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 0"
+                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 1"
+                  :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 2"
+                  :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 3"
+                  :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 4"
+                  :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 5"
+                  :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
+                ></el-card>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="任务状态" width="160px" sortable="custom">
             <template slot-scope="scope">
               <div
                 v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6"
@@ -363,10 +389,32 @@
                     :value="item.value"
                   ></el-option>
                 </el-select>
+                
               </div>
               <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
+               <el-progress
+              :stroke-width="12"
+              :percentage="scope.row.task.schedule"
+              v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
+            ></el-progress>
             </template>
           </el-table-column>
+          <el-table-column prop="asset.episode" label="集数"></el-table-column>
+          <el-table-column prop="asset.session" label="场次"></el-table-column>
+          <el-table-column
+            prop="task.dept.name"
+            label="制作环节"
+            header-align="left"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
+          <el-table-column
+            prop="task.content"
+            header-align="left"
+            label="任务内容"
+            show-overflow-tooltip
+          ></el-table-column>
+
           <el-table-column label="难度等级" header-align="left" align="center" prop="task.grade">
             <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
           </el-table-column>
