@@ -1,118 +1,129 @@
 <template>
   <div id="sharefiles">
-    <el-row>
-      {{fileList}}
-      <el-col :span="12">
-        <el-upload
-          class="upload-demo"
-          ref="upload"
-          :action="action"
-          :headers="headers"
-          :file-list="fileList"
-          :auto-upload="false"
-          :multiple="true"
-          :on-success="handleSuccess"
-        >
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button
-            style="margin-left: 10px;"
-            size="small"
-            type="success"
-            @click="submitUpload"
-          >上传到服务器</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-      </el-col>
-      <el-col :span="12"></el-col>
-    </el-row>
-
-    <div style="display:flex">
-      <div style="width:70%;">
-        <div style="padding-bottom:10px">
-          <el-row>
-            <el-col :span="16">
-              <div style="display:flex">
-                <h4 style="margin: 0 10px;">文件列表</h4>
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="deletList"
-                  style="margin-left:15px"
-                  :disabled="this.multipleSelection.length === 0"
-                >批量删除</el-button>
-              </div>
-            </el-col>
-            <el-col :span="8">
+    <ElRow :gutter="24">
+      <ElCol :span="6">
+        <el-card>
+          <h4 slot="header">
+            上传
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </h4>
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            :action="action"
+            :headers="headers"
+            :file-list="fileList"
+            :auto-upload="false"
+            :multiple="true"
+            :on-success="handleSuccess"
+          >
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button
+              style="margin-left: 10px;"
+              size="small"
+              type="success"
+              @click="submitUpload"
+            >上传到服务器</el-button>
+          </el-upload>
+        </el-card>
+      </ElCol>
+      <ElCol :span="18">
+        <el-card>
+          <h4 slot="header">文件列表</h4>
+          <div>
+            <div style="padding-bottom:10px">
               <el-row>
                 <el-col :span="16">
-                  <el-input
-                    v-model="filterText"
-                    placeholder="请输入文件名称"
-                    @keyup.enter.native="searchFilesList(1)"
-                  >
+                  <div style="display:flex">
                     <el-button
-                      @click="searchFilesList(1)"
-                      slot="append"
-                      icon="el-icon-search"
-                      type="primary"
-                    />
-                  </el-input>
+                      type="danger"
+                      icon="el-icon-delete"
+                      @click="deletList"
+                      style="margin-left:15px"
+                      :disabled="this.multipleSelection.length === 0"
+                    >批量删除</el-button>
+                  </div>
                 </el-col>
                 <el-col :span="8">
-                  <el-button @click="searchFilesList()" type="primary" style="margin-left: 15px">重置</el-button>
+                  <el-row>
+                    <el-col :span="16">
+                      <el-input
+                        v-model="filterText"
+                        placeholder="请输入文件名称"
+                        @keyup.enter.native="searchFilesList(1)"
+                      >
+                        <el-button
+                          @click="searchFilesList(1)"
+                          slot="append"
+                          icon="el-icon-search"
+                          type="primary"
+                        />
+                      </el-input>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-button
+                        @click="searchFilesList()"
+                        type="primary"
+                        style="margin-left: 15px"
+                      >重置</el-button>
+                    </el-col>
+                  </el-row>
                 </el-col>
               </el-row>
-            </el-col>
-          </el-row>
-        </div>
-        <div style="margin-top:10px; border: 1px solid #dfe6ec;">
-          <el-table
-            :row-key="row=>row.id"
-            @selection-change="handleSelectionChange"
-            :data="tableData"
-            style="width: 100%"
-            ref="tableData"
-            :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
-          >
-            <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-            <el-table-column type="index"></el-table-column>
-            <el-table-column prop="filename" label="文件名称">
-              <template slot-scope="scope">{{scope.row.filename}}</template>
-            </el-table-column>
-            <el-table-column prop="filepath" label="文件路径">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" placement="top">
-                  <div slot="content">{{scope.row.filepath}}</div>
-                  <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
-                </el-tooltip>
-              </template>
+            </div>
+            <div style="margin-top:10px; border: 1px solid #dfe6ec;">
+              <el-table
+                :row-key="row=>row.id"
+                @selection-change="handleSelectionChange"
+                :data="tableData"
+                style="width: 100%"
+                ref="tableData"
+                :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+              >
+                <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="filename" label="文件名称">
+                  <template slot-scope="scope">{{scope.row.filename}}</template>
+                </el-table-column>
+                <el-table-column prop="filepath" label="文件路径">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" placement="top">
+                      <div slot="content">{{scope.row.filepath}}</div>
+                      <span
+                        @click="download(scope.row)"
+                        style="cursor:pointer;color:#2d8cf0"
+                      >{{"点击下载"}}</span>
+                    </el-tooltip>
+                  </template>
 
-              <!-- <template slot-scope="scope">{{scope.row.filepath}}</template> -->
-            </el-table-column>
+                  <!-- <template slot-scope="scope">{{scope.row.filepath}}</template> -->
+                </el-table-column>
 
-            <el-table-column prop="date" label="提交日期">
-              <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
-            </el-table-column>
+                <el-table-column prop="date" label="提交日期">
+                  <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
+                </el-table-column>
 
-            <el-table-column prop="username" label="提交人">
-              <template slot-scope="scope">{{scope.row.username}}</template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-tooltip effect="dark" content="删除" placement="top">
-                  <el-button
-                    icon="el-icon-delete"
-                    style="color:red"
-                    type="text"
-                    @click="deleteFile(scope.row.id)"
-                  />
-                </el-tooltip>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
-    </div>
+                <el-table-column prop="username" label="提交人">
+                  <template slot-scope="scope">{{scope.row.username}}</template>
+                </el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-tooltip effect="dark" content="删除" placement="top">
+                      <el-button
+                        icon="el-icon-delete"
+                        style="color:red"
+                        type="text"
+                        @click="deleteFile(scope.row.id)"
+                      />
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </el-card>
+      </ElCol>
+    </ElRow>
   </div>
 </template>
 
@@ -145,8 +156,8 @@ export default {
   },
   methods: {
     submitUpload() {
-        this.$refs.upload.submit();
-      },
+      this.$refs.upload.submit();
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
