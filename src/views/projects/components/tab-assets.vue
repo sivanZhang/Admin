@@ -120,7 +120,7 @@
         :data="AssetList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         :cell-style="cellStyle"
-        :row-style="{height:50}"
+       
         highlight-current-row
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
@@ -1224,8 +1224,9 @@ export default {
             };
         }
       }
-      return { borderRight: 0 };
+      return { borderRight: 0 ,height:50};
     },
+   
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
       if (this.authAsset) {
@@ -2121,6 +2122,9 @@ svg-icon {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   padding-right: 70px !important;
+}
+.el-table__row{
+  height: 50px !important;
 }
 .el-card {
   border-radius: 0px;
