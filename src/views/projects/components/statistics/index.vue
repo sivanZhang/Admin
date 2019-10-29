@@ -1,6 +1,11 @@
 <template>
   <div id="statistics" class="text-center">
     <el-row>
+      <el-col align="right">
+        <el-switch v-model="value1" active-text="图表" inactive-text="表格"></el-switch>
+      </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="5" align="middle">
         <div>
           <label for>项目进度</label>
@@ -11,26 +16,44 @@
       </el-col>
       <el-col :span="8">
         <label for>镜头状态统计</label>
-        <!-- 图表组件 -->
-        <chart ref="asset-chart" chart-id="asset-chart" />
+        <!-- 图表组件  +table-->
+        <chart ref="asset-chart" chart-id="asset-chart" v-if="value1" />
+        <div style="padding:10px">
+          <el-table
+            :data="assetStatusTable"
+            :border="true"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            v-if="!value1"
+          >
+            <el-table-column prop="name" label="镜头状态"></el-table-column>
+            <el-table-column prop="value" label="个数"></el-table-column>
+          </el-table>
+        </div>
       </el-col>
       <el-col :span="11">
         <label for>任务状态统计</label>
-        <!-- 图表组件 -->
-        <chart ref="task-chart" chart-id="task-chart" />
+        <!-- 图表组件  +table-->
+        <chart ref="task-chart" chart-id="task-chart" v-if="value1" />
+        <div style="padding:10px" v-if="!value1">
+          <el-table
+            :data="taskStatusTable"
+            :border="true"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          >
+            <el-table-column prop="name" label="任务状态"></el-table-column>
+            <el-table-column prop="value" label="个数"></el-table-column>
+          </el-table>
+        </div>
       </el-col>
     </el-row>
     <!-- 燃尽图 -->
     <template v-if="burnShow">
       <el-divider />
       <el-row>
-        <!-- <el-col :span="12"> -->
-        <LineChart chart-id="line-chart1" ref="line-chart1" />
-        <!-- </el-col> -->
+        <LineChart chart-id="line-chart1" ref="line-chart1" v-if="value1" />
       </el-row>
     </template>
     <!-- 提交审核次数和外包数据 -->
-
     <el-divider />
     <el-row>
       <el-col :span="12">
@@ -38,14 +61,14 @@
         <PieNestedChart
           chart-id="line-chart2-loopInner2"
           ref="line-chart2-loopInner2"
-          v-if="inner"
+          v-if="inner&&value1"
         />
-        <chart chart-id="line-chart2-loopInner" ref="line-chart2-loopInner" v-if="!inner" />
+        <chart chart-id="line-chart2-loopInner" ref="line-chart2-loopInner" v-if="!inner&&value1" />
       </el-col>
       <el-col :span="12">
         <label for>外部工时统计图</label>
-        <PieNestedChart chart-id="line-chart2-loop2" ref="line-chart2-loop2" v-if="outer" />
-        <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer" />
+        <PieNestedChart chart-id="line-chart2-loop2" ref="line-chart2-loop2" v-if="outer&&value1" />
+        <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer&&value1" />
       </el-col>
     </el-row>
     <!-- 提交审核次数统计 -->
@@ -54,37 +77,63 @@
         <el-col :span="12">
           <label for>内审提交统计</label>
           <!-- 图表组件 -->
-          <chart ref="commit-inner" chart-id="commit-inner" />
+          <chart ref="commit-inner" chart-id="commit-inner" v-if="value1" />
         </el-col>
         <el-col :span="12">
           <label for>外审提交统计</label>
           <!-- 图表组件 -->
-          <chart ref="commit-outer" chart-id="commit-outer" />
+          <chart ref="commit-outer" chart-id="commit-outer" v-if="value1" />
         </el-col>
       </el-row>
     </template>
+    <!-- 资产实际耗时与计划耗时top10 -->
+    <template>
+      <el-divider />
+      <div style="margin-top:40px">
+        <el-row>
+          <el-col :span="12" v-if="plan">
+            <BarChart
+              ref="assetTimePlan"
+              chart-id="assetTimePlan"
+              style="height:400px"
+              v-if="value1"
+            />
+          </el-col>
+          <el-col :span="12" v-if="actual">
+            <BarChart
+              ref="assetTimeActual"
+              chart-id="assetTimeActual"
+              style="height:400px"
+              v-if="value1"
+            />
+          </el-col>
+        </el-row>
+      </div>
+    </template>
+    <!-- 镜头和任务分布 -->
     <template v-if="asssetTask">
       <el-divider />
       <div style="margin-top:40px">
         <el-row>
           <!-- 柱状图组件 -->
-          <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
+          <BarChart ref="task-count" chart-id="task-count" style="height:400px" v-if="value1" />
         </el-row>
       </div>
     </template>
+    <!-- 总成绩排名 -->
     <template v-if="$route.query.type == 0&&showGrade">
       <el-divider />
       <el-row>
         <!-- 柱状图组件 -->
-        <BarChart ref="grade" chart-id="grade" style="height:400px" />
+        <BarChart ref="grade" chart-id="grade" style="height:400px" v-if="value1" />
       </el-row>
     </template>
 
     <el-divider />
-    <!-- 甘特图组件 -->
-    <div class="gantt-header">
-      <h4>项目甘特图</h4>
-      <div class="query-parent">
+    <!-- 甘特图组件  +table-->
+    <div class="gantt-header" >
+      <h4>项目各部门工时统计</h4>
+      <div class="query-parent" v-if="value1">
         <el-select v-model="deptChoose" multiple placeholder="筛选工种">
           <el-option
             v-for="(item,index) of deptList"
@@ -98,17 +147,35 @@
       </div>
     </div>
     <Gantt
+      v-if="value1"
       v-loading="ganttLoading"
       id="gantt"
       :gantt-data="ganttData"
       :customOptions="ganttTasks"
       :customHeaderOption="GanttHeader"
     />
-    <!-- 甘特图组件 -->
+    <div v-if="!value1">
+      <el-table
+        :data="projectGantTable"
+        :border="true"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+       
+      >
+        <el-table-column label="部门名称" prop="deptname"></el-table-column>
+        <el-table-column label="开始时间" prop="start">
+          <template slot-scope="scope">{{scope.row.start|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间" prop="end">
+          <template slot-scope="scope">{{scope.row.end|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="总工时" prop="last"></el-table-column>
+      </el-table>
+    </div>
+    <!-- 甘特图组件 +table -->
     <el-divider />
     <div class="gantt-header">
       <h4>人员工时统计</h4>
-      <div class="query-parent">
+      <div class="query-parent"  v-if="value1">
         <el-select v-model="userChoose" multiple laceholder="筛选人员">
           <el-option
             v-for="(item,index) of userList"
@@ -126,7 +193,31 @@
       :gantt-data="ganttStatData"
       :customHeaderOption="customHeaderOption"
       :customOptions="customOptions"
+      v-if="value1"
     />
+    <div v-if="!value1">
+      <el-table
+        :data="userGantTable"
+        :border="true"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        :span-method="objectSpanMethod"
+      >
+        <el-table-column label="人员名称" prop="name"></el-table-column>
+        <el-table-column label="开始时间" prop="start">
+          <template slot-scope="scope">{{scope.row.start|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间" prop="end">
+          <template slot-scope="scope">{{scope.row.end|dateFormat}}</template>
+        </el-table-column>
+        <el-table-column label="计划工时（小时）" prop="plan"></el-table-column>
+        <el-table-column label="实际工时（小时）" prop="actual"></el-table-column>
+        <el-table-column label="进度" prop="progress">
+          <template slot-scope="scope">
+            <el-progress :stroke-width="12" :percentage="scope.row.progress"></el-progress>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -138,6 +229,7 @@ import LineChart from "@/components/ECharts/LineMarker";
 import BarChart from "@/components/ECharts/BarMarker";
 import PieNestedChart from "@/components/ECharts/PieNestedChart";
 import dayjs from "dayjs";
+import { log } from "util";
 export default {
   name: "all-statistics",
   components: { Chart, Gantt, LineChart, BarChart, PieNestedChart },
@@ -267,8 +359,41 @@ export default {
             }
           ]
         }
-      }
+      },
+      assetTimePlan: [],
+      assetTimeActual: [],
+      plan: true,
+      actual: true,
+      value1: true,
+      assetStatusTable: [],
+      taskStatusTable: [],
+      userGantTable: [],
+      projectGantTable: []
     };
+  },
+  computed: {
+    groupNum() {
+      return new Set(this.userGantTable.map(item => item.name));
+    }
+  },
+  watch: {
+    value1: {
+      handler: function(newVal, oldVal) {
+        if (newVal == true) {
+          this.getProjectProgress();
+          this.getGantt();
+          this.getganttStat();
+          this.getAssetStatistics();
+          this.getTaskStatistics();
+          this.getBurnOut();
+          this.exportData();
+          this.getCommitCount();
+          this.getAssetTask();
+          this.getGradeChange();
+          this.getAssetTimes();
+        }
+      }
+    }
   },
   methods: {
     //指定进度条文字内容。
@@ -285,7 +410,7 @@ export default {
     },
     //获取镜头状态统计  并传参调用图表组件的初始化方法
     getAssetStatistics() {
-      this.$refs["asset-chart"].openLoading();
+      // this.$refs["asset-chart"].openLoading();
       Ajax.getAssetStatistic({
         project_id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
@@ -293,12 +418,13 @@ export default {
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
         });
+        this.assetStatusTable = chartData;
         this.$refs["asset-chart"].initChart("", chartData);
       });
     },
     //获取任务状态统计  并传参调用图表组件的初始化方法
     getTaskStatistics() {
-      this.$refs["task-chart"].openLoading();
+      // this.$refs["task-chart"].openLoading();
       Ajax.getTaskStatistic({
         project_id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
@@ -306,6 +432,7 @@ export default {
         let chartData = keys.map(t => {
           return { name: t, value: data.msg[t] };
         });
+        this.taskStatusTable = chartData;
         this.$refs["task-chart"].initChart("", chartData);
       });
     },
@@ -331,6 +458,40 @@ export default {
       // console.log(this.user)
       this.getganttStat();
     },
+    //甘特图处理table数据
+    Group(name) {
+      return this.userGantTable.filter(item => item.name == name).length;
+    },
+    NameLen(name) {
+      const tmp = Array.from(this.groupNum);
+      const index = tmp.indexOf(name);
+      let len = 0;
+      for (let i = 0; i < index; i++) {
+        len += this.Group(tmp[i]);
+      }
+      return len;
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const len = this.Group(row.name);
+        const lenName = this.NameLen(row.name);
+        if (rowIndex === lenName) {
+          return {
+            rowspan: len,
+            colspan: 1
+          };
+        } else
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+      } else {
+        return {
+          rowspan: 1,
+          colspan: 1
+        };
+      }
+    },
     //重置人员甘特图
     refreshUser() {
       this.userChoose = [];
@@ -346,7 +507,19 @@ export default {
         executors: ""
       })
         .then(({ data }) => {
+          this.userGantTable = [];
           let arr = [...data.msg];
+          arr.map(item => {
+            this.userGantTable.push({
+              id: item[0],
+              name: item[1],
+              start: item[2],
+              end: item[3],
+              plan: item[4],
+              progress: item[5],
+              actual: item[6]
+            });
+          });
           if (this.user.length) {
             // this.ganttStatData = [];
             arr.map((t, i) => {
@@ -400,7 +573,6 @@ export default {
           this.ganttStatLoading = false;
         });
     },
-
     //重置部门甘特图
     refreshDept() {
       this.deptChoose = [];
@@ -413,7 +585,9 @@ export default {
       Ajax.getGanttData({
         id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
+        this.projectGantTable = [];
         const arr = [...data.msg];
+        this.projectGantTable = [...data.msg];
         //获取项目的部门信息
         this.deptList = arr.map(t => {
           return {
@@ -468,6 +642,8 @@ export default {
         bourout: ""
       }).then(({ data }) => {
         if (data.status === 0) {
+          // console.log("burnout");
+          // console.log(data);
           if (!data.dates.length) {
             this.burnShow = false;
             return;
@@ -864,6 +1040,146 @@ export default {
         this.$refs["commit-outer"].initChart("", chartData2);
       });
     },
+    //获取资产耗时
+    getAssetTimes() {
+      Ajax.assetTime({ project_id: this.$route.params.id }).then(({ data }) => {
+        if (data.status === 0) {
+          this.assetTimePlan = [...data.plan];
+          this.assetTimeActual = [...data.actual];
+          if (!Object.keys(this.assetTimePlan).length) {
+            this.plan = false;
+          } else {
+            let keys = [];
+            let data = [];
+            this.assetTimePlan.map(item => {
+              keys.push(item.asset_name);
+              data.push(item.delta);
+            });
+            let customOption = {
+              title: {
+                text: "资产计划耗时Top10",
+                textStyle: {
+                  //---主标题内容样式
+                  color: "#000"
+                  // height:"50px"
+                },
+                padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "shadow"
+                }
+              },
+              legend: {
+                data: ["计划耗时"]
+              },
+              grid: {
+                left: "3%",
+                right: "4%",
+                bottom: "3%",
+                containLabel: true
+              },
+              xAxis: [
+                {
+                  type: "category",
+                  data: keys,
+                  axisLabel: {
+                    //---坐标轴 标签
+                    show: true, //---是否显示
+                    inside: false, //---是否朝内
+                    interval: 0,
+                    rotate: 30,
+                    margin: 5 //---刻度标签与轴线之间的距离
+                    //color:'red',				//---默认取轴线的颜色
+                  }
+                }
+              ],
+              yAxis: [
+                {
+                  type: "value"
+                }
+              ],
+              series: [
+                {
+                  name: "计划耗时",
+                  type: "bar",
+                  barWidth: 30,
+                  data: data
+                }
+              ]
+            };
+            this.$refs["assetTimePlan"].initChart(customOption);
+          }
+          if (!Object.keys(this.assetTimeActual).length) {
+            this.actual = false;
+          } else {
+            let keys2 = [];
+            let data2 = [];
+            this.assetTimeActual.map(item => {
+              keys2.push(item.asset_name);
+              data2.push(item.delta);
+            });
+
+            let customOption2 = {
+              title: {
+                text: "资产实际耗时Top10",
+                textStyle: {
+                  //---主标题内容样式
+                  color: "#000"
+                  // height:"50px"
+                },
+                padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "shadow"
+                }
+              },
+              legend: {
+                data: ["实际耗时"]
+              },
+              grid: {
+                left: "3%",
+                right: "4%",
+                bottom: "3%",
+                containLabel: true
+              },
+              xAxis: [
+                {
+                  type: "category",
+                  data: keys2,
+                  axisLabel: {
+                    //---坐标轴 标签
+                    show: true, //---是否显示
+                    inside: false, //---是否朝内
+                    interval: 0,
+                    rotate: 0,
+                    margin: 5 //---刻度标签与轴线之间的距离
+                    //color:'red',				//---默认取轴线的颜色
+                  }
+                }
+              ],
+              yAxis: [
+                {
+                  type: "value"
+                }
+              ],
+              series: [
+                {
+                  name: "实际耗时",
+                  type: "bar",
+                  barWidth: 30,
+                  data: data2
+                }
+              ]
+            };
+            this.$refs["assetTimeActual"].initChart(customOption2);
+          }
+        }
+      });
+    },
     //统计项目成员的资产和任务信息
     getAssetTask() {
       Ajax.statisticMemberDetail({
@@ -940,9 +1256,7 @@ export default {
             }
           ]
         };
-        // let chartData2 =
         this.$refs["task-count"].initChart(customOption);
-        // this.$refs["asset-count"].initChart("", chartData2);
       });
     },
     //成绩变化
@@ -950,6 +1264,8 @@ export default {
       Ajax.MemberSort({
         project_id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
+        console.log("chengji");
+        console.log(data);
         if (!data.sorted_grade.length) {
           this.showGrade = false;
           return;
@@ -1032,6 +1348,7 @@ export default {
     this.getCommitCount();
     this.getAssetTask();
     this.getGradeChange();
+    this.getAssetTimes();
   }
 };
 </script>
