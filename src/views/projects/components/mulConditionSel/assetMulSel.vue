@@ -67,10 +67,17 @@
                     <el-col :span="12">
                       <el-form-item label="难度等级" prop="level">
                         <el-select v-model="sortSelForm.level" multiple placeholder="请选择">
-                          <el-option label="简单" :value="0"></el-option>
-                          <el-option label="标准" :value="1"></el-option>
-                          <el-option label="复杂" :value="2"></el-option>
-                          <el-option label="高难度" :value="3"></el-option>
+                          <el-option label="A+" :value="0"></el-option>
+                          <el-option label="A" :value="1"></el-option>
+                          <el-option label="A-" :value="2"></el-option>
+                          <el-option label="B+" :value="3"></el-option>
+                          <el-option label="B" :value="4"></el-option>
+                          <el-option label="B-" :value="5"></el-option>
+                          <el-option label="C+" :value="6"></el-option>
+                          <el-option label="C" :value="7"></el-option>
+                          <el-option label="D+" :value="8"></el-option>
+                          <el-option label="D" :value="9"></el-option>
+                          <el-option label="E" :value="10"></el-option>
                         </el-select>
                       </el-form-item>
                     </el-col>

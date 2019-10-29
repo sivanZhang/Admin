@@ -118,65 +118,57 @@ export default {
   created() {},
   mounted() {
     this.initVideo();
-    this.keyup();
     //this.videoPlayerNoVideoIsShow=false;
-
+    this.keyup()
     this.width = document.getElementById("playerBox").offsetWidth;
     this.height = document.getElementById("playerBox").offsetHeight;
   },
   methods: {
-    cancelP() {
-      document.addEventListener(
-        "keydown",
-        function(e) {
-          e.returnValue = true;
-        },
-        false
-      );
+    remove() {
+      window.removeEventListener("keydown", this.handelKeyDownCustom, false);
     },
     keyup() {
-      var _self = this;
+      window.addEventListener("keydown", this.handelKeyDownCustom, false);
+    },
+    handelKeyDownCustom(event) {
       let frameTime = 1 / 25;
-      document.addEventListener(
-        "keydown",
-        function(event) {
-          let e = event || window.event || arguments.callee.caller.arguments[0];
-          // console.log(e.keyCode,_self.videoPlayer)
-          if (_self.videoPlayerIsShow) {
+      var _self = this;
+      let e = event || window.event || arguments.callee.caller.arguments[0];
+      if (_self.videoPlayerIsShow) {
+        _self.playerControls.stateIcon = "el-icon-video-play";
+        if (e && e.keyCode === 37) {
+          //left arrow
+          _self.videoPlayer.pause();
+          _self.videoPlayer.currentTime(
+            Math.max(0, _self.videoPlayer.currentTime() - frameTime)
+          );
+        } else if (e && e.keyCode === 39) {
+          //right arrow
+          _self.videoPlayer.pause();
+          _self.videoPlayer.currentTime(
+            Math.min(
+              _self.videoPlayer.duration(),
+              _self.videoPlayer.currentTime() + frameTime
+            )
+          );
+        } else if (e && e.keyCode === 32) {
+          /*
+              if(document.getElementById('my-textarea').contains(e.target)){
+                return true
+              }else{
+                e.preventDefault();
+              }*/
+          e.preventDefault();
+          if (_self.videoPlayer.paused()) {
+            _self.videoPlayer.play();
+            _self.playerControls.stateIcon = "el-icon-video-pause";
+            _self.playerStepInterval();
+          } else {
+            _self.videoPlayer.pause();
             _self.playerControls.stateIcon = "el-icon-video-play";
-            if (e && e.keyCode === 37) {
-              //left arrow
-              _self.videoPlayer.pause();
-              _self.videoPlayer.currentTime(
-                Math.max(0, _self.videoPlayer.currentTime() - frameTime)
-              );
-            } else if (e && e.keyCode === 39) {
-              //right arrow
-              _self.videoPlayer.pause();
-              _self.videoPlayer.currentTime(
-                Math.min(
-                  _self.videoPlayer.duration(),
-                  _self.videoPlayer.currentTime() + frameTime
-                )
-              );
-            } else if (e && e.keyCode === 32) {
-              console.log(e);
-              
-              e.preventDefault();
-              // console.log(_self.videoPlayer.paused())
-              if (_self.videoPlayer.paused()) {
-                _self.videoPlayer.play();
-                _self.playerControls.stateIcon = "el-icon-video-pause";
-                _self.playerStepInterval();
-              } else {
-                _self.videoPlayer.pause();
-                _self.playerControls.stateIcon = "el-icon-video-play";
-              }
-            }
           }
-        },
-        false
-      );
+        }
+      }
     },
     /**
      * 加载视频资源
@@ -188,7 +180,6 @@ export default {
       let url = project.url;
 
       _self.playerControls.stateIcon = "el-icon-video-pause";
-      console.log(this.videoPlayer.paused());
       (this.videoPlayerNoVideoIsShow = false), (this.videoUrl = url);
       this.videoPlayer.width(pWidth + "px");
       this.videoPlayer.height(pHeight + "px");
@@ -200,7 +191,6 @@ export default {
       }, 1000);
     },
     initNextVideo(index, videoProjects) {
-      console.log(index,videoProjects,'next');
       this.currentProjectIndex = index;
       this.projectLists = videoProjects;
     },
@@ -209,8 +199,6 @@ export default {
      */
     initVideo() {
       var _self = this;
-      console.log(222, this.videoPlayer);
-
       this.videoPlayer = videojs(
         myVideo,
         {
@@ -355,7 +343,7 @@ export default {
         currentFrame: this.calcFrame(this.videoPlayer.currentTime()),
         imgUrl: drawImage,
         currentPosition: this.videoPlayer.currentTime(),
-        currentProject: this.currentProject//选中
+        currentProject: this.currentProject //选中
       };
       this.$emit("getCutImg", obj);
       this.videoPlayerIsShow = true;
@@ -474,7 +462,7 @@ export default {
     }
     .slider {
       margin: 0 10px;
-      width:68%;
+      width: 68%;
       color: #fff;
     }
   }

@@ -39,7 +39,7 @@
                   </div>
                 </li>
               </ul>
-              <el-input placeholder="添加备注" v-model="markText" type="textarea"></el-input>
+              <el-input @focus="handelFocus" @blur="handelBlur" placeholder="添加备注" v-model="markText" type="textarea"></el-input>
               <div class="btn-group">
                 <el-radio-group v-model.number="approve_result">
                   <el-radio :label="0">拒绝</el-radio>
@@ -112,6 +112,13 @@ export default {
       out_path:null
     };
   },
+  watch:{
+    checked(val){
+      if(val){
+        this.approve_result=1
+      }
+    }
+  },
   mounted() {
     let bH = document.body.offsetHeight;
     let videoTabsH = document.getElementById("videoTabs").offsetHeight;
@@ -122,6 +129,12 @@ export default {
       bH - (videoTabsH + 20 + 20 + 94 + 165) + "px";
   },
   methods: {
+    handelBlur(){
+      this.$refs['videoPlayer'].keyup()
+    },
+    handelFocus(){
+       this.$refs['videoPlayer'].remove()
+    },
     commitApprove() {
       if (!this.submitList.length) {
         this.$message.warning("请选择镜头");

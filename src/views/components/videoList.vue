@@ -23,7 +23,7 @@
           </el-checkbox>
           <div style="margin-top:5px">
             <el-image
-              :src="item.project.image?$store.state.BASE_URL+item.project.image:''"
+              :src="item.project.image?$store.state.BASE_URL+item.asset_image:''"
               fit="cover"
             >
               <div
