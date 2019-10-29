@@ -840,7 +840,7 @@ export default {
         {},
         {
           priority: 0,
-          grade: 1,
+          grade: 7,
           asset: this.project.id,
           project: this.$route.params.id
         }
@@ -872,7 +872,7 @@ export default {
         {},
         {
           priority: 0,
-          grade: 1,
+          grade: 7,
           asset: this.project.id,
           project: this.$route.params.id,
           link_id,
