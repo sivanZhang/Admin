@@ -565,7 +565,10 @@
           width="120px"
           sortable="custom"
           column-key="level"
-          :filters="[{text: 'C', value: '0'}, {text: 'B', value: '1'}, {text: 'A', value: '2'}, {text: 'A+', value: '3'}]"
+          :filters="[{text: 'A+', value: '0'}, {text: 'A', value: '1'}, {text: 'A-', value: '2'}, 
+          {text: 'B+', value: '3'},{text: 'B', value: '4'}, {text: 'B-', value: '5'},
+           {text: 'C+', value: '6'}, {text: 'C', value: '7'},{text: 'D+', value: '8'},
+           {text: 'D', value: '9'}, {text: 'E', value: '10'}]"
         >
           <template slot-scope="scope">
             <el-select
@@ -968,20 +971,48 @@ export default {
       isShow: false,
       LevelList: [
         {
-          label: "简单",
+          label: "A+",
           value: 0
         },
         {
-          label: "标准",
+          label: "A",
           value: 1
         },
         {
-          label: "复杂",
+          label: "A-",
           value: 2
         },
         {
-          label: "高难度",
+          label: "B+",
           value: 3
+        },
+        {
+          label: "B",
+          value: 4
+        },
+        {
+          label: "B-",
+          value: 5
+        },
+        {
+          label: "C+",
+          value: 6
+        },
+        {
+          label: "C",
+          value: 7
+        },
+        {
+          label: "D+",
+          value: 8
+        },
+        {
+          label: "D",
+          value: 9
+        },
+        {
+          label: "E",
+          value: 10
         }
       ],
       rules: {
@@ -1174,9 +1205,8 @@ export default {
           this.tableLoading = false;
         });
     },
+    //优先级和难度等级背景颜色动态改变
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      //console.log({ row, column, rowIndex, columnIndex })
-
       if (column.property == "priority") {
         switch (row.priority) {
           case 1:
@@ -1187,7 +1217,7 @@ export default {
         }
       } else if (column.property == "level") {
         switch (row.level) {
-          case 3:
+          case 0:
             return {
               background: "#C64b2b",
               color: "#FFFFFF"
@@ -2000,18 +2030,39 @@ export default {
     //难度等级格式化显示
     Level: function(row, column) {
       switch (row.level) {
-        case 0:
-          return "简单";
-          break;
-        case 1:
-          return "标准";
-          break;
-        case 2:
-          return "复杂";
-          break;
-        case 3:
-          return "高难度";
-          break;
+           case 0:
+            return "A+";
+            break;
+          case 1:
+            return "A";
+            break;
+          case 2:
+            return "A-";
+            break;
+          case 3:
+            return "B+";
+            break;
+          case 4:
+            return "B";
+            break;
+          case 5:
+            return "B-";
+            break;
+          case 6:
+            return "C+";
+            break;
+          case 7:
+            return "C";
+            break;
+          case 8:
+            return "D+";
+            break;
+          case 9:
+            return "D";
+            break;
+          case 10:
+            return "E";
+            break;
       }
     },
     //优先级格式化显示
