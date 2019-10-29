@@ -105,16 +105,37 @@ export function Priority(priority) {
     export function taskgrade(grade) {
         switch (grade) {
           case 0:
-            return "C";
-            // return "简单";
+            return "A+";
             break;
           case 1:
-            return "B";
-            // return "标准";
+            return "A";
             break;
           case 2:
-            return "A";
-            // return "困难";
+            return "A-";
+            break;
+          case 3:
+            return "B+";
+            break;
+          case 4:
+            return "B";
+            break;
+          case 5:
+            return "B-";
+            break;
+          case 6:
+            return "C+";
+            break;
+          case 7:
+            return "C";
+            break;
+          case 8:
+            return "D+";
+            break;
+          case 9:
+            return "D";
+            break;
+          case 10:
+            return "E";
             break;
         }
       }

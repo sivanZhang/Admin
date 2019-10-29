@@ -251,7 +251,7 @@ export default {
         }
       } else if (column.property == "task.grade") {
         switch (row.task.grade) {
-          case 2:
+          case 0:
             return {
               background: "#C64b2b",
                 color: "#FFFFFF"

@@ -244,7 +244,10 @@
           sortable="custom"
           align="center"
           column-key="grade"
-          :filters="[{text: 'C', value: '0'}, {text: 'B', value: '1'}, {text: 'A', value: '2'}]"
+          :filters="[{text: 'A+', value: '0'}, {text: 'A', value: '1'}, {text: 'A-', value: '2'},
+           {text: 'B+', value: '3'}, {text: 'B', value: '4'}, {text: 'B-', value: '5'}, 
+           {text: 'C+', value: '6'}, {text: 'C', value: '7'}, {text: 'D+', value: '8'}, 
+           {text: 'D', value: '9'}, {text: 'E', value: '10'}]"
         >
           <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
         </el-table-column>
@@ -1111,7 +1114,7 @@ export default {
         }
       } else if (column.property == "grade") {
         switch (row.grade) {
-          case 2:
+          case 0:
             return {
               background: "#C64b2b",
               color: "#FFFFFF"
