@@ -359,7 +359,13 @@ export function entityFilter(entity) {
             return '资产类别'
             break
         case 6:
-            return '工种'
+            return '工种实体'
+            break
+        case 7:
+            return '用户实体'
+            break
+        case 8:
+            return '实训项目实体'
             break
     }
 }

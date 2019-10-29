@@ -1,7 +1,7 @@
 <!-- 属性 -->
 <template>
   <div id="attrs">
-    <div style="padding-bottom:10px" >
+    <div style="padding-bottom:10px">
       <el-row :gutter="15">
         <el-col :span="15" v-if="auth">
           <el-row>
@@ -18,11 +18,11 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :span="9" style="float:right">
-          <el-row type="flex" justify="end">
-            <el-col :span="15">
+        <el-col :span="9" align="right">
+          <el-row>
+            <el-col :span="20">
               <el-row>
-                <el-col :span="9" >
+                <el-col :span="9">
                   <el-select
                     v-model="colSel"
                     placeholder="请选择"
@@ -38,19 +38,14 @@
                     ></el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="15">
+                <el-col :span="12">
                   <el-input
                     v-if="colShow"
                     v-model="filterText"
                     placeholder="请输入关键字"
                     @keyup.enter.native="searchMulAttrs()"
-                  >
-                  </el-input>
-                  <el-select
-                    v-show="chooseSel"
-                    v-model="colSel2"
-                    placeholder="请选择属性类型"
-                  >
+                  ></el-input>
+                  <el-select v-show="chooseSel" v-model="colSel2" placeholder="请选择属性类型">
                     <el-option
                       v-for="item in attrsTypeList"
                       :label="item.type"
@@ -59,15 +54,13 @@
                     ></el-option>
                   </el-select>
                 </el-col>
+                <el-col :span="3">
+                  <el-button @click="searchMulAttrs()" icon="el-icon-search" type="primary" />
+                </el-col>
               </el-row>
             </el-col>
 
-            <el-col :span="9">
-              <el-button
-              @click="searchMulAttrs()"
-              icon="el-icon-search"
-              type="primary"
-            />
+            <el-col :span="4">
               <el-button @click="searchAttrs()" type="primary" style="margin-left: 15px">重置</el-button>
             </el-col>
           </el-row>
@@ -83,7 +76,7 @@
         :row-key="(row)=>{ return row.id}"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" :reserve-selection="true" align="left" v-if="auth"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" align="left"></el-table-column>
         <el-table-column type="index" align="center" :index="indexMethod"></el-table-column>
         <el-table-column label="属性名" prop="name">
           <template slot-scope="scope">
@@ -104,8 +97,8 @@
         </el-table-column>
         <el-table-column label="属性值" prop="value"></el-table-column>
         <el-table-column label="默认值" prop="default"></el-table-column>
-        <el-table-column label="操作" v-if="auth" >
-          <template slot-scope="scope" >
+        <el-table-column label="操作" v-if="auth">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="属性绑定" placement="top">
               <el-button
                 icon="el-icon-plus"
@@ -144,7 +137,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block" style="text-align: center;margin-top:10px">
+      <div class="block" style="text-align: right;margin-top:10px">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -356,6 +349,14 @@ export default {
         {
           type: "资产实体",
           value: 5
+        },
+        {
+          type: "用户实体",
+          value: 7
+        },
+        {
+          type: "实训项目实体",
+          value: 8
         }
       ],
       attrName: null,
@@ -394,7 +395,7 @@ export default {
   methods: {
     //批量删除
     mulDelMaterial() {
-      console.log(this.multipleSelection)
+      console.log(this.multipleSelection);
       const ids = this.multipleSelection.map(item => item.id);
       this.$confirm("此操作将永久删除属性, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -402,7 +403,6 @@ export default {
         type: "warning"
       }).then(() => {
         HTTP.delMulAttrs({
-          
           ids: ids
         }).then(({ data }) => {
           if (data.status === 0) {
@@ -447,17 +447,17 @@ export default {
       }
       HTTP.getMulAttrs(data).then(({ data }) => {
         this.attrsList = [...data.msg];
-        
+
         // this.authRole = data.auth.can_manage_material_state;
         this.currentPage = 1;
       });
     },
     searchAttrs() {
-        HTTP.getAttrsList().then(({ data }) => {
-          if (data.status === 0) {
-            this.attrsList = [...data.msg];
-          }
-        });
+      HTTP.getAttrsList().then(({ data }) => {
+        if (data.status === 0) {
+          this.attrsList = [...data.msg];
+        }
+      });
     },
     bindSubmit() {
       this.$refs["bindForm"].validate(valid => {

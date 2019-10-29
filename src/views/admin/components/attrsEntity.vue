@@ -49,12 +49,12 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.attr_value}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="所属实体" prop="entity_id"></el-table-column>
+        <el-table-column label="所属实体" prop="entity_name"></el-table-column>
       </template>
       <el-table-column
         label="实体类别"
         prop="entity_type"
-        :filters="[{text: '任务实体', value: '1'}, {text: '项目实体', value: '4'}, {text: '资产实体', value: '5'}]"
+        :filters="[{text: '任务实体', value: '1'}, {text: '项目实体', value: '4'}, {text: '资产实体', value: '5'},{text: '用户实体', value: '7'},{text: '实训项目实体', value: '8'}]"
         :filter-method="filterHandler"
       >
         <template slot-scope="scope">{{scope.row.entity_type|entityFilter}}</template>
@@ -90,7 +90,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="block" style="text-align: center;margin-top:10px">
+    <div class="block" style="text-align: right;margin-top:10px">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
