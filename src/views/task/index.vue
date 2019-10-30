@@ -397,6 +397,7 @@
               :percentage="scope.row.task.schedule"
               v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
             ></el-progress>
+            <div v-if="scope.row.task.status == 3" >{{scope.row.task.statements}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="asset.episode" label="集数"></el-table-column>

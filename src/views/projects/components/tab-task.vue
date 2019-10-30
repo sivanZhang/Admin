@@ -176,12 +176,14 @@
           align="left"
           sortable="custom"
           column-key="status"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
         >
           <template slot-scope="scope">
             {{scope.row.status|taskStatus}}
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress></template>
-          
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress>
+            <div v-if="scope.row.status == 3" >{{scope.row.statements}}</div>
+          </template>
+            
         </el-table-column>
 
         <el-table-column
