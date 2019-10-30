@@ -9,9 +9,39 @@
     >
       <el-table-column type="index" align="center" :index="indexMethod"></el-table-column>
       <el-table-column label="属性名" prop="attr_name"></el-table-column>
-      <el-table-column label="属性类型" prop="attr_type">
-        <template slot-scope="scope">{{scope.row.attr_type|attrsFilter}}</template>
-      </el-table-column>
+      <el-table-column label="属性类型">
+          <template slot-scope="scope">
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.attr_type === 1"
+              style="background-color:#DB3A34;"
+            >数字</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.attr_type === 2"
+              style="background-color:#FFC857;"
+            >字符</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.attr_type === 3"
+              style="background-color:#084C61;"
+            >日期</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.attr_type === 4"
+              style="background-color:#177E89;"
+            >布尔</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.attr_type ===5"
+              style="background-color:#4472CA;"
+            >枚举</sup>
+          </template>
+        </el-table-column>
       <template v-if="attr_entity === 0">
         <el-table-column label="属性值" prop="attr_value">
           <template slot-scope="scope">
@@ -113,7 +143,7 @@ import {
 export default {
   name: "attrs-entity",
   components: {},
-  props: ["attrsEntityList", "tableLoading", "attr_entity","auth"],
+  props: ["attrsEntityList", "tableLoading", "attr_entity", "auth"],
   data() {
     return {
       currentPage: 1,
@@ -225,5 +255,12 @@ export default {
 #attrs-entity {
   padding: 15px;
   border: 1px solid #dfe6ec;
+}
+.el-badge__content {
+  margin-top: 15px;
+  font-size: 8px;
+  height:30px;
+  width: 55px;
+  line-height:30px;
 }
 </style>

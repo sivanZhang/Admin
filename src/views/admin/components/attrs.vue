@@ -92,8 +92,38 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.name}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="属性类型" prop="type">
-          <template slot-scope="scope">{{scope.row.type|attrsFilter}}</template>
+        <el-table-column label="属性类型">
+          <template slot-scope="scope">
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.type === 1"
+              style="background-color:#DB3A34;"
+            >数字</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.type === 2"
+              style="background-color:#FFC857;"
+            >字符</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.type === 3"
+              style="background-color:#084C61;"
+            >日期</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.type === 4"
+              style="background-color:#177E89;"
+            >布尔</sup>
+
+            <sup
+              class="el-badge__content"
+              v-if="scope.row.type ===5"
+              style="background-color:#4472CA;"
+            >枚举</sup>
+          </template>
         </el-table-column>
         <el-table-column label="属性值" prop="value"></el-table-column>
         <el-table-column label="默认值" prop="default"></el-table-column>
@@ -609,4 +639,11 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+.el-badge__content {
+  margin-top: 15px;
+  font-size: 8px;
+  height:30px;
+  width: 55px;
+  line-height:30px;
+}
 </style>
