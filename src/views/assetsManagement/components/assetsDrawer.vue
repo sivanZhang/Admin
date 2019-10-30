@@ -143,13 +143,8 @@ export default {
       });
     },
     getAssetVersion(id) {
-      // getVersion({
-      //   asset_id: id?id:this.project.id
-      // }).then(({ data }) => {
-      //   this.assetVersion = [...data.msg];
-      // });
       getHistoryVersion({ asset_id: this.project.id }).then(({ data }) => {
-        this.historyVersion = [...data.msg];
+        this.historyVersion = data.msg;
       });
     },
     getAssetApproveLog() {
