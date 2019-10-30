@@ -242,20 +242,33 @@ export default {
   },
   methods: {
     //单条件排序
-    sortFilter({
-      column,
-      prop,
-      order
-    }) {
-      this.sortfilter = {
-        column,
-        prop,
-        order
-      };
+    sortFilter({ column,prop,order}) {
+      let status = this.changecolor;
+      this.sortfilter = {column,prop,order};
+      if (status == 6) {
       let data = {
         mytask: null,
-        sort: order === "descending" ? 0 : 1
-      };
+        sort: order === "descending" ? 0 : 1,
+        status:"[0,1,2,5]"
+      }; 
+      this.getstatusTaskList(data);
+    } else if(status == null){
+      let data = {
+        mytask: null,
+        sort: order === "descending" ? 0 : 1,
+        status: "[0,1,2,3,4,5]"
+      }; 
+      this.getstatusTaskList(data);
+    } else {
+      let data = {
+        mytask: null,
+        sort: order === "descending" ? 0 : 1,
+        status: "[" + status + "]"
+      }; 
+      this.getstatusTaskList(data);
+    }
+    },
+    getstatusTaskList(data){
       getStatusTaskList(data).then(({
         data
       }) => {
