@@ -176,7 +176,7 @@
           align="left"
           sortable="custom"
           column-key="status"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
         >
           <template slot-scope="scope">
             {{scope.row.status|taskStatus}}
@@ -1023,7 +1023,8 @@ export default {
       sortfilter: null, //保存单列排序的条件
       valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
       cutType: -1, //分页类别区分
-      oneSel: null //保存单列筛选的条件
+      oneSel: null, //保存单列筛选的条件
+      assetId:null
     };
   },
   filters: {
@@ -1380,7 +1381,7 @@ export default {
         };
       }
     },
-    // handleTabClick(tab, event) {},
+   //展示侧栏
     showDrawer(item) {
       // console.log(item);
       this.showdrawer = true;
