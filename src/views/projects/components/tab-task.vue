@@ -879,35 +879,7 @@
       draggable
       ref="drawer-parent"
     >
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="任务详情" name="first">
-          <tabTaskDtail
-            :taskdetail="TaskDetail"
-            :link="Link"
-            :asset="Asset"
-            :detailLoading="detailLoading"
-            ref="taskdetail"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="历史版本" name="third">
-          <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion" />
-        </el-tab-pane>
-        <el-tab-pane label="执行记录" name="fifth">
-          <tabLog :loglist="LogList" :logsLoading="logsLoading" />
-        </el-tab-pane>
-        <el-tab-pane label="审批记录">
-          <approve-log ref="approvelogs" />
-        </el-tab-pane>
-        <el-tab-pane label="自定义属性" name="second">
-          <attrsBind
-            :project="project"
-            :customAttrs="customAttrs"
-            :attrsList="attrsList"
-            @refresh_customAttrs="NewcustomAttrs"
-            :attrsTypeNum="attrsTypeNum"
-          />
-        </el-tab-pane>
-      </el-tabs>
+      <taskDrawer ref="taskDrawer"/>
     </Drawer>
     <!-- 打开资产侧栏 -->
     <Drawer
@@ -935,38 +907,25 @@ import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
 import { queryAssets, getHistoryVersion,auth } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
-import approveLog from "@/views/components/approve-log";
-import attrsBind from "@/components/projectDrawer/components/attrsBind";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
-import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { getProjectJoinMeb } from "@/api/training";
 import dayjs from "dayjs";
 import taskMulSel from "@/views/projects/components/mulConditionSel/taskMulSel";
 import taskFilter from "@/views/projects/components/filterCondition/taskFilter";
 import taskSel from "@/views/projects/components/oneConditionSel/taskSel";
-import tabTaskDtail from "@/views/task/components/tab-task-detail";
-import history from "@/views/task/components/tab-history";
-import tabLog from "@/views/task/components/tab-log";
 import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
+import taskDrawer from "@/views/projects/components/ShowDrawer/taskDrawer";
+
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
   data() {
     return {
+      showdrawer: false,
       assetShow:false,
       authTask: null,
       uploadVisible: false,
       activeTab: "first",
-      TaskDetail: {
-        //name: ''
-      },
-      Asset: "",
-      Link: "",
-      detailLoading: false,
-      historyVersion: [],
-      project: null,
-      logsLoading: false,
-      LogList: [],
       tableLoading: false, //表格加载状态
       total: 0,
       pageCount: 0,
@@ -994,8 +953,7 @@ export default {
       path: null,
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [20, 50, 100],
-      showdrawer: false,
+      pageSizeList: [20, 50, 100],     
       show_name: true,
       show_link_dept_name: true,
       show_content: true,
@@ -1023,12 +981,7 @@ export default {
       multiSelect: [],
       name: "",
       linkstart: null,
-      linkend: null,
-      activeName: "first",
-      project: null,
-      attrsList: [],
-      customAttrs: [],
-      attrsTypeNum: null,
+      linkend: null,     
       trainingMenber: [],
       mulEditDialog: false,
       updateMulTask: {},
@@ -1045,7 +998,6 @@ export default {
       valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
       cutType: -1, //分页类别区分
       oneSel: null, //保存单列筛选的条件
-      assetId:null,
       authAsset:null
     };
   },
@@ -1068,16 +1020,13 @@ export default {
   computed: {
     ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
-  components: {
-    approveLog,
-    attrsBind,
+  components: {  
     taskMulSel,
     taskFilter,
-    taskSel,
-    tabLog,
-    tabTaskDtail,
-    history,
-    assetDrawer
+    taskSel,   
+    assetDrawer,
+    taskDrawer,
+
   },
   props: {
     AssetList: {
@@ -1407,40 +1356,12 @@ export default {
         };
       }
     },
-   //展示侧栏
+   //展示任务侧栏
     showDrawer(item) {
-      // console.log(item);
       this.showdrawer = true;
-      this.project = item.project;
-      this.assetId = item.asset.id;
-      searchBind({ entity_type: 1 }).then(({ data }) => {
-        this.attrsList = [...data.msg];
-      });
-      getAttrsEntityList({ entity_id: item.id, entity_type: 1 }).then(
-        ({ data }) => {
-          this.customAttrs = [...data.msg];
-          this.attrsTypeNum = 1;
-        }
-      );
-      this.detailLoading = true;
-
-      this.$refs["taskdetail"].getDetail(item.id, "taskLook");
-
-      getHistoryVersion({ asset_id: item.asset.id }).then(({ data }) => {
-        this.historyVersion = [...data.msg];
-      });
-      this.logsLoading = true;
-      HTTP.queryTaskRecord({ task_id: item.id })
-        .then(({ data }) => {
-          this.LogList = [...data.msg];
-          this.logsLoading = false;
-        })
-        .catch(() => {
-          this.logsLoading = false;
-        });
-      this.$refs["approvelogs"].getApproveLog(item.id);
+      this.$refs['taskDrawer'].showDrawer(item);
     },
-    //展开项目侧栏
+    //展开资产侧栏
     show(id){
       this.assetShow = true;
       this.$refs["assetDrawer"].show(id);
@@ -1451,21 +1372,8 @@ export default {
         }
       });
     },
-    getAssetVersion() {
-      getHistoryVersion({
-        asset_id: this.assetId
-      }).then(({ data }) => {
-        this.historyVersion = [...data.msg];
-      });
-    },
-    NewcustomAttrs() {
-      getAttrsEntityList({ entity_id: this.project.id, entity_type: 1 }).then(
-        ({ data }) => {
-          this.customAttrs = [...data.msg];
-          this.attrsTypeNum = 1;
-        }
-      );
-    },
+    
+    
     change() {
       this.$forceUpdate();
     },

@@ -133,7 +133,12 @@
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
         <el-table-column type="expand" prop="expand" width="20px">
           <template slot-scope="props">
-            <taskTable ref="taskTable" v-if="props.row.task_num != 0" style="margin-left:20px" />
+            <taskTable
+              ref="taskTable"
+              v-if="props.row.task_num != 0"
+              style="margin-left:20px"
+              @showDrawer="showDrawer"
+            />
             <label for v-else>此镜头暂无任务</label>
           </template>
         </el-table-column>
@@ -884,6 +889,7 @@
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
     </el-dialog>
+    <!-- 资产侧栏 -->
     <Drawer
       scrollable
       closable
@@ -894,12 +900,29 @@
       :inner="isInner"
       ref="drawer-parent"
     >
-    <assetDrawer
-      :authAsset="authAsset"
-      :assetJump="assetJump"
-      @refresh_assetList="getAssetList(2)"
-      ref="assetDrawer"
-    /></Drawer>
+      <assetDrawer
+        :authAsset="authAsset"
+        :assetJump="assetJump"
+        @refresh_assetList="getAssetList(2)"
+        ref="assetDrawer"
+      />
+    </Drawer>
+    <!-- 任务侧栏 -->
+    <!-- 打开任务侧栏 -->
+    <Drawer
+      title="任务"
+      scrollable
+      closable
+      v-model="showdrawer"
+      width="526"
+      :inner="isInner"
+      :transfer="false"
+      :mask="false"
+      draggable
+      ref="drawer-parent"
+    >
+      <taskDrawer ref="taskDrawer" />
+    </Drawer>
   </div>
 </template>
 
@@ -917,20 +940,22 @@ import assetSel from "@/views/projects/components/oneConditionSel/assetSel";
 import taskTable from "@/views/projects/components/taskTable";
 import { editSmallStatus } from "@/api/status";
 import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
+import taskDrawer from "@/views/projects/components/ShowDrawer/taskDrawer";
 export default {
   mixins: [thumbtackMixin],
   components: {
-    
     assetMulSel,
     assetFilter,
     assetSortMul,
     assetSel,
     taskTable,
-    assetDrawer
+    assetDrawer,
+    taskDrawer
   },
   neme: "asset-list",
   data() {
     return {
+      showdrawer: false,
       value1: false,
       tableTask: [], //资产的任务
       labelName: this.notShow == "true" ? "镜头号" : "资产名称",
@@ -1063,7 +1088,7 @@ export default {
       finish: [],
       notstart: [],
       pause: [],
-      
+
       attrsList: [],
       customAttrs: [],
       attrsTypeNum: null,
@@ -1794,12 +1819,16 @@ export default {
       this.multipleSelection = val;
     },
 
-    //展示侧栏
+    //展示资产侧栏
     show(id) {
       this.value1 = true;
       this.$refs["assetDrawer"].show(id);
     },
-
+    //展示任务侧栏
+    showDrawer(item) {
+      this.showdrawer = true;
+      this.$refs["taskDrawer"].showDrawer(item);
+    },
     //侧栏关闭
     drawerClose() {
       this.value1 = false;
