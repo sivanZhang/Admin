@@ -98,6 +98,7 @@ export default {
         email: "邮箱"
       },
       keysMap: {
+        sex:"性别",
         phone: "手机号码",
         dept: "部门",
         isactive: "是否使用"
