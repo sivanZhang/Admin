@@ -24,14 +24,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
-      <el-table-column label="所属项目" show-overflow-tooltip>
-        <template slot-scope="scope">
-          <router-link
-            :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
-          >{{scope.row.project.name}}</router-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="项目缩略图"  width="120px">
+       <el-table-column label="项目缩略图"  width="120px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project.image"
@@ -48,8 +41,14 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="asset_name" label="所属资产" show-overflow-tooltip></el-table-column>
-      <el-table-column label="资产缩略图"  width="120px">
+      <el-table-column label="所属项目" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <router-link
+            :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
+          >{{scope.row.project.name}}</router-link>
+        </template>
+      </el-table-column>
+       <el-table-column label="资产缩略图"  width="120px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset_image"
@@ -66,6 +65,7 @@
           </el-image>
         </template>
       </el-table-column>
+      <el-table-column prop="asset_name" label="所属资产" show-overflow-tooltip></el-table-column>
       <el-table-column prop="user.username" label="提交人"></el-table-column>
       <el-table-column prop="task.dept.name" label="工种"></el-table-column>
       <el-table-column label="提交日期"  width="120px">
