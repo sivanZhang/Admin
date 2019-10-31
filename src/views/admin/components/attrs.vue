@@ -643,7 +643,8 @@ export default {
   margin-top: 15px;
   font-size: 8px;
   height:30px;
-  width: 55px;
+  width: 80px;
   line-height:30px;
+  border-radius:20px;
 }
 </style>
