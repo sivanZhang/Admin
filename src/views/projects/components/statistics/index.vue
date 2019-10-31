@@ -5,6 +5,7 @@
         <el-switch v-model="value1" active-text="图表" inactive-text="表格"></el-switch>
       </el-col>
     </el-row>
+    <!-- 项目进度、镜头状态统计、任务状态统计 +table -->
     <el-row>
       <el-col :span="5" align="middle">
         <div>
@@ -46,47 +47,123 @@
         </div>
       </el-col>
     </el-row>
-    <!-- 燃尽图 -->
+    <!-- 燃尽图 +table-->
     <template v-if="burnShow">
       <el-divider />
       <el-row>
         <LineChart chart-id="line-chart1" ref="line-chart1" v-if="value1" />
+        <div v-if="!value1" style="padding-top:10px">
+          <div style="padding-bottom:10px">
+            <label for>项目燃尽图</label>
+          </div>
+          <el-table
+            :data="burnOutTable"
+            :border="true"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          >
+            <el-table-column prop="dates" label="日期"></el-table-column>
+            <el-table-column prop="plan_worktimes" label="计划工作时长"></el-table-column>
+            <el-table-column prop="real_worktimes" label="实际工作时长"></el-table-column>
+          </el-table>
+        </div>
       </el-row>
     </template>
-    <!-- 提交审核次数和外包数据 -->
+    <!-- 内部工时统计图和外部工时统计图 +table-->
     <el-divider />
-    <el-row>
-      <el-col :span="12">
-        <label for>内部工时统计图</label>
-        <PieNestedChart
-          chart-id="line-chart2-loopInner2"
-          ref="line-chart2-loopInner2"
-          v-if="inner&&value1"
-        />
-        <chart chart-id="line-chart2-loopInner" ref="line-chart2-loopInner" v-if="!inner&&value1" />
-      </el-col>
-      <el-col :span="12">
-        <label for>外部工时统计图</label>
-        <PieNestedChart chart-id="line-chart2-loop2" ref="line-chart2-loop2" v-if="outer&&value1" />
-        <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer&&value1" />
-      </el-col>
-    </el-row>
-    <!-- 提交审核次数统计 -->
+    <div>
+      <el-row v-if="value1">
+        <el-col :span="12">
+          <label for>内部工时统计图</label>
+          <PieNestedChart
+            chart-id="line-chart2-loopInner2"
+            ref="line-chart2-loopInner2"
+            v-if="inner&&value1"
+          />
+          <chart
+            chart-id="line-chart2-loopInner"
+            ref="line-chart2-loopInner"
+            v-if="!inner&&value1"
+          />
+        </el-col>
+        <el-col :span="12">
+          <label for>外部工时统计图</label>
+          <PieNestedChart
+            chart-id="line-chart2-loop2"
+            ref="line-chart2-loop2"
+            v-if="outer&&value1"
+          />
+          <chart chart-id="line-chart2-loop" ref="line-chart2-loop" v-if="!outer&&value1" />
+        </el-col>
+      </el-row>
+      <el-row v-else>
+        <div style="padding-bottom:10px">
+          <label for>工时统计图</label>
+        </div>
+        <el-table
+          :data="exportDataTable"
+          v-if="!value1"
+          :border="true"
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        >
+          <el-table-column prop="name" label="工时统计类别"></el-table-column>
+          <el-table-column prop="times" label="时长"></el-table-column>
+          <el-table-column label="各部门耗时" align="center">
+            <el-table-column label="部门">
+              <template slot-scope="scope">
+                <div v-for="(item,index) of scope.row.depts" :key="index">{{item.dept}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="depts.times" label="时长">
+              <template slot-scope="scope">
+                <div v-for="(item,index) of scope.row.depts" :key="index">{{item.times}}</div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+        </el-table>
+      </el-row>
+    </div>
+    <!-- 提交审核次数统计 +table-->
     <template v-if="show_inner">
-      <el-row>
+      <el-row v-if="value1">
         <el-col :span="12">
           <label for>内审提交统计</label>
           <!-- 图表组件 -->
-          <chart ref="commit-inner" chart-id="commit-inner" v-if="value1" />
+          <chart ref="commit-inner" chart-id="commit-inner" />
         </el-col>
         <el-col :span="12">
           <label for>外审提交统计</label>
           <!-- 图表组件 -->
-          <chart ref="commit-outer" chart-id="commit-outer" v-if="value1" />
+          <chart ref="commit-outer" chart-id="commit-outer" />
         </el-col>
       </el-row>
+      <el-row v-else>
+        <div style="padding-top:10px">
+          <div style="padding-bottom:10px">
+            <label for>提交审核次数统计</label>
+          </div>
+          <el-table
+            :data="approveTimeTable"
+            :border="true"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          >
+            <el-table-column prop="name" label="提交类型"></el-table-column>
+            <el-table-column label="提交记录" align="center">
+              <el-table-column label="人员名称">
+                <template slot-scope="scope">
+                  <div v-for="(item,index) of scope.row.users" :key="index">{{item.submit_name}}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="提交次数">
+                <template slot-scope="scope">
+                  <div v-for="(item,index) of scope.row.users" :key="index">{{item.num}}</div>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-row>
     </template>
-    <!-- 资产实际耗时与计划耗时top10 -->
+    <!-- 资产实际耗时与计划耗时top10 +table-->
     <template>
       <el-divider />
       <div style="margin-top:40px">
@@ -98,6 +175,21 @@
               style="height:400px"
               v-if="value1"
             />
+            <div v-else>
+              <div style="padding-bottom:10px">
+                <label for>资产计划耗时Top10</label>
+              </div>
+              <el-table
+                :data="assetTimePlan"
+                :border="true"
+                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+              >
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="asset_name" label="资产名称"></el-table-column>
+                <el-table-column prop="delta" label="计划耗时"></el-table-column>
+                <el-table-column prop="actual_delta" label="实际耗时"></el-table-column>
+              </el-table>
+            </div>
           </el-col>
           <el-col :span="12" v-if="actual">
             <BarChart
@@ -106,32 +198,75 @@
               style="height:400px"
               v-if="value1"
             />
+            <div v-else>
+              <div style="padding-bottom:10px">
+                <label for>资产实际耗时Top10</label>
+              </div>
+              <el-table
+                :data="assetTimeActual"
+                :border="true"
+                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+              >
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="asset_name" label="资产名称"></el-table-column>
+                <el-table-column prop="delta" label="实际耗时"></el-table-column>
+                <el-table-column prop="plan_delta" label="计划耗时"></el-table-column>
+              </el-table>
+            </div>
           </el-col>
         </el-row>
       </div>
     </template>
-    <!-- 镜头和任务分布 -->
+    <!-- 镜头和任务分布 +table -->
     <template v-if="asssetTask">
       <el-divider />
       <div style="margin-top:40px">
-        <el-row>
+        <el-row v-if="value1">
           <!-- 柱状图组件 -->
-          <BarChart ref="task-count" chart-id="task-count" style="height:400px" v-if="value1" />
+          <BarChart ref="task-count" chart-id="task-count" style="height:400px" />
+        </el-row>
+        <el-row v-else>
+          <div style="padding-bottom:10px">
+            <label for>镜头和任务分布</label>
+          </div>
+          <el-table
+            :data="assetTaskTable"
+            :border="true"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          >
+            <el-table-column prop="user" label="人员名称"></el-table-column>
+            <el-table-column prop="asset" label="拥有资产数量"></el-table-column>
+            <el-table-column prop="task" label="拥有任务数量"></el-table-column>
+          </el-table>
         </el-row>
       </div>
     </template>
-    <!-- 总成绩排名 -->
+    <!-- 总成绩排名 +table-->
     <template v-if="$route.query.type == 0&&showGrade">
       <el-divider />
-      <el-row>
+      <el-row v-if="value1">
         <!-- 柱状图组件 -->
-        <BarChart ref="grade" chart-id="grade" style="height:400px" v-if="value1" />
+        <BarChart ref="grade" chart-id="grade" style="height:400px" />
+      </el-row>
+      <el-row v-else>
+        <div style="padding-bottom:10px">
+          <label for>总成绩排名</label>
+        </div>
+        <el-table
+          :data="gradeTable"
+          :border="true"
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        >
+          <el-table-column type="index"></el-table-column>
+          <el-table-column prop="name" label="实训成员"></el-table-column>
+          <el-table-column prop="grade" label="总成绩"></el-table-column>
+        </el-table>
       </el-row>
     </template>
 
     <el-divider />
     <!-- 甘特图组件  +table-->
-    <div class="gantt-header" >
+    <div class="gantt-header">
       <h4>项目各部门工时统计</h4>
       <div class="query-parent" v-if="value1">
         <el-select v-model="deptChoose" multiple placeholder="筛选工种">
@@ -159,7 +294,6 @@
         :data="projectGantTable"
         :border="true"
         :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-       
       >
         <el-table-column label="部门名称" prop="deptname"></el-table-column>
         <el-table-column label="开始时间" prop="start">
@@ -175,7 +309,7 @@
     <el-divider />
     <div class="gantt-header">
       <h4>人员工时统计</h4>
-      <div class="query-parent"  v-if="value1">
+      <div class="query-parent" v-if="value1">
         <el-select v-model="userChoose" multiple laceholder="筛选人员">
           <el-option
             v-for="(item,index) of userList"
@@ -230,6 +364,7 @@ import BarChart from "@/components/ECharts/BarMarker";
 import PieNestedChart from "@/components/ECharts/PieNestedChart";
 import dayjs from "dayjs";
 import { log } from "util";
+import { type } from "os";
 export default {
   name: "all-statistics",
   components: { Chart, Gantt, LineChart, BarChart, PieNestedChart },
@@ -368,7 +503,12 @@ export default {
       assetStatusTable: [],
       taskStatusTable: [],
       userGantTable: [],
-      projectGantTable: []
+      projectGantTable: [],
+      burnOutTable: [],
+      exportDataTable: [],
+      approveTimeTable: [],
+      assetTaskTable: [],
+      gradeTable: []
     };
   },
   computed: {
@@ -642,12 +782,17 @@ export default {
         bourout: ""
       }).then(({ data }) => {
         if (data.status === 0) {
-          // console.log("burnout");
-          // console.log(data);
           if (!data.dates.length) {
             this.burnShow = false;
             return;
           }
+          data.dates.map((item, index) => {
+            this.burnOutTable.push({
+              dates: item,
+              plan_worktimes: data.plan_worktimes[index],
+              real_worktimes: data.real_worktimes[index]
+            });
+          });
           let customOption = {
             title: {
               top: 20,
@@ -710,8 +855,51 @@ export default {
         id: this.click_id ? this.click_id : this.$route.params.id,
         worktime: ""
       }).then(({ data }) => {
-        // console.log(data.msg);
         let keys = Object.keys(data.msg);
+        let plan_depts = [];
+        Object.keys(data.msg.plan_depts).map(item => {
+          plan_depts.push({ dept: item, times: data.msg.plan_depts[item] });
+        });
+        let real_depts = [];
+        Object.keys(data.msg.real_depts).map(item => {
+          real_depts.push({ dept: item, times: data.msg.real_depts[item] });
+        });
+        let outsource_plan_depts = [];
+        Object.keys(data.msg.outsource_plan_depts).map(item => {
+          outsource_plan_depts.push({
+            dept: item,
+            times: data.msg.outsource_plan_depts[item]
+          });
+        });
+        let outsource_real_depts = [];
+        Object.keys(data.msg.outsource_real_depts).map(item => {
+          outsource_real_depts.push({
+            dept: item,
+            times: data.msg.outsource_real_depts[item]
+          });
+        });
+        this.exportDataTable = [
+          {
+            name: "内部计划工时统计",
+            times: data.msg.plan_inner,
+            depts: plan_depts
+          },
+          {
+            name: "外部计划工时统计",
+            times: data.msg.plan_outsource,
+            depts: outsource_plan_depts
+          },
+          {
+            name: "内部实际工时统计",
+            times: data.msg.real_inner,
+            depts: real_depts
+          },
+          {
+            name: "外部实际工时统计",
+            times: data.msg.real_outsource,
+            depts: outsource_real_depts
+          }
+        ];
 
         if (
           data.msg.plan_inner == 0 &&
@@ -1030,6 +1218,16 @@ export default {
         if (!data.inner_num.length) {
           this.show_inner = false;
         }
+        this.approveTimeTable = [
+          {
+            name: "内部审核",
+            users: data.inner_num
+          },
+          {
+            name: "外部审核",
+            users: data.out_num
+          }
+        ];
         let chartData = data.inner_num.map(t => {
           return { name: t.submit_name, value: t.num };
         });
@@ -1051,10 +1249,13 @@ export default {
           } else {
             let keys = [];
             let data = [];
+            let actual_delta = [];
             this.assetTimePlan.map(item => {
               keys.push(item.asset_name);
               data.push(item.delta);
+              actual_delta.push(item.actual_delta);
             });
+
             let customOption = {
               title: {
                 text: "资产计划耗时Top10",
@@ -1063,7 +1264,7 @@ export default {
                   color: "#000"
                   // height:"50px"
                 },
-                padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+                padding: [3, 0, 0, 0] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
               },
               tooltip: {
                 trigger: "axis",
@@ -1072,7 +1273,7 @@ export default {
                 }
               },
               legend: {
-                data: ["计划耗时"]
+                data: ["计划耗时", "实际耗时"]
               },
               grid: {
                 left: "3%",
@@ -1104,8 +1305,14 @@ export default {
                 {
                   name: "计划耗时",
                   type: "bar",
-                  barWidth: 30,
+                  barWidth: 15,
                   data: data
+                },
+                {
+                  name: "实际耗时",
+                  type: "bar",
+                  barWidth: 15,
+                  data: actual_delta
                 }
               ]
             };
@@ -1116,9 +1323,12 @@ export default {
           } else {
             let keys2 = [];
             let data2 = [];
+            let plan_delta = [];
+
             this.assetTimeActual.map(item => {
               keys2.push(item.asset_name);
               data2.push(item.delta);
+              plan_delta.push(item.plan_delta);
             });
 
             let customOption2 = {
@@ -1129,7 +1339,7 @@ export default {
                   color: "#000"
                   // height:"50px"
                 },
-                padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+                padding: [3, 0, 0, 0] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
               },
               tooltip: {
                 trigger: "axis",
@@ -1138,7 +1348,7 @@ export default {
                 }
               },
               legend: {
-                data: ["实际耗时"]
+                data: ["实际耗时", "计划耗时"]
               },
               grid: {
                 left: "3%",
@@ -1170,8 +1380,14 @@ export default {
                 {
                   name: "实际耗时",
                   type: "bar",
-                  barWidth: 30,
+                  barWidth: 15,
                   data: data2
+                },
+                {
+                  name: "计划耗时",
+                  type: "bar",
+                  barWidth: 15,
+                  data: plan_delta
                 }
               ]
             };
@@ -1191,6 +1407,14 @@ export default {
         }
         let keys = Object.keys(data.task);
         let keys2 = Object.keys(data.user_asset);
+        data.user_id_list.map((item, index) => {
+          this.assetTaskTable.push({
+            id: item,
+            user: keys[index],
+            task: data.task[keys[index]],
+            asset: data.user_asset[keys2[index]]
+          });
+        });
         let customOption = {
           title: {
             text: "镜头和任务分布",
@@ -1264,8 +1488,9 @@ export default {
       Ajax.MemberSort({
         project_id: this.click_id ? this.click_id : this.$route.params.id
       }).then(({ data }) => {
-        console.log("chengji");
-        console.log(data);
+        data.sorted_grade.map((item, index) => {
+          this.gradeTable.push({ name: item[0], grade: item[1] });
+        });
         if (!data.sorted_grade.length) {
           this.showGrade = false;
           return;
