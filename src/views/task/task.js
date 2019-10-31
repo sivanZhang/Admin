@@ -3,10 +3,12 @@ import {
   putTaskRecord,
   queryTaskRecord,
   queryTask,
-  getStatusTaskList
+  getStatusTaskList,
+  
 } from "@/api/task";
 import {
-  getHistoryVersion
+  getHistoryVersion,
+  auth
 } from "@/api/assets";
 import draggable from "vuedraggable"
 import taskForm from './components/task-form'
@@ -17,6 +19,7 @@ import history from "@/views/task/components/tab-history"
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import dayjs from "dayjs";
+import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -26,10 +29,12 @@ export default {
     tabLog,
     tabTaskDtail,
     approveLog,
-    history
+    history,
+    assetDrawer
   },
   data() {
     return {
+      authAsset:null,
       activeTab: "second",
       TaskDetail: {
         name: ''
@@ -205,7 +210,7 @@ export default {
         {
           label: 'A-',
           value: 2
-        },{
+        }, {
           label: 'B+',
           value: 3
         },
@@ -216,7 +221,7 @@ export default {
         {
           label: 'B-',
           value: 5
-        },{
+        }, {
           label: 'C+',
           value: 6
         },
@@ -238,37 +243,46 @@ export default {
         }
       ],
       sortfilter: null, //保存单列排序的条件
+      assetShow:false
     };
   },
   methods: {
     //单条件排序
-    sortFilter({ column,prop,order}) {
+    sortFilter({
+      column,
+      prop,
+      order
+    }) {
       let status = this.changecolor;
-      this.sortfilter = {column,prop,order};
+      this.sortfilter = {
+        column,
+        prop,
+        order
+      };
       if (status == 6) {
-      let data = {
-        mytask: null,
-        sort: order === "descending" ? 0 : 1,
-        status:"[0,1,2,5]"
-      }; 
-      this.getstatusTaskList(data);
-    } else if(status == null){
-      let data = {
-        mytask: null,
-        sort: order === "descending" ? 0 : 1,
-        status: "[0,1,2,3,4,5]"
-      }; 
-      this.getstatusTaskList(data);
-    } else {
-      let data = {
-        mytask: null,
-        sort: order === "descending" ? 0 : 1,
-        status: "[" + status + "]"
-      }; 
-      this.getstatusTaskList(data);
-    }
+        let data = {
+          mytask: null,
+          sort: order === "descending" ? 0 : 1,
+          status: "[0,1,2,5]"
+        };
+        this.getstatusTaskList(data);
+      } else if (status == null) {
+        let data = {
+          mytask: null,
+          sort: order === "descending" ? 0 : 1,
+          status: "[0,1,2,3,4,5]"
+        };
+        this.getstatusTaskList(data);
+      } else {
+        let data = {
+          mytask: null,
+          sort: order === "descending" ? 0 : 1,
+          status: "[" + status + "]"
+        };
+        this.getstatusTaskList(data);
+      }
     },
-    getstatusTaskList(data){
+    getstatusTaskList(data) {
       getStatusTaskList(data).then(({
         data
       }) => {
@@ -305,14 +319,14 @@ export default {
         borderRight: 0
       };
     },
-    getstatus(data){
+    getstatus(data) {
       getStatusTaskList(data).then(({
         data
       }) => {
         this.MyTaskList1 = [...data.msg];
       })
     },
-    search(data){
+    search(data) {
       function DateFormat(dateVal) {
         return dayjs(dateVal).format("YYYY/MM/DD")
       }
@@ -422,7 +436,7 @@ export default {
           mytask: null,
           status: "[0,1,2,5]"
         };
-      this.getstatus(data);
+        this.getstatus(data);
       } else if (status == null) {
         let data = {
           mytask: null,
@@ -611,6 +625,18 @@ export default {
       })
 
     },
+    //展示资产侧栏
+    show(id) {
+      this.assetShow = true;
+      //获取项目操作资产权限
+      auth().then(({ data }) => {
+        if (data.status === 0) {
+          this.authAsset = data.auth.manage_asset;
+        }
+      });
+      this.$refs['assetDrawer'].show(id);
+    },
+    
     getAssetVersion() {
       getHistoryVersion({
         asset_id: this.assetId
@@ -733,7 +759,7 @@ export default {
         break;
       case 'grade':
         this.colSel = 'grade'
-        this.currentGrade = [0,1,2]
+        this.currentGrade = [0, 1, 2]
         break
       case 'expire':
         this.colSel = 'end_date'

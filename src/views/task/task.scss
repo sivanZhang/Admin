@@ -1,6 +1,10 @@
 $linkCorlor:#2d8cf0;
 
 #layout_main {
+  .links {
+    cursor: pointer;
+    color: #2d8cf0;
+  }
   .el-table {
     .el-input__inner {
       border: 0;

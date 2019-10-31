@@ -120,7 +120,6 @@
         :data="AssetList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         :cell-style="cellStyle"
-       
         highlight-current-row
         @selection-change="handleSelectionChange"
         :row-key="(row)=>{ return row.id}"
@@ -893,40 +892,23 @@
       :transfer="false"
       :mask="false"
       :inner="isInner"
+      ref="drawer-parent"
     >
-      <Header :project="project">
-        <span v-if="drawerType==='scene'" slot="type">镜头类型</span>
-      </Header>
-      <assetsDrawer
-        :project="project"
-        :RemarksData="RemarksData"
-        @refreshRemark="updateRemark()"
-        @refresh_assetList="getAssetList(2)"
-        ref="assetsDrawer"
-        :assetJump="assetJump"
-        :LinkAssetList="LinkAssetList"
-        @jumpName="jumpName"
-        :attrsList="attrsList"
-        :customAttrs="customAttrs"
-        @refresh_customAttrs="RefreshcustomAttrs"
-        :attrsTypeNum="attrsTypeNum"
-        :pro_type="pro_type"
-        :authAsset="authAsset"
-      />
-    </Drawer>
+    <assetDrawer
+      :authAsset="authAsset"
+      :assetJump="assetJump"
+      @refresh_assetList="getAssetList(2)"
+      ref="assetDrawer"
+    /></Drawer>
   </div>
 </template>
 
 <script>
-import assetsDrawer from "@/views/assetsManagement/components/assetsDrawer";
-import Header from "@/components/projectDrawer/components/Header";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 import * as HTTP from "@/api/assets";
-import { getRemark } from "@/api/remark";
 import { mapState } from "vuex";
 import { getToken } from "@/utils/auth";
-import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getProjectStatus } from "@/api/status";
-import { searchBind, getAttrsEntityList } from "@/api/attrs";
 import { addMaterial } from "@/api/material";
 import assetMulSel from "@/views/projects/components/mulConditionSel/assetMulSel";
 import assetFilter from "@/views/projects/components/filterCondition/assetFilter";
@@ -934,20 +916,22 @@ import assetSortMul from "@/views/projects/components/sortMul/assetSortMul";
 import assetSel from "@/views/projects/components/oneConditionSel/assetSel";
 import taskTable from "@/views/projects/components/taskTable";
 import { editSmallStatus } from "@/api/status";
+import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
 export default {
   mixins: [thumbtackMixin],
   components: {
-    assetsDrawer,
-    Header,
+    
     assetMulSel,
     assetFilter,
     assetSortMul,
     assetSel,
-    taskTable
+    taskTable,
+    assetDrawer
   },
   neme: "asset-list",
   data() {
     return {
+      value1: false,
       tableTask: [], //资产的任务
       labelName: this.notShow == "true" ? "镜头号" : "资产名称",
       uploadVisible: false,
@@ -1079,7 +1063,7 @@ export default {
       finish: [],
       notstart: [],
       pause: [],
-      LinkAssetList: [],
+      
       attrsList: [],
       customAttrs: [],
       attrsTypeNum: null,
@@ -1224,9 +1208,9 @@ export default {
             };
         }
       }
-      return { borderRight: 0 ,height:50};
+      return { borderRight: 0, height: 50 };
     },
-   
+
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
       if (this.authAsset) {
@@ -1693,12 +1677,6 @@ export default {
         .then(({ data }) => {
           if (data.status === 0) {
             this.AssetList = [...data.msg];
-
-            this.AssetList.forEach(item => {
-              if (!item.link.length) {
-                this.LinkAssetList.push(item);
-              }
-            });
             this.total = data.count;
             this.pageCount = data.page_count;
           }
@@ -1815,46 +1793,13 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    updateRemark() {
-      getRemark({
-        appid: this.project.id,
-        apptype: 5
-      }).then(({ data }) => {
-        this.RemarksData = [...data.msg];
-      });
-    },
+
     //展示侧栏
     show(id) {
       this.value1 = true;
-      this.pro_type = this.$route.query.type;
-      HTTP.queryAssets({ id }).then(({ data }) => {
-        this.project = { ...[...data.msg][0], id };
-      });
-      this.$refs.assetsDrawer.getLinkList(id);
-      this.$refs.assetsDrawer.getAssetTask(id);
-      const msg = {
-        appid: id,
-        apptype: 5
-      };
-      getRemark(msg).then(({ data }) => {
-        this.RemarksData = [...data.msg];
-      });
-      searchBind({ entity_type: 5 }).then(({ data }) => {
-        this.attrsList = [...data.msg];
-      });
-      getAttrsEntityList({ entity_id: id, entity_type: 5 }).then(({ data }) => {
-        this.customAttrs = [...data.msg];
-        this.attrsTypeNum = 5;
-      });
+      this.$refs["assetDrawer"].show(id);
     },
-    RefreshcustomAttrs() {
-      getAttrsEntityList({ entity_id: this.project.id, entity_type: 5 }).then(
-        ({ data }) => {
-          this.customAttrs = [...data.msg];
-          this.attrsTypeNum = 5;
-        }
-      );
-    },
+
     //侧栏关闭
     drawerClose() {
       this.value1 = false;
@@ -2031,39 +1976,39 @@ export default {
     //难度等级格式化显示
     Level: function(row, column) {
       switch (row.level) {
-           case 0:
-            return "A+";
-            break;
-          case 1:
-            return "A";
-            break;
-          case 2:
-            return "A-";
-            break;
-          case 3:
-            return "B+";
-            break;
-          case 4:
-            return "B";
-            break;
-          case 5:
-            return "B-";
-            break;
-          case 6:
-            return "C+";
-            break;
-          case 7:
-            return "C";
-            break;
-          case 8:
-            return "D+";
-            break;
-          case 9:
-            return "D";
-            break;
-          case 10:
-            return "E";
-            break;
+        case 0:
+          return "A+";
+          break;
+        case 1:
+          return "A";
+          break;
+        case 2:
+          return "A-";
+          break;
+        case 3:
+          return "B+";
+          break;
+        case 4:
+          return "B";
+          break;
+        case 5:
+          return "B-";
+          break;
+        case 6:
+          return "C+";
+          break;
+        case 7:
+          return "C";
+          break;
+        case 8:
+          return "D+";
+          break;
+        case 9:
+          return "D";
+          break;
+        case 10:
+          return "E";
+          break;
       }
     },
     //优先级格式化显示
@@ -2084,18 +2029,7 @@ export default {
     this.getAssetList(2);
     this.getProjectAllStatus();
     if (this.assetId) {
-      this.value1 = true;
-      let id = this.assetId;
-      HTTP.queryAssets({ id }).then(({ data }) => {
-        this.project = { ...[...data.msg][0], id };
-      });
-      const msg = {
-        appid: this.assetId,
-        apptype: 5
-      };
-      getRemark(msg).then(({ data }) => {
-        this.RemarksData = [...data.msg];
-      });
+      this.$refs["assetDrawer"].show(this.assetId);
     }
   }
 };
@@ -2123,7 +2057,7 @@ svg-icon {
   padding-bottom: 0px !important;
   padding-right: 70px !important;
 }
-.el-table__row{
+.el-table__row {
   height: 50px !important;
 }
 .el-card {

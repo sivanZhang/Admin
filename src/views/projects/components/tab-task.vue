@@ -219,8 +219,9 @@
           prop="asset"
           sortable="custom"
           width="90pxs"
+          class-name="links"
         >
-          <template slot-scope="scope">{{scope.row.asset.name}}</template>
+          <template slot-scope="scope"><div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div></template>
         </el-table-column>
         <el-table-column label="集数" prop="episode"></el-table-column>
         <el-table-column label="场次" prop="session"></el-table-column>
@@ -865,6 +866,7 @@
         </el-row>
       </el-form>
     </el-dialog>
+    <!-- 打开任务侧栏 -->
     <Drawer
       title="任务"
       scrollable
@@ -875,6 +877,7 @@
       :transfer="false"
       :mask="false"
       draggable
+      ref="drawer-parent"
     >
       <el-tabs v-model="activeName">
         <el-tab-pane label="任务详情" name="first">
@@ -906,6 +909,22 @@
         </el-tab-pane>
       </el-tabs>
     </Drawer>
+    <!-- 打开资产侧栏 -->
+    <Drawer
+      scrollable
+      closable
+      v-model="assetShow"
+      width="526"
+      :transfer="false"
+      :mask="false"
+      :inner="isInner"
+      ref="drawer-parent"
+    >
+    <assetDrawer
+      :authAsset="authAsset"
+      @refresh_assetList="getAssetList"
+      ref="assetDrawer"
+    /></Drawer>
   </div>
 </template>
 <script>
@@ -914,7 +933,7 @@ import { Transform } from "stream";
 import myMixin from "./mixins";
 import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
-import { queryAssets, getHistoryVersion } from "@/api/assets";
+import { queryAssets, getHistoryVersion,auth } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
@@ -928,11 +947,13 @@ import taskSel from "@/views/projects/components/oneConditionSel/taskSel";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import history from "@/views/task/components/tab-history";
 import tabLog from "@/views/task/components/tab-log";
+import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "tab-task",
   data() {
     return {
+      assetShow:false,
       authTask: null,
       uploadVisible: false,
       activeTab: "first",
@@ -1024,7 +1045,8 @@ export default {
       valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
       cutType: -1, //分页类别区分
       oneSel: null, //保存单列筛选的条件
-      assetId:null
+      assetId:null,
+      authAsset:null
     };
   },
   filters: {
@@ -1054,7 +1076,8 @@ export default {
     taskSel,
     tabLog,
     tabTaskDtail,
-    history
+    history,
+    assetDrawer
   },
   props: {
     AssetList: {
@@ -1096,6 +1119,9 @@ export default {
     }
   },
   methods: {
+    getAssetList(){
+      return
+    },
     //重置筛选条件展示
     selRefresh() {
       this.$refs["taskFilter"].showMul();
@@ -1413,6 +1439,17 @@ export default {
           this.logsLoading = false;
         });
       this.$refs["approvelogs"].getApproveLog(item.id);
+    },
+    //展开项目侧栏
+    show(id){
+      this.assetShow = true;
+      this.$refs["assetDrawer"].show(id);
+       //获取项目操作资产权限
+      auth().then(({ data }) => {
+        if (data.status === 0) {
+          this.authAsset = data.auth.manage_asset;
+        }
+      });
     },
     getAssetVersion() {
       getHistoryVersion({

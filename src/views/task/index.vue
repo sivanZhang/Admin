@@ -164,8 +164,9 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
+        <!-- 打开任务侧栏 -->
         <Drawer
-          ref="drawer"
+          ref="drawer-parent"
           scrollable
           v-model="isDrawerShow"
           width="512px"
@@ -216,6 +217,22 @@
               <approve-log ref="taskApprovelog" />
             </el-tab-pane>-->
           </el-tabs>
+        </Drawer>
+        <!-- 打开资产侧栏 -->
+        <Drawer
+          scrollable
+          closable
+          v-model="assetShow"
+          width="526"
+          :transfer="false"
+          :mask="false"
+          :inner="isInner"
+          ref="drawer-parent"
+        >
+          <assetDrawer
+            :authAsset="authAsset"
+            ref="assetDrawer"
+          />
         </Drawer>
         <el-row style="padding-bottom:10px">
           <el-col style="text-align:right">
@@ -297,7 +314,7 @@
           :data="MyTaskList1"
           highlight-current-row
           border
-          @row-click="taskBoardRightShow"
+         
           style="width: 100%;"
           :cell-style="cellStyle"
           @sort-change="sortFilter"
@@ -305,7 +322,11 @@
           :row-style="{height:50}"
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
-          <el-table-column prop="task.id" label="任务ID" header-align="left" width="80"></el-table-column>
+          <el-table-column prop="task.id" class-name="links" label="任务ID" header-align="left" width="80">
+            <template slot-scope="scope">
+              <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="缩略图" v-if="show_project_image" width="75px">
             <template slot-scope="scope">
               <el-image
@@ -330,7 +351,11 @@
               >{{scope.row.project.name}}</router-link>
             </template>
           </el-table-column>
-          <el-table-column prop="asset.name" label="镜头" header-align="left" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="asset.name" class-name="links" label="镜头" header-align="left" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
+            </template>
+          </el-table-column>
           <el-table-column width="30px">
             <template slot-scope="scope">
               <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
@@ -389,15 +414,14 @@
                     :value="item.value"
                   ></el-option>
                 </el-select>
-                
               </div>
               <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
-               <el-progress
-              :stroke-width="12"
-              :percentage="scope.row.task.schedule"
-              v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
-            ></el-progress>
-            <div v-if="scope.row.task.status == 3" >{{scope.row.task.statements}}</div>
+              <el-progress
+                :stroke-width="12"
+                :percentage="scope.row.task.schedule"
+                v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
+              ></el-progress>
+              <div v-if="scope.row.task.status == 3">{{scope.row.task.statements}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="asset.episode" label="集数"></el-table-column>

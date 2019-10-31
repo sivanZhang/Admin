@@ -206,7 +206,10 @@ import { getUserList } from "@/api/admin";
 export default {
   props: {
     project: {
-      type: Object
+      type: Object,
+      default:{
+        image:""
+      }
     },
     RemarksData: {
       type: Array,
