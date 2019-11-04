@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import { allocationScene } from "@/api/assets";
+import { needScene } from "@/api/assets";
 import { getLinks } from "@/api/links";
 import { getDept } from "@/api/admin";
 import { addTask } from "@/api/task";
@@ -305,8 +305,13 @@ export default {
       });
     },
     getScene() {
-      allocationScene().then(({ data }) => {
-        this.sceneNeed = [...data.need];
+      let payload = {
+        tag: 0,
+        pagenum: 5,
+        page: 1
+      };
+      needScene(payload).then(({ data }) => {
+        this.sceneNeed = [...data.msg];
       });
     }
   }

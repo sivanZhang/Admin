@@ -1,7 +1,7 @@
 <template>
   <el-card shadow="hover">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
-      <el-badge :value="myTaskList.length" :hidden="!myTaskList.length" :max="99" class="item">
+      <el-badge :value="MyTaskList.length" :hidden="!MyTaskList.length" :max="99" class="item">
         <span style="padding-right: 10px;">我的任务</span>
       </el-badge>
       <el-button @click="targetMore" type="text">查看更多</el-button>
@@ -40,7 +40,7 @@
     <ul class="list">
       <li
         class="item"
-        v-for="item of myTaskList.filter((t,i)=>1<5)"
+        v-for="item of MyTaskList.filter((t,i)=>1<5)"
         :key="item.task.id"
         @click="showDrawer(item)"
         style="cursor: pointer;"
@@ -52,14 +52,14 @@
         <div class="message">{{item.task.content}}</div>
       </li>
     </ul>
-    <div v-show="myTaskList.length>5">...</div>
+    <div v-show="MyTaskList.length>5">...</div>
   </el-card>
 </template>
 <script>
 import { getHomepageMyTask, getFeedback } from "@/api/task";
 export default {
   props: {
-    myTaskList: {
+    MyTaskList: {
       type: Array
     }
   },

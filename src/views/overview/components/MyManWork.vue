@@ -35,9 +35,9 @@
         ref="taskForm"
       >
         <el-form-item label="选择任务" prop="task_id">
-          <el-select v-model="TaskForm.task_id" placeholder="请选择填报任务">
+          <el-select v-model="TaskForm.task_id" placeholder="请选择填报任务" @change="selMyTask">
             <el-option
-              v-for="item in myTasks"
+              v-for="item in MyTaskList"
               :key="item.task.id"
               :label="item.task.name"
               :value="item.task.id"
@@ -67,7 +67,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="工时 (h)" prop="labor_hour">
-          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时"></el-input-number>
+          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" :max="24"></el-input-number>
         </el-form-item>
         <el-form-item label="日期" prop="date">
           <el-date-picker
@@ -135,7 +135,7 @@ export default {
     MyCharts
   },
   props: {
-    myTasks: {
+    MyTaskList: {
       type: Array,
       default: []
     }
@@ -205,6 +205,14 @@ export default {
     this.getMyWorkHours();
   },
   methods: {
+    selMyTask(val){
+      this.MyTaskList.map(item=>{
+        if(item.task.id === val){
+          console.log(item)
+        }
+      })
+      
+    },
     getMyWorkHours() {
       let today = dayjs().format("YYYY/MM/DD");
       let params = { total_count: "", end: today };

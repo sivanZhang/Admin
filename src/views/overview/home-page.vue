@@ -151,7 +151,7 @@ export default {
     getMyTasks() {
       getStatusTaskList({
         mytask: null,
-        status: "2"
+        status: "[2]"
       }).then(({ data }) => {
         this.MyTaskList = [...data.msg];
       });
@@ -279,12 +279,12 @@ export default {
       <!-- <svg-icon icon-class="caitongzhi" />-->
       <el-col :span="5">
         <MyTask
-          :my-task-list="MyTaskList"
+          :MyTaskList="MyTaskList"
           @show-drawer="taskBoardRightShow"
         />
       </el-col>
       <el-col :span="6">
-        <MyManWork :my-tasks="MyTaskList" class="card" />
+        <MyManWork :MyTaskList="MyTaskList" class="card" />
       </el-col>
 
       <el-col :span="5">
