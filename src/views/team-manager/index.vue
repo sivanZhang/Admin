@@ -168,13 +168,6 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="执行人" prop="executor_list">
-            <template slot-scope="scope">
-              <el-row v-for="(item,index) of scope.row.executor_list" :key="index">
-                <el-col>{{item.name}}</el-col>
-              </el-row>
-            </template>
-          </el-table-column>
           <el-table-column label="创建日期" align="left" width="160px" prop="date">
             <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
           </el-table-column>
