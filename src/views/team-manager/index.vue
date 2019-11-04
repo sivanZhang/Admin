@@ -18,8 +18,8 @@
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
-                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
-              >{{scope.row.project.name}}</router-link>
+                :to="{name:'project-detail',params:{id:scope.row.project_id},query:{type:scope.row.project_type}}"
+              >{{scope.row.project_name}}</router-link>
             </template>
           </el-table-column>
           <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
@@ -117,8 +117,8 @@
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
-                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
-              >{{scope.row.project.name}}</router-link>
+                :to="{name:'project-detail',params:{id:scope.row.project_id},query:{type:scope.row.project_type}}"
+              >{{scope.row.project_name}}</router-link>
             </template>
           </el-table-column>
           <el-table-column label="镜头号" prop="name" show-overflow-tooltip></el-table-column>
