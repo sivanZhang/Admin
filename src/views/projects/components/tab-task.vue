@@ -89,6 +89,7 @@
       <!-- 筛选条件展示 -->
       <taskFilter ref="taskFilter" @refresh_close="closeSelectedTag" />
       <el-table
+        ref="multipleTable"
         :data="TaskList"
         style="margin-top:15px;width:100%"
         highlight-current-row
@@ -1204,6 +1205,7 @@ export default {
           if (data.status === 0) {
             this.$message.success(data.msg);
             this.mulEditDialog = false;
+            this.$refs.multipleTable.clearSelection();
             this.getTasks(2);
           } else {
             this.$message.error(data.msg);
