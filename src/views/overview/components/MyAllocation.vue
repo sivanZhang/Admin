@@ -15,8 +15,8 @@
       <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
         <template slot-scope="scope">
           <router-link
-            :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
-          >{{scope.row.project.name}}</router-link>
+            :to="{name:'project-detail',params:{id:scope.row.project_id},query:{type:scope.row.project_type}}"
+          >{{scope.row.project_name}}</router-link>
         </template>
       </el-table-column>
       
@@ -319,4 +319,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.links {
+    cursor: pointer;
+    color: #2d8cf0;
+  }
 </style>

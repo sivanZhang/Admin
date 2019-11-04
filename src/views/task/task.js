@@ -243,7 +243,8 @@ export default {
         }
       ],
       sortfilter: null, //保存单列排序的条件
-      assetShow:false
+      assetShow:false,
+      surplus_labor_hour:null
     };
   },
   methods: {
@@ -581,9 +582,10 @@ export default {
       this.TaskRecord = Object.assign({}, {
         task_id: row.task.id,
         type: 0,
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        
       });
-
+      this.surplus_labor_hour = row.surplus_labor_hour;
       this.logsLoading = true;
       this.$refs['taskApprovelog'].getApproveLog(row.task.id);
       queryTaskRecord({

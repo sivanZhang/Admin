@@ -66,6 +66,7 @@
             </el-col>
           </el-row>
         </el-form-item>
+        <el-form-item label="剩余工时" >{{leaveTime}}</el-form-item>
         <el-form-item label="工时 (h)" prop="labor_hour">
           <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" :max="24"></el-input-number>
         </el-form-item>
@@ -89,7 +90,7 @@
 <script>
 import MyCharts from "@/components/ECharts/BaseECharts";
 import { getMyManHour } from "@/api/manHour";
-import { addTaskRecord } from "@/api/task";
+import { addTaskRecord,queryTask } from "@/api/task";
 import AXIOS from "@/utils/request";
 import dayjs from "dayjs";
 let option = {
@@ -142,6 +143,7 @@ export default {
   },
   data() {
     return {
+      leaveTime:0,
       totalCount:'',
       TaskForm: {
         type: 0,
@@ -206,10 +208,8 @@ export default {
   },
   methods: {
     selMyTask(val){
-      this.MyTaskList.map(item=>{
-        if(item.task.id === val){
-          console.log(item)
-        }
+      queryTask({id:val}).then(({data})=>{
+        this.leaveTime = data.msg.surplus_labor_hour
       })
       
     },

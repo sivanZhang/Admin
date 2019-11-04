@@ -22,6 +22,7 @@
           </el-col>
         </el-row>
       </el-form-item>
+      <el-form-item label="剩余工时">{{surplus_labor_hour}}</el-form-item>
       <el-form-item label="工时" prop="labor_hour">
         <el-input-number v-model="TaskRecord.labor_hour" :min="1" :max="24"></el-input-number>
       </el-form-item>
@@ -39,7 +40,7 @@
 
 <script>
 export default {
-    props:['TaskRecord','createLoading'],
+    props:['TaskRecord','createLoading','surplus_labor_hour'],
     data(){
       return {
             customColors: [{

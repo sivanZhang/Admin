@@ -197,7 +197,8 @@
             </el-tab-pane>
             <el-tab-pane label="执行任务">
               <task-form
-                :task-record.sync="TaskRecord"
+                :surplus_labor_hour="surplus_labor_hour"
+                :TaskRecord="TaskRecord"
                 :createLoading="createLoading"
                 @addRecord="addRecord"
                 @cancel="cancel"
@@ -229,10 +230,7 @@
           :inner="isInner"
           ref="drawer-parent"
         >
-          <assetDrawer
-            :authAsset="authAsset"
-            ref="assetDrawer"
-          />
+          <assetDrawer :authAsset="authAsset" ref="assetDrawer" />
         </Drawer>
         <el-row style="padding-bottom:10px">
           <el-col style="text-align:right">
@@ -314,7 +312,6 @@
           :data="MyTaskList1"
           highlight-current-row
           border
-         
           style="width: 100%;"
           :cell-style="cellStyle"
           @sort-change="sortFilter"
@@ -322,7 +319,13 @@
           :row-style="{height:50}"
         >
           <el-table-column type="index" label="序号" align="center"></el-table-column>
-          <el-table-column prop="task.id" class-name="links" label="任务ID" header-align="left" width="80">
+          <el-table-column
+            prop="task.id"
+            class-name="links"
+            label="任务ID"
+            header-align="left"
+            width="80"
+          >
             <template slot-scope="scope">
               <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
             </template>
@@ -351,7 +354,13 @@
               >{{scope.row.project.name}}</router-link>
             </template>
           </el-table-column>
-          <el-table-column prop="asset.name" class-name="links" label="镜头" header-align="left" show-overflow-tooltip>
+          <el-table-column
+            prop="asset.name"
+            class-name="links"
+            label="镜头"
+            header-align="left"
+            show-overflow-tooltip
+          >
             <template slot-scope="scope">
               <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
             </template>
@@ -418,7 +427,7 @@
               <div v-else style="color:#909399">{{scope.row.task.status|taskStatus}}</div>
               <el-progress
                 :stroke-width="12"
-                :percentage="scope.row.task.schedule"
+                :percentage="scope.row.task.schedule?scope.row.task.schedule:0"
                 v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
               ></el-progress>
               <div v-if="scope.row.task.status == 3">{{scope.row.task.statements}}</div>
