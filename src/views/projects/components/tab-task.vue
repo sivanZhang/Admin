@@ -30,9 +30,6 @@
             <el-col :span="12">
               <el-checkbox v-model="show_content">制作内容</el-checkbox>
             </el-col>
-            <!-- <el-col :span="12">
-              <el-checkbox v-model="show_project_name">所属项目</el-checkbox>
-            </el-col>-->
             <el-col :span="12">
               <el-checkbox v-model="show_project_image">缩略图</el-checkbox>
             </el-col>
@@ -181,10 +178,13 @@
         >
           <template slot-scope="scope">
             {{scope.row.status|taskStatus}}
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress>
-            <div v-if="scope.row.status == 3" >{{scope.row.statements}}</div>
+            <el-progress
+              :stroke-width="12"
+              :percentage="scope.row.schedule"
+              v-if="scope.row.status != 3 && scope.row.status != 4"
+            ></el-progress>
+            <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
-            
         </el-table-column>
 
         <el-table-column
@@ -222,7 +222,9 @@
           width="90pxs"
           class-name="links"
         >
-          <template slot-scope="scope"><div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div></template>
+          <template slot-scope="scope">
+            <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="集数" prop="episode"></el-table-column>
         <el-table-column label="场次" prop="session"></el-table-column>
@@ -271,7 +273,7 @@
           <template slot-scope="scope">
             <el-progress :text-inside="true" :stroke-width="18" :percentage="scope.row.schedule"></el-progress>
           </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column label="提交次数" prop="submit_num"></el-table-column>
         <el-table-column
           label="创建日期"
@@ -412,17 +414,45 @@
             <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
           </el-form-item>
           <el-form-item label="任务难度" prop="grade">
-          <el-radio v-model="TaskForm.grade" :label="0">A+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="1">A</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="2">A-</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="3">B+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="4">B</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="5">B-</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="6">C+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="7">C</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="8">D+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="9">D</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="10">E</el-radio>
+            <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+                </el-col>
+              </el-row>
           </el-form-item>
           <el-form-item label="任务状态" prop="status">
             <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -511,17 +541,45 @@
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
-          <el-radio v-model="TaskForm.grade" :label="0">A+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="1">A</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="2">A-</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="3">B+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="4">B</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="5">B-</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="6">C+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="7">C</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="8">D+</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="9">D</el-radio>
-          <el-radio v-model="TaskForm.grade" :label="10">E</el-radio>
+         <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+                </el-col>
+              </el-row>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -665,10 +723,12 @@
           <el-col :span="20" style="padding-left:35px">
             <el-row>
               <el-col :span="8">
-            <h4 style="padding-bottom:10px">是否修改</h4>
+                <h4 style="padding-bottom:10px">是否修改</h4>
               </el-col>
               <el-col :span="16">
-            <div style="font-size:12px"><span style="font-weight:bold">任务难度:</span>A+ ----> E 难---->易，默认为中等等级</div>
+                <div style="font-size:12px">
+                  <span style="font-weight:bold">任务难度:</span>A+ ----> E 难---->易，默认为中等等级
+                </div>
               </el-col>
             </el-row>
           </el-col>
@@ -744,17 +804,45 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务难度" prop="grade">
-          <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
-          <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-col>
         </el-row>
@@ -880,7 +968,7 @@
       draggable
       ref="drawer-parent"
     >
-      <taskDrawer ref="taskDrawer"/>
+      <taskDrawer ref="taskDrawer" />
     </Drawer>
     <!-- 打开资产侧栏 -->
     <Drawer
@@ -893,11 +981,8 @@
       :inner="isInner"
       ref="drawer-parent"
     >
-    <assetDrawer
-      :authAsset="authAsset"
-      @refresh_assetList="getAssetList"
-      ref="assetDrawer"
-    /></Drawer>
+      <assetDrawer :authAsset="authAsset" @refresh_assetList="getAssetList" ref="assetDrawer" />
+    </Drawer>
   </div>
 </template>
 <script>
@@ -906,7 +991,7 @@ import { Transform } from "stream";
 import myMixin from "./mixins";
 import { mapState } from "vuex";
 import { getDeptUsers } from "@/api/admin";
-import { queryAssets, getHistoryVersion,auth } from "@/api/assets";
+import { queryAssets, getHistoryVersion, auth } from "@/api/assets";
 import { getLinks, getLink, addLinks } from "@/api/links";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getProjectJoinMeb } from "@/api/training";
@@ -923,7 +1008,7 @@ export default {
   data() {
     return {
       showdrawer: false,
-      assetShow:false,
+      assetShow: false,
       authTask: null,
       uploadVisible: false,
       activeTab: "first",
@@ -954,7 +1039,7 @@ export default {
       path: null,
       currentPage: 1,
       pageSize: 20,
-      pageSizeList: [20, 50, 100],     
+      pageSizeList: [20, 50, 100],
       show_name: true,
       show_link_dept_name: true,
       show_content: true,
@@ -982,7 +1067,7 @@ export default {
       multiSelect: [],
       name: "",
       linkstart: null,
-      linkend: null,     
+      linkend: null,
       trainingMenber: [],
       mulEditDialog: false,
       updateMulTask: {},
@@ -999,7 +1084,7 @@ export default {
       valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
       cutType: -1, //分页类别区分
       oneSel: null, //保存单列筛选的条件
-      authAsset:null
+      authAsset: null
     };
   },
   filters: {
@@ -1021,13 +1106,12 @@ export default {
   computed: {
     ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
-  components: {  
+  components: {
     taskMulSel,
     taskFilter,
-    taskSel,   
+    taskSel,
     assetDrawer,
-    taskDrawer,
-
+    taskDrawer
   },
   props: {
     AssetList: {
@@ -1069,8 +1153,8 @@ export default {
     }
   },
   methods: {
-    getAssetList(){
-      return
+    getAssetList() {
+      return;
     },
     //重置筛选条件展示
     selRefresh() {
@@ -1358,24 +1442,23 @@ export default {
         };
       }
     },
-   //展示任务侧栏
+    //展示任务侧栏
     showDrawer(item) {
       this.showdrawer = true;
-      this.$refs['taskDrawer'].showDrawer(item);
+      this.$refs["taskDrawer"].showDrawer(item);
     },
     //展开资产侧栏
-    show(id){
+    show(id) {
       this.assetShow = true;
       this.$refs["assetDrawer"].show(id);
-       //获取项目操作资产权限
+      //获取项目操作资产权限
       auth().then(({ data }) => {
         if (data.status === 0) {
           this.authAsset = data.auth.manage_asset;
         }
       });
     },
-    
-    
+
     change() {
       this.$forceUpdate();
     },
@@ -2011,5 +2094,6 @@ export default {
 .el-card {
   border-radius: 0px;
 }
+
 </style>
 

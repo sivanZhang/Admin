@@ -9,18 +9,23 @@
     <el-table
       v-loading="tableLoading"
       :data="AuditList"
-      style="margin-top:20px;width:100%"
+:header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       highlight-current-row
       @select="taskSelect"
       @select-all="taskSelect"
       :cell-style="cellStyle"
     >
       <el-table-column type="selection" width="60" align="center"></el-table-column>
-      <el-table-column prop="task.id" label="任务ID" class-name="links">
+      <el-table-column label="任务ID"  prop="task.id"  class-name="links" width="105px" >
         <template slot-scope="scope">
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
         </template>
       </el-table-column>
+       <!-- <el-table-column label="任务ID" class-name="links" prop="id" width="105px" sortable="custom">
+          <template slot-scope="scope">
+            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+          </template>
+        </el-table-column> -->
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="task.task_executors" label="任务执行人" width="120px">
         <template slot-scope="scope">
@@ -110,7 +115,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="所属项目" show-overflow-tooltip>
+      <el-table-column label="所属项目" show-overflow-tooltip  class-name="links">
         <template slot-scope="scope">
           <router-link
             :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
