@@ -23,7 +23,7 @@
         </el-row>
       </el-form-item>
       <el-form-item label="工时" prop="labor_hour">
-        <el-input-number v-model="TaskRecord.labor_hour" :min="1"></el-input-number>
+        <el-input-number v-model="TaskRecord.labor_hour" :min="1" :max="24"></el-input-number>
       </el-form-item>
       <el-form-item label="日期" prop="date">
         <el-date-picker v-model="TaskRecord.date" type="date" placeholder="选择日期" value-format="yyyy/MM/dd"
