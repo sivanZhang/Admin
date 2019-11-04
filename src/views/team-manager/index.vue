@@ -58,25 +58,32 @@
           <el-table-column prop="level" label="难度等级">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
-          <el-table-column label="当前环节" align="center" width="160px">
+          <el-table-column label="未分配环节" align="center" width="160px">
             <el-table-column prop="link" label="工种" align="left">
               <template slot-scope="scope">
-                <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
+                <div
+                  v-for="(todo,index) of scope.row.not_allcoted_link"
+                  :key="index"
+                >{{todo.dept_name}}</div>
               </template>
             </el-table-column>
             <el-table-column label="截止日期" align="left" width="95px">
               <template slot-scope="scope">
                 <div
-                  v-for="(todo,index) of scope.row.link"
+                  v-for="(todo,index) of scope.row.not_allcoted_link"
                   :key="index"
                   style="position:top"
-                >{{todo.date_end|dateFormat}}</div>
+                >{{todo.dept_date_end|dateFormat}}</div>
               </template>
             </el-table-column>
           </el-table-column>
           <el-table-column label="创建日期" align="left" width="160px" prop="date">
             <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
           </el-table-column>
+          <el-table-column label="截止日期" align="left" width="160px" prop="date">
+            <template slot-scope="scope">{{scope.row.total_date_end|dateFormat}}</template>
+          </el-table-column>
+
           <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
           <el-table-column prop="remark" label="备注" align="left"></el-table-column>
         </el-table>
@@ -145,6 +152,21 @@
           </el-table-column>
           <el-table-column prop="level" label="难度等级">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
+          </el-table-column>
+          <el-table-column label="已分配的环节" align="center" width="160px">
+            <el-table-column prop="link" label="工种" align="left">
+              <template slot-scope="scope">
+                <div v-for="(todo,index) of scope.row.allcoted_link" :key="index">{{todo.dept_name}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="任务执行人" align="left" width="210apx">
+              <template slot-scope="scope">
+                <div
+                  v-for="(item,index) of scope.row.allcoted_link"
+                  :key="index"
+                >{{item.executors|executorFilter}}</div>
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="执行人" prop="executor_list">
             <template slot-scope="scope">
@@ -356,6 +378,15 @@ export default {
           this.getNotNeedScene();
         }
       }
+    }
+  },
+  filters: {
+    executorFilter(val) {
+      let arr = [];
+      val.forEach(item => {
+        arr.push(item);
+      });
+      return arr.join();
     }
   },
   methods: {
