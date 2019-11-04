@@ -63,8 +63,12 @@ export function getAssetsEndStatus(data) {
 export function getAssetsApprove(params){
     return AXIOS.get('/approve/approve_result/?01',{params})
 }
-//组长分配镜头
-export function allocationScene(params){
+//组长分配镜头（已分配）
+export function noNeedScene(params){
+    return AXIOS.get('/assets/scene/',{params})
+}
+//组长分配镜头（未分配）
+export function needScene(params){
     return AXIOS.get('/assets/scene/',{params})
 }
 

@@ -2,7 +2,7 @@
 <template>
   <div id="team-manager" ref="drawer-parent">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="未分配镜头" name="first">
+      <el-tab-pane label="未分配镜头" name="first" lazy>
         <el-table
           ref="sceneNeed"
           :data="sceneNeed"
@@ -106,7 +106,7 @@
           :border="false"
           v-loading="tableLoading"
         >
-          <el-table-column type="index" :index="indexMethod"></el-table-column>
+          <el-table-column type="index" :index="indexMethod2"></el-table-column>
           <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
             <template slot-scope="scope">
               <router-link
@@ -306,7 +306,7 @@
 </template>
 
 <script>
-import { allocationScene } from "@/api/assets";
+import { noNeedScene, needScene } from "@/api/assets";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import myMixin from "@/views/projects/components/mixins";
 import { getLinks } from "@/api/links";
@@ -348,13 +348,15 @@ export default {
     };
   },
   watch: {
-    // activeName: {
-    //   handler: function(newVal, oldVal) {
-    //     if (newVal) {
-    //       this.getScene();
-    //     }
-    //   }
-    // }
+    activeName: {
+      handler: function(newVal, oldVal) {
+        if (newVal == "first") {
+          this.getNeedScene();
+        } else {
+          this.getNotNeedScene();
+        }
+      }
+    }
   },
   methods: {
     cellStyle({ row, column, rowIndex, columnIndex }) {
@@ -478,25 +480,35 @@ export default {
       this.multipleSelection = val;
       //console.log(this.multipleSelection.length);
     },
-    getScene() {
+    //未分配镜头
+    getNeedScene() {
       this.sceneNeed = [];
-      this.sceneUnneed = [];
       let payload = {
-        pagenum: this.activeName == "first" ? this.pageSize : this.pageSize2,
-        page: this.activeName == "first" ? this.currentPage : this.currentPage2
+        tag: 0,
+        pagenum: this.pageSize,
+        page: this.currentPage
       };
       this.tableLoading = true;
-      allocationScene(payload).then(({ data }) => {
-        
-          this.sceneNeed = [...data.need];
-          this.total = data.need_page.count;
-          this.pageCount = data.need_page.page_count;
-        
-          this.sceneUnneed = [...data.not_need];
-          this.total2 = data.not_need_page.count;
-          this.pageCount2 = data.not_need_page.page_count;
-        
-
+      needScene(payload).then(({ data }) => {
+        this.sceneNeed = [...data.msg];
+        this.total = data.count;
+        this.pageCount = data.page_count;
+        this.tableLoading = false;
+      });
+    },
+    //已分配镜头
+    getNotNeedScene() {
+      this.sceneUnneed = [];
+      let payload = {
+        tag: 1,
+        pagenum: this.pageSize2,
+        page: this.currentPage2
+      };
+      this.tableLoading = true;
+      noNeedScene(payload).then(({ data }) => {
+        this.sceneUnneed = [...data.msg];
+        this.total2 = data.count;
+        this.pageCount2 = data.page_count;
         this.tableLoading = false;
       });
     },
@@ -504,60 +516,64 @@ export default {
     handleSizeChange(val) {
       if (this.activeName == "first") {
         this.pageSize = val;
+        this.getNeedScene();
       } else {
         this.pageSize2 = val;
+        this.getNotNeedScene();
       }
-
-      this.getScene();
     },
     handleCurrentChange(currentPage) {
       if (this.activeName == "first") {
         this.currentPage = currentPage;
+        this.getNeedScene();
       } else {
         this.currentPage2 = currentPage;
+        this.getNotNeedScene();
       }
-      this.getScene();
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     },
+    indexMethod2(index) {
+      return (this.currentPage2 - 1) * this.pageSize2 + index + 1;
+    },
     //难度等级格式化显示
     Level: function(row, column) {
       switch (row.level) {
         case 0:
-            return "A+";
-            break;
-          case 1:
-            return "A";
-            break;
-          case 2:
-            return "A-";
-            break;
-          case 3:
-            return "B+";
-            break;
-          case 4:
-            return "B";
-            break;
-          case 5:
-            return "B-";
-            break;
-          case 6:
-            return "C+";
-            break;
-          case 7:
-            return "C";
-            break;
-          case 8:
-            return "D+";
-            break;
-          case 9:
-            return "D";
-            break;
-          case 10:
-            return "E";
-            break;
+          return "A+";
+          break;
+        case 1:
+          return "A";
+          break;
+        case 2:
+          return "A-";
+          break;
+        case 3:
+          return "B+";
+          break;
+        case 4:
+          return "B";
+          break;
+        case 5:
+          return "B-";
+          break;
+        case 6:
+          return "C+";
+          break;
+        case 7:
+          return "C";
+          break;
+        case 8:
+          return "D+";
+          break;
+        case 9:
+          return "D";
+          break;
+        case 10:
+          return "E";
+          break;
       }
     },
     //优先级格式化显示
@@ -573,7 +589,7 @@ export default {
     }
   },
   created() {
-    this.getScene();
+    this.getNeedScene();
   }
 };
 </script>
