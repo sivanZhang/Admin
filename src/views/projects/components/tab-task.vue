@@ -87,6 +87,7 @@
       <taskFilter ref="taskFilter" @refresh_close="closeSelectedTag" />
       <el-table
         ref="multipleTable"
+        :height="curHeight"
         :data="TaskList"
         style="margin-top:15px;width:100%"
         highlight-current-row
@@ -126,7 +127,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column width="30px">
+        <!-- <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
               <el-card
@@ -165,8 +166,8 @@
               ></el-card>
             </el-tooltip>
           </template>
-        </el-table-column>
-        <el-table-column
+        </el-table-column> -->
+        <!-- <el-table-column
           label="状态"
           prop="status"
           v-if="show_status"
@@ -185,8 +186,24 @@
             ></el-progress>
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
+        </el-table-column> -->
+         <el-table-column
+          label="进度"
+          prop="status"
+          v-if="show_status"
+          width="160px"
+          align="left"
+          
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
+        >
+          <template slot-scope="scope">
+            <el-progress
+              :stroke-width="12"
+              :percentage="scope.row.schedule"
+            ></el-progress>
+            <div v-if="scope.row.status == 3"></div>
+          </template>
         </el-table-column>
-
         <el-table-column
           prop="name"
           label="任务"
@@ -1084,8 +1101,14 @@ export default {
       valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
       cutType: -1, //分页类别区分
       oneSel: null, //保存单列筛选的条件
-      authAsset: null
+      authAsset: null,
+      curHeight:0,
     };
+  },
+  beforeMount() {
+      var h = document.documentElement.clientHeight || document.body.clientHeight;
+      this.curHeight = h - 329; //减去页面上固定高度height
+      //console.log(h);
   },
   filters: {
     executorFilter(val) {
@@ -2040,6 +2063,7 @@ export default {
       }
     }
   },
+ 
   async created() {
     if (this.$route.query.type == 0) {
       this.getTeam();

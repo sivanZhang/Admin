@@ -117,6 +117,7 @@
       <assetFilter ref="assetFilter" @refresh_close="closeSelectedTag" />
       <el-table
         ref="assetTable"
+        :height="curHeight"
         :data="AssetList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         :cell-style="cellStyle"
@@ -175,7 +176,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column width="30px">
+        <!-- <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
               <el-card
@@ -214,8 +215,8 @@
               ></el-card>
             </el-tooltip>
           </template>
-        </el-table-column>
-        <el-table-column
+        </el-table-column> -->
+        <!-- <el-table-column
           label="状态"
           prop="status"
           v-if="show_status"
@@ -231,6 +232,22 @@
               :stroke-width="12"
               :percentage="scope.row.schedule"
               v-if="scope.row.status != 3 && scope.row.status != 4"
+            ></el-progress>
+          </template>
+        </el-table-column> -->
+         <el-table-column
+          label="进度"
+          prop="status"
+          v-if="show_status"
+          width="160px"
+          align="left"
+          
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
+        >
+          <template slot-scope="scope">
+            <el-progress
+              :stroke-width="12"
+              :percentage="scope.row.schedule"
             ></el-progress>
           </template>
         </el-table-column>
@@ -1104,8 +1121,14 @@ export default {
       sortSelForm: {}, //保存多列筛选条件
       valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
       sortfilter: null, //保存单列排序的条件
-      sortMulFilter: null //保存多列排序的条件
+      sortMulFilter: null, //保存多列排序的条件
+      curHeight:0,
     };
+  },
+  beforeMount() {
+    var h = document.documentElement.clientHeight || document.body.clientHeight;
+    this.curHeight = h - 329; //减去页面上固定高度height
+    console.log(h);
   },
   watch: {
     assetId: {
