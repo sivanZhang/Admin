@@ -318,7 +318,7 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           :row-style="{height:50}"
         >
-          <el-table-column type="index" label="序号" align="center"></el-table-column>
+          <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
           <el-table-column
             prop="task.id"
             class-name="links"
@@ -475,6 +475,19 @@
             <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
           </el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :page-count="pageCount"
+          :total="total"
+          style="margin-top:10px"
+        ></el-pagination>
+      </div>
       </el-tab-pane>
     </el-tabs>
     <el-dialog title="任务执行" :visible.sync="isDialogShow" width="512px" center :modal="false">

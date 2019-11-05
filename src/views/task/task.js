@@ -4,7 +4,7 @@ import {
   queryTaskRecord,
   queryTask,
   getStatusTaskList,
-  
+
 } from "@/api/task";
 import {
   getHistoryVersion,
@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      authAsset:null,
+      authAsset: null,
       activeTab: "second",
       TaskDetail: {
         name: ''
@@ -243,9 +243,14 @@ export default {
         }
       ],
       sortfilter: null, //保存单列排序的条件
-      assetShow:false,
-      surplus_labor_hour:null,
-      statusNumber:[],
+      assetShow: false,
+      surplus_labor_hour: null,
+      statusNumber: [],
+      pageCount: 0,
+      total: 0,
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
     };
   },
   methods: {
@@ -326,6 +331,37 @@ export default {
         data
       }) => {
         this.MyTaskList1 = [...data.msg];
+        switch(this.changecolor){
+          case null:
+           this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0;
+           break;
+          case  6:
+            this.total = (this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0) +
+            (this.statusNumber.pause_num ? this.statusNumber.pause_num : 0) +
+            (this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0) +
+            (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0);
+            break;
+          case 1:
+              this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0;
+              break;
+          case 2:
+            this.this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0;
+            break;
+          case 0:
+            this.total =this.statusNumber.pause_num ? this.statusNumber.pause_num : 0;
+            break;
+          case 3:
+              this.total=this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0;
+              break;
+          case 5:
+            this.total = this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0;
+            break;
+          case 4:
+            this.total = this.statusNumber.accomplish_num ? this.statusNumber.accomplish_num : 0;
+            break;
+        }
+        // this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0;
+        this.pageCount = data.page_count;
       })
     },
     search(data) {
@@ -402,29 +438,34 @@ export default {
     //点击筛选任务
     task(status) {
       this.changecolor = status;
-      if (status == 6) {
-        let data = {
-          mytask: null,
-          status: "[0,1,2,5]"
-        };
-        this.search(data);
-        // this.getstatus(data);
-      } else if (status == null) {
-        let data = {
-          mytask: null,
-          status: "[0,1,2,3,4,5]"
-        };
-        this.search(data);
-        // this.getstatus(data);
-      } else {
-        let data = {
-          mytask: null,
-          status: "[" + status + "]"
-        };
-        this.search(data);
-        // this.getstatus(data);
+      let data = {
+        mytask: null,
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+      switch (this.changecolor) {
+        case 6:
+          data = {
+            ...data,
+            status: "[0,1,2,5]"
+          };
+          break;
+        case null:
+          data = {
+            ...data,
+            status: "[0,1,2,3,4,5]"
+          };
+          break;
+        default:
+          data = {
+            ...data,
+            status: "[" + status + "]"
+          };
+          break;
       }
 
+      this.search(data);
+      // this.getstatus(data);
     },
     //筛选重置
     reTask(status) {
@@ -584,7 +625,7 @@ export default {
         task_id: row.task.id,
         type: 0,
         date: new Date().toLocaleDateString(),
-        
+
       });
       this.surplus_labor_hour = row.surplus_labor_hour;
       this.logsLoading = true;
@@ -632,14 +673,16 @@ export default {
     show(id) {
       this.assetShow = true;
       //获取项目操作资产权限
-      auth().then(({ data }) => {
+      auth().then(({
+        data
+      }) => {
         if (data.status === 0) {
           this.authAsset = data.auth.manage_asset;
         }
       });
       this.$refs['assetDrawer'].show(id);
     },
-    
+
     getAssetVersion() {
       getHistoryVersion({
         asset_id: this.assetId
@@ -700,58 +743,73 @@ export default {
         }
       });
     },
-    getstatusNumber(){
-       getStatusTaskList({number:''}).then(({
+    getstatusNumber() {
+      getStatusTaskList({
+        number: ''
+      }).then(({
         data
       }) => {
-         this.statusNumber = data;
+        this.statusNumber = data;
       });
-    }
+    },
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.task(this.changecolor)
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.task(this.changecolor)
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
   },
   computed: {
     topArr() {
       return [{
           title: '所有任务',
           status: null,
-          num: this.statusNumber.all_num?this.statusNumber.all_num:0
+          num: this.statusNumber.all_num ? this.statusNumber.all_num : 0
         },
         {
           title: '未完成',
           status: 6,
-          num: (this.statusNumber.timeout_num?this.statusNumber.timeout_num:0)+
-               (this.statusNumber.pause_num?this.statusNumber.pause_num:0) +
-               (this.statusNumber.not_start_num?this.statusNumber.not_start_num:0) + 
-               (this.statusNumber.ongoing_num?this.statusNumber.ongoing_num:0 )
+          num: (this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0) +
+            (this.statusNumber.pause_num ? this.statusNumber.pause_num : 0) +
+            (this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0) +
+            (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0)
         },
         {
           title: '未开始',
           status: 1,
-          num: this.statusNumber.not_start_num?this.statusNumber.not_start_num:0
+          num: this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0
         },
         {
           title: '进行中',
           status: 2,
-          num: this.statusNumber.ongoing_num?this.statusNumber.ongoing_num:0
+          num: this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0
         },
         {
           title: '暂停',
           status: 0,
-          num: this.statusNumber.pause_num?this.statusNumber.pause_num:0
+          num: this.statusNumber.pause_num ? this.statusNumber.pause_num : 0
         },
         {
           title: '审核中',
           status: 3,
-          num: this.statusNumber.in_review_num?this.statusNumber.in_review_num:0
+          num: this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0
         },
         {
           title: '超时',
           status: 5,
-          num: this.statusNumber.timeout_num?this.statusNumber.timeout_num:0
+          num: this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0
         },
         {
           title: '完成',
           status: 4,
-          num: this.statusNumber.accomplish_num?this.statusNumber.accomplish_num:0
+          num: this.statusNumber.accomplish_num ? this.statusNumber.accomplish_num : 0
         }
 
         // {
