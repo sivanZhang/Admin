@@ -244,7 +244,8 @@ export default {
       ],
       sortfilter: null, //保存单列排序的条件
       assetShow:false,
-      surplus_labor_hour:null
+      surplus_labor_hour:null,
+      statusNumber:[],
     };
   },
   methods: {
@@ -698,6 +699,13 @@ export default {
             //     this.PassArr.push(item.task);
         }
       });
+    },
+    getstatusNumber(){
+       getStatusTaskList({number:''}).then(({
+        data
+      }) => {
+         this.statusNumber = data;
+      });
     }
   },
   computed: {
@@ -705,42 +713,45 @@ export default {
       return [{
           title: '所有任务',
           status: null,
-          num: this.MyTaskList.length
+          num: this.statusNumber.all_num?this.statusNumber.all_num:0
         },
         {
           title: '未完成',
           status: 6,
-          num: this.DraftArr.length + this.InProgressArr.length + this.PauseArr.length + this.TimeOutArr.length
+          num: (this.statusNumber.timeout_num?this.statusNumber.timeout_num:0)+
+               (this.statusNumber.pause_num?this.statusNumber.pause_num:0) +
+               (this.statusNumber.not_start_num?this.statusNumber.not_start_num:0) + 
+               (this.statusNumber.ongoing_num?this.statusNumber.ongoing_num:0 )
         },
         {
           title: '未开始',
           status: 1,
-          num: this.DraftArr.length
+          num: this.statusNumber.not_start_num?this.statusNumber.not_start_num:0
         },
         {
           title: '进行中',
           status: 2,
-          num: this.InProgressArr.length
+          num: this.statusNumber.ongoing_num?this.statusNumber.ongoing_num:0
         },
         {
           title: '暂停',
           status: 0,
-          num: this.PauseArr.length
+          num: this.statusNumber.pause_num?this.statusNumber.pause_num:0
         },
         {
           title: '审核中',
           status: 3,
-          num: this.ApproveingArr.length
+          num: this.statusNumber.in_review_num?this.statusNumber.in_review_num:0
         },
         {
           title: '超时',
           status: 5,
-          num: this.TimeOutArr.length
+          num: this.statusNumber.timeout_num?this.statusNumber.timeout_num:0
         },
         {
           title: '完成',
           status: 4,
-          num: this.FinishedArr.length
+          num: this.statusNumber.accomplish_num?this.statusNumber.accomplish_num:0
         }
 
         // {
@@ -752,7 +763,8 @@ export default {
     }
   },
   created() {
-    this.getMyTasks(1)
+    this.getstatusNumber();
+    this.getMyTasks(1);
     //首页中传递过来的字段
     switch (this.$store.state.mine.keyword) {
       case 'priority':
