@@ -331,28 +331,28 @@ export default {
         data
       }) => {
         this.MyTaskList1 = [...data.msg];
-        switch(this.changecolor){
+        switch (this.changecolor) {
           case null:
-           this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0;
-           break;
-          case  6:
+            this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0;
+            break;
+          case 6:
             this.total = (this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0) +
-            (this.statusNumber.pause_num ? this.statusNumber.pause_num : 0) +
-            (this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0) +
-            (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0);
+              (this.statusNumber.pause_num ? this.statusNumber.pause_num : 0) +
+              (this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0) +
+              (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0);
             break;
           case 1:
-              this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0;
-              break;
+            this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0;
+            break;
           case 2:
             this.this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0;
             break;
           case 0:
-            this.total =this.statusNumber.pause_num ? this.statusNumber.pause_num : 0;
+            this.total = this.statusNumber.pause_num ? this.statusNumber.pause_num : 0;
             break;
           case 3:
-              this.total=this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0;
-              break;
+            this.total = this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0;
+            break;
           case 5:
             this.total = this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0;
             break;
@@ -627,7 +627,7 @@ export default {
         date: new Date().toLocaleDateString(),
 
       });
-      this.surplus_labor_hour = row.surplus_labor_hour;
+
       this.logsLoading = true;
       this.$refs['taskApprovelog'].getApproveLog(row.task.id);
       queryTaskRecord({
@@ -652,7 +652,8 @@ export default {
       }) => {
         this.TaskDetail = {
           ...data.msg
-        }
+        };
+        this.surplus_labor_hour = data.msg.surplus_labor_hour;
         this.Asset = this.TaskDetail.asset;
         this.Link = this.TaskDetail.link_dept_name;
         this.detailLoading = false;

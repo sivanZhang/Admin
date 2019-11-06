@@ -151,7 +151,9 @@ export default {
     getMyTasks() {
       getStatusTaskList({
         mytask: null,
-        status: "[2]"
+        status: "[2]",
+        page:1,
+        pagenum:20
       }).then(({ data }) => {
         this.MyTaskList = [...data.msg];
       });
