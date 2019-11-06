@@ -68,7 +68,7 @@
         </el-form-item>
         <el-form-item label="剩余工时" >{{leaveTime}}</el-form-item>
         <el-form-item label="工时 (h)" prop="labor_hour">
-          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" :max="24"></el-input-number>
+          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" :min="0" :max="leaveTime < 24? leaveTime: 24"></el-input-number>
         </el-form-item>
         <el-form-item label="日期" prop="date">
           <el-date-picker
