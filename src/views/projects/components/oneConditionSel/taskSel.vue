@@ -61,7 +61,7 @@ export default {
       columnSelect: [
         {
           value: "name",
-          label: "任务"
+          label: "任务名称"
         },
         {
           value: "dept",
@@ -70,6 +70,10 @@ export default {
         {
           value: "content",
           label: "制作内容"
+        },
+        {
+          value: "assetname",
+          label: "镜头号"
         },
         {
           value: "priority",
@@ -265,6 +269,11 @@ export default {
           this.keyword &&
             (data = { ...data, name: this.keyword, pagenum: 20, page: 1 });
           this.name = { name: this.keyword };
+          break;
+        case "assetname":
+          this.keyword &&
+            (data = { ...data, assetname: this.keyword, pagenum: 20, page: 1 });
+          this.name = { assetname: this.keyword };
           break;
         case "dept":
           this.keyword && (data = { ...data, dept: this.keyword });

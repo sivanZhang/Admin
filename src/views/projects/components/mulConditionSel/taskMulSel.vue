@@ -5,7 +5,7 @@
       <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="任务" prop="name">
+            <el-form-item label="任务名称" prop="name">
               <el-input v-model="sortSelForm.name"></el-input>
             </el-form-item>
           </el-col>
@@ -106,6 +106,13 @@
           </el-form-item>
         </el-row>
         <el-row>
+          <el-col >
+            <el-form-item label="镜头号" prop="assetname">
+              <el-input v-model="sortSelForm.assetname"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col align="right">
             <el-button type="primary" @click="MulSel()">筛选</el-button>
           </el-col>
@@ -146,6 +153,9 @@ export default {
       }
       if (this.sortSelForm.name) {
         this.showMulChoose.name = this.sortSelForm.name;
+      }
+      if (this.sortSelForm.assetname) {
+        this.showMulChoose.assetname = this.sortSelForm.assetname;
       }
       if (this.sortSelForm.dept) {
         this.showMulChoose.dept = this.sortSelForm.dept;

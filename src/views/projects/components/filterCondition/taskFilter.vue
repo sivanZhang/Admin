@@ -6,12 +6,24 @@
   >
     <label for style="width:80px">筛选条件：</label>
     <scroll-pane class="tags-view-wrapper">
+      
+       <div
+        class="tags-view-item"
+        :class="showMulChoose.assetname?'active':''"
+        v-if="showMulChoose.assetname&&selShowAssetName"
+      >
+        镜头号：{{showMulChoose.assetname}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('assetname')"
+        />
+      </div>
       <div
         class="tags-view-item"
         :class="showMulChoose.name?'active':''"
         v-if="showMulChoose.name&&selShowName"
       >
-        任务：{{showMulChoose.name}}
+        任务名称：{{showMulChoose.name}}
         <span
           class="el-icon-close"
           @click.prevent.stop="closeSelectedTag('name')"
@@ -127,6 +139,7 @@ export default {
   components: { ScrollPane },
   data() {
     return {
+      selShowAssetName:true,
       selShowName: true,
       selShowDept: true,
       selShowContent: true,
@@ -153,6 +166,10 @@ export default {
         case "name":
           delete this.sortSelForm.name;
           this.selShowName = false;
+          break;
+        case "assetname":
+          delete this.sortSelForm.assetname;
+          this.selShowAssetName = false;
           break;
         case "dept":
           delete this.sortSelForm.dept;
