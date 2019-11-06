@@ -13,7 +13,7 @@
       :cell-style="cellStyle"
       border
     >
-      <el-table-column width="30px">
+      <!-- <el-table-column width="30px">
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
             <el-card
@@ -52,25 +52,25 @@
             ></el-card>
           </el-tooltip>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="任务ID" prop="id" width="90px" class-name="links">
         <template slot-scope="scope">
           <div @click="showDrawer(scope.row)">{{scope.row.id}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="缩略图" width="100px">
+      <el-table-column label="缩略图" width="200px">
         <template slot-scope="scope" v-if="!scope.row.pid">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset.image"
             :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px;height: 100px;cursor: pointer; display:block;"
           >
             <div slot="placeholder" class="image-slot">
               加载中
               <span class="dot">...</span>
             </div>
             <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
+               <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"></el-image>
             </div>
           </el-image>
         </template>
@@ -79,7 +79,9 @@
       <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
         <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
       </el-table-column>
-      <el-table-column label="制作内容" align="left" width="300px" prop="content" show-overflow-tooltip></el-table-column>
+      <el-table-column label="制作内容" align="left" width="150px" prop="content" show-overflow-tooltip>
+        <template slot-scope="scope"><span style="white-space: pre-line;">{{scope.row.content}}</span></template>
+      </el-table-column>
       <!-- <el-table-column label="镜头号" show-overflow-tooltip prop="asset" width="90pxs">
         <template slot-scope="scope">{{scope.row.asset.name}}</template>
       </el-table-column>-->

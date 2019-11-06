@@ -157,7 +157,7 @@
                 <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
+                <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
               </div>
             </el-image>
             <el-image
@@ -171,7 +171,7 @@
                 <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
+               <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
               </div>
             </el-image>
           </template>
@@ -526,11 +526,15 @@
           show-overflow-tooltip
           v-if="show_inner_version"
           sortable="custom"
-        ></el-table-column>
+        >
+        <template slot-scope="scope">
+            <span  style="white-space: pre-line;">{{scope.inner_version}}</span>
+        </template>
+        </el-table-column>
         <el-table-column
           prop="content"
           label="制作内容"
-          width="400px"
+          width="150px"
           align="left"
           show-overflow-tooltip
           v-if="show_content"
@@ -547,7 +551,7 @@
             >
               <span>{{scope.row.content?scope.row.content:"-"}}</span>
             </el-input>
-            <span
+            <span style="white-space: pre-line;"
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
