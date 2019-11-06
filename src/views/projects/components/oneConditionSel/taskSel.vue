@@ -120,11 +120,10 @@ export default {
   watch: {
     colSel: {
       handler: function(newVal, oldVal) {
-        //console.log(newVal);
+        this.columnSelect2 = [];
         switch (newVal) {
           case "status":
             this.colShow = false;
-            // console.log(this.colShow, this.chooseSel);
             this.colSel2 = [1];
             this.columnSelect2 = [
               {
