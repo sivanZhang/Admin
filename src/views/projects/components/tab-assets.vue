@@ -530,8 +530,8 @@
         <el-table-column
           prop="content"
           label="制作内容"
-          align="left"
           width="400px"
+          align="left"
           show-overflow-tooltip
           v-if="show_content"
         >
@@ -1106,7 +1106,6 @@ export default {
       finish: [],
       notstart: [],
       pause: [],
-
       attrsList: [],
       customAttrs: [],
       attrsTypeNum: null,
@@ -1290,6 +1289,7 @@ export default {
             break;
           case "制作内容":
             this.cellCol = "content";
+            break;
           case "优先级":
             this.cellCol = "priority";
             break;
@@ -1552,14 +1552,8 @@ export default {
       function dateFormat(date) {
         return new Date(date * 1000).toLocaleDateString();
       }
-      // console.log("edit");
-      // console.log(row);
       if (this.iconShow === true) {
         this.$confirm("当前修改未保存", "注意", {
-          // confirmButtonText: "确定",
-
-          // concelButtonText: "取消",
-
           type: "warning"
         });
       } else {
@@ -1585,6 +1579,7 @@ export default {
       this.dbCell = false;
       let payload = {
         id: row.id,
+        content:row.content,
         priority: row.priority,
         level: row.level,
         ...this.ImgForm,

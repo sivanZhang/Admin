@@ -102,6 +102,7 @@
         v-loading="tableLoading"
         @filter-change="filterHandler"
         @sort-change="sortFilter"
+        @cell-dblclick="editCell"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
@@ -166,7 +167,7 @@
               ></el-card>
             </el-tooltip>
           </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <!-- <el-table-column
           label="状态"
           prop="status"
@@ -186,8 +187,8 @@
             ></el-progress>
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
-        </el-table-column> -->
-         <el-table-column
+        </el-table-column>-->
+        <el-table-column
           label="状态"
           prop="status"
           v-if="show_status"
@@ -198,20 +199,35 @@
           :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
         >
           <template slot-scope="scope">
-            <el-progress
-              :stroke-width="12"
-              :percentage="scope.row.schedule"
-            ></el-progress>
-            <div v-if="scope.row.status == 3"></div>
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
           </template>
         </el-table-column>
         <el-table-column
           prop="name"
-          label="任务"
+          label="任务名称"
           show-overflow-tooltip
           v-if="show_name"
           sortable="custom"
-        ></el-table-column>
+          width="100px"
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.name"
+              placeholder="请输入"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
+              @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <span>{{scope.row.name?scope.row.name:"-"}}</span>
+            </el-input>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
+            
+            >{{scope.row.name?scope.row.name:"-"}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           label="制作环节"
           prop="dept"
@@ -229,7 +245,24 @@
           prop="content"
           show-overflow-tooltip
           v-if="show_content"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.content"
+              placeholder="请输入制作内容"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
+              @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <span>{{scope.row.content?scope.row.content:"-"}}</span>
+            </el-input>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
+            >{{scope.row.content?scope.row.content:"-"}}</span>
+          </template>
+        </el-table-column>
 
         <el-table-column
           label="镜头号"
@@ -248,7 +281,7 @@
         <el-table-column label="场次" prop="session"></el-table-column>
         <el-table-column
           prop="priority"
-          label="优先级"
+          label="任务等级"
           :formatter="Priority"
           v-if="show_priority"
           width="120px"
@@ -257,7 +290,21 @@
           column-key="priority"
           :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
         >
-          <template slot-scope="scope">{{scope.row.priority|taskPriority}}</template>
+          <template slot-scope="scope">
+            <el-select
+              v-model="scope.row.priority"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'priority')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <el-option label="低级" :value="0"></el-option>
+              <el-option label="中级" :value="1"></el-option>
+              <el-option label="高级" :value="2"></el-option>
+            </el-select>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'priority')"
+            >{{scope.row.priority|taskPriority}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="grade"
@@ -273,7 +320,25 @@
            {text: 'C+', value: '6'}, {text: 'C', value: '7'}, {text: 'D+', value: '8'}, 
            {text: 'D', value: '9'}, {text: 'E', value: '10'}]"
         >
-          <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
+          <template slot-scope="scope">
+            <el-select
+              v-model="scope.row.grade"
+              placeholder="请选择难度等级"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'grade')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <el-option
+                v-for="item of LevelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'grade')"
+            >{{scope.row.grade|taskgrade}}</span>
+          </template>
         </el-table-column>
         <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
@@ -309,7 +374,19 @@
           prop="start_date"
           sortable="custom"
         >
-          <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
+          <template slot-scope="scope">
+            <el-date-picker
+              v-model="start_date"
+              type="date"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'start_date')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              placeholder="选择开始日期"
+            />
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'start_date')"
+            >{{scope.row.start_date|dateFormat}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="截止日期"
@@ -318,7 +395,19 @@
           prop="end_date"
           sortable="custom"
         >
-          <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+          <template slot-scope="scope">
+            <el-date-picker
+              v-model="end_date"
+              type="date"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              placeholder="选择结束日期"
+            />
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
+            >{{scope.row.end_date|dateFormat}}</span>
+          </template>
         </el-table-column>
         <el-table-column label="最后提交时间" header-align="left" width="100px">
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
@@ -343,14 +432,22 @@
               </span>
             </el-tooltip>
             <el-tooltip effect="dark" content="修改任务" placement="top">
-              <span style="margin-left:15px">
-                <i
-                  class="el-icon-edit"
-                  type="primary"
-                  style="color:green"
-                  @click="openDialog(3,scope.row)"
-                ></i>
-              </span>
+              <el-button
+                class="el-icon-edit"
+                type="text"
+                style="color:blue"
+                @click="openDialog(3,scope.row)"
+                v-if="!editing||clickId !== scope.row.id"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="确认" placement="top">
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="text"
+                icon="el-icon-check"
+                style="color:green"
+                @click="saveEdit(scope.$index,scope.row)"
+              />
             </el-tooltip>
           </template>
         </el-table-column>
@@ -433,44 +530,44 @@
           </el-form-item>
           <el-form-item label="任务难度" prop="grade">
             <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
-                </el-col>
-              </el-row>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+              </el-col>
+              <el-col :span="5">
+                <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+              </el-col>
+            </el-row>
           </el-form-item>
           <el-form-item label="任务状态" prop="status">
             <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -559,45 +656,45 @@
           <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
-         <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
-                </el-col>
-              </el-row>
+          <el-row>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+            </el-col>
+            <el-col :span="5">
+              <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
@@ -1103,13 +1200,67 @@ export default {
       cutType: -1, //分页类别区分
       oneSel: null, //保存单列筛选的条件
       authAsset: null,
-      curHeight:0,
+      curHeight: 0,
+      cellCol: null,
+      dbCell: false,
+      cellId: null,
+      editing: false,
+      clickId: null,
+      iconShow: false,
+      LevelList: [
+        {
+          label: "A+",
+          value: 0
+        },
+        {
+          label: "A",
+          value: 1
+        },
+        {
+          label: "A-",
+          value: 2
+        },
+        {
+          label: "B+",
+          value: 3
+        },
+        {
+          label: "B",
+          value: 4
+        },
+        {
+          label: "B-",
+          value: 5
+        },
+        {
+          label: "C+",
+          value: 6
+        },
+        {
+          label: "C",
+          value: 7
+        },
+        {
+          label: "D+",
+          value: 8
+        },
+        {
+          label: "D",
+          value: 9
+        },
+        {
+          label: "E",
+          value: 10
+        }
+      ],
+      start_date: null,
+      end_date: null,
     };
   },
   beforeMount() {
-      var h = document.documentElement.clientHeight || document.body.clientHeight;
-      this.curHeight = h - 329; //减去页面上固定高度height
-      //console.log(h);
+    var h = document.documentElement.clientHeight || document.body.clientHeight;
+    this.curHeight = h - 329; //减去页面上固定高度height
+    //console.log(h);
   },
   filters: {
     executorFilter(val) {
@@ -1177,6 +1328,88 @@ export default {
     }
   },
   methods: {
+    //是否显示行内修改框
+    showEditIcon(index, row) {
+      this.iconShow = true;
+      // this.rowClick = true;
+      if (
+        this.cellCol == "priority" ||
+        this.cellCol == "grade" ||
+        this.cellCol == "start_date" ||
+        this.cellCol == "end_date"
+      ) {
+        this.saveEdit(index, row);
+      }
+    },
+    //双击修改单元格获取焦点
+    editCell(row, column, rowIndex, columnIndex) {
+      if (this.authTask) {
+        switch (column.label) {
+          case "状态":
+            this.cellCol = "status";
+            break;
+          case "任务名称":
+            this.cellCol = "name";
+            break;
+          case "制作内容":
+            this.cellCol = "content";
+            break;
+          case "任务等级":
+            this.cellCol = "priority";
+            break;
+          case "难度等级":
+            this.cellCol = "grade";
+            break;
+          case "执行人":
+            this.cellCol = "executor";
+            break;
+          case "开始日期":
+            this.cellCol = "start_date";
+            break;
+          case "截止日期":
+            this.cellCol = "end_date";
+            break;
+        }
+        this.dbCell = true;
+        this.cellId = row.id;
+      }
+    },
+    //行内修改资产保存
+    saveEdit(index, row) {
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      }
+      this.iconShow = false;
+      this.dbCell = false;
+      let payload = {
+        id: row.id,
+        content:row.content,
+        priority: row.priority,
+        grade: row.grade,
+        ...this.ImgForm,
+        name: row.name,
+        method: "put",
+        start_date: DateFormat(this.start_date),
+        end_date: DateFormat(this.end_date)
+      };
+    
+      if (payload.start_date === "Invalid Date") {
+        delete payload.start_date;
+      }
+      if (payload.end_date === "Invalid Date") {
+        delete payload.end_date;
+      }
+      HTTP.putTask(payload).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          this.getTasks(2);
+          this.editing = false;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
     getAssetList() {
       return;
     },
@@ -1639,6 +1872,7 @@ export default {
             priority: 0,
             grade: 7
           };
+          this.isDialogShow = true;
           break;
         case 2:
           this.$emit("getAssetList");
@@ -1663,46 +1897,32 @@ export default {
                 : ""
             ]
           };
+          this.isDialogShow = true;
           break;
         case 3:
-          if (!Object.keys(this.ActiveRow).length) {
-            this.$message.error("请选择要修改的任务");
-            return false;
+          function dateFormat(date) {
+            return new Date(date * 1000).toLocaleDateString();
           }
-          let executorlist;
-          if (this.ActiveRow.executor.length) {
-            executorlist = this.ActiveRow.executor.map(item => +item.id);
+          if (this.iconShow === true) {
+            this.$confirm("当前修改未保存", "注意", {
+              type: "warning"
+            });
+          } else {
+            this.editing = true;
+            this.clickId = row.id;
+            this.start_date =
+              new Date(dateFormat(row.start_date)) > 0
+                ? new Date(dateFormat(row.start_date))
+                : "";
+            this.end_date =
+              new Date(dateFormat(row.end_date)) > 0
+                ? new Date(dateFormat(row.end_date))
+                : "";
           }
-          this.$emit("getAssetList");
-          this.dialogTitle = "修改任务";
-          this.TaskForm = {
-            ...this.ActiveRow,
-            grade: 7,
-            datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.start_date))
-                : "",
-              new Date(dateFormat(this.ActiveRow.end_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.end_date))
-                : ""
-            ],
-            executorlist,
-            manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
-            asset: this.ActiveRow.asset.id,
-            method: "put"
-          };
-          // console.log(this.TaskForm, "~~~~~~~~~~~~");
-
-          delete this.TaskForm.executor;
-          delete this.TaskForm.creator;
-          delete this.TaskForm.create_time;
-          delete this.TaskForm.category;
-          delete this.TaskForm.project;
-          delete this.TaskForm["sub_task"];
 
           break;
       }
-      this.isDialogShow = true;
+      
     },
     //添加或者修改任务
     editTask() {
@@ -2064,7 +2284,7 @@ export default {
       }
     }
   },
- 
+
   async created() {
     if (this.$route.query.type == 0) {
       this.getTeam();
@@ -2119,6 +2339,5 @@ export default {
 .el-card {
   border-radius: 0px;
 }
-
 </style>
 
