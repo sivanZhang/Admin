@@ -4,10 +4,10 @@
     <template v-if="project && project.entity_type === 4">
       <div>
         <el-row class="header-first">
-          <el-col :span="3">
-            <div class="color" :style="{backgroundColor:project.color||'transparent'}"></div>
+          <el-col :span="4">
+            <svg-icon icon-class="projectIcon" style="width:40px;height:40px"></svg-icon>
           </el-col>
-          <el-col :span="21">
+          <el-col :span="20">
             <div>
               <span class="project-name">
                 <router-link
@@ -16,7 +16,7 @@
               </span>
             </div>
             <div>
-              <div class="project-type">{{'project'}}</div>
+              <div class="project-type">{{'项目'}}</div>
             </div>
           </el-col>
         </el-row>
@@ -86,12 +86,30 @@
         </div>
         <div class="header-body">
           <el-col :span="9">
-            <el-image
-              class="mini-image"
-              :src="project.image?$store.state.BASE_URL+project.image:''"
-              fit="cover"
-              style="width: 160px;height: 90px;float: left;margin-right: 10px"
-            ></el-image>
+            <el-upload
+              accept="image/jpeg, image/gif, image/png"
+              ref="upload"
+              class="upload-demo"
+              action="/api/appfile/appfile/"
+              :headers="headers"
+              :on-success="handleSuccess"
+              drag
+              :show-file-list="false"
+            >
+              <el-tooltip class="item" effect="dark" content="拖动至此处可替换图片" placement="top">
+                <el-image v-if="SRC" :src="SRC" fit="cover" style="width: 160px;height: 100px;"></el-image>
+
+                <template v-else>
+                  <div style="padding-top:15px">
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">
+                      拖入图片，或
+                      <em>点击上传</em>
+                    </div>
+                  </div>
+                </template>
+              </el-tooltip>
+            </el-upload>
           </el-col>
           <el-col :span="15">
             <el-row>
@@ -122,6 +140,7 @@
 <script>
 import { putProjects } from "@/api/project";
 import { getToken } from "@/utils/auth";
+import {editAssets} from "@/api/assets"
 import { log } from "util";
 export default {
   name: "d-header",
@@ -152,26 +171,38 @@ export default {
   methods: {
     //监听上传图片成功，成功后赋值给form ，并且赋值给图片src显示图片
     handleSuccess(response, file, fileList) {
-      if(response.status == 0){
+      if (response.status == 0) {
         this.SRC = this.$store.state.BASE_URL + response.msg;
-        const data = {
-        image: response.msg,
-        image_id: response.id,
-        method: "put",
-        name: this.project.name,
-        color: this.project.color,
-        id: this.project.id
-      };
-      putProjects(data).then(({ data }) => {
-        this.$message.success(data.msg);
-        if (data.status === 0) {
-          this.$store.dispatch("project/get_Projects");
+        if (this.project.entity_type === 4) {
+          const data = {
+            image: response.msg,
+            image_id: response.id,
+            method: "put",
+            name: this.project.name,
+            color: this.project.color,
+            id: this.project.id
+          };
+          putProjects(data).then(({ data }) => {
+            this.$message.success(data.msg);
+            if (data.status === 0) {
+              this.$store.dispatch("project/get_Projects");
+            }
+          });
+        }else{
+          const data = {
+            id:this.project.id,
+            image: response.msg,
+            image_id: response.id,
+            method: "put",
+          };
+          editAssets(data).then(({data})=>{
+            this.$message.success(data.msg);
+            this.$emit("refreshList");
+          })
         }
-      });
       } else {
-        this.$message.error(response.msg)
+        this.$message.error(response.msg);
       }
-     
     }
   }
 };

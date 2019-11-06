@@ -2,7 +2,7 @@
 <template>
   <div id="assetDrawer">
     
-      <Header :project="project">
+      <Header :project="project" @refreshList="refreshList">
         <span v-if="drawerType=='0'" slot="type">镜头类型</span>
       </Header>
       <assetsDrawer
@@ -102,6 +102,9 @@ export default {
         }
       );
     },
+    refreshList(){
+      this.$emit("refresh_assetList")
+    }
 
   },
   created() {}
