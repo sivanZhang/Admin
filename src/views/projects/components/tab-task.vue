@@ -105,17 +105,17 @@
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
-        <el-table-column label="任务ID" class-name="links" prop="id" width="105px" sortable="custom">
+        <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="缩略图" v-if="show_project_image">
+        <el-table-column label="缩略图" v-if="show_project_image" width="180px">
           <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
-              style="width: 55px;height: 33px;cursor: pointer; display:block;"
+              style="width: 180px;height: 100px;cursor: pointer; display:block;"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -188,12 +188,13 @@
           </template>
         </el-table-column> -->
          <el-table-column
-          label="进度"
+          label="状态"
           prop="status"
           v-if="show_status"
           width="160px"
           align="left"
-          
+          sortable="custom"
+          column-key="status"
           :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
         >
           <template slot-scope="scope">

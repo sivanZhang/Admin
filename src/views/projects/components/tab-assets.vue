@@ -144,11 +144,11 @@
           </template>
         </el-table-column>
         <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
-        <el-table-column label="缩略图" align="center" v-if="show_image">
+        <el-table-column label="缩略图" align="center" v-if="show_image" width="180px">
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
-              style="width: 55px;height: 33px;cursor: pointer; display:block;"
+              style="width: 180px;height: 100px;cursor: pointer; display:block;"
               :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
               v-if="!editing||clickId !== scope.row.id"
             >
@@ -236,12 +236,13 @@
           </template>
         </el-table-column> -->
          <el-table-column
-          label="进度"
+          label="状态"
           prop="status"
           v-if="show_status"
           width="160px"
           align="left"
-          
+          sortable="custom"
+          column-key="status"
           :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
         >
           <template slot-scope="scope">
