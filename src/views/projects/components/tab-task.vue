@@ -1877,18 +1877,13 @@ export default {
     //打开对话框
     openDialog(Type, row) {
       this.ActiveRow = { ...row };
-      // console.log(this.ActiveRow);
-
       this.DialogType = Type;
       getDeptUsers({
         id: this.ActiveRow.link_dept
       }).then(res => {
         this.DeptUsers = [...res.data.users];
-        // console.log(this.DeptUsers);
       });
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      
       switch (Type) {
         case 1:
           this.dialogTitle = "创建任务";
@@ -1901,23 +1896,24 @@ export default {
         case 2:
           this.$emit("getAssetList");
           if (!Object.keys(this.ActiveRow).length) {
-            // console.log(this.ActiveRow);
             this.$message.error("请选择父任务");
             return false;
           }
           this.dialogTitle = `创建 ${this.ActiveRow.name} 的子任务`;
-
+          function dateFormat2(date) {
+            return new Date(date * 1000).toLocaleDateString();
+          }
           this.TaskForm = {
             priority: 0,
             grade: 7,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.start_date))
+              new Date(dateFormat2(this.ActiveRow.start_date)) > 0
+                ? new Date(dateFormat2(this.ActiveRow.start_date))
                 : "",
-              new Date(dateFormat(this.ActiveRow.end_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.end_date))
+              new Date(dateFormat2(this.ActiveRow.end_date)) > 0
+                ? new Date(dateFormat2(this.ActiveRow.end_date))
                 : ""
             ]
           };
