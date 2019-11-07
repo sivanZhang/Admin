@@ -41,6 +41,7 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
+                <label for @click="openList(DraftArr[0].status)" class="links" v-if="Object.keys(DraftArr).length">展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -68,6 +69,7 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
+                <label for @click="openList(InProgressArr[0].status)" class="links" v-if="Object.keys(InProgressArr).length">展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -94,6 +96,7 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
+                 <label for @click="openList(PauseArr[0].status)" class="links" v-if="Object.keys(PauseArr).length">展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -120,6 +123,7 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
+                 <label for @click="openList(TimeOutArr[0].status)" class="links" v-if="Object.keys(TimeOutArr).length">展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -138,6 +142,7 @@
                     <div class="cardvalue">{{item.name}}</div>
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
+                   <label for @click="openList(ApproveingArr[0].status)" class="links" v-if="Object.keys(ApproveingArr).length">展示更多...</label>
                 </div>
               </div>
             </el-col>
@@ -157,6 +162,7 @@
                     <div class="cardvalue">{{item.name}}</div>
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
+                   <label for @click="openList(FinishedArr[0].status)" class="links" v-if="Object.keys(FinishedArr).length">展示更多...</label>
                 </div>
               </div>
             </el-col>

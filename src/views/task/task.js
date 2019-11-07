@@ -670,6 +670,11 @@ export default {
       })
 
     },
+    //任务板展示更多跳转任务列表
+    openList(status){
+      this.activeTab="second";
+      this.task(status);
+    },
     //展示资产侧栏
     show(id) {
       this.assetShow = true;
@@ -697,7 +702,7 @@ export default {
     },
     //http获取‘我的任务’
     async getMyTasks() {
-      await getStatusTaskList().then(({
+      await getStatusTaskList({mytask:null,page:1,pagenum:20}).then(({
         data
       }) => {
         this.MyTaskList = [...data.msg];
@@ -718,8 +723,6 @@ export default {
       this.FinishedArr = []
       //超时 5
       this.TimeOutArr = []
-      //审核通过 6
-      // this.PassArr = []
       this.MyTaskList.forEach(item => {
         switch (item.task.status) {
           case 0:
@@ -739,8 +742,6 @@ export default {
             break;
           case 5:
             this.TimeOutArr.push(item.task);
-            // case 6:
-            //     this.PassArr.push(item.task);
         }
       });
     },
@@ -823,7 +824,7 @@ export default {
   },
   created() {
     this.getstatusNumber();
-    this.getMyTasks(1);
+    this.getMyTasks();
     //首页中传递过来的字段
     switch (this.$store.state.mine.keyword) {
       case 'priority':
