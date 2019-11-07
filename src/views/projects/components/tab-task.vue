@@ -123,7 +123,9 @@
                 <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-                <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
+                <el-image
+                  :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                ></el-image>
               </div>
             </el-image>
           </template>
@@ -199,7 +201,7 @@
           :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
         >
           <template slot-scope="scope">
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule?scope.row.schedule:0"></el-progress>
           </template>
         </el-table-column>
         <el-table-column
@@ -224,7 +226,6 @@
             </el-input>
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
-            
             >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
@@ -258,7 +259,8 @@
             >
               <span>{{scope.row.content?scope.row.content:"-"}}</span>
             </el-input>
-            <span  style="white-space: pre-line;"
+            <span
+              style="white-space: pre-line;"
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
@@ -343,7 +345,14 @@
         <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
         </el-table-column>
-        <el-table-column label="执行人" show-overflow-tooltip v-if="show_executor">
+        <el-table-column
+          label="执行人"
+          show-overflow-tooltip
+          v-if="show_executor"
+          :filters="columnSelect2"
+          column-key="executor"
+            align="center"
+        >
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
         <!-- <el-table-column
@@ -1101,6 +1110,7 @@
   </div>
 </template>
 <script>
+import { getProjectMember } from "@/api/statistics";
 import * as HTTP from "@/api/task";
 import { Transform } from "stream";
 import myMixin from "./mixins";
@@ -1146,6 +1156,7 @@ export default {
       asset_type: null,
       AssetListTask: null,
       optionAssetType: null,
+      columnSelect2: [],
       LinkList: [],
       FormList: [{}],
       selectList: [],
@@ -1174,6 +1185,7 @@ export default {
       filterStatus: [],
       filterPriority: [],
       filterGrade: [],
+      filterExecutor: [],
       sort: null,
       propName: null,
       sortFunction: null,
@@ -1254,7 +1266,7 @@ export default {
         }
       ],
       start_date: null,
-      end_date: null,
+      end_date: null
     };
   },
   beforeMount() {
@@ -1328,6 +1340,18 @@ export default {
     }
   },
   methods: {
+    getProjectNum() {
+      getProjectMember({ id: this.$route.params.id, members: "" }).then(
+        ({ data }) => {
+          [...data.msg].map(item => {
+            this.columnSelect2.push({
+              value: item.userid,
+              text: item.username
+            });
+          });
+        }
+      );
+    },
     //是否显示行内修改框
     showEditIcon(index, row) {
       this.iconShow = true;
@@ -1384,7 +1408,7 @@ export default {
       this.dbCell = false;
       let payload = {
         id: row.id,
-        content:row.content,
+        content: row.content,
         priority: row.priority,
         grade: row.grade,
         ...this.ImgForm,
@@ -1393,7 +1417,7 @@ export default {
         start_date: DateFormat(this.start_date),
         end_date: DateFormat(this.end_date)
       };
-    
+
       if (payload.start_date === "Invalid Date") {
         delete payload.start_date;
       }
@@ -1922,7 +1946,6 @@ export default {
 
           break;
       }
-      
     },
     //添加或者修改任务
     editTask() {
@@ -2109,9 +2132,21 @@ export default {
       if (val.priority) {
         this.filterPriority = [];
         this.filterPriority = [...val.priority];
+
         this.filterPriority.forEach((item, index) => {
           item = Number(item);
           this.filterPriority[index] = item;
+        });
+      }
+      if (val.executor) {
+        this.filterExecutor = [];
+        this.filterExecutor = [...val.executor];
+        // console.log("111111");
+        // console.log(this.filterExecutor);
+
+        this.filterExecutor.forEach((item, index) => {
+          item = Number(item);
+          this.filterExecutor[index] = item;
         });
       }
       let data = {
@@ -2132,6 +2167,13 @@ export default {
       if (this.filterPriority.length) {
         data = { ...data, priority: "[" + String(this.filterPriority) + "]" };
       }
+      if (this.filterExecutor.length) {
+        data = {
+          ...data,
+          executor_ids: "[" + String(this.filterExecutor) + "]"
+        };
+      }
+
       HTTP.queryTask(data)
         .then(({ data }) => {
           if (data.status === 0) {
@@ -2286,6 +2328,7 @@ export default {
   },
 
   async created() {
+    this.getProjectNum();
     if (this.$route.query.type == 0) {
       this.getTeam();
       //console.log("train")
