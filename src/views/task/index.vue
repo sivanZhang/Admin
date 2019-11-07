@@ -336,7 +336,7 @@
               <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="缩略图" v-if="show_project_image" width="75px">
+         <el-table-column label="缩略图" v-if="show_project_image" width="180px">
             <template slot-scope="scope">
               <el-image
                 :src="$store.state.BASE_URL+scope.row.asset.image"
@@ -347,7 +347,7 @@
                   <span class="dot">...</span>
                 </div>
                 <div slot="error" class="image-slot">
-                  <i class="el-icon-picture" style="color:#909399"></i>
+                  <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
                 </div>
               </el-image>
             </template>

@@ -80,11 +80,11 @@
       <el-table-column label="任务状态">
         <template slot-scope="scope">{{scope.row.task.status|taskStatus}}</template>
       </el-table-column>
-       <el-table-column label="资产缩略图" width="120px">
+       <el-table-column label="资产缩略图" width="180px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset_image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px;height: 100px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.asset_image]"
           >
             <div slot="placeholder" class="image-slot">
@@ -92,17 +92,17 @@
               <span class="dot">...</span>
             </div>
             <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
+              <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
             </div>
           </el-image>
         </template>
       </el-table-column>
       <el-table-column prop="asset_name" label="所属资产" show-overflow-tooltip></el-table-column>
-      <el-table-column label="项目缩略图" width="120px">
+      <el-table-column label="项目缩略图" width="180px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project.image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px;height: 100px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.project.image]"
           >
             <div slot="placeholder" class="image-slot">
@@ -407,5 +407,8 @@ export default {
   .el-card {
     border-radius: 0px;
   }
+}
+.el-table--mini th, .el-table--mini td {
+    padding:0;
 }
 </style>

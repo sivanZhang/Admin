@@ -45,13 +45,13 @@
           </template>
         </el-table-column>
         <!-- <el-table-column prop="creator.username" label="创建者" header-align="center"></el-table-column> -->
-        <el-table-column label="素材缩略图" align="center">
+        <el-table-column label="素材缩略图" align="center" width="180px">
           <!-- <el-table-column prop="asset.name" label="素材名称" header-align="center"></el-table-column> -->
 
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
-              style="width: 55px;height: 33px;cursor: pointer; display:inline-block;"
+              style="width: 180px;height: 100px;cursor: pointer; display:inline-block;margin-bottom:-10px"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
             >
               <div slot="placeholder" class="image-slot">
@@ -59,13 +59,13 @@
                 <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-                <i class="el-icon-picture" style="color:#909399"></i>
+                 <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
               </div>
             </el-image>
           </template>
         </el-table-column>
 
-        <el-table-column label="任务名称" header-align="center" prop="task[0].taskname"></el-table-column>
+        <el-table-column label="任务名称" align="center" prop="task[0].taskname"></el-table-column>
 
         <el-table-column label="评论" align="center" v-if="!teamId">
           <template slot-scope="scope">
@@ -265,3 +265,9 @@ export default {
   }
 };
 </script>
+<style>
+.el-table--mini th, .el-table--mini td {
+  padding: 0;
+}
+
+</style>

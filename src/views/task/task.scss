@@ -1,6 +1,9 @@
 $linkCorlor:#2d8cf0;
 
 #layout_main {
+  .el-table--mini th, .el-table--mini td {
+    padding: 0;
+  }
   .links {
     cursor: pointer;
     color: #2d8cf0;
