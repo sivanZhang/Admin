@@ -130,47 +130,47 @@
             </el-image>
           </template>
         </el-table-column>
-        <!-- <el-table-column width="30px">
+        <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
               <el-card
                 v-if="scope.row.status === 0"
-                :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px',padding: '30px 5px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
               <el-card
                 v-if="scope.row.status === 1"
-                :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px',padding: '30px 5px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
               <el-card
                 v-if="scope.row.status === 2"
-                :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#589BAD',border:'0px',padding: '30px 5px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
               <el-card
                 v-if="scope.row.status === 3"
-                :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#2D5637',border:'0px',padding: '30px 5px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：完成" placement="top">
               <el-card
                 v-if="scope.row.status === 4"
-                :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px',padding: '30px 5px'}"
               ></el-card>
             </el-tooltip>
             <el-tooltip effect="dark" content="任务状态：超时" placement="top">
               <el-card
                 v-if="scope.row.status === 5"
-                :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
+                :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px',padding: '30px 5px'}"
               ></el-card>
             </el-tooltip>
           </template>
-        </el-table-column>-->
-        <!-- <el-table-column
+        </el-table-column>
+        <el-table-column
           label="状态"
           prop="status"
           v-if="show_status"
@@ -189,8 +189,8 @@
             ></el-progress>
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
-        </el-table-column>-->
-        <el-table-column
+        </el-table-column>
+        <!-- <el-table-column
           label="状态"
           prop="status"
           v-if="show_status"
@@ -203,7 +203,7 @@
           <template slot-scope="scope">
             <el-progress :stroke-width="12" :percentage="scope.row.schedule?scope.row.schedule:0"></el-progress>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="name"
           label="任务名称"
