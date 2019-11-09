@@ -17,16 +17,15 @@ export default function asyncRoutes(params) {
         icon: 'gailan'
       },
       children: [{
-          path: 'home-page',
-          name: 'home-page',
-          component: () =>
-            import('@/views/overview/home-page'),
-          meta: {
-            title: '个人首页',
-            icon: 'home'
-          }
-        },
-      ]
+        path: 'home-page',
+        name: 'home-page',
+        component: () =>
+          import('@/views/overview/home-page'),
+        meta: {
+          title: '个人首页',
+          icon: 'home'
+        }
+      }, ]
     }, , {
       path: '/overview',
       component: Layout,
@@ -37,7 +36,7 @@ export default function asyncRoutes(params) {
         title: '概览',
         icon: 'gailan'
       },
-      children: [ {
+      children: [{
           path: 'project',
           name: 'overview-project',
           component: () =>
@@ -118,17 +117,7 @@ export default function asyncRoutes(params) {
           title: '我的任务',
           icon: 'task'
         }
-      }]
-    },
-    {
-      path: '/mine',
-      component: Layout,
-      redirect: 'noRedirect',
-      meta: {
-        title: '我的工作台',
-        icon: 'pd'
-      },
-      children: [{
+      }, {
         path: 'production',
         name: 'my-production',
         component: () =>
@@ -137,17 +126,7 @@ export default function asyncRoutes(params) {
           title: '我的作品',
           icon: 'pd'
         }
-      }]
-    },
-    {
-      path: '/mine',
-      component: Layout,
-      redirect: 'noRedirect',
-      meta: {
-        title: '我的工作台',
-        icon: 'task'
-      },
-      children: [{
+      }, {
         path: 'man-hour',
         name: 'man-hour',
         component: () =>
@@ -156,8 +135,18 @@ export default function asyncRoutes(params) {
           title: '我的工时',
           icon: 'fs'
         }
+      }, {
+        path: 'man-feedback',
+        name: 'man-feedback',
+        component: () =>
+          import('@/views/feedBack'),
+        meta: {
+          title: '我的反馈',
+          icon: 'fs'
+        }
       }]
     },
+
     {
       path: '/task',
       component: Layout,
@@ -188,7 +177,7 @@ export default function asyncRoutes(params) {
             icon: 'v2',
             roles: 'manage_approve'
           }
-        },{
+        }, {
           path: 'dailies',
           name: 'dailies',
           component: () =>
