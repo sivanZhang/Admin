@@ -1,58 +1,64 @@
 <template>
   <div>
-    <el-col style="padding-bottom:10px" align="right">
-      <div style="display:flex;width:400px">
-        <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
-          <el-option
-            v-for="item in columnSelect"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+    <el-row>
+      <el-col :span="5">
+        <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
+      </el-col>
 
-        <el-select
-          v-if="colShow1"
-          v-model="colSel2"
-          placeholder="请选择"
-          style="width:300px;margin-top:1px"
-          filterable
-          @change="getSearchKpi()"
-        >
-          <el-option
-            v-for="item in columnSelect2"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-        <el-cascader
-          @change="getSearchKpi()"
-          v-if="colShow2"
-          v-model="colSel2"
-          placeholder="输入搜索工种"
-          :options="selectList"
-          :props="{ checkStrictly: true}"
-          filterable
-          style="width:100%"
-        ></el-cascader>
-        <el-select
-          v-if="colShow3"
-          v-model="colSel2"
-          placeholder="请选择"
-          style="width:300px;margin-top:1px"
-          filterable
-          @change="getSearchKpi()"
-        >
-          <el-option
-            v-for="item in UserList"
-            :key="item.id"
-            :label="item.username"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </div>
-    </el-col>
+      <el-col :span="19" style="padding-bottom:10px" align="right">
+        <div style="display:flex;width:400px">
+          <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
+            <el-option
+              v-for="item in columnSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+
+          <el-select
+            v-if="colShow1"
+            v-model="colSel2"
+            placeholder="请选择"
+            style="width:300px;margin-top:1px"
+            filterable
+            @change="getSearchKpi()"
+          >
+            <el-option
+              v-for="item in columnSelect2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-cascader
+            @change="getSearchKpi()"
+            v-if="colShow2"
+            v-model="colSel2"
+            placeholder="输入搜索工种"
+            :options="selectList"
+            :props="{ checkStrictly: true}"
+            filterable
+            style="width:100%"
+          ></el-cascader>
+          <el-select
+            v-if="colShow3"
+            v-model="colSel2"
+            placeholder="请选择"
+            style="width:300px;margin-top:1px"
+            filterable
+            @change="getSearchKpi()"
+          >
+            <el-option
+              v-for="item in UserList"
+              :key="item.id"
+              :label="item.username"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+      </el-col>
+    </el-row>
     <el-table
       :data="kpiList"
       :tree-props="{children: 'sub'}"
@@ -76,6 +82,21 @@
       <el-table-column prop="inner_total_overtime" label="加班工时"></el-table-column>
       <el-table-column prop="kpi" label="平均单帧制作时长（小时）" width="250px"></el-table-column>
     </el-table>
+    <!-- KPI导出 -->
+    <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
+      <el-row>
+        <el-col :span="6">
+          <span>excel文件</span>
+        </el-col>
+        <el-col :span="18">
+          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadVisible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadExcel">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -86,6 +107,7 @@ export default {
   data() {
     return {
       kpiList: [],
+      uploadVisible: false,
       colSel: "month_num",
       colSel2: null,
       columnSelect: [
@@ -243,6 +265,44 @@ export default {
     }
   },
   methods: {
+    //kpi列表导出
+    //任务导出dialog
+    targetUpload() {
+      this.uploadVisible = true;
+      console.log("111111111");
+      // let data = {
+      //   ...this.name,
+      //   ...this.multiSelect,
+      //   project: this.$route.params.id,
+      //   print: "null"
+      // };
+      // HTTP.queryTask(data)
+      //   .then(({ data }) => {
+      //     if (data.status === 0) {
+      //       this.uploadVisible = true;
+      //       this.path = data.path;
+      //       this.multiSelect = [];
+      //       this.name = [];
+      //     }
+      //   })
+      //   .catch(err => {
+      //     this.$message.error(data.msg);
+      //     // this.uploadVisible = true;
+      //     this.multiSelect = [];
+      //     this.name = [];
+      //   });
+    },
+    //导出Excel
+    download() {
+      let data = this.$store.state.BASE_URL + this.path;
+      window.location.href = data;
+      this.uploadVisible = false;
+    },
+    uploadExcel() {
+      //  this.download();
+      this.uploadVisible = false;
+    },
+    //获取kpi列表
     getSearchKpi() {
       let data = {};
       if (this.colSel2) {
@@ -279,17 +339,13 @@ export default {
         });
         [...data.msg].map((item, index) => {
           const keys1 = Object.keys(item.inner);
-          console.log("inner")
-          console.log(keys1);
-         
+        
           const keys2 = Object.keys(item.outer);
-          console.log("outer")
-           console.log(keys2);
+         
           for (let i = 0; i < keys1.length - 4; i++) {
             for (let j = 0; j < keys2.length - 4; j++) {
               if (i === j) {
-                console.log(i);
-                console.log("iiiii");
+               
                 this.kpiList[index].sub.push({
                   id: keys1[i] + 1000,
                   inner_total_asset: item.inner[keys1[i]].inner_total_asset,
@@ -310,7 +366,7 @@ export default {
             }
           }
         });
-        console.log(this.kpiList);
+       
       });
     },
     formatList() {
