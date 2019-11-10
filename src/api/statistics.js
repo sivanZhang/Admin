@@ -103,6 +103,6 @@ export function assetTime(params) {
   })
 }
 //查询kpi
-export function searchKpi() {
-  return AXIOS.get('/task/kpi/')
+export function searchKpi(params) {
+  return AXIOS.get('/task/kpi/',{params})
 }
