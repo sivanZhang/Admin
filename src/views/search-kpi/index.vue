@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="5">
+      <el-col :span="4">
         <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
       </el-col>
 
-      <el-col :span="19" style="padding-bottom:10px" align="right">
+      <el-col :span="20" style="padding-bottom:10px" align="right">
         <!-- 筛选 -->
-        <div style="display:flex;width:400px">
-          <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
+        <div style="display:flex;width:470px">
+          <el-select v-model="colSel" placeholder="请选择" style="width:190px;" filterable>
             <el-option
               v-for="item in columnSelect"
               :key="item.value"
@@ -21,7 +21,7 @@
             v-if="colShow1"
             v-model="colSel2"
             placeholder="请选择"
-            style="width:300px;margin-top:1px"
+            style="width:280px;margin-top:1px"
             filterable
             @change="getSearchKpi()"
           >
@@ -40,13 +40,13 @@
             :options="selectList"
             :props="{ checkStrictly: true}"
             filterable
-            style="width:100%"
+            style="width:280px"
           ></el-cascader>
           <el-select
             v-if="colShow3"
             v-model="colSel2"
             placeholder="请选择"
-            style="width:300px;margin-top:1px"
+            style="width:280px;margin-top:1px"
             filterable
             @change="getSearchKpi()"
           >
@@ -57,6 +57,17 @@
               :value="item.id"
             ></el-option>
           </el-select>
+          <div v-if="colSel === 'date' " style="width:280px;display:flex;">
+            <el-date-picker v-model="start_date" type="date" placeholder="选择日期" size="mini"></el-date-picker>
+            <span style="text-align:center;padding-top:3px">至</span>
+            <el-date-picker v-model="end_date" type="date" placeholder="选择日期" size="mini"></el-date-picker>
+          </div>
+          <el-button
+            @click="getSearchKpi()"
+            icon="el-icon-search"
+            type="primary"
+            style="height:27.99px"
+          />
         </div>
       </el-col>
     </el-row>
@@ -123,6 +134,10 @@ export default {
         {
           value: "user_id",
           label: "人员名称"
+        },
+        {
+          value: "date",
+          label: "自定义时间"
         }
       ],
       columnSelect2: [
@@ -178,7 +193,9 @@ export default {
       colShow1: true,
       colShow2: false,
       colShow3: false,
-      selectList: []
+      selectList: [],
+      start_date: null,
+      end_date: null
     };
   },
   computed: {
@@ -187,7 +204,7 @@ export default {
   watch: {
     colSel: {
       handler: function(newVal, oldVal) {
-        console.log(newVal);
+        // console.log(newVal);
         switch (newVal) {
           case "month_num":
             this.columnSelect2 = [];
@@ -252,9 +269,12 @@ export default {
             this.colShow1 = false;
             this.colShow2 = false;
             this.colShow3 = true;
-
             break;
-
+          case "date":
+            this.colShow1 = false;
+            this.colShow2 = false;
+            this.colShow3 = false;
+            break;
           default:
             this.colShow1 = true;
             this.colShow2 = false;
@@ -270,7 +290,7 @@ export default {
     //任务导出dialog
     targetUpload() {
       this.uploadVisible = true;
-      console.log("111111111");
+      // console.log("111111111");
       // let data = {
       //   ...this.name,
       //   ...this.multiSelect,
@@ -306,7 +326,7 @@ export default {
     //获取kpi列表
     getSearchKpi() {
       let data = {};
-      if (this.colSel2) {
+      if (this.colSel2||this.start_date||this.end_date) {
         switch (this.colSel) {
           case "month_num":
             data = { month_num: this.colSel2 };
@@ -317,7 +337,16 @@ export default {
           case "user_id":
             data = { user_id: this.colSel2 };
             break;
+          case "date":
+            function DateFormat(dateVal) {
+              return new Date(dateVal).toLocaleDateString();
+            }
+            data = {
+              start_date: this.start_date?DateFormat(this.start_date):"",
+              end_date: this.end_date?DateFormat(this.end_date):""
+            };
         }
+        // console.log(data)
       }
       this.kpiList = [];
       searchKpi(data).then(({ data }) => {
@@ -340,13 +369,12 @@ export default {
         });
         [...data.msg].map((item, index) => {
           const keys1 = Object.keys(item.inner);
-        
+
           const keys2 = Object.keys(item.outer);
-         
+
           for (let i = 0; i < keys1.length - 4; i++) {
             for (let j = 0; j < keys2.length - 4; j++) {
               if (i === j) {
-               
                 this.kpiList[index].sub.push({
                   id: keys1[i] + 1000,
                   inner_total_asset: item.inner[keys1[i]].inner_total_asset,
@@ -367,7 +395,6 @@ export default {
             }
           }
         });
-       
       });
     },
     formatList() {
