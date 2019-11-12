@@ -318,17 +318,18 @@ export default function asyncRoutes(params) {
             title: '共享文件',
             icon: 'list'
           }
-        },
-        {
-          path: 'transcoding-video',
-          name: 'transcoding-video',
-          component: () =>
-            import('@/views/sharefiles/transcoding-video'),
-          meta: {
-            title: '视频解码',
-            icon: 'v2'
-          }
-        },
+        }
+        // ,
+        // {
+        //   path: 'transcoding-video',
+        //   name: 'transcoding-video',
+        //   component: () =>
+        //     import('@/views/sharefiles/transcoding-video'),
+        //   meta: {
+        //     title: '视频解码',
+        //     icon: 'v2'
+        //   }
+        // },
       ]
     },
     {
