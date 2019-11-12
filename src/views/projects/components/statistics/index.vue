@@ -1407,13 +1407,13 @@ export default {
         }
         let keys = Object.keys(data.task);
         let keys2 = Object.keys(data.user_asset);
-        data.user_id_list.map((item, index) => {
-          this.assetTaskTable.push({
+        this.assetTaskTable = data.user_id_list.map((item, index) => {
+          return {
             id: item,
             user: keys[index],
             task: data.task[keys[index]],
             asset: data.user_asset[keys2[index]]
-          });
+          };
         });
         let customOption = {
           title: {

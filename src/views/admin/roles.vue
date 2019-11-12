@@ -5,7 +5,7 @@
         <el-card>
           <h4 slot="header">角色列表</h4>
           <div>
-            <el-row type="flex" align="middle">
+            <el-row type="flex" align="middle" style="padding:8px 0">
               <el-button
                 @click="addRole(1)"
                 type="success"
@@ -108,7 +108,7 @@
               >
                 <el-table-column
                   type="selection"
-                  width="30"
+                  width="60"
                   align="center"
                   :reserve-selection="true"
                 ></el-table-column>
