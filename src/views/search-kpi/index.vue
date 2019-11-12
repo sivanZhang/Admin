@@ -195,7 +195,9 @@ export default {
       colShow3: false,
       selectList: [],
       start_date: null,
-      end_date: null
+      end_date: null,
+      searchList:[],
+      path: null,
     };
   },
   computed: {
@@ -290,28 +292,22 @@ export default {
     //任务导出dialog
     targetUpload() {
       this.uploadVisible = true;
-      // console.log("111111111");
-      // let data = {
-      //   ...this.name,
-      //   ...this.multiSelect,
-      //   project: this.$route.params.id,
-      //   print: "null"
-      // };
-      // HTTP.queryTask(data)
-      //   .then(({ data }) => {
-      //     if (data.status === 0) {
-      //       this.uploadVisible = true;
-      //       this.path = data.path;
-      //       this.multiSelect = [];
-      //       this.name = [];
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.$message.error(data.msg);
-      //     // this.uploadVisible = true;
-      //     this.multiSelect = [];
-      //     this.name = [];
-      //   });
+      let data = {
+        ...this.searchList,
+        print: "null"
+      };
+      searchKpi(data)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.uploadVisible = true;
+            this.path = data.path;
+            this.searchList = [];
+          }
+        })
+        .catch(err => {
+          this.$message.error(data.msg);
+          this.searchList = [];
+        });
     },
     //导出Excel
     download() {
@@ -320,7 +316,6 @@ export default {
       this.uploadVisible = false;
     },
     uploadExcel() {
-      //  this.download();
       this.uploadVisible = false;
     },
     //获取kpi列表
@@ -345,9 +340,11 @@ export default {
               start_date: this.start_date?DateFormat(this.start_date):"",
               end_date: this.end_date?DateFormat(this.end_date):""
             };
+            break;
         }
         // console.log(data)
       }
+      this.searchList = data;
       this.kpiList = [];
       searchKpi(data).then(({ data }) => {
         [...data.msg].map((item, index) => {
