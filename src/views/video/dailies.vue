@@ -8,7 +8,6 @@
       :cell-style="cellStyle"
       v-loading="tableLoading"
     >
-      <el-table-column label="任务ID" prop="id" width="100px"></el-table-column>
       <el-table-column label="缩略图">
         <template slot-scope="scope">
           <el-image
@@ -26,22 +25,23 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="任务" show-overflow-tooltip></el-table-column>
-      <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
-        <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
-      </el-table-column>
-      <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
-
       <el-table-column label="镜头号" show-overflow-tooltip prop="asset" width="90pxs">
         <template slot-scope="scope">{{scope.row.asset.name}}</template>
       </el-table-column>
-      <el-table-column prop="priority" label="优先级" width="120px" align="center">
+      <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
+      <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
+        <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
+      </el-table-column>
+      <el-table-column label="截止日期" width="100px" prop="end_date">
+        <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
+      </el-table-column>
+       <el-table-column label="执行人" show-overflow-tooltip>
+        <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
+      </el-table-column>
+      <el-table-column label="状态" prop="status" width="160px" align="left">
         <template slot-scope="scope">
-          <div
-            style="backgroundColor:#C64b2b;color:#FFF"
-            v-if="scope.row.priority === 2"
-          >{{scope.row.priority|taskPriority}}</div>
-          <div style="backgroundColor:'transparent'" v-else>{{scope.row.priority|taskPriority}}</div>
+          {{scope.row.status|taskStatus}}
+          <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress>
         </template>
       </el-table-column>
       <el-table-column prop="grade" label="难度等级" width="120px" align="center">
@@ -53,17 +53,26 @@
           <div style="backgroundColor:'transparent'" v-else>{{scope.row.grade|taskgrade}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" width="160px" align="left">
+      <el-table-column prop="priority" label="优先级" width="120px" align="center">
         <template slot-scope="scope">
-          {{scope.row.status|taskStatus}}
-          <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress>
+          <div
+            style="backgroundColor:#C64b2b;color:#FFF"
+            v-if="scope.row.priority === 2"
+          >{{scope.row.priority|taskPriority}}</div>
+          <div style="backgroundColor:'transparent'" v-else>{{scope.row.priority|taskPriority}}</div>
         </template>
+      </el-table-column>
+      <el-table-column label="开始日期" width="100px" prop="start_date">
+        <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
+      </el-table-column>
+      <el-table-column prop="total_hour" align="center" label="预设时间（小时）" width="130px"></el-table-column>
+      <el-table-column label="任务ID" prop="id" width="100px"></el-table-column>
+      <el-table-column prop="name" label="任务名称" show-overflow-tooltip></el-table-column>
+      <el-table-column label="创建日期" width="100px" prop="date">
+        <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
       </el-table-column>
       <el-table-column label="创建者" prop="user">
         <template slot-scope="scope">{{scope.row.creator.name}}</template>
-      </el-table-column>
-      <el-table-column label="执行人" show-overflow-tooltip>
-        <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
       </el-table-column>
       <!-- <el-table-column label="任务进度" width="100px" align="center" prop="schedule">
         <template slot-scope="scope">
@@ -73,17 +82,7 @@
               :percentage="scope.row.schedule"       
             ></el-progress>
           </template>
-      </el-table-column>-->
-      <el-table-column label="创建日期" width="100px" prop="date">
-        <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
-      </el-table-column>
-      <el-table-column label="开始日期" width="100px" prop="start_date">
-        <template slot-scope="scope">{{scope.row.start_date|dateFormat}}</template>
-      </el-table-column>
-      <el-table-column label="截止日期" width="100px" prop="end_date">
-        <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
-      </el-table-column>
-      <el-table-column prop="total_hour" align="center" label="预设时间（小时）" width="130px"></el-table-column>
+      </el-table-column>--> 
     </el-table>
     <div class="block" style="text-align: right;margin-top:10px">
       <el-pagination

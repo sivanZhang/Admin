@@ -106,11 +106,7 @@
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
-        <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
-          <template slot-scope="scope">
-            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
-          </template>
-        </el-table-column>
+      
         <el-table-column label="缩略图" v-if="show_project_image" width="180px">
           <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
@@ -130,6 +126,89 @@
             </el-image>
           </template>
         </el-table-column>
+          <el-table-column
+          label="镜头号"
+          show-overflow-tooltip
+          v-if="show_asset_name"
+          prop="asset"
+          sortable="custom"
+          width="90pxs"
+          class-name="links"
+        >
+          <template slot-scope="scope">
+            <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
+          </template>
+        </el-table-column>
+         <el-table-column label="集数" prop="episode"></el-table-column>
+        <el-table-column label="场次" prop="session"></el-table-column>
+         <el-table-column
+          label="制作内容"
+          align="left"
+          width="150px"
+          prop="content"
+          show-overflow-tooltip
+          v-if="show_content"
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.content"
+              placeholder="请输入制作内容"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
+              @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <span>{{scope.row.content?scope.row.content:"-"}}</span>
+            </el-input>
+            <span
+              style="white-space: pre-line;"
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
+            >{{scope.row.content?scope.row.content:"-"}}</span>
+          </template>
+        </el-table-column>
+           <el-table-column
+          label="制作环节"
+          prop="dept"
+          sortable="custom"
+          show-overflow-tooltip
+          v-if="show_link_dept_name"
+          width="100px"
+        >
+          <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
+        </el-table-column>
+         <el-table-column
+          label="截止日期"
+          width="100px"
+          v-if="show_end_date"
+          prop="end_date"
+          sortable="custom"
+        >
+          <template slot-scope="scope">
+            <el-date-picker
+              v-model="end_date"
+              type="date"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
+              @change="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              placeholder="选择结束日期"
+            />
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
+            >{{scope.row.end_date|dateFormat}}</span>
+          </template>
+        </el-table-column>
+          <el-table-column
+          label="执行人"
+          show-overflow-tooltip
+          v-if="show_executor"
+          :filters="columnSelect2"
+          column-key="executor"
+            align="center"
+        >
+          <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
+        </el-table-column>
+        <!-- 状态的颜色展示 -->
         <el-table-column width="30px">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
@@ -190,98 +269,8 @@
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          label="状态"
-          prop="status"
-          v-if="show_status"
-          width="160px"
-          align="left"
-          sortable="custom"
-          column-key="status"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
-        >
-          <template slot-scope="scope">
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule?scope.row.schedule:0"></el-progress>
-          </template>
-        </el-table-column> -->
-        <el-table-column
-          prop="name"
-          label="任务名称"
-          show-overflow-tooltip
-          v-if="show_name"
-          sortable="custom"
-          width="100px"
-        >
-          <template slot-scope="scope">
-            <el-input
-              size="small"
-              v-model="scope.row.name"
-              placeholder="请输入"
-              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
-              @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-            >
-              <span>{{scope.row.name?scope.row.name:"-"}}</span>
-            </el-input>
-            <span
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
-            >{{scope.row.name?scope.row.name:"-"}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="制作环节"
-          prop="dept"
-          sortable="custom"
-          show-overflow-tooltip
-          v-if="show_link_dept_name"
-          width="100px"
-        >
-          <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
-        </el-table-column>
-        <el-table-column
-          label="制作内容"
-          align="left"
-          width="150px"
-          prop="content"
-          show-overflow-tooltip
-          v-if="show_content"
-        >
-          <template slot-scope="scope">
-            <el-input
-              size="small"
-              v-model="scope.row.content"
-              placeholder="请输入制作内容"
-              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
-              @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-            >
-              <span>{{scope.row.content?scope.row.content:"-"}}</span>
-            </el-input>
-            <span
-              style="white-space: pre-line;"
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
-            >{{scope.row.content?scope.row.content:"-"}}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="镜头号"
-          show-overflow-tooltip
-          v-if="show_asset_name"
-          prop="asset"
-          sortable="custom"
-          width="90pxs"
-          class-name="links"
-        >
-          <template slot-scope="scope">
-            <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="集数" prop="episode"></el-table-column>
-        <el-table-column label="场次" prop="session"></el-table-column>
-        <el-table-column
+        <el-table-column label="提交次数" prop="submit_num"></el-table-column>
+         <el-table-column
           prop="priority"
           label="任务等级"
           :formatter="Priority"
@@ -308,7 +297,7 @@
             >{{scope.row.priority|taskPriority}}</span>
           </template>
         </el-table-column>
-        <el-table-column
+         <el-table-column
           prop="grade"
           label="难度等级"
           :formatter="Grade"
@@ -342,41 +331,7 @@
             >{{scope.row.grade|taskgrade}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
-          <template slot-scope="scope">{{scope.row.creator.name}}</template>
-        </el-table-column>
-        <el-table-column
-          label="执行人"
-          show-overflow-tooltip
-          v-if="show_executor"
-          :filters="columnSelect2"
-          column-key="executor"
-            align="center"
-        >
-          <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
-        </el-table-column>
-        <!-- <el-table-column
-          label="任务进度"
-          width="100px"
-          align="center"
-          v-if="show_schedule"
-          prop="schedule"
-        >
-          <template slot-scope="scope">
-            <el-progress :text-inside="true" :stroke-width="18" :percentage="scope.row.schedule"></el-progress>
-          </template>
-        </el-table-column>-->
-        <el-table-column label="提交次数" prop="submit_num"></el-table-column>
-        <el-table-column
-          label="创建日期"
-          width="100px"
-          v-if="show_create_time"
-          prop="date"
-          sortable="custom"
-        >
-          <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
-        </el-table-column>
-        <el-table-column
+          <el-table-column
           label="开始日期"
           width="100px"
           v-if="show_start_date"
@@ -397,37 +352,83 @@
             >{{scope.row.start_date|dateFormat}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="截止日期"
-          width="100px"
-          v-if="show_end_date"
-          prop="end_date"
-          sortable="custom"
-        >
-          <template slot-scope="scope">
-            <el-date-picker
-              v-model="end_date"
-              type="date"
-              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
-              @change="showEditIcon(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-              placeholder="选择结束日期"
-            />
-            <span
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
-            >{{scope.row.end_date|dateFormat}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="最后提交时间" header-align="left" width="100px">
-          <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
-        </el-table-column>
-        <el-table-column
+         <el-table-column
           prop="total_hour"
           align="center"
           label="预设时间（小时）"
           width="130px"
           v-if="show_total_hour"
         ></el-table-column>
+        <el-table-column label="最后提交时间" header-align="left" width="100px">
+          <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
+        </el-table-column>
+          <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
+          <template slot-scope="scope">
+            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+          </template>
+        </el-table-column>
+           <el-table-column
+          prop="name"
+          label="任务名称"
+          show-overflow-tooltip
+          v-if="show_name"
+          sortable="custom"
+          width="100px"
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.name"
+              placeholder="请输入"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
+              @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <span>{{scope.row.name?scope.row.name:"-"}}</span>
+            </el-input>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
+            >{{scope.row.name?scope.row.name:"-"}}</span>
+          </template>
+        </el-table-column>
+          <el-table-column
+          label="创建日期"
+          width="100px"
+          v-if="show_create_time"
+          prop="date"
+          sortable="custom"
+        >
+          <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
+        </el-table-column>
+        <!-- <el-table-column
+          label="状态"
+          prop="status"
+          v-if="show_status"
+          width="160px"
+          align="left"
+          sortable="custom"
+          column-key="status"
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}, {text: '审核通过', value: '6'}]"
+        >
+          <template slot-scope="scope">
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule?scope.row.schedule:0"></el-progress>
+          </template>
+        </el-table-column> -->
+        <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
+          <template slot-scope="scope">{{scope.row.creator.name}}</template>
+        </el-table-column>
+        <!-- <el-table-column
+          label="任务进度"
+          width="100px"
+          align="center"
+          v-if="show_schedule"
+          prop="schedule"
+        >
+          <template slot-scope="scope">
+            <el-progress :text-inside="true" :stroke-width="18" :percentage="scope.row.schedule"></el-progress>
+          </template>
+        </el-table-column>-->
         <el-table-column label="操作" align="center" v-if="authTask">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">

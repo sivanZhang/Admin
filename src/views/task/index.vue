@@ -325,15 +325,12 @@
           :row-style="{height:50}"
         >
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
-          <el-table-column
-            prop="task.id"
-            class-name="links"
-            label="任务ID"
-            header-align="left"
-            width="80"
-          >
+          <el-table-column label="项目" header-align="left" show-overflow-tooltip>
             <template slot-scope="scope">
-              <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
+              <router-link
+                style="cursor: pointer;"
+                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
+              >{{scope.row.project.name}}</router-link>
             </template>
           </el-table-column>
          <el-table-column label="缩略图" v-if="show_project_image" width="180px">
@@ -352,14 +349,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="项目" header-align="left" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <router-link
-                style="cursor: pointer;"
-                :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
-              >{{scope.row.project.name}}</router-link>
-            </template>
-          </el-table-column>
+          
           <el-table-column
             prop="asset.name"
             class-name="links"
@@ -370,6 +360,17 @@
             <template slot-scope="scope">
               <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
             </template>
+          </el-table-column>
+          <el-table-column prop="asset.episode" label="集数"></el-table-column>
+          <el-table-column prop="asset.session" label="场次"></el-table-column>
+           <el-table-column
+            prop="task.dept.name"
+            label="制作环节"
+            header-align="left"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column label="截止日期" header-align="left" width="100px">
+            <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
           </el-table-column>
           <el-table-column width="30px">
             <template slot-scope="scope">
@@ -439,14 +440,33 @@
               <div v-if="scope.row.task.status == 3">{{scope.row.task.statements}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="asset.episode" label="集数"></el-table-column>
-          <el-table-column prop="asset.session" label="场次"></el-table-column>
+          <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
+           <el-table-column label="难度等级" header-align="left" align="center" prop="task.grade">
+            <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
+          </el-table-column>
+          <el-table-column label="优先级" header-align="left" prop="task.priority">
+            <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
+          </el-table-column>
+          <el-table-column label="开始日期" header-align="left" width="100px">
+            <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
+          </el-table-column>
+          <el-table-column prop="total_hour" header-align="left" label="预设时间（小时）" width="80px;">
+            <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
+          </el-table-column>
+          <el-table-column label="最后提交时间" header-align="left" width="100px">
+            <template slot-scope="scope">{{scope.row.task.latest_submit_time|dateFormat}}</template>
+          </el-table-column>
           <el-table-column
-            prop="task.dept.name"
-            label="制作环节"
+            prop="task.id"
+            class-name="links"
+            label="任务ID"
             header-align="left"
-            show-overflow-tooltip
-          ></el-table-column>
+            width="80"
+          >
+            <template slot-scope="scope">
+              <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
+            </template>
+          </el-table-column>
           <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
           <el-table-column
             prop="task.content"
@@ -454,31 +474,11 @@
             label="任务内容"
             show-overflow-tooltip
           ></el-table-column>
-
-          <el-table-column label="难度等级" header-align="left" align="center" prop="task.grade">
-            <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
-          </el-table-column>
-          <el-table-column label="优先级" header-align="left" prop="task.priority">
-            <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
-          </el-table-column>
           <!-- <el-table-column label="创建日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
           </el-table-column>-->
           <el-table-column label="任务进度" header-align="left">
             <template slot-scope="scope">{{scope.row.task.schedule}}%</template>
-          </el-table-column>
-          <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
-          <el-table-column label="开始日期" header-align="left" width="100px">
-            <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
-          </el-table-column>
-          <el-table-column label="截止日期" header-align="left" width="100px">
-            <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
-          </el-table-column>
-          <el-table-column label="最后提交时间" header-align="left" width="100px">
-            <template slot-scope="scope">{{scope.row.task.latest_submit_time|dateFormat}}</template>
-          </el-table-column>
-          <el-table-column prop="total_hour" header-align="left" label="预设时间（小时）" width="80px;">
-            <template slot-scope="scope">{{scope.row.task.total_hour}}</template>
           </el-table-column>
         </el-table>
         <div class="block" style="text-align: right">
