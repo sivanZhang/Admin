@@ -272,7 +272,7 @@
         <el-table-column label="提交次数" prop="submit_num"></el-table-column>
          <el-table-column
           prop="priority"
-          label="任务等级"
+          label="优先级"
           :formatter="Priority"
           v-if="show_priority"
           width="120px"
@@ -1399,7 +1399,7 @@ export default {
           case "制作内容":
             this.cellCol = "content";
             break;
-          case "任务等级":
+          case "优先级":
             this.cellCol = "priority";
             break;
           case "难度等级":
