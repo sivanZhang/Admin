@@ -869,11 +869,12 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务名称" prop="name">
-              <el-input v-model="updateMulTask.name" placeholder="请填写任务名称"></el-input>
+              <el-input v-model="updateMulTask.name" placeholder="请填写任务名称" :disabled="disabled1"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -887,11 +888,12 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务内容" prop="content">
-              <el-input v-model="updateMulTask.content" type="textarea" placeholder="请填写任务内容"></el-input>
+              <el-input v-model="updateMulTask.content" type="textarea" placeholder="请填写任务内容" :disabled="disabled2"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -905,13 +907,14 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="优先级" prop="priority">
-              <el-radio v-model="updateMulTask.priority" :label="0">低级</el-radio>
-              <el-radio v-model="updateMulTask.priority" :label="1">中级</el-radio>
-              <el-radio v-model="updateMulTask.priority" :label="2">高级</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="0" :disabled="disabled3">低级</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="1" :disabled="disabled3">中级</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="2" :disabled="disabled3">高级</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -925,47 +928,48 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务难度" prop="grade">
               <el-row>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="0">A+</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="0" :disabled="disabled4">A+</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="1">A</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="1" :disabled="disabled4">A</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="2">A-</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="2" :disabled="disabled4">A-</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="3">B+</el-radio>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="4">B</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="5">B-</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="6">C+</el-radio>
-                </el-col>
-                <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="7">C</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="3" :disabled="disabled4">B+</el-radio>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="8">D+</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="4" :disabled="disabled4">B</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="9">D</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="5" :disabled="disabled4">B-</el-radio>
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.grade" :label="10">E</el-radio>
+                  <el-radio v-model="updateMulTask.grade" :label="6" :disabled="disabled4">C+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="7" :disabled="disabled4">C</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="8" :disabled="disabled4">D+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="9" :disabled="disabled4">D</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.grade" :label="10" :disabled="disabled4">E</el-radio>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -981,6 +985,7 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
@@ -991,6 +996,7 @@
                   :label="item.label"
                   :value="item.value"
                   :key="item.value"
+                  :disabled="disabled5"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -1006,6 +1012,7 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
@@ -1021,6 +1028,7 @@
                   :label="item.username"
                   :value="item.id"
                   :key="item.id"
+                  :disabled="disabled6"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -1036,6 +1044,7 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
@@ -1047,6 +1056,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 format="yyyy/MM/dd"
+                :disabled="disabled7"
                 @change="changeTime2()"
               ></el-date-picker>
             </el-form-item>
@@ -1062,12 +1072,14 @@
               inactive-value="否"
               active-text="是"
               inactive-text="否"
+              @change="changelist"
             ></el-switch>
           </el-col>
           <el-col :span="18">
             <el-form-item label="总工时" prop="total_hour">
               <el-input
                 v-model="updateMulTask.total_hour"
+                :disabled="disabled8"
                 oninput="value=value.replace(/[^\d.]/g,'')"
               ></el-input>
             </el-form-item>
@@ -1267,7 +1279,15 @@ export default {
         }
       ],
       start_date: null,
-      end_date: null
+      end_date: null,
+      disabled1:true,
+      disabled2:true,
+      disabled3:true,
+      disabled4:true,
+      disabled5:true,
+      disabled6:true,
+      disabled7:true,
+      disabled8:true,
     };
   },
   beforeMount() {
@@ -1499,6 +1519,32 @@ export default {
       }
       return { borderRight: 0 };
     },
+    changelist(){
+      if(this.value1 == "是"){
+           this.disabled1=false;
+        }
+        if(this.value2 == "是"){
+           this.disabled2=false;
+        }
+        if(this.value3 == "是"){
+           this.disabled3=false;
+        }
+        if(this.value4 == "是"){
+           this.disabled4=false;
+        }
+        if(this.value5 == "是"){
+           this.disabled5=false;
+        }
+        if(this.value6 == "是"){
+           this.disabled6=false;
+        }
+        if(this.value7 == "是"){
+           this.disabled7=false;
+        }
+        if(this.value8 == "是"){
+           this.disabled8=false;
+        }
+    },
     //批量修改任务
     mulEditTasks(Type) {
       function dataFormat(params) {
@@ -1573,6 +1619,15 @@ export default {
             this.mulEditDialog = false;
             this.$refs.multipleTable.clearSelection();
             this.getTasks(2);
+            this.value1 = "否";
+            this.value2 = "否";
+            this.value3 = "否";
+            this.value4 = "否";
+            this.value5 = "否";
+            this.value6 = "否";
+            this.value7 = "否";
+            this.value8 = "否";
+            this.updateMulTask = {};
           } else {
             this.$message.error(data.msg);
           }
