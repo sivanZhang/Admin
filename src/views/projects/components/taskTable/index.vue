@@ -58,7 +58,7 @@
           <div @click="showDrawer(scope.row)">{{scope.row.id}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="缩略图" width="200px">
+      <!-- <el-table-column label="缩略图" width="200px">
         <template slot-scope="scope" v-if="!scope.row.pid">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset.image"
@@ -74,8 +74,8 @@
             </div>
           </el-image>
         </template>
-      </el-table-column>
-      <el-table-column prop="name" label="任务" width="100px"></el-table-column>
+      </el-table-column> -->
+      <el-table-column prop="name" label="任务" show-overflow-tooltip width="100px"></el-table-column>
       <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
         <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
       </el-table-column>
