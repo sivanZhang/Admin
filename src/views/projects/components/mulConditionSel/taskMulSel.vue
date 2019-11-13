@@ -113,6 +113,18 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="集数" prop="episode">
+              <el-input v-model="sortSelForm.asset__episode"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="场次" prop="session">
+              <el-input v-model="sortSelForm.asset__session"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col align="right">
             <el-button type="primary" @click="MulSel()">筛选</el-button>
           </el-col>
@@ -153,6 +165,12 @@ export default {
       }
       if (this.sortSelForm.name) {
         this.showMulChoose.name = this.sortSelForm.name;
+      }
+      if (this.sortSelForm.asset__episode) {
+        this.showMulChoose.asset__episode = this.sortSelForm.asset__episode;
+      }
+      if (this.sortSelForm.asset__session) {
+        this.showMulChoose.asset__session = this.sortSelForm.asset__session;
       }
       if (this.sortSelForm.assetname) {
         this.showMulChoose.assetname = this.sortSelForm.assetname;

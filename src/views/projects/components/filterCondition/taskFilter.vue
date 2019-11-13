@@ -18,6 +18,28 @@
           @click.prevent.stop="closeSelectedTag('assetname')"
         />
       </div>
+        <div
+        class="tags-view-item"
+        :class="showMulChoose.asset__episode?'active':''"
+        v-if="showMulChoose.asset__episode&&selShowEpisode"
+      >
+        集数：{{showMulChoose.asset__episode}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('asset__session')"
+        />
+      </div>
+        <div
+        class="tags-view-item"
+        :class="showMulChoose.asset__session?'active':''"
+        v-if="showMulChoose.asset__session&&selShowSession"
+      >
+        场次：{{showMulChoose.asset__session}}
+        <span
+          class="el-icon-close"
+          @click.prevent.stop="closeSelectedTag('asset__session')"
+        />
+      </div>
       <div
         class="tags-view-item"
         :class="showMulChoose.name?'active':''"
@@ -140,6 +162,8 @@ export default {
   data() {
     return {
       selShowAssetName:true,
+      selShowEpisode:true,
+      selShowSession:true,
       selShowName: true,
       selShowDept: true,
       selShowContent: true,
@@ -170,6 +194,14 @@ export default {
         case "assetname":
           delete this.sortSelForm.assetname;
           this.selShowAssetName = false;
+          break;
+        case "asset__episode":
+          delete this.sortSelForm.asset__episode;
+          this.selShowEpisode = false;
+          break;
+        case "asset__session":
+          delete this.sortSelForm.asset__session;
+          this.selShowSession = false;
           break;
         case "dept":
           delete this.sortSelForm.dept;
@@ -213,6 +245,8 @@ export default {
     //重置筛选条件
     showMul(){
       this.selShowName=true;
+      this.selShowEpisode = true;
+      this.selShowSession = true;
       this.selShowDept=true;
       this.selShowContent=true;
       this.selShowUser=true;

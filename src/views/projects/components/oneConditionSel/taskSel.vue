@@ -76,6 +76,14 @@ export default {
           label: "镜头号"
         },
         {
+          value: "episode",
+          label: "集数"
+        },
+        {
+          value: "session",
+          label: "场次"
+        },
+        {
           value: "priority",
           label: "优先级"
         },
@@ -281,6 +289,14 @@ export default {
         case "content":
           this.keyword && (data = { ...data, content: this.keyword });
           this.name = { content: this.keyword };
+          break;
+           case "episode":
+          this.keyword && (data = { ...data, asset__episode: this.keyword });
+          this.name = { asset__episode: this.keyword };
+          break;
+           case "session":
+          this.keyword && (data = { ...data, asset__session: this.keyword });
+          this.name = { asset__session: this.keyword };
           break;
         case "user":
           this.keyword && (data = { ...data, user: this.keyword });
