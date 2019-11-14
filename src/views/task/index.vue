@@ -510,6 +510,7 @@
       <task-form
         :task-record.sync="TaskRecord"
         :createLoading="createLoading"
+        :surplus_labor_hour="surplus_labor_hour"
         @addRecord="addRecord"
         @cancel="cancel"
       />

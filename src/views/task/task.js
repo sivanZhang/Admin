@@ -275,8 +275,8 @@ export default {
           mytask: null,
           sort: order === "descending" ? "-" + prop : prop,
           status: "[0,1,2,5]",
-          pagenum: 20,
-          page: 1,
+          pagenum: this.pageSize,
+          page: this.currentPage,
 
         };
         if (Type === 2) {
@@ -298,8 +298,8 @@ export default {
           mytask: null,
           sort: order === "descending" ? "-" + prop : prop,
           status: "[0,1,2,3,4,5]",
-          pagenum: 20,
-          page: 1,
+          pagenum: this.pageSize,
+          page: this.currentPage,
         };
         if (Type === 2) {
           //处理分页
@@ -320,8 +320,8 @@ export default {
           mytask: null,
           sort: order === "descending" ? "-" + prop : prop,
           status: "[" + status + "]",
-          pagenum: 20,
-          page: 1,
+          pagenum: this.pageSize,
+          page: this.currentPage,
         };
         if (Type === 2) {
           //处理分页
@@ -678,6 +678,14 @@ export default {
         type: 0,
         date: new Date().toLocaleDateString()
       });
+      queryTask({
+        id: obj.id,
+      }).then(({
+        data
+      }) => {
+        this.surplus_labor_hour = data.msg.surplus_labor_hour;
+      })
+      
 
     },
     addRecord() {
