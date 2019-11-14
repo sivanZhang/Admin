@@ -54,7 +54,7 @@
         <el-form-item label="完成进度" prop="content">
           <el-row type="flex" align="middle">
             <el-col :span="10">
-              <el-input-number v-model="TaskForm.schedule" :min="0" :max="100" :step="10"></el-input-number>
+              <el-input-number v-model="TaskForm.schedule" :min="0" :max="100" :step="10" @blur="BlurText($event)"></el-input-number>
             </el-col>
             <el-col :span="14">
               <el-progress
@@ -66,9 +66,11 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="剩余工时" >{{leaveTime}}</el-form-item>
+        <el-form-item label="剩余工时" >{{leaveTime?leaveTime:0}}</el-form-item>
         <el-form-item label="工时 (h)" prop="labor_hour">
-          <el-input-number v-model="TaskForm.labor_hour" placeholder="小时" :min="0" :max="leaveTime < 24? leaveTime: 24"></el-input-number>
+          <el-input-number 
+          :disabled="leaveTime?false:true"
+          v-model="TaskForm.labor_hour" placeholder="小时" :min="0" :max="leaveTime < 24? leaveTime: 24"></el-input-number>
         </el-form-item>
         <el-form-item label="日期" prop="date">
           <el-date-picker
@@ -81,7 +83,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="isDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="submitWorkHourFrom" :loading="submitLoading">提交</el-button>
+        <el-button type="primary" @click="submitWorkHourFrom" :loading="submitLoading" :disabled="leaveTime?false:true">提交</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -207,6 +209,15 @@ export default {
     this.getMyWorkHours();
   },
   methods: {
+     //进度输入框限制只能输入整数
+    BlurText(e){
+     let boolean = new RegExp("^[1-9][0-9]*$").test(e.target.value)
+     if(!boolean){
+       this.$message.error('请输入正整数');
+       e.target.value = '0';
+       this.TaskForm.schedule = ''
+     }
+    },
     selMyTask(val){
       queryTask({id:val}).then(({data})=>{
         this.leaveTime = data.msg.surplus_labor_hour
