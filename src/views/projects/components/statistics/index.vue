@@ -1444,6 +1444,7 @@ export default {
             {
               type: "category",
               data: keys,
+              // nameGap :15,
               axisLabel: {
                 //---坐标轴 标签
                 show: true, //---是否显示
@@ -1474,6 +1475,8 @@ export default {
               type: "bar",
               barWidth: 30,
               barMaxWidth: 50,
+              barCategoryGap:'30%',
+              barGap:'0%',
               data: keys.map(t => {
                 return data.task[t];
               })
