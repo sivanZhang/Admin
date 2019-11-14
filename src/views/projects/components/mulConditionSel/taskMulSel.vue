@@ -115,12 +115,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="集数" prop="episode">
-              <el-input v-model="sortSelForm.asset__episode"></el-input>
+              <el-input v-model="sortSelForm.episode"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="场次" prop="session">
-              <el-input v-model="sortSelForm.asset__session"></el-input>
+              <el-input v-model="sortSelForm.session"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -166,11 +166,11 @@ export default {
       if (this.sortSelForm.name) {
         this.showMulChoose.name = this.sortSelForm.name;
       }
-      if (this.sortSelForm.asset__episode) {
-        this.showMulChoose.asset__episode = this.sortSelForm.asset__episode;
+      if (this.sortSelForm.episode) {
+        this.showMulChoose.episode = this.sortSelForm.episode;
       }
-      if (this.sortSelForm.asset__session) {
-        this.showMulChoose.asset__session = this.sortSelForm.asset__session;
+      if (this.sortSelForm.session) {
+        this.showMulChoose.session = this.sortSelForm.session;
       }
       if (this.sortSelForm.assetname) {
         this.showMulChoose.assetname = this.sortSelForm.assetname;

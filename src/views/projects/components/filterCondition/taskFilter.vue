@@ -20,24 +20,24 @@
       </div>
         <div
         class="tags-view-item"
-        :class="showMulChoose.asset__episode?'active':''"
-        v-if="showMulChoose.asset__episode&&selShowEpisode"
+        :class="showMulChoose.episode?'active':''"
+        v-if="showMulChoose.episode&&selShowEpisode"
       >
-        集数：{{showMulChoose.asset__episode}}
+        集数：{{showMulChoose.episode}}
         <span
           class="el-icon-close"
-          @click.prevent.stop="closeSelectedTag('asset__session')"
+          @click.prevent.stop="closeSelectedTag('episode')"
         />
       </div>
         <div
         class="tags-view-item"
-        :class="showMulChoose.asset__session?'active':''"
-        v-if="showMulChoose.asset__session&&selShowSession"
+        :class="showMulChoose.session?'active':''"
+        v-if="showMulChoose.session&&selShowSession"
       >
-        场次：{{showMulChoose.asset__session}}
+        场次：{{showMulChoose.session}}
         <span
           class="el-icon-close"
-          @click.prevent.stop="closeSelectedTag('asset__session')"
+          @click.prevent.stop="closeSelectedTag('session')"
         />
       </div>
       <div
@@ -195,12 +195,12 @@ export default {
           delete this.sortSelForm.assetname;
           this.selShowAssetName = false;
           break;
-        case "asset__episode":
-          delete this.sortSelForm.asset__episode;
+        case "episode":
+          delete this.sortSelForm.episode;
           this.selShowEpisode = false;
           break;
-        case "asset__session":
-          delete this.sortSelForm.asset__session;
+        case "session":
+          delete this.sortSelForm.session;
           this.selShowSession = false;
           break;
         case "dept":

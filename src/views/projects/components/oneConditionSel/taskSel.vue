@@ -291,12 +291,12 @@ export default {
           this.name = { content: this.keyword };
           break;
            case "episode":
-          this.keyword && (data = { ...data, asset__episode: this.keyword });
-          this.name = { asset__episode: this.keyword };
+          this.keyword && (data = { ...data, episode: this.keyword });
+          this.name = { episode: this.keyword };
           break;
            case "session":
-          this.keyword && (data = { ...data, asset__session: this.keyword });
-          this.name = { asset__session: this.keyword };
+          this.keyword && (data = { ...data, session: this.keyword });
+          this.name = { session: this.keyword };
           break;
         case "user":
           this.keyword && (data = { ...data, user: this.keyword });
