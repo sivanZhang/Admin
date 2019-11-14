@@ -86,6 +86,7 @@
                   data-arr="PauseArr"
                 >
                   <el-card
+                    @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
                     v-for="item of PauseArr"
                     :key="item.id"
@@ -113,6 +114,7 @@
                   data-arr="TimeOutArr"
                 >
                   <el-card
+                    @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
                     v-for="item of TimeOutArr"
                     :key="item.id"
@@ -323,6 +325,7 @@
           @sort-change="sortFilter"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           :row-style="{height:50}"
+           @filter-change="filterHandler"
         >
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
@@ -377,42 +380,49 @@
               <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
                 <el-card
                   v-if="scope.row.task.status === 0"
-                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
+                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px',padding: '25px 5px'}"
                 ></el-card>
               </el-tooltip>
               <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
                 <el-card
                   v-if="scope.row.task.status === 1"
-                  :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
+                  :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px',padding: '25px 5px'}"
                 ></el-card>
               </el-tooltip>
               <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
                 <el-card
                   v-if="scope.row.task.status === 2"
-                  :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
+                  :style="{width:'10px',backgroundColor:'#589BAD',border:'0px',padding: '25px 5px'}"
                 ></el-card>
               </el-tooltip>
               <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
                 <el-card
                   v-if="scope.row.task.status === 3"
-                  :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
+                  :style="{width:'10px',backgroundColor:'#2D5637',border:'0px',padding: '25px 5px'}"
                 ></el-card>
               </el-tooltip>
               <el-tooltip effect="dark" content="任务状态：完成" placement="top">
                 <el-card
                   v-if="scope.row.task.status === 4"
-                  :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
+                  :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px',padding: '25px 5px'}"
                 ></el-card>
               </el-tooltip>
               <el-tooltip effect="dark" content="任务状态：超时" placement="top">
                 <el-card
                   v-if="scope.row.task.status === 5"
-                  :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
+                  :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px',padding: '25px 5px'}"
                 ></el-card>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="任务状态" width="160px" sortable="custom">
+          <el-table-column 
+          label="任务状态/进度"
+          width="160px" 
+          sortable="custom" 
+          prop="schedule"
+          column-key="schedule"
+          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}]"
+          >
             <template slot-scope="scope">
               <div
                 v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6"
@@ -441,10 +451,10 @@
             </template>
           </el-table-column>
           <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
-           <el-table-column label="难度等级" header-align="left" align="center" prop="task.grade">
+          <el-table-column label="难度等级" header-align="left" align="center" prop="task.grade">
             <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
           </el-table-column>
-          <el-table-column label="优先级" header-align="left" prop="task.priority">
+          <el-table-column label="优先级" header-align="left" prop="priority" sortable="custom">
             <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
           </el-table-column>
           <el-table-column label="开始日期" header-align="left" width="100px">
@@ -477,9 +487,9 @@
           <!-- <el-table-column label="创建日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
           </el-table-column>-->
-          <el-table-column label="任务进度" header-align="left">
+          <!-- <el-table-column label="任务进度" header-align="left">
             <template slot-scope="scope">{{scope.row.task.schedule}}%</template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
         <div class="block" style="text-align: right">
         <el-pagination

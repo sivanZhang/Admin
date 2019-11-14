@@ -22,58 +22,69 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="剩余工时">{{surplus_labor_hour}}</el-form-item>
+        <el-form-item label="剩余工时">{{surplus_labor_hour?surplus_labor_hour:0}}</el-form-item>
       <el-form-item label="工时" prop="labor_hour">
-        <el-input-number v-model="TaskRecord.labor_hour" :min="0" :max="surplus_labor_hour < 24? surplus_labor_hour: 24"></el-input-number>
+        <el-input-number
+          :disabled="surplus_labor_hour?false:true"
+          v-model="TaskRecord.labor_hour"
+          :min="0"
+          :max="surplus_labor_hour < 24? surplus_labor_hour: 24"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="日期" prop="date">
-        <el-date-picker v-model="TaskRecord.date" type="date" placeholder="选择日期" value-format="yyyy/MM/dd"
-        style="width:130px"></el-date-picker>
-         </el-form-item>
+        <el-date-picker
+          v-model="TaskRecord.date"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy/MM/dd"
+          style="width:130px"
+        ></el-date-picker>
+      </el-form-item>
     </el-form>
     <el-row type="flex" justify="end">
       <el-button @click="cancel">取消</el-button>
-      <el-button :loading="createLoading" type="primary" @click="addRecord()">提交</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addRecord()" :disabled="surplus_labor_hour?false:true">提交</el-button>
     </el-row>
   </div>
 </template>
 
 <script>
 export default {
-    props:['TaskRecord','createLoading','surplus_labor_hour'],
-    data(){
-      return {
-            customColors: [{
-                    color: "#f56c6c",
-                    percentage: 20
-                },
-                {
-                    color: "#e6a23c",
-                    percentage: 40
-                },
-                {
-                    color: "#6f7ad3",
-                    percentage: 60
-                },
-                {
-                    color: "#1989fa",
-                    percentage: 80
-                },
-                {
-                    color: "#5cb87a",
-                    percentage: 100
-                }
-            ],
-      }
+  props: ["TaskRecord", "createLoading", "surplus_labor_hour"],
+  data() {
+    return {
+      customColors: [
+        {
+          color: "#f56c6c",
+          percentage: 20
+        },
+        {
+          color: "#e6a23c",
+          percentage: 40
+        },
+        {
+          color: "#6f7ad3",
+          percentage: 60
+        },
+        {
+          color: "#1989fa",
+          percentage: 80
+        },
+        {
+          color: "#5cb87a",
+          percentage: 100
+        }
+      ]
+    };
+  },
+  methods: {
+    addRecord() {
+      this.$emit("addRecord");
     },
-    methods:{
-      addRecord(){
-        this.$emit('addRecord')
-      },
-      cancel(){
-        this.$emit('cancel')
-      }
+    cancel() {
+      this.$emit("cancel");
     }
+  }
 };
 </script>
 

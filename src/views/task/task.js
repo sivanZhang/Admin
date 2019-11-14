@@ -243,6 +243,9 @@ export default {
         }
       ],
       sortfilter: null, //保存单列排序的条件
+      valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
+      cutType: -1, //分页类别区分
+      filterStatus: [],
       assetShow: false,
       surplus_labor_hour: null,
       statusNumber: [],
@@ -259,35 +262,120 @@ export default {
       column,
       prop,
       order
-    }) {
+    },Type) {
       let status = this.changecolor;
       this.sortfilter = {
         column,
         prop,
         order
       };
+      this.cutType = 3;
       if (status == 6) {
         let data = {
           mytask: null,
-          sort: order === "descending" ? 0 : 1,
-          status: "[0,1,2,5]"
+          sort: order === "descending" ? "-" + prop : prop,
+          status: "[0,1,2,5]",
+          pagenum: 20,
+          page: 1,
+
         };
-        this.getstatusTaskList(data);
+        if (Type === 2) {
+          //处理分页
+          data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+        }
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          if (data.status === 0) {
+            this.MyTaskList1 = [...data.msg];
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
+          }
+        })
       } else if (status == null) {
         let data = {
           mytask: null,
-          sort: order === "descending" ? 0 : 1,
-          status: "[0,1,2,3,4,5]"
+          sort: order === "descending" ? "-" + prop : prop,
+          status: "[0,1,2,3,4,5]",
+          pagenum: 20,
+          page: 1,
         };
-        this.getstatusTaskList(data);
+        if (Type === 2) {
+          //处理分页
+          data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+        }
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          if (data.status === 0) {
+            this.MyTaskList1 = [...data.msg];
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
+          }
+        })
       } else {
         let data = {
           mytask: null,
-          sort: order === "descending" ? 0 : 1,
-          status: "[" + status + "]"
+          sort: order === "descending" ? "-" + prop : prop,
+          status: "[" + status + "]",
+          pagenum: 20,
+          page: 1,
         };
-        this.getstatusTaskList(data);
+        if (Type === 2) {
+          //处理分页
+          data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+        }
+        getStatusTaskList(data).then(({
+          data
+        }) => {
+          if (data.status === 0) {
+            this.MyTaskList1 = [...data.msg];
+            if (Type === 1) {
+              this.currentPage = 1;
+            }
+          }
+        })
+        
       }
+    },
+    //table表内筛选（状态）+分页
+    filterHandler(val, Type) {
+      this.cutType = 4;
+      this.valSel = val;
+      if (val.schedule) {
+        this.filterStatus = [];
+        this.filterStatus = [...val.schedule];
+        this.filterStatus.forEach((item, index) => {
+          item = Number(item);
+          this.filterStatus[index] = item;
+        });
+      }
+      let data={
+        mytask: null,
+        pagenum: 20,
+        page: 1
+      };
+      if (Type === 2) {
+        //处理分页
+        data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+      }
+      if (this.filterStatus.length) {
+        data = { ...data, status:"[" + String(this.filterStatus) + "]" };
+      }
+      // this.getstatusTaskList(data);
+      getStatusTaskList(data).then(({
+        data
+      }) => {
+        if (data.status === 0) {
+          this.MyTaskList1 = [...data.msg];
+          if (Type === 1) {
+            this.currentPage = 1;
+          }
+        }
+      })
+
     },
     getstatusTaskList(data) {
       getStatusTaskList(data).then(({
@@ -757,11 +845,33 @@ export default {
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
-      this.task(this.changecolor)
+      // this.task(this.changecolor);
+      switch (this.cutType) {
+        case 3:
+          this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
+          break;
+        case 4:
+          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          break;
+          case -1:
+            this.getTasks(-1); //正常请求后分页
+            break;
+      }
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
-      this.task(this.changecolor)
+      // this.task(this.changecolor);
+      switch (this.cutType) {
+        case 3:
+          this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
+          break;
+        case 4:
+          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          break;
+        case -1:
+            this.getTasks(-1); //正常请求后分页
+            break;
+      }
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
