@@ -1745,8 +1745,8 @@ export default {
       this.cutType = 3;
       let data = {
         project: this.$route.params.id,
-        pagenum: 20,
-        page: 1,
+        pagenum: this.pageSize,
+        page: this.currentPage,
         sort: order === "descending" ? "-" + prop : prop
       };
       if (Type === 2) {
