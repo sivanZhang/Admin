@@ -10,7 +10,7 @@
       <el-form-item label="完成进度" prop="content">
         <el-row type="flex" align="middle">
           <el-col :span="10">
-            <el-input-number v-model="TaskRecord.schedule" :min="0" :max="100" :step="10"></el-input-number>
+            <el-input-number v-model="TaskRecord.schedule" :min="0" :max="100" :step="10" @blur="BlurText($event)"></el-input-number>
           </el-col>
           <el-col :span="14">
             <el-progress
@@ -78,6 +78,15 @@ export default {
     };
   },
   methods: {
+    //进度输入框限制只能输入整数
+    BlurText(e){
+     let boolean = new RegExp("^[1-9][0-9]*$").test(e.target.value)
+     if(!boolean){
+       this.$message.error('请输入正整数');
+       e.target.value = '0';
+       this.TaskRecord.schedule = ''
+     }
+    },
     addRecord() {
       this.$emit("addRecord");
     },
