@@ -380,7 +380,7 @@
           align="center"
           v-if="show_episode&&notShow == 'true'?true:false"
           sortable="custom"
-          column-key="session"
+          column-key="episode"
           :filters="columnSelect2"
         >
           <template slot-scope="scope">
