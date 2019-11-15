@@ -89,6 +89,12 @@ export function getProjectMember(params) {
     params
   })
 }
+//获取项目中的场次和集数
+export function getEpisodeSession(params) {
+  return AXIOS.get('/projects/projects/', {
+    params
+  })
+}
 
 //获取人员工时
 export function getMemberTime(params) {

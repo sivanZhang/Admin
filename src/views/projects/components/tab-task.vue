@@ -106,7 +106,7 @@
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
-      
+
         <el-table-column label="缩略图" v-if="show_project_image" width="180px">
           <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
@@ -126,7 +126,7 @@
             </el-image>
           </template>
         </el-table-column>
-          <el-table-column
+        <el-table-column
           label="镜头号"
           show-overflow-tooltip
           v-if="show_asset_name"
@@ -139,9 +139,29 @@
             <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
           </template>
         </el-table-column>
-         <el-table-column label="集数" prop="episode"></el-table-column>
-        <el-table-column label="场次" prop="session"></el-table-column>
-         <el-table-column
+        <el-table-column
+          label="集数"
+          prop="episode"
+          sortable="custom"
+          column-key="episode"
+          :filters="columnSelect3"
+        >
+        <template slot-scope="scope">
+         {{scope.row.episode?scope.row.episode:"-"}}
+        </template>
+        </el-table-column>
+        <el-table-column
+          label="场次"
+          prop="session"
+          sortable="custom"
+          column-key="session"
+          :filters="columnSelect4"
+        >
+        <template slot-scope="scope">
+         {{scope.row.session?scope.row.session:"-"}}
+        </template>>
+        </el-table-column>
+        <el-table-column
           label="制作内容"
           align="left"
           width="150px"
@@ -167,7 +187,7 @@
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
-           <el-table-column
+        <el-table-column
           label="制作环节"
           prop="dept"
           sortable="custom"
@@ -177,7 +197,7 @@
         >
           <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
         </el-table-column>
-         <el-table-column
+        <el-table-column
           label="截止日期"
           width="100px"
           v-if="show_end_date"
@@ -198,13 +218,13 @@
             >{{scope.row.end_date|dateFormat}}</span>
           </template>
         </el-table-column>
-          <el-table-column
+        <el-table-column
           label="执行人"
           show-overflow-tooltip
           v-if="show_executor"
           :filters="columnSelect2"
           column-key="executor"
-            align="center"
+          align="center"
         >
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
@@ -270,7 +290,7 @@
           </template>
         </el-table-column>
         <el-table-column label="提交次数" prop="submit_num"></el-table-column>
-         <el-table-column
+        <el-table-column
           prop="priority"
           label="优先级"
           :formatter="Priority"
@@ -297,7 +317,7 @@
             >{{scope.row.priority|taskPriority}}</span>
           </template>
         </el-table-column>
-         <el-table-column
+        <el-table-column
           prop="grade"
           label="难度等级"
           :formatter="Grade"
@@ -331,7 +351,7 @@
             >{{scope.row.grade|taskgrade}}</span>
           </template>
         </el-table-column>
-          <el-table-column
+        <el-table-column
           label="开始日期"
           width="100px"
           v-if="show_start_date"
@@ -352,7 +372,7 @@
             >{{scope.row.start_date|dateFormat}}</span>
           </template>
         </el-table-column>
-         <el-table-column
+        <el-table-column
           prop="total_hour"
           align="center"
           label="预设时间（小时）"
@@ -362,12 +382,12 @@
         <el-table-column label="最后提交时间" header-align="left" width="100px">
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
-          <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
+        <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
-           <el-table-column
+        <el-table-column
           prop="name"
           label="任务名称"
           show-overflow-tooltip
@@ -392,7 +412,7 @@
             >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>
-          <el-table-column
+        <el-table-column
           label="创建日期"
           width="100px"
           v-if="show_create_time"
@@ -414,7 +434,7 @@
           <template slot-scope="scope">
             <el-progress :stroke-width="12" :percentage="scope.row.schedule?scope.row.schedule:0"></el-progress>
           </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
         </el-table-column>
@@ -893,7 +913,12 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="任务内容" prop="content">
-              <el-input v-model="updateMulTask.content" type="textarea" placeholder="请填写任务内容" :disabled="disabled2"></el-input>
+              <el-input
+                v-model="updateMulTask.content"
+                type="textarea"
+                placeholder="请填写任务内容"
+                :disabled="disabled2"
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -1123,7 +1148,7 @@
   </div>
 </template>
 <script>
-import { getProjectMember } from "@/api/statistics";
+import { getProjectMember, getEpisodeSession } from "@/api/statistics";
 import * as HTTP from "@/api/task";
 import { Transform } from "stream";
 import myMixin from "./mixins";
@@ -1169,7 +1194,9 @@ export default {
       asset_type: null,
       AssetListTask: null,
       optionAssetType: null,
-      columnSelect2: [],
+      columnSelect2: [], //执行人列表
+      columnSelect3: [], //集数列表
+      columnSelect4: [], //场次列表
       LinkList: [],
       FormList: [{}],
       selectList: [],
@@ -1196,6 +1223,8 @@ export default {
       show_total_hour: true,
       show_schedule: true,
       filterStatus: [],
+      filterSession: [],
+      filterEpisode: [],
       filterPriority: [],
       filterGrade: [],
       filterExecutor: [],
@@ -1280,14 +1309,14 @@ export default {
       ],
       start_date: null,
       end_date: null,
-      disabled1:true,
-      disabled2:true,
-      disabled3:true,
-      disabled4:true,
-      disabled5:true,
-      disabled6:true,
-      disabled7:true,
-      disabled8:true,
+      disabled1: true,
+      disabled2: true,
+      disabled3: true,
+      disabled4: true,
+      disabled5: true,
+      disabled6: true,
+      disabled7: true,
+      disabled8: true
     };
   },
   beforeMount() {
@@ -1362,12 +1391,35 @@ export default {
   },
   methods: {
     getProjectNum() {
+      //获取执行人的列表
       getProjectMember({ id: this.$route.params.id, members: "" }).then(
         ({ data }) => {
           [...data.msg].map(item => {
             this.columnSelect2.push({
               value: item.userid,
               text: item.username
+            });
+          });
+        }
+      );
+      //获取集数列表
+      getEpisodeSession({ id: this.$route.params.id, episode: "" }).then(
+        ({ data }) => {
+          [...data.msg].map(item => {
+            this.columnSelect3.push({
+              value: item,
+              text: item
+            });
+          });
+        }
+      );
+      //  //获取场次列表
+      getEpisodeSession({ id: this.$route.params.id, session: "" }).then(
+        ({ data }) => {
+          [...data.msg].map(item => {
+            this.columnSelect4.push({
+              value: item,
+              text: item
             });
           });
         }
@@ -1519,47 +1571,47 @@ export default {
       }
       return { borderRight: 0 };
     },
-    changelist(){
-      if(this.value1 == "是"){
-           this.disabled1=false;
-        }else {
-          this.disabled1=true;
-        }
-        if(this.value2 == "是"){
-           this.disabled2=false;
-        }else {
-          this.disabled2=true;
-        }
-        if(this.value3 == "是"){
-           this.disabled3=false;
-        }else {
-          this.disabled3=true;
-        }
-        if(this.value4 == "是"){
-           this.disabled4=false;
-        }else {
-          this.disabled4=true;
-        }
-        if(this.value5 == "是"){
-           this.disabled5=false;
-        }else {
-          this.disabled5=true;
-        }
-        if(this.value6 == "是"){
-           this.disabled6=false;
-        }else {
-          this.disabled6=true;
-        }
-        if(this.value7 == "是"){
-           this.disabled7=false;
-        }else {
-          this.disabled7=true;
-        }
-        if(this.value8 == "是"){
-           this.disabled8=false;
-        }else {
-          this.disabled8=true;
-        }
+    changelist() {
+      if (this.value1 == "是") {
+        this.disabled1 = false;
+      } else {
+        this.disabled1 = true;
+      }
+      if (this.value2 == "是") {
+        this.disabled2 = false;
+      } else {
+        this.disabled2 = true;
+      }
+      if (this.value3 == "是") {
+        this.disabled3 = false;
+      } else {
+        this.disabled3 = true;
+      }
+      if (this.value4 == "是") {
+        this.disabled4 = false;
+      } else {
+        this.disabled4 = true;
+      }
+      if (this.value5 == "是") {
+        this.disabled5 = false;
+      } else {
+        this.disabled5 = true;
+      }
+      if (this.value6 == "是") {
+        this.disabled6 = false;
+      } else {
+        this.disabled6 = true;
+      }
+      if (this.value7 == "是") {
+        this.disabled7 = false;
+      } else {
+        this.disabled7 = true;
+      }
+      if (this.value8 == "是") {
+        this.disabled8 = false;
+      } else {
+        this.disabled8 = true;
+      }
     },
     //批量修改任务
     mulEditTasks(Type) {
@@ -1955,7 +2007,7 @@ export default {
       }).then(res => {
         this.DeptUsers = [...res.data.users];
       });
-      
+
       switch (Type) {
         case 1:
           this.dialogTitle = "创建任务";
@@ -2189,6 +2241,23 @@ export default {
           this.filterStatus[index] = item;
         });
       }
+      if (val.episode) {
+        this.filterEpisode = [];
+        this.filterEpisode = [...val.episode];
+        this.filterEpisode.forEach((item, index) => {
+          // item = Number(item);
+          this.filterEpisode[index] = item;
+        });
+      }
+      if (val.session) {
+        this.filterSession = [];
+        this.filterSession = [...val.session];
+      
+        this.filterSession.forEach((item, index) => {
+          // item = Number(item);
+          this.filterSession[index] = item;
+        });
+      }
       if (val.grade) {
         this.filterGrade = [];
         this.filterGrade = [...val.grade];
@@ -2228,6 +2297,12 @@ export default {
       }
       if (this.filterStatus.length) {
         data = { ...data, status: "[" + String(this.filterStatus) + "]" };
+      }
+      if (this.filterEpisode.length) {
+        data = { ...data, episode: String(this.filterEpisode=="-"?'none':this.filterEpisode) };
+      }
+      if (this.filterSession.length) {
+        data = { ...data, session: String(this.filterSession=="-"?'none':this.filterSession) };
       }
       if (this.filterGrade.length) {
         data = { ...data, grade: "[" + String(this.filterGrade) + "]" };

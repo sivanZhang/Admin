@@ -354,6 +354,8 @@
           align="center"
           v-if="show_session&&notShow == 'true'?true:false"
           sortable="custom"
+          column-key="session"
+          :filters="columnSelect1"
         >
           <template slot-scope="scope">
             <el-input
@@ -378,6 +380,8 @@
           align="center"
           v-if="show_episode&&notShow == 'true'?true:false"
           sortable="custom"
+          column-key="session"
+          :filters="columnSelect2"
         >
           <template slot-scope="scope">
             <el-input
@@ -950,6 +954,7 @@
 </template>
 
 <script>
+import { getEpisodeSession} from "@/api/statistics";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import * as HTTP from "@/api/assets";
 import { mapState } from "vuex";
@@ -1100,11 +1105,15 @@ export default {
       start_date: null,
       end_date: null,
       filterStatus: [],
+      filterSession: [],
+      filterEpisode: [],
       filterPriority: [],
       filterLevel: [],
       sort: null,
       path: null,
       multiSelect: [],
+      columnSelect1:[],//场次列表
+      columnSelect2:[],//集数列表
       name: "",
       approving: [],
       conducting: [],
@@ -1133,7 +1142,7 @@ export default {
   beforeMount() {
     var h = document.documentElement.clientHeight || document.body.clientHeight;
     this.curHeight = h - 329; //减去页面上固定高度height
-    console.log(h);
+    // console.log(h);
   },
   watch: {
     assetId: {
@@ -1169,6 +1178,29 @@ export default {
     }
   },
   methods: {
+    getProjectNum(){
+        //获取集数列表
+      getEpisodeSession({id: this.$route.params.id, episode: ""}).then(
+        ({ data })=>{
+         [...data.msg].map(item => {
+            this.columnSelect2.push({
+              value: item,
+              text: item
+            });
+          });
+          console.log(this.columnSelect2);
+      });
+      //  //获取场次列表
+        getEpisodeSession({id: this.$route.params.id, session: ""}).then(
+        ({ data })=>{
+         [...data.msg].map(item => {
+            this.columnSelect1.push({
+              value: item,
+              text: item
+            });
+          });
+      }); 
+    },
     //展示要修改的资产表单
     showAssetForm(Type, row) {
       this.DialogName = Type;
@@ -1430,6 +1462,22 @@ export default {
           this.filterStatus[index] = item;
         });
       }
+      if (val.episode) {
+        this.filterEpisode = [];
+        this.filterEpisode = [...val.episode];
+        this.filterEpisode.forEach((item, index) => {
+          // item = Number(item);
+          this.filterEpisode[index] = item;
+        });
+      }
+      if (val.session) {
+        this.filterSession = [];
+        this.filterSession = [...val.session];
+        this.filterSession.forEach((item, index) => {
+          // item = Number(item);
+          this.filterSession[index] = item;
+        });
+      }
       if (val.priority) {
         this.filterPriority = [...val.priority];
         this.filterPriority.forEach((item, index) => {
@@ -1461,6 +1509,12 @@ export default {
       }
       if (this.filterStatus.length) {
         payload = { ...payload, status: "[" + String(this.filterStatus) + "]" };
+      }
+      if (this.filterEpisode.length) {
+        payload = { ...payload, episode: String(this.filterEpisode=="-"?'none':this.filterEpisode)};
+      }
+      if (this.filterSession.length) {
+        payload = { ...payload, session: String(this.filterSession=="-"?'none':this.filterSession)};
       }
       if (this.filterPriority.length) {
         payload = {
@@ -2077,6 +2131,7 @@ export default {
     }
   },
   created() {
+    this.getProjectNum();
     this.$emit("getGroup");
     this.getAuth();
     this.getAssetList(2);
