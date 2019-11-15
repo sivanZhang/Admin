@@ -18,7 +18,7 @@
       style="width:300px"
     ></el-input>
     <el-select
-      v-if="colSel === 'status' || colSel === 'grade'||colSel === 'priority'||colSel === 'executor_ids'"
+      v-if="colSel === 'status' || colSel === 'grade'||colSel === 'priority'||colSel === 'executor_ids'||colSel === 'episode'||colSel === 'session'"
       v-model="colSel2"
       placeholder="请选择"
       style="width:300px;margin-top:1px"
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { getProjectMember } from "@/api/statistics";
+import { getProjectMember, getEpisodeSession } from "@/api/statistics";
 export default {
   name: "taskSel",
   components: {},
@@ -247,6 +247,32 @@ export default {
               }
             );
             break;
+            case "episode":
+            this.colShow = false;
+            getEpisodeSession({ id: this.$route.params.id, episode: "" }).then(
+              ({ data }) => {
+                [...data.msg].map(item => {
+                  this.columnSelect2.push({
+                    value: item,
+                    label: item
+                  });
+                });
+              }
+            );
+            break;
+            case "session":
+            this.colShow = false;
+            getEpisodeSession({ id: this.$route.params.id, session: "" }).then(
+              ({ data }) => {
+                [...data.msg].map(item => {
+                  this.columnSelect2.push({
+                    value: item,
+                    label: item
+                  });
+                });
+              }
+            );
+            break;
           case "start_date":
             this.colShow = false;
             this.timeSelection = "";
@@ -289,14 +315,6 @@ export default {
         case "content":
           this.keyword && (data = { ...data, content: this.keyword });
           this.name = { content: this.keyword };
-          break;
-           case "episode":
-          this.keyword && (data = { ...data, episode: this.keyword });
-          this.name = { episode: this.keyword };
-          break;
-           case "session":
-          this.keyword && (data = { ...data, session: this.keyword });
-          this.name = { session: this.keyword };
           break;
         case "user":
           this.keyword && (data = { ...data, user: this.keyword });
@@ -387,6 +405,24 @@ export default {
             };
             this.name = { executor_ids: "[" + String(this.colSel2) + "]" };
           }
+           case "episode":
+             if (this.colSel2.length) {
+            data = {
+              ...data,
+              episode: String(this.colSel2=="-"?'none':this.colSel2)
+            };
+            this.name = { episode: "[" + String(this.colSel2) + "]" };
+          }
+          break;
+           case "session":
+              if (this.colSel2.length) {
+            data = {
+              ...data,
+              session: String(this.colSel2=="-"?'none':this.colSel2)
+            };
+            this.name = { session: "[" + String(this.colSel2) + "]" };
+          }
+          break;
       }
       this.$emit("refreshTaskList", 3, data, this.name);
     },

@@ -17,7 +17,7 @@
       style="width:300px"
     ></el-input>
     <el-select
-      v-if="colSel === 'status' || colSel === 'level'||colSel === 'priority'"
+      v-if="colSel === 'status' || colSel === 'level'||colSel === 'priority'||colSel === 'episode'||colSel === 'session'"
       v-model="colSel2"
       placeholder="请选择"
       style="width:300px;margin-top:1px"
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { getEpisodeSession } from "@/api/statistics";
 export default {
   name: "assetSel",
   components: {},
@@ -234,6 +235,34 @@ export default {
             this.timeSelection = "";
 
             break;
+          case "episode":
+            this.colShow = false;
+            this.columnSelect2=[];
+            getEpisodeSession({ id: this.$route.params.id, episode: "" }).then(
+              ({ data }) => {
+                [...data.msg].map(item => {
+                  this.columnSelect2.push({
+                    value: item,
+                    label: item
+                  });
+                });
+              }
+            );
+            break;
+          case "session":
+            this.colShow = false;
+            this.columnSelect2=[];
+            getEpisodeSession({ id: this.$route.params.id, session: "" }).then(
+              ({ data }) => {
+                [...data.msg].map(item => {
+                  this.columnSelect2.push({
+                    value: item,
+                    label: item
+                  });
+                });
+              }
+            );
+            break;
           default:
             this.colShow = true;
             this.colSel2 = [];
@@ -267,25 +296,9 @@ export default {
             });
           this.name = { inner_version: this.filterText };
           break;
-        case "session":
-          this.filterText &&
-            (payload = {
-              ...payload,
-              session: this.filterText
-            });
-          this.name = { session: this.filterText };
-          break;
         case "frame":
           this.filterText && (payload = { ...payload, frame: this.filterText });
           this.name = { frame: this.filterText };
-          break;
-        case "episode":
-          this.filterText &&
-            (payload = {
-              ...payload,
-              episode: this.filterText
-            });
-          this.name = { episode: this.filterText };
           break;
         case "content":
           this.filterText &&
@@ -357,6 +370,24 @@ export default {
               status: "[" + String(this.colSel2) + "]"
             };
             this.name = { status: "[" + String(this.colSel2) + "]" };
+          }
+          break;
+          case "episode":
+          if (this.colSel2.length) {
+            payload = {
+              ...payload,
+             episode: String(this.colSel2=="-"?'none':this.colSel2)
+            };
+            this.name = { episode: "[" + String(this.colSel2) + "]" };
+          }
+          break;
+          case "session":
+          if (this.colSel2.length) {
+            payload = {
+              ...payload,
+              session: String(this.colSel2=="-"?'none':this.colSel2)
+            };
+            this.name = { session: "[" + String(this.colSel2) + "]" };
           }
           break;
         case "level":
