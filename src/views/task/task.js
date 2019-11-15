@@ -861,9 +861,9 @@ export default {
          case 4:
           this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
           break;
-      //  case -1:
-      //       this.getstatusTaskList(-1); //正常请求后分页
-      //       break;
+       case -1:
+        this.task(this.changecolor)//正常请求后分页
+            break;
       }
     },
     handleCurrentChange(currentPage) {
@@ -876,9 +876,9 @@ export default {
         case 4:
           this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
           break;
-        // case -1:
-        //     this.getstatusTaskList(-1); //正常请求后分页
-        //     break;
+        case -1:
+          this.task(this.changecolor) //正常请求后分页
+            break;
       }
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
