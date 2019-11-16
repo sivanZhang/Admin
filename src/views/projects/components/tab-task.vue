@@ -2299,10 +2299,10 @@ export default {
         data = { ...data, status: "[" + String(this.filterStatus) + "]" };
       }
       if (this.filterEpisode.length) {
-        data = { ...data, episode: String(this.filterEpisode=="-"?'none':this.filterEpisode) };
+        data = { ...data, episode: String(this.filterEpisode) };
       }
       if (this.filterSession.length) {
-        data = { ...data, session: String(this.filterSession=="-"?'none':this.filterSession) };
+        data = { ...data, session: String(this.filterSession) };
       }
       if (this.filterGrade.length) {
         data = { ...data, grade: "[" + String(this.filterGrade) + "]" };

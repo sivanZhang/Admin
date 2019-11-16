@@ -1511,10 +1511,10 @@ export default {
         payload = { ...payload, status: "[" + String(this.filterStatus) + "]" };
       }
       if (this.filterEpisode.length) {
-        payload = { ...payload, episode: String(this.filterEpisode=="-"?'none':this.filterEpisode)};
+        payload = { ...payload, episode: String(this.filterEpisode)};
       }
       if (this.filterSession.length) {
-        payload = { ...payload, session: String(this.filterSession=="-"?'none':this.filterSession)};
+        payload = { ...payload, session: String(this.filterSession)};
       }
       if (this.filterPriority.length) {
         payload = {

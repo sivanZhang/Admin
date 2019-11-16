@@ -409,7 +409,7 @@ export default {
              if (this.colSel2.length) {
             data = {
               ...data,
-              episode: String(this.colSel2=="-"?'none':this.colSel2)
+              episode: String(this.colSel2)
             };
             this.name = { episode: "[" + String(this.colSel2) + "]" };
           }
@@ -418,7 +418,7 @@ export default {
               if (this.colSel2.length) {
             data = {
               ...data,
-              session: String(this.colSel2=="-"?'none':this.colSel2)
+              session: String(this.colSel2)
             };
             this.name = { session: "[" + String(this.colSel2) + "]" };
           }
