@@ -969,6 +969,7 @@ import taskTable from "@/views/projects/components/taskTable";
 import { editSmallStatus } from "@/api/status";
 import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
 import taskDrawer from "@/views/projects/components/ShowDrawer/taskDrawer";
+let isSaved = false//方式重复提交保存表格
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -1629,6 +1630,10 @@ export default {
     },
     //行内修改资产保存
     saveEdit(index, row) {
+      if(isSaved){
+        return
+      }
+      isSaved = true
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
@@ -1682,7 +1687,9 @@ export default {
         this.columnSelect1 = [];
         this.getProjectNum();
         
-      });
+      }).finally(()=>{
+        isSaved=false
+      })
     },
     change() {
       this.$forceUpdate();
