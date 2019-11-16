@@ -1505,6 +1505,7 @@ export default {
         } else {
           this.$message.error(data.msg);
         }
+        this.getProjectNum();
       });
     },
     getAssetList() {

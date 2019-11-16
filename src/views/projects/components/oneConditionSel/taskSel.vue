@@ -24,7 +24,7 @@
       style="width:300px;margin-top:1px"
       multiple
       filterable
-      @keyup.enter.native="getTasks()"
+      @change="getTasks()"
       size="mini"
     >
       <el-option
@@ -35,9 +35,9 @@
       ></el-option>
     </el-select>
     <div v-if="colSel === 'start_date' || colSel === 'end_date'" style="width:280px;display:flex;">
-      <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期" size="mini"></el-date-picker>
+      <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期" size="mini" @change="getTasks()"></el-date-picker>
       <span style="text-align:center;padding-top:3px">至</span>
-      <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期" size="mini"></el-date-picker>
+      <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期" size="mini" @change="getTasks()"></el-date-picker>
     </div>
 
     <el-button

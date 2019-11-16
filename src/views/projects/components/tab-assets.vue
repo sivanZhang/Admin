@@ -1188,7 +1188,6 @@ export default {
               text: item
             });
           });
-          console.log(this.columnSelect2);
       });
       //  //获取场次列表
         getEpisodeSession({id: this.$route.params.id, session: ""}).then(
@@ -1675,10 +1674,14 @@ export default {
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.getAssetList(2);
-          this.editing = false;
+          this.editing = false;     
         } else {
           this.$message.error(data.msg);
         }
+        this.columnSelect2 = [];
+        this.columnSelect1 = [];
+        this.getProjectNum();
+        
       });
     },
     change() {
