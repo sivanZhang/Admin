@@ -1,5 +1,7 @@
 <script>
-import MyTask from "./components/MyTask";
+import MyInfo from "./components/MyInfo";
+import MyFeedback from "./components/MyFeedback";
+import MyTaskCount from "./components/MyTaskCount";
 import MyManWork from "./components/MyManWork";
 import MyApprove from "./components/MyApprove";
 import noticeDetail from "@/components/Notice/components/notice-detail";
@@ -20,7 +22,9 @@ import {
 export default {
   name: "home-page",
   components: {
-    MyTask,
+    MyInfo,
+    MyTaskCount,
+    MyFeedback,
     MyManWork,
     MyApprove,
     noticeDetail,
@@ -52,7 +56,6 @@ export default {
   },
   computed: {
     ...mapState("notice", ["Notice", "unreadCount"]),
-    ...mapState("login", ["userInfo"]),
     unreadList() {
       if (this.Notice && this.Notice.length) {
         return this.Notice.filter(t => !t.read);
@@ -114,7 +117,7 @@ export default {
           this.logsLoading = false;
         });
       this.detailLoading = true;
-      this.$refs['taskDetail'].getDetail(row.task.id);
+      this.$refs["taskDetail"].getDetail(row.task.id);
       // queryTask({
       //   id: row.task.id
       // })
@@ -132,7 +135,6 @@ export default {
     },
     //修改是否已读
     updateIsRead(row) {
-      console.log(row);
       if (row.read === 0) {
         row.read = 1;
       }
@@ -152,8 +154,8 @@ export default {
       getStatusTaskList({
         mytask: null,
         status: "[2]",
-        page:1,
-        pagenum:20
+        page: 1,
+        pagenum: 20
       }).then(({ data }) => {
         this.MyTaskList = [...data.msg];
       });
@@ -168,63 +170,39 @@ export default {
 </script>
 <template>
   <div id="home-page">
-    <el-row :gutter="16">
-      <el-col :span="4">
-        <el-card shadow="hover">
-          <el-row
-            slot="header"
-            type="flex"
-            justify="space-between"
-            align="middle"
-            class="card-header"
-          >
-            <span>我的信息</span>
+    <el-row class="home-header" :gutter="15">
+      <el-col :span="16">
+        <el-row class="basic" :gutter="15">
+          <el-col :span="12" class="card-warp">
+            <MyInfo />
+          </el-col>
+          <el-col :span="12" class="card-warp">
+            <MyManWork :MyTaskList="MyTaskList" />
+          </el-col>
+          <el-col :span="24" style="height:15px" />
+          <el-col :span="12" class="card-warp">
+            <MyFeedback :MyTaskList="MyTaskList" @show-drawer="taskBoardRightShow" />
+          </el-col>
+          <el-col :span="12" class="card-warp">
+            <MyTaskCount :MyTaskList="MyTaskList" @show-drawer="taskBoardRightShow" />
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="8" class="aside">
+        <el-card shadow="always">
+          <el-row slot="header" type="flex" justify="space-between" align="middle">
+            <span>我的消息</span>
           </el-row>
-          <div class="card-item">
-            <div class="labels">
-              <el-avatar size="small">{{userInfo.username | avatarFormat}}</el-avatar>
-            </div>
-            <div class="content">
-              {{userInfo.username}}
-              <svg-icon :icon-class="userInfo.sex && userInfo.sex==='男'?'nanxing':'nvxing'" />
-            </div>
-          </div>
-          <div class="card-item">
-            <div class="labels">邮 箱</div>
-            <div class="content">{{userInfo.email}}</div>
-          </div>
-          <div class="card-item">
-            <div class="labels">角 色</div>
-            <div class="content">{{userInfo.role.role}}</div>
-          </div>
-          <div class="card-item">
-            <div class="labels">工 种</div>
-            <div class="content">
-              <router-link
-                class="dept-link"
-                v-for="(item,index) of userInfo.dept"
-                :key="index"
-                :to="{path:'/admin/userGroup',query:{id:item.id}}"
-              >{{item.name}}</router-link>
-            </div>
-          </div>
           <div>
-            <div class="labels">
-              <el-badge :value="unreadCount" :hidden="!unreadCount" :max="99" class="item">
-                <span style="padding-right:8px">消 息</span>
-              </el-badge>
-            </div>
-
             <div class="content">
               <el-table
-                :data="unreadList.filter((t,i)=>i<5)"
+                :data="unreadList.filter((t,i)=>i<10)"
                 style="width: 100%"
                 ref="multipleTable"
                 tooltip-effect="dark"
                 @row-click="updateIsRead"
-                :show-header="false"
               >
-                <el-table-column label="通知" width="256" show-overflow-tooltip>
+                <el-table-column label="通知" show-overflow-tooltip>
                   <template slot-scope="scope">
                     <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
 
@@ -232,7 +210,7 @@ export default {
                     <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column label="紧急程度" align="center" width="60">
+                <el-table-column label="紧急程度" align="center" width="80">
                   <template slot-scope="scope">
                     <el-tooltip
                       v-if="scope.row.urgency_level == 0"
@@ -265,7 +243,7 @@ export default {
                 </el-table-column>
               </el-table>
               <el-button
-                v-show="unreadList.length>5"
+                v-show="unreadList.length>10"
                 @click="$store.commit('notice/SET_CARDSHOW', true)"
                 type="text"
               >查看更多</el-button>
@@ -278,21 +256,12 @@ export default {
           </div>
         </el-card>
       </el-col>
-      <!-- <svg-icon icon-class="caitongzhi" />-->
-      <el-col :span="5">
-        <MyTask
-          :MyTaskList="MyTaskList"
-          @show-drawer="taskBoardRightShow"
-        />
-      </el-col>
-      <el-col :span="6">
-        <MyManWork :MyTaskList="MyTaskList" class="card" />
-      </el-col>
-
-      <el-col :span="5">
+    </el-row>
+    <el-row class="home-footer" :gutter="15">
+      <el-col :span="12" class="card-warp">
         <MyApprove />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="12" class="card-warp">
         <MyAllocation />
       </el-col>
     </el-row>
@@ -344,19 +313,28 @@ export default {
 <style lang="scss">
 #home-page {
   font-size: 12px;
-  .card-item {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 12px;
+  background: #f1f2f3;
+  /* height: calc(100vh - 84px); */
+  position: relative;
+
+  .home-header {
+    margin-bottom: 15px;
+    .basic {
+      height: 70%;
+      .el-card {
+        height: 300px;
+      }
+    }
+    .aside {
+      .el-card {
+        height: 615px;
+      }
+    }
   }
-  .labels {
-    vertical-align: middle;
-    color: #909399;
-    width: 60px;
-    flex: 0 0 40px;
-  }
-  .label {
-    width: 200px;
+  .home-footer {
+    .el-card {
+      height: 300px;
+    }
   }
   .el-button--text {
     padding: 0;

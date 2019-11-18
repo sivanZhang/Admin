@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover">
+  <el-card shadow="always" :body-style="{overflowY:'scroll',height:'245px'}">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span>我的审核</span>
       <!-- <el-button type="text" @click="isDialogShow = true">填报工时</el-button> -->

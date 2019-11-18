@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover">
+  <el-card shadow="always" :body-style="{overflowY:'scroll',height:'245px'}">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <el-badge :value="sceneNeed.length" :hidden="!sceneNeed.length" :max="99" class="item">
         <span style="padding-right: 10px;">待分配镜头</span>

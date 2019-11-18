@@ -1,12 +1,12 @@
 <template>
-  <el-card shadow="hover">
+  <el-card shadow="always" :body-style="{overflowY:'scroll',height:'245px'}">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span>
         我的工时
       </span>
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
-    <MyCharts ref="radar" chart-id="radar-chart" />
+    <MyCharts ref="radar" chart-id="radar-chart" height="300px"/>
    <el-row>
       <el-col :span="8" :offset="9">
         <div style="font-size:13px;color:#909399;margin-top:-50px;" v-if="this.totalCount <= 8 && this.totalCount != 0">感谢您的付出.</div>
@@ -111,7 +111,7 @@ let option = {
         lineStyle: {
           // 属性lineStyle控制线条样式
           color: [[0.167, "#91c7ae"], [0.334, "#63869e"], [1, "#c23531"]],
-          width: 7
+          width: 10
         }
       },
       axisTick: {
@@ -280,5 +280,31 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@mixin scrollStyle {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 6px;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 0px;
+    box-shadow: inset 0 0 0 #fff;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 0 #fff;
+    border-radius: 0;
+    background: #fff;
+  }
+}
+$border: 1px solid #dcdfe6;
+$linkColor: #2d8cf0;
+.el-card__body{
+  @include scrollStyle;
+}
 </style>
