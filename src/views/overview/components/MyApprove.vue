@@ -11,8 +11,9 @@
     </el-divider>
     <el-table :data="AuditList" v-loading="tableLoading" @row-click="taskBoardRightShow">
       <el-table-column prop="task.name" label="任务" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="user.username" label="提交人"></el-table-column>
+      <el-table-column prop="task.content" label="任务内容" show-overflow-tooltip></el-table-column>
       <el-table-column prop="task.dept.name" label="工种"></el-table-column>
+      <el-table-column prop="user.username" label="提交人"></el-table-column>
     </el-table>
 
     <el-divider content-position="left">
@@ -22,6 +23,7 @@
     <el-table :data="ApproveOverTime" v-loading="tableLoading1" @row-click="openDialog">
       <el-table-column prop="overtime_creator.username" label="申请人"></el-table-column>
       <el-table-column prop="task.name" label="加班任务"></el-table-column>
+      <el-table-column prop="reason" label="加班原因"></el-table-column>
       <el-table-column prop="overtime_hour" label="加班工时"></el-table-column>
     </el-table>
 

@@ -1,15 +1,16 @@
 <template>
   <el-card shadow="always" :body-style="{overflowY:'scroll',height:'245px'}">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
-      <span>
-        我的工时
-      </span>
+      <span>我的工时</span>
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
-    <MyCharts ref="radar" chart-id="radar-chart" height="300px"/>
-   <el-row>
+    <MyCharts ref="radar" chart-id="radar-chart" height="300px" />
+    <el-row>
       <el-col :span="8" :offset="9">
-        <div style="font-size:13px;color:#909399;margin-top:-50px;" v-if="this.totalCount <= 8 && this.totalCount != 0">感谢您的付出.</div>
+        <div
+          style="font-size:13px;color:#909399;margin-top:-50px;"
+          v-if="this.totalCount <= 8 && this.totalCount != 0"
+        >感谢您的付出.</div>
       </el-col>
       <el-col :span="8" :offset="10">
         <div style="font-size:13px;color:#909399;margin-top:-50px;" v-if="this.totalCount > 8 ">辛苦了.</div>
@@ -54,7 +55,13 @@
         <el-form-item label="完成进度" prop="content">
           <el-row type="flex" align="middle">
             <el-col :span="10">
-              <el-input-number v-model="TaskForm.schedule" :min="0" :max="100" :step="10" @blur="BlurText($event)"></el-input-number>
+              <el-input-number
+                v-model="TaskForm.schedule"
+                :min="0"
+                :max="100"
+                :step="10"
+                @blur="BlurText($event)"
+              ></el-input-number>
             </el-col>
             <el-col :span="14">
               <el-progress
@@ -66,11 +73,15 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="剩余工时" >{{leaveTime?leaveTime:0}}</el-form-item>
+        <el-form-item label="剩余工时">{{leaveTime?leaveTime:0}}</el-form-item>
         <el-form-item label="工时 (h)" prop="labor_hour">
-          <el-input-number 
-          :disabled="leaveTime?false:true"
-          v-model="TaskForm.labor_hour" placeholder="小时" :min="0" :max="leaveTime < 24? leaveTime: 24"></el-input-number>
+          <el-input-number
+            :disabled="leaveTime?false:true"
+            v-model="TaskForm.labor_hour"
+            placeholder="小时"
+            :min="0"
+            :max="leaveTime < 24? leaveTime: 24"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="日期" prop="date">
           <el-date-picker
@@ -83,7 +94,12 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="isDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="submitWorkHourFrom" :loading="submitLoading" :disabled="leaveTime?false:true">提交</el-button>
+        <el-button
+          type="primary"
+          @click="submitWorkHourFrom"
+          :loading="submitLoading"
+          :disabled="leaveTime?false:true"
+        >提交</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -92,20 +108,24 @@
 <script>
 import MyCharts from "@/components/ECharts/BaseECharts";
 import { getMyManHour } from "@/api/manHour";
-import { addTaskRecord,queryTask } from "@/api/task";
+import { addTaskRecord, queryTask } from "@/api/task";
 import AXIOS from "@/utils/request";
 import dayjs from "dayjs";
 let option = {
   tooltip: {
     formatter: "{a} <br/>{c} {b}"
   },
+  grid : {
+        bottom: 0   //距离容器下边界30像素
+    },
   series: [
     {
       name: "工时",
       type: "gauge",
+      center: ['50%', 115],    // 默认全局居中
       min: 0,
       max: 24,
-      splitNumber: 12,//max/splitNumber每个刻度代表多少
+      splitNumber: 12, //max/splitNumber每个刻度代表多少
       axisLine: {
         // 坐标轴线
         lineStyle: {
@@ -116,7 +136,7 @@ let option = {
       },
       axisTick: {
         // 坐标轴小标记
-        length: 0, // 属性length控制线长
+        length: 0 // 属性length控制线长
       },
       splitLine: {
         // 分隔线
@@ -145,8 +165,8 @@ export default {
   },
   data() {
     return {
-      leaveTime:0,
-      totalCount:'',
+      leaveTime: 0,
+      totalCount: "",
       TaskForm: {
         type: 0,
         date: dayjs().format("YYYY/MM/DD"),
@@ -209,20 +229,19 @@ export default {
     this.getMyWorkHours();
   },
   methods: {
-     //进度输入框限制只能输入整数
-    BlurText(e){
-     let boolean = new RegExp("^[1-9][0-9]*$").test(e.target.value)
-     if(!boolean){
-       this.$message.error('请输入正整数');
-       e.target.value = '0';
-       this.TaskForm.schedule = ''
-     }
+    //进度输入框限制只能输入整数
+    BlurText(e) {
+      let boolean = new RegExp("^[1-9][0-9]*$").test(e.target.value);
+      if (!boolean) {
+        this.$message.error("请输入正整数");
+        e.target.value = "0";
+        this.TaskForm.schedule = "";
+      }
     },
-    selMyTask(val){
-      queryTask({id:val}).then(({data})=>{
-        this.leaveTime = data.msg.surplus_labor_hour
-      })
-      
+    selMyTask(val) {
+      queryTask({ id: val }).then(({ data }) => {
+        this.leaveTime = data.msg.surplus_labor_hour;
+      });
     },
     getMyWorkHours() {
       let today = dayjs().format("YYYY/MM/DD");
@@ -304,7 +323,7 @@ export default {
 }
 $border: 1px solid #dcdfe6;
 $linkColor: #2d8cf0;
-.el-card__body{
+.el-card__body {
   @include scrollStyle;
 }
 </style>

@@ -191,7 +191,7 @@ export default {
       <el-col :span="8" class="aside">
         <el-card shadow="always">
           <el-row slot="header" type="flex" justify="space-between" align="middle">
-            <span>我的消息</span>
+            <span class="card-header">我的消息</span>
           </el-row>
           <div>
             <div class="content">
@@ -202,13 +202,16 @@ export default {
                 tooltip-effect="dark"
                 @row-click="updateIsRead"
               >
-                <el-table-column label="通知" show-overflow-tooltip>
+                <el-table-column label="消息" show-overflow-tooltip>
                   <template slot-scope="scope">
                     <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
 
                     <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
                     <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link>
                   </template>
+                </el-table-column>
+                <el-table-column label="时间" >
+                  <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
                 </el-table-column>
                 <el-table-column label="紧急程度" align="center" width="80">
                   <template slot-scope="scope">
@@ -313,7 +316,7 @@ export default {
 <style lang="scss">
 #home-page {
   font-size: 12px;
-  background: #f1f2f3;
+  background-color: #f4f5f5;
   /* height: calc(100vh - 84px); */
   position: relative;
 
@@ -335,6 +338,10 @@ export default {
     .el-card {
       height: 300px;
     }
+  }
+  .card-header{
+    font-size: 14px;
+    font-weight: 600;
   }
   .el-button--text {
     padding: 0;

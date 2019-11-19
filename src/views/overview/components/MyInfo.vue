@@ -1,13 +1,13 @@
 <template>
   <el-card shadow="always">
     <el-row slot="header" type="flex" justify="space-between" align="middle">
-      <span>我的信息</span>
+      <span class="card-header">我的信息</span>
     </el-row>
     <div class="card-item">
       <div class="labels">
         <el-avatar size="small">{{userInfo.username | avatarFormat}}</el-avatar>
       </div>
-      <div class="content">
+      <div class="content name">
         {{userInfo.username}}
         <svg-icon :icon-class="userInfo.sex && userInfo.sex==='男'?'nanxing':'nvxing'" />
       </div>
@@ -47,6 +47,10 @@ export default {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 12px;
+  .name{
+    font-size: 18px;
+    font-weight: 600;
+  }
 }
 .labels {
     vertical-align: middle;

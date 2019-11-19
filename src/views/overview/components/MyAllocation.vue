@@ -7,11 +7,14 @@
       <el-button @click="$router.push({path:'/team-manager/team-manager'})" type="text">查看更多</el-button>
     </el-row>
     <el-table :data="sceneNeed">
-        <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
+      <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
         <template slot-scope="scope">
           <span @click="showDrawer(scope.row)">{{scope.row.name}}</span>
         </template>
       </el-table-column>
+
+      <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip></el-table-column>
+
       <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
         <template slot-scope="scope">
           <router-link
@@ -19,10 +22,12 @@
           >{{scope.row.project_name}}</router-link>
         </template>
       </el-table-column>
-      
+      <el-table-column prop="priority" label="优先级">
+        <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
+      </el-table-column>
     </el-table>
     <Drawer
-    ref="drawer"
+      ref="drawer"
       scrollable
       closable
       v-model="value1"
@@ -156,53 +161,65 @@ import { getDept } from "@/api/admin";
 import { addTask } from "@/api/task";
 import myMixin from "@/views/projects/components/mixins";
 export default {
-  mixins:[myMixin],
+  mixins: [myMixin],
   data() {
     return {
       sceneNeed: [],
-      value1:false,
+      value1: false,
       assetId: null,
       assetName: null,
-      link:[],
+      link: [],
       deptList: this.$store.state.login.userInfo.dept,
-      isCreateTaskShow:false,
+      isCreateTaskShow: false,
       TaskForm: {},
       rules: {
-                name: [{
-                    required: true,
-                    message: "请输入任务名称",
-                    trigger: "blur"
-                }],
-                priority: [{
-                    required: true,
-                    message: "请输入优先等级",
-                    trigger: "blur"
-                }],
-                content: [{
-                    required: true,
-                    message: "请输入任务内容",
-                    trigger: "blur"
-                }],
-                executorlist: [{
-                    required: true,
-                    message: "请输入任务执行人",
-                    trigger: "blur"
-                }],
-                total_hour: [{
-                    required: true,
-                    message: "请输入总工时",
-                    trigger: "blur"
-                }],
-                datetime: [{
-                    required: true,
-                    message: "请输入任务时间",
-                    trigger: "blur"
-                }]
-            },
-            DeptUsers: [],
-            linkstart: null,
-            linkend: null,
-            createTaskLoading:false,
+        name: [
+          {
+            required: true,
+            message: "请输入任务名称",
+            trigger: "blur"
+          }
+        ],
+        priority: [
+          {
+            required: true,
+            message: "请输入优先等级",
+            trigger: "blur"
+          }
+        ],
+        content: [
+          {
+            required: true,
+            message: "请输入任务内容",
+            trigger: "blur"
+          }
+        ],
+        executorlist: [
+          {
+            required: true,
+            message: "请输入任务执行人",
+            trigger: "blur"
+          }
+        ],
+        total_hour: [
+          {
+            required: true,
+            message: "请输入总工时",
+            trigger: "blur"
+          }
+        ],
+        datetime: [
+          {
+            required: true,
+            message: "请输入任务时间",
+            trigger: "blur"
+          }
+        ]
+      },
+      DeptUsers: [],
+      linkstart: null,
+      linkend: null,
+      createTaskLoading: false
     };
   },
   created() {
@@ -299,7 +316,7 @@ export default {
       this.value1 = true;
       this.assetId = row.id;
       this.assetName = row.name;
-      
+
       getLinks({ asset: row.id }).then(({ data }) => {
         this.link = [...data.msg];
       });
@@ -320,7 +337,7 @@ export default {
 
 <style lang="scss" scoped>
 .links {
-    cursor: pointer;
-    color: #2d8cf0;
-  }
+  cursor: pointer;
+  color: #2d8cf0;
+}
 </style>
