@@ -9,7 +9,8 @@
         <MyCharts ref="radar" chart-id="radar-chart" height="100%" />
       </div>
       <div class="chart-warp">
-        <PieNestedChart ref="home-pei-chart" chart-id="home-pei-chart" height="100%" />
+        <PieNestedChart ref="home-pei-chart" chart-id="home-pei-chart" height="50%" />
+        <PieNestedChart ref="home-pei-chart2" chart-id="home-pei-chart2" height="50%" />
         <!-- <el-row v-if="this.totalCount !==0"> -->
         <!--   <el-col :span="8" :offset="9"> -->
         <!--     <div -->
@@ -291,13 +292,13 @@ export default {
           this.monthHour = arg[1].data;
           let option2 = {
             title:{
-              text:'外：近一月\n内：近一周',
+              text:`近一周:${this.weekHour.total_count}`,
               textAlign:'left',
               textStyle:{
                 fontSize:12,
                 fintWeigt:'normal',
               },
-              bottom:'0',
+              top:10,
               right:"0",
             },
             tooltip: {
@@ -307,24 +308,36 @@ export default {
             series: [
               {
                 name: "近一周",
-                type: "pie",
-                radius: [0, "30%"],
-
                 label: {
                   normal: {
                     position: "inner"
                   }
                 },
-                labelLine: {
-                  normal: {
-                    show: false
-                  }
-                },
+                type: "pie",
+                radius: [0, '80%'],
                 data: [
                   { value: this.weekHour.overtime_count, name: "加班" },
                   { value: this.weekHour.task_count, name: "任务" }
                 ]
               },
+            ]
+          };
+          let option3 = {
+            title:{
+              text:`近一月:${this.monthHour.total_count}`,
+              textAlign:'left',
+              textStyle:{
+                fontSize:12,
+                fintWeigt:'normal',
+              },
+              top:10,
+              right:"0",
+            },
+            tooltip: {
+              trigger: "item",
+              formatter: "{a} <br/>{b}工时: {c} ({d}%)"
+            },
+            series: [
               {
                 name: "近一月",
                 label: {
@@ -333,7 +346,7 @@ export default {
                   }
                 },
                 type: "pie",
-                radius: ["60%", "90%"],
+                radius: [0, '80%'],
                 data: [
                   { value: this.monthHour.overtime_count, name: "加班" },
                   { value: this.monthHour.task_count, name: "任务" }
@@ -342,6 +355,7 @@ export default {
             ]
           };
           this.$refs["home-pei-chart"].initChart(option2);
+          this.$refs["home-pei-chart2"].initChart(option3);
         })
       );
     },
