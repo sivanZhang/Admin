@@ -7,6 +7,7 @@ import echarts from "echarts";
 import resize from "./resize";
 export default {
   name: "base-echarts",
+  mixins:[resize],
   props: {
     chartId: {
       type: String,

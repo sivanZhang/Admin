@@ -319,7 +319,32 @@ export default {
   background-color: #f4f5f5;
   /* height: calc(100vh - 84px); */
   position: relative;
-
+@mixin scrollStyle {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 6px;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 0px;
+    box-shadow: inset 0 0 0 #fff;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 0 #fff;
+    border-radius: 0;
+    background: #fff;
+  }
+}
+$border: 1px solid #dcdfe6;
+$linkColor: #2d8cf0;
+.el-card__body {
+  @include scrollStyle;
+}
   .home-header {
     margin-bottom: 15px;
     .basic {

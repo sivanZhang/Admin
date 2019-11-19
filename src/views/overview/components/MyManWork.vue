@@ -1,31 +1,38 @@
 <template>
-  <el-card shadow="always" :body-style="{overflowY:'scroll',height:'245px'}">
+  <el-card shadow="always" :body-style="{height:'245px'}">
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span>我的工时</span>
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
-    <MyCharts ref="radar" chart-id="radar-chart" height="300px" />
-    <el-row>
-      <el-col :span="8" :offset="9">
-        <div
-          style="font-size:13px;color:#909399;margin-top:-50px;"
-          v-if="this.totalCount <= 8 && this.totalCount != 0"
-        >感谢您的付出.</div>
-      </el-col>
-      <el-col :span="8" :offset="10">
-        <div style="font-size:13px;color:#909399;margin-top:-50px;" v-if="this.totalCount > 8 ">辛苦了.</div>
-      </el-col>
-    </el-row>
-    <!-- <el-row>
-      <el-col :span="12">本周工时(h)：{{weekHour.total_count}}</el-col>
-      <el-col :span="12">本月工时(h)：{{monthHour.total_count}}</el-col>
-    </el-row>-->
-    <el-table :data="workhouerlist">
-      <el-table-column prop="time" label="时间"></el-table-column>
-      <el-table-column label="任务工时" prop="task_count"></el-table-column>
-      <el-table-column label="加班工时" prop="overtime_count"></el-table-column>
-      <el-table-column label="总工时" prop="total_count"></el-table-column>
-    </el-table>
+    <div class="man-work">
+      <div class="chart-warp">
+        <MyCharts ref="radar" chart-id="radar-chart" height="100%" />
+      </div>
+      <div class="chart-warp">
+        <PieNestedChart ref="home-pei-chart" chart-id="home-pei-chart" height="100%" />
+        <!-- <el-row v-if="this.totalCount !==0"> -->
+        <!--   <el-col :span="8" :offset="9"> -->
+        <!--     <div -->
+        <!--       style="font-size:13px;color:#909399;margin-top:-50px;" -->
+        <!--       v-if="this.totalCount <= 8 && this.totalCount != 0" -->
+        <!--     >感谢您的付出.</div> -->
+        <!--   </el-col> -->
+        <!--   <el-col :span="8" :offset="10"> -->
+        <!--     <div -->
+        <!--       style="font-size:13px;color:#909399;margin-top:-50px;" -->
+        <!--       v-if="this.totalCount > 8 " -->
+        <!--     >辛苦了.</div> -->
+        <!--   </el-col> -->
+        <!-- </el-row> -->
+        <!-- <el-table :data="workhouerlist"> -->
+        <!--   <el-table-column prop="time" label="时间" width="60"></el-table-column> -->
+        <!--   <el-table-column label="总工时" prop="total_count" width="60"></el-table-column> -->
+        <!--   <el-table-column label="任务" prop="task_count" width="60"></el-table-column> -->
+        <!--   <el-table-column label="加班" prop="overtime_count" width="60"></el-table-column> -->
+        <!-- </el-table> -->
+      </div>
+    </div>
+
     <el-dialog :visible.sync="isDialogShow" width="460px">
       <h4 slot="title">工时填报</h4>
       <el-form
@@ -103,28 +110,38 @@
       </span>
     </el-dialog>
   </el-card>
+  <!-- <el-row>
+      <el-col :span="12">本周工时(h)：{{weekHour.total_count}}</el-col>
+      <el-col :span="12">本月工时(h)：{{monthHour.total_count}}</el-col>
+  </el-row>-->
 </template>
 
 <script>
+import PieNestedChart from "@/components/ECharts/PieNestedChart";
 import MyCharts from "@/components/ECharts/BaseECharts";
 import { getMyManHour } from "@/api/manHour";
 import { addTaskRecord, queryTask } from "@/api/task";
-import AXIOS from "@/utils/request";
+import AXIOS from "axios";
 import dayjs from "dayjs";
 let option = {
   tooltip: {
     formatter: "{a} <br/>{c} {b}"
   },
-  grid : {
-        bottom: 0   //距离容器下边界30像素
-    },
+  grid: {
+    x: 0, //默认是80px
+    y: 0, //默认是60px
+    x2: 0, //默认80px
+    y2: 0, //默认60px
+    bottom: 0 //距离容器下边界30像素
+  },
   series: [
     {
       name: "工时",
       type: "gauge",
-      center: ['50%', 115],    // 默认全局居中
+      center: ["50%", "50%"], // 默认全局居中
       min: 0,
       max: 24,
+      radius: "100%",
       splitNumber: 12, //max/splitNumber每个刻度代表多少
       axisLine: {
         // 坐标轴线
@@ -155,7 +172,8 @@ let option = {
 };
 export default {
   components: {
-    MyCharts
+    MyCharts,
+    PieNestedChart
   },
   props: {
     MyTaskList: {
@@ -253,25 +271,79 @@ export default {
         this.$refs.radar.initChart(option);
       });
       //查询近一周
-      getMyManHour({
-        ...params,
-        start: dayjs()
-          .subtract(1, "week")
-          .format("YYYY/MM/DD")
-      }).then(({ data }) => {
-        this.weekHour = { ...data };
-      });
-      //查询近一年
-      getMyManHour({
-        ...params,
-        start: dayjs()
-          .subtract(1, "month")
-          .format("YYYY/MM/DD")
-      }).then(({ data }) => {
-        this.monthHour = {
-          ...data
-        };
-      });
+      let httpFn = [
+        getMyManHour({
+          ...params,
+          start: dayjs()
+            .subtract(1, "week")
+            .format("YYYY/MM/DD")
+        }),
+        getMyManHour({
+          ...params,
+          start: dayjs()
+            .subtract(1, "month")
+            .format("YYYY/MM/DD")
+        })
+      ];
+      AXIOS.all(httpFn).then(
+        AXIOS.spread((...arg) => {
+          this.weekHour = arg[0].data;
+          this.monthHour = arg[1].data;
+          let option2 = {
+            title:{
+              text:'外：近一月\n内：近一周',
+              textAlign:'left',
+              textStyle:{
+                fontSize:12,
+                fintWeigt:'normal',
+              },
+              bottom:'0',
+              right:"0",
+            },
+            tooltip: {
+              trigger: "item",
+              formatter: "{a} <br/>{b}工时: {c} ({d}%)"
+            },
+            series: [
+              {
+                name: "近一周",
+                type: "pie",
+                radius: [0, "30%"],
+
+                label: {
+                  normal: {
+                    position: "inner"
+                  }
+                },
+                labelLine: {
+                  normal: {
+                    show: false
+                  }
+                },
+                data: [
+                  { value: this.weekHour.overtime_count, name: "加班" },
+                  { value: this.weekHour.task_count, name: "任务" }
+                ]
+              },
+              {
+                name: "近一月",
+                label: {
+                  normal: {
+                    position: "inner"
+                  }
+                },
+                type: "pie",
+                radius: ["60%", "90%"],
+                data: [
+                  { value: this.monthHour.overtime_count, name: "加班" },
+                  { value: this.monthHour.task_count, name: "任务" }
+                ]
+              }
+            ]
+          };
+          this.$refs["home-pei-chart"].initChart(option2);
+        })
+      );
     },
     submitWorkHourFrom() {
       this.$refs["taskForm"].validate(valid => {
@@ -300,30 +372,12 @@ export default {
 </script>
 
 <style lang="scss">
-@mixin scrollStyle {
-  &::-webkit-scrollbar {
-    /*滚动条整体样式*/
-    width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
-    height: 6px;
-    cursor: pointer;
+.man-work {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  .chart-warp {
+    flex: 0 0 50%;
   }
-  &::-webkit-scrollbar-thumb {
-    /*滚动条里面小方块*/
-    border-radius: 0px;
-    box-shadow: inset 0 0 0 #fff;
-    background: rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-  }
-  &::-webkit-scrollbar-track {
-    /*滚动条里面轨道*/
-    box-shadow: inset 0 0 0 #fff;
-    border-radius: 0;
-    background: #fff;
-  }
-}
-$border: 1px solid #dcdfe6;
-$linkColor: #2d8cf0;
-.el-card__body {
-  @include scrollStyle;
 }
 </style>
