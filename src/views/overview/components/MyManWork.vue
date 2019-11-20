@@ -5,12 +5,14 @@
       <el-button type="text" @click="isDialogShow = true">填报工时</el-button>
     </el-row>
     <div class="man-work">
+      <div class="pei-warp">
+        <PieNestedChart ref="home-pei-chart" chart-id="home-pei-chart" height="100%" />
+      </div>
       <div class="chart-warp">
         <MyCharts ref="radar" chart-id="radar-chart" height="100%" />
       </div>
-      <div class="chart-warp">
-        <PieNestedChart ref="home-pei-chart" chart-id="home-pei-chart" height="50%" />
-        <PieNestedChart ref="home-pei-chart2" chart-id="home-pei-chart2" height="50%" />
+      <div class="pei-warp">
+        <PieNestedChart ref="home-pei-chart2" chart-id="home-pei-chart2" height="100%" />
         <!-- <el-row v-if="this.totalCount !==0"> -->
         <!--   <el-col :span="8" :offset="9"> -->
         <!--     <div -->
@@ -292,14 +294,14 @@ export default {
           this.monthHour = arg[1].data;
           let option2 = {
             title:{
-              text:`近一周:${this.weekHour.total_count}`,
+              text:`近一周(h):${this.weekHour.total_count}`,
               textAlign:'left',
               textStyle:{
                 fontSize:12,
                 fintWeigt:'normal',
               },
-              top:10,
-              right:"0",
+              top:0,
+              left:"center",
             },
             tooltip: {
               trigger: "item",
@@ -324,14 +326,14 @@ export default {
           };
           let option3 = {
             title:{
-              text:`近一月:${this.monthHour.total_count}`,
+              text:`近一月(h):${this.monthHour.total_count}`,
               textAlign:'left',
               textStyle:{
                 fontSize:12,
                 fintWeigt:'normal',
               },
-              top:10,
-              right:"0",
+              top:0,
+              left:"center",
             },
             tooltip: {
               trigger: "item",
@@ -391,7 +393,10 @@ export default {
   width: 100%;
   display: flex;
   .chart-warp {
-    flex: 0 0 50%;
+    flex: 0 0 40%;
+  }
+  .pei-warp{
+    flex: 0 0 30%;
   }
 }
 </style>
