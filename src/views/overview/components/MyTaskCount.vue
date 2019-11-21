@@ -9,19 +9,19 @@
 
     <div class="navs">
       <div @click="targetMore('priority')">
-        <span style="font-size:18px;color:#B50B1E">
+        <span style="font-size:20px;color:#B50B1E">
         {{TaskCount.high}}
         </span>
         <br />高优先级
       </div>
       <div @click="targetMore('grade')">
-        <span style="font-size:18px;color:#B50B1E">
+        <span style="font-size:20px;color:#B50B1E">
         {{TaskCount.difficult}}
          </span>
         <br />A+&nbsp; A&nbsp; A-
       </div>
       <div @click="targetMore('expire')">
-        <span style="font-size:18px;color:#B50B1E">
+        <span style="font-size:20px;color:#B50B1E">
         {{TaskCount.outdate}}
          </span>
         <br />即将超期
@@ -90,8 +90,8 @@ export default {
   white-space: nowrap; //强制一行显示
 }
 $border: 1px solid #dcdfe6;
-$linkColor: #B50B1E;
-// $linkColor: #2d8cf0;
+// $linkColor: #B50B1E;
+$linkColor: #2d8cf0;
 .navs {
   display: flex;
   justify-content: space-between;
