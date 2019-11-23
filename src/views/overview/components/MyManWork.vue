@@ -6,13 +6,13 @@
     </el-row>
     <div class="man-work">
       <div class="pei-warp">
-        <PieNestedChart ref="home-pei-chart" chart-id="home-pei-chart" height="100%" />
+        近一月(h):{{monthHour.task_count}}
       </div>
       <div class="chart-warp">
         <MyCharts ref="radar" chart-id="radar-chart" height="100%" />
       </div>
       <div class="pei-warp">
-        <PieNestedChart ref="home-pei-chart2" chart-id="home-pei-chart2" height="100%" />
+        近一周(h):{{weekHour.task_count}}
         <!-- <el-row v-if="this.totalCount !==0"> -->
         <!--   <el-col :span="8" :offset="9"> -->
         <!--     <div -->
@@ -397,6 +397,10 @@ export default {
   }
   .pei-warp{
     flex: 0 0 30%;
+    display: flex;
+    align-items: flex-end;
+    justify-content:center;
+    font-weight: 600;
   }
 }
 </style>
