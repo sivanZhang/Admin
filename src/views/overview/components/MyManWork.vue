@@ -393,10 +393,10 @@ export default {
   width: 100%;
   display: flex;
   .chart-warp {
-    flex: 0 0 40%;
+    flex: 0 0 60%;
   }
   .pei-warp{
-    flex: 0 0 30%;
+    flex: 0 0 20%;
     display: flex;
     align-items: flex-end;
     justify-content:center;
