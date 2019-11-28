@@ -287,7 +287,7 @@ export default function asyncRoutes(params) {
       component: Layout,
       redirect: 'noRedirect',
       meta: {
-        title: '查询kpi',
+        title: 'kpi',
         icon: 'KPI'
       },
       children: [{
@@ -296,7 +296,16 @@ export default function asyncRoutes(params) {
         component: () =>
           import('@/views/search-kpi'),
         meta: {
-          title: '查询kpi',
+          title: '人员kpi',
+          icon: 'KPI'
+        }
+      },{
+        path: 'department-kpi',
+        name: 'department-kpi',
+        component: () =>
+          import('@/views/search-kpi/department-kpi'),
+        meta: {
+          title: '部门kpi',
           icon: 'KPI'
         }
       }]

@@ -99,3 +99,11 @@ export function getTaskDailies(){
 export function getAssetTask(params){
   return AXIOS.get('/task/asset_task/',{params})
 }
+//任务预判断
+export function taskProgress(params) {
+  return AXIOS.get('/projects/schedule_control/?prejudgment',{params})
+}
+//距离截止日期为1天还未提交的任务
+export function notSubmitTask(params) {
+  return AXIOS.get('/projects/schedule_control/',{params})
+}
