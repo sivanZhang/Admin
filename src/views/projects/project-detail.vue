@@ -68,7 +68,7 @@ import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
 import training from "./components/training-member";
-import progressContral from "./components/progressContral";
+import progressContral from "./components/progressContral/progressContral";
 import { getProjects } from "@/api/project";
 import { getTrainingProject, getProjectJoinMeb ,allScene} from "@/api/training";
 import statistics from "./components/statistics";
