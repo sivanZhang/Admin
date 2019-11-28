@@ -4,7 +4,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="制作要求" name="tab6" lazy>
         <div style="width:50%">
-          <info :project="project" configImg = "img"/>
+          <info :project="project" configImg="img" />
         </div>
       </el-tab-pane>
       <template v-if="project.pro_type === 0">
@@ -12,6 +12,9 @@
           <training :trainingMenber="trainingMenber" />
         </el-tab-pane>
       </template>
+      <el-tab-pane label="进度控制" name="tab7" lazy>
+        <progressContral />
+      </el-tab-pane>
       <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
           ref="scene"
@@ -21,8 +24,8 @@
           :assetId="assetId"
           @jumpName="jumpName"
           :groupType="groupType"
-          @getGroup ="getGroupAuth"
-          notShow = "true"
+          @getGroup="getGroupAuth"
+          notShow="true"
         >
           <span slot="add">添加镜头</span>
           <span slot="import">镜头导入</span>
@@ -37,8 +40,8 @@
           :assetId="assetId"
           @jumpName="jumpName"
           :groupType="groupType"
-          @getGroup ="getGroupAuth"
-          notShow = "false"
+          @getGroup="getGroupAuth"
+          notShow="false"
         />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2" lazy>
@@ -48,7 +51,12 @@
         <statistics />
       </el-tab-pane>
       <el-tab-pane label="项目设置" name="tab3" lazy>
-        <configProject :project="project" @refresh="getProjectDetail" :configTab="configTab" :auth="auth"/>
+        <configProject
+          :project="project"
+          @refresh="getProjectDetail"
+          :configTab="configTab"
+          :auth="auth"
+        />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -60,6 +68,7 @@ import tabTask from "./components/tab-task";
 import tabAssets from "./components/tab-assets";
 import configProject from "./components/configProject";
 import training from "./components/training-member";
+import progressContral from "./components/progressContral";
 import { getProjects } from "@/api/project";
 import { getTrainingProject, getProjectJoinMeb ,allScene} from "@/api/training";
 import statistics from "./components/statistics";
@@ -72,7 +81,8 @@ export default {
     configProject,
     statistics,
     training,
-    info
+    info,
+    progressContral
   },
   data() {
     return {
@@ -91,13 +101,14 @@ export default {
   watch: {
     activeName: {
       handler: function(newVal, oldVal) {
-        if(newVal === "tab0"){
-          this.$nextTick(()=>{
-            this.$refs['scene'].getAssetList(2)
+        if (newVal === "tab0") {
+          this.$nextTick(() => {
+            this.$refs["scene"].getAssetList(2);
+          });
+        } else if (newVal === "tab1") {
+          this.$nextTick(() => {
+          this.$refs["scene2"].getAssetList(2);
           })
-          
-        }else if(newVal === "tab1"){
-          this.$refs['scene2'].getAssetList(2)
         }
       }
     }
@@ -151,10 +162,10 @@ export default {
   },
   created() {
     if (this.$route.query.type === 0) {
-     // this.activeName = "tab5";
+      // this.activeName = "tab5";
       this.groupType = "0";
     } else {
-      this.groupType ="1";
+      this.groupType = "1";
     }
     this.getAssetList();
     this.getProjectDetail();
@@ -167,7 +178,6 @@ export default {
       this.assetJump = this.$route.query.tab;
     }
     this.assetId = this.$route.query.asset;
-
   },
   //每次路由从批量上传进入，会刷新
   beforeRouteEnter(to, from, next) {

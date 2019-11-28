@@ -112,3 +112,23 @@ export function assetTime(params) {
 export function searchKpi(params) {
   return AXIOS.get('/task/kpi/',{params})
 }
+//部门kpi
+export function searchDepartmentKpi(params) {
+  return AXIOS.get('/task/dept_kpi/',{params})
+}
+//部门本月的总工时实际工时和空闲工时
+export function getDepartmentTime(params) {
+  return AXIOS.get('/projects/dept_worktime/',{params})
+}
+//查询项目中超时的镜头
+export function getOverDueAsset(params) {
+  return AXIOS.get('/statistic/asset/?overdue',{params})
+}
+//统计超期的任务数量和任务执行人的排名
+export function getOverDueTask(params) {
+  return AXIOS.get('/statistic/task/?overdue',{params})
+}
+//查询项目中提交审批数目最多的资产和任务
+export function getAssetMaxSubmit(params) {
+  return AXIOS.get('/statistic/asset/?max_submit',{params})
+}
