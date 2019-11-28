@@ -163,7 +163,8 @@ export default {
           data = { ...data, score: this.score };
         }
         this.imgList.forEach(k => {
-          if (k.task === t.task.id) {
+          debugger
+          if (k.currentProject.task.id === t.task.id) {
             data["key"].push({
               image: k.imgUrl,
               frame: k.currentFrame
