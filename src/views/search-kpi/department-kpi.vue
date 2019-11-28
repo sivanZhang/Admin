@@ -37,8 +37,8 @@
       highlight-current-row
       default-expand-all
     >
-      <el-table-column prop="accomplist_asset_num" label="资产数量"></el-table-column>
-      <el-table-column prop="accomplish_asset_frame" label="镜头帧数"></el-table-column>
+      <el-table-column prop="accomplist_asset_num" label="完成的资产数量"></el-table-column>
+      <el-table-column prop="accomplish_asset_frame" label="完成的镜头帧数"></el-table-column>
       <el-table-column  label="难度等级">
         <template slot-scope="scope">
           <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">
