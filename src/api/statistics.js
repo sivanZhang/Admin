@@ -132,3 +132,7 @@ export function getOverDueTask(params) {
 export function getAssetMaxSubmit(params) {
   return AXIOS.get('/statistic/asset/?max_submit',{params})
 }
+//按照部门去看人员的甘特图
+export function getDeptMember(params) {
+  return AXIOS.get('/task/dept_member_gantt/',{params})
+}
