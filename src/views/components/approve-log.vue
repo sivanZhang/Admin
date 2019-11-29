@@ -53,6 +53,11 @@
         <div class="item">
           <div class="item-con">{{t.approve_suggestion}}</div>
         </div>
+        <div class="item" v-if="t.video_link">
+          <div class="item-con" @click="showVideo(t.video_link)">视频链接:
+            <span style="cursor:pointer;color:#2d8cf0">{{t.video_link}}</span>
+          </div>
+        </div>
         <div class="item">
           <div class="item-con">
             <el-col :span="5"  v-for="(item,index) of t.images" :key="index">
@@ -75,6 +80,9 @@
       </div>
     </div>
     <div v-show="!list.length">暂无数据</div>
+    <el-dialog :visible.sync="dialogTableVisible" @closed="endPlay">
+      <video ref="videoplayer" :src="videoSrc" controls width="100%"></video>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -102,10 +110,21 @@ export default {
           value: 1
         }
       ],
-      select: 2
+      select: 2,
+      videoSrc: "",
+      dialogTableVisible: false //dialog是否显示
     };
   },
   methods: {
+     //打开视频弹框，为视频src赋值
+    showVideo(path) {
+      this.videoSrc = this.$store.state.BASE_URL + '/'+path;
+      this.dialogTableVisible = true;
+    },
+    //关闭dialog回调，停止视频播放
+    endPlay() {
+      this.$refs["videoplayer"].pause();
+    },
     imageList(image){
       return image.map(t=>this.$store.state.BASE_URL+t.image_path)
     },
