@@ -2,42 +2,52 @@
   <div>
     <template v-if="task_or_project==='project'">
       <el-select
-      v-model="select"
-      placeholder="请选择"
-      style="width:120px;margin-bottom:10px;"
-      @change="getAssetAppooveList()"
-    >
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
+        v-model="select"
+        placeholder="请选择"
+        style="width:120px;margin-bottom:10px;"
+        @change="getAssetAppooveList()"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </template>
     <template v-else>
       <el-select
-      v-model="select"
-      placeholder="请选择"
-      style="width:120px;margin-bottom:10px;"
-      @change="getApproveLog()"
-    >
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
+        v-model="select"
+        placeholder="请选择"
+        style="width:120px;margin-bottom:10px;"
+        @change="getApproveLog()"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </template>
     <div v-loading="tableLoading">
       <div class="bd" v-for="(t,i) of list" :key="i">
         <el-row type="flex" justify="space-between">
           <el-col style="display:flex">
-            <div class="item"> 
-               <div class="item-con">
-                  <template v-if="t.approve_result =='1'">
+            <div class="item">
+              <div class="item-con">
+                <template v-if="t.approve_result =='1'">
                   <i class="el-icon-check" style="color:green;font-size:15px">通过</i>
                 </template>
                 <template v-else>
                   <i class="el-icon-close" style="color:red;font-size:15px">未通过</i>
-                </template>  
-                </div>
+                </template>
+              </div>
             </div>
           </el-col>
           <el-col style="display:flex">
             <template v-if="t.pro_type === 0">
-              <div class="item" style="padding-left:40px" >
+              <div class="item" style="padding-left:40px">
                 <div class="item-title" style="width:40px">评分:</div>
                 <div class="item-con">{{t.score}}</div>
               </div>
@@ -47,33 +57,31 @@
         </el-row>
         <el-row type="flex" justify="space-between">
           <el-col style="display:flex">
-            {{t.approve_user_id.name}}<h6 style="padding-left:8px">:</h6>
+            {{t.approve_user_id.name}}
+            <h6 style="padding-left:8px">:</h6>
           </el-col>
         </el-row>
         <div class="item">
           <div class="item-con">{{t.approve_suggestion}}</div>
         </div>
         <div class="item" v-if="t.video_link">
-          <div class="item-con" @click="showVideo(t.video_link)">视频链接:
+          <div class="item-con" @click="showVideo(t.video_link)">
+            视频链接:
             <span style="cursor:pointer;color:#2d8cf0">{{t.video_link}}</span>
           </div>
         </div>
         <div class="item">
           <div class="item-con">
-            <el-col :span="5"  v-for="(item,index) of t.images" :key="index">
-              
-                <el-row>
-                  <el-image
+            <el-col :span="5" v-for="(item,index) of t.images" :key="index">
+              <el-row>
+                <el-image
                   :src="$store.state.BASE_URL+item.image_path"
                   :preview-src-list="imageList(t.images)"
                   style="height:55px;width:90px"
                   fit="cover"
                 ></el-image>
-                </el-row>
-                <el-row style="text-align:center">
-                  第{{item.image_frame}}帧
-                </el-row>
-              
+              </el-row>
+              <el-row style="text-align:center">第{{item.image_frame}}帧</el-row>
             </el-col>
           </div>
         </div>
@@ -90,7 +98,7 @@ import { getApproveRemark } from "@/api/video";
 import { getAssetsApprove } from "@/api/assets";
 export default {
   mame: "approve-logs",
-  props:["task_or_project"],
+  props: ["task_or_project"],
   data() {
     return {
       tableLoading: false,
@@ -116,17 +124,17 @@ export default {
     };
   },
   methods: {
-     //打开视频弹框，为视频src赋值
+    //打开视频弹框，为视频src赋值
     showVideo(path) {
-      this.videoSrc = this.$store.state.BASE_URL + '/'+path;
+      this.videoSrc = this.$store.state.BASE_URL + path;
       this.dialogTableVisible = true;
     },
     //关闭dialog回调，停止视频播放
     endPlay() {
       this.$refs["videoplayer"].pause();
     },
-    imageList(image){
-      return image.map(t=>this.$store.state.BASE_URL+t.image_path)
+    imageList(image) {
+      return image.map(t => this.$store.state.BASE_URL + t.image_path);
     },
     //父组件直接通过$refs[组件ref值].getApproveLog(task的id)即可请求列表，切换筛选时自动调用的
     getApproveLog(task_id) {

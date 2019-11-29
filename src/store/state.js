@@ -1,4 +1,6 @@
 export default {
-  BASE_URL: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_BASE_API : `${location.origin}/`, //图片地址
-  hasSetUrl: false //是否设置了basURL
+  // 图片地址
+  BASE_URL: process.env.NODE_ENV === 'development' ? 'http://tl.chidict.com:8081/' : `${location.origin}/`,
+  // 是否设置了basURL
+  hasSetUrl: false
 }
