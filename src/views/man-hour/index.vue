@@ -156,14 +156,13 @@
 
 <script>
 import Chart from "@/components/ECharts/PieChart";
-import Gantt from "@/components/Gantt";
 import * as Ajax from "@/api/manHour";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getDayOffList } from "@/api/checkingIn";
 export default {
   name: "my-man-hour",
   mixins: [thumbtackMixin],
-  components: { Chart, Gantt },
+  components: { Chart },
   data() {
     return {
       detailLoading: false,

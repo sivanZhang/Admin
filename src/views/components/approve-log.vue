@@ -120,7 +120,7 @@ export default {
       ],
       select: 2,
       videoSrc: "",
-      dialogTableVisible: false //dialog是否显示
+      dialogTableVisible: false // dialog是否显示
     };
   },
   methods: {

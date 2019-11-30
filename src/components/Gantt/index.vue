@@ -85,6 +85,7 @@ export default {
     }
   }
 };
+// 原始配置参考
 /* const locale = {
   name: "en",
   weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
