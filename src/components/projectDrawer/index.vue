@@ -13,7 +13,7 @@
           <el-tab-pane label="资产" name="third">
             <assets :project="project" :assetsList="assetsList" />
           </el-tab-pane>
-          <el-tab-pane label="动态" name="fifth">动态</el-tab-pane>
+          <!-- <el-tab-pane label="动态" name="fifth">动态</el-tab-pane> -->
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" />
             <el-divider />
