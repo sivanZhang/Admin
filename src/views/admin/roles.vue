@@ -156,9 +156,25 @@
         </el-card>
       </ElCol>
     </ElRow>
-    <el-dialog title="修改角色名称" :visible.sync="editing" width="300px">
+    <el-dialog title="修改角色" :visible.sync="editing" width="450px" top="5vh">
       <el-row style="padding-bottom:15px">
+        <el-col :span="5">
+        <span style="font-size:12px">角色名称</span>
+        </el-col>
+        <el-col :span="19">
         <el-input v-model="editName" type="text"></el-input>
+        </el-col>
+      </el-row>
+      <el-row style="padding-bottom:15px">
+        <el-col :span="5">
+        <span style="font-size:12px">角色类别</span>
+        </el-col>
+        <el-col :span="19">
+        <el-radio-group v-model="role_type">
+            <el-radio :label="1">唯一性角色</el-radio>
+            <el-radio :label="2">多用户角色</el-radio>
+          </el-radio-group>
+        </el-col>
       </el-row>
       <el-row>
         <el-col :span="12" align="left">
@@ -228,7 +244,7 @@
             <el-radio :label="2">多用户角色</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="角色分类" prop="role_sort">
+        <el-form-item label="角色属性" prop="role_sort">
           <el-radio-group v-model="addDeptRole.role_sort">
             <el-radio :label="0">内置角色</el-radio>
             <el-radio :label="1">自定义角色</el-radio>
@@ -265,6 +281,7 @@ export default {
       roleList: null,
       roleAdd: {},
       editName: null,
+      role_type: null,
       roleUserList: null,
       name: "",
       addMultipleSelection: [],
@@ -325,10 +342,12 @@ export default {
             } else {
               this.$message.error(data.msg);
             }
+            this.addDeptRole = {};
           })
           .catch(res => {
             this.$message.error(res.msg);
             this.add_role_show = false;
+            this.addDeptRole = [];
           });
       }
     },
@@ -483,11 +502,13 @@ export default {
       this.id = todo.id;
       this.editing = true;
       this.editName = todo.name;
+      this.role_type = todo.role_type;
     },
     editRoleName() {
       updateRole({
         id: this.id,
         name: this.editName,
+        role_type: this.role_type,
         method: "put"
       })
         .then(({ data }) => {
