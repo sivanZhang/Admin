@@ -14,7 +14,7 @@
               >添加角色</el-button>
             </el-row>
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
-            <el-row v-for="(todo,index) of roleList" :key="index" class="role-list" align="center">
+            <el-row style="width:100%" v-for="(todo,index) of roleList" :key="index" class="role-list" align="center">
               <div @mouseenter="editShow=todo.id" @mouseleave="editShow=null">
                 <el-row style="border-bottom: 1px solid #dfe6ec;padding:5px 0 5px 0;text-justify:center;height:35px">
                   <el-col :span="18">

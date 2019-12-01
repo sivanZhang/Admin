@@ -203,6 +203,34 @@ export default function asyncRoutes(params) {
       ]
     },
     {
+      path: '/search-kpi',
+      component: Layout,
+      redirect: 'noRedirect',
+      meta: {
+        title: 'kpi',
+        icon: 'KPI'
+      },
+      children: [{
+        path: 'search-kpi',
+        name: 'search-kpi',
+        component: () =>
+          import('@/views/search-kpi'),
+        meta: {
+          title: '人员kpi',
+          icon: 'KPI'
+        }
+      },{
+        path: 'department-kpi',
+        name: 'department-kpi',
+        component: () =>
+          import('@/views/search-kpi/department-kpi'),
+        meta: {
+          title: '部门kpi',
+          icon: 'KPI'
+        }
+      }]
+    },
+    {
       path: '/checking-in',
       component: Layout,
       redirect: 'noRedirect',
@@ -279,34 +307,6 @@ export default function asyncRoutes(params) {
         meta: {
           title: '素材库',
           icon: 'material'
-        }
-      }]
-    },
-    {
-      path: '/search-kpi',
-      component: Layout,
-      redirect: 'noRedirect',
-      meta: {
-        title: 'kpi',
-        icon: 'KPI'
-      },
-      children: [{
-        path: 'search-kpi',
-        name: 'search-kpi',
-        component: () =>
-          import('@/views/search-kpi'),
-        meta: {
-          title: '人员kpi',
-          icon: 'KPI'
-        }
-      },{
-        path: 'department-kpi',
-        name: 'department-kpi',
-        component: () =>
-          import('@/views/search-kpi/department-kpi'),
-        meta: {
-          title: '部门kpi',
-          icon: 'KPI'
         }
       }]
     },
