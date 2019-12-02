@@ -4,11 +4,10 @@
       <el-col :span="4">
         <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
       </el-col>
-
-      <el-col :span="20" style="padding-bottom:10px" align="right">
+      <el-col :span="18" style="padding-bottom:10px" align="right">
         <!-- 筛选 -->
         <div style="display:flex;width:470px">
-          <el-select v-model="colSel" placeholder="请选择" style="width:190px;" filterable>
+          <el-select v-model="colSel" placeholder="请选择"  style="width:190px;" filterable>
             <el-option
               v-for="item in columnSelect"
               :key="item.value"
@@ -70,6 +69,10 @@
           />
         </div>
       </el-col>
+      <el-col :span="2">
+         <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
+      </el-col>
+      
     </el-row>
     <el-table
       :data="kpiList"
@@ -83,7 +86,7 @@
       default-expand-all
     >
       <el-table-column prop="member_name" label="制作人员"></el-table-column>
-      <el-table-column prop="client_total_asset" label="完成镜头数量（客户通过的）"></el-table-column>
+      <el-table-column prop="client_total_asset" label="完成镜头数量 (客户通过的)" width="110"></el-table-column>
       <el-table-column prop="level" label="难度等级">
         <template slot-scope="scope">{{scope.row.level|Level }}</template>
       </el-table-column>
@@ -198,6 +201,7 @@ export default {
       end_date: null,
       searchList:[],
       path: null,
+      showMulChoose: [],
     };
   },
   computed: {
@@ -265,6 +269,7 @@ export default {
             this.columnSelect2 = [];
             this.colShow1 = false;
             this.colShow2 = true;
+            this.colShow3 = false;
             this.columnSelect2 = this.selectList;
             break;
           case "user_id":
@@ -288,6 +293,11 @@ export default {
     }
   },
   methods: {
+    //重置
+    getTasks(){
+       this.showMulChoose = [];
+       this.colSel = null;
+    },
     //kpi列表导出
     //任务导出dialog
     targetUpload() {
@@ -324,29 +334,29 @@ export default {
       if (this.colSel2||this.start_date||this.end_date) {
         switch (this.colSel) {
           case "month_num":
-            data = { month_num: this.colSel2 };
+            this.showMulChoose.month_num = this.colSel2;
             break;
           case "dept_id":
-            data = { dept_id: this.colSel2[this.colSel2.length - 1] };
+            this.showMulChoose.dept_id = this.colSel2[this.colSel2.length - 1] ;
             break;
           case "user_id":
-            data = { user_id: this.colSel2 };
+            this.showMulChoose.user_id = this.colSel2;
             break;
           case "date":
             function DateFormat(dateVal) {
               return new Date(dateVal).toLocaleDateString();
             }
-            data = {
-              start_date: this.start_date?DateFormat(this.start_date):"",
-              end_date: this.end_date?DateFormat(this.end_date):""
-            };
+            this.showMulChoose.start_date = this.start_date?DateFormat(this.start_date):"" ;
+            this.showMulChoose.end_date = this.end_date?DateFormat(this.end_date):"" ;
             break;
         }
+        data = { ...this.showMulChoose}
         // console.log(data)
       }
       this.searchList = data;
       this.kpiList = [];
       searchKpi(data).then(({ data }) => {
+        if(data.status == 0){
         [...data.msg].map((item, index) => {
           this.kpiList.push({
             id: index + 1,
@@ -392,7 +402,11 @@ export default {
             }
           }
         });
-      });
+      // 
+      }  else {
+          this.$message.error(data.msg);
+        };
+        });
     },
     formatList() {
       function changeList(arr) {
