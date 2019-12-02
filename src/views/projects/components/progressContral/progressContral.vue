@@ -309,10 +309,10 @@
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
       <div class style="padding-left:5px;padding-bottom:20px;padding-right:5px">
         <div style="font-size:12px">
-          <h3>偏离值为负数：</h3>说明完成进度超前，绝对值越大，排名越靠前
+          <h3>偏离值为负数：</h3>说明完成进度超前，绝对值越大，进度越超前，排名也更靠前
         </div>
         <div style="font-size:12px">
-          <h3>偏离值为正数：</h3>说明完成进度滞后，绝对值越大，排名越靠前
+          <h3>偏离值为正数：</h3>说明完成进度滞后，绝对值越大，说明滞后程度越严重，排名更靠前
         </div>
         <div style="font-size:12px">
           <h3>偏离值计算公式：</h3>
