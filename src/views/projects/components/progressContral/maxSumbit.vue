@@ -1,10 +1,20 @@
 <template>
   <div>
-      <!-- 查询项目中提交审批数目最多的资产和任务 -->
+    <!-- 查询项目中提交审批数目最多的资产和任务 -->
     <div style="padding-top:30px">
       <el-row>
-        <el-col :span="20">
-          <label for style="padding-top:15px">项目中提交审批数目最多的资产</label>
+        <el-col :span="4">
+          <label for style="padding-top:15px">项目中提交审批次数最多的镜头</label>
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="assetvalue" placeholder="请选择提交次数排名" @change="valueChange">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-col>
       </el-row>
       <el-table
@@ -15,7 +25,7 @@
         default-expand-all
         :border="false"
       >
-        <el-table-column type="index" align="center"></el-table-column>
+        <el-table-column prop="submit_num" label="提交次数" align="center"></el-table-column>
         <el-table-column label="缩略图" align="center" width="180px">
           <template slot-scope="scope">
             <el-image
@@ -106,14 +116,24 @@
         <el-table-column prop="total_date_end" label="计划截止日期" width="160px">
           <template slot-scope="scope">{{scope.row.total_date_end|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="submit_num" label="提交的数量" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip></el-table-column>
       </el-table>
+
     </div>
     <div style="padding-top:20px">
       <el-row>
-        <el-col :span="20">
-          <label for style="padding-top:15px">项目中提交审批数目最多的任务</label>
+        <el-col :span="4">
+          <label for style="padding-top:15px">项目中提交审批次数最多的任务</label>
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="taskvalue" placeholder="请选择提交次数排名">
+            <el-option
+              v-for="item in options1"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-col>
       </el-row>
       <el-table
@@ -124,7 +144,7 @@
         default-expand-all
         :border="false"
       >
-        <el-table-column type="index" align="center"></el-table-column>
+        <el-table-column prop="submit_num" label="提交次数" align="center"></el-table-column>
         <el-table-column label="缩略图" align="center" width="180px">
           <template slot-scope="scope">
             <el-image
@@ -202,18 +222,56 @@ export default {
   data() {
     return {
       assetMaxSubmit: [],
-      taskMaxSubmit: []
+      taskMaxSubmit: [],
+      options:[{ //镜头的查询提交次数
+          value: '10',
+          label:'top10'
+        }, {
+          value: '20',
+          label:'top20'
+        }, {
+          value: '30',
+          label:'top30'
+        }, {
+          value: '40',
+          label:'top40'
+        }, {
+          value: '50',
+          label:'top50'
+      }], 
+        assetvalue: '10',
+        options1: [{//任务的查询提交次数
+          value: '10',
+          label:'top10'
+        }, {
+          value: '20',
+          label:'top20'
+        }, {
+          value: '30',
+          label:'top30'
+        }, {
+          value: '40',
+          label:'top40'
+        }, {
+          value: '50',
+          label:'top50'
+        }],
+        taskvalue: '10'
     };
   },
   created() {
     this.getAssetMaxSubmitS();
   },
   methods: {
+    valueChange(){
+       this.getAssetMaxSubmitS();
+    },
     //查询项目中提交审批数目最多的资产和任务
     getAssetMaxSubmitS() {
       let data = {
         project_id: this.$route.params.id,
-        max_submit: ""
+        max_submit: "",
+        sort:this.assetvalue
       };
       Ajax.getAssetMaxSubmit(data).then(({ data }) => {
         this.assetMaxSubmit = data.asset;
