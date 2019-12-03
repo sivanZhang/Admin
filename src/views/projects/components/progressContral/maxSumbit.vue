@@ -207,10 +207,10 @@
         </el-table-column>
         <el-table-column prop="id" label="任务ID" width="80px"></el-table-column>
         <el-table-column prop="name" label="任务名称" width="100px"></el-table-column>
-        <el-table-column prop="create_time" label="创建时间" width="100px">
+        <!-- <el-table-column prop="create_time" label="创建时间" width="100px">
           <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="creator.name" label="创建者"></el-table-column>
+        <el-table-column prop="creator.name" label="创建者"></el-table-column> -->
       </el-table>
     </div>
   </div>
