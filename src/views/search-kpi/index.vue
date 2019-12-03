@@ -1,78 +1,112 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="4">
+      <el-col :span="19">
         <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
       </el-col>
-      <el-col :span="18" style="padding-bottom:10px" align="right">
+      <el-col :span="3" style="padding-bottom:10px" >
         <!-- 筛选 -->
-        <div style="display:flex;width:470px">
-          <el-select v-model="colSel" placeholder="请选择"  style="width:190px;" filterable>
-            <el-option
-              v-for="item in columnSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+        <div style="display:flex;width:150px;align-items:center">
+          <span
+            @click="openExplain()"
+            style="padding-right:10px;font-size:12px;color:#808080;cursor: pointer;"
+          >
+            使用帮助:
+            <svg-icon icon-class="wenhao" />
+          </span>
+          <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
+            <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
+              <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="月份跨度" prop="month_num">
+                      <el-select v-model="sortSelForm.month_num" placeholder="请选择">
+                        <el-option
+                          v-for="item in columnSelect2"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="人员名称" prop="user_id">
+                      <el-select
+                        v-model="sortSelForm.user_id"
+                        placeholder="请选择"
+                        filterable
+                        multiple
+                      >
+                        <el-option
+                          v-for="item in UserList"
+                          :key="item.id"
+                          :label="item.username"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="部门" prop="dept_id">
+                      <el-cascader
+                        v-model="sortSelForm.dept_id"
+                        placeholder="输入搜索工种"
+                        :options="selectList"
+                        :props="{ checkStrictly: true}"
+                        filterable
+                      ></el-cascader>
+                    </el-form-item>
+                  </el-col>
 
-          <el-select
-            v-if="colShow1"
-            v-model="colSel2"
-            placeholder="请选择"
-            style="width:280px;margin-top:1px"
-            filterable
-            @change="getSearchKpi()"
-          >
-            <el-option
-              v-for="item in columnSelect2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-cascader
-            @change="getSearchKpi()"
-            v-if="colShow2"
-            v-model="colSel2"
-            placeholder="输入搜索工种"
-            :options="selectList"
-            :props="{ checkStrictly: true}"
-            filterable
-            style="width:280px"
-          ></el-cascader>
-          <el-select
-            v-if="colShow3"
-            v-model="colSel2"
-            placeholder="请选择"
-            style="width:280px;margin-top:1px"
-            filterable
-            @change="getSearchKpi()"
-          >
-            <el-option
-              v-for="item in UserList"
-              :key="item.id"
-              :label="item.username"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-          <div v-if="colSel === 'date' " style="width:280px;display:flex;">
-            <el-date-picker v-model="start_date" type="date" placeholder="选择日期" size="mini"></el-date-picker>
-            <span style="text-align:center;padding-top:3px">至</span>
-            <el-date-picker v-model="end_date" type="date" placeholder="选择日期" size="mini"></el-date-picker>
-          </div>
-          <el-button
-            @click="getSearchKpi()"
-            icon="el-icon-search"
-            type="primary"
-            style="height:27.99px"
-          />
+                </el-row>
+                <el-row>
+                  <el-form-item label="自定义时间">
+                    <div style="display:flex">
+                      <el-col :span="11">
+                        <el-date-picker
+                          v-model="sortSelForm.start_date"
+                          type="date"
+                          placeholder="开始日期"
+                          size="mini"
+                        ></el-date-picker>
+                      </el-col>
+                      <el-col :span="2" align="center">
+                        <span style="padding-top:3px">至</span>
+                      </el-col>
+                      <el-col :span="11" align="right">
+                        <el-date-picker
+                          v-model="sortSelForm.end_date"
+                          type="date"
+                          placeholder="结束日期"
+                          size="mini"
+                        ></el-date-picker>
+                      </el-col>
+                    </div>
+                  </el-form-item>
+                </el-row>
+                <el-row>
+                  <el-col align="right">
+                    <el-button type="primary" @click="getSearchKpi()">筛选</el-button>
+                  </el-col>
+                </el-row>
+              </el-form>
+              <el-button
+                slot="reference"
+                type="primary"
+                style="margin-left: 15px"
+                size="mini"
+                @click="showMul()"
+              >筛选</el-button>
+            </el-popover>
+          </el-tooltip>
         </div>
       </el-col>
       <el-col :span="2">
-         <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
+        <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
       </el-col>
-      
     </el-row>
     <el-table
       :data="kpiList"
@@ -97,6 +131,12 @@
       <el-table-column prop="inner_total_overtime" label="加班工时"></el-table-column>
       <el-table-column prop="kpi" label="平均单帧制作时长（小时）" width="250px"></el-table-column>
     </el-table>
+    <!-- 超前与滞后说明 -->
+    <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
+      <div class style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+        <div style="font-size:12px">默认查询的是本月1号至今天的kpi</div>
+      </div>
+    </el-dialog>
     <!-- KPI导出 -->
     <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
       <el-row>
@@ -118,31 +158,15 @@
 <script>
 import { searchKpi } from "@/api/statistics";
 import { mapState } from "vuex";
+import dayjs from "dayjs";
 export default {
   data() {
     return {
       kpiList: [],
       uploadVisible: false,
-      colSel: "month_num",
-      colSel2: null,
-      columnSelect: [
-        {
-          value: "month_num",
-          label: "月份跨度"
-        },
-        {
-          value: "dept_id",
-          label: "部门"
-        },
-        {
-          value: "user_id",
-          label: "人员名称"
-        },
-        {
-          value: "date",
-          label: "自定义时间"
-        }
-      ],
+      dialogVisible: false,
+      visible2: false,
+      sortSelForm: {},
       columnSelect2: [
         {
           value: 1,
@@ -193,113 +217,29 @@ export default {
           label: "近一年"
         }
       ],
-      colShow1: true,
-      colShow2: false,
-      colShow3: false,
       selectList: [],
-      start_date: null,
-      end_date: null,
-      searchList:[],
+      searchList: [],
       path: null,
-      showMulChoose: [],
+      showMulChoose: []
     };
   },
   computed: {
     ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
-  watch: {
-    colSel: {
-      handler: function(newVal, oldVal) {
-        // console.log(newVal);
-        switch (newVal) {
-          case "month_num":
-            this.columnSelect2 = [];
-            this.colShow1 = true;
-            this.colShow2 = false;
-            this.colShow3 = false;
-            // this.colSel2 = [1];
-            this.columnSelect2 = [
-              {
-                value: 1,
-                label: "近一个月"
-              },
-              {
-                value: 2,
-                label: "近两个月"
-              },
-              {
-                value: 3,
-                label: "近三个月"
-              },
-              {
-                value: 4,
-                label: "近四个月"
-              },
-              {
-                value: 5,
-                label: "近五个月"
-              },
-              {
-                value: 6,
-                label: "近半年"
-              },
-              {
-                value: 7,
-                label: "近七个月"
-              },
-              {
-                value: 8,
-                label: "近八个月"
-              },
-              {
-                value: 9,
-                label: "近九个月"
-              },
-              {
-                value: 10,
-                label: "近十个月"
-              },
-              {
-                value: 11,
-                label: "近十一个月"
-              }
-            ];
-            break;
-          case "dept_id":
-            this.columnSelect2 = [];
-            this.colShow1 = false;
-            this.colShow2 = true;
-            this.colShow3 = false;
-            this.columnSelect2 = this.selectList;
-            break;
-          case "user_id":
-            this.colShow1 = false;
-            this.colShow2 = false;
-            this.colShow3 = true;
-            break;
-          case "date":
-            this.colShow1 = false;
-            this.colShow2 = false;
-            this.colShow3 = false;
-            break;
-          default:
-            this.colShow1 = true;
-            this.colShow2 = false;
-            this.colShow3 = false;
-            this.colSel2 = [];
-            this.columnSelect2 = [];
-        }
-      }
-    }
-  },
   methods: {
+    //默认说明
+    openExplain() {
+      this.dialogVisible = true;
+    },
     //重置
-    getTasks(){
-       this.showMulChoose = [];
-       this.colSel = null;
+    getTasks() {
+      this.sortSelForm = {};
+      this.mulChoose = false;
+      this.showMulChoose = [];
+      let data = { ...this.showMulChoose};
+      this.searchKpi(data);
     },
     //kpi列表导出
-    //任务导出dialog
     targetUpload() {
       this.uploadVisible = true;
       let data = {
@@ -328,85 +268,99 @@ export default {
     uploadExcel() {
       this.uploadVisible = false;
     },
-    //获取kpi列表
+    showMul() {
+      this.sortSelForm = {};
+      this.mulChoose = false;
+      this.showMulChoose = [];
+    },
+    //筛选
     getSearchKpi() {
+      this.mulChoose = true;
+      this.visible2 = false;
       let data = {};
-      if (this.colSel2||this.start_date||this.end_date) {
-        switch (this.colSel) {
-          case "month_num":
-            this.showMulChoose.month_num = this.colSel2;
-            break;
-          case "dept_id":
-            this.showMulChoose.dept_id = this.colSel2[this.colSel2.length - 1] ;
-            break;
-          case "user_id":
-            this.showMulChoose.user_id = this.colSel2;
-            break;
-          case "date":
-            function DateFormat(dateVal) {
-              return new Date(dateVal).toLocaleDateString();
-            }
-            this.showMulChoose.start_date = this.start_date?DateFormat(this.start_date):"" ;
-            this.showMulChoose.end_date = this.end_date?DateFormat(this.end_date):"" ;
-            break;
-        }
-        data = { ...this.showMulChoose}
-        // console.log(data)
+      function DateFormat(dateVal) {
+        return new dayjs(dateVal).format("YYYY/MM/DD");
+        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
       }
+      if (this.sortSelForm.month_num) {
+        this.showMulChoose.month_num = this.sortSelForm.month_num;
+      }
+      if (this.sortSelForm.dept_id) {
+        this.showMulChoose.dept_id = this.sortSelForm.dept_id[this.sortSelForm.dept_id.length - 1];
+      }
+      if (this.sortSelForm.user_id) {
+        this.showMulChoose.user_id = this.sortSelForm.user_id.join();
+      }
+      if (this.sortSelForm.start_date) {
+        this.showMulChoose.start_date = this.sortSelForm.start_date
+          ? DateFormat(this.sortSelForm.start_date)
+          : "";
+      }
+      if (this.sortSelForm.end_date) {
+        this.showMulChoose.end_date = this.sortSelForm.end_date
+          ? DateFormat(this.sortSelForm.end_date)
+          : "";
+      }
+      data = { ...this.showMulChoose };
+      this.searchKpi(data);
+    },
+    //获取kpi列表
+    searchKpi(data){
       this.searchList = data;
       this.kpiList = [];
       searchKpi(data).then(({ data }) => {
-        if(data.status == 0){
-        [...data.msg].map((item, index) => {
-          this.kpiList.push({
-            id: index + 1,
-            inner_total_asset: item.inner.inner_total_asset,
-            inner_total_frame: item.inner.inner_total_frame,
-            level: Number(-1),
-            inner_total_overtime: item.inner.inner_total_overtime,
-            member_name: item.member_name,
-            client_total_asset: item.outer.client_total_asset,
-            client_total_frame: item.outer.client_total_frame,
-            client_total_modify: item.outer.client_total_modify,
-            kpi:
-              item.inner.inner_total_frame /
-              (22 * 8 + item.inner.inner_total_overtime),
-            sub: []
+        if (data.status == 0) {
+          [...data.msg].map((item, index) => {
+            this.kpiList.push({
+              id: index + 1,
+              inner_total_asset: item.inner.inner_total_asset,
+              inner_total_frame: item.inner.inner_total_frame,
+              level: Number(-1),
+              inner_total_overtime: item.inner.inner_total_overtime,
+              member_name: item.member_name,
+              client_total_asset: item.outer.client_total_asset,
+              client_total_frame: item.outer.client_total_frame,
+              client_total_modify: item.outer.client_total_modify,
+              kpi:
+                item.inner.inner_total_frame /
+                (22 * 8 + item.inner.inner_total_overtime),
+              sub: []
+            });
           });
-        });
-        [...data.msg].map((item, index) => {
-          const keys1 = Object.keys(item.inner);
+          [...data.msg].map((item, index) => {
+            const keys1 = Object.keys(item.inner);
 
-          const keys2 = Object.keys(item.outer);
+            const keys2 = Object.keys(item.outer);
 
-          for (let i = 0; i < keys1.length - 4; i++) {
-            for (let j = 0; j < keys2.length - 4; j++) {
-              if (i === j) {
-                this.kpiList[index].sub.push({
-                  id: keys1[i] + 1000,
-                  inner_total_asset: item.inner[keys1[i]].inner_total_asset,
-                  inner_total_frame: item.inner[keys1[i]].inner_total_frame,
-                  level: Number(keys1[i]),
-                  inner_total_overtime:
-                    item.inner[keys1[i]].inner_total_overtime,
-                  member_name: "",
-                  client_total_asset: item.outer[keys2[i]].client_total_asset,
-                  client_total_frame: item.outer[keys2[i]].client_total_frame,
-                  client_total_modify: item.outer[keys2[i]].client_total_modify,
-                  kpi:
-                    item.inner[keys1[i]].inner_total_frame /
-                    (22 * 8 + item.inner[keys1[i]].inner_total_overtime),
-                  sub: []
-                });
+            for (let i = 0; i < keys1.length - 4; i++) {
+              for (let j = 0; j < keys2.length - 4; j++) {
+                if (i === j) {
+                  this.kpiList[index].sub.push({
+                    id: keys1[i] + 1000,
+                    inner_total_asset: item.inner[keys1[i]].inner_total_asset,
+                    inner_total_frame: item.inner[keys1[i]].inner_total_frame,
+                    level: Number(keys1[i]),
+                    inner_total_overtime:
+                      item.inner[keys1[i]].inner_total_overtime,
+                    member_name: "",
+                    client_total_asset: item.outer[keys2[i]].client_total_asset,
+                    client_total_frame: item.outer[keys2[i]].client_total_frame,
+                    client_total_modify:
+                      item.outer[keys2[i]].client_total_modify,
+                    kpi:
+                      item.inner[keys1[i]].inner_total_frame /
+                      (22 * 8 + item.inner[keys1[i]].inner_total_overtime),
+                    sub: []
+                  });
+                }
               }
             }
-          }
-        });
-      // 
-      }  else {
+          });
+          //
+        } else {
           this.$message.error(data.msg);
-        };
-        });
+        }
+      });
     },
     formatList() {
       function changeList(arr) {
