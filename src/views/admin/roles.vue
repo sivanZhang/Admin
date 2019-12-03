@@ -176,7 +176,12 @@
           </el-radio-group>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row> 
+        <el-col  align="center">
+          <span style="font-size:12px;color:#808080;padding-left:35px">如果设置为唯一性角色，之前绑定的用户全部会解绑</span>
+        </el-col>
+        </el-row>
+      <el-row style="padding-top:10px">
         <el-col :span="12" align="left">
           <el-button @click="cancle">取消</el-button>
         </el-col>
