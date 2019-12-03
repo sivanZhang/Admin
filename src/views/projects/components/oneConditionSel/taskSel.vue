@@ -405,6 +405,7 @@ export default {
             };
             this.name = { executor_ids: "[" + String(this.colSel2) + "]" };
           }
+          break;
            case "episode":
              if (this.colSel2.length) {
             data = {
