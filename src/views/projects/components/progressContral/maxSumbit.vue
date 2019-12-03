@@ -20,7 +20,6 @@
       <el-table
         :data="assetMaxSubmit"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-        style="padding-top:15px;width:100%"
         highlight-current-row
         default-expand-all
         :border="false"
@@ -48,7 +47,13 @@
         <el-table-column prop="name" label="镜头名称"></el-table-column>
         <el-table-column prop="schedule" label="进度" width="160px">
           <template slot-scope="scope">
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
+            <el-progress
+              :stroke-width="10"
+              :status="scope.row.schedule==100?'success':''"
+              :show-text="false"
+              :percentage="scope.row.schedule"
+            ></el-progress>
+            {{scope.row.schedule}}%
           </template>
         </el-table-column>
         <el-table-column prop="small_status" label="小状态">
@@ -118,7 +123,6 @@
         </el-table-column>
         <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip></el-table-column>
       </el-table>
-
     </div>
     <div style="padding-top:20px">
       <el-row>
@@ -139,7 +143,6 @@
       <el-table
         :data="taskMaxSubmit "
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-        style="padding-top:15px;width:100%"
         highlight-current-row
         default-expand-all
         :border="false"
@@ -210,7 +213,7 @@
         <!-- <el-table-column prop="create_time" label="创建时间" width="100px">
           <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="creator.name" label="创建者"></el-table-column> -->
+        <el-table-column prop="creator.name" label="创建者"></el-table-column>-->
       </el-table>
     </div>
   </div>
@@ -223,55 +226,69 @@ export default {
     return {
       assetMaxSubmit: [],
       taskMaxSubmit: [],
-      options:[{ //镜头的查询提交次数
-          value: '10',
-          label:'top10'
-        }, {
-          value: '20',
-          label:'top20'
-        }, {
-          value: '30',
-          label:'top30'
-        }, {
-          value: '40',
-          label:'top40'
-        }, {
-          value: '50',
-          label:'top50'
-      }], 
-        assetvalue: '10',
-        options1: [{//任务的查询提交次数
-          value: '10',
-          label:'top10'
-        }, {
-          value: '20',
-          label:'top20'
-        }, {
-          value: '30',
-          label:'top30'
-        }, {
-          value: '40',
-          label:'top40'
-        }, {
-          value: '50',
-          label:'top50'
-        }],
-        taskvalue: '10'
+      options: [
+        {
+          //镜头的查询提交次数
+          value: "10",
+          label: "top10"
+        },
+        {
+          value: "20",
+          label: "top20"
+        },
+        {
+          value: "30",
+          label: "top30"
+        },
+        {
+          value: "40",
+          label: "top40"
+        },
+        {
+          value: "50",
+          label: "top50"
+        }
+      ],
+      assetvalue: "10",
+      options1: [
+        {
+          //任务的查询提交次数
+          value: "10",
+          label: "top10"
+        },
+        {
+          value: "20",
+          label: "top20"
+        },
+        {
+          value: "30",
+          label: "top30"
+        },
+        {
+          value: "40",
+          label: "top40"
+        },
+        {
+          value: "50",
+          label: "top50"
+        }
+      ],
+      taskvalue: "10"
     };
   },
   created() {
     this.getAssetMaxSubmitS();
   },
   methods: {
-    valueChange(){
-       this.getAssetMaxSubmitS();
+    valueChange() {
+      this.getAssetMaxSubmitS();
     },
     //查询项目中提交审批数目最多的资产和任务
     getAssetMaxSubmitS() {
       let data = {
         project_id: this.$route.params.id,
         max_submit: "",
-        sort:this.assetvalue
+        sort: this.assetvalue
       };
       Ajax.getAssetMaxSubmit(data).then(({ data }) => {
         this.assetMaxSubmit = data.asset;
@@ -281,3 +298,13 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.el-table {
+  margin: 15px 0 20px;
+}
+.el-progress {
+  width: 80px;
+  display: inline-block;
+  margin-right: 5px;
+}
+</style>

@@ -16,7 +16,7 @@ function hasPermission(route, UserRoles) {
     return true
   }
 }
-//判断Training权限
+// 判断Training权限
 function judgeTraining(UserRoles) {
   return 'training_manager' in UserRoles && UserRoles['training_manager']
 }
@@ -26,7 +26,7 @@ function judgeTraining(UserRoles) {
  * @param roles
  */
 export function filterAsyncRoutes(routes, UserRoles) {
-  let res = []
+  const res = []
   routes.forEach(route => {
     if (hasPermission(route, UserRoles)) {
       if (route.children) {
@@ -39,8 +39,8 @@ export function filterAsyncRoutes(routes, UserRoles) {
 }
 
 const state = {
-  routes: [], //用来在侧边栏显示已经挂载的路由列表
-  addRoutes: [] //筛选出来有权限进入的动态路由
+  routes: [], // 用来在侧边栏显示已经挂载的路由列表
+  addRoutes: [] // 筛选出来有权限进入的动态路由
 }
 
 const mutations = {
@@ -56,7 +56,7 @@ const actions = {
     commit,
     rootState
   }) {
-    let UserRoles = rootState.login.userInfo.auth
+    const UserRoles = rootState.login.userInfo.auth
     return new Promise(resolve => {
       let accessedRoutes = []
       if (judgeTraining(UserRoles)) {
@@ -69,7 +69,7 @@ const actions = {
       router.addRoutes(accessedRoutes)
       resolve(accessedRoutes)
 
-      //accessedRoutes有权限的路由
+      // accessedRoutes有权限的路由
 
 
     })

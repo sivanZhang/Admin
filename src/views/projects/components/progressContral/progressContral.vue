@@ -102,12 +102,12 @@
       <div v-if="progress">
         <el-table
           :data="progressPredict "
-          :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+          :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
           style="padding-top:15px;width:100%"
           highlight-current-row
           default-expand-all
         >
-          <el-table-column prop="deviation" label="偏离值">
+          <el-table-column prop="deviation" label="偏离值" width="80px">
             <template slot-scope="scope">
               <svg-icon icon-class="shuzhikuang" style="width:20px;height:20px" />
               {{scope.row.deviation }}
@@ -132,7 +132,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="asset__name" label="镜头名称" width="100"></el-table-column>
+          <el-table-column prop="asset__name" label="镜头号"></el-table-column>
           <el-table-column prop="name" label="任务名称"></el-table-column>
           <el-table-column prop="content" label="任务内容" show-overflow-tooltip></el-table-column>
           <el-table-column prop="start_date" label="任务开始时间">
