@@ -15,17 +15,7 @@
       </template>
 
       <div v-if="deptId">
-        <HotChart chart-id="line-chart1" ref="line-chart1" height="500px" />
-        <el-row>
-          <el-col align="right">
-            <label for align="right">注：此图展示员工近30天的每日任务量</label>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col align="right">
-            <label for align="right">灰色代表空闲时间</label>
-          </el-col>
-        </el-row>
+        <HotChart chart-id="line-chart1" ref="line-chart1" height="500px" /> 
         <el-divider />
      <!--部门内，全部项目的任务/人员分配图(甘特图表示) -->
      <personalDistribute :dept-id="deptId"/>
@@ -84,20 +74,20 @@ export default {
 
         let chartData = {
           title: {
-            text: "制作人员任务统计",
+            text: "制作人员任务统计(注：此图展示员工近30天的每日任务量, 灰色代表空闲时间)",
             textStyle: {
               //---主标题内容样式
               color: "#000"
               // height:"50px"
             },
-            padding: [3, 0, 100, 100] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            padding: [3, 0, 50, 50] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
           },
           tooltip: {
             position: "top"
           },
           animation: false,
           grid: {
-            height: "50%",
+            height: "70%",
             left: "5%",
             right: "5%",
             y: "10%"
@@ -122,7 +112,7 @@ export default {
             calculable: true,
             orient: "horizontal",
             left: "center",
-            bottom: "15%"
+            bottom: "2%"
           },
           series: [
             {
