@@ -79,9 +79,6 @@
       </el-row>
     </div>
     <el-divider />
-    <!--部门内，全部项目的任务/人员分配图(甘特图表示) -->
-    <personalDistribute :is-chart-view="isChartView" />
-    <el-divider />
     <!-- 任务预判断 -->
     <div>
       <el-row>
@@ -336,7 +333,6 @@ import * as Ajax from "@/api/statistics";
 import Chart from "@/components/ECharts/PieChart";
 import LineChart from "@/components/ECharts/LineMarker";
 import maxSumbit from "./maxSumbit";
-import personalDistribute from "./personalDistribute";
 import { log } from "util";
 import { type } from "os";
 export default {
@@ -344,8 +340,7 @@ export default {
   components: {
     Chart,
     LineChart,
-    maxSumbit,
-    personalDistribute
+    maxSumbit
   },
   data() {
     return {

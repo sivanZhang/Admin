@@ -4,7 +4,7 @@
     <ElCard>
       <template slot="header">
         <label for>部门：</label>
-        <el-select v-model="value1" @change="getFreeTime()">
+        <el-select v-model="deptId" @change="getFreeTime()">
           <el-option
             v-for="(item,index) of loginMessage.dept"
             :key="index"
@@ -14,10 +14,10 @@
         </el-select>
       </template>
 
-      <div v-if="value1">
+      <div v-if="deptId">
         <HotChart chart-id="line-chart1" ref="line-chart1" height="500px" />
         <el-row>
-          <el-col  align="right">
+          <el-col align="right">
             <label for align="right">注：此图展示员工近30天的每日任务量</label>
           </el-col>
         </el-row>
@@ -26,6 +26,9 @@
             <label for align="right">灰色代表空闲时间</label>
           </el-col>
         </el-row>
+        <el-divider />
+     <!--部门内，全部项目的任务/人员分配图(甘特图表示) -->
+     <personalDistribute :dept-id="deptId"/>
       </div>
       <div v-else class="text-center">选择部门查看</div>
     </ElCard>
@@ -35,13 +38,14 @@
 <script>
 import HotChart from "@/components/ECharts/HotChart";
 import { getMemberTime } from "@/api/statistics";
+import personalDistribute from "./components/personalDistribute";
 import dayjs from "dayjs";
 export default {
   name: "rememberTime",
-  components: { HotChart },
+  components: { HotChart, personalDistribute },
   data() {
     return {
-      value1: this.$store.state.login.userInfo.dept[0].id,
+      deptId: this.$store.state.login.userInfo.dept[0].id,
       loginMessage: this.$store.state.login.userInfo,
       freeTime: [],
       userDate: [],
@@ -55,7 +59,7 @@ export default {
       this.dateList = [];
       this.userDate = [];
       this.dataCellList = [];
-      let payload = { dept_id: this.value1, day: 30 };
+      let payload = { dept_id: this.deptId, day: 30 };
       function dataFormat(params) {
         if (params) {
           params *= 1000;
