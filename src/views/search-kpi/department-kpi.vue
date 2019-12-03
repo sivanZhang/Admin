@@ -131,6 +131,7 @@ export default {
       visible2: false,
       sortSelForm: {},
       showMulChoose: [],
+      showTimeChoose:[],
       saveRules: {
         dept_id: [
           {
@@ -173,6 +174,9 @@ export default {
         this.showMulChoose.dept_id = this.sortSelForm.dept_id[
           this.sortSelForm.dept_id.length - 1
         ];
+        this.showTimeChoose.dept_id = this.sortSelForm.dept_id[
+          this.sortSelForm.dept_id.length - 1
+        ];
       }
       if (this.sortSelForm.start_date) {
         this.showMulChoose.start_date = this.sortSelForm.start_date
@@ -195,7 +199,7 @@ export default {
       searchDepartmentKpi(data).then(({ data }) => {
         this.kpiList = [...data.msg];
       });
-      getDepartmentTime(data).then(({ data }) => {
+      getDepartmentTime({...this.showTimeChoose}).then(({ data }) => {
         this.workTime = data.msg;
       });
     },
