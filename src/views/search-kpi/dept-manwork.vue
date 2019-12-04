@@ -10,10 +10,12 @@
       filterable
       clearable
     ></el-cascader>
-    <label class="inp-label" for="">每天工时(h):</label>
+    <!-- 暂时隐藏工时参数 -->
+   <!--  <label class="inp-label" for="">每天工时(h):</label>
     <el-input-number v-model="work_time" placeholder=""></el-input-number>
-    <label class="inp-label" for="">每月工作(天):</label>
+    <label class="inp-label" for="">每月工作(天):</label> 
     <el-input-number v-model="work_days" placeholder=""></el-input-number>
+    -->
     <el-button class="inp-label" type="primary" @click="searchList()" :loading="tableLoading">查询</el-button>
     <el-button type="primary" @click="resetParams()">重置</el-button>
     <el-table
@@ -25,6 +27,7 @@
       default-expand-all
       v-loading="tableLoading"
     >
+      <el-table-column prop="dept_name" label="部门"></el-table-column>
       <el-table-column prop="dept_user_count" label="人员数量"></el-table-column>
       <el-table-column prop="total_work_time" label="本月总工时(小时)"></el-table-column>
       <el-table-column prop="total_allocation_time" label="本月已分配工时(小时)"></el-table-column>
@@ -65,11 +68,12 @@ export default {
         })
         params = {...params,dept_id:idList.join()}
       }
-      params = {
+      // 暂时隐藏工时参数
+      /* params = {
           ...params,
           work_days:this.work_days,
           work_time:this.work_time
-        }
+        } */
       this.tableLoading = true
       getDepartmentTime(params).then(({ data }) => {
         this.workTime = data.msg;
