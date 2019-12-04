@@ -292,72 +292,73 @@ export default {
         AXIOS.spread((...arg) => {
           this.weekHour = arg[0].data;
           this.monthHour = arg[1].data;
-          let option2 = {
-            title:{
-              text:`近一周(h):${this.weekHour.total_count}`,
-              textAlign:'left',
-              textStyle:{
-                fontSize:12,
-                fintWeigt:'normal',
-              },
-              top:0,
-              left:"center",
-            },
-            tooltip: {
-              trigger: "item",
-              formatter: "{a} <br/>{b}工时: {c} ({d}%)"
-            },
-            series: [
-              {
-                name: "近一周",
-                label: {
-                  normal: {
-                    position: "inner"
-                  }
-                },
-                type: "pie",
-                radius: [0, '80%'],
-                data: [
-                  { value: this.weekHour.overtime_count, name: "加班" },
-                  { value: this.weekHour.task_count, name: "任务" }
-                ]
-              },
-            ]
-          };
-          let option3 = {
-            title:{
-              text:`近一月(h):${this.monthHour.total_count}`,
-              textAlign:'left',
-              textStyle:{
-                fontSize:12,
-                fintWeigt:'normal',
-              },
-              top:0,
-              left:"center",
-            },
-            tooltip: {
-              trigger: "item",
-              formatter: "{a} <br/>{b}工时: {c} ({d}%)"
-            },
-            series: [
-              {
-                name: "近一月",
-                label: {
-                  normal: {
-                    position: "inner"
-                  }
-                },
-                type: "pie",
-                radius: [0, '80%'],
-                data: [
-                  { value: this.monthHour.overtime_count, name: "加班" },
-                  { value: this.monthHour.task_count, name: "任务" }
-                ]
-              }
-            ]
-          };
-          this.$refs["home-pei-chart"].initChart(option2);
-          this.$refs["home-pei-chart2"].initChart(option3);
+          //  饼图显示
+          // let option2 = {
+          //   title:{
+          //     text:`近一周(h):${this.weekHour.total_count}`,
+          //     textAlign:'left',
+          //     textStyle:{
+          //       fontSize:12,
+          //       fintWeigt:'normal',
+          //     },
+          //     top:0,
+          //     left:"center",
+          //   },
+          //   tooltip: {
+          //     trigger: "item",
+          //     formatter: "{a} <br/>{b}工时: {c} ({d}%)"
+          //   },
+          //   series: [
+          //     {
+          //       name: "近一周",
+          //       label: {
+          //         normal: {
+          //           position: "inner"
+          //         }
+          //       },
+          //       type: "pie",
+          //       radius: [0, '80%'],
+          //       data: [
+          //         { value: this.weekHour.overtime_count, name: "加班" },
+          //         { value: this.weekHour.task_count, name: "任务" }
+          //       ]
+          //     },
+          //   ]
+          // };
+          // let option3 = {
+          //   title:{
+          //     text:`近一月(h):${this.monthHour.total_count}`,
+          //     textAlign:'left',
+          //     textStyle:{
+          //       fontSize:12,
+          //       fintWeigt:'normal',
+          //     },
+          //     top:0,
+          //     left:"center",
+          //   },
+          //   tooltip: {
+          //     trigger: "item",
+          //     formatter: "{a} <br/>{b}工时: {c} ({d}%)"
+          //   },
+          //   series: [
+          //     {
+          //       name: "近一月",
+          //       label: {
+          //         normal: {
+          //           position: "inner"
+          //         }
+          //       },
+          //       type: "pie",
+          //       radius: [0, '80%'],
+          //       data: [
+          //         { value: this.monthHour.overtime_count, name: "加班" },
+          //         { value: this.monthHour.task_count, name: "任务" }
+          //       ]
+          //     }
+          //   ]
+          // };
+          // this.$refs["home-pei-chart"].initChart(option2);
+          // this.$refs["home-pei-chart2"].initChart(option3);
         })
       );
     },

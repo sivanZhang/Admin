@@ -26,8 +26,6 @@ const actions = {
   get_Notice({
     commit
   }, params) {
-      console.log('params',params);
-      
     return noticeDetail(params).then(({
       data
     }) => {
