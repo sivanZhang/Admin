@@ -52,7 +52,6 @@ export default {
     //重置
     resetParams() {
       this.deptIds=[]
-      this.workTime= []
       this.work_days= 21.75
       this.work_time= 8
     },
