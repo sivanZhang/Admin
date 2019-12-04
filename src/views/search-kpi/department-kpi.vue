@@ -22,6 +22,7 @@
       default-expand-all
       v-loading="tableLoading"
     >
+     <el-table-column prop="dept_name" label="部门"></el-table-column>
       <el-table-column prop="accomplist_asset_num" label="完成的资产数量"></el-table-column>
       <el-table-column prop="accomplish_asset_frame" label="完成的镜头帧数"></el-table-column>
       <el-table-column label="难度等级">
