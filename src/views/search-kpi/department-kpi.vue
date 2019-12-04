@@ -43,10 +43,11 @@
 
 <script>
 import { searchDepartmentKpi } from "@/api/statistics";
-import { mapState } from "vuex";
 import dayjs from "dayjs";
+import DeptListMixin from '@/utils/dept-list-mixins'
 export default {
   name: "dept-manwork",
+  mixins:[DeptListMixin],
   data() {
     return {
       tableLoading:false,
@@ -55,13 +56,7 @@ export default {
       // 选中的时间
       recordTime:null,
       kpiList: [],
-      // 原始部门id列表
-      selectList: [],
     };
-  },
-  computed: {
-    //DeptUsers是根据登录账号得来的
-    ...mapState("admin", ["DeptList"])
   },
   methods: {
     // 重置
@@ -71,22 +66,20 @@ export default {
     },
     // 根据筛选条件请求列表，如果没有筛选值则不传字段
     getKPI() {
-      let idList = []
+      let params = null
       if (this.deptIds.length) {
+        let idList = []
         idList = this.deptIds.map(i=>{
           return i[i.length-1]
         })
+        params = {...params,dept_id:idList.join()}
       }
-      let params = null
+      
       if(this.recordTime){
         params = {
+          ...params,
           record_time:dayjs(this.recordTime).format("YYYY/MM")
         }
-      }
-      if (idList.length) {
-        params = Object.assign(params,{
-          dept_id:idList.join()
-        })
       }
       this.tableLoading = true
       searchDepartmentKpi(params).then(({ data }) => {
@@ -95,32 +88,10 @@ export default {
         this.tableLoading = false
       })
     },
-    formatList() {
-      function changeList(arr) {
-        for (const item of arr) {
-          if (item["children"] && item["children"].length) {
-            changeList(item["children"]);
-          } else {
-            item["children"] = null;
-          }
-        }
-      }
-      this.selectList = JSON.parse(
-        JSON.stringify(this.DeptList)
-          .replace(/name/g, "label")
-          .replace(/id/g, "value")
-      );
-      changeList(this.selectList);
-    }
+    
   },
   async created() {
     this.getKPI()
-    if (!this.DeptList) {
-      await this.$store.dispatch("admin/get_DeptList");
-      this.formatList();
-    } else {
-      this.formatList();
-    }
   }
 };
 </script>

@@ -2,61 +2,91 @@
  <!-- 部门kpi -->
  <template>
   <div>
-    <div>
-      <!-- <el-row>
-            <el-col :span="20">
-               <label for style="padding-top:15px">部门本月的总工时、实际工时和空闲工时</label>
-            </el-col>
-      </el-row>-->
-      <el-table
-        :data="workTime"
-        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-        style="margin-top:10px;width:100%"
-        :stripe="true"
-        highlight-current-row
-        default-expand-all
-      >
-        <el-table-column prop="dept_user_count" label="人员数量"></el-table-column>
-        <el-table-column prop="total_work_time" label="本月总工时(小时)"></el-table-column>
-        <el-table-column prop="total_allocation_time" label="本月已分配工时(小时)"></el-table-column>
-        <el-table-column prop="total_free_time" label="本月空闲工时(小时)"></el-table-column>
-      </el-table>
-    </div>
+    <el-cascader
+      v-model="deptIds"
+      placeholder="输入搜索工种"
+      :options="selectList"
+      :props="{ multiple: true,checkStrictly: true,expandTrigger: 'hover'}"
+      filterable
+      clearable
+    ></el-cascader>
+    <label class="inp-label" for="">每天工时(h):</label>
+    <el-input-number v-model="work_time" placeholder=""></el-input-number>
+    <label class="inp-label" for="">每月工作(天):</label>
+    <el-input-number v-model="work_days" placeholder=""></el-input-number>
+    <el-button class="inp-label" type="primary" @click="searchList()" :loading="tableLoading">查询</el-button>
+    <el-button type="primary" @click="resetParams()">重置</el-button>
+    <el-table
+      :data="workTime"
+      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+      style="margin-top:10px;width:100%"
+      :stripe="true"
+      highlight-current-row
+      default-expand-all
+      v-loading="tableLoading"
+    >
+      <el-table-column prop="dept_user_count" label="人员数量"></el-table-column>
+      <el-table-column prop="total_work_time" label="本月总工时(小时)"></el-table-column>
+      <el-table-column prop="total_allocation_time" label="本月已分配工时(小时)"></el-table-column>
+      <el-table-column prop="total_free_time" label="本月空闲工时(小时)"></el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-import { searchDepartmentKpi, getDepartmentTime } from "@/api/statistics";
-import { mapState } from "vuex";
+import { getDepartmentTime } from "@/api/statistics";
 import dayjs from "dayjs";
+import DeptListMixin from "@/utils/dept-list-mixins";
 export default {
+  mixins: [DeptListMixin],
   data() {
     return {
-      selectList: [],
-      colSel2: null,
+      tableLoading:false,
+      deptIds:[],
       workTime: [],
-      work_days: "",
-      work_time: "",
-      showMulChoose: [],
-      showTimeChoose: []
+      work_days: 21.75,
+      work_time: 8,
     };
   },
   methods: {
     //重置
-    getTasks() {
-      this.mulChoose = false;
-      this.showMulChoose = [];
-      let data = { ...this.showMulChoose };
-      this.searchDepartmentKpi(data);
+    resetParams() {
+      this.deptIds=[]
+      this.workTime= []
+      this.work_days= 21.75
+      this.work_time= 8
     },
-    searchDepartmentKpi(data) {
-      getDepartmentTime({ ...this.showTimeChoose }).then(({ data }) => {
+    // 根据筛选条件搜索
+    searchList() {
+     let params = null
+      if (this.deptIds.length) {
+        let idList = []
+        idList = this.deptIds.map(i=>{
+          return i[i.length-1]
+        })
+        params = {...params,dept_id:idList.join()}
+      }
+      params = {
+          ...params,
+          work_days:this.work_days,
+          work_time:this.work_time
+        }
+      this.tableLoading = true
+      getDepartmentTime(params).then(({ data }) => {
         this.workTime = data.msg;
-      });
+      }).finally(()=>{
+        this.tableLoading = false
+      })
     }
+  },
+  async created() {
+    this.searchList();
   }
 };
 </script>
 
-<style>
+<style scoped>
+.inp-label{
+  margin-left: 10px;
+}
 </style>
