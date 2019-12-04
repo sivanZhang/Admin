@@ -2,71 +2,17 @@
  <!-- 部门kpi -->
  <template>
   <div>
-    <el-row>
-      <el-col  align="right">
-        <div style="display:flex;width:150px;align-items:center">
-          <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
-            <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
-              <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px" :rules="saveRules">
-                <el-row>
-                  <el-col :span="12">
-                    <el-form-item label="部门" prop="dept_id">
-                      <el-cascader
-                        v-model="sortSelForm.dept_id"
-                        placeholder="输入搜索工种"
-                        :options="selectList"
-                        :props="{ checkStrictly: true}"
-                        filterable
-                      ></el-cascader>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-form-item label="自定义时间">
-                    <div style="display:flex">
-                      <el-col :span="11">
-                        <el-date-picker
-                          v-model="sortSelForm.start_date"
-                          type="date"
-                          placeholder="开始日期"
-                          size="mini"
-                        ></el-date-picker>
-                      </el-col>
-                      <el-col :span="2" align="center">
-                        <span style="padding-top:3px">至</span>
-                      </el-col>
-                      <el-col :span="11" align="right">
-                        <el-date-picker
-                          v-model="sortSelForm.end_date"
-                          type="date"
-                          placeholder="结束日期"
-                          size="mini"
-                        ></el-date-picker>
-                      </el-col>
-                    </div>
-                  </el-form-item>
-                </el-row>
-                <el-row>
-                  <el-col align="right">
-                    <el-button type="primary" @click="getDepartmentKpi()">筛选</el-button>
-                  </el-col>
-                </el-row>
-              </el-form>
-              <el-button
-                slot="reference"
-                type="primary"
-                style="margin-left: 15px"
-                size="mini"
-                @click="showMul()"
-              >筛选</el-button>
-            </el-popover>
-          </el-tooltip>
-        </div>
-      </el-col>
-      <!-- <el-col :span="2">
-        <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
-      </el-col>-->
-    </el-row>
+    <el-cascader
+      v-model="deptIds"
+      placeholder="输入搜索工种"
+      :options="selectList"
+      :props="{ multiple: true,checkStrictly: true,expandTrigger: 'hover'}"
+      filterable
+      clearable
+    ></el-cascader>
+    <el-date-picker v-model="recordTime" type="month" placeholder="选择日期"></el-date-picker>
+    <el-button type="primary" @click="getKPI()" :loading="tableLoading">查询</el-button>
+    <el-button type="primary" @click="resetParams()">重置</el-button>
     <el-table
       :data="kpiList"
       :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
@@ -74,6 +20,7 @@
       :stripe="true"
       highlight-current-row
       default-expand-all
+      v-loading="tableLoading"
     >
       <el-table-column prop="accomplist_asset_num" label="完成的资产数量"></el-table-column>
       <el-table-column prop="accomplish_asset_frame" label="完成的镜头帧数"></el-table-column>
@@ -91,117 +38,62 @@
       <el-table-column prop="total_over_time" label="加班工时"></el-table-column>
       <el-table-column prop="average_per_time" label="平均单帧制作时长（小时）"></el-table-column>
     </el-table>
-    <!-- 部门本月的总工时实际工时和空闲工时 -->
-    <div style="padding-top:25px">
-      <!-- <el-row>
-            <el-col :span="20">
-               <label for style="padding-top:15px">部门本月的总工时、实际工时和空闲工时</label>
-            </el-col>
-      </el-row>-->
-      <el-table
-        :data="workTime"
-        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-        style="margin-top:10px;width:100%"
-        :stripe="true"
-        highlight-current-row
-        default-expand-all
-      >
-        <el-table-column prop="dept_user_count" label="人员数量"></el-table-column>
-        <el-table-column prop="total_work_time" label="本月总工时(小时)"></el-table-column>
-        <el-table-column prop="total_allocation_time" label="本月已分配工时(小时)"></el-table-column>
-        <el-table-column prop="total_free_time" label="本月空闲工时(小时)"></el-table-column>
-      </el-table>
-    </div>
   </div>
 </template>
 
 <script>
-import { searchDepartmentKpi, getDepartmentTime } from "@/api/statistics";
+import { searchDepartmentKpi } from "@/api/statistics";
 import { mapState } from "vuex";
 import dayjs from "dayjs";
 export default {
+  name: "dept-manwork",
   data() {
     return {
+      tableLoading:false,
+      // 选中的部门id
+      deptIds:[],
+      // 选中的时间
+      recordTime:null,
       kpiList: [],
+      // 原始部门id列表
       selectList: [],
-      colSel2: null,
-      workTime: [],
-      work_days: "",
-      work_time: "",
-      visible2: false,
-      sortSelForm: {},
-      showMulChoose: [],
-      showTimeChoose:[],
-      saveRules: {
-        dept_id: [
-          {
-            required: true,
-            trigger: "blur",
-            message: "请选择部门名称"
-          }
-        ]
-      },
     };
   },
   computed: {
-    ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
+    //DeptUsers是根据登录账号得来的
+    ...mapState("admin", ["DeptList"])
   },
   methods: {
-    //重置
-    getTasks() {
-      this.sortSelForm = {};
-      this.mulChoose = false;
-      this.showMulChoose = [];
-      let data = { ...this.showMulChoose };
-      this.searchDepartmentKpi(data);
+    // 重置
+    resetParams() {
+      this.deptIds=[]
+      this.recordTime=null
     },
-    showMul() {
-      this.sortSelForm = {};
-      this.mulChoose = false;
-      this.showMulChoose = [];
-    },
-    getDepartmentKpi() {
-      this.$refs["sortSelForm"].validate(valid => {
-        if (valid) {
-      this.mulChoose = true;
-      this.visible2 = false;
-      let data = {};
-      function DateFormat(dateVal) {
-        return new dayjs(dateVal).format("YYYY/MM/DD");
-        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+    // 根据筛选条件请求列表，如果没有筛选值则不传字段
+    getKPI() {
+      let idList = []
+      if (this.deptIds.length) {
+        idList = this.deptIds.map(i=>{
+          return i[i.length-1]
+        })
       }
-      if (this.sortSelForm.dept_id) {
-        this.showMulChoose.dept_id = this.sortSelForm.dept_id[
-          this.sortSelForm.dept_id.length - 1
-        ];
-        this.showTimeChoose.dept_id = this.sortSelForm.dept_id[
-          this.sortSelForm.dept_id.length - 1
-        ];
-      }
-      if (this.sortSelForm.start_date) {
-        this.showMulChoose.start_date = this.sortSelForm.start_date
-          ? DateFormat(this.sortSelForm.start_date)
-          : "";
-      }
-      if (this.sortSelForm.end_date) {
-        this.showMulChoose.end_date = this.sortSelForm.end_date
-          ? DateFormat(this.sortSelForm.end_date)
-          : "";
-      }
-      data = { ...this.showMulChoose };
-      this.searchDepartmentKpi(data);
+      let params = null
+      if(this.recordTime){
+        params = {
+          record_time:dayjs(this.recordTime).format("YYYY/MM")
         }
-      });
-    },
-    searchDepartmentKpi(data) {
-      this.kpiList = [];
-      this.workTime = [];
-      searchDepartmentKpi(data).then(({ data }) => {
+      }
+      if (idList.length) {
+        params = Object.assign(params,{
+          dept_id:idList.join()
+        })
+      }
+      this.tableLoading = true
+      searchDepartmentKpi(params).then(({ data }) => {
         this.kpiList = [...data.msg];
-      });
-      getDepartmentTime({...this.showTimeChoose}).then(({ data }) => {
-        this.workTime = data.msg;
-      });
+      }).finally(()=>{
+        this.tableLoading = false
+      })
     },
     formatList() {
       function changeList(arr) {
@@ -222,6 +114,7 @@ export default {
     }
   },
   async created() {
+    this.getKPI()
     if (!this.DeptList) {
       await this.$store.dispatch("admin/get_DeptList");
       this.formatList();

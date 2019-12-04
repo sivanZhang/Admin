@@ -1,6 +1,6 @@
 /**
  * 
- *@file 动态路由
+ * @file 动态路由
  *  
  */
 import Layout from '@/layout'
@@ -219,13 +219,23 @@ export default function asyncRoutes(params) {
           title: '人员kpi',
           icon: 'KPI'
         }
-      },{
+      }, {
         path: 'department-kpi',
         name: 'department-kpi',
         component: () =>
           import('@/views/search-kpi/department-kpi'),
         meta: {
           title: '部门kpi',
+          icon: 'KPI'
+        }
+      },
+      {
+        path: 'dept-manwork',
+        name: 'dept-manwork',
+        component: () =>
+          import('@/views/search-kpi/dept-manwork'),
+        meta: {
+          title: '部门工时概览',
           icon: 'KPI'
         }
       }]
