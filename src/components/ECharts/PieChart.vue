@@ -1,5 +1,5 @@
 <template>
-  <div :id="chartId" :style="{height:height,width:width}" v-loading="loading" />
+  <div :id="chartId" :style="{height:height,width:width}"/>
 </template>
 
 <script>
@@ -26,7 +26,6 @@ export default {
   data() {
     return {
       chart: null,
-      loading: true
     };
   },
   mounted() {
@@ -42,7 +41,7 @@ export default {
   methods: {
     // 父组件调用,开启加载动画
     openLoading() {
-      this.loading = true;
+      this.chart.showLoading()
     },
     /**
      * 父组件直接调用该方法即可渲染，但是父组件必须在其 mounted() 钩子中调用
@@ -78,7 +77,7 @@ export default {
         ]
       };
       this.chart.setOption(options);
-      this.loading = false;
+      this.chart.hideLoading()
     }
   }
 };
