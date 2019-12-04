@@ -19,6 +19,7 @@ import {
   queryTask,
   getStatusTaskList
 } from "@/api/task";
+let TimeOut = null;
 export default {
   name: "home-page",
   components: {
@@ -66,6 +67,26 @@ export default {
   },
   created() {
     this.getMyTasks();
+  },
+  beforeRouteEnter(to, from, next) {
+    let timeOutCallBack = function() {
+      this.$store.dispatch("tagsView/delAllCachedViews", this.$route);
+      const { fullPath } = this.$route;
+      this.$nextTick(() => {
+        this.$router.replace({
+          path: `/redirect${fullPath}`
+        });
+      });
+    };
+    // 此钩子函数中无法访问VUE实例（this），可在next回调的时候给个参数， setTimeout回调绑定vm为“this”，但必须bind因为是异步调用
+    // 60000*15 = 延迟十五分钟刷新一次
+    next(vm => {
+      TimeOut = setTimeout(timeOutCallBack.bind(vm), 60000*15);
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    clearTimeout(TimeOut);
+    next();
   },
   methods: {
     cancel() {
@@ -319,32 +340,32 @@ export default {
   background-color: #f4f5f5;
   /* height: calc(100vh - 84px); */
   position: relative;
-@mixin scrollStyle {
-  &::-webkit-scrollbar {
-    /*滚动条整体样式*/
-    width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
-    height: 6px;
-    cursor: pointer;
+  @mixin scrollStyle {
+    &::-webkit-scrollbar {
+      /*滚动条整体样式*/
+      width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+      height: 6px;
+      cursor: pointer;
+    }
+    &::-webkit-scrollbar-thumb {
+      /*滚动条里面小方块*/
+      border-radius: 0px;
+      box-shadow: inset 0 0 0 #fff;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+    &::-webkit-scrollbar-track {
+      /*滚动条里面轨道*/
+      box-shadow: inset 0 0 0 #fff;
+      border-radius: 0;
+      background: #fff;
+    }
   }
-  &::-webkit-scrollbar-thumb {
-    /*滚动条里面小方块*/
-    border-radius: 0px;
-    box-shadow: inset 0 0 0 #fff;
-    background: rgba(0, 0, 0, 0.2);
-    cursor: pointer;
+  $border: 1px solid #dcdfe6;
+  $linkColor: #2d8cf0;
+  .el-card__body {
+    @include scrollStyle;
   }
-  &::-webkit-scrollbar-track {
-    /*滚动条里面轨道*/
-    box-shadow: inset 0 0 0 #fff;
-    border-radius: 0;
-    background: #fff;
-  }
-}
-$border: 1px solid #dcdfe6;
-$linkColor: #2d8cf0;
-.el-card__body {
-  @include scrollStyle;
-}
   .home-header {
     margin-bottom: 15px;
     .basic {
@@ -364,7 +385,7 @@ $linkColor: #2d8cf0;
       height: 300px;
     }
   }
-  .card-header{
+  .card-header {
     font-size: 14px;
     font-weight: 600;
   }
