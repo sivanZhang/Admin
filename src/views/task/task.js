@@ -4,7 +4,7 @@ import {
   queryTaskRecord,
   queryTask,
   getStatusTaskList,
-
+  getFeedback,
 } from "@/api/task";
 import {
   getHistoryVersion,
@@ -254,9 +254,20 @@ export default {
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
+      currentPage1:1,//我的反馈分页
+      pageSize1:20,
+      FeedbackList:[],
     };
   },
   methods: {
+    //分页
+    handleSizeChange1(e) {  
+      this.pageSize1 = e;
+    },
+    handleCurrentChange1(currentPage1) {
+      this.currentPage1 = currentPage1;
+    },
+     
     //单条件排序
     sortFilter({
       column,
@@ -885,6 +896,12 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     },
+    //获取我的反馈数据
+    getFeedback(){
+      getFeedback().then(res => {
+        this.FeedbackList = [...res.data.msg];
+      });
+    },
   },
   computed: {
     topArr() {
@@ -943,6 +960,7 @@ export default {
   created() {
     this.getstatusNumber();
     this.getMyTasks();
+    this.getFeedback();
     //首页中传递过来的字段
     switch (this.$store.state.mine.keyword) {
       case 'priority':
