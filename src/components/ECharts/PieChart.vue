@@ -1,9 +1,9 @@
 <template>
-  <div :id="chartId" :style="{height:height,width:width}"/>
+  <div :id="chartId" :style="{height:height,width:width}" />
 </template>
 
 <script>
-import echarts from 'echarts'
+import echarts from "echarts";
 import resize from "./resize";
 
 export default {
@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      chart: null,
+      chart: null
     };
   },
   mounted() {
@@ -41,7 +41,7 @@ export default {
   methods: {
     // 父组件调用,开启加载动画
     openLoading() {
-      this.chart.showLoading()
+      this.chart.showLoading();
     },
     /**
      * 父组件直接调用该方法即可渲染，但是父组件必须在其 mounted() 钩子中调用
@@ -77,7 +77,10 @@ export default {
         ]
       };
       this.chart.setOption(options);
-      this.chart.hideLoading()
+      this.chart.hideLoading();
+      this.chart.on("click", (params)=> {
+        this.$emit('click-item',params)
+      });
     }
   }
 };
