@@ -9,6 +9,12 @@
       <div class="asset"><span class="label">镜头</span>: {{item.task.asset_name}}</div>
       <div class="text-right" :style="{color:item.result?'#19be6b':'#ed4014'}">{{item.result?'通过':'未通过'}}</div>
       <div class="opinion"><span class="label">意见</span>: {{item.suggestion}}</div>
+      <div class="assetName">
+        镜头号 : {{item.task.asset_name}}
+      </div>
+      <div>
+        意见 : {{item.suggestion}}
+      </div>
     </section>
   </el-card>
 </template>
@@ -82,6 +88,9 @@ $linkColor: #2d8cf0;
   .label{
     display: inline-block;
     width: 30px;
+  }
+  .assetName{
+    width: 100%;
   }
   & + .feedback {
     border-top: $border;
