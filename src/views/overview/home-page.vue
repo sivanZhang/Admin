@@ -52,7 +52,8 @@ export default {
       logsLoading: false,
       TaskRecord: [],
       createLoading: false,
-      activeRow: {} //点击任务列表选中的列的数据
+      activeRow: {},//点击任务列表选中的列的数据
+      surplus_labor_hour: null,
     };
   },
   computed: {
@@ -139,20 +140,21 @@ export default {
         });
       this.detailLoading = true;
       this.$refs["taskDetail"].getDetail(row.task.id);
-      // queryTask({
-      //   id: row.task.id
-      // })
-      //   .then(({ data }) => {
-      //     this.TaskDetail = {
-      //       ...data.msg
-      //     };
-      //     this.Asset = this.TaskDetail.asset;
-      //     this.Link = this.TaskDetail.link_dept_name;
-      //     this.detailLoading = false;
-      //   })
-      //   .catch(() => {
-      //     this.detailLoading = false;
-      //   });
+      queryTask({
+        id: row.task.id
+      })
+        .then(({ data }) => {
+          this.surplus_labor_hour = data.msg.surplus_labor_hour;
+        //   this.TaskDetail = {
+        //     ...data.msg
+        //   };
+        //   this.Asset = this.TaskDetail.asset;
+        //   this.Link = this.TaskDetail.link_dept_name;
+        //   this.detailLoading = false;
+        // })
+        // .catch(() => {
+        //   this.detailLoading = false;
+        });
     },
     //修改是否已读
     updateIsRead(row) {
@@ -312,6 +314,7 @@ export default {
         </el-tab-pane>
         <el-tab-pane label="执行任务">
           <task-form
+            :surplus_labor_hour="surplus_labor_hour"
             :task-record.sync="TaskRecord"
             :createLoading="createLoading"
             @addRecord="addRecord"

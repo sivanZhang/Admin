@@ -27,7 +27,12 @@
           <tabLog :loglist="LogList" :logsLoading="logsLoading" />
         </el-tab-pane>
         <el-tab-pane label="执行任务" name="third">
-          <task-form :task-record.sync="TaskRecord" @addRecord="addRecord" @cancel="cancel" />
+          <task-form 
+          :task-record.sync="TaskRecord" 
+          :surplus_labor_hour="surplus_labor_hour" 
+          :createLoading="createLoading" 
+          @addRecord="addRecord" 
+          @cancel="cancel" />
         </el-tab-pane>
         <el-tab-pane label="提交审核" name="fourth">
           <tab-approve v-if="activeRow.task && activeRow.task.status === 2" :row="activeRow" />
@@ -58,6 +63,8 @@ export default {
   data() {
     return {
       activeName: "first",
+      surplus_labor_hour: null,
+      createLoading: false,
       TaskDetail: {
         asset: {
           name: ""
@@ -109,6 +116,7 @@ export default {
           this.TaskDetail = {
             ...data.msg
           };
+          this.surplus_labor_hour = data.msg.surplus_labor_hour;
           // console.log(this.TaskDetail);
         })
         .catch(() => {});
