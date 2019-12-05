@@ -13,7 +13,7 @@
         </el-tab-pane>
       </template>
       <el-tab-pane label="进度控制" name="tab7" lazy>
-        <progressContral />
+        <progressContral @switch-task-tab="jumpName('tab2')"/>
       </el-tab-pane>
       <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets

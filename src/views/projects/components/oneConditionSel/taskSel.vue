@@ -24,7 +24,6 @@
       style="width:300px;margin-top:1px"
       multiple
       filterable
-      @change="getTasks()"
       size="mini"
     >
       <el-option
@@ -35,9 +34,21 @@
       ></el-option>
     </el-select>
     <div v-if="colSel === 'start_date' || colSel === 'end_date'" style="width:280px;display:flex;">
-      <el-date-picker v-model="timeSelection" type="date" placeholder="选择日期" size="mini" @change="getTasks()"></el-date-picker>
+      <el-date-picker
+        v-model="timeSelection"
+        type="date"
+        placeholder="选择日期"
+        size="mini"
+        @change="getTasks()"
+      ></el-date-picker>
       <span style="text-align:center;padding-top:3px">至</span>
-      <el-date-picker v-model="timeSelection2" type="date" placeholder="选择日期" size="mini" @change="getTasks()"></el-date-picker>
+      <el-date-picker
+        v-model="timeSelection2"
+        type="date"
+        placeholder="选择日期"
+        size="mini"
+        @change="getTasks()"
+      ></el-date-picker>
     </div>
 
     <el-button
@@ -132,7 +143,6 @@ export default {
         switch (newVal) {
           case "status":
             this.colShow = false;
-            this.colSel2 = [1];
             this.columnSelect2 = [
               {
                 value: 0,
@@ -247,7 +257,7 @@ export default {
               }
             );
             break;
-            case "episode":
+          case "episode":
             this.colShow = false;
             getEpisodeSession({ id: this.$route.params.id, episode: "" }).then(
               ({ data }) => {
@@ -260,7 +270,7 @@ export default {
               }
             );
             break;
-            case "session":
+          case "session":
             this.colShow = false;
             getEpisodeSession({ id: this.$route.params.id, session: "" }).then(
               ({ data }) => {
@@ -406,8 +416,8 @@ export default {
             this.name = { executor_ids: "[" + String(this.colSel2) + "]" };
           }
           break;
-           case "episode":
-             if (this.colSel2.length) {
+        case "episode":
+          if (this.colSel2.length) {
             data = {
               ...data,
               episode: String(this.colSel2)
@@ -415,8 +425,8 @@ export default {
             this.name = { episode: "[" + String(this.colSel2) + "]" };
           }
           break;
-           case "session":
-              if (this.colSel2.length) {
+        case "session":
+          if (this.colSel2.length) {
             data = {
               ...data,
               session: String(this.colSel2)
@@ -436,7 +446,17 @@ export default {
       this.timeSelection2 = "";
     }
   },
-  created() {}
+  created() {
+    // store 中的 isFilterOverdue决定是否少选条件为  状态：超期
+    if (this.$store.state.project.isFilterOverdue) {
+      this.colSel = "status"
+      this.colSel2 = [5]
+      this.$store.commit('project/setFilterOverdue',false)
+      this.$nextTick(()=>{
+        this.getTasks()
+      })
+    }
+  }
 };
 </script>
 <style lang='scss' scoped>
