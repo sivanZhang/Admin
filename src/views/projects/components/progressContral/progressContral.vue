@@ -487,7 +487,7 @@ export default {
           let customOption = {
             title: {
               top: 20,
-              text: "项目燃尽图",
+              text: "项目总工时走向图",
               textStyle: {
                 fontWeight: 600,
                 fontSize: 16
