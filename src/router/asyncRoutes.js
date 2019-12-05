@@ -135,16 +135,17 @@ export default function asyncRoutes(params) {
           title: '我的工时',
           icon: 'fs'
         }
-      }, {
-        path: 'man-feedback',
-        name: 'man-feedback',
-        component: () =>
-          import('@/views/feedBack'),
-        meta: {
-          title: '我的反馈',
-          icon: 'fs'
-        }
-      }]
+      } ]
+      // }, {
+      //   path: 'man-feedback',
+      //   name: 'man-feedback',
+      //   component: () =>
+      //     import('@/views/feedBack'),
+      //   meta: {
+      //     title: '我的反馈',
+      //     icon: 'fs'
+      //   }
+      // }]
     },
 
     {
