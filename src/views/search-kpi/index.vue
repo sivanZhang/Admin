@@ -1,114 +1,49 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="19">
-        <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
-      </el-col>
-      <el-col :span="3" style="padding-bottom:10px" >
-        <!-- 筛选 -->
-        <div style="display:flex;width:150px;align-items:center">
+    <el-card shadow="never">
+      <el-row>
+        <el-col :span="20">
+          <el-cascader
+            v-model="deptIds"
+            placeholder="输入搜索工种"
+            :options="selectList"
+            :props="{ multiple: true,checkStrictly: true,expandTrigger: 'hover'}"
+            filterable
+            clearable
+          ></el-cascader>
+          <el-select v-model="userIds" placeholder="请选择" filterable multiple clearable>
+            <el-option
+              v-for="item in UserList"
+              :key="item.id"
+              :label="item.username"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+          <el-date-picker
+            v-model="dateRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+          <el-button type="primary" @click="getSearchKpi()" :loading="searchLoading">查询</el-button>
+          <!-- 筛选 -->
+          <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
           <span
             @click="openExplain()"
-            style="padding-right:10px;font-size:12px;color:#808080;cursor: pointer;"
+            style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
           >
             使用帮助:
             <svg-icon icon-class="wenhao" />
           </span>
-          <el-tooltip class="item" effect="dark" content="多条件筛选" placement="top">
-            <el-popover v-model="visible2" placement="bottom" width="600" trigger="click">
-              <el-form ref="sortSelForm" :model="sortSelForm" label-width="80px">
-                <el-row>
-                  <el-col :span="12">
-                    <el-form-item label="月份跨度" prop="month_num">
-                      <el-select v-model="sortSelForm.month_num" placeholder="请选择">
-                        <el-option
-                          v-for="item in columnSelect2"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item label="人员名称" prop="user_id">
-                      <el-select
-                        v-model="sortSelForm.user_id"
-                        placeholder="请选择"
-                        filterable
-                        multiple
-                      >
-                        <el-option
-                          v-for="item in UserList"
-                          :key="item.id"
-                          :label="item.username"
-                          :value="item.id"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="12">
-                    <el-form-item label="部门" prop="dept_id">
-                      <el-cascader
-                        v-model="sortSelForm.dept_id"
-                        placeholder="输入搜索工种"
-                        :options="selectList"
-                        :props="{ checkStrictly: true}"
-                        filterable
-                      ></el-cascader>
-                    </el-form-item>
-                  </el-col>
-
-                </el-row>
-                <el-row>
-                  <el-form-item label="自定义时间">
-                    <div style="display:flex">
-                      <el-col :span="11">
-                        <el-date-picker
-                          v-model="sortSelForm.start_date"
-                          type="date"
-                          placeholder="开始日期"
-                          size="mini"
-                        ></el-date-picker>
-                      </el-col>
-                      <el-col :span="2" align="center">
-                        <span style="padding-top:3px">至</span>
-                      </el-col>
-                      <el-col :span="11" align="right">
-                        <el-date-picker
-                          v-model="sortSelForm.end_date"
-                          type="date"
-                          placeholder="结束日期"
-                          size="mini"
-                        ></el-date-picker>
-                      </el-col>
-                    </div>
-                  </el-form-item>
-                </el-row>
-                <el-row>
-                  <el-col align="right">
-                    <el-button type="primary" @click="getSearchKpi()">筛选</el-button>
-                  </el-col>
-                </el-row>
-              </el-form>
-              <el-button
-                slot="reference"
-                type="primary"
-                style="margin-left: 15px"
-                size="mini"
-                @click="showMul()"
-              >筛选</el-button>
-            </el-popover>
-          </el-tooltip>
-        </div>
-      </el-col>
-      <el-col :span="2">
-        <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
-      </el-col>
-    </el-row>
+        </el-col>
+        <el-col :span="4" class="text-right">
+          <el-button icon="el-icon-download" type="success" @click="targetUpload">导出</el-button>
+        </el-col>
+      </el-row>
+    </el-card>
     <el-table
+      v-loading="searchLoading"
       :data="kpiList"
       :tree-props="{children: 'sub'}"
       :row-key="row=>(row.id + 20000)"
@@ -159,68 +94,21 @@
 import { searchKpi } from "@/api/statistics";
 import { mapState } from "vuex";
 import dayjs from "dayjs";
+import DeptListMixin from "@/utils/dept-list-mixins";
 export default {
+  mixins: [DeptListMixin],
   data() {
     return {
+      searchLoading:false,
+      dateRange: [],
       kpiList: [],
+      deptIds:[],
+      userIds:[],
       uploadVisible: false,
       dialogVisible: false,
-      visible2: false,
-      sortSelForm: {},
-      columnSelect2: [
-        {
-          value: 1,
-          label: "近一个月"
-        },
-        {
-          value: 2,
-          label: "近两个月"
-        },
-        {
-          value: 3,
-          label: "近三个月"
-        },
-        {
-          value: 4,
-          label: "近四个月"
-        },
-        {
-          value: 5,
-          label: "近五个月"
-        },
-        {
-          value: 6,
-          label: "近半年"
-        },
-        {
-          value: 7,
-          label: "近七个月"
-        },
-        {
-          value: 8,
-          label: "近八个月"
-        },
-        {
-          value: 9,
-          label: "近九个月"
-        },
-        {
-          value: 10,
-          label: "近十个月"
-        },
-        {
-          value: 11,
-          label: "近十一个月"
-        },
-        {
-          value: 12,
-          label: "近一年"
-        }
-      ],
       selectList: [],
-      searchList: [],
+      searchList: {},
       path: null,
-      showMulChoose: []
     };
   },
   computed: {
@@ -233,17 +121,17 @@ export default {
     },
     //重置
     getTasks() {
-      this.sortSelForm = {};
-      this.mulChoose = false;
-      this.showMulChoose = [];
-      let data = { ...this.showMulChoose};
-      this.searchKpi(data);
+      this.dateRange = []
+      this.deptIds=[]
+      this.userIds=[]
+      this.getSearchKpi()
     },
     //kpi列表导出
     targetUpload() {
       this.uploadVisible = true;
-      let data = {
-        ...this.searchList,
+      let data = this.$_returnParams()
+      data = {
+        ...data,
         print: "null"
       };
       searchKpi(data)
@@ -251,12 +139,12 @@ export default {
           if (data.status === 0) {
             this.uploadVisible = true;
             this.path = data.path;
-            this.searchList = [];
+            this.searchList = {}
           }
         })
         .catch(err => {
           this.$message.error(data.msg);
-          this.searchList = [];
+          this.searchList = {}
         });
     },
     //导出Excel
@@ -268,46 +156,34 @@ export default {
     uploadExcel() {
       this.uploadVisible = false;
     },
-    showMul() {
-      this.sortSelForm = {};
-      this.mulChoose = false;
-      this.showMulChoose = [];
-    },
     //筛选
     getSearchKpi() {
-      this.mulChoose = true;
-      this.visible2 = false;
-      let data = {};
-      function DateFormat(dateVal) {
-        return new dayjs(dateVal).format("YYYY/MM/DD");
-        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-      }
-      if (this.sortSelForm.month_num) {
-        this.showMulChoose.month_num = this.sortSelForm.month_num;
-      }
-      if (this.sortSelForm.dept_id) {
-        this.showMulChoose.dept_id = this.sortSelForm.dept_id[this.sortSelForm.dept_id.length - 1];
-      }
-      if (this.sortSelForm.user_id) {
-        this.showMulChoose.user_id = this.sortSelForm.user_id.join();
-      }
-      if (this.sortSelForm.start_date) {
-        this.showMulChoose.start_date = this.sortSelForm.start_date
-          ? DateFormat(this.sortSelForm.start_date)
-          : "";
-      }
-      if (this.sortSelForm.end_date) {
-        this.showMulChoose.end_date = this.sortSelForm.end_date
-          ? DateFormat(this.sortSelForm.end_date)
-          : "";
-      }
-      data = { ...this.showMulChoose };
-      this.searchKpi(data);
+      let params = this.$_returnParams()
+      this.$_searchKpi(params)
+    },
+    $_returnParams(){
+      let data1 = {
+        dept_id:this.deptIds.length?this.deptIds.join():null,
+        user_id:this.userIds.length?this.userIds.join():null,
+        start_date: this.dateRange.length
+          ? dayjs(this.dateRange[0]).format("YYYY/MM/DD")
+          : null,
+        end_date: this.dateRange.length
+          ? dayjs(this.dateRange[1]).format("YYYY/MM/DD")
+          : null
+      };
+      let data2 = {};
+      Object.keys(data1).forEach(t => {
+        if (data1[t]) {
+          data2 = {...data2,[t]:data1[t]}
+        }
+      })
+      return data2
     },
     //获取kpi列表
-    searchKpi(data){
-      this.searchList = data;
+    $_searchKpi(data) {
       this.kpiList = [];
+      this.searchLoading = true
       searchKpi(data).then(({ data }) => {
         if (data.status == 0) {
           [...data.msg].map((item, index) => {
@@ -360,36 +236,18 @@ export default {
         } else {
           this.$message.error(data.msg);
         }
-      });
-    },
-    formatList() {
-      function changeList(arr) {
-        for (const item of arr) {
-          if (item["children"] && item["children"].length) {
-            changeList(item["children"]);
-          } else {
-            item["children"] = null;
-          }
-        }
-      }
-      this.selectList = JSON.parse(
-        JSON.stringify(this.DeptList)
-          .replace(/name/g, "label")
-          .replace(/id/g, "value")
-      );
-      changeList(this.selectList);
+      }).finally(()=>{
+        this.searchLoading = false
+      })
     }
   },
   async created() {
     this.getSearchKpi();
-    if (!this.DeptList) {
-      await this.$store.dispatch("admin/get_DeptList");
-      this.formatList();
-    } else {
-      this.formatList();
-    }
   }
 };
 </script>
 <style lang='scss' scoped>
+.text-right {
+  text-align: right;
+}
 </style>
