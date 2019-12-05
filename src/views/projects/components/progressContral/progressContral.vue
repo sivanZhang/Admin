@@ -26,7 +26,7 @@
           <div style="padding:17px 0px">
             <label for>超期镜头数量</label>
           </div>
-          <chart ref="asset-chart1" chart-id="asset-chart1" v-if="isChartView" />
+          <chart ref="asset-chart1" chart-id="asset-chart1" v-if="isChartView" @click-item="handleClickChart"/>
           <el-table
             :data="overdueNum"
             :border="true"
@@ -333,8 +333,6 @@ import * as Ajax from "@/api/statistics";
 import Chart from "@/components/ECharts/PieChart";
 import LineChart from "@/components/ECharts/LineMarker";
 import maxSumbit from "./maxSumbit";
-import { log } from "util";
-import { type } from "os";
 export default {
   name: "progressContral",
   components: {
@@ -389,6 +387,10 @@ export default {
     this.getProjectProgress();
   },
   methods: {
+    // 监听饼图点击事件
+    handleClickChart(params){
+      console.log(params,'params');
+    },
 	  //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -441,8 +443,7 @@ export default {
     getOverDueTaskS() {
       let data = {
         project_id: this.$route.params.id,
-        overdue: ""
-      };
+      }
       Ajax.getOverDueTask(data).then(({ data }) => {
         this.overdueUserName = [...data.msg];
       });
@@ -451,8 +452,7 @@ export default {
     getAssetStatistics() {
       // this.$refs["asset-chart"].openLoading();
       Ajax.getOverDueAsset({
-        project_id: this.$route.params.id,
-        overdue: ""
+        project_id: this.$route.params.id
       }).then(({ data }) => {
         let chartData = [
           {
@@ -469,7 +469,7 @@ export default {
       // this.$refs["line-chart1"].openLoading();
       Ajax.burnOut({
         id: this.click_id ? this.click_id : this.$route.params.id,
-        bourout: ""
+        workhour: ""
       }).then(({ data }) => {
         if (data.status === 0) {
           if (!data.dates.length) {
