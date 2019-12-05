@@ -726,7 +726,7 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="任务状态" prop="status">
+        <el-form-item label="任务状态">
           <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
             <el-option
               v-for="item of StatusList2"
@@ -736,7 +736,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务执行人" prop="executorlist">
+        <el-form-item label="任务执行人" >
           <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择任务执行人">
             <el-option
               v-for="item of DeptUsers"
@@ -2045,26 +2045,48 @@ export default {
           this.isDialogShow = true;
           break;
         case 3:
+          
           function dateFormat(date) {
             return new Date(date * 1000).toLocaleDateString();
           }
-          if (this.iconShow === true) {
-            this.$confirm("当前修改未保存", "注意", {
-              type: "warning"
-            });
-          } else {
-            this.editing = true;
-            this.clickId = row.id;
-            this.start_date =
-              new Date(dateFormat(row.start_date)) > 0
-                ? new Date(dateFormat(row.start_date))
-                : "";
-            this.end_date =
-              new Date(dateFormat(row.end_date)) > 0
-                ? new Date(dateFormat(row.end_date))
-                : "";
+          this.isDialogShow=true;
+   if (!Object.keys(this.ActiveRow).length) {
+            this.$message.error("请选择要修改的任务");
+            return false;
           }
+          let executorlist;
+          if (this.ActiveRow.executor.length) {
+            executorlist = this.ActiveRow.executor.map(item => +item.id);
+          }
+          this.$emit("getAssetList");
+          this.dialogTitle = "修改任务";
+          this.TaskForm = {
+            ...this.ActiveRow,
+            
+            datetime: [
+              new Date(dateFormat(this.ActiveRow.start_date)) > 0
+                ? new Date(dateFormat(this.ActiveRow.start_date))
+                : "",
+              new Date(dateFormat(this.ActiveRow.end_date)) > 0
+                ? new Date(dateFormat(this.ActiveRow.end_date))
+                : ""
+            ],
+            executorlist,
+            manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
+            asset: this.ActiveRow.asset.id,
+            method: "put"
+          };
+          console.log(this.TaskForm, "~~~~~~~~~~~~");
 
+          delete this.TaskForm.executor;
+          delete this.TaskForm.creator;
+          delete this.TaskForm.create_time;
+          delete this.TaskForm.category;
+          delete this.TaskForm.project;
+          delete this.TaskForm["sub_task"];
+         
+          this.updateMulTask.grade=this.ActiveRow.grade;
+        
           break;
       }
     },
@@ -2079,17 +2101,19 @@ export default {
           }
           let data = {
             ...this.TaskForm,
+            grade:this.updateMulTask.grade,
             start_date: changeDateFormat(this.TaskForm.datetime[0]),
             end_date: changeDateFormat(this.TaskForm.datetime[1]),
             project: this.$route.params.id
           };
-          // console.log(data);
+          console.log(data);
           if (this.TaskForm.executorlist.length) {
             data["executorlist"] = data["executorlist"].join();
           }
           delete data.datetime;
           //若果是修改
           if (this.DialogType === 3) {
+           
             HTTP.putTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
@@ -2202,6 +2226,7 @@ export default {
     //取消对话框
     cancel() {
       this.isDialogShow = false;
+      this.TaskForm={};
       this.$refs["TaskRef"].resetFields();
     },
     cancel2() {
