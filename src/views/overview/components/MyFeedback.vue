@@ -11,6 +11,9 @@
         </div>
       </div>
       <div class="date">{{item.date|dateFormat}}</div>
+      <div class="assetName">
+        镜头号 : {{item.task.asset_name}}
+      </div>
       <div>
         意见 : {{item.suggestion}}
       </div>
@@ -77,6 +80,9 @@ $linkColor: #2d8cf0;
   }
   .msg{
     flex:0 0 50%;
+  }
+  .assetName{
+    width: 100%;
   }
   & + .feedback {
     border-top: $border;
