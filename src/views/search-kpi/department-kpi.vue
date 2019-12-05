@@ -26,7 +26,7 @@
      
     >
      <el-table-column prop="dept_name" label="部门"></el-table-column>
-      <el-table-column prop="accomplist_asset_num" label="完成的资产数量"></el-table-column>
+      <el-table-column prop="accomplish_asset_num" label="完成的资产数量"></el-table-column>
       <el-table-column prop="accomplish_asset_frame" label="完成的镜头帧数"></el-table-column>
       <el-table-column label="难度等级">
         <template slot-scope="scope">
@@ -35,12 +35,24 @@
       </el-table-column>
       <el-table-column label="每帧耗时 (当前难度等级）">
         <template slot-scope="scope">
-          <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">{{todo.make_time}}</div>
+          <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">{{todo.average_per_time}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="total_actual_time" label="实际工时"></el-table-column>
-      <el-table-column prop="total_over_time" label="加班工时"></el-table-column>
-      <el-table-column prop="average_per_time" label="平均单帧制作时长（小时）"></el-table-column>
+      <el-table-column prop="total_actual_time" label="实际工时">
+        <template slot-scope="scope">
+          <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">{{todo.total_actual_time}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="total_over_time" label="加班工时">
+         <template slot-scope="scope">
+          <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">{{todo.total_over_time}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="average_per_time" label="平均单帧制作时长（小时）">
+         <template slot-scope="scope">
+          <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">{{todo.average_per_time}}</div>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
