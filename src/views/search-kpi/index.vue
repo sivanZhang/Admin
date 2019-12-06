@@ -38,7 +38,7 @@
           </span>
         </el-col>
         <el-col :span="4" class="text-right">
-          <el-button icon="el-icon-download" type="success" @click="targetUpload">导出</el-button>
+          <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
         </el-col>
       </el-row>
     </el-card>
