@@ -93,7 +93,7 @@
 <script>
 import { searchKpi } from "@/api/statistics";
 import { mapState } from "vuex";
-import manFilter from "@/views/search-kpi/filterContion/manFilter";
+
 import dayjs from "dayjs";
 import DeptListMixin from "@/utils/dept-list-mixins";
 export default {
@@ -112,9 +112,7 @@ export default {
       path: null,
     };
   },
-  components: {
-    manFilter
-  },
+
   computed: {
     ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
