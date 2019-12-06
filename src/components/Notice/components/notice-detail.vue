@@ -134,7 +134,6 @@ export default {
     },
     //修改是否已读
     updateIsRead(row) {
-      console.log(row);
       if (row.read === 0) {
         row.read = 1;
       }

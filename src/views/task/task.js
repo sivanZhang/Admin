@@ -20,12 +20,6 @@ import approveLog from '@/views/components/approve-log'
 import thumbtackMixin from '@/utils/thumbtack-mixin'
 import dayjs from 'dayjs'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
-function showNoticeTask() {
-  if (this.$store.state.mine.TaskID) {
-    this.show(this.$store.state.mine.TaskID)
-    this.$store.commit('mine/setTaskId')
-  }
-}
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -165,28 +159,28 @@ export default {
       keyword: '',
       colSel: 'name',
       columnSelect: [{
-          value: "name",
-          label: "任务名称"
-        },{
-          value: "project_name",
-          label: "项目名称"
-        },
-        {
-          value: "priority",
-          label: "优先等级"
-        },
-        {
-          value: "start_date",
-          label: "开始日期"
-        },
-        {
-          value: "end_date",
-          label: "截止日期"
-        },
-        {
-          value: "grade",
-          label: "难度等级"
-        },
+        value: 'name',
+        label: '任务名称'
+      }, {
+        value: 'project_name',
+        label: '项目名称'
+      },
+      {
+        value: 'priority',
+        label: '优先等级'
+      },
+      {
+        value: 'start_date',
+        label: '开始日期'
+      },
+      {
+        value: 'end_date',
+        label: '截止日期'
+      },
+      {
+        value: 'grade',
+        label: '难度等级'
+      }
       ],
       columnSelect2: [{
         value: 0,
@@ -270,7 +264,10 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      showNoticeTask.apply(vm)
+      if (vm.$store.state.mine.task_id) {
+        vm.show(vm.$store.state.mine.task_id)
+        vm.$store.commit('mine/setTaskId')
+      }
     })
   },
   methods: {
@@ -295,7 +292,7 @@ export default {
         order
       }
       this.cutType = 3
-      if (status == 6) {
+      if (status === 6) {
         let data = {
           mytask: null,
           sort: order === 'descending' ? '-' + prop : prop,
@@ -306,7 +303,11 @@ export default {
         }
         if (Type === 2) {
           // 处理分页
-          data = { ...data, pagenum: this.pageSize, page: this.currentPage }
+          data = {
+            ...data,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          }
         }
         getStatusTaskList(data).then(({
           data
@@ -328,7 +329,11 @@ export default {
         }
         if (Type === 2) {
           // 处理分页
-          data = { ...data, pagenum: this.pageSize, page: this.currentPage }
+          data = {
+            ...data,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          }
         }
         getStatusTaskList(data).then(({
           data
@@ -350,7 +355,11 @@ export default {
         }
         if (Type === 2) {
           // 处理分页
-          data = { ...data, pagenum: this.pageSize, page: this.currentPage }
+          data = {
+            ...data,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          }
         }
         getStatusTaskList(data).then(({
           data
@@ -383,10 +392,17 @@ export default {
       }
       if (Type === 2) {
         // 处理分页
-        data = { ...data, pagenum: this.pageSize, page: this.currentPage }
+        data = {
+          ...data,
+          pagenum: this.pageSize,
+          page: this.currentPage
+        }
       }
       if (this.filterStatus.length) {
-        data = { ...data, status: '[' + String(this.filterStatus) + ']' }
+        data = {
+          ...data,
+          status: '[' + String(this.filterStatus) + ']'
+        }
       }
       // this.getstatusTaskList(data);
       getStatusTaskList(data).then(({
@@ -416,7 +432,7 @@ export default {
       rowIndex,
       columnIndex
     }) {
-      if (column.property == 'task.priority') {
+      if (column.property === 'task.priority') {
         switch (row.task.priority) {
           case 2:
             return {
@@ -424,7 +440,7 @@ export default {
               color: '#FFFFFF'
             }
         }
-      } else if (column.property == 'task.grade') {
+      } else if (column.property === 'task.grade') {
         switch (row.task.grade) {
           case 0:
             return {
@@ -485,13 +501,13 @@ export default {
             ...data,
             name: this.keyword
           })
-          break;
-          case 'project_name':
+          break
+        case 'project_name':
           this.keyword && (data = {
             ...data,
             project_name: this.keyword
           })
-          break;
+          break
         case 'grade':
           data = {
             ...data,
@@ -591,7 +607,7 @@ export default {
       this.colSel2 = []
       this.timeSelection = ''
       this.timeSelection2 = ''
-      if (status == 6) {
+      if (status === 6) {
         const data = {
           mytask: null,
           status: '[0,1,2,5]'
@@ -641,7 +657,7 @@ export default {
         } else {
           this.$message.warning(data.msg)
         }
-      }).catch(err => {
+      }).catch(() => {
         loading.close()
       })
     },
@@ -692,7 +708,7 @@ export default {
         } else {
           this.$message.warning(data.msg)
         }
-      }).catch(err => {
+      }).catch(() => {
         loading.close()
         self.resetTasks()
       })
@@ -730,15 +746,15 @@ export default {
           this.createLoading = false
           this.isDrawerShow = false
         })
-        .catch(err => {
+        .catch(() => {
           this.createLoading = false
         })
     },
-    //双击一行弹出任务侧边栏
+    // 双击一行弹出任务侧边栏
     editCell(row) {
-      this.taskBoardRightShow(row);
+      this.taskBoardRightShow(row)
     },
-    //是否显示任务板右侧
+    // 是否显示任务板右侧
     taskBoardRightShow(row) {
       this.project = row.project
       this.assetId = row.asset.id
@@ -824,7 +840,11 @@ export default {
     },
     // http获取‘我的任务’
     async getMyTasks() {
-      await getStatusTaskList({ mytask: null, page: 1, pagenum: 20 }).then(({
+      await getStatusTaskList({
+        mytask: null,
+        page: 1,
+        pagenum: 20
+      }).then(({
         data
       }) => {
         this.MyTaskList = [...data.msg]
@@ -887,7 +907,7 @@ export default {
           this.filterHandler(this.valSel, 2) // table表内状态、难度等级和优先级排序分页查看
           break
         case -1:
-          this.task(this.changecolor)// 正常请求后分页
+          this.task(this.changecolor) // 正常请求后分页
           break
       }
     },
@@ -972,6 +992,13 @@ export default {
     }
   },
   created() {
+    console.log(this.$store.state.mine.task_id,11111111111111111111111111111);
+    
+    if (this.$store.state.mine.task_id) {
+      debugger
+      this.show(this.$store.state.mine.task_id)
+      this.$store.commit('mine/setTaskId')
+    }
     this.getstatusNumber()
     this.getMyTasks()
     this.getFeedback()
@@ -996,8 +1023,5 @@ export default {
       // 清空store中的 state.mine.keyword
       this.$store.commit('mine/SET_KEYWORD', '')
     })
-  },
-  mounted() {
-    showNoticeTask.apply(this)
   }
 }
