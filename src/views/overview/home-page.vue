@@ -12,6 +12,7 @@ import tabApprove from "@/views/task/components/tab-approve";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "@/views/components/approve-log";
 import { mapState } from "vuex";
+import { putNotice } from "@/api/notice";
 import {
   addTaskRecord,
   putTaskRecord,
@@ -52,8 +53,8 @@ export default {
       logsLoading: false,
       TaskRecord: [],
       createLoading: false,
-      activeRow: {},//点击任务列表选中的列的数据
-      surplus_labor_hour: null,
+      activeRow: {}, //点击任务列表选中的列的数据
+      surplus_labor_hour: null
     };
   },
   computed: {
@@ -82,7 +83,7 @@ export default {
     // 此钩子函数中无法访问VUE实例（this），可在next回调的时候给个参数， setTimeout回调绑定vm为“this”，但必须bind因为是异步调用
     // 60000*15 = 延迟十五分钟刷新一次
     next(vm => {
-      TimeOut = setTimeout(timeOutCallBack.bind(vm), 60000*15);
+      TimeOut = setTimeout(timeOutCallBack.bind(vm), 60000 * 15);
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -90,6 +91,12 @@ export default {
     next();
   },
   methods: {
+    navigationMyTask({ url, task_id, category }) {
+      if (category === 1) {
+        this.$store.commit("mine/setTaskId", task_id);
+      }
+      this.$router.push({path:url});
+    },
     cancel() {
       this.isDialogShow = false;
     },
@@ -142,9 +149,8 @@ export default {
       this.$refs["taskDetail"].getDetail(row.task.id);
       queryTask({
         id: row.task.id
-      })
-        .then(({ data }) => {
-          this.surplus_labor_hour = data.msg.surplus_labor_hour;
+      }).then(({ data }) => {
+        this.surplus_labor_hour = data.msg.surplus_labor_hour;
         //   this.TaskDetail = {
         //     ...data.msg
         //   };
@@ -154,14 +160,14 @@ export default {
         // })
         // .catch(() => {
         //   this.detailLoading = false;
-        });
+      });
     },
     //修改是否已读
     updateIsRead(row) {
       if (row.read === 0) {
         row.read = 1;
       }
-      HTTP.putNotice({
+      putNotice({
         method: "put",
         ids: row.id,
         read: row.read
@@ -228,9 +234,8 @@ export default {
                 <el-table-column label="消息" show-overflow-tooltip width="180">
                   <template slot-scope="scope">
                     <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-
                     <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-                    <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link>
+                    <a @click="navigationMyTask(scope.row)">{{scope.row.title}}</a>
                   </template>
                 </el-table-column>
                 <el-table-column label="时间" width="120">

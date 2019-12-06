@@ -26,11 +26,6 @@
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-row>
-              <el-form-item label="通知类别:">
-                <span>{{ props.row.category }}</span>
-              </el-form-item>
-            </el-row>
-            <el-row>
               <el-form-item label="通知内容:">
                 <span>{{ props.row.content }}</span>
               </el-form-item>
@@ -55,11 +50,6 @@
                 <span>{{ props.row.urgency_level |urgencyLevel}}</span>
               </el-form-item>
             </el-row>
-            <el-row>
-              <el-form-item label="url">
-                <span>{{ props.row.url }}</span>
-              </el-form-item>
-            </el-row>
           </el-form>
         </template>
       </el-table-column>
@@ -68,9 +58,8 @@
       <el-table-column label="通知" width="160" show-overflow-tooltip>
         <template slot-scope="scope">
           <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-
           <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-          <router-link :to="{path:scope.row.url}">{{scope.row.title}}</router-link>
+          <span @click="navigationMyTask(scope.row)">{{scope.row.title}}</span>
         </template>
       </el-table-column>
       <el-table-column label="紧急程度" align="center" width="80">
@@ -117,12 +106,17 @@ export default {
   props: ["notice"],
   data() {
     return {
-    
       multipleSelection: []
     };
   },
 
   methods: {
+    navigationMyTask({ url, task_id, category }) {
+      if (category === 1) {
+        this.$store.commit("mine/setTaskId", task_id);
+      }
+      this.$router.push({ path: url });
+    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -220,5 +214,4 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-
 </style> 

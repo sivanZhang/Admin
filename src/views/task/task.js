@@ -4,22 +4,28 @@ import {
   queryTaskRecord,
   queryTask,
   getStatusTaskList,
-  getFeedback,
-} from "@/api/task";
+  getFeedback
+} from '@/api/task'
 import {
   getHistoryVersion,
   auth
-} from "@/api/assets";
-import draggable from "vuedraggable"
+} from '@/api/assets'
+import draggable from 'vuedraggable'
 import taskForm from './components/task-form'
-import tabLog from "./components/tab-log"
-import tabApprove from "./components/tab-approve"
-import tabTaskDtail from "./components/tab-task-detail"
-import history from "@/views/task/components/tab-history"
-import approveLog from "@/views/components/approve-log";
-import thumbtackMixin from "@/utils/thumbtack-mixin";
-import dayjs from "dayjs";
-import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
+import tabLog from './components/tab-log'
+import tabApprove from './components/tab-approve'
+import tabTaskDtail from './components/tab-task-detail'
+import history from '@/views/task/components/tab-history'
+import approveLog from '@/views/components/approve-log'
+import thumbtackMixin from '@/utils/thumbtack-mixin'
+import dayjs from 'dayjs'
+import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
+function showNoticeTask() {
+  if (this.$store.state.mine.TaskID) {
+    this.show(this.$store.state.mine.TaskID)
+    this.$store.commit('mine/setTaskId')
+  }
+}
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -35,7 +41,7 @@ export default {
   data() {
     return {
       authAsset: null,
-      activeTab: "second",
+      activeTab: 'second',
       TaskDetail: {
         name: ''
       },
@@ -69,76 +75,76 @@ export default {
       // PassArr : [],
       ApproveingArr: [],
       taskList: [{
-        value: "1",
-        label: "任何项目"
+        value: '1',
+        label: '任何项目'
       }],
       taskProgress: [{
-          value: "1",
-          label: "任何备注"
-        },
-        {
-          value: "2",
-          label: "已完成"
-        },
-        {
-          value: "3",
-          label: "未完成"
-        }
+        value: '1',
+        label: '任何备注'
+      },
+      {
+        value: '2',
+        label: '已完成'
+      },
+      {
+        value: '3',
+        label: '未完成'
+      }
       ],
       typeList: [{
-          value: "1",
-          label: "任何类型"
-        },
-        {
-          value: "2",
-          label: "备注"
-        },
-        {
-          value: "3",
-          label: "资产上传"
-        },
-        {
-          value: "4",
-          label: "状态更改"
-        },
-        {
-          value: "5",
-          label: "任务分配"
-        }
+        value: '1',
+        label: '任何类型'
+      },
+      {
+        value: '2',
+        label: '备注'
+      },
+      {
+        value: '3',
+        label: '资产上传'
+      },
+      {
+        value: '4',
+        label: '状态更改'
+      },
+      {
+        value: '5',
+        label: '任务分配'
+      }
       ],
       taskTime: [{
-          value: "1",
-          label: "昨天"
-        },
-        {
-          value: "2",
-          label: "上星期"
-        },
-        {
-          value: "3",
-          label: "最近一个月"
-        }
+        value: '1',
+        label: '昨天'
+      },
+      {
+        value: '2',
+        label: '上星期'
+      },
+      {
+        value: '3',
+        label: '最近一个月'
+      }
       ],
       options: [{
-          value: "1",
-          label: "截止时间"
-        },
-        {
-          value: "2",
-          label: "项目"
-        },
-        {
-          value: "3",
-          label: "状态"
-        },
-        {
-          value: "4",
-          label: "父级"
-        },
-        {
-          value: "5",
-          label: "优先级"
-        }
+        value: '1',
+        label: '截止时间'
+      },
+      {
+        value: '2',
+        label: '项目'
+      },
+      {
+        value: '3',
+        label: '状态'
+      },
+      {
+        value: '4',
+        label: '父级'
+      },
+      {
+        value: '5',
+        label: '优先级'
+      }
       ],
       value1: [],
       value2: [],
@@ -155,96 +161,96 @@ export default {
       Asset: '',
       Link: '',
       changecolor: 1,
-      activeRow: {}, //点击任务列表选中的列的数据
-      keyword: "",
-      colSel: "name",
+      activeRow: {}, // 点击任务列表选中的列的数据
+      keyword: '',
+      colSel: 'name',
       columnSelect: [{
-          value: "name",
-          label: "任务名称"
-        },
-        {
-          value: "priority",
-          label: "优先等级"
-        },
-        {
-          value: "start_date",
-          label: "开始日期"
-        },
-        {
-          value: "end_date",
-          label: "截止日期"
-        },
-        {
-          value: "grade",
-          label: "难度等级"
-        },
+        value: 'name',
+        label: '任务名称'
+      },
+      {
+        value: 'priority',
+        label: '优先等级'
+      },
+      {
+        value: 'start_date',
+        label: '开始日期'
+      },
+      {
+        value: 'end_date',
+        label: '截止日期'
+      },
+      {
+        value: 'grade',
+        label: '难度等级'
+      }
       ],
       columnSelect2: [{
-          value: 0,
-          label: "低级"
-        },
-        {
-          value: 1,
-          label: "中级"
-        },
-        {
-          value: 2,
-          label: "高级"
-        }
+        value: 0,
+        label: '低级'
+      },
+      {
+        value: 1,
+        label: '中级'
+      },
+      {
+        value: 2,
+        label: '高级'
+      }
       ],
       colSel2: [],
-      timeSelection: "",
-      timeSelection2: "",
+      timeSelection: '',
+      timeSelection2: '',
       historyVersion: [],
       project: null,
       assetId: null,
       currentGrade: null,
       GradeList: [{
-          label: 'A+',
-          value: 0
-        },
-        {
-          label: 'A',
-          value: 1
-        },
-        {
-          label: 'A-',
-          value: 2
-        }, {
-          label: 'B+',
-          value: 3
-        },
-        {
-          label: 'B',
-          value: 4
-        },
-        {
-          label: 'B-',
-          value: 5
-        }, {
-          label: 'C+',
-          value: 6
-        },
-        {
-          label: 'C',
-          value: 7
-        },
-        {
-          label: 'D+',
-          value: 8
-        },
-        {
-          label: 'D',
-          value: 9
-        },
-        {
-          label: 'E',
-          value: 10
-        }
+        label: 'A+',
+        value: 0
+      },
+      {
+        label: 'A',
+        value: 1
+      },
+      {
+        label: 'A-',
+        value: 2
+      }, {
+        label: 'B+',
+        value: 3
+      },
+      {
+        label: 'B',
+        value: 4
+      },
+      {
+        label: 'B-',
+        value: 5
+      }, {
+        label: 'C+',
+        value: 6
+      },
+      {
+        label: 'C',
+        value: 7
+      },
+      {
+        label: 'D+',
+        value: 8
+      },
+      {
+        label: 'D',
+        value: 9
+      },
+      {
+        label: 'E',
+        value: 10
+      }
       ],
-      sortfilter: null, //保存单列排序的条件
-      valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
-      cutType: -1, //分页类别区分
+      sortfilter: null, // 保存单列排序的条件
+      valSel: null, // 保存table表内筛选（状态、难度等级、优先级）的条件
+      cutType: -1, // 分页类别区分
       filterStatus: [],
       assetShow: false,
       surplus_labor_hour: null,
@@ -254,218 +260,221 @@ export default {
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
-      currentPage1:1,//我的反馈分页
-      pageSize1:20,
-      FeedbackList:[],
-    };
+      currentPage1: 1, // 我的反馈分页
+      pageSize1: 20,
+      FeedbackList: []
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      showNoticeTask.apply(vm)
+    })
   },
   methods: {
-    //分页
-    handleSizeChange1(e) {  
-      this.pageSize1 = e;
+    // 分页
+    handleSizeChange1(e) {
+      this.pageSize1 = e
     },
     handleCurrentChange1(currentPage1) {
-      this.currentPage1 = currentPage1;
+      this.currentPage1 = currentPage1
     },
-     
-    //单条件排序
+
+    // 单条件排序
     sortFilter({
       column,
       prop,
       order
-    },Type) {
-      let status = this.changecolor;
+    }, Type) {
+      const status = this.changecolor
       this.sortfilter = {
         column,
         prop,
         order
-      };
-      this.cutType = 3;
+      }
+      this.cutType = 3
       if (status == 6) {
         let data = {
           mytask: null,
-          sort: order === "descending" ? "-" + prop : prop,
-          status: "[0,1,2,5]",
+          sort: order === 'descending' ? '-' + prop : prop,
+          status: '[0,1,2,5]',
           pagenum: this.pageSize,
-          page: this.currentPage,
+          page: this.currentPage
 
-        };
+        }
         if (Type === 2) {
-          //处理分页
-          data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+          // 处理分页
+          data = { ...data, pagenum: this.pageSize, page: this.currentPage }
         }
         getStatusTaskList(data).then(({
           data
         }) => {
           if (data.status === 0) {
-            this.MyTaskList1 = [...data.msg];
+            this.MyTaskList1 = [...data.msg]
             if (Type === 1) {
-              this.currentPage = 1;
+              this.currentPage = 1
             }
           }
         })
       } else if (status == null) {
         let data = {
           mytask: null,
-          sort: order === "descending" ? "-" + prop : prop,
-          status: "[0,1,2,3,4,5]",
+          sort: order === 'descending' ? '-' + prop : prop,
+          status: '[0,1,2,3,4,5]',
           pagenum: this.pageSize,
-          page: this.currentPage,
-        };
+          page: this.currentPage
+        }
         if (Type === 2) {
-          //处理分页
-          data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+          // 处理分页
+          data = { ...data, pagenum: this.pageSize, page: this.currentPage }
         }
         getStatusTaskList(data).then(({
           data
         }) => {
           if (data.status === 0) {
-            this.MyTaskList1 = [...data.msg];
+            this.MyTaskList1 = [...data.msg]
             if (Type === 1) {
-              this.currentPage = 1;
+              this.currentPage = 1
             }
           }
         })
       } else {
         let data = {
           mytask: null,
-          sort: order === "descending" ? "-" + prop : prop,
-          status: "[" + status + "]",
+          sort: order === 'descending' ? '-' + prop : prop,
+          status: '[' + status + ']',
           pagenum: this.pageSize,
-          page: this.currentPage,
-        };
+          page: this.currentPage
+        }
         if (Type === 2) {
-          //处理分页
-          data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+          // 处理分页
+          data = { ...data, pagenum: this.pageSize, page: this.currentPage }
         }
         getStatusTaskList(data).then(({
           data
         }) => {
           if (data.status === 0) {
-            this.MyTaskList1 = [...data.msg];
+            this.MyTaskList1 = [...data.msg]
             if (Type === 1) {
-              this.currentPage = 1;
+              this.currentPage = 1
             }
           }
         })
-        
       }
     },
-    //table表内筛选（状态）+分页
+    // table表内筛选（状态）+分页
     filterHandler(val, Type) {
-      this.cutType = 4;
-      this.valSel = val;
+      this.cutType = 4
+      this.valSel = val
       if (val.schedule) {
-        this.filterStatus = [];
-        this.filterStatus = [...val.schedule];
+        this.filterStatus = []
+        this.filterStatus = [...val.schedule]
         this.filterStatus.forEach((item, index) => {
-          item = Number(item);
-          this.filterStatus[index] = item;
-        });
+          item = Number(item)
+          this.filterStatus[index] = item
+        })
       }
-      let data={
+      let data = {
         mytask: null,
         pagenum: 20,
         page: 1
-      };
+      }
       if (Type === 2) {
-        //处理分页
-        data = { ...data, pagenum: this.pageSize, page: this.currentPage };
+        // 处理分页
+        data = { ...data, pagenum: this.pageSize, page: this.currentPage }
       }
       if (this.filterStatus.length) {
-        data = { ...data, status:"[" + String(this.filterStatus) + "]" };
+        data = { ...data, status: '[' + String(this.filterStatus) + ']' }
       }
       // this.getstatusTaskList(data);
       getStatusTaskList(data).then(({
         data
       }) => {
         if (data.status === 0) {
-          this.MyTaskList1 = [...data.msg];
+          this.MyTaskList1 = [...data.msg]
           if (Type === 1) {
-            this.currentPage = 1;
+            this.currentPage = 1
           }
         }
       })
-
     },
     getstatusTaskList(data) {
       getStatusTaskList(data).then(({
         data
       }) => {
         if (data.status === 0) {
-          this.MyTaskList1 = [...data.msg];
+          this.MyTaskList1 = [...data.msg]
         }
       })
     },
-    //表内单元格样式（状态、优先级改变背景色）
+    // 表内单元格样式（状态、优先级改变背景色）
     cellStyle({
       row,
       column,
       rowIndex,
       columnIndex
     }) {
-      if (column.property == "task.priority") {
+      if (column.property == 'task.priority') {
         switch (row.task.priority) {
           case 2:
             return {
-              background: "#C64b2b",
-                color: "#FFFFFF"
-            };
+              background: '#C64b2b',
+              color: '#FFFFFF'
+            }
         }
-      } else if (column.property == "task.grade") {
+      } else if (column.property == 'task.grade') {
         switch (row.task.grade) {
           case 0:
             return {
-              background: "#C64b2b",
-                color: "#FFFFFF"
-            };
+              background: '#C64b2b',
+              color: '#FFFFFF'
+            }
         }
       }
       return {
         borderRight: 0
-      };
+      }
     },
     getstatus(data) {
       getStatusTaskList(data).then(({
         data
       }) => {
-        this.MyTaskList1 = [...data.msg];
+        this.MyTaskList1 = [...data.msg]
         switch (this.changecolor) {
           case null:
-            this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0;
-            break;
+            this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0
+            break
           case 6:
             this.total = (this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0) +
               (this.statusNumber.pause_num ? this.statusNumber.pause_num : 0) +
               (this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0) +
-              (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0);
-            break;
+              (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0)
+            break
           case 1:
-            this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0;
-            break;
+            this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0
+            break
           case 2:
-            this.this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0;
-            break;
+            this.this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0
+            break
           case 0:
-            this.total = this.statusNumber.pause_num ? this.statusNumber.pause_num : 0;
-            break;
+            this.total = this.statusNumber.pause_num ? this.statusNumber.pause_num : 0
+            break
           case 3:
-            this.total = this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0;
-            break;
+            this.total = this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0
+            break
           case 5:
-            this.total = this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0;
-            break;
+            this.total = this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0
+            break
           case 4:
-            this.total = this.statusNumber.accomplish_num ? this.statusNumber.accomplish_num : 0;
-            break;
+            this.total = this.statusNumber.accomplish_num ? this.statusNumber.accomplish_num : 0
+            break
         }
         // this.total = this.statusNumber.all_num ? this.statusNumber.all_num : 0;
-        this.pageCount = data.page_count;
+        this.pageCount = data.page_count
       })
     },
     search(data) {
       function DateFormat(dateVal) {
-        return dayjs(dateVal).format("YYYY/MM/DD")
+        return dayjs(dateVal).format('YYYY/MM/DD')
       }
       switch (this.colSel) {
         case 'name':
@@ -473,131 +482,131 @@ export default {
             ...data,
             name: this.keyword
           })
-          break;
+          break
         case 'grade':
           data = {
             ...data,
             grade: JSON.stringify(this.currentGrade)
           }
-          break;
+          break
         case 'start_date':
           if (!this.timeSelection && this.timeSelection2) {
             data = {
               ...data,
-              start: "" + "," + DateFormat(this.timeSelection2)
-            };
+              start: '' + ',' + DateFormat(this.timeSelection2)
+            }
           } else if (this.timeSelection && !this.timeSelection2) {
             data = {
               ...data,
-              start: DateFormat(this.timeSelection) + "," + ""
-            };
+              start: DateFormat(this.timeSelection) + ',' + ''
+            }
           } else {
             data = {
               ...data,
               start: DateFormat(this.timeSelection) +
-                "," +
+                ',' +
                 DateFormat(this.timeSelection2)
-            };
+            }
           }
-          break;
+          break
         case 'end_date':
           if (!this.timeSelection && this.timeSelection2) {
             data = {
               ...data,
-              end: "" + "," + DateFormat(this.timeSelection2)
-            };
+              end: '' + ',' + DateFormat(this.timeSelection2)
+            }
           } else if (this.timeSelection && !this.timeSelection2) {
             data = {
               ...data,
-              end: DateFormat(this.timeSelection) + "," + ""
-            };
+              end: DateFormat(this.timeSelection) + ',' + ''
+            }
           } else {
             data = {
               ...data,
               end: DateFormat(this.timeSelection) +
-                "," +
+                ',' +
                 DateFormat(this.timeSelection2)
-            };
+            }
           }
-          break;
+          break
         case 'priority':
           if (this.colSel2.length) {
             data = {
               ...data,
               priority: JSON.stringify(this.colSel2)
-            };
+            }
             this.name = {
               priority: JSON.stringify(this.colSel2)
-            };
+            }
           }
           break
-      };
-      this.getstatus(data);
+      }
+      this.getstatus(data)
     },
-    //点击筛选任务
+    // 点击筛选任务
     task(status) {
-      this.changecolor = status;
+      this.changecolor = status
       let data = {
         mytask: null,
         pagenum: this.pageSize,
         page: this.currentPage
-      };
+      }
       switch (this.changecolor) {
         case 6:
           data = {
             ...data,
-            status: "[0,1,2,5]"
-          };
-          break;
+            status: '[0,1,2,5]'
+          }
+          break
         case null:
           data = {
             ...data,
-            status: "[0,1,2,3,4,5]"
-          };
-          break;
+            status: '[0,1,2,3,4,5]'
+          }
+          break
         default:
           data = {
             ...data,
-            status: "[" + status + "]"
-          };
-          break;
+            status: '[' + status + ']'
+          }
+          break
       }
 
-      this.search(data);
+      this.search(data)
       // this.getstatus(data);
     },
-    //筛选重置
+    // 筛选重置
     reTask(status) {
-      this.keyword = "";
-      this.colSel = "name";
-      this.colSel2 = [];
-      this.timeSelection = "";
-      this.timeSelection2 = "";
+      this.keyword = ''
+      this.colSel = 'name'
+      this.colSel2 = []
+      this.timeSelection = ''
+      this.timeSelection2 = ''
       if (status == 6) {
-        let data = {
+        const data = {
           mytask: null,
-          status: "[0,1,2,5]"
-        };
-        this.getstatus(data);
+          status: '[0,1,2,5]'
+        }
+        this.getstatus(data)
       } else if (status == null) {
-        let data = {
+        const data = {
           mytask: null,
-          status: "[0,1,2,3,4,5]"
-        };
-        this.getstatus(data);
+          status: '[0,1,2,3,4,5]'
+        }
+        this.getstatus(data)
       } else {
-        let data = {
+        const data = {
           mytask: null,
-          status: "[" + status + "]"
-        };
-        this.getstatus(data);
+          status: '[' + status + ']'
+        }
+        this.getstatus(data)
       }
     },
-    //表格中的快捷下拉切换任务状态
+    // 表格中的快捷下拉切换任务状态
     statusChange(status, row) {
-      let loading = this.$loading({
+      const loading = this.$loading({
         fullscreen: true
-      });
+      })
       putTaskRecord({
         method: 'put',
         id: row.task.id,
@@ -609,16 +618,16 @@ export default {
         if (data.status === 0) {
           row.task.status = status
           if (status === 0) {
-            status = "暂停";
+            status = '暂停'
           }
           if (status === 1) {
-            status = "未开始";
+            status = '未开始'
           }
           if (status === 2) {
-            status = "进行中";
+            status = '进行中'
           }
 
-          this.$message.success("任务" + row.task.id + "状态已更改为：" + status);
+          this.$message.success('任务' + row.task.id + '状态已更改为：' + status)
           this.resetTasks()
         } else {
           this.$message.warning(data.msg)
@@ -639,26 +648,26 @@ export default {
       switch (e.to.dataset.arr) {
         case 'PauseArr':
           status = 0
-          break;
+          break
         case 'DraftArr':
           status = 1
-          break;
+          break
         case 'InProgressArr':
           status = 2
-          break;
+          break
         case 'ApproveingArr':
           status = 3
-          break;
+          break
         case 'FinishedArr':
           status = 4
-          break;
+          break
         case 'TimeOutArr':
           status = 5
-          break;
+          break
       }
-      let loading = this.$loading({
+      const loading = this.$loading({
         fullscreen: true
-      });
+      })
       putTaskRecord({
         method: 'put',
         id: e.item.dataset.taskid,
@@ -680,120 +689,115 @@ export default {
       })
     },
     cancel() {
-      this.isDialogShow = false;
+      this.isDialogShow = false
     },
     openDialog(obj) {
-      this.isDialogShow = true;
+      this.isDialogShow = true
       this.TaskRecord = Object.assign({}, {
         task_id: obj.id,
         type: 0,
         date: new Date().toLocaleDateString()
-      });
+      })
       queryTask({
-        id: obj.id,
+        id: obj.id
       }).then(({
         data
       }) => {
-        this.surplus_labor_hour = data.msg.surplus_labor_hour;
+        this.surplus_labor_hour = data.msg.surplus_labor_hour
       })
-      
-
     },
     addRecord() {
-      this.createLoading = true;
+      this.createLoading = true
 
       addTaskRecord(this.TaskRecord)
         .then(res => {
           if (res.data.status === 0) {
-            this.$message.success(res.data.msg);
+            this.$message.success(res.data.msg)
             this.getMyTasks()
           } else {
-            this.$message.warning(res.data.msg);
+            this.$message.warning(res.data.msg)
           }
-          this.isDialogShow = false;
-          this.createLoading = false;
-          this.isDrawerShow = false;
+          this.isDialogShow = false
+          this.createLoading = false
+          this.isDrawerShow = false
         })
         .catch(err => {
-          this.createLoading = false;
-        });
-
+          this.createLoading = false
+        })
     },
-    //是否显示任务板右侧
+    // 是否显示任务板右侧
     taskBoardRightShow(row) {
-      this.project = row.project;
-      this.assetId = row.asset.id;
-      this.isDrawerShow = true;
+      this.project = row.project
+      this.assetId = row.asset.id
+      this.isDrawerShow = true
 
       this.activeRow = {
         ...row
-      };
+      }
       this.TaskRecord = Object.assign({}, {
         task_id: row.task.id,
         type: 0,
-        date: new Date().toLocaleDateString(),
+        date: new Date().toLocaleDateString()
 
-      });
+      })
 
-      this.logsLoading = true;
-      this.$refs['taskApprovelog'].getApproveLog(row.task.id);
+      this.logsLoading = true
+      this.$refs['taskApprovelog'].getApproveLog(row.task.id)
       queryTaskRecord({
-        task_id: row.task.id,
+        task_id: row.task.id
       }).then(({
         data
       }) => {
-        this.LogList = [...data.msg];
-        this.logsLoading = false;
+        this.LogList = [...data.msg]
+        this.logsLoading = false
       }).catch(() => {
-        this.logsLoading = false;
-      });
-      this.detailLoading = true;
+        this.logsLoading = false
+      })
+      this.detailLoading = true
       this.$nextTick(() => {
-        this.$refs['taskDetail'].getDetail(row.task.id);
-      });
+        this.$refs['taskDetail'].getDetail(row.task.id)
+      })
 
       queryTask({
-        id: row.task.id,
+        id: row.task.id
       }).then(({
         data
       }) => {
         this.TaskDetail = {
           ...data.msg
-        };
-        this.surplus_labor_hour = data.msg.surplus_labor_hour;
-        this.Asset = this.TaskDetail.asset;
-        this.Link = this.TaskDetail.link_dept_name;
-        this.detailLoading = false;
+        }
+        this.surplus_labor_hour = data.msg.surplus_labor_hour
+        this.Asset = this.TaskDetail.asset
+        this.Link = this.TaskDetail.link_dept_name
+        this.detailLoading = false
       }).catch(() => {
-        this.detailLoading = false;
-      });
+        this.detailLoading = false
+      })
       getHistoryVersion({
         asset_id: row.asset.id
       }).then(({
         data
       }) => {
         this.historyVersion = [...data.msg]
-
       })
-
     },
-    //任务板展示更多跳转任务列表
-    openList(status){
-      this.activeTab="second";
-      this.task(status);
+    // 任务板展示更多跳转任务列表
+    openList(status) {
+      this.activeTab = 'second'
+      this.task(status)
     },
-    //展示资产侧栏
+    // 展示资产侧栏
     show(id) {
-      this.assetShow = true;
-      //获取项目操作资产权限
+      this.assetShow = true
+      // 获取项目操作资产权限
       auth().then(({
         data
       }) => {
         if (data.status === 0) {
-          this.authAsset = data.auth.manage_asset;
+          this.authAsset = data.auth.manage_asset
         }
-      });
-      this.$refs['assetDrawer'].show(id);
+      })
+      this.$refs['assetDrawer'].show(id)
     },
 
     getAssetVersion() {
@@ -803,54 +807,51 @@ export default {
         data
       }) => {
         this.historyVersion = [...data.msg]
-
       })
-
     },
-    //http获取‘我的任务’
+    // http获取‘我的任务’
     async getMyTasks() {
-      await getStatusTaskList({mytask:null,page:1,pagenum:20}).then(({
+      await getStatusTaskList({ mytask: null, page: 1, pagenum: 20 }).then(({
         data
       }) => {
-        this.MyTaskList = [...data.msg];
+        this.MyTaskList = [...data.msg]
         this.resetTasks()
-      });
-
+      })
     },
     resetTasks() {
-      //暂停 0
+      // 暂停 0
       this.PauseArr = []
-      //未开始 1
+      // 未开始 1
       this.DraftArr = []
-      //进行中 2
+      // 进行中 2
       this.InProgressArr = []
-      //审核中 3
+      // 审核中 3
       this.ApproveingArr = []
-      //完成 4
+      // 完成 4
       this.FinishedArr = []
-      //超时 5
+      // 超时 5
       this.TimeOutArr = []
       this.MyTaskList.forEach(item => {
         switch (item.task.status) {
           case 0:
-            this.PauseArr.push(item.task);
-            break;
+            this.PauseArr.push(item.task)
+            break
           case 1:
-            this.DraftArr.push(item.task);
-            break;
+            this.DraftArr.push(item.task)
+            break
           case 2:
-            this.InProgressArr.push(item.task);
-            break;
+            this.InProgressArr.push(item.task)
+            break
           case 3:
-            this.ApproveingArr.push(item.task);
-            break;
+            this.ApproveingArr.push(item.task)
+            break
           case 4:
-            this.FinishedArr.push(item.task);
-            break;
+            this.FinishedArr.push(item.task)
+            break
           case 5:
-            this.TimeOutArr.push(item.task);
+            this.TimeOutArr.push(item.task)
         }
-      });
+      })
     },
     getstatusNumber() {
       getStatusTaskList({
@@ -858,96 +859,96 @@ export default {
       }).then(({
         data
       }) => {
-        this.statusNumber = data;
-      });
+        this.statusNumber = data
+      })
     },
-    //分页
+    // 分页
     handleSizeChange(val) {
-      this.pageSize = val;
+      this.pageSize = val
       // this.task(this.changecolor);
       switch (this.cutType) {
         case 3:
-          this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
-          break;
-         case 4:
-          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
-          break;
-       case -1:
-        this.task(this.changecolor)//正常请求后分页
-            break;
+          this.sortFilter(this.sortfilter, 2) // 单条件排序分页查看
+          break
+        case 4:
+          this.filterHandler(this.valSel, 2) // table表内状态、难度等级和优先级排序分页查看
+          break
+        case -1:
+          this.task(this.changecolor)// 正常请求后分页
+          break
       }
     },
     handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
+      this.currentPage = currentPage
       // this.task(this.changecolor);
       switch (this.cutType) {
         case 3:
-          this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
-          break;
+          this.sortFilter(this.sortfilter, 2) // 单条件排序分页查看
+          break
         case 4:
-          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
-          break;
+          this.filterHandler(this.valSel, 2) // table表内状态、难度等级和优先级排序分页查看
+          break
         case -1:
-          this.task(this.changecolor) //正常请求后分页
-            break;
+          this.task(this.changecolor) // 正常请求后分页
+          break
       }
     },
-    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    // 解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
-      return (this.currentPage - 1) * this.pageSize + index + 1;
+      return (this.currentPage - 1) * this.pageSize + index + 1
     },
-    //获取我的反馈数据
-    getFeedback(){
+    // 获取我的反馈数据
+    getFeedback() {
       getFeedback().then(res => {
-        this.FeedbackList = [...res.data.msg];
-      });
-    },
+        this.FeedbackList = [...res.data.msg]
+      })
+    }
   },
   computed: {
     topArr() {
       return [{
-          title: '所有任务',
-          status: null,
-          num: this.statusNumber.all_num ? this.statusNumber.all_num : 0
-        },
-        {
-          title: '未完成',
-          status: 6,
-          num: (this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0) +
+        title: '所有任务',
+        status: null,
+        num: this.statusNumber.all_num ? this.statusNumber.all_num : 0
+      },
+      {
+        title: '未完成',
+        status: 6,
+        num: (this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0) +
             (this.statusNumber.pause_num ? this.statusNumber.pause_num : 0) +
             (this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0) +
             (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0)
-        },
-        {
-          title: '未开始',
-          status: 1,
-          num: this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0
-        },
-        {
-          title: '进行中',
-          status: 2,
-          num: this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0
-        },
-        {
-          title: '暂停',
-          status: 0,
-          num: this.statusNumber.pause_num ? this.statusNumber.pause_num : 0
-        },
-        {
-          title: '审核中',
-          status: 3,
-          num: this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0
-        },
-        {
-          title: '超时',
-          status: 5,
-          num: this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0
-        },
-        {
-          title: '完成',
-          status: 4,
-          num: this.statusNumber.accomplish_num ? this.statusNumber.accomplish_num : 0
-        }
+      },
+      {
+        title: '未开始',
+        status: 1,
+        num: this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0
+      },
+      {
+        title: '进行中',
+        status: 2,
+        num: this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0
+      },
+      {
+        title: '暂停',
+        status: 0,
+        num: this.statusNumber.pause_num ? this.statusNumber.pause_num : 0
+      },
+      {
+        title: '审核中',
+        status: 3,
+        num: this.statusNumber.in_review_num ? this.statusNumber.in_review_num : 0
+      },
+      {
+        title: '超时',
+        status: 5,
+        num: this.statusNumber.timeout_num ? this.statusNumber.timeout_num : 0
+      },
+      {
+        title: '完成',
+        status: 4,
+        num: this.statusNumber.accomplish_num ? this.statusNumber.accomplish_num : 0
+      }
 
         // {
         //     title: '审核通过',
@@ -958,29 +959,32 @@ export default {
     }
   },
   created() {
-    this.getstatusNumber();
-    this.getMyTasks();
-    this.getFeedback();
-    //首页中传递过来的字段
+    this.getstatusNumber()
+    this.getMyTasks()
+    this.getFeedback()
+    // 首页中传递过来的字段
     switch (this.$store.state.mine.keyword) {
       case 'priority':
         this.colSel = 'priority'
         this.colSel2 = [2]
-        break;
+        break
       case 'grade':
         this.colSel = 'grade'
         this.currentGrade = [0, 1, 2]
         break
       case 'expire':
         this.colSel = 'end_date'
-        this.timeSelection = dayjs(new Date)
-        this.timeSelection2 = dayjs(new Date).add(1, 'day')
+        this.timeSelection = dayjs(new Date())
+        this.timeSelection2 = dayjs(new Date()).add(1, 'day')
         break
     }
     this.$nextTick(() => {
-      this.task(6);
-      //清空store中的 state.mine.keyword
-      this.$store.commit("mine/SET_KEYWORD", '')
+      this.task(6)
+      // 清空store中的 state.mine.keyword
+      this.$store.commit('mine/SET_KEYWORD', '')
     })
   },
-};
+  mounted() {
+    showNoticeTask.apply(this)
+  }
+}
