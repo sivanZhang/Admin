@@ -4,7 +4,7 @@
       <el-col :span="19">
         <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
       </el-col>
-      <el-col :span="3" style="padding-bottom:10px" >
+      <el-col :span="3" style="padding-bottom:10px">
         <!-- 筛选 -->
         <div style="display:flex;width:150px;align-items:center">
           <span
@@ -60,7 +60,6 @@
                       ></el-cascader>
                     </el-form-item>
                   </el-col>
-
                 </el-row>
                 <el-row>
                   <el-form-item label="自定义时间">
@@ -108,6 +107,7 @@
         <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
       </el-col>
     </el-row>
+    <manFilter ref="manFilter" @refresh_close="searchKpi"/>
     <el-table
       :data="kpiList"
       :tree-props="{children: 'sub'}"
@@ -158,6 +158,7 @@
 <script>
 import { searchKpi } from "@/api/statistics";
 import { mapState } from "vuex";
+import manFilter from "@/views/search-kpi/filterContion/manFilter";
 import dayjs from "dayjs";
 export default {
   data() {
@@ -223,6 +224,9 @@ export default {
       showMulChoose: []
     };
   },
+  components: {
+    manFilter
+  },
   computed: {
     ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
@@ -236,7 +240,7 @@ export default {
       this.sortSelForm = {};
       this.mulChoose = false;
       this.showMulChoose = [];
-      let data = { ...this.showMulChoose};
+      let data = { ...this.showMulChoose };
       this.searchKpi(data);
     },
     //kpi列表导出
@@ -286,7 +290,9 @@ export default {
         this.showMulChoose.month_num = this.sortSelForm.month_num;
       }
       if (this.sortSelForm.dept_id) {
-        this.showMulChoose.dept_id = this.sortSelForm.dept_id[this.sortSelForm.dept_id.length - 1];
+        this.showMulChoose.dept_id = this.sortSelForm.dept_id[
+          this.sortSelForm.dept_id.length - 1
+        ];
       }
       if (this.sortSelForm.user_id) {
         this.showMulChoose.user_id = this.sortSelForm.user_id.join();
@@ -303,9 +309,11 @@ export default {
       }
       data = { ...this.showMulChoose };
       this.searchKpi(data);
+      this.$refs["manFilter"].filterCondition(showMulChoose, sortSelForm);
     },
+
     //获取kpi列表
-    searchKpi(data){
+    searchKpi(data) {
       this.searchList = data;
       this.kpiList = [];
       searchKpi(data).then(({ data }) => {
