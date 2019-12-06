@@ -4,19 +4,11 @@
       <span style="padding-right: 10px;">审批反馈</span>
     </el-row>
     <section class="feedback" v-for="(item,index) of FeedbackList" :key="index">
-      <div class="name" @click="showDrawer(item)">{{item.task.name}}</div>
-      <div class="msg">
-        <div :style="{color:item.result?'#19be6b':'#ed4014'}">
-          {{item.result?'通过':'未通过'}}
-        </div>
-      </div>
+      <div class="name" @click="showDrawer(item)"><span class="label">任务</span>: {{item.task.name}}</div>
       <div class="date">{{item.date|dateFormat}}</div>
-      <div class="assetName">
-        镜头号 : {{item.task.asset_name}}
-      </div>
-      <div>
-        意见 : {{item.suggestion}}
-      </div>
+      <div class="asset"><span class="label">镜头</span>: {{item.task.asset_name}}</div>
+      <div class="text-right" :style="{color:item.result?'#19be6b':'#ed4014'}">{{item.result?'通过':'未通过'}}</div>
+      <div class="opinion"><span class="label">意见</span>: {{item.suggestion}}</div>
     </section>
   </el-card>
 </template>
@@ -48,7 +40,7 @@ export default {
     },
     showDrawer(item) {
       this.$emit("show-drawer", item);
-    },
+    }
   }
 };
 </script>
@@ -65,21 +57,31 @@ $linkColor: #2d8cf0;
   display: flex;
   justify-content: space-between;
   flex-flow: row wrap;
-  .name {
-    width: 100%;
+  .asset{
+    flex: 0 0 80%;
     @include mustInLine;
-    cursor: pointer;
-    &:hover {
-      color: $linkColor;
-    }
   }
-  .date{
-    flex:0 0 50%;
+  .opinion{
+    flex: 1 1 100%;
+  }
+  .name {
+    @include mustInLine;
+    flex: 0 0 80%;
+    cursor: pointer;
+    color: $linkColor;
+  }
+  .date {
     color: #909399;
     text-align: right;
+    flex: 0 0 20%;
   }
-  .msg{
-    flex:0 0 50%;
+  .text-right{
+    text-align: right;
+    flex: 0 0 20%;
+  }
+  .label{
+    display: inline-block;
+    width: 30px;
   }
   .assetName{
     width: 100%;
