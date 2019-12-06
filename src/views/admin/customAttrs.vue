@@ -63,6 +63,11 @@ export default {
       });
     },
     getAttrsEntity(){
+       HTTP.searchBind().then(({data})=>{
+        if(data.status === 0){
+          this.auth1 = data.auth.can_manage_attrsbind;
+          }
+       });
       HTTP.getAttrsEntityList().then(({data})=>{
         this.tableLoading = true;
         if(data.status === 0){
