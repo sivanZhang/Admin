@@ -418,10 +418,10 @@ export default {
           }
           addProjects(Data).then(({ data }) => {
             // this.$message.success("项目创建成功！");
-            if (data.status === 0) {
+            if (data.status == 0) {
               this.id = data.id;
               this.isShowNext = true;
-              if (this.radio === 0) {
+              if (this.radio == 0) {
                 this.$store.dispatch("trainingStatus/get_TrainProject");
               } else {
                 this.$store.dispatch("project/get_Projects");
