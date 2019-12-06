@@ -163,7 +163,6 @@ export default {
           data = { ...data, score: this.score };
         }
         this.imgList.forEach(k => {
-          debugger
           if (k.currentProject.task.id === t.task.id) {
             data["key"].push({
               image: k.imgUrl,

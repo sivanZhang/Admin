@@ -83,9 +83,6 @@ $linkColor: #2d8cf0;
     display: inline-block;
     width: 30px;
   }
-  .assetName{
-    width: 100%;
-  }
   & + .feedback {
     border-top: $border;
   }

@@ -2362,6 +2362,10 @@ export default {
     },
     //获取任务列表
     getTasks(type, oneSel, name) {
+      // 如果isFilterOverdue 告诉直接筛选超期，就不要事先加载一遍
+      if(this.$store.state.project.isFilterOverdue){
+        return
+      }
       this.oneSel = oneSel;
       this.name = name; //任务导出时若有筛选条件
       let data = {

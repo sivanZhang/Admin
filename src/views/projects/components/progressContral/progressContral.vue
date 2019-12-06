@@ -26,7 +26,12 @@
           <div style="padding:17px 0px">
             <label for>超期镜头数量</label>
           </div>
-          <chart ref="asset-chart1" chart-id="asset-chart1" v-if="isChartView" @click-item="handleClickChart"/>
+          <chart
+            ref="asset-chart1"
+            chart-id="asset-chart1"
+            v-if="isChartView"
+            @click-item="handleClickChart"
+          />
           <el-table
             :data="overdueNum"
             :border="true"
@@ -343,8 +348,8 @@ export default {
   data() {
     return {
       dialogVisible: false,
-	  projectProgress: 0,
-	  currentPage: 1,
+      projectProgress: 0,
+      currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
       progressPredict: [],
@@ -388,10 +393,14 @@ export default {
   },
   methods: {
     // 监听饼图点击事件
-    handleClickChart(params){
-      console.log(params,'params');
+    handleClickChart(params) {
+      // 点击超期时
+      if (params.dataIndex===0) {
+        this.$store.commit('project/setFilterOverdue',true)
+        this.$emit('switch-task-tab')
+      }
     },
-	  //分页
+    //分页
     handleSizeChange(val) {
       this.pageSize = val;
     },
@@ -442,8 +451,8 @@ export default {
     //超期的任务数量与任务执行人排名
     getOverDueTaskS() {
       let data = {
-        project_id: this.$route.params.id,
-      }
+        project_id: this.$route.params.id
+      };
       Ajax.getOverDueTask(data).then(({ data }) => {
         this.overdueUserName = [...data.msg];
       });
@@ -458,6 +467,9 @@ export default {
           {
             name: "超期",
             value: data.overdue_assetnum
+          },{
+            name:'未超期',
+            value: data.total_asset_num-data.overdue_assetnum
           }
         ];
         this.overdueNum = chartData;
@@ -481,8 +493,8 @@ export default {
               dates: item,
               plan_worktimes: data.plan_worktimes[index],
               real_worktimes: data.real_worktimes[index]
-			});
-			this.currentPage = 1;
+            });
+            this.currentPage = 1;
           });
           let customOption = {
             title: {

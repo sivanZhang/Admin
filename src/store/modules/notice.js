@@ -1,13 +1,12 @@
 import {
   noticeDetail
-} from "@/api/notice"
-import {
-  getOverTimeApprove
-} from "@/api/checkingIn";
+} from '@/api/notice'
+
 const state = {
-  Notice: null, //我的审批任务列表
+  // 我的审批任务列表
+  Notice: null,
   unreadCount: null,
-  isShowCard:false,
+  isShowCard: false
 }
 
 const mutations = {
@@ -19,7 +18,7 @@ const mutations = {
   },
   SET_CARDSHOW: (state, bl) => {
     state.isShowCard = bl
-  },
+  }
 }
 
 const actions = {
@@ -35,7 +34,7 @@ const actions = {
       commit('SET_NOTICE', null)
       commit('SET_UnreadCount', null)
     })
-  },
+  }
 }
 
 export default {
