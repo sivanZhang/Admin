@@ -260,6 +260,10 @@ export default {
     };
   },
   methods: {
+    //双击一行弹出侧边栏
+    editCell(row) {
+      this.show(row.asset.id)
+    },
     //分页
     handleSizeChange1(e) {  
       this.pageSize1 = e;
