@@ -413,7 +413,7 @@ export default {
 
           delete this.ProjectForm.datetime[0];
           delete this.ProjectForm.datetime[1];
-          if (this.radio === 0) {
+          if (this.radio == 0) {
             Data = { ...Data, training: null };
           }
           addProjects(Data).then(({ data }) => {
