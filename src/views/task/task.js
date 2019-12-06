@@ -165,25 +165,28 @@ export default {
       keyword: '',
       colSel: 'name',
       columnSelect: [{
-        value: 'name',
-        label: '任务名称'
-      },
-      {
-        value: 'priority',
-        label: '优先等级'
-      },
-      {
-        value: 'start_date',
-        label: '开始日期'
-      },
-      {
-        value: 'end_date',
-        label: '截止日期'
-      },
-      {
-        value: 'grade',
-        label: '难度等级'
-      }
+          value: "name",
+          label: "任务名称"
+        },{
+          value: "project_name",
+          label: "项目名称"
+        },
+        {
+          value: "priority",
+          label: "优先等级"
+        },
+        {
+          value: "start_date",
+          label: "开始日期"
+        },
+        {
+          value: "end_date",
+          label: "截止日期"
+        },
+        {
+          value: "grade",
+          label: "难度等级"
+        },
       ],
       columnSelect2: [{
         value: 0,
@@ -482,7 +485,13 @@ export default {
             ...data,
             name: this.keyword
           })
-          break
+          break;
+          case 'project_name':
+          this.keyword && (data = {
+            ...data,
+            project_name: this.keyword
+          })
+          break;
         case 'grade':
           data = {
             ...data,
@@ -725,7 +734,11 @@ export default {
           this.createLoading = false
         })
     },
-    // 是否显示任务板右侧
+    //双击一行弹出任务侧边栏
+    editCell(row) {
+      this.taskBoardRightShow(row);
+    },
+    //是否显示任务板右侧
     taskBoardRightShow(row) {
       this.project = row.project
       this.assetId = row.asset.id

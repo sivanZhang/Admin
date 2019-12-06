@@ -38,7 +38,7 @@
           </span>
         </el-col>
         <el-col :span="4" class="text-right">
-          <el-button icon="el-icon-download" type="success" @click="targetUpload">导出</el-button>
+          <el-button icon="el-icon-upload2" type="success" @click="targetUpload">导出</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -93,6 +93,7 @@
 <script>
 import { searchKpi } from "@/api/statistics";
 import { mapState } from "vuex";
+
 import dayjs from "dayjs";
 import DeptListMixin from "@/utils/dept-list-mixins";
 export default {
@@ -111,6 +112,7 @@ export default {
       path: null,
     };
   },
+
   computed: {
     ...mapState("admin", ["DeptList", "UserList"]) //DeptUsers是根据登录账号得来的
   },
@@ -180,6 +182,7 @@ export default {
       })
       return data2
     },
+
     //获取kpi列表
     $_searchKpi(data) {
       this.kpiList = [];

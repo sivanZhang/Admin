@@ -258,7 +258,7 @@
                 ></el-option>
               </el-select>
               <el-input
-                v-if="colSel === 'name'"
+                v-if="colSel === 'name'|| colSel === 'project_name'"
                 placeholder="输入关键字搜索"
                 v-model="keyword"
                 @keyup.enter.native="task(changecolor)"
@@ -326,6 +326,7 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           :row-style="{height:50}"
            @filter-change="filterHandler"
+           @cell-dblclick="editCell"
         >
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
