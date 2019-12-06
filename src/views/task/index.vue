@@ -258,7 +258,7 @@
                 ></el-option>
               </el-select>
               <el-input
-                v-if="colSel === 'name'"
+                v-if="colSel === 'name'|| colSel === 'project_name'"
                 placeholder="输入关键字搜索"
                 v-model="keyword"
                 @keyup.enter.native="task(changecolor)"

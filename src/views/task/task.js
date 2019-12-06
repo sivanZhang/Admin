@@ -161,6 +161,9 @@ export default {
       columnSelect: [{
           value: "name",
           label: "任务名称"
+        },{
+          value: "project_name",
+          label: "项目名称"
         },
         {
           value: "priority",
@@ -472,6 +475,12 @@ export default {
           this.keyword && (data = {
             ...data,
             name: this.keyword
+          })
+          break;
+          case 'project_name':
+          this.keyword && (data = {
+            ...data,
+            project_name: this.keyword
           })
           break;
         case 'grade':
