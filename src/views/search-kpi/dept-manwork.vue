@@ -20,12 +20,14 @@
     <el-button type="primary" @click="resetParams()">重置</el-button>
     <el-table
       :data="workTime"
+      :tree-props="{ children: 'son' }"
       :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       style="margin-top:10px;width:100%"
       :stripe="true"
       highlight-current-row
       default-expand-all
       v-loading="tableLoading"
+      row-key="dept_user_count"
     >
       <el-table-column prop="dept_name" label="部门"></el-table-column>
       <el-table-column prop="dept_user_count" label="人员数量"></el-table-column>
