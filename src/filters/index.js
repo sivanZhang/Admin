@@ -91,13 +91,13 @@ export function Priority(priority) {
 export function taskPriority(priority) {
   switch (priority) {
     case 0:
-      return "低级";
+      return "低";
       break;
     case 1:
-      return "中级";
+      return "中";
       break;
     case 2:
-      return "高级";
+      return "高";
       break;
   }
 }
