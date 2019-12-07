@@ -20,6 +20,9 @@ import approveLog from '@/views/components/approve-log'
 import thumbtackMixin from '@/utils/thumbtack-mixin'
 import dayjs from 'dayjs'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
+import {
+  mapState
+} from 'vuex'
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -404,7 +407,6 @@ export default {
           status: '[' + String(this.filterStatus) + ']'
         }
       }
-      // this.getstatusTaskList(data);
       getStatusTaskList(data).then(({
         data
       }) => {
@@ -413,15 +415,6 @@ export default {
           if (Type === 1) {
             this.currentPage = 1
           }
-        }
-      })
-    },
-    getstatusTaskList(data) {
-      getStatusTaskList(data).then(({
-        data
-      }) => {
-        if (data.status === 0) {
-          this.MyTaskList1 = [...data.msg]
         }
       })
     },
@@ -454,7 +447,7 @@ export default {
       }
     },
     getstatus(data) {
-      getStatusTaskList(data).then(({
+      return getStatusTaskList(data).then(({
         data
       }) => {
         this.MyTaskList1 = [...data.msg]
@@ -838,9 +831,9 @@ export default {
         this.historyVersion = [...data.msg]
       })
     },
-    // http获取‘我的任务’
-    async getMyTasks() {
-      await getStatusTaskList({
+    // http获取所有‘我的任务’列表
+    getMyTasks() {
+      return getStatusTaskList({
         mytask: null,
         page: 1,
         pagenum: 20
@@ -851,6 +844,7 @@ export default {
         this.resetTasks()
       })
     },
+    // 按状态划分我的任务
     resetTasks() {
       // 暂停 0
       this.PauseArr = []
@@ -887,7 +881,7 @@ export default {
       })
     },
     getstatusNumber() {
-      getStatusTaskList({
+      return getStatusTaskList({
         number: ''
       }).then(({
         data
@@ -989,18 +983,45 @@ export default {
         //     num: this.PassArr.length
         // }
       ]
+    },
+    searchId() {
+      return this.$store.state.mine.taskId
+    }
+  },
+  watch: {
+    searchId(val) {
+      if (val > 0) {
+        const row = this.MyTaskList1.find(t => {
+          return t.task.id === val
+        })
+        if (row) {
+          this.taskBoardRightShow(row)
+        } else {
+          this.$message.error('未找到匹配的任务')
+        }
+        this.$store.commit('mine/setTaskId')
+      }
+    },
+    MyTaskList1: {
+      handler: function(val) {
+        if (this.searchId > 0) {
+          const row = val.find(t => {
+            return t.task.id === this.searchId
+          })
+          if (row) {
+            this.taskBoardRightShow(row)
+          } else {
+            this.$message.error('未找到匹配的任务')
+          }
+          this.$store.commit('mine/setTaskId')
+        }
+      },
+      deep: true
     }
   },
   created() {
-    console.log(this.$store.state.mine.task_id,11111111111111111111111111111);
-    
-    if (this.$store.state.mine.task_id) {
-      debugger
-      this.show(this.$store.state.mine.task_id)
-      this.$store.commit('mine/setTaskId')
-    }
-    this.getstatusNumber()
     this.getMyTasks()
+    this.getstatusNumber()
     this.getFeedback()
     // 首页中传递过来的字段
     switch (this.$store.state.mine.keyword) {

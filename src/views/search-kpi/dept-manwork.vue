@@ -10,12 +10,6 @@
       filterable
       clearable
     ></el-cascader>
-    <!-- 暂时隐藏工时参数 -->
-   <!--  <label class="inp-label" for="">每天工时(h):</label>
-    <el-input-number v-model="work_time" placeholder=""></el-input-number>
-    <label class="inp-label" for="">每月工作(天):</label> 
-    <el-input-number v-model="work_days" placeholder=""></el-input-number>
-    -->
     <el-button class="inp-label" type="primary" @click="searchList()" :loading="tableLoading">查询</el-button>
     <el-button type="primary" @click="resetParams()">重置</el-button>
     <el-table

@@ -71,6 +71,7 @@ export default {
     this.getMyTasks();
   },
   beforeRouteEnter(to, from, next) {
+    // 刷新页面方法
     let timeOutCallBack = function() {
       this.$store.dispatch("tagsView/delAllCachedViews", this.$route);
       const { fullPath } = this.$route;
@@ -91,11 +92,15 @@ export default {
     next();
   },
   methods: {
-    navigationMyTask({ url, task_id, category }) {
-      if (category === 1) {
+    //点击消息触发，参数为点击的消息数据
+    handelClickNoticeItem({ url, task_id, category }) {
+      // category == 1 时候跳转到我的任务后需要打开任务的侧边栏，  在stroe中传递 id识别
+      if (category == 1) {
         this.$store.commit("mine/setTaskId", task_id);
       }
-      this.$router.push({path:url});
+      // 关闭notice的抽屉
+      this.$store.commit('notice/SET_CARDSHOW',false)
+      this.$router.push(url);
     },
     cancel() {
       this.isDialogShow = false;
@@ -235,7 +240,7 @@ export default {
                   <template slot-scope="scope">
                     <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
                     <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-                    <a @click="navigationMyTask(scope.row)">{{scope.row.title}}</a>
+                    <a @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</a>
                   </template>
                 </el-table-column>
                 <el-table-column label="时间" width="120">

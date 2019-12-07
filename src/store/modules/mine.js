@@ -1,15 +1,15 @@
 const state = {
   // 主页跳转我的任务带的参数
   keyword: '',
-  task_id: ''
+  taskId: -1
 }
 
 const mutations = {
   SET_KEYWORD: (state, str = '') => {
     state.keyword = str
   },
-  setTaskId: (state, id = '') => {
-    state.task_id = id
+  setTaskId: (state, id = -1) => {
+    state.taskId = Number(id)
   }
 }
 

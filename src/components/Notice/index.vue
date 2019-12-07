@@ -190,7 +190,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("notice", ["Notice", "unreadCount", "isShowCard"])
+    ...mapState("notice", ["Notice", "unreadCount", "isShowCard"]),
   },
   watch: {
     // date: {

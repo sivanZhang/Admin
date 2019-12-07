@@ -174,7 +174,6 @@
       <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
         <!-- 打开任务侧栏 -->
         <Drawer
-          ref="drawer-parent"
           scrollable
           v-model="isDrawerShow"
           width="512px"
@@ -236,7 +235,6 @@
           :transfer="false"
           :mask="false"
           :inner="isInner"
-          ref="drawer-parent"
         >
           <assetDrawer :authAsset="authAsset" ref="assetDrawer" />
         </Drawer>
