@@ -249,9 +249,9 @@
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
-          <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
-          <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
-          <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="0">低</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="1">中</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="2">高</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->

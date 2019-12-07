@@ -31,9 +31,9 @@
           <el-col :span="12">
             <el-form-item label="优先级" prop="priority">
               <el-select v-model="sortSelForm.priority" multiple placeholder="请选择">
-                <el-option label="低级" :value="0"></el-option>
-                <el-option label="中级" :value="1"></el-option>
-                <el-option label="高级" :value="2"></el-option>
+                <el-option label="低" :value="0"></el-option>
+                <el-option label="中" :value="1"></el-option>
+                <el-option label="高" :value="2"></el-option>
               </el-select>
             </el-form-item>
           </el-col>

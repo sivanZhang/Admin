@@ -187,15 +187,15 @@ export default {
       ],
       columnSelect2: [{
         value: 0,
-        label: '低级'
+        label: '低'
       },
       {
         value: 1,
-        label: '中级'
+        label: '中'
       },
       {
         value: 2,
-        label: '高级'
+        label: '高'
       }
       ],
       colSel2: [],

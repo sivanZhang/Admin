@@ -299,7 +299,7 @@
           sortable="custom"
           align="center"
           column-key="priority"
-          :filters="[{text: '低级', value: '0'}, {text: '中级', value: '1'}, {text: '高级', value: '2'}]"
+          :filters="[{text: '低', value: '0'}, {text: '中', value: '1'}, {text: '高', value: '2'}]"
         >
           <template slot-scope="scope">
             <el-select
@@ -308,9 +308,9 @@
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
-              <el-option label="低级" :value="0"></el-option>
-              <el-option label="中级" :value="1"></el-option>
-              <el-option label="高级" :value="2"></el-option>
+              <el-option label="低" :value="0"></el-option>
+              <el-option label="中" :value="1"></el-option>
+              <el-option label="高" :value="2"></el-option>
             </el-select>
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'priority')"
@@ -554,9 +554,9 @@
           </el-form-item>
           <el-form-item label="优先级" prop="priority">
             <!-- <el-input v-model="TaskForm.code"></el-input> -->
-            <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
-            <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
-            <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+            <el-radio v-model="TaskForm.priority" :label="0">低</el-radio>
+            <el-radio v-model="TaskForm.priority" :label="1">中</el-radio>
+            <el-radio v-model="TaskForm.priority" :label="2">高</el-radio>
           </el-form-item>
           <el-form-item label="任务难度" prop="grade">
             <el-row>
@@ -681,9 +681,9 @@
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
-          <el-radio v-model="TaskForm.priority" :label="0">低级</el-radio>
-          <el-radio v-model="TaskForm.priority" :label="1">中级</el-radio>
-          <el-radio v-model="TaskForm.priority" :label="2">高级</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="0">低</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="1">中</el-radio>
+          <el-radio v-model="TaskForm.priority" :label="2">高</el-radio>
         </el-form-item>
         <el-form-item label="任务难度" prop="grade">
           <el-row>
@@ -937,9 +937,9 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="优先级" prop="priority">
-              <el-radio v-model="updateMulTask.priority" :label="0" :disabled="disabled3">低级</el-radio>
-              <el-radio v-model="updateMulTask.priority" :label="1" :disabled="disabled3">中级</el-radio>
-              <el-radio v-model="updateMulTask.priority" :label="2" :disabled="disabled3">高级</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="0" :disabled="disabled3">低</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="1" :disabled="disabled3">中</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="2" :disabled="disabled3">高</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -2474,13 +2474,13 @@ export default {
     Priority: function(row, column) {
       switch (row.priority) {
         case 0:
-          return "低级";
+          return "低";
           break;
         case 1:
-          return "中级";
+          return "中";
           break;
         case 2:
-          return "高级";
+          return "高";
           break;
       }
     },
