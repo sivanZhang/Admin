@@ -123,7 +123,7 @@ export default {
         all: ""
       };
       allScene(payload).then(({ data }) => {
-        if (data.status === 0) {
+        if (data.status == 0) {
           this.AssetList = [...data.msg];
         }
       });

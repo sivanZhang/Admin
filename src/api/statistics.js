@@ -139,7 +139,7 @@ export function getOverDueTask(params) {
 }
 //查询项目中提交审批数目最多的资产和任务
 export function getAssetMaxSubmit(params) {
-  return AXIOS.get('/statistic/asset/?max_submit', {
+  return AXIOS.get('/statistic/asset/', {
     params
   })
 }

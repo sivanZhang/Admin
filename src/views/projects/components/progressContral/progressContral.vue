@@ -103,7 +103,7 @@
       </el-row>
       <div v-if="progress">
         <el-table
-          :data="progressPredict "
+          :data="progressPredict"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
           style="padding-top:15px;width:100%"
           highlight-current-row
@@ -154,7 +154,7 @@
       </div>
       <div v-if="!progress">
         <el-table
-          :data="progressPredict1 "
+          :data="progressPredict1"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           style="padding-top:15px;width:100%"
           highlight-current-row
@@ -212,7 +212,7 @@
         </el-col>
       </el-row>
       <el-table
-        :data="notSubmitList "
+        :data="notSubmitList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         style="padding-top:15px;width:100%"
         highlight-current-row
@@ -483,7 +483,7 @@ export default {
         id: this.click_id ? this.click_id : this.$route.params.id,
         workhour: ""
       }).then(({ data }) => {
-        if (data.status === 0) {
+        if (data.status == 0) {
           if (!data.dates.length) {
             this.burnShow = false;
             return;

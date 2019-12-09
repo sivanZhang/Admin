@@ -7,7 +7,7 @@
           <label for style="padding-top:15px">项目中提交审批次数最多的镜头</label>
         </el-col>
         <el-col :span="3">
-          <el-select v-model="assetvalue" placeholder="请选择提交次数排名" @change="valueChange">
+          <el-select v-model="assetvalue" placeholder="请选择提交次数排名" @change="assetValueChange">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -44,7 +44,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="镜头名称"></el-table-column>
+        <el-table-column prop="name" label="镜头名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="schedule" label="进度" width="160px">
           <template slot-scope="scope">
             <el-progress
@@ -130,7 +130,7 @@
           <label for style="padding-top:15px">项目中提交审批次数最多的任务</label>
         </el-col>
         <el-col :span="3">
-          <el-select v-model="taskvalue" placeholder="请选择提交次数排名">
+          <el-select v-model="taskvalue" placeholder="请选择提交次数排名" @change="taskValueChange">
             <el-option
               v-for="item in options1"
               :key="item.value"
@@ -167,7 +167,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="asset.name" label="镜头名称">
+        <el-table-column prop="asset.name" label="镜头名称" show-overflow-tooltip>
           <template slot-scope="scope">{{scope.row.asset.name?scope.row.asset.name:'-'}}</template>
         </el-table-column>
         <el-table-column prop="asset.id" label="镜头号"></el-table-column>
@@ -182,16 +182,17 @@
           <template slot-scope="scope">{{scope.row.end_date|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="executor.name" label="执行人"></el-table-column>
-        <el-table-column prop="status" label="状态">
-          <template slot-scope="scope">{{scope.row.status|taskStatus}}</template>
-        </el-table-column>
-        <el-table-column prop="schedule" label="进度" width="160px">
+        <el-table-column prop="status" label="状态/进度" width="160px" align="left">
           <template slot-scope="scope">
-            <el-progress
-              :stroke-width="12"
+            {{scope.row.status|taskStatus}}
+            <div v-if="scope.row.status != 3 && scope.row.status != 4">
+              <el-progress
+              :stroke-width="10"
+              :show-text="false"
               :percentage="scope.row.schedule"
-              v-if="scope.row.status != 3 && scope.row.status != 4"
             ></el-progress>
+            {{scope.row.schedule}}%
+            </div>
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
         </el-table-column>
@@ -209,7 +210,7 @@
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
         <el-table-column prop="id" label="任务ID" width="80px"></el-table-column>
-        <el-table-column prop="name" label="任务名称" width="100px"></el-table-column>
+        <el-table-column prop="name" label="任务名称" width="100px" show-overflow-tooltip></el-table-column>
         <!-- <el-table-column prop="create_time" label="创建时间" width="100px">
           <template slot-scope="scope">{{scope.row.create_time|dateFormat}}</template>
         </el-table-column>
@@ -278,23 +279,37 @@ export default {
   },
   created() {
     this.getAssetMaxSubmitS();
+    this.getTaskMaxSubmitS();
   },
   methods: {
-    valueChange() {
+    assetValueChange() {
       this.getAssetMaxSubmitS();
     },
-    //查询项目中提交审批数目最多的资产和任务
+    taskValueChange() {
+      this.getTaskMaxSubmitS();
+    },
+    //查询项目中提交审批数目最多的资产
     getAssetMaxSubmitS() {
       let data = {
         project_id: this.$route.params.id,
-        max_submit: "",
-        sort: this.assetvalue
+        max_submit_asset: "",
+        top: this.assetvalue
       };
       Ajax.getAssetMaxSubmit(data).then(({ data }) => {
         this.assetMaxSubmit = data.asset;
+      });
+    },
+    //查询项目中提交审批数目最多的任务
+    getTaskMaxSubmitS() {
+      let data = {
+        project_id: this.$route.params.id,
+        max_submit_task: "",
+        top: this.taskvalue
+      };
+      Ajax.getAssetMaxSubmit(data).then(({ data }) => {
         this.taskMaxSubmit = data.task;
       });
-    }
+    },
   }
 };
 </script>
