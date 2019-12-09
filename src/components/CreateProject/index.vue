@@ -272,7 +272,7 @@ export default {
       TemplateList: [],
       TemplateListName: null,
       ProjectForm: {
-        image: null
+        image: " "
         // color: "#409EFF"
       },
       predefineColors: [
@@ -384,11 +384,11 @@ export default {
     cancel() {
       //告诉父组件：不显示弹框
       this.$emit("update:isShow", false);
-      this.TemplateListName = [];
+      this.TemplateListName = null;
     },
     cancel1() {
       this.isShowNext = false;
-      this.TemplateListName = [];
+      this.TemplateListName = null;
     },
     //验证，并提交创建项目的表单
     submitForm() {
@@ -411,8 +411,8 @@ export default {
             Data = { ...Data, templateid: this.templateid };
           }
 
-          delete this.ProjectForm.datetime[0];
-          delete this.ProjectForm.datetime[1];
+          // delete this.ProjectForm.datetime[0];
+          // delete this.ProjectForm.datetime[1];
           if (this.radio == 0) {
             Data = { ...Data, training: null };
           }
