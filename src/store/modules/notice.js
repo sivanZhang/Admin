@@ -4,7 +4,7 @@ import {
 
 const state = {
   // 我的审批任务列表
-  Notice: null,
+  Notice: [],
   unreadCount: null,
   isShowCard: false
 }

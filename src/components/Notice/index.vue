@@ -190,7 +190,15 @@ export default {
     };
   },
   computed: {
-    ...mapState("notice", ["Notice", "unreadCount", "isShowCard"]),
+    ...mapState("notice", ["Notice", "unreadCount"]),
+    isShowCard:{
+      get:function(){
+        return this.$store.state.notice.isShowCard
+      },
+      set:function(val){
+        this.$store.commit('notice/SET_CARDSHOW',val)
+      }
+    }
   },
   watch: {
     // date: {

@@ -15,7 +15,7 @@
     </div>
 
     <el-table
-      :data="notice"
+      :data="noticeList"
       style="width: 100%"
       ref="multipleTable"
       tooltip-effect="dark"
@@ -108,6 +108,17 @@
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>
+      <div class="block" style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="notice.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -117,11 +128,29 @@ export default {
   props: ["notice"],
   data() {
     return {
+       currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
       multipleSelection: []
     };
   },
-
+ computed: {
+    noticeList(){
+      return this.notice.slice((this.currentPage-1)*this.pageSize,this.currentPage*this.pageSize) || []
+    }
+  },
   methods: {
+      //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
     //点击消息触发，参数为点击的消息数据
     handelClickNoticeItem({ url, task_id, category }) {
       // category == 1 时候跳转到我的任务后需要打开任务的侧边栏，  在stroe中传递 id识别
