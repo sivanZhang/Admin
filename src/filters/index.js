@@ -101,7 +101,7 @@ export function taskPriority(priority) {
       break;
   }
 }
-//任务难度等级显示
+//任务难度显示
 export function taskgrade(grade) {
   switch (grade) {
     case 0:
@@ -139,7 +139,7 @@ export function taskgrade(grade) {
       break;
   }
 }
-//资产难度等级
+//资产难度
 export function Level(level) {
   switch (level) {
     case 0:

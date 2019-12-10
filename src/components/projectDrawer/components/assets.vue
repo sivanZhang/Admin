@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column prop="name" label="名称" align="left"></el-table-column>
       <el-table-column prop="priority" label="优先级" :formatter="Priority" align="left"></el-table-column>
-      <el-table-column prop="level" label="难度等级" :formatter="Level" align="left"></el-table-column>
+      <el-table-column prop="level" label="难度" :formatter="Level" align="left"></el-table-column>
       <el-table-column prop="id" label="资产ID" v-if="false" align="left"></el-table-column>
       <el-table-column prop="path" label="路径" v-if="false" align="left"></el-table-column>
       <el-table-column prop="creator_name" label="创建人" v-if="false" align="left"></el-table-column>
@@ -63,7 +63,7 @@ export default {
   },
   components: {},
   methods: {
-    //难度等级格式化显示
+    //难度格式化显示
     Level: function(row, column) {
       switch (row.level) {
            case 0:

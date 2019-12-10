@@ -61,7 +61,7 @@
           <div style="padding-top:2px">
             <span style="font-weight:bold">
               开始日期，结束日期，缩略图，路径，内部版本号，外部版本号，优先级，
-              难度等级，场次，帧数，帧数范围，画面调整信息，变速信息，集数，备注，
+              难度，场次，帧数，帧数范围，画面调整信息，变速信息，集数，备注，
             </span>这些字段可以选填或者不填。
           </div>
         </div>
@@ -94,7 +94,7 @@ export default {
         inner_version: "内部版本号",
         outer_version: "外部版本号",
         priority: "优先级（高中低）",
-        level: "难度等级（A+,A,A-,B+,B,B-,C+,C,D+,D,E）",
+        level: "难度（A+,A,A-,B+,B,B-,C+,C,D+,D,E）",
         session: "场次",
         frame: "帧数",
         frame_range: "帧数范围",

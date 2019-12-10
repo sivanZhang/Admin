@@ -88,7 +88,7 @@
       <el-table-column prop="priority" label="优先级" width="120px" align="center">
         <template slot-scope="scope">{{scope.row.priority|taskPriority}}</template>
       </el-table-column>
-      <el-table-column prop="grade" label="难度等级" width="120px" align="center">
+      <el-table-column prop="grade" label="难度" width="120px" align="center">
         <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
       </el-table-column>
       <el-table-column label="状态" prop="status" width="90px">

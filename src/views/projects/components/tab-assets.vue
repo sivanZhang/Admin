@@ -58,7 +58,7 @@
               <el-checkbox v-model="show_priority">优先级</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_level">难度等级</el-checkbox>
+              <el-checkbox v-model="show_level">难度</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_id">资产ID</el-checkbox>
@@ -589,7 +589,7 @@
         </el-table-column>
         <el-table-column
           prop="level"
-          label="难度等级"
+          label="难度"
           :formatter="Level"
           align="center"
           v-if="show_level"
@@ -604,7 +604,7 @@
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.level"
-              placeholder="请选择难度等级"
+              placeholder="请选择难度"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'level')"
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
@@ -826,8 +826,8 @@
           <el-radio v-model="AssetForm.priority" :label="0">正常</el-radio>
           <el-radio v-model="AssetForm.priority" :label="1">优先</el-radio>
         </el-form-item>
-        <el-form-item label="难度等级" prop="level">
-          <el-select v-model="AssetForm.level" placeholder="请选择难度等级">
+        <el-form-item label="难度" prop="level">
+          <el-select v-model="AssetForm.level" placeholder="请选择难度">
             <el-option
               v-for="item of LevelList"
               :key="item.value"
@@ -1058,7 +1058,7 @@ export default {
         priority: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],
-        level: [{ required: true, message: "请输入难度等级", trigger: "blur" }]
+        level: [{ required: true, message: "请输入难度", trigger: "blur" }]
       },
       buttonStates: {
         createLoading: false
@@ -1134,7 +1134,7 @@ export default {
       cutType: -1, //分页类型
       oneSel: null, //保存单列筛选的条件
       sortSelForm: {}, //保存多列筛选条件
-      valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
+      valSel: null, //保存table表内筛选（状态、难度、优先级）的条件
       sortfilter: null, //保存单列排序的条件
       sortMulFilter: null, //保存多列排序的条件
       curHeight:0,
@@ -1274,7 +1274,7 @@ export default {
           this.tableLoading = false;
         });
     },
-    //优先级和难度等级背景颜色动态改变
+    //优先级和难度背景颜色动态改变
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
         switch (row.priority) {
@@ -1330,7 +1330,7 @@ export default {
           case "优先级":
             this.cellCol = "priority";
             break;
-          case "难度等级":
+          case "难度":
             this.cellCol = "level";
             break;
           case "小状态":
@@ -1450,7 +1450,7 @@ export default {
           this.tableLoading = false;
         });
     },
-    //table表内筛选（状态、难度等级、优先级）
+    //table表内筛选（状态、难度、优先级）
     filterHandler(val, Type) {
       this.valSel = val;
       this.cutType = 4;
@@ -1752,7 +1752,7 @@ export default {
           this.$refs["assetFilter"].showMul(); //重置筛选条件展示
           this.$refs["assetSel"].refreshOneSel(); //重置单条件筛选
           this.sortfilter = null; //重置多条件筛选存储的条件
-          this.valSel = null; //重置table表内筛选（状态、难度等级、优先级）存储的条件
+          this.valSel = null; //重置table表内筛选（状态、难度、优先级）存储的条件
           this.oneSel = null; //重置单条件排序存储的条件
           this.sortMulFilter = null; //重置多条件排序存储的条件
           payload = { ...payload, pagenum: 20, page: 1 };
@@ -2049,7 +2049,7 @@ export default {
           this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
           break;
         case 4:
-          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          this.filterHandler(this.valSel, 2); //table表内状态、难度和优先级排序分页查看
           break;
         case 5:
           this.getAssetList(4, this.oneSel); //单条件筛选下的分页
@@ -2074,7 +2074,7 @@ export default {
           this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
           break;
         case 4:
-          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          this.filterHandler(this.valSel, 2); //table表内状态、难度和优先级排序分页查看
           break;
         case 5:
           this.getAssetList(4, this.oneSel); //单条件筛选下的分页
@@ -2090,7 +2090,7 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
     },
-    //难度等级格式化显示
+    //难度格式化显示
     Level: function(row, column) {
       switch (row.level) {
         case 0:

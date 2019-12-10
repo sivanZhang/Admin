@@ -182,7 +182,7 @@ export default {
       },
       {
         value: 'grade',
-        label: '难度等级'
+        label: '难度'
       }
       ],
       columnSelect2: [{
@@ -249,7 +249,7 @@ export default {
       }
       ],
       sortfilter: null, // 保存单列排序的条件
-      valSel: null, // 保存table表内筛选（状态、难度等级、优先级）的条件
+      valSel: null, // 保存table表内筛选（状态、难度、优先级）的条件
       cutType: -1, // 分页类别区分
       filterStatus: [],
       assetShow: false,
@@ -898,7 +898,7 @@ export default {
           this.sortFilter(this.sortfilter, 2) // 单条件排序分页查看
           break
         case 4:
-          this.filterHandler(this.valSel, 2) // table表内状态、难度等级和优先级排序分页查看
+          this.filterHandler(this.valSel, 2) // table表内状态、难度和优先级排序分页查看
           break
         case -1:
           this.task(this.changecolor) // 正常请求后分页
@@ -913,7 +913,7 @@ export default {
           this.sortFilter(this.sortfilter, 2) // 单条件排序分页查看
           break
         case 4:
-          this.filterHandler(this.valSel, 2) // table表内状态、难度等级和优先级排序分页查看
+          this.filterHandler(this.valSel, 2) // table表内状态、难度和优先级排序分页查看
           break
         case -1:
           this.task(this.changecolor) // 正常请求后分页

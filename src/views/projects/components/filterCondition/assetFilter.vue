@@ -143,7 +143,7 @@
         v-if="showMulChoose.level&&selShowLevel"
         :class="showMulChoose.level?'active':''"
       >
-        难度等级：
+        难度：
         <span v-for="(item,index) of showMulChoose.level" :key="index">
           <span style="padding-left:5px">{{item|Level}}</span>
         </span>

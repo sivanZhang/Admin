@@ -96,8 +96,8 @@
           <el-radio v-model="AssetForm.priority" :label="0">正常</el-radio>
           <el-radio v-model="AssetForm.priority" :label="1">优先</el-radio>
         </el-form-item>
-        <el-form-item label="难度等级" prop="level">
-          <el-select v-model="AssetForm.level" placeholder="请选择难度等级">
+        <el-form-item label="难度" prop="level">
+          <el-select v-model="AssetForm.level" placeholder="请选择难度">
             <el-option
               v-for="item of LevelList"
               :key="item.value"
@@ -207,7 +207,7 @@ export default {
         priority: [
           { required: true, message: "请输入优先等级", trigger: "blur" }
         ],
-        level: [{ required: true, message: "请输入难度等级", trigger: "blur" }],
+        level: [{ required: true, message: "请输入难度", trigger: "blur" }],
         path: [{ required: true, message: "请输入路径", trigger: "blur" }]
       },
       buttonStates: {

@@ -296,7 +296,7 @@
               <el-select
                 v-if="colSel === 'grade'"
                 v-model="currentGrade"
-                placeholder="选择任务难度等级"
+                placeholder="选择任务难度"
                 multiple
                 filterable
                 style="width:200px"
@@ -450,7 +450,7 @@
             </template>
           </el-table-column>
           <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
-          <el-table-column label="难度等级" header-align="left" align="center" prop="task.grade">
+          <el-table-column label="难度" header-align="left" align="center" prop="task.grade">
             <template slot-scope="scope">{{scope.row.task.grade|taskgrade}}</template>
           </el-table-column>
           <el-table-column label="优先级" header-align="left" prop="priority" sortable="custom">

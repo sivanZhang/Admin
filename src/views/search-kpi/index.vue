@@ -56,7 +56,7 @@
     >
       <el-table-column prop="member_name" label="制作人员"></el-table-column>
       <el-table-column prop="client_total_asset" label="完成镜头数量 (客户通过的)" width="110"></el-table-column>
-      <el-table-column prop="level" label="难度等级">
+      <el-table-column prop="level" label="难度">
         <template slot-scope="scope">{{scope.row.level|Level }}</template>
       </el-table-column>
       <el-table-column prop="client_total_frame" label="总帧数"></el-table-column>

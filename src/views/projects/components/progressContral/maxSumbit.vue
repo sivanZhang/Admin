@@ -86,7 +86,7 @@
         <el-table-column prop="priority" label="优先级">
           <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
         </el-table-column>
-        <el-table-column prop="level" label="难度等级">
+        <el-table-column prop="level" label="难度">
           <template slot-scope="scope">{{scope.row.level|Level}}</template>
         </el-table-column>
         <el-table-column prop="id" label="资产ID"></el-table-column>
@@ -199,7 +199,7 @@
         <el-table-column prop="priority" label="优先级">
           <template slot-scope="scope">{{scope.row.priority|taskPriority}}</template>
         </el-table-column>
-        <el-table-column prop="grade" label="难度等级">
+        <el-table-column prop="grade" label="难度">
           <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
         </el-table-column>
         <el-table-column prop="start_date" label="开始日期" width="100px">

@@ -55,7 +55,7 @@
           <el-table-column prop="priority" label="优先级">
             <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
           </el-table-column>
-          <el-table-column prop="level" label="难度等级">
+          <el-table-column prop="level" label="难度">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
           <el-table-column label="未分配环节" align="center" width="160px">
@@ -150,7 +150,7 @@
           <el-table-column prop="priority" label="优先级">
             <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
           </el-table-column>
-          <el-table-column prop="level" label="难度等级">
+          <el-table-column prop="level" label="难度">
             <template slot-scope="scope">{{scope.row.level|Level}}</template>
           </el-table-column>
           <el-table-column label="已分配的环节" align="center" width="160px">
@@ -562,7 +562,7 @@ export default {
     indexMethod2(index) {
       return (this.currentPage2 - 1) * this.pageSize2 + index + 1;
     },
-    //难度等级格式化显示
+    //难度格式化显示
     Level: function(row, column) {
       switch (row.level) {
         case 0:

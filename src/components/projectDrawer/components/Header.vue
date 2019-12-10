@@ -127,7 +127,7 @@
               <el-col :span="18" class="project-comment">{{project.priority |Priority}}</el-col>
             </el-row>
             <el-row>
-              <el-col :span="6" class="project-comment">难度等级</el-col>
+              <el-col :span="6" class="project-comment">难度</el-col>
               <el-col :span="18" class="project-comment">{{project.level |Level}}</el-col>
             </el-row>
           </el-col>
