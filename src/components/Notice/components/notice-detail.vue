@@ -11,7 +11,10 @@
         @click="updateIsReads"
         type="primary"
         :disabled="this.multipleSelection.length === 0"
+        style="margin-right:20px;"
       >标记为已读</el-button>
+      <el-radio v-model="radio" label="1" @change="searchNotice()" >已读</el-radio>
+      <el-radio v-model="radio" label="2" @change="searchNotice()">未读</el-radio>
     </div>
 
     <el-table
@@ -29,10 +32,10 @@
               <el-form-item label="通知类别:">
                 <span>{{ props.row.category }}</span>
               </el-form-item>
-            </el-row> -->
+            </el-row>-->
             <el-row>
               <el-form-item label="通知内容:">
-                <span  v-html="props.row.content"></span>
+                <span v-html="props.row.content"></span>
               </el-form-item>
             </el-row>
             <el-row>
@@ -44,7 +47,7 @@
               <el-form-item label="修改时间">
                 <span>{{ props.row.modify_date|dateFormat }}</span>
               </el-form-item>
-            </el-row> -->
+            </el-row>-->
             <el-row>
               <el-form-item label="是否已读:">
                 <span>{{ props.row.read |isRead }}</span>
@@ -59,9 +62,8 @@
               <el-form-item label="url">
                 <span>{{ props.row.url }}</span>
               </el-form-item>
-            </el-row> -->
+            </el-row>-->
           </el-form>
-
         </template>
       </el-table-column>
       <el-table-column type="selection"></el-table-column>
@@ -108,7 +110,7 @@
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>
-      <div class="block" style="text-align: right">
+    <div class="block" style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -128,19 +130,25 @@ export default {
   props: ["notice"],
   data() {
     return {
-       currentPage: 1,
+      radio: "2",
+      currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
       multipleSelection: []
     };
   },
- computed: {
-    noticeList(){
-      return this.notice.slice((this.currentPage-1)*this.pageSize,this.currentPage*this.pageSize) || []
+  computed: {
+    noticeList() {
+      return (
+        this.notice.slice(
+          (this.currentPage - 1) * this.pageSize,
+          this.currentPage * this.pageSize
+        ) || []
+      );
     }
   },
   methods: {
-      //分页
+    //分页
     handleSizeChange(val) {
       this.pageSize = val;
     },
@@ -158,7 +166,7 @@ export default {
         this.$store.commit("mine/setTaskId", task_id);
       }
       // 关闭notice的抽屉
-      this.$store.commit('notice/SET_CARDSHOW',false)
+      this.$store.commit("notice/SET_CARDSHOW", false);
       this.$router.push(url);
     },
     toggleSelection(rows) {
@@ -208,6 +216,19 @@ export default {
           //this.$message.error(data.msg);
         }
       });
+    },
+    //查询已读未读
+    searchNotice() {
+      let noti = {
+        read: this.radio
+      };
+       if (this.radio == 1) {
+        this.$store.dispatch('notice/get_Notice',noti )
+      } else {
+        if (this.radio == 2) {
+        this.$store.dispatch('notice/get_Notice')
+        }
+      }
     },
     //批量删除通知
     delNotices() {

@@ -1,8 +1,8 @@
 import AXIOS from "@/utils/request"
 
 //通知详情
-export function noticeDetail(data) {
-  return AXIOS.get('/notice/notice/', data)
+export function noticeDetail(params) {
+  return AXIOS.get('/notice/notice/', {params})
 }
 
 //通知删除
