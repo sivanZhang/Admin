@@ -60,11 +60,6 @@ export default {
                     label: "进行中",
                     value: 2
                 },
-                {
-                    label: "完成",
-                    value: 4
-                },
-
             ],
         }
     },
