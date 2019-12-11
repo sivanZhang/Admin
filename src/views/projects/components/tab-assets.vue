@@ -323,8 +323,7 @@
           prop="name"
           :label="labelName"
           align="left"
-          width="120px"
-          show-overflow-tooltip
+          width="130px"
           v-if="show_name"
           sortable="custom"
           class-name="links"

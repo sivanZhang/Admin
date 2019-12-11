@@ -128,11 +128,11 @@
         </el-table-column>
         <el-table-column
           label="镜头号"
-          show-overflow-tooltip
+        
           v-if="show_asset_name"
           prop="asset"
           sortable="custom"
-          width="90pxs"
+          width="130px"
           class-name="links"
         >
           <template slot-scope="scope">
