@@ -50,44 +50,59 @@
         <el-row v-if="configImg == 'img'">
           <el-col :span="6" class="comment">制作要求</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit25=true" @mouseleave="showEdit25 = false">
-              <span v-if="!editing25&&project.requirement" v-html="project.requirement"></span>
-              <span v-else v-show="!project.requirement&&!editing25">{{"-"}}</span>
+            <div
+              v-if="!copyProjecr.requirement.isEdit"
+              @mouseover="showIcon('requirement',true)"
+              @mouseleave="showIcon('requirement',false)"
+            >
+              <span>{{project.requirement?project.requirement:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit25"
-                @click="edit(24)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.requirement.isShowEditeIcon"
+                @click="editItem('requirement')"
               ></i>
             </div>
-            <div v-if="editing25">
+            <div v-else>
               <el-input
                 type="textarea"
                 ref="input"
                 class="input"
-                v-model="requirement"
-                @keyup.enter="save3(24)"
+                v-model="copyProjecr.requirement.value"
+                @keyup.enter="saveItem('requirement')"
                 style="width:300px"
               />
-              <el-button @click="save3(24)" type="primary">修改</el-button>
+              <el-button @click="saveItem('requirement')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('requirement')">取消</el-button>
             </div>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Windows路径</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit7=true" @mouseleave="showEdit7 = false">
-              <span v-if="!editing7">{{project.Windows?project.Windows:"-"}}</span>
+            <div
+              v-if="!copyProjecr.Windows.isEdit"
+              @mouseover="showIcon('Windows',true)"
+              @mouseleave="showIcon('Windows',false)"
+            >
+              <span>{{project.Windows?project.Windows:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit7"
-                @click="edit(6)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.Windows.isShowEditeIcon"
+                @click="editItem('Windows')"
               ></i>
             </div>
-            <div v-if="editing7">
-              <input type="text" ref="input" class="input" v-model="windows" @keyup.enter="save(6)" />
-              <el-button @click="save(6)" type="primary">修改</el-button>
+            <div v-else>
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                v-model="copyProjecr.Windows.value"
+                @keyup.enter="saveItem('Windows')"
+              />
+              <el-button @click="saveItem('Windows')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('Windows')">取消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -112,18 +127,29 @@
         <el-row>
           <el-col :span="6" class="comment">Linux路径</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit9=true" @mouseleave="showEdit9 = false">
-              <span v-if="!editing9">{{project.Linux?project.Linux:"-"}}</span>
+            <div
+              v-if="!copyProjecr.Linux.isEdit"
+              @mouseover="showIcon('Linux',true)"
+              @mouseleave="showIcon('Linux',false)"
+            >
+              <span>{{project.Linux?project.Linux:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit9"
-                @click="edit(8)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.Linux.isShowEditeIcon"
+                @click="editItem('Linux')"
               ></i>
             </div>
-            <div v-if="editing9">
-              <input type="text" ref="input" class="input" v-model="linux" @keyup.enter="save(8)" />
-              <el-button @click="save(8)" type="primary">修改</el-button>
+            <div v-else>
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                v-model="copyProjecr.Linux.value"
+                @keyup.enter="saveItem('Linux')"
+              />
+              <el-button @click="saveItem('Linux')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('Linux')">取消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -221,49 +247,57 @@
         <el-row>
           <el-col :span="6" class="comment">开始日期</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit13=true" @mouseleave="showEdit13 = false">
-              <span v-if="!editing13">{{project.date_start|dateFormat}}</span>
+            <div
+              v-if="!copyProjecr.date_start.isEdit"
+              @mouseover="showIcon('date_start',true)"
+              @mouseleave="showIcon('date_start',false)"
+            >
+              <span>{{project.date_start|dateFormat}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit13"
-                @click="edit(12)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.date_start.isShowEditeIcon"
+                @click="editItem('date_start')"
               ></i>
             </div>
-            <div v-if="editing13">
+            <div v-else>
               <el-date-picker
-                v-model="date_start"
+                v-model="copyProjecr.date_start.value"
                 type="date"
                 format="yyyy/MM/dd"
                 ref="start"
-                @change="save(12)"
               ></el-date-picker>
-              <el-button @click="save(12)" type="primary">修改</el-button>
+              <el-button @click="saveItem('date_start')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('date_start')">取消</el-button>
             </div>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">结束日期</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit14=true" @mouseleave="showEdit14 = false">
-              <span v-if="!editing14">{{project.date_end|dateFormat}}</span>
+            <div
+              v-if="!copyProjecr.date_end.isEdit"
+              @mouseover="showIcon('date_end',true)"
+              @mouseleave="showIcon('date_end',false)"
+            >
+              <span>{{project.date_end|dateFormat}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit14"
-                @click="edit(13)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.date_end.isShowEditeIcon"
+                @click="editItem('date_end')"
               ></i>
             </div>
-            <div v-if="editing14">
+            <div v-else>
               <!-- $store.state.login.userInfo -->
               <el-date-picker
-                v-model="date_end"
+                v-model="copyProjecr.date_end.value"
                 type="date"
                 format="yyyy/MM/dd"
                 ref="end"
-                @change="save(13)"
               ></el-date-picker>
-              <el-button @click="save(13)" type="primary">修改</el-button>
+              <el-button @click="saveItem('date_end')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('date_end')">取消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -788,7 +822,7 @@ export default {
         const OBJ = {};
         Object.keys(newObj).map(t => {
           OBJ[t] = {
-            value: newObj[t],
+            value:t=="date_end"||t=="date_start"?newObj[t]*1000:newObj[t],
             isEdit: false,
             isShowEditIcon: false
           };
@@ -816,6 +850,23 @@ export default {
           break;
         case "client":
           httpData[prop] = this.copyProjecr[prop].value.client_id;
+          break;
+        case "Windows":
+          httpData["windows_path"] = this.copyProjecr[prop].value;
+          break;
+        case "Linux":
+          httpData["linux_path"] = this.copyProjecr[prop].value;
+          break;
+        case "date_start":
+          httpData["start"] = dayjs(this.copyProjecr[prop].value).format(
+            "YYYY/MM/DD"
+          );
+          break;
+        case "date_end":
+          httpData["end"] = dayjs(this.copyProjecr[prop].value).format(
+            "YYYY/MM/DD"
+          );
+          break;
         default:
           httpData[prop] = this.copyProjecr[prop].value;
           break;
@@ -846,7 +897,7 @@ export default {
      * @param {Boolean} type 默认为true表示进入了编辑状态
      **/
     editItem(prop, type = true) {
-      if (prop==='client') {
+      if (prop === "client") {
         getClientList().then(({ data }) => {
           this.clientList = [...data];
         });
