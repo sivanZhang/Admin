@@ -17,25 +17,29 @@
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit=true" @mouseleave="showEdit = false">
-              <span v-if="!editing">{{project.name}}</span>
+            <div
+              v-if="!copyProjecr.name.isEdit"
+              @mouseover="showIcon('name',true)"
+              @mouseleave="showIcon('name',false)"
+            >
+              <span>{{project.name}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit"
-                @click="edit(0)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.name.isShowEditeIcon"
+                @click="editItem('name')"
               ></i>
             </div>
-            <div v-if="editing">
+            <div v-else>
               <input
                 type="text"
                 ref="input"
                 class="input"
-                value="project.name"
-                v-model="name"
-                @keyup.enter="save(0)"
+                v-model="copyProjecr.name.value"
+                @keyup.enter="saveItem('name')"
               />
-              <el-button @click="save(0)" type="primary">修改</el-button>
+              <el-button @click="saveItem('name')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('name')">取消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -127,49 +131,56 @@
           <el-row>
             <el-col :span="6" class="comment">项目预算</el-col>
             <el-col :span="18" class="comment">
-              <div @mouseover="showEdit2=true" @mouseleave="showEdit2 = false">
-                <span v-if="!editing2">¥{{project.budget|numberFormat}}万元</span>
+              <div
+                v-if="!copyProjecr.budget.isEdit"
+                @mouseover="showIcon('budget',true)"
+                @mouseleave="showIcon('budget',false)"
+              >
+                <span>¥{{project.budget|numberFormat}}万元</span>
                 <i
                   class="el-icon-edit"
                   style="color:blue"
-                  v-if="$store.state.login.userInfo.auth.manage_project&&showEdit2"
-                  @click="edit(1)"
+                  v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.budget.isShowEditeIcon"
+                  @click="editItem('budget')"
                 ></i>
               </div>
-              <div v-if="editing2">
-                ¥
-                <input
-                  type="text"
-                  ref="input"
-                  class="input"
-                  value="project.budget"
-                  v-model="budget"
-                  @keyup.enter="save(1)"
-                />万元
-                <el-button @click="save(1)" type="primary">修改</el-button>
-              </div>
+              <el-row type="flex" items="middel" v-else>
+                <el-input
+                  v-model.number="copyProjecr.budget.value"
+                  @keyup.enter="saveItem('budget')"
+                  class="edit-inp"
+                >
+                  <template slot="prepend">¥</template>
+                  <template slot="append">万元</template>
+                </el-input>
+                <el-button @click="saveItem('budget')" type="primary">修改</el-button>
+                <el-button @click="cancelChange('budget')">取消</el-button>
+              </el-row>
             </el-col>
           </el-row>
         </template>
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit3=true" @mouseleave="showEdit3 = false">
-              <span v-if="!editing3">{{project.charger_name}}</span>
+            <div
+              v-if="!copyProjecr.charger_name.isEdit"
+              @mouseover="showIcon('charger_name',true)"
+              @mouseleave="showIcon('charger_name',false)"
+            >
+              <span>{{project.charger_name}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit3"
-                @click="edit(2)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.charger_name.isShowEditeIcon"
+                @click="editItem('charger_name')"
               ></i>
             </div>
-            <div v-if="editing3">
+            <div v-else>
               <el-select
-                v-model="charger"
+                v-model="copyProjecr.charger_name.value"
                 filterable
                 placeholder="请选择负责人"
                 ref="selete"
-                @change="userChange"
               >
                 <el-option
                   v-for="item of UserList"
@@ -178,7 +189,8 @@
                   :key="item.id"
                 ></el-option>
               </el-select>
-              <el-button @click="save(2)" type="primary">修改</el-button>
+              <el-button @click="saveItem('charger_name')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('charger_name')">取消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -259,17 +271,25 @@
           <el-row>
             <el-col :span="6" class="comment">客户信息</el-col>
             <el-col :span="18" class="comment">
-              <div @mouseover="showEdit5=true" @mouseleave="showEdit5 = false">
-                <span v-if="!editing5">{{project.client.client_name?project.client.client_name:"-"}}</span>
+              <div
+                v-if="!copyProjecr.client.isEdit"
+                @mouseover="showIcon('client',true)"
+                @mouseleave="showIcon('client',false)"
+              >
+                <span>{{project.client.client_name?project.client.client_name:"-"}}</span>
                 <i
                   class="el-icon-edit"
                   style="color:blue"
-                  v-if="$store.state.login.userInfo.auth.manage_project&&showEdit5"
-                  @click="edit(4)"
+                  v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.client.isShowEditeIcon"
+                  @click="editItem('client')"
                 ></i>
               </div>
-              <div v-if="editing5">
-                <el-select v-model="client" placeholder="请选择" ref="selete" @change="clientChange">
+              <div v-else>
+                <el-select
+                  v-model="copyProjecr.client.value.client_id"
+                  placeholder="请选择"
+                  ref="selete"
+                >
                   <el-option
                     v-for="item of clientList"
                     :key="item.id"
@@ -277,7 +297,8 @@
                     :value="item.id"
                   ></el-option>
                 </el-select>
-                <el-button @click="save(4)" type="primary">修改</el-button>
+                <el-button @click="saveItem('client')" type="primary">修改</el-button>
+                <el-button @click="cancelChange('client')">取消</el-button>
               </div>
             </el-col>
           </el-row>
@@ -668,20 +689,21 @@
 </template>
 
 <script>
-import { putProjects,updateRequirement } from "@/api/project";
+import { putProjects, updateRequirement } from "@/api/project";
 import { getClientList } from "@/api/admin";
 import { editAssets } from "@/api/assets";
 import { mapState } from "vuex";
 import { returnStatement } from "@babel/types";
 import { constants } from "crypto";
+import dayjs from "dayjs";
 export default {
   props: ["project", "authAsset", "configImg"],
   name: "info",
   data() {
     return {
-      editing: false,
+      // 复制并变异this.project对象
+      copyProjecr: {},
       editing2: false,
-      editing3: false,
       editing4: false,
       editing5: false,
       editing6: false,
@@ -704,8 +726,6 @@ export default {
       editing23: false,
       editing24: false,
       editing25: false,
-      name: null,
-      budget: null,
       charger: null,
       charger_name: null,
       path: null,
@@ -731,9 +751,7 @@ export default {
       school: null,
       reference: null,
       requirement: null,
-      showEdit: false,
       showEdit2: false,
-      showEdit3: false,
       showEdit4: false,
       showEdit5: false,
       showEdit6: false,
@@ -756,28 +774,94 @@ export default {
       showEdit23: false,
       showEdit24: false,
       showEdit25: false,
-      clientList: null
+      clientList: []
     };
   },
   computed: {
     ...mapState("admin", ["UserList"])
   },
   created() {},
+  watch: {
+    project: {
+      deep: true,
+      handler: function(newObj) {
+        const OBJ = {};
+        Object.keys(newObj).map(t => {
+          OBJ[t] = {
+            value: newObj[t],
+            isEdit: false,
+            isShowEditIcon: false
+          };
+        });
+        this.copyProjecr = Object.assign({}, OBJ);
+      }
+    }
+  },
   methods: {
-    userChange(val) {
-      //console.log(val);
-      this.charger_name = this.UserList.find(item => {
-        return item.id === val;
-      }).username;
-      //console.log(this.charger_name);
-      this.save(2);
+    // 提交编辑的内容
+    saveItem(prop) {
+      const httpData = {
+        method: "put",
+        id: this.project.id
+      };
+      function dataFormat(dateVal) {
+        return dayjs(dateVal).format("YYYY/MM/DD HH:mm:ss");
+      }
+      switch (prop) {
+        case "start" || "end":
+          httpData[prop] = dataFormat(this.copyProjecr[prop].value);
+          break;
+        case "charger_name":
+          httpData["charger"] = this.copyProjecr[prop].value;
+          break;
+        case "client":
+          httpData[prop] = this.copyProjecr[prop].value.client_id;
+        default:
+          httpData[prop] = this.copyProjecr[prop].value;
+          break;
+      }
+      putProjects(httpData).then(({ data }) => {
+        if (data.status === 0) {
+          this.$message.success(data.msg);
+          // 关闭编辑状态
+          this.editItem(prop, false);
+          this.$emit("refreshProject");
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
     },
-    clientChange(val) {
-      this.client_name = this.clientList.find(item => {
-        return item.id === val;
-      }).username;
-      // console.log(this.client_name)
-      this.save(4);
+    // 取消修改
+    cancelChange(prop) {
+      // 关闭编辑状态
+      this.editItem(prop, false);
+      // 还原成原来的数据
+      this.copyProjecr[prop] = {
+        ...this.copyProjecr[prop],
+        value: this.project[prop]
+      };
+    },
+    /**
+     * 进入编辑状态
+     * @param {Boolean} type 默认为true表示进入了编辑状态
+     **/
+    editItem(prop, type = true) {
+      if (prop==='client') {
+        getClientList().then(({ data }) => {
+          this.clientList = [...data];
+        });
+      }
+      this.copyProjecr[prop] = { ...this.copyProjecr[prop], isEdit: type };
+    },
+    /**
+     * hover状态显示编辑按钮
+     * @param {Boolean} type hover的时候改变状态，表示是否显示编辑图标
+     **/
+    showIcon(prop, type) {
+      this.copyProjecr[prop] = {
+        ...this.copyProjecr[prop],
+        isShowEditeIcon: type
+      };
     },
     edit(Type) {
       if (Type === 0) {
@@ -1293,7 +1377,7 @@ export default {
         this.$emit("refresh_assetList");
       });
     },
-    save3(Type){
+    save3(Type) {
       if (Type === 24) {
         let data = {};
         this.editing25 = false;
@@ -1313,10 +1397,9 @@ export default {
               .replace(/\n/g, "<br/>")
               .replace(/\s/g, "&nbsp;");
             this.requirement = null;
-          }else{
-            this.$message.error(data.msg)
+          } else {
+            this.$message.error(data.msg);
           }
-          
         });
       }
     }
@@ -1337,6 +1420,9 @@ export default {
   }
   input:focus {
     outline: none;
+  }
+  .edit-inp {
+    width: 300px;
   }
 }
 </style>

@@ -4,7 +4,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="制作要求" name="tab6" lazy>
         <div style="width:50%">
-          <info :project="project" configImg="img" />
+          <info @refreshProject="getProjectDetail()" :project="project" configImg="img" />
         </div>
       </el-tab-pane>
       <template v-if="project.pro_type === 0">
