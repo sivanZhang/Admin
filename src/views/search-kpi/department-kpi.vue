@@ -27,12 +27,12 @@
       <el-table-column prop="dept_name" label="部门"></el-table-column>
       <el-table-column prop="accomplish_asset_num" label="完成的资产数量"></el-table-column>
       <el-table-column prop="accomplish_asset_frame" label="完成的镜头帧数"></el-table-column>
-      <el-table-column label="难度等级">
+      <el-table-column label="难度">
         <template slot-scope="scope">
           <div v-for="(todo,index) of scope.row.per_grade_task" :key="index">{{todo.grade|Level}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="每帧耗时|(当前难度等级）" :render-header="renderheader">
+      <el-table-column label="每帧耗时|(当前难度）" :render-header="renderheader">
         <template slot-scope="scope">
           <div
             v-for="(todo,index) of scope.row.per_grade_task"

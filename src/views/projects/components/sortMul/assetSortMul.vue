@@ -87,7 +87,7 @@ export default {
         },
         {
           value: "level",
-          label: "难度等级"
+          label: "难度"
         },
         {
           value: "status",

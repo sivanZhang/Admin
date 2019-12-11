@@ -421,7 +421,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="comment">难度等级</el-col>
+          <el-col :span="6" class="comment">难度</el-col>
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
               <span v-if="!editing19">{{project.level |Level}}</span>
@@ -436,7 +436,7 @@
               <el-select
                 v-model="level"
                 filterable
-                placeholder="请选择难度等级"
+                placeholder="请选择难度"
                 ref="selete"
                 @change="save2(18)"
               >

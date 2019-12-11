@@ -40,7 +40,7 @@
               <el-checkbox v-model="show_priority">优先级</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_grade">难度等级</el-checkbox>
+              <el-checkbox v-model="show_grade">难度</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_status">状态</el-checkbox>
@@ -128,11 +128,11 @@
         </el-table-column>
         <el-table-column
           label="镜头号"
-          show-overflow-tooltip
+        
           v-if="show_asset_name"
           prop="asset"
           sortable="custom"
-          width="90pxs"
+          width="130px"
           class-name="links"
         >
           <template slot-scope="scope">
@@ -319,7 +319,7 @@
         </el-table-column>
         <el-table-column
           prop="grade"
-          label="难度等级"
+          label="难度"
           :formatter="Grade"
           v-if="show_grade"
           width="120px"
@@ -334,7 +334,7 @@
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.grade"
-              placeholder="请选择难度等级"
+              placeholder="请选择难度"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'grade')"
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
@@ -1250,7 +1250,7 @@ export default {
       value8: "否",
       sortSelForm: {}, //保存多列筛选条件
       sortfilter: null, //保存单列排序的条件
-      valSel: null, //保存table表内筛选（状态、难度等级、优先级）的条件
+      valSel: null, //保存table表内筛选（状态、难度、优先级）的条件
       cutType: -1, //分页类别区分
       oneSel: null, //保存单列筛选的条件
       authAsset: null,
@@ -1454,7 +1454,7 @@ export default {
           case "优先级":
             this.cellCol = "priority";
             break;
-          case "难度等级":
+          case "难度":
             this.cellCol = "grade";
             break;
           case "执行人":
@@ -2255,7 +2255,7 @@ export default {
         })
         .catch(() => {});
     },
-    //table表内筛选（状态、难度等级、优先级）+分页
+    //table表内筛选（状态、难度、优先级）+分页
     filterHandler(val, Type) {
       this.cutType = 4;
       this.valSel = val;
@@ -2377,7 +2377,7 @@ export default {
           this.$refs["taskFilter"].showMul(); //重置筛选条件展示
           this.$refs["taskSel"].refreshOneSel(); //重置单条件筛选
           this.sortfilter = null; //重置多条件筛选存储的条件
-          this.valSel = null; //重置table表内筛选（状态、难度等级、优先级）存储的条件
+          this.valSel = null; //重置table表内筛选（状态、难度、优先级）存储的条件
           this.oneSel = null; //重置单条件排序存储的条件
           this.currentPage = 1;
           data = { ...data, pagenum: 20, page: 1 };
@@ -2432,7 +2432,7 @@ export default {
           this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
           break;
         case 4:
-          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          this.filterHandler(this.valSel, 2); //table表内状态、难度和优先级排序分页查看
           break;
         case 5:
           this.getTasks(4, this.oneSel); //单条件筛选下的分页
@@ -2455,7 +2455,7 @@ export default {
           this.sortFilter(this.sortfilter, 2); //单条件排序分页查看
           break;
         case 4:
-          this.filterHandler(this.valSel, 2); //table表内状态、难度等级和优先级排序分页查看
+          this.filterHandler(this.valSel, 2); //table表内状态、难度和优先级排序分页查看
           break;
         case 5:
           this.getTasks(4, this.oneSel); //单条件筛选下的分页
@@ -2484,7 +2484,7 @@ export default {
           break;
       }
     },
-    //难度等级格式化显示
+    //难度格式化显示
     Grade: function(row, column) {
       switch (row.grade) {
         case 0:

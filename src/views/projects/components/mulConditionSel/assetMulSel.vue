@@ -65,7 +65,7 @@
                   </el-row>
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item label="难度等级" prop="level">
+                      <el-form-item label="难度" prop="level">
                         <el-select v-model="sortSelForm.level" multiple placeholder="请选择">
                           <el-option label="A+" :value="0"></el-option>
                           <el-option label="A" :value="1"></el-option>

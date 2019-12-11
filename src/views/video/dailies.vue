@@ -44,7 +44,7 @@
           <el-progress :stroke-width="12" :percentage="scope.row.schedule" v-if="scope.row.status != 3 && scope.row.status != 4"></el-progress>
         </template>
       </el-table-column>
-      <el-table-column prop="grade" label="难度等级" width="120px" align="center">
+      <el-table-column prop="grade" label="难度" width="120px" align="center">
         <template slot-scope="scope">
           <div
             style="backgroundColor:#C64b2b;color:#FFF"

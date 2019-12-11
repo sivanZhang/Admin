@@ -44,7 +44,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="镜头名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="name" label="镜头号" width="130px;" ></el-table-column>
         <el-table-column prop="schedule" label="进度" width="160px">
           <template slot-scope="scope">
             <el-progress
@@ -86,7 +86,7 @@
         <el-table-column prop="priority" label="优先级">
           <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
         </el-table-column>
-        <el-table-column prop="level" label="难度等级">
+        <el-table-column prop="level" label="难度">
           <template slot-scope="scope">{{scope.row.level|Level}}</template>
         </el-table-column>
         <el-table-column prop="id" label="资产ID"></el-table-column>
@@ -167,10 +167,9 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="asset.name" label="镜头名称" show-overflow-tooltip>
+        <el-table-column prop="asset.name" label="镜头号" width="130px;">
           <template slot-scope="scope">{{scope.row.asset.name?scope.row.asset.name:'-'}}</template>
         </el-table-column>
-        <el-table-column prop="asset.id" label="镜头号"></el-table-column>
         <el-table-column prop="episode" label="集数">
           <template slot-scope="scope">{{scope.row.episode?scope.row.episode:'-'}}</template>
         </el-table-column>
@@ -199,7 +198,7 @@
         <el-table-column prop="priority" label="优先级">
           <template slot-scope="scope">{{scope.row.priority|taskPriority}}</template>
         </el-table-column>
-        <el-table-column prop="grade" label="难度等级">
+        <el-table-column prop="grade" label="难度">
           <template slot-scope="scope">{{scope.row.grade|taskgrade}}</template>
         </el-table-column>
         <el-table-column prop="start_date" label="开始日期" width="100px">
