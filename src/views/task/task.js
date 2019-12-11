@@ -35,7 +35,7 @@ export default {
     approveLog,
     history,
     assetDrawer,
-   // linkTaskOutput
+   //linkTaskOutput
   },
   data() {
     return {
@@ -60,10 +60,7 @@ export default {
         label: '进行中',
         value: 2
       },
-      {
-        label: '完成',
-        value: 4
-      },
+     
     ],
       createLoading: false,
       TaskRecord: [],
@@ -769,7 +766,7 @@ export default {
         date: new Date().toLocaleDateString()
 
       })
-     // this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
+    //  this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
       this.logsLoading = true
       this.$refs['taskApprovelog'].getApproveLog(row.task.id)
       queryTaskRecord({
