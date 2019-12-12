@@ -1,4 +1,4 @@
-//实训项目 公共状态
+//练习项目 公共状态
 import {
     getTrainingProject
 } from "@/api/training"

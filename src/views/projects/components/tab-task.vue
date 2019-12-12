@@ -1703,7 +1703,7 @@ export default {
         });
       }
     },
-    //获取实训分组
+    //获取练习分组
     getTeam() {
       getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
         ({ data }) => {

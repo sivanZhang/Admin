@@ -77,7 +77,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="实训时间配置">
+      <el-tab-pane label="练习时间配置">
         <div style="display:flex">
           <div style="width:35%;padding:3px" v-if="$store.state.login.userInfo.auth.admin_management">
             <div style="display:flex">
@@ -268,7 +268,7 @@ export default {
           }
         });
       }
-      //实训成员设置
+      //练习生设置
       if (Type == 2) {
         this.$refs["saveForm1"].validate(valid => {
           if (valid) {

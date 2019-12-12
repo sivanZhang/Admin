@@ -8,7 +8,7 @@
         </div>
       </el-tab-pane>
       <template v-if="project.pro_type === 0">
-        <el-tab-pane label="实训成员" name="tab5" lazy>
+        <el-tab-pane label="练习生" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
         </el-tab-pane>
       </template>

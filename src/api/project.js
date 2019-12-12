@@ -23,21 +23,21 @@ export function projectProfession(data) {
 export function delOneProject(data) {
   return AXIOS.post('/projects/projects/?delete', data)
 }
-// 实训项目新建分组
+// 练习生项目新建分组
 export function createTeam(data) {
   return AXIOS.post('/projects/team/', data)
 }
 
-// 实训项目修改分组
+// 练习生项目修改分组
 export function putTeam(data) {
   return AXIOS.post('/projects/team/?put', data)
 }
 
-// 实训项目删除分组
+// 练习生项目删除分组
 export function delTeam(data) {
   return AXIOS.post('/projects/team/?delete', data)
 }
-// 实训项目获取分组列表
+// 练习生项目获取分组列表
 export function getTeamList(params) {
   return AXIOS.get('/projects/team/', { params })
 }

@@ -84,7 +84,7 @@
       <el-table-column
         label="实体类别"
         prop="entity_type"
-        :filters="[{text: '任务实体', value: '1'}, {text: '项目实体', value: '4'}, {text: '资产实体', value: '5'},{text: '用户实体', value: '7'},{text: '实训项目实体', value: '8'}]"
+        :filters="[{text: '任务实体', value: '1'}, {text: '项目实体', value: '4'}, {text: '资产实体', value: '5'},{text: '用户实体', value: '7'},{text: '练习项目实体', value: '8'}]"
         :filter-method="filterHandler"
       >
         <template slot-scope="scope">{{scope.row.entity_type|entityFilter}}</template>

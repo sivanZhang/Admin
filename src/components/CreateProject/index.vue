@@ -31,14 +31,14 @@
         </el-upload>
         <el-form-item label="类型">
           <!-- <el-radio-group v-model="radio">
-            <el-radio :label="0">实训项目</el-radio>
+            <el-radio :label="0">练习项目</el-radio>
             <el-radio :label="1">项目</el-radio>
           </el-radio-group>-->
           <el-switch
             v-model="radio"
             active-value="0"
             inactive-value="1"
-            active-text="实训项目"
+            active-text="练习项目"
             inactive-text="标准项目"
           ></el-switch>
         </el-form-item>

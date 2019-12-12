@@ -385,7 +385,7 @@ export default {
           value: 7
         },
         {
-          type: "实训项目实体",
+          type: "练习项目实体",
           value: 8
         }
       ],

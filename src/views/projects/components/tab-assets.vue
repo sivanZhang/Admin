@@ -310,7 +310,7 @@
           </template>
         </el-table-column>
         <template v-if="groupType == 0?true:false">
-          <el-table-column label="实训阶段" prop="groups" width="120px">
+          <el-table-column label="练习阶段" prop="groups" width="120px">
             <template slot-scope="scope">
               <el-row v-for="(item,index) of scope.row.groups" :key="index">
                 <el-col>{{item}}</el-col>

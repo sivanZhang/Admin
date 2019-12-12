@@ -258,7 +258,7 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         >
           <el-table-column type="index"></el-table-column>
-          <el-table-column prop="name" label="实训成员"></el-table-column>
+          <el-table-column prop="name" label="练习生"></el-table-column>
           <el-table-column prop="grade" label="总成绩"></el-table-column>
         </el-table>
       </el-row>
