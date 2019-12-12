@@ -10,17 +10,21 @@ import {
   getHistoryVersion,
   auth
 } from '@/api/assets'
+import {
+  getProjects
+} from '@/api/project';
 import draggable from 'vuedraggable'
 import taskForm from './components/task-form'
 import tabLog from './components/tab-log'
 import tabApprove from './components/tab-approve'
 import tabTaskDtail from './components/tab-task-detail'
 import history from '@/views/task/components/tab-history'
-//import linkTaskOutput from "@/views/task/components/tab-linkTaskOutput";
+// import linkTaskOutput from "@/views/task/components/tab-linkTaskOutput";
 import approveLog from '@/views/components/approve-log'
 import thumbtackMixin from '@/utils/thumbtack-mixin'
 import dayjs from 'dayjs'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
+import info from '@/components/projectDrawer/components/info';
 import {
   mapState
 } from 'vuex'
@@ -35,7 +39,8 @@ export default {
     approveLog,
     history,
     assetDrawer,
-   //linkTaskOutput
+    info
+    // linkTaskOutput
   },
   data() {
     return {
@@ -59,9 +64,9 @@ export default {
       }, {
         label: '进行中',
         value: 2
-      },
-     
-    ],
+      }
+
+      ],
       createLoading: false,
       TaskRecord: [],
       isDialogShow: false,
@@ -756,7 +761,6 @@ export default {
       this.project = row.project
       this.assetId = row.asset.id
       this.isDrawerShow = true
-
       this.activeRow = {
         ...row
       }
@@ -766,7 +770,7 @@ export default {
         date: new Date().toLocaleDateString()
 
       })
-    //  this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
+      //  this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
       this.logsLoading = true
       this.$refs['taskApprovelog'].getApproveLog(row.task.id)
       queryTaskRecord({
@@ -795,8 +799,7 @@ export default {
         this.surplus_labor_hour = data.msg.surplus_labor_hour
         this.Asset = this.TaskDetail.asset
         this.Link = this.TaskDetail.link_dept_name
-        this.detailLoading = false
-      }).catch(() => {
+      }).finally(() => {
         this.detailLoading = false
       })
       getHistoryVersion({

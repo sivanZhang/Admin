@@ -3,13 +3,27 @@
     <el-row slot="header" type="flex" justify="space-between" align="middle" class="card-header">
       <span style="padding-right: 10px;">审批反馈</span>
     </el-row>
-    <section class="feedback" v-for="(item,index) of FeedbackList" :key="index">
-      <div class="name" @click="showDrawer(item)"><span class="label">任务</span>: {{item.task.name}}</div>
-      <div class="date">{{item.date|dateFormat}}</div>
-      <div class="asset"><span class="label">镜头</span>: {{item.task.asset_name}}</div>
-      <div class="text-right" :style="{color:item.result?'#19be6b':'#ed4014'}">{{item.result?'通过':'未通过'}}</div>
-      <div class="opinion"><span class="label">意见</span>: {{item.suggestion}}</div>
-    </section>
+    <template v-if="FeedbackList.length">
+      <section class="feedback" v-for="(item,index) of FeedbackList" :key="index">
+        <div class="name" @click="showDrawer(item)">
+          <span class="label">任务</span>
+          : {{item.task.name}}
+        </div>
+        <div class="date">{{item.date|dateFormat}}</div>
+        <div class="asset">
+          <span class="label">镜头</span>
+          : {{item.task.asset_name}}
+        </div>
+        <div
+          class="text-right"
+          :style="{color:item.result?'#19be6b':'#ed4014'}"
+        >{{item.result?'通过':'未通过'}}</div>
+        <div class="opinion">
+          <span class="label">意见</span>
+          : {{item.suggestion}}
+        </div>
+      </section>
+    </template>
   </el-card>
 </template>
 <script>
@@ -29,7 +43,12 @@ export default {
   created() {
     this.getTaskCount();
     getFeedback().then(res => {
-      this.FeedbackList = [...res.data.msg];
+      if (res.data.status===0) {
+        this.FeedbackList = [...res.data.msg];
+      }else{
+        this.$message.error('审批反馈：'+res.data.msg)
+      }
+      
     });
   },
   methods: {
@@ -57,11 +76,11 @@ $linkColor: #2d8cf0;
   display: flex;
   justify-content: space-between;
   flex-flow: row wrap;
-  .asset{
+  .asset {
     flex: 0 0 80%;
     @include mustInLine;
   }
-  .opinion{
+  .opinion {
     flex: 1 1 100%;
   }
   .name {
@@ -75,11 +94,11 @@ $linkColor: #2d8cf0;
     text-align: right;
     flex: 0 0 20%;
   }
-  .text-right{
+  .text-right {
     text-align: right;
     flex: 0 0 20%;
   }
-  .label{
+  .label {
     display: inline-block;
     width: 30px;
   }
