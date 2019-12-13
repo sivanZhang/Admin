@@ -63,13 +63,13 @@ export function getingExecutorChart(params) {
   })
 }
 
-//获取实训项目下某分组的任务完成情况
+//获取练习生项目下某分组的任务完成情况
 export function trainTask(params) {
   return AXIOS.get('/statistic/task/', {
     params
   })
 }
-//获取个人实训画像雷达数据
+//获取个人练习生画像雷达数据
 export function getRange(params) {
   return AXIOS.get('/projects/range/', {
     params

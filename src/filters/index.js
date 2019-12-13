@@ -385,7 +385,7 @@ export function entityFilter(entity) {
       return '用户实体'
       break
     case 8:
-      return '实训项目实体'
+      return '练习项目实体'
       break
   }
 }

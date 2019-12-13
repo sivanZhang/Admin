@@ -1,6 +1,6 @@
 /**
  * 
- *@file 只有实训项目的权限时候用的路由
+ *@file 只有练习项目的权限时候用的路由
  *  
  */
 import Layout from '@/layout'
@@ -20,7 +20,7 @@ export default [{
       component: () =>
         import('@/views/training/training-project'),
       meta: {
-        title: '实训项目',
+        title: '练习项目',
         icon: 'tree2'
       },
     }]

@@ -8,6 +8,9 @@
           ref="taskdetail"
         />
       </el-tab-pane>
+      <el-tab-pane label="关联任务输出" name="fourth">
+        <linkTaskOutput ref="linkTaskOutput" />
+      </el-tab-pane>
       <el-tab-pane label="历史版本" name="third">
         <history :historyVersion="historyVersion" :project="project" @Version="getAssetVersion" />
       </el-tab-pane>
@@ -34,6 +37,7 @@
 import * as HTTP from "@/api/task";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import history from "@/views/task/components/tab-history";
+import linkTaskOutput from "@/views/task/components/tab-linkTaskOutput";
 import tabLog from "@/views/task/components/tab-log";
 import approveLog from "@/views/components/approve-log";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
@@ -46,7 +50,8 @@ export default {
     attrsBind,
     tabLog,
     tabTaskDtail,
-    history
+    history,
+    linkTaskOutput
   },
   data() {
     return {
@@ -65,8 +70,9 @@ export default {
   methods: {
     //展示任务侧栏
     showDrawer(item) {
+      // console.log("-----")
       // console.log(item);
-      
+      this.$refs["linkTaskOutput"].getlinkTaskOutput(item.id);
       this.project = item.project;
       searchBind({ entity_type: 1 }).then(({ data }) => {
         this.attrsList = [...data.msg];

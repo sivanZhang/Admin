@@ -171,15 +171,15 @@ export function getDates(params) {
 export function officialWorktime(data) {
   return AXIOS.post('/wkconfig/sysconfig/', data)
 }
-//实训成员的上下班时间和工时
+//练习生成员的上下班时间和工时
 export function trainingWorktime(data) {
   return AXIOS.post('/wkconfig/sysconfig/', data)
 }
-//实训排名权重设置
+//练习生排名权重设置
 export function rankList(data) {
   return AXIOS.post('/wkconfig/sysconfig/', data)
 }
-//获取客户部门或者外包部门、实训以及内部工时设置
+//获取客户部门或者外包部门、练习生以及内部工时设置
 export function getDateList(params) {
   return AXIOS.get('/wkconfig/sysconfig/', {params})
 }

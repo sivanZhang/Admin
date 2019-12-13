@@ -68,7 +68,7 @@ export function getAssetTaskList(params) {
   })
 }
 
-//给实训项目批量创建任务
+//给练习生项目批量创建任务
 export function mulCreateTasks(data) {
   return AXIOS.post('/task/batch_task/', data)
 }

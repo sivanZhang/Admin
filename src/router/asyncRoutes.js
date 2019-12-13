@@ -52,7 +52,7 @@ export default function asyncRoutes(params) {
           component: () =>
             import('@/views/training/training-project'),
           meta: {
-            title: '实训项目',
+            title: '练习项目',
             icon: 'tree2'
           },
         }

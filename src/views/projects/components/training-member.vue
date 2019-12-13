@@ -1,4 +1,4 @@
-<!-- 实训成员 -->
+<!-- 练习生 -->
 <template>
   <div id="training" ref="drawer-parent">
     <el-table
@@ -11,7 +11,7 @@
           <div @click="openTeam(scope)" class="links">{{scope.row.name}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="实训人员">
+      <el-table-column label="练习人员">
         <template slot-scope="scope">
           <div @click="openRanking(scope.row)" class="links">{{scope.row.username}}</div>
         </template>
@@ -150,7 +150,7 @@ export default {
       }).then(({ data }) => {
         const option = {
           title: {
-            text: "实训画像"
+            text: "练习画像"
           },
           legend: {
             data: ["个人所有排名"],

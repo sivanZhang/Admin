@@ -766,7 +766,7 @@ export default {
       addMebDialog: false,
       addMebForm: {},
       addId: null,
-      labelChange: this.project.pro_type == 0 ? "实训岗位" : "参与工种",
+      labelChange: this.project.pro_type == 0 ? "练习岗位" : "参与工种",
       groupDialog: false,
       groupForm: {
         projectid: this.project.id

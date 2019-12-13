@@ -192,6 +192,13 @@
                 :detailLoading="detailLoading"
               />
             </el-tab-pane>
+            <el-tab-pane label="项目详情" lazy >
+              <info :project="project" />
+             </el-tab-pane>
+            <el-tab-pane label="关联任务输出">
+              <linkTaskOutput ref="linkTaskOutput" />
+            </el-tab-pane>
+            
             <el-tab-pane label="历史版本">
               <history
                 :historyVersion="historyVersion"
