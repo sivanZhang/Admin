@@ -22,9 +22,6 @@
           </template>
           <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
             <el-col :span="12">
-              <el-checkbox v-model="ind">序号</el-checkbox>
-            </el-col>
-            <el-col :span="12">
               <el-checkbox v-model="show_image">缩略图</el-checkbox>
             </el-col>
             <el-col :span="12">
@@ -64,13 +61,16 @@
               <el-checkbox v-model="show_id">资产ID</el-checkbox>
             </el-col>
             <el-col :span="12">
+              <el-checkbox v-model="show_small_status">小状态</el-checkbox>
+            </el-col>
+            <el-col :span="12">
               <el-checkbox v-model="show_creator_name">创建人</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_creator_id">创建人ID</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_status">状态</el-checkbox>
+              <el-checkbox v-model="show_status">进度</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_link">当前环节</el-checkbox>
@@ -143,7 +143,34 @@
             <label for v-else>此镜头暂无任务</label>
           </template>
         </el-table-column>
-        <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column>
+           <el-table-column
+          prop="name"
+          :label="labelName"
+          align="left"
+          width="130px"
+          v-if="show_name"
+          sortable="custom"
+          class-name="links"
+        >
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.name"
+              placeholder="请输入"
+              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
+              @change="showEditIcon"
+              @blur="saveEdit(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            >
+              <span>{{scope.row.name?scope.row.name:"-"}}</span>
+            </el-input>
+            <span
+              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
+              @click="show(scope.row.id)"
+            >{{scope.row.name?scope.row.name:"-"}}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column> -->
         <el-table-column label="缩略图" align="center" v-if="show_image" width="180px">
           <template slot-scope="scope">
             <el-image
@@ -253,7 +280,7 @@
             ></el-progress>
           </template>
         </el-table-column>
-        <el-table-column label="小状态" prop="small_status" width="120px">
+        <el-table-column label="小状态" prop="small_status" width="100px"  v-if="show_small_status">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
@@ -318,36 +345,9 @@
             </template>
           </el-table-column>
         </template>
-
+        <el-table-column label="任务|数量" prop="task_num" width="60px;"    :render-header="renderheader"></el-table-column>
         <el-table-column
-          prop="name"
-          :label="labelName"
-          align="left"
-          width="130px"
-          v-if="show_name"
-          sortable="custom"
-          class-name="links"
-        >
-          <template slot-scope="scope">
-            <el-input
-              size="small"
-              v-model="scope.row.name"
-              placeholder="请输入"
-              v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
-              @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-            >
-              <span>{{scope.row.name?scope.row.name:"-"}}</span>
-            </el-input>
-            <span
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
-              @click="show(scope.row.id)"
-            >{{scope.row.name?scope.row.name:"-"}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="任务数量" prop="task_num"></el-table-column>
-        <el-table-column
+         width="80px;"
           prop="session"
           label="场次"
           align="center"
@@ -374,6 +374,7 @@
           </template>
         </el-table-column>
         <el-table-column
+          width="80px;"
           prop="episode"
           label="集数"
           align="center"
@@ -453,7 +454,7 @@
           prop="reference"
           label="制作参考"
           align="left"
-          width="120px"
+          width="100px"
           v-if="show_frame_reference"
         >
           <template slot-scope="scope">
@@ -502,7 +503,7 @@
           prop="retime"
           label="变速信息"
           align="left"
-          width="120px"
+          width="100px"
           v-if="show_retime&&(notShow == 'true' ?true:false)"
         >
           <template slot-scope="scope">
@@ -642,7 +643,7 @@
         <el-table-column
           label="创建日期"
           align="left"
-          width="160px"
+          width="105px"
           v-if="show_create_date"
           prop="date"
           class-name="date"
@@ -653,7 +654,7 @@
         <el-table-column
           label="开始日期"
           align="left"
-          width="160px"
+          width="105px"
           v-if="show_start_date"
           prop="start_date"
           class-name="date"
@@ -676,7 +677,7 @@
         <el-table-column
           label="结束日期"
           align="left"
-          width="160px"
+           width="105px"
           v-if="show_end_date"
           prop="end_date"
           class-name="date"
@@ -697,17 +698,18 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="计划截止日期"
+          label="计划截止|日期"
           align="left"
-          width="160px"
+          width="105px"
           v-if="show_totle_date_end"
           prop="total_end_date"
           class-name="date"
           sortable="custom"
+          :render-header="renderheader"
         >
           <template slot-scope="scope">{{scope.row.total_date_end|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hours" label="总工时" align="left" v-if="show_total_hours"></el-table-column>
+        <el-table-column prop="total_hours" label="总工时" align="left"   width="80px" v-if="show_total_hours"></el-table-column>
         <el-table-column
           prop="remark"
           label="备注"
@@ -1078,6 +1080,7 @@ export default {
       imagePath: null,
       row: null,
       ind: true,
+      show_small_status:false,
       show_image: true,
       show_session: true,
       show_episode: true,
@@ -1178,6 +1181,14 @@ export default {
     }
   },
   methods: {
+     renderheader(h, { column, $index }) {
+      return h("span", {}, [
+        h("span", {}, column.label.split("|")[0]),
+        h("br"),
+        h("span", {}, column.label.split("|")[1])
+      ]);
+    },
+
     getProjectNum(){
         //获取集数列表
       getEpisodeSession({id: this.$route.params.id, episode: ""}).then(
