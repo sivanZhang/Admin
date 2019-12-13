@@ -6,6 +6,7 @@
       :data="extraList"
       style="margin-top:20px;width:100%"
       highlight-current-row
+      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="cellStyle"
     >
       <el-table-column type="index" label="序号" align="center" />
@@ -373,13 +374,7 @@ export default {
 };
 </script>
 <style lang='scss' >
-#extra-audit {
-  .links {
-    cursor: pointer;
-    color: #2d8cf0;
-  }
-  .el-card {
-    border-radius: 0px;
-  }
+.el-table--mini th, .el-table--mini td {
+    padding: 12px 0;
 }
 </style>

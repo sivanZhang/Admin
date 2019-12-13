@@ -7,9 +7,10 @@
       class="pan-btn green-btn"
     >任务审核</el-button>
     <el-table
+    style="margin-top:20px;width:100%"
       v-loading="tableLoading"
       :data="AuditList"
-:header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+     :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       highlight-current-row
       @select="taskSelect"
       @select-all="taskSelect"
@@ -164,6 +165,7 @@
             <el-radio :label="0">拒绝</el-radio>
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
+           <el-checkbox v-model="form_obj.checked1" style="margin-left:20px;">标记为已完成</el-checkbox>
           <template v-if="pro_type === 0">
             <el-row type="flex" align="middle">
               <el-col :span="5">审核评分</el-col>
@@ -334,9 +336,15 @@ export default {
         {
           suggestion: "",
           approve_result: 0,
-          task_id: id
+          task_id: id,
+          checked1:false,
         }
       );
+       if (this.form_obj.checked1 == false) {
+        delete this.form_obj.checked1;
+      }
+     console.log('11111')
+     console.log( this.form_obj)
       this.$refs["approvelogs"].getApproveLog(id);
     },
     submitApprove() {
@@ -409,6 +417,6 @@ export default {
   }
 }
 .el-table--mini th, .el-table--mini td {
-    padding:0;
+    padding: 12px 0;
 }
 </style>

@@ -4,7 +4,7 @@
     <el-table
      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :data="dailies"
-      style="margin-top:15px;width:100%"
+      style="margin-top:20px;width:100%"
       highlight-current-row
       :cell-style="cellStyle"
       v-loading="tableLoading"
@@ -185,5 +185,7 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-
+.el-table--mini th, .el-table--mini td {
+    padding: 12px 0;
+}
 </style>
