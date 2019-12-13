@@ -106,6 +106,19 @@
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
+        <el-table-column
+          label="镜头号"
+        
+          v-if="show_asset_name"
+          prop="asset"
+          sortable="custom"
+          width="130px"
+          class-name="links"
+        >
+          <template slot-scope="scope">
+            <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
+          </template>
+        </el-table-column>
 
         <el-table-column label="缩略图" v-if="show_project_image" width="180px">
           <template slot-scope="scope" v-if="!scope.row.pid">
@@ -126,19 +139,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column
-          label="镜头号"
         
-          v-if="show_asset_name"
-          prop="asset"
-          sortable="custom"
-          width="130px"
-          class-name="links"
-        >
-          <template slot-scope="scope">
-            <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
-          </template>
-        </el-table-column>
         <el-table-column
           label="集数"
           prop="episode"
@@ -289,7 +290,7 @@
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="提交次数" prop="submit_num"></el-table-column>
+        <el-table-column label="提交|次数" prop="submit_num" :render-header="renderheader" ></el-table-column>
         <el-table-column
           prop="priority"
           label="优先级"
@@ -373,13 +374,14 @@
           </template>
         </el-table-column>
         <el-table-column
+         :render-header="renderheader"
           prop="total_hour"
           align="center"
-          label="预设时间（小时）"
+          label="预设时间|（小时）"
           width="130px"
           v-if="show_total_hour"
         ></el-table-column>
-        <el-table-column label="最后提交时间" header-align="left" width="100px">
+        <el-table-column label="最后|提交时间" header-align="left" width="100px"  :render-header="renderheader">
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
         <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
@@ -1390,6 +1392,14 @@ export default {
     }
   },
   methods: {
+     renderheader(h, { column, $index }) {
+      return h("span", {}, [
+        h("span", {}, column.label.split("|")[0]),
+        h("br"),
+        h("span", {}, column.label.split("|")[1])
+      ]);
+    },
+
     getProjectNum() {
       //获取执行人的列表
       getProjectMember({ id: this.$route.params.id, members: "" }).then(
