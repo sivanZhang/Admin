@@ -2,6 +2,7 @@
 <template>
   <div id="Dailies">
     <el-table
+     :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :data="dailies"
       style="margin-top:15px;width:100%"
       highlight-current-row
@@ -184,4 +185,5 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+
 </style>
