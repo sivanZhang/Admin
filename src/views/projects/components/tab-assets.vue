@@ -442,7 +442,6 @@
               @blur="saveEdit(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
-              <span>{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
             </el-input>
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame_range')"
@@ -1307,6 +1306,8 @@ export default {
 
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
+      console.log(row, column, cell);
+      
       if (this.authAsset) {
         switch (column.label) {
           case "镜头号":
@@ -1682,9 +1683,6 @@ export default {
       if (!payload.small_status) {
         delete payload.small_status;
       }
-      console.log(index,row);
-      
-      debugger
       HTTP.editAssets(payload).then(({ data }) => {
         if (smallStatus) {
           editSmallStatus(smallStatus).then(({ data }) => {});
