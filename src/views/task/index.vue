@@ -463,7 +463,7 @@
           >
             <template slot-scope="scope">
               <div
-                v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&&scope.row.task.status != 5&& scope.row.task.status != 6"
+                v-if="scope.row.task.status != 3 &&scope.row.task.status != 4&& scope.row.task.status != 6"
               >
                 <el-select
                   :value="scope.row.task.status"

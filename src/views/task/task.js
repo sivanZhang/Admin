@@ -64,8 +64,11 @@ export default {
       }, {
         label: '进行中',
         value: 2
+      },
+      {
+        label: '超时',
+        value: 5
       }
-
       ],
       createLoading: false,
       TaskRecord: [],
@@ -271,7 +274,9 @@ export default {
       pageSizeList: [20, 30, 50, 100],
       currentPage1: 1, // 我的反馈分页
       pageSize1: 20,
-      FeedbackList: { msg: [] }
+      FeedbackList: {
+        msg: []
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -941,7 +946,9 @@ export default {
       }
       getFeedback(PARAMS).then(res => {
         if (res.data.status === 0) {
-          this.FeedbackList = { ...res.data }
+          this.FeedbackList = {
+            ...res.data
+          }
         } else {
           this.$message.error('审批反馈：' + res.data.msg)
         }
