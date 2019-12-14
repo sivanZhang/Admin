@@ -1,4 +1,4 @@
-//项目 公共状态
+// 项目 公共状态
 import {
   getProjects
 } from '@/api/project'

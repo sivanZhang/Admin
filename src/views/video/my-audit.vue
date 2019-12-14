@@ -1,5 +1,77 @@
 <template>
   <div id="my-audit" ref="drawer-parent">
+    <el-card class="custom-card">
+      <div class="inputs-warp">
+        <div>
+          <label class="input-label">项目:</label>
+          <el-select
+            v-model="searchParams.project_ids"
+            clearable
+            placeholder="请选择"
+            multiple
+            @visible-change="queryProjects"
+            filterable
+          >
+            <el-option
+              v-for="item in ProjectList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+        <div>
+          <label class="input-label">优先级:</label>
+          <el-select
+            v-model="searchParams.prioritys"
+            clearable
+            placeholder="请选择"
+            multiple
+            filterable
+          >
+            <el-option
+              v-for="item in prioritysLevelList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+        <div>
+          <label class="input-label">执行人:</label>
+          <el-select
+            v-model="searchParams.executor_ids"
+            clearable
+            placeholder="请选择"
+            multiple
+            filterable
+          >
+            <el-option
+              v-for="item in UserList"
+              :key="item.id"
+              :label="item.username"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+        <div>
+          <label class="input-label">镜头号:</label>
+          <el-input placeholder="请输入内容" v-model="searchParams.asset_name" clearable />
+        </div>
+        <div>
+          <label class="input-label">任务名:</label>
+          <el-input placeholder="请输入内容" v-model="searchParams.task_name" clearable />
+        </div>
+        <div>
+          <label class="input-label">任务内容:</label>
+          <el-input placeholder="请输入内容" v-model="searchParams.task_content" clearable />
+        </div>
+        <el-button-group>
+          <el-button type="primary" @click="queryMyTasks">查询</el-button>
+          <el-button @click="resetMyTasks">重置</el-button>
+        </el-button-group>
+      </div>
+    </el-card>
     <el-button
       icon="el-icon-video-camera-solid"
       type="success"
@@ -7,17 +79,17 @@
       class="pan-btn green-btn"
     >任务审核</el-button>
     <el-table
-    style="margin-top:20px;width:100%"
+      style="margin-top:20px;width:100%"
       v-loading="tableLoading"
       :data="AuditList"
-     :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       highlight-current-row
       @select="taskSelect"
       @select-all="taskSelect"
       :cell-style="cellStyle"
     >
       <el-table-column type="selection" width="60" align="center"></el-table-column>
-      <el-table-column label="所属项目" show-overflow-tooltip  class-name="links">
+      <el-table-column label="所属项目" show-overflow-tooltip class-name="links">
         <template slot-scope="scope">
           <router-link
             :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
@@ -36,13 +108,13 @@
               <span class="dot">...</span>
             </div>
             <div slot="error" class="image-slot">
-              <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
+              <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"></el-image>
             </div>
           </el-image>
         </template>
       </el-table-column>
       <el-table-column prop="asset_name" label="镜头号" show-overflow-tooltip></el-table-column>
-       <el-table-column label="反馈截图" width="180px">
+      <el-table-column label="反馈截图" width="180px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project.image"
@@ -60,7 +132,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="task.content" label="任务内容" show-overflow-tooltip></el-table-column>
-       <el-table-column prop="end_date" label="截止日期" width="120px">
+      <el-table-column prop="end_date" label="截止日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
       </el-table-column>
       <el-table-column prop="task.task_executors" label="任务执行人" width="120px">
@@ -70,37 +142,37 @@
       </el-table-column>
       <el-table-column width="30px">
         <template slot-scope="scope">
-          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+          <el-tooltip effect="dark" content="任务状态:暂停" placement="top">
             <el-card
               v-if="scope.row.task.status === 0"
               :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
             ></el-card>
           </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+          <el-tooltip effect="dark" content="任务状态:未开始" placement="top">
             <el-card
               v-if="scope.row.task.status === 1"
               :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
             ></el-card>
           </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+          <el-tooltip effect="dark" content="任务状态:进行中" placement="top">
             <el-card
               v-if="scope.row.task.status === 2"
               :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
             ></el-card>
           </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+          <el-tooltip effect="dark" content="任务状态:审核中" placement="top">
             <el-card
               v-if="scope.row.task.status === 3"
               :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
             ></el-card>
           </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+          <el-tooltip effect="dark" content="任务状态:完成" placement="top">
             <el-card
               v-if="scope.row.task.status === 4"
               :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
             ></el-card>
           </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+          <el-tooltip effect="dark" content="任务状态:超时" placement="top">
             <el-card
               v-if="scope.row.task.status === 5"
               :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
@@ -121,18 +193,18 @@
       <el-table-column label="提交日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
-      <el-table-column label="任务ID"  prop="task.id"  class-name="links" width="105px" >
+      <el-table-column label="任务ID" prop="task.id" class-name="links" width="105px">
         <template slot-scope="scope">
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="task.dept.name" label="工种"></el-table-column>
-       <!-- <el-table-column label="任务ID" class-name="links" prop="id" width="105px" sortable="custom">
+      <!-- <el-table-column label="任务ID" class-name="links" prop="id" width="105px" sortable="custom">
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
           </template>
-        </el-table-column> -->
+      </el-table-column>-->
     </el-table>
     <Drawer
       scrollable
@@ -165,7 +237,7 @@
             <el-radio :label="0">拒绝</el-radio>
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
-           <el-checkbox v-model="form_obj.checked1" style="margin-left:20px;">标记为已完成</el-checkbox>
+          <el-checkbox v-model="form_obj.checked1" style="margin-left:20px;">标记为已完成</el-checkbox>
           <template v-if="pro_type === 0">
             <el-row type="flex" align="middle">
               <el-col :span="5">审核评分</el-col>
@@ -218,7 +290,7 @@ import tabLog from "@/views/task/components/tab-log";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
-import { mapState } from "vuex";
+import { getApprove } from "@/api/video";
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -229,6 +301,26 @@ export default {
   },
   data() {
     return {
+      // 查询参数
+      searchParams: {},
+      // 列表结果是全部还是搜索结果
+      isSearch: false,
+      // 我的审批列表根据条件搜索后的结果
+      prioritysLevelList: [
+        {
+          label: "低级",
+          value: 0
+        },
+        {
+          label: "中级",
+          value: 1
+        },
+        {
+          label: "高级",
+          value: 2
+        }
+      ],
+      SearchResult: [],
       out_suggestion: "",
       checked: false,
       submitLoading: false,
@@ -248,9 +340,30 @@ export default {
     };
   },
   computed: {
-    ...mapState("approve", ["AuditList"])
+    UserList() {
+      return this.$store.state.admin.UserList;
+    },
+    ProjectList() {
+      return this.$store.state.project.ProjectList;
+    },
+    //{Array} 我的审批列表数据
+    ApproveList() {
+      // 如果是在搜索，使用搜索结果，否则使用store中缓存的数据
+      if (this.isSearch) {
+        return this.SearchResult;
+      } else {
+        return this.$store.state.approve.AuditList;
+      }
+    }
   },
   methods: {
+    // 获取所有项目
+    queryProjects(selectionType) {
+      // 下拉框显示时
+      if (selectionType && !this.ProjectList) {
+        this.$store.dispatch("project/get_Projects");
+      }
+    },
     //状态
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
@@ -337,14 +450,14 @@ export default {
           suggestion: "",
           approve_result: 0,
           task_id: id,
-          checked1:false,
+          checked1: false
         }
       );
-       if (this.form_obj.checked1 == false) {
+      if (this.form_obj.checked1 == false) {
         delete this.form_obj.checked1;
       }
-     console.log('11111')
-     console.log( this.form_obj)
+      console.log("11111");
+      console.log(this.form_obj);
       this.$refs["approvelogs"].getApproveLog(id);
     },
     submitApprove() {
@@ -378,6 +491,38 @@ export default {
       this.$store.dispatch("approve/get_Approve").finally(() => {
         this.tableLoading = false;
       });
+    },
+    queryMyTasks() {
+      this.isSearch = true;
+      this.tableLoading = true;
+      const params = { ...this.searchParams };
+      // 值为数组的属性转换为带","的字符串
+      function propFormat(prop) {
+        if (prop in params && prop.length) {
+          params[prop] = params[prop].join();
+        } else {
+          delete params[prop];
+        }
+      }
+      propFormat("project_ids");
+      propFormat("prioritys");
+      propFormat("executor_ids");
+      Object.entries(params).forEach(t => {
+        if (!t[1]) {
+          delete params[t[0]];
+        }
+      });
+      getApprove(params)
+        .then(({ data }) => {
+          this.SearchResult = [...data.msg];
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    resetMyTasks() {
+      this.searchParams = {};
+      this.isSearch = false;
     }
     //添加任务执行记录
     /* addRecord() {
@@ -408,6 +553,19 @@ export default {
 </script>
 <style lang="scss">
 #my-audit {
+  .custom-card {
+    margin-bottom: 15px;
+  }
+  .inputs-warp {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    & > * {
+      margin-bottom: 10px;
+      padding-right: 15px;
+    }
+  }
   .links {
     cursor: pointer;
     color: #2d8cf0;
@@ -415,8 +573,16 @@ export default {
   .el-card {
     border-radius: 0px;
   }
+  .input-label {
+    width: 70px;
+    display: block;
+    & + * {
+      width: 200px;
+    }
+  }
 }
-.el-table--mini th, .el-table--mini td {
-    padding: 12px 0;
+.el-table--mini th,
+.el-table--mini td {
+  padding: 12px 0;
 }
 </style>

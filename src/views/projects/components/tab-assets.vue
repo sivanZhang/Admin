@@ -554,10 +554,9 @@
               @blur="saveEdit(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
-              <span>{{scope.row.content?scope.row.content:"-"}}</span>
             </el-input>
             <span style="white-space: pre-line;"
-              v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'content')"
+              v-else
             >{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
@@ -1640,6 +1639,7 @@ export default {
     },
     //行内修改资产保存
     saveEdit(index, row) {
+      
       if(isSaved){
         return
       }
@@ -1682,6 +1682,9 @@ export default {
       if (!payload.small_status) {
         delete payload.small_status;
       }
+      console.log(index,row);
+      
+      debugger
       HTTP.editAssets(payload).then(({ data }) => {
         if (smallStatus) {
           editSmallStatus(smallStatus).then(({ data }) => {});
@@ -1689,7 +1692,7 @@ export default {
         if (data.status === 0) {
           this.$message.success(data.msg);
           this.getAssetList(2);
-          this.editing = false;     
+          this.editing = false;
         } else {
           this.$message.error(data.msg);
         }
