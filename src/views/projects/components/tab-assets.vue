@@ -143,7 +143,7 @@
             <label for v-else>此镜头暂无任务</label>
           </template>
         </el-table-column>
-           <el-table-column
+        <el-table-column
           prop="name"
           :label="labelName"
           align="left"
@@ -184,7 +184,9 @@
                 <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-                <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
+                <el-image
+                  :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                ></el-image>
               </div>
             </el-image>
             <el-image
@@ -198,7 +200,9 @@
                 <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-               <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
+                <el-image
+                  :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                ></el-image>
               </div>
             </el-image>
           </template>
@@ -242,7 +246,7 @@
               ></el-card>
             </el-tooltip>
           </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <!-- <el-table-column
           label="状态"
           prop="status"
@@ -261,8 +265,8 @@
               v-if="scope.row.status != 3 && scope.row.status != 4"
             ></el-progress>
           </template>
-        </el-table-column> -->
-         <el-table-column
+        </el-table-column>-->
+        <el-table-column
           label="进度"
           prop="status"
           v-if="show_status"
@@ -270,17 +274,13 @@
           align="left"
           sortable="custom"
           column-key="status"
-          
         >
-        <!-- :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]" -->
+          <!-- :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]" -->
           <template slot-scope="scope">
-            <el-progress
-              :stroke-width="12"
-              :percentage="scope.row.schedule"
-            ></el-progress>
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
           </template>
         </el-table-column>
-        <el-table-column label="小状态" prop="small_status" width="100px"  v-if="show_small_status">
+        <el-table-column label="小状态" prop="small_status" width="100px" v-if="show_small_status">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
@@ -345,9 +345,9 @@
             </template>
           </el-table-column>
         </template>
-        <el-table-column label="任务|数量" prop="task_num" width="60px;"    :render-header="renderheader"></el-table-column>
+        <el-table-column label="任务|数量" prop="task_num" width="60px;" :render-header="renderheader"></el-table-column>
         <el-table-column
-         width="80px;"
+          width="80px;"
           prop="session"
           label="场次"
           align="center"
@@ -441,8 +441,7 @@
               @change="showEditIcon"
               @blur="saveEdit(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-            >
-            </el-input>
+            ></el-input>
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame_range')"
             >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
@@ -531,9 +530,9 @@
           v-if="show_inner_version"
           sortable="custom"
         >
-        <template slot-scope="scope">
-            <span  style="white-space: pre-line;">{{scope.inner_version}}</span>
-        </template>
+          <template slot-scope="scope">
+            <span style="white-space: pre-line;">{{scope.inner_version}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="content"
@@ -552,11 +551,8 @@
               @change="showEditIcon"
               @blur="saveEdit(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-            >
-            </el-input>
-            <span style="white-space: pre-line;"
-              v-else
-            >{{scope.row.content?scope.row.content:"-"}}</span>
+            ></el-input>
+            <span style="white-space: pre-line;" v-else>{{scope.row.content?scope.row.content:"-"}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -675,7 +671,7 @@
         <el-table-column
           label="结束日期"
           align="left"
-           width="105px"
+          width="105px"
           v-if="show_end_date"
           prop="end_date"
           class-name="date"
@@ -707,7 +703,13 @@
         >
           <template slot-scope="scope">{{scope.row.total_date_end|dateFormat}}</template>
         </el-table-column>
-        <el-table-column prop="total_hours" label="总工时" align="left"   width="80px" v-if="show_total_hours"></el-table-column>
+        <el-table-column
+          prop="total_hours"
+          label="总工时"
+          align="left"
+          width="80px"
+          v-if="show_total_hours"
+        ></el-table-column>
         <el-table-column
           prop="remark"
           label="备注"
@@ -953,7 +955,7 @@
 </template>
 
 <script>
-import { getEpisodeSession} from "@/api/statistics";
+import { getEpisodeSession } from "@/api/statistics";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import * as HTTP from "@/api/assets";
 import { mapState } from "vuex";
@@ -968,7 +970,7 @@ import taskTable from "@/views/projects/components/taskTable";
 import { editSmallStatus } from "@/api/status";
 import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
 import taskDrawer from "@/views/projects/components/ShowDrawer/taskDrawer";
-let isSaved = false//方式重复提交保存表格
+let isSaved = false; //方式重复提交保存表格
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -1078,7 +1080,7 @@ export default {
       imagePath: null,
       row: null,
       ind: true,
-      show_small_status:false,
+      show_small_status: false,
       show_image: true,
       show_session: true,
       show_episode: true,
@@ -1113,8 +1115,8 @@ export default {
       sort: null,
       path: null,
       multiSelect: [],
-      columnSelect1:[],//场次列表
-      columnSelect2:[],//集数列表
+      columnSelect1: [], //场次列表
+      columnSelect2: [], //集数列表
       name: "",
       approving: [],
       conducting: [],
@@ -1137,7 +1139,8 @@ export default {
       valSel: null, //保存table表内筛选（状态、难度、优先级）的条件
       sortfilter: null, //保存单列排序的条件
       sortMulFilter: null, //保存多列排序的条件
-      curHeight:0,
+      curHeight: 0,
+      cache: null
     };
   },
   beforeMount() {
@@ -1179,7 +1182,7 @@ export default {
     }
   },
   methods: {
-     renderheader(h, { column, $index }) {
+    renderheader(h, { column, $index }) {
       return h("span", {}, [
         h("span", {}, column.label.split("|")[0]),
         h("br"),
@@ -1187,27 +1190,29 @@ export default {
       ]);
     },
 
-    getProjectNum(){
-        //获取集数列表
-      getEpisodeSession({id: this.$route.params.id, episode: ""}).then(
-        ({ data })=>{
-         [...data.msg].map(item => {
+    getProjectNum() {
+      //获取集数列表
+      getEpisodeSession({ id: this.$route.params.id, episode: "" }).then(
+        ({ data }) => {
+          [...data.msg].map(item => {
             this.columnSelect2.push({
               value: item,
               text: item
             });
           });
-      });
+        }
+      );
       //  //获取场次列表
-        getEpisodeSession({id: this.$route.params.id, session: ""}).then(
-        ({ data })=>{
-         [...data.msg].map(item => {
+      getEpisodeSession({ id: this.$route.params.id, session: "" }).then(
+        ({ data }) => {
+          [...data.msg].map(item => {
             this.columnSelect1.push({
               value: item,
               text: item
             });
           });
-      }); 
+        }
+      );
     },
     //展示要修改的资产表单
     showAssetForm(Type, row) {
@@ -1306,12 +1311,9 @@ export default {
 
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
-      console.log(row, column, cell);
-      
       if (this.authAsset) {
         switch (column.label) {
           case "镜头号":
-            this.cellCol = "name";
             break;
           case "场次":
             this.cellCol = "session";
@@ -1359,6 +1361,13 @@ export default {
 
         this.dbCell = true;
         this.cellId = row.id;
+        const index = this.AssetList.findIndex(t => t.id === this.cellId);
+        const newObj = JSON.parse(JSON.stringify(this.AssetList[index]))
+        this.cache = {
+          index,
+          value: newObj[column.property],
+          property: column.property
+        };
       }
     },
 
@@ -1521,10 +1530,10 @@ export default {
         payload = { ...payload, status: "[" + String(this.filterStatus) + "]" };
       }
       if (this.filterEpisode.length) {
-        payload = { ...payload, episode: String(this.filterEpisode)};
+        payload = { ...payload, episode: String(this.filterEpisode) };
       }
       if (this.filterSession.length) {
-        payload = { ...payload, session: String(this.filterSession)};
+        payload = { ...payload, session: String(this.filterSession) };
       }
       if (this.filterPriority.length) {
         payload = {
@@ -1640,11 +1649,10 @@ export default {
     },
     //行内修改资产保存
     saveEdit(index, row) {
-      
-      if(isSaved){
-        return
+      if (isSaved) {
+        return;
       }
-      isSaved = true
+      isSaved = true;
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
         //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
@@ -1683,24 +1691,40 @@ export default {
       if (!payload.small_status) {
         delete payload.small_status;
       }
-      HTTP.editAssets(payload).then(({ data }) => {
-        if (smallStatus) {
-          editSmallStatus(smallStatus).then(({ data }) => {});
-        }
-        if (data.status === 0) {
-          this.$message.success(data.msg);
-          this.getAssetList(2);
-          this.editing = false;
-        } else {
-          this.$message.error(data.msg);
-        }
-        this.columnSelect2 = [];
-        this.columnSelect1 = [];
-        this.getProjectNum();
-        
-      }).finally(()=>{
-        isSaved=false
-      })
+      HTTP.editAssets(payload)
+        .then(({ data }) => {
+          if (smallStatus) {
+            editSmallStatus(smallStatus).then(({ data }) => {});
+          }
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.editing = false;
+          } else {
+            this.$message.error(data.msg);
+            this.AssetList[this.cache.index] = Object.assign(
+              {},
+              this.AssetList[this.cache.index],
+              {
+                [this.cache.property]: this.cache.value
+              }
+            );
+          }
+          this.columnSelect2 = [];
+          this.columnSelect1 = [];
+          this.getProjectNum();
+        })
+        .catch(() => {
+          this.AssetList[this.cache.index] = Object.assign(
+              {},
+              this.AssetList[this.cache.index],
+              {
+                [this.cache.property]: this.cache.value
+              }
+            );
+        })
+        .finally(() => {
+          isSaved = false;
+        });
     },
     change() {
       this.$forceUpdate();

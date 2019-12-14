@@ -1318,7 +1318,8 @@ export default {
       disabled5: true,
       disabled6: true,
       disabled7: true,
-      disabled8: true
+      disabled8: true,
+      cache:null
     };
   },
   beforeMount() {
@@ -1479,6 +1480,13 @@ export default {
         }
         this.dbCell = true;
         this.cellId = row.id;
+        const index = this.TaskList.findIndex(t => t.id === this.cellId);
+        const newObj = JSON.parse(JSON.stringify(this.TaskList[index]))
+        this.cache = {
+          index,
+          value: newObj[column.property],
+          property: column.property
+        };
       }
     },
     //行内修改资产保存
@@ -1510,13 +1518,28 @@ export default {
       HTTP.putTask(payload).then(({ data }) => {
         if (data.status === 0) {
           this.$message.success(data.msg);
-          this.getTasks(2);
           this.editing = false;
         } else {
+          this.TaskList[this.cache.index] = Object.assign(
+              {},
+              this.TaskList[this.cache.index],
+              {
+                [this.cache.property]: this.cache.value
+              }
+            );
           this.$message.error(data.msg);
         }
         this.getProjectNum();
-      });
+      })
+      .catch(() => {
+          this.TaskList[this.cache.index] = Object.assign(
+              {},
+              this.TaskList[this.cache.index],
+              {
+                [this.cache.property]: this.cache.value
+              }
+            );
+        })
     },
     getAssetList() {
       return;
