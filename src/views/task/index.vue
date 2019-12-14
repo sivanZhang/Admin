@@ -201,8 +201,9 @@
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="任务列表" name="second" class="tab-task" ref="drawer-parent">
-        <!-- 打开任务侧栏 -->
+      <el-tab-pane label="任务列表" name="second" class="tab-task">
+        <div ref="drawer-parent">
+          <!-- 打开任务侧栏 -->
         <Drawer
           scrollable
           v-model="isDrawerShow"
@@ -210,8 +211,7 @@
           :inner="isInner"
           :mask-style="{backgroundColor: 'transparent'}"
           :transfer="false"
-          draggable
-        >
+          draggable>
           <el-tabs>
             <el-tab-pane label="任务详情">
               <tabTaskDtail
@@ -271,8 +271,7 @@
           width="526"
           :transfer="false"
           :mask="false"
-          :inner="isInner"
-        >
+          :inner="isInner">
           <assetDrawer :authAsset="authAsset" ref="assetDrawer" />
         </Drawer>
         <el-row style="padding-bottom:10px">
@@ -361,8 +360,7 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           :row-style="{height:50}"
           @filter-change="filterHandler"
-          @cell-dblclick="editCell"
-        >
+          @cell-dblclick="editCell">
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
           <el-table-column label="项目" header-align="left"  >
             <template slot-scope="scope">
@@ -542,17 +540,34 @@
             style="margin-top:10px"
           ></el-pagination>
         </div>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="我的反馈" name="third" class="tab-task">
         <div id="feedback">
           <el-table
             :data="FeedbackList.msg"
-            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
             :border="false"
             :row-style="{height:50}"
           >
-            <el-table-column prop="asset_name" label="镜头号"></el-table-column>
-            <el-table-column prop="asset_image" label="缩略图"></el-table-column>
+            <el-table-column prop="task.asset_name" label="镜头号"></el-table-column>
+            <el-table-column label="缩略图" align="center">
+              <template slot-scope="scope">
+              <el-image
+                :src="$store.state.BASE_URL+scope.row.task.asset_image"
+                :preview-src-list="[$store.state.BASE_URL+scope.row.task.asset_image]"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span class="dot">...</span>
+                </div>
+                <div slot="error" class="image-slot">
+                  <el-image
+                    :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                  ></el-image>
+                </div>
+              </el-image>
+            </template>
+            </el-table-column>
             <el-table-column prop="task.name" label="任务名称"></el-table-column>
             <el-table-column prop="result" label="审批结果">
               <template slot-scope="scope">
