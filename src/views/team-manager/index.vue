@@ -15,14 +15,14 @@
           :cell-style="cellStyle"
         >
           <el-table-column type="index" :index="indexMethod"></el-table-column>
-          <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
+          <el-table-column label="项目名称" class-name="links"  >
             <template slot-scope="scope">
               <router-link
                 :to="{name:'project-detail',params:{id:scope.row.project_id},query:{type:scope.row.project_type}}"
               >{{scope.row.project_name}}</router-link>
             </template>
           </el-table-column>
-          <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
+          <el-table-column label="镜头号" prop="name"  width="120px" class-name="links">
             <template slot-scope="scope">
               <span @click="showDrawer(scope.row)">{{scope.row.name}}</span>
             </template>
@@ -31,8 +31,8 @@
             <template slot-scope="scope">
               <el-image
                 :src="$store.state.BASE_URL+scope.row.image"
-                style="width: 55px;height: 33px;cursor: pointer; display:block;"
-                :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
+                style="width: 180px; height: 100px;cursor: pointer; display:block;"
+                t:preview-src-lis="[$store.state.BASE_URL+scope.row.image]"
               >
                 <div slot="placeholder" class="image-slot">
                   加载中
@@ -51,7 +51,7 @@
           <el-table-column prop="reference" label="制作参考" align="left" width="120px"></el-table-column>
           <el-table-column prop="report" label="画面调整信息" align="left" width="120px"></el-table-column>
           <el-table-column prop="retime" label="变速信息" align="left"></el-table-column>
-          <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="content" label="制作内容" align="left"  ></el-table-column>
           <el-table-column prop="priority" label="优先级">
             <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
           </el-table-column>
@@ -114,19 +114,19 @@
           v-loading="tableLoading"
         >
           <el-table-column type="index" :index="indexMethod2"></el-table-column>
-          <el-table-column label="项目名称" class-name="links" show-overflow-tooltip>
+          <el-table-column label="项目名称" class-name="links"  >
             <template slot-scope="scope">
               <router-link
                 :to="{name:'project-detail',params:{id:scope.row.project_id},query:{type:scope.row.project_type}}"
               >{{scope.row.project_name}}</router-link>
             </template>
           </el-table-column>
-          <el-table-column label="镜头号" prop="name" show-overflow-tooltip></el-table-column>
+          <el-table-column label="镜头号" prop="name"  width="120px" ></el-table-column>
           <el-table-column label="缩略图" prop="image">
             <template slot-scope="scope">
               <el-image
                 :src="$store.state.BASE_URL+scope.row.image"
-                style="width: 55px;height: 33px;cursor: pointer; display:block;"
+                style="width: 180px; height: 100px;cursor: pointer; display:block;"
                 :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
               >
                 <div slot="placeholder" class="image-slot">
@@ -146,7 +146,7 @@
           <el-table-column prop="reference" label="制作参考" align="left" width="120px"></el-table-column>
           <el-table-column prop="report" label="画面调整信息" align="left" width="120px"></el-table-column>
           <el-table-column prop="retime" label="变速信息" align="left"></el-table-column>
-          <el-table-column prop="content" label="制作内容" align="left" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="content" label="制作内容" align="left"  ></el-table-column>
           <el-table-column prop="priority" label="优先级">
             <template slot-scope="scope">{{scope.row.priority|Priority}}</template>
           </el-table-column>
