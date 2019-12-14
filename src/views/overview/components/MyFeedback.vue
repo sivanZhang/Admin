@@ -42,7 +42,8 @@ export default {
   },
   created() {
     this.getTaskCount();
-    getFeedback().then(res => {
+    const PARAMS = { latest: "", page: 1, pagenum: 100 };
+    getFeedback(PARAMS).then(res => {
       if (res.data.status===0) {
         this.FeedbackList = [...res.data.msg];
       }else{

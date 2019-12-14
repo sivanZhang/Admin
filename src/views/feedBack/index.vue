@@ -13,19 +13,16 @@
         </template>
       </el-table-column>
       <el-table-column prop="suggestion" label="审批意见"></el-table-column>
-       <el-table-column label="任务进度" prop="task.schedule">
-           <template slot-scope="scope">
-               <el-progress :stroke-width="12" :percentage="scope.row.task.schedule"></el-progress>
-           </template>
-       </el-table-column>
-       <el-table-column label="优先级" prop="task.priority">
-           <template slot-scope="scope">
-               {{scope.row.task.priority|taskPriority}}
-           </template>
-       </el-table-column>
-       <el-table-column label="任务状态" prop="task.statements"></el-table-column>
-       <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
-
+      <el-table-column label="任务进度" prop="task.schedule">
+        <template slot-scope="scope">
+          <el-progress :stroke-width="12" :percentage="scope.row.task.schedule"></el-progress>
+        </template>
+      </el-table-column>
+      <el-table-column label="优先级" prop="task.priority">
+        <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
+      </el-table-column>
+      <el-table-column label="任务状态" prop="task.statements"></el-table-column>
+      <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -43,13 +40,13 @@ export default {
   watch: {},
   methods: {},
   created() {
-    getFeedback().then(res => {
-      if (res.data.status===0) {
+    const PARAMS = { latest: "", page: 1, pagenum: 100 };
+    getFeedback(PARAMS).then(res => {
+      if (res.data.status === 0) {
         this.FeedbackList = [...res.data.msg];
-      }else{
-        this.$message.error('审批反馈：'+res.data.msg)
+      } else {
+        this.$message.error("审批反馈：" + res.data.msg);
       }
- 
     });
   }
 };
