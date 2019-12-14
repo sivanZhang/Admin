@@ -109,18 +109,29 @@
         <el-row>
           <el-col :span="6" class="comment">Mac路径</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit8=true" @mouseleave="showEdit8 = false">
-              <span v-if="!editing8">{{project.Mac?project.Mac:"-"}}</span>
+            <div
+              v-if="!copyProjecr.Mac.isEdit"
+              @mouseover="showIcon('Mac',true)"
+              @mouseleave="showIcon('Mac',false)"
+            >
+              <span>{{project.Mac?project.Mac:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
-                v-if="$store.state.login.userInfo.auth.manage_project&&showEdit8"
-                @click="edit(7)"
+                v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.Mac.isShowEditeIcon"
+                @click="editItem('Mac')"
               ></i>
             </div>
-            <div v-if="editing8">
-              <input type="text" ref="input" class="input" v-model="mac" @keyup.enter="save(7)" />
-              <el-button @click="save(7)" type="primary">修改</el-button>
+            <div v-else>
+              <input
+                type="text"
+                ref="input"
+                class="input"
+                v-model="mac"
+                @keyup.enter="saveItem('Mac')"
+              />
+              <el-button @click="saveItem('Mac')" type="primary">修改</el-button>
+              <el-button @click="cancelChange('Mac')">取消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -822,7 +833,10 @@ export default {
         const OBJ = {};
         Object.keys(newObj).map(t => {
           OBJ[t] = {
-            value:t=="date_end"||t=="date_start"?newObj[t]*1000:newObj[t],
+            value:
+              t == "date_end" || t == "date_start"
+                ? newObj[t] * 1000
+                : newObj[t],
             isEdit: false,
             isShowEditIcon: false
           };
@@ -853,6 +867,9 @@ export default {
           break;
         case "Windows":
           httpData["windows_path"] = this.copyProjecr[prop].value;
+          break;
+        case "Mac":
+          httpData["mac_path"] = this.copyProjecr[prop].value;
           break;
         case "Linux":
           httpData["linux_path"] = this.copyProjecr[prop].value;
