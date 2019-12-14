@@ -21,7 +21,7 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset_image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px; height: 100px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.asset_image]"
           >
             <div slot="placeholder" class="image-slot">
@@ -39,7 +39,7 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project.image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px; height: 100px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.project.image]"
           >
             <div slot="placeholder" class="image-slot">

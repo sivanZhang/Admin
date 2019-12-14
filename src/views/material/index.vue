@@ -84,7 +84,7 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px; height: 100px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
             v-if="!editing||clickId !== scope.row.id"
           >
@@ -98,7 +98,7 @@
           </el-image>
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 55px;height: 33px;cursor: pointer;display:block;"
+            style="width: 180px; height: 100px;cursor: pointer;display:block;"
             @click.native="img(scope.row)"
             v-if="editing&&clickId === scope.row.id"
           >
@@ -153,7 +153,7 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project_image"
-            style="width: 55px;height: 33px;cursor: pointer; display:block;"
+            style="width: 180px; height: 100px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.project_image]"
           >
             <div slot="placeholder" class="image-slot">

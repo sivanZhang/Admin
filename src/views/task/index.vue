@@ -44,7 +44,7 @@
                 <label
                   for
                   @click="openList(DraftArr[0].status)"
-                  class="links"
+                  class="show_more_links"
                   v-if="Object.keys(DraftArr).length"
                 >展示更多...</label>
               </div>
@@ -77,7 +77,7 @@
                 <label
                   for
                   @click="openList(InProgressArr[0].status)"
-                  class="links"
+                  class="show_more_links"
                   v-if="Object.keys(InProgressArr).length"
                 >展示更多...</label>
               </div>
@@ -110,7 +110,7 @@
                 <label
                   for
                   @click="openList(PauseArr[0].status)"
-                  class="links"
+                  class="show_more_links"
                   v-if="Object.keys(PauseArr).length"
                 >展示更多...</label>
               </div>
@@ -143,7 +143,7 @@
                 <label
                   for
                   @click="openList(TimeOutArr[0].status)"
-                  class="links"
+                  class="show_more_links"
                   v-if="Object.keys(TimeOutArr).length"
                 >展示更多...</label>
               </div>
@@ -167,7 +167,7 @@
                   <label
                     for
                     @click="openList(ApproveingArr[0].status)"
-                    class="links"
+                    class="show_more_links"
                     v-if="Object.keys(ApproveingArr).length"
                   >展示更多...</label>
                 </div>
@@ -192,7 +192,7 @@
                   <label
                     for
                     @click="openList(FinishedArr[0].status)"
-                    class="links"
+                    class="show_more_links"
                     v-if="Object.keys(FinishedArr).length"
                   >展示更多...</label>
                 </div>
@@ -364,7 +364,7 @@
           @cell-dblclick="editCell"
         >
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
-          <el-table-column label="项目" header-align="left" show-overflow-tooltip>
+          <el-table-column label="项目" header-align="left"  >
             <template slot-scope="scope">
               <router-link
                 style="cursor: pointer;"
@@ -394,9 +394,9 @@
           <el-table-column
             prop="asset.name"
             class-name="links"
-            label="镜头"
+            label="镜头号"
             header-align="left"
-            show-overflow-tooltip
+             width="120px"
           >
             <template slot-scope="scope">
               <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
@@ -551,8 +551,8 @@
             :border="false"
             :row-style="{height:50}"
           >
-            <el-table-column prop="task.name" label="镜头号"></el-table-column>
-            <el-table-column prop="task.name" label="缩略图"></el-table-column>
+            <el-table-column prop="asset_name" label="镜头号"></el-table-column>
+            <el-table-column prop="asset_image" label="缩略图"></el-table-column>
             <el-table-column prop="task.name" label="任务名称"></el-table-column>
             <el-table-column prop="result" label="审批结果">
               <template slot-scope="scope">
@@ -601,4 +601,6 @@
 
 <script src="./task.js">
 </script>
-<style lang="scss" src="./task.scss"></style>
+<style lang="scss" src="./task.scss">
+
+</style>

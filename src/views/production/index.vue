@@ -29,7 +29,7 @@
             <el-image
               v-if="scope.row.path && isImagePath(scope.row.path)"
               :src="$store.state.BASE_URL+scope.row.path"
-              style="width: 55px;height: 33px;cursor: pointer; display:block;"
+              style="width: 180px; height: 100px;cursor: pointer; display:block;"
               :preview-src-list="[$store.state.BASE_URL+scope.row.path]"
             >
               <div slot="error">

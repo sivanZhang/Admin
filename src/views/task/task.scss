@@ -6,7 +6,12 @@ $linkCorlor:#2d8cf0;
   }
   .links {
     cursor: pointer;
-    color: #2d8cf0;
+    color: #2d8cf0; 
+  }
+  .show_more_links {
+    cursor: pointer; 
+    font-size: 10px;
+    font-weight: 100;
   }
   .el-table {
     .el-input__inner {
@@ -14,7 +19,7 @@ $linkCorlor:#2d8cf0;
       padding-left: 0;
       background: transparent;
       color: $linkCorlor;
-    }
+    } 
   }
 
   .fold-icon {
