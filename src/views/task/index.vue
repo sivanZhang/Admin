@@ -551,8 +551,8 @@
             :border="false"
             :row-style="{height:50}"
           >
-            <el-table-column prop="task.name" label="镜头号"></el-table-column>
-            <el-table-column prop="task.name" label="缩略图"></el-table-column>
+            <el-table-column prop="asset_name" label="镜头号"></el-table-column>
+            <el-table-column prop="asset_image" label="缩略图"></el-table-column>
             <el-table-column prop="task.name" label="任务名称"></el-table-column>
             <el-table-column prop="result" label="审批结果">
               <template slot-scope="scope">
