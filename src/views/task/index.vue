@@ -364,7 +364,7 @@
           @cell-dblclick="editCell"
         >
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
-          <el-table-column label="项目" header-align="left" show-overflow-tooltip>
+          <el-table-column label="项目" header-align="left"  >
             <template slot-scope="scope">
               <router-link
                 style="cursor: pointer;"
@@ -394,9 +394,9 @@
           <el-table-column
             prop="asset.name"
             class-name="links"
-            label="镜头"
+            label="镜头号"
             header-align="left"
-            show-overflow-tooltip
+             width="120px"
           >
             <template slot-scope="scope">
               <div @click="show(scope.row.asset.id)">{{scope.row.asset.name}}</div>
