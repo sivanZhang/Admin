@@ -12,7 +12,7 @@ import {
 } from '@/api/assets'
 import {
   getProjects
-} from '@/api/project';
+} from '@/api/project'
 import draggable from 'vuedraggable'
 import taskForm from './components/task-form'
 import tabLog from './components/tab-log'
@@ -24,7 +24,7 @@ import approveLog from '@/views/components/approve-log'
 import thumbtackMixin from '@/utils/thumbtack-mixin'
 import dayjs from 'dayjs'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
-import info from '@/components/projectDrawer/components/info';
+import info from '@/components/projectDrawer/components/info'
 import {
   mapState
 } from 'vuex'
@@ -271,7 +271,7 @@ export default {
       pageSizeList: [20, 30, 50, 100],
       currentPage1: 1, // 我的反馈分页
       pageSize1: 20,
-      FeedbackList: []
+      FeedbackList: { msg: [] }
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -286,9 +286,11 @@ export default {
     // 分页
     handleSizeChange1(e) {
       this.pageSize1 = e
+      this.getFeedback()
     },
     handleCurrentChange1(currentPage1) {
       this.currentPage1 = currentPage1
+      this.getFeedback()
     },
 
     // 单条件排序
@@ -931,15 +933,18 @@ export default {
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1
     },
-    // 获取我的反馈数据
+    // 获取我的反馈 分页数据
     getFeedback() {
-      getFeedback().then(res => {
-        if (res.data.status===0) {
-          this.FeedbackList = [...res.data.msg];
-        }else{
-          this.$message.error('审批反馈：'+res.data.msg)
+      const PARAMS = {
+        page: this.currentPage1,
+        pagenum: this.pageSize1
+      }
+      getFeedback(PARAMS).then(res => {
+        if (res.data.status === 0) {
+          this.FeedbackList = { ...res.data }
+        } else {
+          this.$message.error('审批反馈：' + res.data.msg)
         }
-        
       })
     }
   },

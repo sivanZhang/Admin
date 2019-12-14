@@ -41,7 +41,12 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
-                <label for @click="openList(DraftArr[0].status)" class="links" v-if="Object.keys(DraftArr).length">展示更多...</label>
+                <label
+                  for
+                  @click="openList(DraftArr[0].status)"
+                  class="links"
+                  v-if="Object.keys(DraftArr).length"
+                >展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -69,7 +74,12 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
-                <label for @click="openList(InProgressArr[0].status)" class="links" v-if="Object.keys(InProgressArr).length">展示更多...</label>
+                <label
+                  for
+                  @click="openList(InProgressArr[0].status)"
+                  class="links"
+                  v-if="Object.keys(InProgressArr).length"
+                >展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -97,7 +107,12 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
-                 <label for @click="openList(PauseArr[0].status)" class="links" v-if="Object.keys(PauseArr).length">展示更多...</label>
+                <label
+                  for
+                  @click="openList(PauseArr[0].status)"
+                  class="links"
+                  v-if="Object.keys(PauseArr).length"
+                >展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -125,7 +140,12 @@
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
                 </draggable>
-                 <label for @click="openList(TimeOutArr[0].status)" class="links" v-if="Object.keys(TimeOutArr).length">展示更多...</label>
+                <label
+                  for
+                  @click="openList(TimeOutArr[0].status)"
+                  class="links"
+                  v-if="Object.keys(TimeOutArr).length"
+                >展示更多...</label>
               </div>
             </el-col>
             <el-col>
@@ -144,7 +164,12 @@
                     <div class="cardvalue">{{item.name}}</div>
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
-                   <label for @click="openList(ApproveingArr[0].status)" class="links" v-if="Object.keys(ApproveingArr).length">展示更多...</label>
+                  <label
+                    for
+                    @click="openList(ApproveingArr[0].status)"
+                    class="links"
+                    v-if="Object.keys(ApproveingArr).length"
+                  >展示更多...</label>
                 </div>
               </div>
             </el-col>
@@ -164,7 +189,12 @@
                     <div class="cardvalue">{{item.name}}</div>
                     <div class="feedback">{{item.feedback_counter}}个反馈</div>
                   </el-card>
-                   <label for @click="openList(FinishedArr[0].status)" class="links" v-if="Object.keys(FinishedArr).length">展示更多...</label>
+                  <label
+                    for
+                    @click="openList(FinishedArr[0].status)"
+                    class="links"
+                    v-if="Object.keys(FinishedArr).length"
+                  >展示更多...</label>
                 </div>
               </div>
             </el-col>
@@ -192,13 +222,13 @@
                 :detailLoading="detailLoading"
               />
             </el-tab-pane>
-            <el-tab-pane label="项目详情" lazy >
+            <el-tab-pane label="项目详情" lazy>
               <info :project="project" />
-             </el-tab-pane>
+            </el-tab-pane>
             <el-tab-pane label="关联任务输出">
               <linkTaskOutput ref="linkTaskOutput" />
             </el-tab-pane>
-            
+
             <el-tab-pane label="历史版本">
               <history
                 :historyVersion="historyVersion"
@@ -330,8 +360,8 @@
           @sort-change="sortFilter"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           :row-style="{height:50}"
-           @filter-change="filterHandler"
-           @cell-dblclick="editCell"
+          @filter-change="filterHandler"
+          @cell-dblclick="editCell"
         >
           <el-table-column type="index" label="序号" :index="indexMethod" align="center"></el-table-column>
           <el-table-column label="项目" header-align="left" show-overflow-tooltip>
@@ -342,7 +372,7 @@
               >{{scope.row.project.name}}</router-link>
             </template>
           </el-table-column>
-         <el-table-column label="缩略图" v-if="show_project_image" width="180px">
+          <el-table-column label="缩略图" v-if="show_project_image" width="180px">
             <template slot-scope="scope">
               <el-image
                 :src="$store.state.BASE_URL+scope.row.asset.image"
@@ -353,12 +383,14 @@
                   <span class="dot">...</span>
                 </div>
                 <div slot="error" class="image-slot">
-                  <el-image :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'" ></el-image>
+                  <el-image
+                    :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                  ></el-image>
                 </div>
               </el-image>
             </template>
           </el-table-column>
-          
+
           <el-table-column
             prop="asset.name"
             class-name="links"
@@ -372,7 +404,7 @@
           </el-table-column>
           <el-table-column prop="asset.episode" label="集数"></el-table-column>
           <el-table-column prop="asset.session" label="场次"></el-table-column>
-           <el-table-column
+          <el-table-column
             prop="task.dept.name"
             label="制作环节"
             header-align="left"
@@ -421,13 +453,13 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column 
-          label="任务状态/进度"
-          width="160px" 
-          sortable="custom" 
-          prop="schedule"
-          column-key="schedule"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}]"
+          <el-table-column
+            label="任务状态/进度"
+            width="160px"
+            sortable="custom"
+            prop="schedule"
+            column-key="schedule"
+            :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}, {text: '超时', value: '5'}]"
           >
             <template slot-scope="scope">
               <div
@@ -495,66 +527,65 @@
           </el-table-column>-->
           <!-- <el-table-column label="任务进度" header-align="left">
             <template slot-scope="scope">{{scope.row.task.schedule}}%</template>
-          </el-table-column> -->
+          </el-table-column>-->
         </el-table>
         <div class="block" style="text-align: right">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="pageSizeList"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :page-count="pageCount"
-          :total="total"
-          style="margin-top:10px"
-        ></el-pagination>
-      </div>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-count="pageCount"
+            :total="total"
+            style="margin-top:10px"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="我的反馈" name="third" class="tab-task">
-         <div id="feedback">
-         <el-table 
-         :data="FeedbackList.slice((currentPage1-1)*pageSize1,currentPage1*pageSize1)"
-         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-         :border="false"
-         :row-style="{height:50}"  
-       >
-      <el-table-column prop="task.name" label="镜头号"></el-table-column>
-      <el-table-column prop="task.name" label="缩略图"></el-table-column>
-      <el-table-column prop="task.name" label="任务名称"></el-table-column>
-      <el-table-column prop="result" label="审批结果">
-        <template slot-scope="scope">
-          <div :style="{color:scope.row.result?'#19be6b':'#ed4014'}">{{scope.row.result?'通过':'未通过'}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="suggestion" label="审批意见"></el-table-column>
-       <el-table-column label="任务进度" prop="task.schedule">
-           <template slot-scope="scope">
-               <el-progress :stroke-width="12" :percentage="scope.row.task.schedule"></el-progress>
-           </template>
-       </el-table-column>
-       <el-table-column label="优先级" prop="task.priority">
-           <template slot-scope="scope">
-               {{scope.row.task.priority|taskPriority}}
-           </template>
-       </el-table-column>
-       <el-table-column label="任务状态" prop="task.statements"></el-table-column>
-       <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
-
-    </el-table>
-    <div class="block" style="text-align: right">
-        <el-pagination
-          @size-change="handleSizeChange1"
-          @current-change="handleCurrentChange1"
-          :current-page.sync="currentPage1"
-          :page-sizes="[10,20,50,100]"
-          :page-size="pageSize1"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="FeedbackList.length"
-        ></el-pagination>
-      </div>
-    </div>
-    </el-tab-pane>
+        <div id="feedback">
+          <el-table
+            :data="FeedbackList.msg"
+            :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+            :border="false"
+            :row-style="{height:50}"
+          >
+            <el-table-column prop="task.name" label="镜头号"></el-table-column>
+            <el-table-column prop="task.name" label="缩略图"></el-table-column>
+            <el-table-column prop="task.name" label="任务名称"></el-table-column>
+            <el-table-column prop="result" label="审批结果">
+              <template slot-scope="scope">
+                <div
+                  :style="{color:scope.row.result?'#19be6b':'#ed4014'}"
+                >{{scope.row.result?'通过':'未通过'}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="suggestion" label="审批意见"></el-table-column>
+            <el-table-column label="任务进度" prop="task.schedule">
+              <template slot-scope="scope">
+                <el-progress :stroke-width="12" :percentage="scope.row.task.schedule"></el-progress>
+              </template>
+            </el-table-column>
+            <el-table-column label="优先级" prop="task.priority">
+              <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
+            </el-table-column>
+            <el-table-column label="任务状态" prop="task.statements"></el-table-column>
+            <el-table-column label="提交次数" prop="task.submit_num"></el-table-column>
+          </el-table>
+          <div class="block" style="text-align: right">
+            <el-pagination
+              @size-change="handleSizeChange1"
+              @current-change="handleCurrentChange1"
+              :current-page.sync="currentPage1"
+              :page-sizes="[10,20,50,100]"
+              :page-size="pageSize1"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="FeedbackList.count"
+            ></el-pagination>
+          </div>
+        </div>
+      </el-tab-pane>
     </el-tabs>
     <el-dialog title="任务执行" :visible.sync="isDialogShow" width="512px" center :modal="false">
       <task-form
