@@ -934,7 +934,12 @@ export default {
     // 获取我的反馈数据
     getFeedback() {
       getFeedback().then(res => {
-        this.FeedbackList = [...res.data.msg]
+        if (res.data.status===0) {
+          this.FeedbackList = [...res.data.msg];
+        }else{
+          this.$message.error('审批反馈：'+res.data.msg)
+        }
+        
       })
     }
   },
