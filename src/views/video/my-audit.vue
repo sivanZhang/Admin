@@ -113,8 +113,8 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="asset_name" label="镜头号" show-overflow-tooltip></el-table-column>
-      <el-table-column label="反馈截图" width="180px">
+      <el-table-column prop="asset_name" label="镜头号"  width="100px;"></el-table-column>
+       <el-table-column label="反馈截图" width="180px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project.image"
@@ -140,7 +140,7 @@
           <div v-for="(item,index) of scope.row.task.task_executors" :key="index">{{item.user_name}}</div>
         </template>
       </el-table-column>
-      <el-table-column width="30px">
+      <!-- <el-table-column width="30px">
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="任务状态:暂停" placement="top">
             <el-card
@@ -182,14 +182,14 @@
       </el-table-column>
       <el-table-column label="任务状态">
         <template slot-scope="scope">{{scope.row.task.status|taskStatus}}</template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="优先级" prop="priority">
         <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
       </el-table-column>
       <el-table-column label="开始日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.total_hour" label="预设时间（小时）" width="150px"></el-table-column>
+      <el-table-column prop="task.total_hour" label="预设时间|（小时）" :render-header="renderheader" width="150px"></el-table-column>
       <el-table-column label="提交日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
@@ -363,7 +363,16 @@ export default {
       if (selectionType && !this.ProjectList) {
         this.$store.dispatch("project/get_Projects");
       }
+      },
+     // 表头换行
+    renderheader(h, { column, $index }) {
+      return h("span", {}, [
+        h("span", {}, column.label.split("|")[0]),
+        h("br"),
+        h("span", {}, column.label.split("|")[1])
+      ]);
     },
+    
     //状态
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
