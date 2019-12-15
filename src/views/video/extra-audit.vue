@@ -10,7 +10,7 @@
       :cell-style="cellStyle"
     >
       <el-table-column type="index" label="序号" align="center" />
-      <el-table-column label="所属项目" show-overflow-tooltip>
+      <el-table-column label="所属项目" width="80px">
         <template slot-scope="scope">
           <router-link
             :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
