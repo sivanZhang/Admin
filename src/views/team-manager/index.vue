@@ -27,7 +27,7 @@
               <span @click="showDrawer(scope.row)">{{scope.row.name}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="缩略图" prop="image">
+          <el-table-column label="缩略图" prop="image" width="180px">
             <template slot-scope="scope">
               <el-image
                 :src="$store.state.BASE_URL+scope.row.image"
@@ -122,7 +122,7 @@
             </template>
           </el-table-column>
           <el-table-column label="镜头号" prop="name"  width="120px" ></el-table-column>
-          <el-table-column label="缩略图" prop="image">
+          <el-table-column label="缩略图" prop="image" width="180px">
             <template slot-scope="scope">
               <el-image
                 :src="$store.state.BASE_URL+scope.row.image"
@@ -620,9 +620,10 @@ export default {
 <style lang='scss'>
 #team-manager {
   min-height: calc(100vh - 199px);
+}
   .links {
     cursor: pointer;
     color: #2d8cf0;
   }
-}
+
 </style>
