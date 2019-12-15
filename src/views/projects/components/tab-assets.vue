@@ -656,22 +656,22 @@
         >
           <template slot-scope="scope">
             <el-date-picker
-              v-model="start_date"
+              v-model="scope.row.start_date"
               type="date"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'start_date')"
               @change="showEditIcon(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              @blur="saveEdit(scope.$index,scope.row)"
               placeholder="选择开始日期"
+              value-format="timestamp"
             />
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'start_date')"
-            >{{scope.row.start_date|dateFormat}}</span>
+            >{{scope.row.start_date/1000 | dateFormat}}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="结束日期"
           align="left"
-          width="105px"
           v-if="show_end_date"
           prop="end_date"
           class-name="date"
@@ -679,22 +679,23 @@
         >
           <template slot-scope="scope">
             <el-date-picker
-              v-model="end_date"
+              v-model="scope.row.end_date"
               type="date"
+              value-format="timestamp"
+              :default-value="new Date()"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
               @change="showEditIcon(scope.$index,scope.row)"
-              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              @blur="saveEdit(scope.$index,scope.row)"
               placeholder="选择结束日期"
             />
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
-            >{{scope.row.end_date|dateFormat}}</span>
+            >{{scope.row.end_date/1000 | dateFormat}}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="计划截止|日期"
           align="left"
-          width="105px"
           v-if="show_totle_date_end"
           prop="total_end_date"
           class-name="date"
@@ -747,7 +748,7 @@
             </el-tooltip>
             <el-tooltip effect="dark" content="修改" placement="top">
               <el-button
-                @click="editOneAsset(scope.row)"
+                @click="editOneAsset(scope.row,scope.$index)"
                 icon="el-icon-edit"
                 type="text"
                 style="color:blue"
@@ -970,6 +971,7 @@ import taskTable from "@/views/projects/components/taskTable";
 import { editSmallStatus } from "@/api/status";
 import assetDrawer from "@/views/projects/components/ShowDrawer/assetDrawer";
 import taskDrawer from "@/views/projects/components/ShowDrawer/taskDrawer";
+import dayjs from "dayjs";
 let isSaved = false; //方式重复提交保存表格
 export default {
   mixins: [thumbtackMixin],
@@ -1105,8 +1107,6 @@ export default {
       show_create_date: true,
       show_start_date: true,
       show_end_date: true,
-      start_date: null,
-      end_date: null,
       filterStatus: [],
       filterSession: [],
       filterEpisode: [],
@@ -1140,7 +1140,8 @@ export default {
       sortfilter: null, //保存单列排序的条件
       sortMulFilter: null, //保存多列排序的条件
       curHeight: 0,
-      cache: null
+      // 单元格里的值得缓存，以便提交失败后把原值赋值回去
+      cellValueCache: null
     };
   },
   beforeMount() {
@@ -1274,7 +1275,7 @@ export default {
       HTTP.queryAssets(data)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.AssetList = [...data.msg];
+            this.assignmentAssetList(data.msg)
             this.total = data.count;
             this.pageCount = data.page_count;
             if (Type === 1) {
@@ -1362,8 +1363,8 @@ export default {
         this.dbCell = true;
         this.cellId = row.id;
         const index = this.AssetList.findIndex(t => t.id === this.cellId);
-        const newObj = JSON.parse(JSON.stringify(this.AssetList[index]))
-        this.cache = {
+        const newObj = JSON.parse(JSON.stringify(this.AssetList[index]));
+        this.cellValueCache = {
           index,
           value: newObj[column.property],
           property: column.property
@@ -1419,7 +1420,7 @@ export default {
       HTTP.queryAssets(payload)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.AssetList = [...data.msg];
+            this.assignmentAssetList(data.msg)
             this.total = data.count;
             this.pageCount = data.page_count;
             if (Type === 1) {
@@ -1456,7 +1457,7 @@ export default {
       HTTP.queryAssets(payload)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.AssetList = [...data.msg];
+            this.assignmentAssetList(data.msg)
             this.total = data.count;
             this.pageCount = data.page_count;
             // if (Type === 1) {
@@ -1548,7 +1549,7 @@ export default {
       HTTP.queryAssets(payload)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.AssetList = [...data.msg];
+            this.assignmentAssetList(data.msg)
             this.total = data.count;
             this.pageCount = data.page_count;
             if (Type === 1) {
@@ -1582,7 +1583,7 @@ export default {
       HTTP.queryAssets(data)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.AssetList = [...data.msg];
+            this.assignmentAssetList(data.msg)
             this.total = data.count;
             this.pageCount = data.page_count;
             if (Type === 1) {
@@ -1628,7 +1629,7 @@ export default {
     //修改资产
     editOneAsset(row) {
       function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
+        return dayjs(date).format("YYYY/MM/DD");
       }
       if (this.iconShow === true) {
         this.$confirm("当前修改未保存", "注意", {
@@ -1637,14 +1638,6 @@ export default {
       } else {
         this.editing = true;
         this.clickId = row.id;
-        this.start_date =
-          new Date(dateFormat(row.start_date)) > 0
-            ? new Date(dateFormat(row.start_date))
-            : "";
-        this.end_date =
-          new Date(dateFormat(row.end_date)) > 0
-            ? new Date(dateFormat(row.end_date))
-            : "";
       }
     },
     //行内修改资产保存
@@ -1654,14 +1647,13 @@ export default {
       }
       isSaved = true;
       function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
-        //'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+        return dayjs(dateVal).format("YYYY/MM/DD");
       }
       this.iconShow = false;
       this.dbCell = false;
       let payload = {
         id: row.id,
-        content:row.content,
+        content: row.content,
         priority: row.priority,
         level: row.level,
         ...this.ImgForm,
@@ -1674,8 +1666,8 @@ export default {
         report: row.report,
         retime: row.retime,
         frame_range: row.frame_range,
-        start: DateFormat(this.start_date),
-        end: DateFormat(this.end_date),
+        start: DateFormat(row.start_date),
+        end: DateFormat(row.end_date),
         reference: row.pro_reference
       };
       let smallStatus = {};
@@ -1701,11 +1693,11 @@ export default {
             this.editing = false;
           } else {
             this.$message.error(data.msg);
-            this.AssetList[this.cache.index] = Object.assign(
+            this.AssetList[this.cellValueCache.index] = Object.assign(
               {},
-              this.AssetList[this.cache.index],
+              this.AssetList[this.cellValueCache.index],
               {
-                [this.cache.property]: this.cache.value
+                [this.cellValueCache.property]: this.cellValueCache.value
               }
             );
           }
@@ -1714,13 +1706,13 @@ export default {
           this.getProjectNum();
         })
         .catch(() => {
-          this.AssetList[this.cache.index] = Object.assign(
-              {},
-              this.AssetList[this.cache.index],
-              {
-                [this.cache.property]: this.cache.value
-              }
-            );
+          this.AssetList[this.cellValueCache.index] = Object.assign(
+            {},
+            this.AssetList[this.cellValueCache.index],
+            {
+              [this.cellValueCache.property]: this.cellValueCache.value
+            }
+          );
         })
         .finally(() => {
           isSaved = false;
@@ -1824,7 +1816,7 @@ export default {
       HTTP.queryAssets(payload)
         .then(({ data }) => {
           if (data.status === 0) {
-            this.AssetList = [...data.msg];
+            this.assignmentAssetList(data.msg)
             this.total = data.count;
             this.pageCount = data.page_count;
           }
@@ -2173,6 +2165,14 @@ export default {
           return "优先";
           break;
       }
+    },
+    // 赋值AssetList,并且改变里面的日期格式（后端返回的时间戳*1000）
+    assignmentAssetList(arr) {
+      this.AssetList = [...arr];
+      this.AssetList.forEach(t => {
+        t.start_date = !t.start_date?t.start_date:t.start_date*1000;
+        t.end_date = !t.end_date?t.end_date:t.end_date*1000;
+      });
     }
   },
   created() {
