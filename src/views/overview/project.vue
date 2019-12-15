@@ -67,18 +67,23 @@
               <router-link :to="{name:'project-detail',params:{id:item.id},query:{type:item.pro_type}}">
                 <mallki class-name="mallki-text" :text="item.name" />
               </router-link>
-              <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
+              <!-- <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p> -->
               <el-row @click.native="show(item)">
                 <el-col :span="12">
                   <p class="subtitle">工作流</p>
                   <div>{{item.status|projectStatus}}</div>
                 </el-col>
                 <el-col :span="12">
+                  <p class="subtitle">创建者</p>
+                    {{item.creator_name}} 
+                    <div style="font-size:12px;">{{item.date|dateTimeFormat}}</div>
+                </el-col>
+                <!-- <el-col :span="12">
                   <p class="subtitle">项目预算</p>
                   <div style="display:flex;">
                     <div>¥{{item.budget|numberFormat}}万元</div>
                   </div>
-                </el-col>
+                </el-col> -->
                 <el-col :span="12">
                   <p class="subtitle">开始日期</p>
                   <div>{{item.date_start|dateFormat}}</div>
@@ -134,18 +139,23 @@
               >
                 <mallki class-name="mallki-text" :text="item.name" />
               </router-link>
-              <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p>
+              <!-- <p>创建者：{{item.creator_name}} {{item.date|dateTimeFormat}}</p> -->
               <el-row @click.native="show(item)">
                 <el-col :span="12">
                   <p class="subtitle">工作流</p>
                   <div>{{item.status|projectStatus}}</div>
                 </el-col>
                 <el-col :span="12">
+                  <p class="subtitle">创建者</p>
+                   {{item.creator_name}}
+                   <div style="font-size:12px;">{{item.date|dateTimeFormat}}</div>
+                </el-col>
+                <!-- <el-col :span="12">
                   <p class="subtitle">项目预算</p>
                   <div style="display:flex;">
                     <div>¥{{item.budget|numberFormat}}万元</div>
                   </div>
-                </el-col>
+                </el-col> -->
                 <el-col :span="12">
                   <p class="subtitle">开始日期</p>
                   <div>{{item.date_start|dateFormat}}</div>
