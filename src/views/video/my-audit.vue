@@ -320,6 +320,7 @@ export default {
           value: 2
         }
       ],
+      AuditList:[],
       SearchResult: [],
       out_suggestion: "",
       checked: false,
