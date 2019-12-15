@@ -17,7 +17,7 @@
           >{{scope.row.project.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column label="镜头缩略图"  width="120px">
+      <el-table-column label="镜头缩略图"  width="180px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.asset_image"
@@ -25,17 +25,19 @@
             :preview-src-list="[$store.state.BASE_URL+scope.row.asset_image]"
           >
             <div slot="placeholder" class="image-slot">
-              加载中
-              <span class="dot">...</span>
-            </div>
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
+                加载中
+                <span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <el-image
+                  :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                ></el-image>
+              </div>
           </el-image>
         </template>
       </el-table-column>
       <el-table-column prop="asset_name" label="镜头号" show-overflow-tooltip></el-table-column>
-        <el-table-column label="反馈截图"  width="120px">
+      <!-- <el-table-column label="反馈截图"  width="120px">
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project.image"
@@ -51,7 +53,7 @@
             </div>
           </el-image>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="task.content" label="任务内容" show-overflow-tooltip></el-table-column>
       <el-table-column prop="end_date" label="截止日期" width="120px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
