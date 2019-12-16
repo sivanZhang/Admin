@@ -20,7 +20,13 @@
               :disabled="this.multipleSelection.length === 0"
             >批量删除</el-button>
           </template>
-          <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
+          <el-popover
+            placement="bottom"
+            width="300"
+            trigger="click"
+            v-model="visible"
+            style="margin-left:15px"
+          >
             <el-col :span="12">
               <el-checkbox v-model="show_name">任务</el-checkbox>
             </el-col>
@@ -35,6 +41,12 @@
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_asset_name">镜头号</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_episode">集数</el-checkbox>
+            </el-col>
+            <el-col :span="12">
+              <el-checkbox v-model="show_session">场次</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_priority">优先级</el-checkbox>
@@ -63,8 +75,11 @@
             <el-col :span="12">
               <el-checkbox v-model="show_end_date">截止日期</el-checkbox>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="24">
               <el-checkbox v-model="show_total_hour">预设时间（小时）</el-checkbox>
+            </el-col>
+            <el-col :span="24" style="padding-top:8px" align="right">
+              <el-button type="primary" size="mini" @click="saveLongMenu">保存</el-button>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
@@ -108,7 +123,6 @@
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
         <el-table-column
           label="镜头号"
-        
           v-if="show_asset_name"
           prop="asset"
           sortable="custom"
@@ -139,28 +153,26 @@
             </el-image>
           </template>
         </el-table-column>
-        
+
         <el-table-column
           label="集数"
           prop="episode"
           sortable="custom"
+          v-if="show_episode"
           column-key="episode"
           :filters="columnSelect3"
         >
-        <template slot-scope="scope">
-         {{scope.row.episode?scope.row.episode:"-"}}
-        </template>
+          <template slot-scope="scope">{{scope.row.episode?scope.row.episode:"-"}}</template>
         </el-table-column>
         <el-table-column
           label="场次"
           prop="session"
           sortable="custom"
           column-key="session"
+          v-if="show_session"
           :filters="columnSelect4"
         >
-        <template slot-scope="scope">
-         {{scope.row.session?scope.row.session:"-"}}
-        </template>>
+          <template slot-scope="scope">{{scope.row.session?scope.row.session:"-"}}</template>>
         </el-table-column>
         <el-table-column
           label="制作内容"
@@ -230,7 +242,7 @@
           <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
         </el-table-column>
         <!-- 状态的颜色展示 -->
-        <el-table-column width="30px">
+        <el-table-column width="30px" v-if="show_status">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
               <el-card
@@ -290,7 +302,7 @@
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="提交|次数" prop="submit_num" :render-header="renderheader" ></el-table-column>
+        <el-table-column label="提交|次数" prop="submit_num" :render-header="renderheader"></el-table-column>
         <el-table-column
           prop="priority"
           label="优先级"
@@ -374,14 +386,19 @@
           </template>
         </el-table-column>
         <el-table-column
-         :render-header="renderheader"
+          :render-header="renderheader"
           prop="total_hour"
           align="center"
           label="预设时间|（小时）"
           width="130px"
           v-if="show_total_hour"
         ></el-table-column>
-        <el-table-column label="最后|提交时间" header-align="left" width="100px"  :render-header="renderheader">
+        <el-table-column
+          label="最后|提交时间"
+          header-align="left"
+          width="100px"
+          :render-header="renderheader"
+        >
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
         <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
@@ -738,7 +755,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务执行人" >
+        <el-form-item label="任务执行人">
           <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择任务执行人">
             <el-option
               v-for="item of DeptUsers"
@@ -1151,6 +1168,7 @@
 </template>
 <script>
 import { getProjectMember, getEpisodeSession } from "@/api/statistics";
+import { setupMenu, getMenu } from "@/api/project";
 import * as HTTP from "@/api/task";
 import { Transform } from "stream";
 import myMixin from "./mixins";
@@ -1208,22 +1226,24 @@ export default {
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 50, 100],
-      show_name: true,
-      show_link_dept_name: true,
-      show_content: true,
-      show_project_name: true,
-      show_project_image: true,
-      show_asset_name: true,
-      show_priority: true,
-      show_grade: true,
-      show_status: true,
-      show_executor: true,
+      show_name: false,
+      show_link_dept_name: false,
+      show_content: false,
+      show_project_name: false,
+      show_project_image: false,
+      show_asset_name: false,
+      show_priority: false,
+      show_grade: false,
+      show_status: false,
+      show_executor: false,
+      show_episode: false,
+      show_session: false,
       show_creator_name: false,
-      show_create_time: true,
-      show_start_date: true,
-      show_end_date: true,
-      show_total_hour: true,
-      show_schedule: true,
+      show_create_time: false,
+      show_start_date: false,
+      show_end_date: false,
+      show_total_hour: false,
+      show_schedule: false,
       filterStatus: [],
       filterSession: [],
       filterEpisode: [],
@@ -1319,7 +1339,9 @@ export default {
       disabled6: true,
       disabled7: true,
       disabled8: true,
-      cache:null
+      cache: null,
+      visible: false,
+      checkList: []
     };
   },
   beforeMount() {
@@ -1393,7 +1415,146 @@ export default {
     }
   },
   methods: {
-     renderheader(h, { column, $index }) {
+    //永久保存
+    saveLongMenu() {
+      if (this.show_name == true) {
+        this.checkList.push("任务名称");
+      }
+      if (this.show_link_dept_name == true) {
+        this.checkList.push("制作环节");
+      }
+      if (this.show_content == true) {
+        this.checkList.push("制作内容");
+      }
+      if (this.show_project_image == true) {
+        this.checkList.push("缩略图");
+      }
+      if (this.show_asset_name == true) {
+        this.checkList.push("镜头号");
+      }
+      if (this.show_episode == true) {
+        this.checkList.push("集数");
+      }
+      if (this.show_session == true) {
+        this.checkList.push("场次");
+      }
+      if (this.show_priority == true) {
+        this.checkList.push("优先级");
+      }
+      if (this.show_grade == true) {
+        this.checkList.push("难度");
+      }
+      if (this.show_status == true) {
+        this.checkList.push("状态");
+      }
+      if (this.show_creator_name == true) {
+        this.checkList.push("创建者");
+      }
+      if (this.show_executor == true) {
+        this.checkList.push("执行人");
+      }
+      if (this.show_schedule == true) {
+        this.checkList.push("任务进度");
+      }
+      if (this.show_create_time == true) {
+        this.checkList.push("创建日期");
+      }
+      if (this.show_start_date == true) {
+        this.checkList.push("开始日期");
+      }
+      if (this.show_end_date == true) {
+        this.checkList.push("截止日期");
+      }
+      if (this.show_total_hour == true) {
+        this.checkList.push("预设时间（小时）");
+      }
+      setupMenu({ menu_type: 0, menu_list:String(this.checkList) }).then(
+        ({ data }) => {
+          this.visible = false;
+        }
+      );
+    },
+    //获取菜单设置
+    getMenuList() {
+      getMenu({ menu_type: 0 }).then(({ data }) => {
+        if (data.msg != "") {
+          [...data.msg].map(item => {
+            switch (item) {
+              case "任务名称":
+                this.show_name = true;
+                break;
+              case "制作环节":
+                this.show_link_dept_name = true;
+                break;
+              case "制作内容":
+                this.show_content = true;
+                break;
+              case "缩略图":
+                this.show_project_image = true;
+                break;
+              case "镜头号":
+                this.show_asset_name = true;
+                break;
+              case "集数":
+                this.show_episode = true;
+                break;
+              case "场次":
+                this.show_session = true;
+                break;
+              case "优先级":
+                this.show_priority = true;
+                break;
+              case "难度":
+                this.show_grade = true;
+                break;
+              case "状态":
+                this.show_status = true;
+                break;
+              case "创建者":
+                this.show_creator_name = true;
+                break;
+              case "执行人":
+                this.show_executor = true;
+                break;
+              case "任务进度":
+                this.show_schedule = true;
+                break;
+              case "创建日期":
+                this.show_create_time = true;
+                break;
+              case "开始日期":
+                this.show_start_date = true;
+                break;
+              case "截止日期":
+                this.show_end_date = true;
+                break;
+              case "预设时间（小时）":
+                this.show_total_hour = true;
+                break;
+            }
+          })
+        } else {
+          this.show_asset_name = true;
+          this.show_project_image = true;
+          this.show_episode = true;
+          this.show_session = true;
+          this.show_content = true;
+          this.show_link_dept_name = true;
+          this.show_end_date = true;
+          this.show_executor = true;
+          this.show_status = true;
+          this.show_schedule = true;
+          this.show_priority = true;
+          this.show_grade = true;
+          this.show_start_date = true;
+          this.show_total_hour = true;
+          this.show_name = true;
+          this.show_create_time = true;
+          this.show_creator_name = true;
+        }
+      });
+    },
+    renderheader(h, { column, $index }) {
       return h("span", {}, [
         h("span", {}, column.label.split("|")[0]),
         h("br"),
@@ -1481,7 +1642,7 @@ export default {
         this.dbCell = true;
         this.cellId = row.id;
         const index = this.TaskList.findIndex(t => t.id === this.cellId);
-        const newObj = JSON.parse(JSON.stringify(this.TaskList[index]))
+        const newObj = JSON.parse(JSON.stringify(this.TaskList[index]));
         this.cache = {
           index,
           value: newObj[column.property],
@@ -1515,31 +1676,32 @@ export default {
       if (payload.end_date === "Invalid Date") {
         delete payload.end_date;
       }
-      HTTP.putTask(payload).then(({ data }) => {
-        if (data.status === 0) {
-          this.$message.success(data.msg);
-          this.editing = false;
-        } else {
-          this.TaskList[this.cache.index] = Object.assign(
+      HTTP.putTask(payload)
+        .then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.editing = false;
+          } else {
+            this.TaskList[this.cache.index] = Object.assign(
               {},
               this.TaskList[this.cache.index],
               {
                 [this.cache.property]: this.cache.value
               }
             );
-          this.$message.error(data.msg);
-        }
-        this.getProjectNum();
-      })
-      .catch(() => {
-          this.TaskList[this.cache.index] = Object.assign(
-              {},
-              this.TaskList[this.cache.index],
-              {
-                [this.cache.property]: this.cache.value
-              }
-            );
+            this.$message.error(data.msg);
+          }
+          this.getProjectNum();
         })
+        .catch(() => {
+          this.TaskList[this.cache.index] = Object.assign(
+            {},
+            this.TaskList[this.cache.index],
+            {
+              [this.cache.property]: this.cache.value
+            }
+          );
+        });
     },
     getAssetList() {
       return;
@@ -1831,7 +1993,7 @@ export default {
       this.cutType = 3;
       let data = {
         ...this.sortSelForm,
-         ...this.oneSel,
+        ...this.oneSel,
         project: this.$route.params.id,
         pagenum: this.pageSize,
         page: this.currentPage,
@@ -2080,12 +2242,11 @@ export default {
           this.isDialogShow = true;
           break;
         case 3:
-          
           function dateFormat(date) {
             return new Date(date * 1000).toLocaleDateString();
           }
-          this.isDialogShow=true;
-   if (!Object.keys(this.ActiveRow).length) {
+          this.isDialogShow = true;
+          if (!Object.keys(this.ActiveRow).length) {
             this.$message.error("请选择要修改的任务");
             return false;
           }
@@ -2097,7 +2258,7 @@ export default {
           this.dialogTitle = "修改任务";
           this.TaskForm = {
             ...this.ActiveRow,
-            
+
             datetime: [
               new Date(dateFormat(this.ActiveRow.start_date)) > 0
                 ? new Date(dateFormat(this.ActiveRow.start_date))
@@ -2119,9 +2280,9 @@ export default {
           delete this.TaskForm.category;
           delete this.TaskForm.project;
           delete this.TaskForm["sub_task"];
-         
-          this.updateMulTask.grade=this.ActiveRow.grade;
-        
+
+          this.updateMulTask.grade = this.ActiveRow.grade;
+
           break;
       }
     },
@@ -2136,7 +2297,7 @@ export default {
           }
           let data = {
             ...this.TaskForm,
-            grade:this.updateMulTask.grade,
+            grade: this.updateMulTask.grade,
             start_date: changeDateFormat(this.TaskForm.datetime[0]),
             end_date: changeDateFormat(this.TaskForm.datetime[1]),
             project: this.$route.params.id
@@ -2148,7 +2309,6 @@ export default {
           delete data.datetime;
           //若果是修改
           if (this.DialogType === 3) {
-           
             HTTP.putTask(data)
               .then(({ data }) => {
                 this.buttonStates.createLoading = false;
@@ -2261,7 +2421,7 @@ export default {
     //取消对话框
     cancel() {
       this.isDialogShow = false;
-      this.TaskForm={};
+      this.TaskForm = {};
       this.$refs["TaskRef"].resetFields();
     },
     cancel2() {
@@ -2313,7 +2473,7 @@ export default {
       if (val.session) {
         this.filterSession = [];
         this.filterSession = [...val.session];
-      
+
         this.filterSession.forEach((item, index) => {
           // item = Number(item);
           this.filterSession[index] = item;
@@ -2349,7 +2509,7 @@ export default {
       }
       let data = {
         ...this.sortSelForm,
-         ...this.oneSel,
+        ...this.oneSel,
         project: this.$route.params.id,
         pagenum: 20,
         page: 1
@@ -2400,8 +2560,8 @@ export default {
     //获取任务列表
     getTasks(type, oneSel, name) {
       // 如果isFilterOverdue 告诉直接筛选超期，就不要事先加载一遍
-      if(this.$store.state.project.isFilterOverdue){
-        return
+      if (this.$store.state.project.isFilterOverdue) {
+        return;
       }
       this.oneSel = oneSel;
       this.name = name; //任务导出时若有筛选条件
@@ -2538,6 +2698,7 @@ export default {
   },
 
   async created() {
+    this.getMenuList();
     this.getProjectNum();
     if (this.$route.query.type == 0) {
       this.getTeam();

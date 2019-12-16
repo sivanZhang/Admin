@@ -20,15 +20,15 @@
               :disabled="this.multipleSelection.length === 0"
             >批量删除</el-button>
           </template>
-          <el-popover placement="bottom" width="300" trigger="click" style="margin-left:15px">
+          <el-popover placement="bottom" v-model="visible" width="300" trigger="click" style="margin-left:15px">
             <el-col :span="12">
               <el-checkbox v-model="show_image">缩略图</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_session">场次</el-checkbox>
+              <el-checkbox v-model="show_session" v-if="(notShow == 'true' ?true:false)">场次</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_episode">集数</el-checkbox>
+              <el-checkbox v-model="show_episode" v-if="(notShow == 'true' ?true:false)">集数</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_name">{{labelName}}</el-checkbox>
@@ -92,6 +92,9 @@
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_remark">备注</el-checkbox>
+            </el-col>
+            <el-col :span="24" style="padding-top:8px" align="right">
+              <el-button type="primary" size="mini" @click="saveLongMenu">保存</el-button>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting">展示列</el-button>
           </el-popover>
@@ -956,6 +959,7 @@
 </template>
 
 <script>
+import { setupMenu, getMenu } from "@/api/project";
 import { getEpisodeSession } from "@/api/statistics";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import * as HTTP from "@/api/assets";
@@ -1083,30 +1087,32 @@ export default {
       row: null,
       ind: true,
       show_small_status: false,
-      show_image: true,
-      show_session: true,
-      show_episode: true,
-      show_name: true,
-      show_frame: true,
-      show_frame_range: true,
-      show_frame_reference: true,
-      show_report: true,
-      show_retime: true,
-      show_inner_version: true,
-      show_content: true,
-      show_priority: true,
-      show_level: true,
+      show_image: false,
+      show_session: false,
+      show_episode: false,
+      show_name: false,
+      show_frame: false,
+      show_frame_range: false,
+      show_frame_reference: false,
+      show_report: false,
+      show_retime: false,
+      show_inner_version: false,
+      show_content: false,
+      show_priority: false,
+      show_level: false,
       show_id: false,
       show_creator_name: false,
       show_creator_id: false,
-      show_status: true,
-      show_link: true,
-      show_totle_date_end: true,
-      show_total_hours: true,
-      show_remark: true,
-      show_create_date: true,
-      show_start_date: true,
-      show_end_date: true,
+      show_status: false,
+      show_link: false,
+      show_totle_date_end: false,
+      show_total_hours: false,
+      show_remark: false,
+      show_create_date: false,
+      show_start_date: false,
+      show_end_date: false,
+      checkAssetList:[],
+      visible:false,
       filterStatus: [],
       filterSession: [],
       filterEpisode: [],
@@ -1183,6 +1189,192 @@ export default {
     }
   },
   methods: {
+     //全部项目使用保存
+     saveLongMenu(){
+        if(this.show_image == true){
+         this.checkAssetList.push("缩略图")
+       }
+       if(this.show_session == true){
+         this.checkAssetList.push("场次")
+       }
+       if(this.show_episode == true){
+         this.checkAssetList.push("集数")
+       }
+       if(this.show_name == true){
+         this.checkAssetList.push(this.notShow == "true" ? "镜头号" : "资产名称")
+       }
+       if(this.show_frame == true){
+         this.checkAssetList.push("帧数")
+       }
+       if(this.show_frame_range == true){
+         this.checkAssetList.push("帧数范围")
+       }
+       if(this.show_report == true){
+         this.checkAssetList.push("画面调整信息")
+       }
+       if(this.show_retime == true){
+         this.checkAssetList.push("变速信息")
+       }
+       if(this.show_inner_version == true){
+         this.checkAssetList.push("版本号")
+       }
+       if(this.show_content == true){
+         this.checkAssetList.push("制作内容")
+       }
+       if(this.show_priority == true){
+         this.checkAssetList.push("优先级")
+       }
+       if(this.show_level == true){
+         this.checkAssetList.push("难度")
+       }
+       if(this.show_id == true){
+         this.checkAssetList.push("资产ID")
+       }
+       if(this.show_small_status == true){
+         this.checkAssetList.push("小状态")
+       }
+       if(this.show_creator_name == true){
+         this.checkAssetList.push("创建人")
+       }
+       if(this.show_creator_id == true){
+         this.checkAssetList.push("创建人ID")
+       }
+       if(this.show_status == true){
+         this.checkAssetList.push("进度")
+       }
+       if(this.show_link == true){
+         this.checkAssetList.push("当前环节")
+       }
+       if(this.show_create_date == true){
+         this.checkAssetList.push("创建日期")
+       }
+       if(this.show_start_date == true){
+         this.checkAssetList.push("开始日期")
+       }
+       if(this.show_end_date == true){
+         this.checkAssetList.push("结束日期")
+       }
+       if(this.show_totle_date_end == true){
+         this.checkAssetList.push("计划截止日期")
+       }
+       if(this.show_total_hours == true){
+         this.checkAssetList.push("总工时")
+       }
+       if(this.show_remark == true){
+         this.checkAssetList.push("备注")
+       }
+       setupMenu({menu_type:this.notShow == "true" ? 2:1,menu_list:String(this.checkAssetList)}).then(({ data })=>{
+         this.visible = false;
+       })
+     },
+     //获取菜单设置
+     getMenuList(){
+       getMenu({menu_type:this.notShow == "true" ? 2:1}).then(({ data })=>{
+         if(data.msg!=""){
+            [...data.msg].map(item =>{
+           switch(item){
+           case "缩略图":
+             this.show_image = true;
+             break;
+           case "场次":
+             this.show_session = true;
+             break;
+           case "集数":
+             this.show_episode = true;
+             break;
+           case "镜头号" ||"资产名称":
+             this.show_name = true;
+             break;
+           case "帧数":
+             this.show_frame = true;
+             break;
+           case "帧数范围":
+             this.show_frame_range = true;
+             break;
+           case "画面调整信息":
+             this.show_report = true;
+             break;
+           case "变速信息":
+             this.show_retime = true;
+             break;
+           case "版本号":
+             this.show_inner_version = true;
+             break;
+           case "制作内容":
+             this.show_content = true;
+             break;
+           case "优先级":
+             this.show_priority = true;
+             break;
+           case "难度":
+             this.show_level = true;
+             break;
+           case "资产ID":
+             this.show_id = true;
+             break;
+           case "小状态":
+             this.show_small_status = true;
+             break;
+           case "创建人":
+             this.show_creator_name = true;
+             break;
+           case "创建人ID":
+             this.show_creator_id = true;
+             break;
+           case "进度":
+             this.show_status = true;
+             break;
+           case "当前环节":
+             this.show_link = true;
+             break;
+           case "创建日期":
+             this.show_create_date = true;
+             break;
+           case "开始日期":
+             this.show_start_date = true;
+             break;
+           case "结束日期":
+             this.show_end_date = true;
+             break;
+           case "计划截止日期":
+             this.show_totle_date_end = true;
+             break;
+           case "总工时":
+             this.show_total_hours = true;
+             break;
+           case "备注":
+             this.show_remark = true;
+             break;
+         }
+         })
+         } else {  
+             this.show_image = true;
+             this.show_session = true;
+             this.show_episode = true;
+             this.show_name = true;
+             this.show_frame = true;
+             this.show_frame_range = true;
+             this.show_report = true;
+             this.show_retime = true;
+             this.show_inner_version = true;
+             this.show_content = true;
+             this.show_priority = true;
+             this.show_level = true;
+             this.show_id = true;
+             this.show_small_status = true;
+             this.show_creator_name = true;
+             this.show_creator_id = true;
+             this.show_status = true;     
+             this.show_link = true;
+             this.show_create_date = true;
+             this.show_start_date = true;
+             this.show_end_date = true;     
+             this.show_totle_date_end = true;
+             this.show_total_hours = true;
+             this.show_remark = true;     
+         }
+       })
+     },
     renderheader(h, { column, $index }) {
       return h("span", {}, [
         h("span", {}, column.label.split("|")[0]),
@@ -2184,6 +2376,7 @@ export default {
     }
   },
   created() {
+    this.getMenuList();
     this.getProjectNum();
     this.$emit("getGroup");
     this.getAuth();

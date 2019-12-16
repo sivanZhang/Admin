@@ -45,4 +45,11 @@ export function getTeamList(params) {
 export function updateRequirement(data){
   return AXIOS.post("/projects/projects/",data)
 }
-
+//设置菜单项(镜头与任务中展示列设置)
+export function setupMenu(data){
+  return AXIOS.post('/menu/menu/',data)
+}
+//获取菜单设置
+export function getMenu(params) {
+  return AXIOS.get('/menu/menu/', { params })
+}
