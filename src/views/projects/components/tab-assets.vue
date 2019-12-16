@@ -1402,10 +1402,14 @@ export default {
       this.sortfilter = { column, prop, order };
       this.cutType = 3;
       let payload = {
+        ...this.sortSelForm,
+         ...this.oneSel,
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         sort: order === "descending" ? "-" + prop : prop
+
       };
+      
       if (Type === 1) {
         //正常请求
         payload = { ...payload, pagenum: 20, page: 1 };
@@ -1438,6 +1442,8 @@ export default {
       this.sortMulFilter = sort;
       this.cutType = 6;
       let payload = {
+        ...this.sortSelForm,
+        ...this.oneSel,
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1,
         sort: sort
@@ -1513,6 +1519,8 @@ export default {
         });
       }
       let payload = {
+        ...this.sortSelForm,
+         ...this.oneSel,
         project: this.$route.params.id,
         asset_type: this.drawerType === "scene" ? 0 : 1
       };

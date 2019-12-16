@@ -1830,6 +1830,8 @@ export default {
       this.sortfilter = { column, prop, order };
       this.cutType = 3;
       let data = {
+        ...this.sortSelForm,
+         ...this.oneSel,
         project: this.$route.params.id,
         pagenum: this.pageSize,
         page: this.currentPage,
@@ -2346,6 +2348,8 @@ export default {
         });
       }
       let data = {
+        ...this.sortSelForm,
+         ...this.oneSel,
         project: this.$route.params.id,
         pagenum: 20,
         page: 1
