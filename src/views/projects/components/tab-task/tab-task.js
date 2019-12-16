@@ -596,7 +596,7 @@ export default {
             };
         }
       }
-      return { borderRight: 0 };
+      return { borderRight: 0,padding:0 };
     },
     changelist() {
       if (this.value1 == "是") {

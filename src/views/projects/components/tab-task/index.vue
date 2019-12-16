@@ -110,7 +110,7 @@
         @current-change="rowSelected"
         @selection-change="handleSelectionChange"
         :stripe="true"
-        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,padding:0 }"
         :cell-style="cellStyle"
         border
         :row-key="row=>row.id"
@@ -224,7 +224,7 @@
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-              placeholder="选择结束日期"
+              placeholder="点击选择"
             />
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
@@ -286,7 +286,7 @@
           label="状态"
           prop="status"
           v-if="show_status"
-          width="160px"
+          width="140px"
           align="left"
           sortable="custom"
           column-key="status"
@@ -308,7 +308,7 @@
           label="优先级"
           :formatter="Priority"
           v-if="show_priority"
-          width="120px"
+          width="100px"
           sortable="custom"
           align="center"
           column-key="priority"
@@ -335,7 +335,7 @@
           label="难度"
           :formatter="Grade"
           v-if="show_grade"
-          width="120px"
+          width="100px"
           sortable="custom"
           align="center"
           column-key="grade"
@@ -366,7 +366,7 @@
         </el-table-column>
         <el-table-column
           label="开始日期"
-          width="100px"
+          width="90px"
           v-if="show_start_date"
           prop="start_date"
           sortable="custom"
@@ -378,7 +378,7 @@
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'start_date')"
               @change="showEditIcon(scope.$index,scope.row)"
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
-              placeholder="选择开始日期"
+              placeholder="点击选择"
             />
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'start_date')"
@@ -390,13 +390,13 @@
           prop="total_hour"
           align="center"
           label="预设时间|（小时）"
-          width="130px"
+          width="110px"
           v-if="show_total_hour"
         ></el-table-column>
         <el-table-column
           label="最后|提交时间"
           header-align="left"
-          width="100px"
+          width="90px"
           :render-header="renderheader"
         >
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
