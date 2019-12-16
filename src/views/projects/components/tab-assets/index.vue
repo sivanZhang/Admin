@@ -940,7 +940,7 @@
     <el-dialog title="注意事项" :visible.sync="SaveDialogVisible" width="365px">
       <div style="padding:0px 5px 20px;">
         <div style="font-size:12px">
-          <h3>点击记住选择列后：</h3>
+          <h3>点击“记住选择列”后：</h3>
           <div style="padding-top:2px">
             <span style="font-weight:bold">1：</span>
             所有项目中都会展示选择的列
