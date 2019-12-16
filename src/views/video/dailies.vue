@@ -30,7 +30,7 @@
         <template slot-scope="scope">{{scope.row.asset.name}}</template>
       </el-table-column>
       <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
-      <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
+      <el-table-column label="环节" prop="dept" show-overflow-tooltip width="100px">
         <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
       </el-table-column>
       <el-table-column label="截止日期" width="100px" prop="end_date">

@@ -10,7 +10,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="制作环节" prop="dept">
+            <el-form-item label="环节" prop="dept">
               <el-input v-model="sortSelForm.dept"></el-input>
             </el-form-item>
           </el-col>

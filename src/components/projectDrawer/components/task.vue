@@ -14,7 +14,7 @@
     >
       <el-table-column type="index" label="序号" align="center"></el-table-column>
       <el-table-column prop="name" label="任务"></el-table-column>
-      <el-table-column label="制作环节">
+      <el-table-column label="环节">
         <template slot-scope="scope">{{scope.row.category|categoryFilter}}</template>
       </el-table-column>
       <el-table-column label="镜头号">

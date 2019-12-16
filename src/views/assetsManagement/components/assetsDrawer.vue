@@ -4,7 +4,7 @@
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab">
-          <el-tab-pane label="制作环节" name="first">
+          <el-tab-pane label="环节" name="first">
             <links
               :link-list="LinkList"
               :project="project"

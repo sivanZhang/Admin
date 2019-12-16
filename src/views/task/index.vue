@@ -404,7 +404,7 @@
           <el-table-column prop="asset.session" label="场次"></el-table-column>
           <el-table-column
             prop="task.dept.name"
-            label="制作环节"
+            label="环节"
             header-align="left"
             show-overflow-tooltip
           ></el-table-column>

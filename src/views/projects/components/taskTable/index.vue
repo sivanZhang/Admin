@@ -76,7 +76,7 @@
         </template>
       </el-table-column> -->
       <el-table-column prop="name" label="任务" show-overflow-tooltip width="100px"></el-table-column>
-      <el-table-column label="制作环节" prop="dept" show-overflow-tooltip width="100px">
+      <el-table-column label="环节" prop="dept" show-overflow-tooltip width="100px">
         <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
       </el-table-column>
       <el-table-column label="制作内容" align="left" width="150px" prop="content" show-overflow-tooltip>

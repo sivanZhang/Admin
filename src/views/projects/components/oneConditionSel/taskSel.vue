@@ -76,7 +76,7 @@ export default {
         },
         {
           value: "dept",
-          label: "制作环节"
+          label: "环节"
         },
         {
           value: "content",

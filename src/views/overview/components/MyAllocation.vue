@@ -35,7 +35,7 @@
       :transfer="false"
       :mask="false"
       inner
-      title="制作环节"
+      title="环节"
     >
       <div style="display:flex;overflow:auto">
         <el-steps

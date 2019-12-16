@@ -56,7 +56,7 @@
         v-if="showMulChoose.dept&&selShowDept"
         :class="showMulChoose.dept?'active':''"
       >
-        制作环节：{{showMulChoose.dept}}
+        环节：{{showMulChoose.dept}}
         <span
           class="el-icon-close"
           @click.prevent.stop="closeSelectedTag('dept')"

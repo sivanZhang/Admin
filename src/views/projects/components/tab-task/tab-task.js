@@ -252,7 +252,7 @@ export default {
         this.checkList.push("任务名称");
       }
       if (this.show_link_dept_name == true) {
-        this.checkList.push("制作环节");
+        this.checkList.push("环节");
       }
       if (this.show_content == true) {
         this.checkList.push("制作内容");
@@ -314,7 +314,7 @@ export default {
               case "任务名称":
                 this.show_name = true;
                 break;
-              case "制作环节":
+              case "环节":
                 this.show_link_dept_name = true;
                 break;
               case "制作内容":

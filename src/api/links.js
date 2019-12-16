@@ -17,11 +17,11 @@ export function addLinks(data) {
         }],
     })
 }
-//通过link_id查询制作环节
+//通过link_id查询环节
 export function getLink(params) {
     return AXIOS.get('/links/links/?link=1', { params })
 }
-//修改制作环节
+//修改环节
 export function updateLink(data) {
     return AXIOS.post('/links/links/', data, {
         headers: {
@@ -32,7 +32,7 @@ export function updateLink(data) {
         }],
     })
 }
-//删除制作环节
+//删除环节
 export function delLink(data) {
     return AXIOS.post('/links/links/', data)
 }

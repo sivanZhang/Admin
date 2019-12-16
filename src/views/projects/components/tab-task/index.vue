@@ -31,7 +31,7 @@
               <el-checkbox v-model="show_name">任务</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_link_dept_name">制作环节</el-checkbox>
+              <el-checkbox v-model="show_link_dept_name">环节</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_content">制作内容</el-checkbox>
@@ -201,7 +201,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="制作环节"
+          label="环节"
           prop="dept"
           sortable="custom"
           show-overflow-tooltip
