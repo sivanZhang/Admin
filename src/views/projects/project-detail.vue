@@ -64,8 +64,8 @@
 
 <script>
 import { queryAssets } from "@/api/assets";
-import tabTask from "./components/tab-task";
-import tabAssets from "./components/tab-assets";
+import tabTask from "./components/tab-task/index";
+import tabAssets from "./components/tab-assets/index";
 import configProject from "./components/configProject";
 import training from "./components/training-member";
 import progressContral from "./components/progressContral/progressContral";
