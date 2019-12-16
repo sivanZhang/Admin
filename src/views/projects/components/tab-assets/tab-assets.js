@@ -534,11 +534,11 @@ export default {
           case 0:
             return {
               background: "#C64b2b",
-              color: "#FFFFFF"
+              color: "#FFFFFF",
             };
         }
       }
-      return { borderRight: 0, height: 50 };
+      return { borderRight: 0, height: 50,paddingLeft: 5,paddingRight:5 };
     },
 
     //双击修改单元格获取焦点

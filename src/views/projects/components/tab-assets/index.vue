@@ -20,7 +20,13 @@
               :disabled="this.multipleSelection.length === 0"
             >批量删除</el-button>
           </template>
-          <el-popover placement="bottom" v-model="visible" width="300" trigger="click" style="margin-left:15px">
+          <el-popover
+            placement="bottom"
+            v-model="visible"
+            width="300"
+            trigger="click"
+            style="margin-left:15px"
+          >
             <el-col :span="12">
               <el-checkbox v-model="show_image">缩略图</el-checkbox>
             </el-col>
@@ -122,7 +128,7 @@
         ref="assetTable"
         :height="curHeight"
         :data="AssetList"
-        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,padding:0}"
         :cell-style="cellStyle"
         highlight-current-row
         @selection-change="handleSelectionChange"
@@ -150,7 +156,7 @@
           prop="name"
           :label="labelName"
           align="left"
-          width="130px"
+          width="110px"
           v-if="show_name"
           sortable="custom"
           class-name="links"
@@ -621,13 +627,13 @@
         <el-table-column prop="id" label="资产ID" v-if="show_id" align="left"></el-table-column>
         <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column>
         <el-table-column prop="creator_id" label="创建人ID" v-if="show_creator_id" align="left"></el-table-column>
-        <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
+        <el-table-column label="当前环节" align="center" width="140px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">
               <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="截止日期" align="left" width="95px">
+          <el-table-column label="截止日期" align="left" width="80px">
             <template slot-scope="scope">
               <div
                 v-for="(todo,index) of scope.row.link"
@@ -640,7 +646,7 @@
         <el-table-column
           label="创建日期"
           align="left"
-          width="105px"
+          width="80px"
           v-if="show_create_date"
           prop="date"
           class-name="date"
@@ -651,7 +657,7 @@
         <el-table-column
           label="开始日期"
           align="left"
-          width="105px"
+          width="80px"
           v-if="show_start_date"
           prop="start_date"
           class-name="date"
@@ -664,7 +670,7 @@
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'start_date')"
               @change="showEditIcon(scope.$index,scope.row)"
               @blur="saveEdit(scope.$index,scope.row)"
-              placeholder="选择开始日期"
+              placeholder="点击选择"
               value-format="timestamp"
             />
             <span
@@ -675,6 +681,7 @@
         <el-table-column
           label="结束日期"
           align="left"
+          width="80px"
           v-if="show_end_date"
           prop="end_date"
           class-name="date"
@@ -689,7 +696,7 @@
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'end_date')"
               @change="showEditIcon(scope.$index,scope.row)"
               @blur="saveEdit(scope.$index,scope.row)"
-              placeholder="选择结束日期"
+              placeholder="点击选择"
             />
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'end_date')"
@@ -699,6 +706,7 @@
         <el-table-column
           label="计划截止|日期"
           align="left"
+          width="80px"
           v-if="show_totle_date_end"
           prop="total_end_date"
           class-name="date"
@@ -711,7 +719,7 @@
           prop="total_hours"
           label="总工时"
           align="left"
-          width="80px"
+          width="60px"
           v-if="show_total_hours"
         ></el-table-column>
         <el-table-column
@@ -964,6 +972,12 @@
 <style lang="scss">
 #tab-assets {
   min-height: calc(100vh - 199px);
+  .el-table td {
+    .cell {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
   .links {
     cursor: pointer;
     color: #2d8cf0;

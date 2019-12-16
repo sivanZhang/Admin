@@ -366,7 +366,7 @@
         </el-table-column>
         <el-table-column
           label="开始日期"
-          width="90px"
+          width="80px"
           v-if="show_start_date"
           prop="start_date"
           sortable="custom"
@@ -1203,6 +1203,12 @@
 }
 .el-table--mini td {
   padding: 0px 0;
+}
+.el-table td {
+  .cell{
+    padding-left:5px;
+    padding-right:5px
+  }
 }
 .el-card {
   border-radius: 0px;
