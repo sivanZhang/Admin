@@ -100,13 +100,20 @@
               <el-checkbox v-model="show_remark">备注</el-checkbox>
             </el-col>
             <el-col :span="24" style="padding-top:8px" align="right">
-              <el-button type="primary" size="mini" @click="saveLongMenu">保存</el-button>
+              <el-button type="primary" size="mini" @click="saveLongMenu">记住选择列</el-button>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting">展示列</el-button>
           </el-popover>
           <template>
             <assetSortMul @refresh="sortMul" style="margin-left:15px;width:100px" />
           </template>
+          <span
+            style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
+            @click="openExplain()"
+          >
+            使用帮助:
+            <svg-icon icon-class="wenhao" />
+          </span>
         </el-col>
         <el-col :span="10" align="right">
           <el-row type="flex" justify="end">
@@ -928,6 +935,30 @@
         <el-button @click="uploadVisible = false">取 消</el-button>
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
+    </el-dialog>
+    <!-- 展示列保存说明 -->
+    <el-dialog title="注意事项" :visible.sync="SaveDialogVisible" width="365px">
+      <div style="padding:0px 5px 20px;">
+        <div style="font-size:12px">
+          <h3>点击记住选择列后：</h3>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">1：</span>
+            所有项目中都会展示选择的列
+          </div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">2：</span>
+            刷新之后，仍然会展示选择的列
+          </div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">3：</span>
+            重新登录之后，仍然会展示选择的列
+          </div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">4：</span>
+            在不同客户端中，仍然会展示选择的列
+          </div>
+        </div>
+      </div>
     </el-dialog>
     <!-- 资产侧栏 -->
     <Drawer

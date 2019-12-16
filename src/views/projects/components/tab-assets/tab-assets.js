@@ -186,7 +186,8 @@ export default {
       sortMulFilter: null, //保存多列排序的条件
       curHeight: 0,
       // 单元格里的值得缓存，以便提交失败后把原值赋值回去
-      cellValueCache: null
+      cellValueCache: null,
+      SaveDialogVisible:false
     };
   },
   beforeMount() {
@@ -228,6 +229,10 @@ export default {
     }
   },
   methods: {
+    //保存说明
+    openExplain() {
+      this.SaveDialogVisible = true;
+    },
      //全部项目使用保存
      saveLongMenu(){
         if(this.show_image == true){

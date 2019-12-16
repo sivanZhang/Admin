@@ -172,7 +172,8 @@ export default {
       disabled8: true,
       cache: null,
       visible: false,
-      checkList: []
+      checkList: [],
+      SaveDialogVisible: false,
     };
   },
   beforeMount() {
@@ -246,6 +247,10 @@ export default {
     }
   },
   methods: {
+    //保存说明
+    openExplain() {
+      this.SaveDialogVisible = true;
+    },
     //永久保存
     saveLongMenu() {
       if (this.show_name == true) {
