@@ -320,7 +320,7 @@ export default {
           value: 2
         }
       ],
-      AuditList:[],
+      // AuditList:[],
       SearchResult: [],
       out_suggestion: "",
       checked: false,
@@ -348,14 +348,16 @@ export default {
       return this.$store.state.project.ProjectList;
     },
     //{Array} 我的审批列表数据
-    ApproveList() {
+    AuditList() {
       // 如果是在搜索，使用搜索结果，否则使用store中缓存的数据
       if (this.isSearch) {
         return this.SearchResult;
       } else {
         return this.$store.state.approve.AuditList;
       }
+      console.log(this.$store.state.approve.AuditList);
     }
+    
   },
   methods: {
     // 获取所有项目
@@ -556,8 +558,9 @@ export default {
       this.isDialogShow = false;
     } */
   },
-  created() {
+  mounted() {
     this.getMyTasks();
+    
   }
 };
 </script>

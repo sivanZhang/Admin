@@ -1243,6 +1243,12 @@
     padding-right: 5px;
   }
 }
+ .el-table th {
+    .cell {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
 .el-card {
   border-radius: 0px;
 }
