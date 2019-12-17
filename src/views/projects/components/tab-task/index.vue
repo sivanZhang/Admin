@@ -78,18 +78,20 @@
             <el-col :span="24">
               <el-checkbox v-model="show_total_hour">预设时间（小时）</el-checkbox>
             </el-col>
-            <el-col :span="24" style="padding-top:8px" align="right">
+            <el-col :span="14" style="padding-top:11px" align="right">
+              <span
+                style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
+                @click="openExplain()"
+              >
+                使用帮助:
+                <svg-icon icon-class="wenhao" />
+              </span>
+            </el-col>
+            <el-col :span="10" style="padding-top:8px" align="center">
               <el-button type="primary" size="mini" @click="saveLongMenu">记住选择列</el-button>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
-          <span
-            style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
-            @click="openExplain()"
-          >
-            使用帮助:
-            <svg-icon icon-class="wenhao" />
-          </span>
         </el-col>
         <el-col :span="11" style="text-align:right">
           <div style="display:flex;justify-content:flex-end;text-align:bottom">

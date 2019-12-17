@@ -99,7 +99,16 @@
             <el-col :span="12">
               <el-checkbox v-model="show_remark">备注</el-checkbox>
             </el-col>
-            <el-col :span="24" style="padding-top:8px" align="right">
+            <el-col :span="14" style="padding-top:11px" align="right">
+              <span
+                style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
+                @click="openExplain()"
+              >
+                使用帮助:
+                <svg-icon icon-class="wenhao" />
+              </span>
+            </el-col>
+            <el-col :span="10" style="padding-top:8px" align="center">
               <el-button type="primary" size="mini" @click="saveLongMenu">记住选择列</el-button>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting">展示列</el-button>
@@ -107,13 +116,6 @@
           <template>
             <assetSortMul @refresh="sortMul" style="margin-left:15px;width:100px" />
           </template>
-          <span
-            style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
-            @click="openExplain()"
-          >
-            使用帮助:
-            <svg-icon icon-class="wenhao" />
-          </span>
         </el-col>
         <el-col :span="10" align="right">
           <el-row type="flex" justify="end">
