@@ -237,7 +237,16 @@
             <el-radio :label="0">拒绝</el-radio>
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
-          <el-checkbox v-model="form_obj.checked1" style="margin-left:20px;">标记为已完成</el-checkbox>
+          <div>
+             <el-checkbox v-model="form_obj.status">标记为已完成</el-checkbox>
+              <span
+                    @click="openExplain()"
+                    style="padding-left:30px;font-size:12px;color:#808080;cursor: pointer;"
+                  >
+                    使用帮助:
+                    <svg-icon icon-class="wenhao" />
+                  </span>
+          </div>
           <template v-if="pro_type === 0">
             <el-row type="flex" align="middle">
               <el-col :span="5">审核评分</el-col>
@@ -246,8 +255,9 @@
               </el-col>
             </el-row>
           </template>
+          
           <div>
-            <el-checkbox v-model="checked">是否提交客户审批</el-checkbox>
+            <el-checkbox v-model="checked" style="margin-top:5px">是否提交客户审批</el-checkbox>
           </div>
           <el-input
             v-if="checked"
@@ -274,6 +284,12 @@
         </el-tab-pane>
       </el-tabs>
     </Drawer>
+     <!-- 标记已完成说明 -->
+    <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
+      <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+        <div style="font-size:12px">如果勾选“标记为已完成”，则不用进行下一阶段的审批。</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -320,10 +336,12 @@ export default {
           value: 2
         }
       ],
+       dialogVisible: false,
       // AuditList:[],
       SearchResult: [],
       out_suggestion: "",
-      checked: false,
+      checked: false, 
+        
       submitLoading: false,
       form_obj: {},
       isDrawerShow: false,
@@ -360,6 +378,9 @@ export default {
     
   },
   methods: {
+     openExplain() {
+      this.dialogVisible = true;
+    },
     // 获取所有项目
     queryProjects(selectionType) {
       // 下拉框显示时
@@ -462,14 +483,10 @@ export default {
           suggestion: "",
           approve_result: 0,
           task_id: id,
-          checked1: false
+          status: false,
         }
       );
-      if (this.form_obj.checked1 == false) {
-        delete this.form_obj.checked1;
-      }
-      console.log("11111");
-      console.log(this.form_obj);
+    
       this.$refs["approvelogs"].getApproveLog(id);
     },
     submitApprove() {
@@ -483,6 +500,11 @@ export default {
           path: this.out_path
         };
       }
+        if (this.form_obj.status==false) {
+        delete this.form_obj.status;
+      }
+      // console.log("11111");
+      // console.log(this.form_obj);
       postApprove(this.form_obj)
         .then(res => {
           if (res.data.status === 0) {

@@ -39,12 +39,30 @@
                   </div>
                 </li>
               </ul>
-              <el-input @focus="handelFocus" @blur="handelBlur" placeholder="添加备注" v-model="markText" type="textarea"></el-input>
+              <el-input
+                @focus="handelFocus"
+                @blur="handelBlur"
+                placeholder="添加备注"
+                v-model="markText"
+                type="textarea"
+              ></el-input>
+
               <div class="btn-group">
                 <el-radio-group v-model.number="approve_result">
                   <el-radio :label="0">拒绝</el-radio>
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
+                <div style="margin-top:5px">
+                  <el-checkbox v-model="checked1">标记为已完成</el-checkbox>
+                  <span
+                    @click="openExplain()"
+                    style="padding-left:30px;font-size:12px;color:#808080;cursor: pointer;"
+                  >
+                    使用帮助:
+                    <svg-icon icon-class="wenhao" />
+                  </span>
+                </div>
+
                 <div style="margin-top:5px">
                   <el-checkbox v-model="checked">是否提交客户审批</el-checkbox>
                 </div>
@@ -81,6 +99,12 @@
         <approve-log ref="approvelogs" id="videoComment" class="video-comment" />
       </el-col>
     </el-row>
+    <!-- 标记已完成说明 -->
+    <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
+      <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+        <div style="font-size:12px">如果勾选“标记为已完成”，则不用进行下一阶段的审批。</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -97,6 +121,7 @@ export default {
   data() {
     return {
       out_suggestion: "",
+      checked1: false,
       checked: false,
       approve_result: 0,
       score: null,
@@ -104,18 +129,19 @@ export default {
       activeTab: "first",
       markText: "",
       currentVideoIsEdit: false,
+      dialogVisible: false,
       pWidth: 0,
       pHeight: 0,
       submitList: [],
       currentId: null,
       scoreShow: false,
-      out_path:null
+      out_path: null
     };
   },
-  watch:{
-    checked(val){
-      if(val){
-        this.approve_result=1
+  watch: {
+    checked(val) {
+      if (val) {
+        this.approve_result = 1;
       }
     }
   },
@@ -129,11 +155,14 @@ export default {
       bH - (videoTabsH + 20 + 20 + 94 + 165) + "px";
   },
   methods: {
-    handelBlur(){
-      this.$refs['videoPlayer'].keyup()
+    openExplain() {
+      this.dialogVisible = true;
     },
-    handelFocus(){
-       this.$refs['videoPlayer'].remove()
+    handelBlur() {
+      this.$refs["videoPlayer"].keyup();
+    },
+    handelFocus() {
+      this.$refs["videoPlayer"].remove();
     },
     commitApprove() {
       if (!this.submitList.length) {
@@ -148,15 +177,22 @@ export default {
           task_id: t.task.id,
           approve_result: this.approve_result,
           suggestion: this.markText,
+          status: this.checked1,
           key: []
         };
+
+        if (data.status == false) {
+          delete data.status;
+        }
+        //     console.log('11111')
+        //  console.log( data)
         if (this.checked) {
           //添加提交外网审核字段
           data = {
             ...data,
             click: "",
             out_suggestion: this.out_suggestion,
-            path :this.out_path
+            path: this.out_path
           };
         }
         if (this.scoreShow === true) {
@@ -206,8 +242,8 @@ export default {
           this.pWidth,
           this.pHeight
         );
-        if (projectList[1]===null) {
-          projectList[1]=projectList[0]
+        if (projectList[1] === null) {
+          projectList[1] = projectList[0];
         }
         this.$refs.videoPlayer.initNextVideo(index, projectList);
       }
