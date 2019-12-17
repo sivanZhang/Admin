@@ -137,7 +137,7 @@
         ref="assetTable"
         :height="curHeight"
         :data="AssetList"
-        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,padding:0}"
+        :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
         :cell-style="cellStyle"
         highlight-current-row
         @selection-change="handleSelectionChange"
@@ -1006,6 +1006,12 @@
 #tab-assets {
   min-height: calc(100vh - 199px);
   .el-table td {
+    .cell {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
+  .el-table th {
     .cell {
       padding-left: 5px;
       padding-right: 5px;
