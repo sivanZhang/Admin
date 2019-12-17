@@ -716,11 +716,12 @@ export default {
           this.$message.success(data.msg)
         } else {
           this.$message.warning(data.msg)
-        }
+        };
+        this.getstatusNumber();
       }).catch(() => {
         loading.close()
         self.resetTasks()
-      })
+      });
     },
     cancel() {
       this.isDialogShow = false
@@ -847,15 +848,11 @@ export default {
     },
     // http获取所有‘我的任务’列表
     getMyTasks() {
-      return getStatusTaskList({
-        mytask: null,
-        page: 1,
-        pagenum: 20
-      }).then(({
+      return getStatusTaskList().then(({
         data
       }) => {
-        this.MyTaskList = [...data.msg]
-        this.resetTasks()
+        this.MyTaskList = [...data.msg];
+        this.resetTasks();
       })
     },
     // 按状态划分我的任务
