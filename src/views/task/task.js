@@ -478,10 +478,10 @@ export default {
               (this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0)
             break
           case 1:
-            this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0
+            this.total = this.statusNumber.not_start_num ? this.statusNumber.not_start_num : 0
             break
           case 2:
-            this.this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0
+            this.total = this.statusNumber.ongoing_num ? this.statusNumber.ongoing_num : 0
             break
           case 0:
             this.total = this.statusNumber.pause_num ? this.statusNumber.pause_num : 0
