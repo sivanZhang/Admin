@@ -11,6 +11,7 @@
             multiple
             @visible-change="queryProjects"
             filterable
+            class="select"
           >
             <el-option
               v-for="item in ProjectList"
@@ -28,12 +29,13 @@
             placeholder="请选择"
             multiple
             filterable
+            class="priority select"
           >
             <el-option
               v-for="item in prioritysLevelList"
               :key="item.value"
               :label="item.label"
-              :value="item.value"
+              :value="item.value" 
             ></el-option>
           </el-select>
         </div>
@@ -60,7 +62,7 @@
         </div>
         <div>
           <label class="input-label">任务名:</label>
-          <el-input placeholder="请输入内容" v-model="searchParams.task_name" clearable />
+          <el-input placeholder="请输入内容" v-model="searchParams.task_name" clearable class="taskname"/>
         </div>
         <div>
           <label class="input-label">任务内容:</label>
@@ -89,13 +91,14 @@
       :cell-style="cellStyle"
     >
       <el-table-column type="selection" width="60" align="center"></el-table-column>
-      <el-table-column label="所属项目" show-overflow-tooltip class-name="links">
+      <el-table-column label="所属项目"   class-name="links">
         <template slot-scope="scope">
           <router-link
             :to="{name:'project-detail',params:{id:scope.row.project.id},query:{type:scope.row.project.pro_type}}"
           >{{scope.row.project.name}}</router-link>
         </template>
       </el-table-column>
+      <el-table-column prop="asset_name" label="镜头号"  width="120px;"></el-table-column>
       <el-table-column label="镜头缩略图" width="180px">
         <template slot-scope="scope">
           <el-image
@@ -113,29 +116,13 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="asset_name" label="镜头号"  width="100px;"></el-table-column>
-       <el-table-column label="反馈截图" width="180px">
-        <template slot-scope="scope">
-          <el-image
-            :src="$store.state.BASE_URL+scope.row.project.image"
-            style="width: 180px;height: 100px;cursor: pointer; display:block;"
-            :preview-src-list="[$store.state.BASE_URL+scope.row.project.image]"
-          >
-            <div slot="placeholder" class="image-slot">
-              加载中
-              <span class="dot">...</span>
-            </div>
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
-            </div>
-          </el-image>
-        </template>
-      </el-table-column>
-      <el-table-column prop="task.content" label="任务内容" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="end_date" label="截止日期" width="120px">
+     
+       
+      <el-table-column prop="task.content" label="任务内容" width="120px;" ></el-table-column>
+      <el-table-column prop="end_date" label="截止日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.task_executors" label="任务执行人" width="120px">
+      <el-table-column prop="task.task_executors" label="执行人" width="100px">
         <template slot-scope="scope">
           <div v-for="(item,index) of scope.row.task.task_executors" :key="index">{{item.user_name}}</div>
         </template>
@@ -186,14 +173,14 @@
       <el-table-column label="优先级" prop="priority">
         <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
       </el-table-column>
-      <el-table-column label="开始日期" width="120px">
+      <el-table-column label="开始日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.total_hour" label="预设时间|（小时）" :render-header="renderheader" width="150px"></el-table-column>
-      <el-table-column label="提交日期" width="120px">
+      <el-table-column prop="task.total_hour" label="预设(h)" :render-header="renderheader" width="50px"></el-table-column>
+      <el-table-column label="提交日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
-      <el-table-column label="任务ID" prop="task.id" class-name="links" width="105px">
+      <el-table-column label="任务ID" prop="task.id" class-name="links" width="60px">
         <template slot-scope="scope">
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
         </template>
@@ -590,16 +577,22 @@ export default {
 #my-audit {
   .custom-card {
     margin-bottom: 15px;
-  }
+  } 
   .inputs-warp {
     display: flex;
     flex-flow: row wrap;
     align-items: flex-end;
     justify-content: space-between;
     & > * {
-      margin-bottom: 10px;
-      padding-right: 15px;
+      margin-bottom: 10px; 
     }
+    .priority{
+      width:90px;
+    }
+    .taskname{
+       width:140px;
+    }
+    
   }
   .links {
     cursor: pointer;
@@ -611,6 +604,8 @@ export default {
   .input-label {
     width: 70px;
     display: block;
+    font-weight:100;
+    font-size:12px;
     & + * {
       width: 200px;
     }
