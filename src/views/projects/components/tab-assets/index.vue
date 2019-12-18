@@ -72,9 +72,7 @@
             <el-col :span="12">
               <el-checkbox v-model="show_creator_name">创建人</el-checkbox>
             </el-col>
-            <el-col :span="12">
-              <el-checkbox v-model="show_creator_id">创建人ID</el-checkbox>
-            </el-col>
+            
             <el-col :span="12">
               <el-checkbox v-model="show_status">进度</el-checkbox>
             </el-col>
@@ -634,8 +632,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="资产ID" v-if="show_id" align="left"></el-table-column>
-        <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column>
-        <el-table-column prop="creator_id" label="创建人ID" v-if="show_creator_id" align="left"></el-table-column>
+        <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column> 
         <el-table-column label="当前环节" align="center" width="140px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">

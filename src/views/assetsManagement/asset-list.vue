@@ -18,7 +18,7 @@
       <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
       <el-table-column prop="path" label="路径" align="center"></el-table-column>
       <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
-      <el-table-column prop="creator_id" label="创建人ID" v-if="false" align="center"></el-table-column>
+      
       <el-table-column label="缩略图" align="center">
         <template slot-scope="scope">
           <el-image

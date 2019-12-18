@@ -280,9 +280,7 @@ export default {
        if(this.show_creator_name == true){
          this.checkAssetList.push("创建人")
        }
-       if(this.show_creator_id == true){
-         this.checkAssetList.push("创建人ID")
-       }
+       
        if(this.show_status == true){
          this.checkAssetList.push("进度")
        }
@@ -362,9 +360,7 @@ export default {
            case "创建人":
              this.show_creator_name = true;
              break;
-           case "创建人ID":
-             this.show_creator_id = true;
-             break;
+            
            case "进度":
              this.show_status = true;
              break;

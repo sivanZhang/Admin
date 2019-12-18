@@ -91,7 +91,7 @@
         </el-table-column>
         <el-table-column prop="id" label="资产ID"></el-table-column>
         <el-table-column prop="creator_name" label="创建人"></el-table-column>
-        <el-table-column prop="creator_id" label="创建人ID"></el-table-column>
+      
         <el-table-column label="当前环节" align="center" width="160px">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">
