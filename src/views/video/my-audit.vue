@@ -244,7 +244,7 @@
           </template>
           
           <div>
-            <el-checkbox v-model="checked" style="margin-top:5px">是否提交客户审批</el-checkbox>
+            <el-checkbox v-model="checked" v-if="pro_type === 1" style="margin-top:5px">是否提交客户审批</el-checkbox>
           </div>
           <el-input
             v-if="checked"

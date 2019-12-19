@@ -84,7 +84,7 @@
             </el-row>
           </template>
           <div>
-            <el-checkbox v-model="checked">是否提交客户审批</el-checkbox>
+            <el-checkbox v-if="pro_type === 1" v-model="checked">是否提交客户审批</el-checkbox>
           </div>
           <el-input
             v-if="checked"
