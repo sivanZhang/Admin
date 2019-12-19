@@ -53,10 +53,10 @@
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
                 <div style="margin-top:5px">
-                  <el-checkbox v-model="checked1">标记为已完成</el-checkbox>
+                  <el-checkbox v-model="status_finish">标记为已完成</el-checkbox>
                   <span
                     @click="openExplain()"
-                    style="padding-left:30px;font-size:12px;color:#808080;cursor: pointer;"
+                    class="btn-explain"
                   >
                     使用帮助:
                     <svg-icon icon-class="wenhao" />
@@ -121,7 +121,7 @@ export default {
   data() {
     return {
       out_suggestion: "",
-      checked1: false,
+      status_finish: false,
       checked: false,
       approve_result: 0,
       score: null,
@@ -177,7 +177,7 @@ export default {
           task_id: t.task.id,
           approve_result: this.approve_result,
           suggestion: this.markText,
-          status: this.checked1,
+          status: this.status_finish,
           key: []
         };
 
@@ -432,6 +432,12 @@ export default {
       .btn {
         padding: 6px 10px;
         font-size: 12px;
+      }
+      .btn-explain{
+        padding-left:30px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
       }
     }
   }

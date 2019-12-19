@@ -228,7 +228,7 @@
              <el-checkbox v-model="form_obj.status">标记为已完成</el-checkbox>
               <span
                     @click="openExplain()"
-                    style="padding-left:30px;font-size:12px;color:#808080;cursor: pointer;"
+                     class="btn-explain"
                   >
                     使用帮助:
                     <svg-icon icon-class="wenhao" />
@@ -615,4 +615,10 @@ export default {
 .el-table--mini td {
   padding: 12px 0;
 }
+ .btn-explain{
+        padding-left:30px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
+      }
 </style>
