@@ -76,13 +76,7 @@
         <el-form-item label="Linux路径" prop="linux_path">
           <el-input v-model="ProjectForm.linux_path"></el-input>
         </el-form-item>
-        <template v-if="radio == 1">
-          <el-form-item label="项目预算" prop="budget">
-            <el-input v-model="ProjectForm.budget">
-              <span slot="append">万</span>
-            </el-input>
-          </el-form-item>
-        </template>
+        
         <el-form-item label="工作流" prop="region">
           <el-select v-model="ProjectForm.status" placeholder="请选择工作流">
             <el-option label="未开始" :value="0"></el-option>

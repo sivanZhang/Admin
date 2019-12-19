@@ -164,38 +164,7 @@
             </div>
           </el-col>
         </el-row>
-        <template v-if="project.pro_type === 1">
-          <el-row>
-            <el-col :span="6" class="comment">项目预算</el-col>
-            <el-col :span="18" class="comment">
-              <div
-                v-if="!copyProjecr.budget.isEdit"
-                @mouseover="showIcon('budget',true)"
-                @mouseleave="showIcon('budget',false)"
-              >
-                <span>¥{{project.budget|numberFormat}}万元</span>
-                <i
-                  class="el-icon-edit"
-                  style="color:blue"
-                  v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.budget.isShowEditeIcon"
-                  @click="editItem('budget')"
-                ></i>
-              </div>
-              <el-row type="flex" items="middel" v-else>
-                <el-input
-                  v-model.number="copyProjecr.budget.value"
-                  @keyup.enter="saveItem('budget')"
-                  class="edit-inp"
-                >
-                  <template slot="prepend">¥</template>
-                  <template slot="append">万元</template>
-                </el-input>
-                <el-button @click="saveItem('budget')" type="primary">修改</el-button>
-                <el-button @click="cancelChange('budget')">取消</el-button>
-              </el-row>
-            </el-col>
-          </el-row>
-        </template>
+      
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="18" class="comment">

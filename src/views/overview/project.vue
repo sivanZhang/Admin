@@ -78,12 +78,7 @@
                     {{item.creator_name}} 
                     <div style="font-size:12px;">{{item.date|dateTimeFormat}}</div>
                 </el-col>
-                <!-- <el-col :span="12">
-                  <p class="subtitle">项目预算</p>
-                  <div style="display:flex;">
-                    <div>¥{{item.budget|numberFormat}}万元</div>
-                  </div>
-                </el-col> -->
+                
                 <el-col :span="12">
                   <p class="subtitle">开始日期</p>
                   <div>{{item.date_start|dateFormat}}</div>
@@ -150,12 +145,7 @@
                    {{item.creator_name}}
                    <div style="font-size:12px;">{{item.date|dateTimeFormat}}</div>
                 </el-col>
-                <!-- <el-col :span="12">
-                  <p class="subtitle">项目预算</p>
-                  <div style="display:flex;">
-                    <div>¥{{item.budget|numberFormat}}万元</div>
-                  </div>
-                </el-col> -->
+                
                 <el-col :span="12">
                   <p class="subtitle">开始日期</p>
                   <div>{{item.date_start|dateFormat}}</div>

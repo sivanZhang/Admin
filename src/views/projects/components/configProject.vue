@@ -43,13 +43,7 @@
             <el-col :span="6" class="comment">Linux路径</el-col>
             <el-col :span="15" class="comment">{{project.Linux}}</el-col>
           </el-row>
-          <el-row>
-            <el-col :span="6" class="comment">项目预算</el-col>
-            <el-col :span="15" class="comment">
-              <span v-if="project.budget">¥{{project.budget|numberFormat}}万元</span>
-              <span v-else>¥{{"0"}}万元</span>
-            </el-col>
-          </el-row>
+          
           <el-row>
             <el-col :span="6" class="comment">负责人</el-col>
             <el-col :span="15" class="comment">{{project.charger_name}}</el-col>
