@@ -98,7 +98,12 @@
           >{{scope.row.project.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="asset_name" label="镜头号"  width="120px;"></el-table-column>
+      <el-table-column prop="asset_name" label="镜头号"  width="120px;">
+        <template slot-scope="scope">
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.project.name}}</div>
+        </template>
+      </el-table-column>
+
       <el-table-column label="镜头缩略图" width="180px">
         <template slot-scope="scope">
           <el-image
@@ -118,60 +123,24 @@
       </el-table-column>
      
        
-      <el-table-column prop="task.content" label="任务内容" width="120px;" ></el-table-column>
+      <el-table-column prop="task.content" label="任务内容" width="120px;" >
+         <template slot-scope="scope">
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.content}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="end_date" label="截止日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
       </el-table-column>
       <el-table-column prop="task.task_executors" label="执行人" width="100px">
         <template slot-scope="scope">
-          <div v-for="(item,index) of scope.row.task.task_executors" :key="index">{{item.user_name}}</div>
+          <div v-for="(item,index) of scope.row.task.task_executors" :key="index"  @click="taskBoardRightShow(scope.row.task.id)">{{item.user_name}}</div>
         </template>
       </el-table-column>
-      <!-- <el-table-column width="30px">
-        <template slot-scope="scope">
-          <el-tooltip effect="dark" content="任务状态:暂停" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 0"
-              :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态:未开始" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 1"
-              :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态:进行中" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 2"
-              :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态:审核中" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 3"
-              :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态:完成" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 4"
-              :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态:超时" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 5"
-              :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
-            ></el-card>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="任务状态">
-        <template slot-scope="scope">{{scope.row.task.status|taskStatus}}</template>
-      </el-table-column> -->
+       
       <el-table-column label="优先级" prop="priority">
-        <template slot-scope="scope">{{scope.row.task.priority|taskPriority}}</template>
+        <template slot-scope="scope"> 
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.priority|taskPriority}}</div> 
+        </template>
       </el-table-column>
       <el-table-column label="开始日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
@@ -185,7 +154,7 @@
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="task.name" label="任务名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="task.name" label="任务名称"  ></el-table-column>
       <el-table-column prop="task.dept.name" label="工种"></el-table-column>
       <!-- <el-table-column label="任务ID" class-name="links" prop="id" width="105px" sortable="custom">
           <template slot-scope="scope">
