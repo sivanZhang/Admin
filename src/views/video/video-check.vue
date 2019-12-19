@@ -48,12 +48,12 @@
               ></el-input>
 
               <div class="btn-group">
-                <el-radio-group v-model.number="approve_result">
+                <el-radio-group v-model.number="approve_result" @change="approveStatusChange()">
                   <el-radio :label="0">拒绝</el-radio>
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
                 <div style="margin-top:5px" v-if="scoreShow===false">
-                  <el-checkbox v-model="status_finish">标记为已完成</el-checkbox>
+                  <el-checkbox v-model="status_finish"  :disabled="approve_refused">标记为已完成</el-checkbox>
                   <span
                     @click="openExplain()"
                     class="btn-explain"
@@ -64,7 +64,7 @@
                 </div>
 
                 <div style="margin-top:5px">
-                  <el-checkbox v-if="scoreShow===false" v-model="checked">是否提交客户审批</el-checkbox>
+                  <el-checkbox v-if="scoreShow===false" v-model="checked"  :disabled="approve_refused">是否提交客户审批</el-checkbox>
                 </div>
                 <el-input
                   v-if="checked"
@@ -135,7 +135,8 @@ export default {
       submitList: [],
       currentId: null,
       scoreShow: false,
-      out_path: null
+      out_path: null,
+      approve_refused: true,
     };
   },
   watch: {
@@ -157,6 +158,16 @@ export default {
   methods: {
     openExplain() {
       this.dialogVisible = true;
+    },
+    // 审核状态变化
+    approveStatusChange(){
+        //审核状态变为拒绝时，disable“标记为已完成”以及“提交客户审批”的按钮 
+        if (this.approve_result === 0){ 
+            this.approve_refused = true;
+        }
+        else{
+           this.approve_refused = false;
+        }
     },
     handelBlur() {
       this.$refs["videoPlayer"].keyup();

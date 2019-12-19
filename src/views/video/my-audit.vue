@@ -220,12 +220,12 @@
               clearable
             ></el-input>
           </el-row>
-          <el-radio-group v-model.number="form_obj.approve_result" style="margin: 15px 0">
-            <el-radio :label="0">拒绝</el-radio>
+          <el-radio-group v-model.number="form_obj.approve_result" style="margin: 15px 0" @change="approveStatusChange()">
+            <el-radio :label="0" che>拒绝</el-radio>
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
           <div v-if="pro_type !== 0">
-             <el-checkbox v-model="form_obj.status">标记为已完成</el-checkbox>
+             <el-checkbox v-model="form_obj.status" :disabled="approve_refused">标记为已完成</el-checkbox>
               <span
                     @click="openExplain()"
                      class="btn-explain"
@@ -244,7 +244,7 @@
           </template>
           
           <div>
-            <el-checkbox v-model="checked" v-if="pro_type === 1" style="margin-top:5px">是否提交客户审批</el-checkbox>
+            <el-checkbox v-model="checked" v-if="pro_type === 1" :disabled="approve_refused" style="margin-top:5px">是否提交客户审批</el-checkbox>
           </div>
           <el-input
             v-if="checked"
@@ -342,7 +342,8 @@ export default {
       path: null,
       pro_type: null,
       tableLoading: false,
-      out_path: null
+      out_path: null,
+      approve_refused : true, // 拒绝的时候，已完成和是否提交客户审批都不可用
     };
   },
   computed: {
@@ -367,6 +368,16 @@ export default {
   methods: {
      openExplain() {
       this.dialogVisible = true;
+    },
+    // 审核状态变化
+    approveStatusChange(){
+        //审核状态变为拒绝时，disable“标记为已完成”以及“提交客户审批”的按钮 
+        if (this.form_obj.approve_result === 0){ 
+            this.approve_refused = true;
+        }
+        else{
+           this.approve_refused = false;
+        }
     },
     // 获取所有项目
     queryProjects(selectionType) {
