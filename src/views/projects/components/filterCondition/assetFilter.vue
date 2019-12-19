@@ -1,7 +1,7 @@
 <!-- 资产多条件筛选是筛选条件 -->
 <template>
   <div
-    style="display:flex;padding-top:10px;overflow-x:auto;height:45px"
+    style="display:flex; overflow-x:auto; font-size:12px; font-weight:100; "
     class="tags-view-container"
   >
     <label for style="width:80px">筛选条件：</label>
