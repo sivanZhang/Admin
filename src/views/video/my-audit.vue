@@ -224,7 +224,7 @@
             <el-radio :label="0">拒绝</el-radio>
             <el-radio :label="1">同意</el-radio>
           </el-radio-group>
-          <div>
+          <div v-if="pro_type !== 0">
              <el-checkbox v-model="form_obj.status">标记为已完成</el-checkbox>
               <span
                     @click="openExplain()"

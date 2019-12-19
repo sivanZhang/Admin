@@ -52,7 +52,7 @@
                   <el-radio :label="0">拒绝</el-radio>
                   <el-radio :label="1">同意</el-radio>
                 </el-radio-group>
-                <div style="margin-top:5px">
+                <div style="margin-top:5px" v-if="scoreShow===false">
                   <el-checkbox v-model="status_finish">标记为已完成</el-checkbox>
                   <span
                     @click="openExplain()"
