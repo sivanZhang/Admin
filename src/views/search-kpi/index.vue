@@ -30,8 +30,8 @@
           <!-- 筛选 -->
           <el-button @click="getTasks()" style="margin-left: 15px" type="primary" size="mini">重置</el-button>
           <span
+            class="btn-explain"
             @click="openExplain()"
-            style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
           >
             使用帮助:
             <svg-icon icon-class="wenhao" />
@@ -68,7 +68,7 @@
     </el-table>
     <!-- 超前与滞后说明 -->
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
-      <div class style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+      <div class="notice-matter">
         <div style="font-size:12px">默认查询的是本月1号至今天的kpi</div>
       </div>
     </el-dialog>
@@ -252,5 +252,16 @@ export default {
 <style lang='scss' scoped>
 .text-right {
   text-align: right;
+}
+.btn-explain{
+        padding-left:10px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
+      }
+  .notice-matter {
+  padding-left: 5px;
+  padding-bottom: 20px;
+  padding-right: 5px;
 }
 </style>

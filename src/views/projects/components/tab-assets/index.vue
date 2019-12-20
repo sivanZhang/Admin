@@ -99,7 +99,7 @@
             </el-col>
             <el-col :span="14" style="padding-top:11px" align="right">
               <span
-                style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
+               class="btn-explain"
                 @click="openExplain()"
               >
                 使用帮助:
@@ -1039,4 +1039,11 @@ svg-icon {
 .el-card {
   border-radius: 0px;
 }
+.btn-explain{
+        padding-left:10px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
+      }
+
 </style>
