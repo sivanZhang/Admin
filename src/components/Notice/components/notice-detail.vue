@@ -67,7 +67,7 @@
         </template>
       </el-table-column>
       <el-table-column type="selection" width="30"></el-table-column>
-       <el-table-column  align="center" width="50">
+       <el-table-column  align="center" width="30">
         <template slot-scope="scope">
           <el-tooltip
             v-if="scope.row.urgency_level == 0"
@@ -98,7 +98,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="通知" width="240" show-overflow-tooltip>
+      <el-table-column label="通知" width="260" show-overflow-tooltip>
         <template slot-scope="scope">
           <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
           <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
