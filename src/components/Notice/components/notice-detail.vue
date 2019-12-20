@@ -28,11 +28,7 @@
       <el-table-column type="expand" width="15">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <!-- <el-row>
-              <el-form-item label="通知类别:">
-                <span>{{ props.row.category }}</span>
-              </el-form-item>
-            </el-row>-->
+             
             <el-row>
               <el-form-item label="通知内容:">
                 <span v-html="props.row.content"></span>
@@ -43,11 +39,7 @@
                 <span>{{ props.row.date|dateFormat }}</span>
               </el-form-item>
             </el-row>
-            <!-- <el-row>
-              <el-form-item label="修改时间">
-                <span>{{ props.row.modify_date|dateFormat }}</span>
-              </el-form-item>
-            </el-row>-->
+           
             <el-row>
               <el-form-item label="是否已读:">
                 <span>{{ props.row.read |isRead }}</span>
@@ -58,18 +50,15 @@
                 <span>{{ props.row.urgency_level |urgencyLevel}}</span>
               </el-form-item>
             </el-row>
-            <!-- <el-row>
-              <el-form-item label="url">
-                <span>{{ props.row.url }}</span>
-              </el-form-item>
-            </el-row>-->
+          
           </el-form>
         </template>
       </el-table-column>
       <el-table-column type="selection" width="30"></el-table-column>
-       <el-table-column  align="center" width="30">
+       
+      <el-table-column label="通知" :min-width="100" show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-tooltip
+           <el-tooltip
             v-if="scope.row.urgency_level == 0"
             class="item"
             effect="dark"
@@ -96,17 +85,13 @@
           >
             <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
           </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="通知" width="260" show-overflow-tooltip>
-        <template slot-scope="scope">
           <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
           <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
           <span @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</span>
         </template>
       </el-table-column>
      
-      <el-table-column label="时间">
+      <el-table-column label="时间" :min-width="40">
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>
