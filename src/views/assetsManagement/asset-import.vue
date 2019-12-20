@@ -199,7 +199,7 @@ export default {
   display: none;
 }
 .btn-explain {
-  padding-left: 30px;
+  padding-left: 15px;
   font-size: 12px;
   color: #808080;
   cursor: pointer;
