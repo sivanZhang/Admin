@@ -118,7 +118,7 @@
               />
             </el-tooltip>
             <el-tooltip effect="dark" content="取消" placement="top">
-              <el-button type="primary" icon="el-icon-error" @click="cancleUser(scope.row.id)" />
+              <el-button type="primary" icon="el-icon-error" @click="cancleUser(scope.row)" />
             </el-tooltip>
 
             <!-- <el-tooltip content="删除用户" placement="top">
@@ -198,7 +198,9 @@ export default {
       project: null,
       attrsList: [],
       customAttrs: [],
-      attrsTypeNum: null
+      attrsTypeNum: null,
+      list:[],
+      Info:[]
     };
   },
   methods: {
@@ -242,11 +244,12 @@ export default {
       this.iconShow = true;
     },
     editUser(row) {
+      this.list = JSON.stringify(row);
       if (this.iconShow === true) {
         this.$confirm("当前修改未保存", "注意", {
-          // confirmButtonText: "确定",
+          confirmButtonText: "确定",
 
-          // concelButtonText: "取消",
+          concelButtonText: "取消",
 
           type: "warning"
         });
@@ -258,9 +261,16 @@ export default {
       // console.log(index);
     },
     //取消修改
-    cancleUser(id) {
-      this.editing = false;
-      // this.$confirm("此操作将永久删除该用户，是否继续?", "提示", {
+    cancleUser(row) {
+        this.Info = JSON.parse(this.list);
+        row.sex = this.Info.sex;
+        row.username = this.Info.username;
+        row.email = this.Info.email;
+        row.phone = this.Info.phone;
+        row.is_active =this.Info.is_active;
+        this.editing = false;
+        this.iconShow = false;
+      // this.$confirm("是否取消该操作?", "提示", {
       //   confirmButtonText: "确认",
       //   cancelButtonText: "取消",
       //   type: "warning"
