@@ -117,8 +117,8 @@
                 @click="saveEdit(scope.$index,scope.row)"
               />
             </el-tooltip>
-            <el-tooltip effect="dark" content="删除" placement="top">
-              <el-button type="danger" icon="el-icon-delete" @click="deleteUser(scope.row.id)" />
+            <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button type="primary" icon="el-icon-error" @click="cancleUser(scope.row.id)" />
             </el-tooltip>
 
             <!-- <el-tooltip content="删除用户" placement="top">
@@ -257,24 +257,25 @@ export default {
       // console.log("edit");
       // console.log(index);
     },
-    //删除单个用户
-    deleteUser(id) {
-      this.$confirm("此操作将永久删除该用户，是否继续?", "提示", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        console.log(id);
-        deleteUser({ ids: id, method: "delete " }).then(({ data }) => {
-          console.log(data.msg);
-          if (data.status === 0) {
-            this.$emit("refresh");
-            this.$message.success(data.msg);
-          } else {
-            this.$message.error(data.msg);
-          }
-        });
-      });
+    //取消修改
+    cancleUser(id) {
+      this.editing = false;
+      // this.$confirm("此操作将永久删除该用户，是否继续?", "提示", {
+      //   confirmButtonText: "确认",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // }).then(() => {
+      //   console.log(id);
+      //   deleteUser({ ids: id, method: "delete " }).then(({ data }) => {
+      //     console.log(data.msg);
+      //     if (data.status === 0) {
+      //       this.$emit("refresh");
+      //       this.$message.success(data.msg);
+      //     } else {
+      //       this.$message.error(data.msg);
+      //     }
+      //   });
+      // });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
