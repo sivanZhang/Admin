@@ -215,7 +215,7 @@ export default {
       mulEditDialog: false,
       updateMulTask: {},
       changeSession: "否",
-      changFrame: "否",
+      changeFrame: "否",
       changeEpisode:"否",
       changeContent: "否",
       changePriority: "否",
