@@ -63,8 +63,8 @@
             <el-col :span="12">
               <el-checkbox v-model="show_content">制作内容</el-checkbox>
             </el-col>
-            <el-col :span="12">
-              <el-checkbox v-model="show_priority">优先级</el-checkbox>
+            <el-col :span="2">
+              <el-checkbox v-model="show_priority">优先级23</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_level">难度</el-checkbox>

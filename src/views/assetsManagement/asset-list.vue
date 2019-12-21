@@ -91,7 +91,7 @@
         <el-form-item label="存放路径" prop="path">
           <el-input v-model="AssetForm.path"></el-input>
         </el-form-item>
-        <el-form-item label="优先等级" prop="priority">
+        <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="AssetForm.code"></el-input> -->
           <el-radio v-model="AssetForm.priority" :label="0">正常</el-radio>
           <el-radio v-model="AssetForm.priority" :label="1">优先</el-radio>
