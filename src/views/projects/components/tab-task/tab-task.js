@@ -452,7 +452,7 @@ export default {
     }) {
       return h('span', {}, [
         h('span', {}, column.label.split('|')[0]),
-        h('br'),
+        //h('br'), //有bug
         h('span', {}, column.label.split('|')[1])
       ])
     },

@@ -15,7 +15,7 @@
       <el-table-column prop="changci" label="场次" align="center"></el-table-column>
       <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
       <el-table-column prop="name" label="名称" align="center"></el-table-column>
-      <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
+       
       <el-table-column prop="path" label="路径" align="center"></el-table-column>
       <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
       
@@ -91,7 +91,7 @@
         <el-form-item label="存放路径" prop="path">
           <el-input v-model="AssetForm.path"></el-input>
         </el-form-item>
-        <el-form-item label="优先等级" prop="priority">
+        <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="AssetForm.code"></el-input> -->
           <el-radio v-model="AssetForm.priority" :label="0">正常</el-radio>
           <el-radio v-model="AssetForm.priority" :label="1">优先</el-radio>
