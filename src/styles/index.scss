@@ -9,13 +9,18 @@ body {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+    font-family: "Helvetica Neue", "Helvetica", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Arial", “sans-serif”;
     font-size: 14px;
     min-width: 1200px;
 }
 
-a {
+a,
+a:focus,
+a:hover {
+    cursor: pointer;
     color: inherit;
+    text-decoration: none;
+    outline: none;
 }
 
 * {
@@ -26,11 +31,6 @@ a {
 
 label {
     font-weight: 600;
-}
-
-html {
-    height: 100%;
-    box-sizing: border-box;
 }
 
 #app {
@@ -51,18 +51,7 @@ html {
     padding: 4px 0;
 }
 
-a:focus,
-a:active {
-    outline: none;
-}
 
-a,
-a:focus,
-a:hover {
-    cursor: pointer;
-    color: inherit;
-    text-decoration: none;
-}
 
 div:focus {
     outline: none;
@@ -97,14 +86,7 @@ div:focus {
 }
 
 .clearfix {
-    &:after {
-        visibility: hidden;
-        display: block;
-        font-size: 0;
-        content: " ";
-        clear: both;
-        height: 0;
-    }
+    @include clearfix
 }
 
 aside {
@@ -144,7 +126,12 @@ aside {
 .text-center {
     text-align: center
 }
-
+.text-right{
+    text-align: right;
+}
+.text-left{
+    text-align: left;
+}
 .sub-navbar {
     height: 50px;
     line-height: 50px;

@@ -1,186 +1,171 @@
-import dayjs from "dayjs";
-//字符形式的头像 格式化保留前一位
+import dayjs from 'dayjs';
+// 字符形式的头像 格式化保留前一位
 export function avatarFormat(text) {
-  return `${text}`.substring(0, 1);
+  return `${text}`.substring(0, 1)
 }
-//时间戳格式化为 YYYY/MM/DD
+// 时间戳格式化为 YYYY/MM/DD
 export function dateFormat(date) {
   if (date) {
     date *= 1000
-    return dayjs(date).format("YYYY/MM/DD")
+    return dayjs(date).format('YYYY/MM/DD')
   } else {
     return ''
   }
 }
-//时间戳格式化为 YYYY/MM/DD HH:mm:ss
+// 时间戳格式化为 YYYY/MM/DD HH:mm:ss
 export function dateTimeFormat(date) {
   if (date) {
     date *= 1000
-    return dayjs(date).format("YYYY/MM/DD HH:mm")
+    return dayjs(date).format('YYYY/MM/DD HH:mm')
   } else {
     return ''
   }
 }
-//时间格式化 HH:mm
+// 时间格式化 HH:mm
 export function dateHMSFormat(date) {
   if (date) {
     date *= 1000
-    return dayjs(date).format("HH:mm")
+    return dayjs(date).format('HH:mm')
   } else {
     return ''
   }
 }
-//项目工作流格式化
+// 项目工作流格式化
 export function projectStatus(code) {
   switch (code) {
     case 0:
       return '未开始'
-      break
     case 1:
       return '正在进行'
-      break
     case 2:
       return '已完成'
-      break
     case 3:
       return '超期'
-      break
     case 4:
       return '暂停'
-      break
   }
 }
-//数字保留两位小数并且格式化
+// 数字保留两位小数并且格式化
 export function numberFormat(num) {
   return (+num).toLocaleString(undefined, {
     maximumFractionDigits: 2
   })
 }
-//镜头状态
+// 镜头状态
 export function assetStatus(status) {
   switch (status) {
     case 0:
       return '暂停'
-      break
     case 1:
       return '未开始'
-      break
     case 2:
       return '进行中'
-      break
     case 3:
       return '审核中'
-      break
     case 4:
       return '完成'
-      break
   }
 }
-//资产优先级
+// 资产优先级
 export function Priority(priority) {
   switch (priority) {
     case 0:
       return '正常'
-      break
     case 1:
       return '优先'
-      break
   }
 }
-//任务优先级
+// 任务优先级
 export function taskPriority(priority) {
   switch (priority) {
     case 0:
-      return "低";
-      break;
+      return '低'
     case 1:
-      return "中";
-      break;
+      return '中'
     case 2:
-      return "高";
-      break;
+      return '高'
   }
 }
-//任务难度显示
+// 任务难度显示
 export function taskgrade(grade) {
   switch (grade) {
     case 0:
-      return "A+";
-      break;
+      return 'A+';
+      break
     case 1:
-      return "A";
-      break;
+      return 'A';
+      break
     case 2:
-      return "A-";
-      break;
+      return 'A-';
+      break
     case 3:
-      return "B+";
-      break;
+      return 'B+';
+      break
     case 4:
-      return "B";
-      break;
+      return 'B';
+      break
     case 5:
-      return "B-";
-      break;
+      return 'B-';
+      break
     case 6:
-      return "C+";
-      break;
+      return 'C+';
+      break
     case 7:
-      return "C";
-      break;
+      return 'C';
+      break
     case 8:
-      return "D+";
-      break;
+      return 'D+';
+      break
     case 9:
-      return "D";
-      break;
+      return 'D';
+      break
     case 10:
-      return "E";
-      break;
+      return 'E';
+      break
   }
 }
-//资产难度
+// 资产难度
 export function Level(level) {
   switch (level) {
     case 0:
-      return "A+";
-      break;
+      return 'A+';
+      break
     case 1:
-      return "A";
-      break;
+      return 'A';
+      break
     case 2:
-      return "A-";
-      break;
+      return 'A-';
+      break
     case 3:
-      return "B+";
-      break;
+      return 'B+';
+      break
     case 4:
-      return "B";
-      break;
+      return 'B';
+      break
     case 5:
-      return "B-";
-      break;
+      return 'B-';
+      break
     case 6:
-      return "C+";
-      break;
+      return 'C+';
+      break
     case 7:
-      return "C";
-      break;
+      return 'C';
+      break
     case 8:
-      return "D+";
-      break;
+      return 'D+';
+      break
     case 9:
-      return "D";
-      break;
+      return 'D';
+      break
     case 10:
-      return "E";
-      break;
+      return 'E';
+      break
     case -1:
-      return "";
-      break;
+      return '';
+      break
   }
 }
-//通知是否已读
+// 通知是否已读
 export function isRead(data) {
   switch (data) {
     case 0:
@@ -191,7 +176,7 @@ export function isRead(data) {
       break
   }
 }
-//通知的紧急程度
+// 通知的紧急程度
 export function urgencyLevel(data) {
   switch (data) {
     case 0:
@@ -203,10 +188,9 @@ export function urgencyLevel(data) {
     case 2:
       return '特急'
       break
-
   }
 }
-//审批流程等级
+// 审批流程等级
 export function WKLevel(data) {
   switch (data) {
     case 0:
@@ -221,37 +205,28 @@ export function WKLevel(data) {
     case 3:
       return '三级审批'
       break
-
   }
 }
-//任务状态
+// 任务状态
 export function taskStatus(data) {
   switch (data) {
     case 0:
       return '暂停'
-      break
     case 1:
       return '未开始'
-      break
     case 2:
       return '进行中'
-      break
     case 3:
       return '审核中'
-      break
     case 4:
       return '完成'
-      break
     case 5:
       return '超时'
-      break
     case 6:
       return '审核通过'
-      break
-
   }
 }
-//小状态
+// 小状态
 export function taskMinStatus(data) {
   switch (data) {
     case 0:
@@ -340,7 +315,7 @@ export function taskMinStatus(data) {
       break
   }
 }
-//自定义属性类别
+// 自定义属性类别
 export function attrsFilter(attrs) {
   switch (attrs) {
     case 1:
@@ -360,7 +335,7 @@ export function attrsFilter(attrs) {
       break
   }
 }
-//实体信息
+// 实体信息
 export function entityFilter(entity) {
   switch (entity) {
     case 1:
@@ -389,7 +364,7 @@ export function entityFilter(entity) {
       break
   }
 }
-//迟到状态
+// 迟到状态
 export function lateStatus(status) {
   switch (status) {
     case 0:
@@ -400,7 +375,7 @@ export function lateStatus(status) {
       break
   }
 }
-//早退状态
+// 早退状态
 export function earlyStatus(data) {
   switch (data) {
     case 1:
