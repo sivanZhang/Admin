@@ -9,6 +9,7 @@
         v-model="isDrawerShow"
         width="526px"
         :transfer="false"
+        :mask="false"
         :mask-style="{backgroundColor: 'transparent'}"
         :append-to-body="true"
       >

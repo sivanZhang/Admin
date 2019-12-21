@@ -1,6 +1,7 @@
 <template>
-  <div id="info">
+  <div id="info"  >
     <!-- 项目消息栏 -->
+
     <template v-if="project && project.entity_type === 4">
       <div>
         <el-row v-if="configImg == 'img'">
@@ -17,20 +18,20 @@
         <el-row>
           <el-col :span="6" class="comment">项目名称</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.name.isEdit"
               @mouseover="showIcon('name',true)"
               @mouseleave="showIcon('name',false)"
-            >
+            > -->
               <span>{{project.name}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.name.isShowEditeIcon"
                 @click="editItem('name')"
-              ></i>
-            </div>
-            <div v-else>
+              ></i> -->
+            <!-- </div> -->
+            <!-- <div v-else>
               <input
                 type="text"
                 ref="input"
@@ -40,7 +41,7 @@
               />
               <el-button @click="saveItem('name')" type="primary">修改</el-button>
               <el-button @click="cancelChange('name')">取消</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
@@ -80,13 +81,13 @@
         <el-row>
           <el-col :span="6" class="comment">Windows路径</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.Windows.isEdit"
               @mouseover="showIcon('Windows',true)"
               @mouseleave="showIcon('Windows',false)"
-            >
+            > -->
               <span>{{project.Windows?project.Windows:"-"}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.Windows.isShowEditeIcon"
@@ -103,19 +104,19 @@
               />
               <el-button @click="saveItem('Windows')" type="primary">修改</el-button>
               <el-button @click="cancelChange('Windows')">取消</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Mac路径</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.Mac.isEdit"
               @mouseover="showIcon('Mac',true)"
               @mouseleave="showIcon('Mac',false)"
-            >
+            > -->
               <span>{{project.Mac?project.Mac:"-"}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.Mac.isShowEditeIcon"
@@ -132,19 +133,19 @@
               />
               <el-button @click="saveItem('Mac')" type="primary">修改</el-button>
               <el-button @click="cancelChange('Mac')">取消</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">Linux路径</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.Linux.isEdit"
               @mouseover="showIcon('Linux',true)"
               @mouseleave="showIcon('Linux',false)"
-            >
+            > -->
               <span>{{project.Linux?project.Linux:"-"}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.Linux.isShowEditeIcon"
@@ -161,20 +162,20 @@
               />
               <el-button @click="saveItem('Linux')" type="primary">修改</el-button>
               <el-button @click="cancelChange('Linux')">取消</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
       
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.charger_name.isEdit"
               @mouseover="showIcon('charger_name',true)"
               @mouseleave="showIcon('charger_name',false)"
-            >
+            > -->
               <span>{{project.charger_name}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.charger_name.isShowEditeIcon"
@@ -197,22 +198,22 @@
               </el-select>
               <el-button @click="saveItem('charger_name')" type="primary">修改</el-button>
               <el-button @click="cancelChange('charger_name')">取消</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">工作流</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit6=true" @mouseleave="showEdit6 = false">
-              <span v-if="!editing6">{{project.status|projectStatus}}</span>
-              <i
+            <!-- <div @mouseover="showEdit6=true" @mouseleave="showEdit6 = false"> -->
+              <span>{{project.status|projectStatus}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&showEdit6"
                 @click="edit(5)"
               ></i>
-            </div>
-            <div v-if="editing6">
+            </div> -->
+            <!-- <div v-if="editing6">
               <el-select v-model="status" placeholder="请选择工作流" ref="selete" @change="save(5)">
                 <el-option label="未开始" :value="0"></el-option>
                 <el-option label="正在进行" :value="1"></el-option>
@@ -221,19 +222,19 @@
                 <el-option label="重启" :value="4"></el-option>
               </el-select>
               <el-button @click="save(5)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">开始日期</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.date_start.isEdit"
               @mouseover="showIcon('date_start',true)"
               @mouseleave="showIcon('date_start',false)"
-            >
+            > -->
               <span>{{project.date_start|dateFormat}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.date_start.isShowEditeIcon"
@@ -249,28 +250,28 @@
               ></el-date-picker>
               <el-button @click="saveItem('date_start')" type="primary">修改</el-button>
               <el-button @click="cancelChange('date_start')">取消</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">结束日期</el-col>
           <el-col :span="18" class="comment">
-            <div
+            <!-- <div
               v-if="!copyProjecr.date_end.isEdit"
               @mouseover="showIcon('date_end',true)"
               @mouseleave="showIcon('date_end',false)"
-            >
+            > -->
               <span>{{project.date_end|dateFormat}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.date_end.isShowEditeIcon"
                 @click="editItem('date_end')"
               ></i>
             </div>
-            <div v-else>
-              <!-- $store.state.login.userInfo -->
-              <el-date-picker
+            <div v-else>-->
+             <!--  $store.state.login.userInfo -->
+            <!--  <el-date-picker
                 v-model="copyProjecr.date_end.value"
                 type="date"
                 format="yyyy/MM/dd"
@@ -278,20 +279,20 @@
               ></el-date-picker>
               <el-button @click="saveItem('date_end')" type="primary">修改</el-button>
               <el-button @click="cancelChange('date_end')">取消</el-button>
-            </div>
+            </div> --> 
           </el-col>
         </el-row>
         <template v-if="project.pro_type === 1">
           <el-row>
             <el-col :span="6" class="comment">客户信息</el-col>
             <el-col :span="18" class="comment">
-              <div
+              <!-- <div
                 v-if="!copyProjecr.client.isEdit"
                 @mouseover="showIcon('client',true)"
                 @mouseleave="showIcon('client',false)"
-              >
+              > -->
                 <span>{{project.client.client_name?project.client.client_name:"-"}}</span>
-                <i
+                <!-- <i
                   class="el-icon-edit"
                   style="color:blue"
                   v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.client.isShowEditeIcon"
@@ -313,7 +314,7 @@
                 </el-select>
                 <el-button @click="saveItem('client')" type="primary">修改</el-button>
                 <el-button @click="cancelChange('client')">取消</el-button>
-              </div>
+              </div> -->
             </el-col>
           </el-row>
         </template>
@@ -321,9 +322,9 @@
           <el-row>
             <el-col :span="6" class="comment">所属学校</el-col>
             <el-col :span="18" class="comment">
-              <div @mouseover="showEdit23=true" @mouseleave="showEdit23 = false">
-                <span v-if="!editing23">{{project.school?project.school:"-"}}</span>
-                <i
+              <!-- <div @mouseover="showEdit23=true" @mouseleave="showEdit23 = false"> -->
+                <span >{{project.school?project.school:"-"}}</span>
+                <!-- <i
                   class="el-icon-edit"
                   style="color:blue"
                   v-if="$store.state.login.userInfo.auth.manage_project&&showEdit23"
@@ -340,7 +341,7 @@
                   @keyup.enter="save(22)"
                 />
                 <el-button @click="save(22)" type="primary">修改</el-button>
-              </div>
+              </div> -->
             </el-col>
           </el-row>
         </template>
@@ -352,9 +353,9 @@
         <el-row>
           <el-col :span="6" class="comment">名称</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false">
-              <span v-if="!editing15">{{project.name}}</span>
-              <i
+            <!-- <div @mouseover="showEdit15=true" @mouseleave="showEdit15 = false"> -->
+              <span >{{project.name}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 @click="edit(14)"
@@ -371,7 +372,7 @@
                 @keyup.enter="save2(14)"
               />
               <el-button @click="save2(14)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
@@ -381,9 +382,9 @@
         <el-row>
           <el-col :span="6" class="comment">路径</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false">
-              <span v-if="!editing4">{{project.path?project.path:"-"}}</span>
-              <i
+            <!-- <div @mouseover="showEdit4=true" @mouseleave="showEdit4 = false"> -->
+              <span >{{project.path?project.path:"-"}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit4&&authAsset"
@@ -400,7 +401,7 @@
                 @keyup.enter="save2(3)"
               />
               <el-button @click="save2(3)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
@@ -410,9 +411,9 @@
         <el-row>
           <el-col :span="6" class="comment">优先级</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit18=true" @mouseleave="showEdit18 = false">
-              <span v-if="!editing18">{{project.priority |Priority}}</span>
-              <i
+            <!-- <div @mouseover="showEdit18=true" @mouseleave="showEdit18 = false"> -->
+              <span >{{project.priority |Priority}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit18&&authAsset"
@@ -431,15 +432,15 @@
                 <el-option label="优先" :value="1"></el-option>
               </el-select>
               <el-button @click="save2(17)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">难度</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false">
-              <span v-if="!editing19">{{project.level |Level}}</span>
-              <i
+            <!-- <div @mouseover="showEdit19=true" @mouseleave="showEdit19 = false"> -->
+              <span >{{project.level |Level}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit19&&authAsset"
@@ -467,15 +468,15 @@
                 <el-option label="E" :value="10"></el-option>
               </el-select>
               <el-button @click="save2(18)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">开始日期</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit11=true" @mouseleave="showEdit11 = false">
-              <span v-if="!editing11">{{project.start_date|dateFormat}}</span>
-              <i
+            <!-- <div @mouseover="showEdit11=true" @mouseleave="showEdit11 = false"> -->
+              <span >{{project.start_date|dateFormat}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit11&&authAsset"
@@ -491,24 +492,24 @@
                 @change="save2(10)"
               ></el-date-picker>
               <el-button @click="save2(10)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">结束日期</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit12=true" @mouseleave="showEdit12 = false">
-              <span v-if="!editing12">{{project.end_date|dateFormat}}</span>
-              <i
+            <!-- <div @mouseover="showEdit12=true" @mouseleave="showEdit12 = false"> -->
+              <span>{{project.end_date|dateFormat}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit12&&authAsset"
                 @click="edit(11)"
               ></i>
             </div>
-            <div v-if="editing12">
+            <div v-if="editing12">-->
               <!-- $store.state.login.userInfo -->
-              <el-date-picker
+            <!--  <el-date-picker
                 v-model="end_date"
                 type="date"
                 format="yyyy/MM/dd"
@@ -516,15 +517,15 @@
                 @change="save2(11)"
               ></el-date-picker>
               <el-button @click="save2(11)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">帧数</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false">
-              <span v-if="!editing16">{{project.frame?project.frame:"-"}}</span>
-              <i
+            <!-- <div @mouseover="showEdit16=true" @mouseleave="showEdit16 = false"> -->
+              <span >{{project.frame?project.frame:"-"}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 @click="edit(15)"
@@ -541,15 +542,15 @@
                 @keyup.enter="save2(15)"
               />
               <el-button @click="save2(15)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">集数</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false">
-              <span v-if="!editing17">{{project.episode?project.episode:"-"}}</span>
-              <i
+            <!-- <div @mouseover="showEdit17=true" @mouseleave="showEdit17 = false"> -->
+              <span >{{project.episode?project.episode:"-"}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 @click="edit(16)"
@@ -566,7 +567,7 @@
                 @keyup.enter="save2(16)"
               />
               <el-button @click="save2(16)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
@@ -580,9 +581,9 @@
         <el-row>
           <el-col :span="6" class="comment">画面调整信息</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false">
-              <span v-if="!editing20">{{project.report?project.report:"-"}}</span>
-              <i
+            <!-- <div @mouseover="showEdit20=true" @mouseleave="showEdit20 = false"> -->
+              <span >{{project.report?project.report:"-"}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit20&&authAsset"
@@ -599,15 +600,15 @@
                 @keyup.enter="save2(19)"
               />
               <el-button @click="save2(19)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">变速信息</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false">
-              <span v-if="!editing21">{{project.retime?project.retime:"-"}}</span>
-              <i
+            <!-- <div @mouseover="showEdit21=true" @mouseleave="showEdit21 = false"> -->
+              <span>{{project.retime?project.retime:"-"}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit21&&authAsset"
@@ -624,15 +625,15 @@
                 @keyup.enter="save2(20)"
               />
               <el-button @click="save2(20)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">帧数范围</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false">
-              <span v-if="!editing22">{{project.frame_range?project.frame_range:"-"}}</span>
-              <i
+            <!-- <div @mouseover="showEdit22=true" @mouseleave="showEdit22 = false"> -->
+              <span >{{project.frame_range?project.frame_range:"-"}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit22&&authAsset"
@@ -649,15 +650,15 @@
                 @keyup.enter="save2(21)"
               />
               <el-button @click="save2(21)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">制作参考</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit24=true" @mouseleave="showEdit24 = false">
-              <span v-if="!editing24">{{project.pro_reference}}</span>
-              <i
+            <!-- <div @mouseover="showEdit24=true" @mouseleave="showEdit24 = false"> -->
+              <span>{{project.pro_reference}}</span>
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 @click="edit(23)"
@@ -674,27 +675,27 @@
                 @keyup.enter="save2(23)"
               />
               <el-button @click="save2(23)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" class="comment">备注</el-col>
           <el-col :span="18" class="comment">
-            <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false">
+            <!-- <div @mouseover="showEdit10=true" @mouseleave="showEdit10 = false"> -->
               <span v-if="!editing10&&project.remark" v-html="project.remark" style="width:20px"></span>
               <span v-else v-show="!editing10&&!project.remark">{{"-"}}</span>
-              <i
+              <!-- <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="showEdit10&&authAsset"
                 @click="edit(9)"
-              ></i>
-            </div>
+              ></i> 
+             </div> -->
 
-            <div v-if="editing10" style="display:flex">
+            <!-- <div v-if="editing10" style="display:flex">
               <el-input type="textarea" ref="input" v-model="remark" @keyup.enter="save2(9)" />
               <el-button @click="save2(9)" type="primary">修改</el-button>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
       </div>
@@ -703,7 +704,7 @@
 </template>
 
 <script>
-import { putProjects, updateRequirement } from "@/api/project";
+import {putProjects, updateRequirement } from "@/api/project";
 import { getClientList } from "@/api/admin";
 import { editAssets } from "@/api/assets";
 import { mapState } from "vuex";
@@ -711,7 +712,7 @@ import { returnStatement } from "@babel/types";
 import { constants } from "crypto";
 import dayjs from "dayjs";
 export default {
-  props: ["project", "authAsset", "configImg"],
+  props: ["project", "authAsset", "configImg"], 
   name: "info",
   data() {
     return {
@@ -788,15 +789,20 @@ export default {
       showEdit23: false,
       showEdit24: false,
       showEdit25: false,
-      clientList: []
+      clientList: [],
+      
+     
     };
   },
   computed: {
     ...mapState("admin", ["UserList"])
   },
-  created() {},
+  created() {
+    
+  },
   watch: {
     project: {
+      
       deep: true,
       handler: function(newObj) {
         const OBJ = {};
@@ -812,7 +818,7 @@ export default {
         });
         this.copyProjecr = Object.assign({}, OBJ);
       }
-    }
+    },
   },
   methods: {
     // 提交编辑的内容
@@ -858,6 +864,7 @@ export default {
           break;
       }
       putProjects(httpData).then(({ data }) => {
+        
         if (data.status === 0) {
           this.$message.success(data.msg);
           // 关闭编辑状态
@@ -868,6 +875,7 @@ export default {
         }
       });
     },
+   
     // 取消修改
     cancelChange(prop) {
       // 关闭编辑状态

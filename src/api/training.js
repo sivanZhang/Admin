@@ -29,3 +29,15 @@ export function getGroup(params){
 export function allScene(params){
     return AXIOS.get('/assets/assets/?10',{params})
 }
+//查询实习成员成绩权重
+export function getRecord(params){
+    return AXIOS.get('/projects/scoreconfig/',{params})
+}
+//新建实习成员成绩权重
+export function setRecord(data){
+    return AXIOS.post('/projects/scoreconfig/',data)
+}
+//删除实习成员成绩权重
+export function removeRecord(data){
+    return AXIOS.post('/projects/scoreconfig/',data)
+}

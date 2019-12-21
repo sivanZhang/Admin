@@ -11,7 +11,7 @@ import {
   auth
 } from '@/api/assets'
 import {
-  getProjects
+  getProjects,gettestProjects
 } from '@/api/project'
 import draggable from 'vuedraggable'
 import taskForm from './components/task-form'
@@ -214,7 +214,11 @@ export default {
       timeSelection: '',
       timeSelection2: '',
       historyVersion: [],
-      project: null,
+      project: {},
+      testproject:{},
+      project_id:null,
+      testproject_id:null,
+      configImg:'',
       assetId: null,
       currentGrade: null,
       GradeList: [{
@@ -766,7 +770,8 @@ export default {
     },
     // 是否显示任务板右侧
     taskBoardRightShow(row) {
-      this.project = row.project
+      // this.project = row.project
+      this.project_id = row.project.id
       this.assetId = row.asset.id
       this.isDrawerShow = true
       this.activeRow = {
@@ -816,6 +821,20 @@ export default {
         data
       }) => {
         this.historyVersion = [...data.msg]
+      })
+      getProjects({id:this.project_id}).then(({ data })=>{
+        if(data.msg.id!=undefined){
+          this.project = data.msg
+        }
+      })
+      gettestProjects({id:this.project_id}).then(({ data })=>{
+        if(data.msg.id!=undefined){
+          this.testproject_id=data.msg.id
+          gettestProjects({id:this.testproject_id}).then(({ data })=>{  
+            this.project=data.msg
+          })
+        }
+        
       })
     },
     // 任务板展示更多跳转任务列表

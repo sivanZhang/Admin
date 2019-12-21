@@ -94,7 +94,7 @@
           <el-switch v-model="progress" active-text="滞后" inactive-text="超前"></el-switch>
           <span
             @click="openExplain()"
-            style="padding-left:15px;font-size:12px;color:#808080;cursor: pointer;"
+            class="btn-explain"
           >
             使用帮助:
             <svg-icon icon-class="wenhao" />
@@ -309,7 +309,7 @@
     <maxSumbit />
     <!-- 超前与滞后说明 -->
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
-      <div class style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+      <div  class="notice-matter">
         <div style="font-size:12px">
           <h3>偏离值为负数：</h3>说明完成进度超前，绝对值越大，进度越超前，排名也更靠前
         </div>
@@ -555,3 +555,16 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.btn-explain{
+        padding-left:15px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
+      }
+    .notice-matter {
+  padding-left: 5px;
+  padding-bottom: 20px;
+  padding-right: 5px;
+}
+</style>

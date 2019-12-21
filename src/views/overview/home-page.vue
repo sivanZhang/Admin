@@ -236,19 +236,10 @@ export default {
                 tooltip-effect="dark"
                 @row-click="updateIsRead"
               >
-                <el-table-column label="消息" show-overflow-tooltip width="180">
+               
+                <el-table-column label="消息" show-overflow-tooltip :min-width="80">
                   <template slot-scope="scope">
-                    <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-                    <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-                    <a @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</a>
-                  </template>
-                </el-table-column>
-                <el-table-column label="时间" width="120">
-                  <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
-                </el-table-column>
-                <el-table-column label="紧急程度" align="center" width="70">
-                  <template slot-scope="scope">
-                    <el-tooltip
+                     <el-tooltip
                       v-if="scope.row.urgency_level == 0"
                       class="item"
                       effect="dark"
@@ -275,8 +266,15 @@ export default {
                     >
                       <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
                     </el-tooltip>
+                    <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
+                    <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
+                    <a @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</a>
                   </template>
                 </el-table-column>
+                <el-table-column label="时间" :min-width="40">
+                  <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
+                </el-table-column>
+               
               </el-table>
               <el-button
                 v-show="unreadList.length>10"

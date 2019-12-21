@@ -13,13 +13,13 @@
         :disabled="this.multipleSelection.length === 0"
         style="margin-right:20px;"
       >标记为已读</el-button>
-      <el-radio v-model="radio" label="1" @change="searchNotice()" >已读</el-radio>
-      <el-radio v-model="radio" label="2" @change="searchNotice()">未读</el-radio>
+      <el-radio v-model="ifRead" label="1" @change="searchNotice()" style="margin-right:5px;" >已读</el-radio>
+      <el-radio v-model="ifRead" label="2" @change="searchNotice()">未读</el-radio>
     </div>
 
     <el-table
       :data="noticeList"
-      style="width: 100%"
+      style="width: 100%;margin-top:5px;"
       ref="multipleTable"
       tooltip-effect="dark"
       @selection-change="handleSelectionChange"
@@ -28,11 +28,7 @@
       <el-table-column type="expand" width="15">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <!-- <el-row>
-              <el-form-item label="通知类别:">
-                <span>{{ props.row.category }}</span>
-              </el-form-item>
-            </el-row>-->
+             
             <el-row>
               <el-form-item label="通知内容:">
                 <span v-html="props.row.content"></span>
@@ -43,11 +39,7 @@
                 <span>{{ props.row.date|dateFormat }}</span>
               </el-form-item>
             </el-row>
-            <!-- <el-row>
-              <el-form-item label="修改时间">
-                <span>{{ props.row.modify_date|dateFormat }}</span>
-              </el-form-item>
-            </el-row>-->
+           
             <el-row>
               <el-form-item label="是否已读:">
                 <span>{{ props.row.read |isRead }}</span>
@@ -58,26 +50,15 @@
                 <span>{{ props.row.urgency_level |urgencyLevel}}</span>
               </el-form-item>
             </el-row>
-            <!-- <el-row>
-              <el-form-item label="url">
-                <span>{{ props.row.url }}</span>
-              </el-form-item>
-            </el-row>-->
+          
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column type="selection"></el-table-column>
-
-      <el-table-column label="通知" width="160" show-overflow-tooltip>
+      <el-table-column type="selection" width="30"></el-table-column>
+       
+      <el-table-column label="通知" :min-width="100" show-overflow-tooltip>
         <template slot-scope="scope">
-          <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-          <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-          <span @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="紧急程度" align="center" width="80">
-        <template slot-scope="scope">
-          <el-tooltip
+           <el-tooltip
             v-if="scope.row.urgency_level == 0"
             class="item"
             effect="dark"
@@ -104,9 +85,13 @@
           >
             <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
           </el-tooltip>
+          <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
+          <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
+          <span @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间">
+     
+      <el-table-column label="时间" :min-width="40">
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>
@@ -130,7 +115,7 @@ export default {
   props: ["notice"],
   data() {
     return {
-      radio: "2",
+      ifRead: "2",
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
@@ -220,12 +205,12 @@ export default {
     //查询已读未读
     searchNotice() {
       let noti = {
-        read: this.radio
+        read: this.ifRead
       };
-       if (this.radio == 1) {
+       if (this.ifRead == 1) {
         this.$store.dispatch('notice/get_Notice',noti )
       } else {
-        if (this.radio == 2) {
+        if (this.ifRead == 2) {
         this.$store.dispatch('notice/get_Notice')
         }
       }

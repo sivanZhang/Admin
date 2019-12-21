@@ -427,6 +427,18 @@
             </div>
           </div>
         </el-tab-pane>
+        <el-tab-pane label="权重配置" name="sixth">
+          <div class="weightSetting">
+            <el-input  v-model="record" placeholder="权重" oninput="value=value.replace(/[^\d.]/g,'')"/>
+            <span>&nbsp;*&nbsp;成绩&nbsp;&nbsp;+&nbsp;&nbsp;</span>
+            <el-input  v-model="submitTime" placeholder="权重" oninput="value=value.replace(/[^\d.]/g,'')"/>
+            <span>&nbsp;*&nbsp;提交时间排名&nbsp;&nbsp;+&nbsp;&nbsp;</span>
+            <el-input  v-model="attendance" placeholder="权重" oninput="value=value.replace(/[^\d.]/g,'')"/>
+            <span>&nbsp;*&nbsp;考勤排名&nbsp;&nbsp;=&nbsp;&nbsp;单次排名&nbsp;&nbsp;</span>
+            <el-button type="primary" @click="saveWeightSetting">保存</el-button>
+            <el-button type="danger" @click="deleteWeightSetting">删除</el-button>
+          </div>
+        </el-tab-pane>
       </template>
     </el-tabs>
     <!-- 添加分组 -->
@@ -698,7 +710,10 @@ import {
   createGroup,
   removeGroup,
   putGroup,
-  getGroup
+  getGroup,
+  getRecord,
+  setRecord,
+  removeRecord
 } from "@/api/training";
 export default {
   name: "config-project",
@@ -772,12 +787,16 @@ export default {
       scene: [],
       addSceneDialog: false,
       addSceneForm: {},
-      sceneId: null
+      sceneId: null,
+      record:'',
+      submitTime:'',
+      attendance:''
     };
   },
   created() {
     this.getStatus();
     this.getPeojectAllStatus();
+    this.getRecordSetting();
   },
   watch: {
     activeName: {
@@ -802,6 +821,45 @@ export default {
     ...mapState("admin", ["DeptList", "UserList"])
   },
   methods: {
+    //获取权重配置
+    getRecordSetting(){
+      getRecord({ project_id:this.project.id }).then(({ data })=>{
+        if(data.status == 0){
+          [...data.msg].map(item =>{
+            this.record = item.task_percent ;
+            this.submitTime = item.submission_time_percent ;
+            this.attendance = item.attendance_percent;
+          })      
+        }
+      })
+    },
+    //新建权重配置
+    saveWeightSetting(){
+       setRecord({
+         project_id:this.project.id,
+         task_percent:this.record,
+         attendance_percent:this.attendance,
+         submission_time_percent:this.submitTime
+       }).then(({ data })=>{
+         if(data.status == 0){
+           this.$message.success(data.msg);
+         }else{
+           this.$message.error(data.msg);
+         }
+       })
+    },
+    //删除权重配置
+    deleteWeightSetting(){
+      removeRecord({method:"delete",project_id:this.project.id}).then(({ data })=>{
+        if(data.status == 0){
+          this.$message.success(data.msg);
+          this.getRecordSetting();
+          this.record = null;
+          this.submitTime = null;
+          this.attendance = null;
+        }
+      })
+    },
     //添加阶段
     addGroup(Type) {
       if (Type === 1) {
@@ -928,7 +986,7 @@ export default {
       if (Type === 1) {
         this.addMebDialog = true;
         this.addId = row.id;
-        console.log(row);
+        // console.log(row);
       } else {
         let addMeb = {
           method: "put",
@@ -1035,7 +1093,7 @@ export default {
       });
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      // console.log(tab, event);
     },
     //获取工种信息
     getDeptList() {
@@ -1304,5 +1362,16 @@ export default {
 }
 .search-group {
   margin-bottom: 10px;
+}
+.weightSetting {
+  display:flex;
+  align-items:center;
+  .el-input{
+    width:40px;
+    .el-input__inner{
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
 }
 </style>

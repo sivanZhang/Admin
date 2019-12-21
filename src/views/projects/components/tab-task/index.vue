@@ -80,7 +80,7 @@
             </el-col>
             <el-col :span="14" style="padding-top:11px" align="right">
               <span
-                style="padding-left:10px;font-size:12px;color:#808080;cursor: pointer;"
+               class="btn-explain"
                 @click="openExplain()"
               >
                 使用帮助:
@@ -127,6 +127,7 @@
         @filter-change="filterHandler"
         @sort-change="sortFilter"
         @cell-dblclick="editCell"
+        @row-click="showDrawer"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
@@ -432,9 +433,9 @@
         >
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
+        <el-table-column label="任务ID"  prop="id" width="80px" sortable="custom">
           <template slot-scope="scope">
-            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+            <span >{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -1274,5 +1275,11 @@
 .el-card {
   border-radius: 0px;
 }
+.btn-explain{
+        padding-left:10px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
+      }
 </style>
 

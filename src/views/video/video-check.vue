@@ -101,7 +101,7 @@
     </el-row>
     <!-- 标记已完成说明 -->
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
-      <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+      <div class="notice-matter">
         <div style="font-size:12px">如果勾选“标记为已完成”，任务会标记为“已完成”，无需下一级审批。</div>
       </div>
     </el-dialog>
@@ -450,6 +450,11 @@ export default {
         color:#808080;
         cursor: pointer;
       }
+    .notice-matter {
+  padding-left: 5px;
+  padding-bottom: 20px;
+  padding-right: 5px;
+}
     }
   }
 }

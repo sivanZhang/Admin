@@ -40,27 +40,30 @@
         v-show="$refs.tableTemplate?$refs.tableTemplate.tableData.length : false"
         size="mini"
       >删除已选</el-button>
-      <span
-        style="padding-left:15px;font-size:12px;color:#808080;cursor: pointer;"
-        @click="openExplain()"
-      >
+      <span class="btn-explain" @click="openExplain()">
         使用帮助:
         <svg-icon icon-class="wenhao" />
       </span>
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
-       <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+      <div class="notice-matter">
         <div style="font-size:12px">
-          <h3 >必填字段</h3>
+          <h3>必填字段</h3>
           <div style="padding-top:2px">
             <span span style="font-weight:bold">节假日名：</span>不符合要求则返回“节假日名是必填字段”；
           </div>
-          <div style="padding-top:2px"><span style="font-weight:bold">日期：</span>格式可为 "yyyy.mm.dd" &nbsp;&nbsp; "yyyy/mm/dd"&nbsp;&nbsp;
-              "yyyy-mm-dd"&nbsp;&nbsp;"yyyymmdd"&nbsp;&nbsp;"yyyy年mm月dd日"；不符合要求则返回“日期是必填字段”；</div>
-          <div style="padding-top:2px"><span span style="font-weight:bold">调休：</span>如果是调休日期的话，该字段值为“调休”，否则返回“调休是必填字段”；</div>
+          <div style="padding-top:2px">
+            <span style="font-weight:bold">日期：</span>格式可为 "yyyy.mm.dd" &nbsp;&nbsp; "yyyy/mm/dd"&nbsp;&nbsp;
+            "yyyy-mm-dd"&nbsp;&nbsp;"yyyymmdd"&nbsp;&nbsp;"yyyy年mm月dd日"；不符合要求则返回“日期是必填字段”；
+          </div>
+          <div style="padding-top:2px">
+            <span span style="font-weight:bold">调休：</span>如果是调休日期的话，该字段值为“调休”，否则返回“调休是必填字段”；
+          </div>
           <div style="padding-top:2px;font-size:12px">
-          <div style="padding-top:2px"><span style="font-weight:bold">注意：</span>以上必填字段都按要求绑定成功的话，则会返回“导入成功”以及“成功数量”和“失败数量”。</div>
+            <div style="padding-top:2px">
+              <span style="font-weight:bold">注意：</span>以上必填字段都按要求绑定成功的话，则会返回“导入成功”以及“成功数量”和“失败数量”。
+            </div>
           </div>
         </div>
       </div>
@@ -205,5 +208,16 @@ export default {
 <style lang="scss" scoped>
 .file_inp {
   display: none;
+}
+.btn-explain {
+  padding-left: 15px;
+  font-size: 12px;
+  color: #808080;
+  cursor: pointer;
+}
+.notice-matter {
+  padding-left: 5px;
+  padding-bottom: 20px;
+  padding-right: 5px;
 }
 </style>

@@ -34,17 +34,14 @@
         v-show="$refs.tableTemplate?$refs.tableTemplate.tableData.length : false"
         size="mini"
       >删除已选</el-button>
-      <span
-        style="padding-left:15px;font-size:12px;color:#808080;cursor: pointer;"
-        @click="openExplain()"
-      >
+      <span class="btn-explain" @click="openExplain()">
         使用帮助:
         <svg-icon icon-class="wenhao" />
       </span>
     </div>
     <import-table-template ref="tableTemplate" @returnAssemblingData="returnAssemblingData"></import-table-template>
     <el-dialog title="注意事项" :visible.sync="dialogVisible" width="365px">
-      <div style="padding-left:5px;padding-bottom:20px;padding-right:5px">
+      <div class="notice-matter">
         <div style="font-size:12px">
           <h3>必填字段</h3>
           <div style="padding-top:2px">
@@ -153,7 +150,7 @@ export default {
           if (data.msg) {
             this.$message.warning(data.msg);
           } else {
-            let label = this.$route.query.type==='scene'?'镜头':'资产'
+            let label = this.$route.query.type === "scene" ? "镜头" : "资产";
             this.$notify.info({
               title: "导入结果",
               duration: 0,
@@ -200,5 +197,16 @@ export default {
 <style lang="scss" scoped>
 .file_inp {
   display: none;
+}
+.btn-explain {
+  padding-left: 15px;
+  font-size: 12px;
+  color: #808080;
+  cursor: pointer;
+}
+.notice-matter {
+  padding-left: 5px;
+  padding-bottom: 20px;
+  padding-right: 5px;
 }
 </style>

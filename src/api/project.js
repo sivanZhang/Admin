@@ -1,7 +1,11 @@
 import AXIOS from '@/utils/request'
 // 获取项目列表或者项目详情
-export function getProjects(params = null) {
+export function getProjects(params) {
   return AXIOS.get('/projects/projects/', { params })
+}
+//获取实训项目
+export function gettestProjects(params) {
+  return AXIOS.get('/projects/training_projects/', { params })
 }
 // 创建项目
 export function addProjects(data) {

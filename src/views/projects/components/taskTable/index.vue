@@ -11,6 +11,7 @@
       :stripe="true"
       :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="cellStyle"
+      @row-click="showDrawer"
       border
     >
       <!-- <el-table-column width="30px">
@@ -53,9 +54,9 @@
           </el-tooltip>
         </template>
       </el-table-column> -->
-      <el-table-column label="任务ID" prop="id" width="90px" class-name="links">
+      <el-table-column label="任务ID" prop="id" width="90px" >
         <template slot-scope="scope">
-          <div @click="showDrawer(scope.row)">{{scope.row.id}}</div>
+          <div >{{scope.row.id}}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="缩略图" width="200px">

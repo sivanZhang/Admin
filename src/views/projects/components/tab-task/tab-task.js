@@ -664,46 +664,14 @@ export default {
       }
     },
     changelist() {
-      if (this.value1 == '是') {
-        this.disabled1 = false
-      } else {
-        this.disabled1 = true
-      }
-      if (this.value2 == '是') {
-        this.disabled2 = false
-      } else {
-        this.disabled2 = true
-      }
-      if (this.value3 == '是') {
-        this.disabled3 = false
-      } else {
-        this.disabled3 = true
-      }
-      if (this.value4 == '是') {
-        this.disabled4 = false
-      } else {
-        this.disabled4 = true
-      }
-      if (this.value5 == '是') {
-        this.disabled5 = false
-      } else {
-        this.disabled5 = true
-      }
-      if (this.value6 == '是') {
-        this.disabled6 = false
-      } else {
-        this.disabled6 = true
-      }
-      if (this.value7 == '是') {
-        this.disabled7 = false
-      } else {
-        this.disabled7 = true
-      }
-      if (this.value8 == '是') {
-        this.disabled8 = false
-      } else {
-        this.disabled8 = true
-      }
+      this.value1 == "是"?this.disabled1 = false:this.disabled1 = true;
+      this.value2 == "是"?this.disabled2 = false:this.disabled2 = true;
+      this.value3 == "是"?this.disabled3 = false:this.disabled3 = true;
+      this.value4 == "是"?this.disabled4 = false:this.disabled4 = true;
+      this.value5 == "是"?this.disabled5 = false:this.disabled5 = true;
+      this.value6 == "是"?this.disabled6 = false:this.disabled6 = true;
+      this.value7 == "是"?this.disabled7 = false:this.disabled7 = true;
+      this.value8 == "是"?this.disabled8 = false:this.disabled8 = true;
     },
     // 批量修改任务
     mulEditTasks(Type) {
