@@ -1001,27 +1001,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 资产状态 -->
-        <el-row>
-          <el-col :span="6" align="center">
-            <el-switch
-              v-model="changeStatus"
-              active-color="#42d842"
-              inactive-color="#b7b7b7"
-              active-value="是"
-              inactive-value="否"
-              active-text="是"
-              inactive-text="否"
-              @change="changelist"
-            ></el-switch>
-          </el-col>
-          <el-col :span="18">
-            <el-form-item label="资产状态" prop="status">
-              <el-radio v-model="updateMulTask.status" :label="1" :disabled="disableStatus">未开始</el-radio>
-              <el-radio v-model="updateMulTask.status" :label="2" :disabled="disableStatus">已完成</el-radio>          
-            </el-form-item>
-          </el-col>
-        </el-row>
+        
         <!-- 资产时间 -->
         <el-row>
           <el-col :span="6" align="center">
