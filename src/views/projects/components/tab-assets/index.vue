@@ -1,8 +1,8 @@
 <template>
   <div id="tab-assets" ref="drawer-parent">
     <div>
-      <el-row :gutter="15">
-        <el-col :span="14" style="padding-bottom:15px;">
+      <el-row :gutter="24">
+        <el-col :span="16" style="padding-bottom:15px;">
           <template v-if="authAsset">
             <el-button icon="el-icon-plus" type="primary" @click="showAssetForm(1)">
               <slot name="add">添加资产</slot>
@@ -13,6 +13,12 @@
             <el-button icon="el-icon-upload2" type="success" @click="targetUpload">
               <slot name="upload">资产导出</slot>
             </el-button>
+            <el-button
+              type="success"
+              @click="mulEditTasks(1)"
+              icon="el-icon-edit"
+              :disabled="this.multipleSelection.length === 0"
+            >批量修改</el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -67,14 +73,10 @@
               <el-checkbox v-model="show_id">资产ID</el-checkbox>
             </el-col>
             <el-col :span="12">
-              <el-checkbox v-model="show_small_status">小状态</el-checkbox>
+              <el-checkbox v-model="show_small_status">小状态/进度</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_creator_name">创建人</el-checkbox>
-            </el-col>
-            
-            <el-col :span="12">
-              <el-checkbox v-model="show_status">进度</el-checkbox>
             </el-col>
             <el-col :span="12">
               <el-checkbox v-model="show_link">当前环节</el-checkbox>
@@ -115,7 +117,7 @@
             <assetSortMul @refresh="sortMul" style="margin-left:15px;width:100px" />
           </template>
         </el-col>
-        <el-col :span="10" align="right">
+        <el-col :span="8" align="right">
           <el-row type="flex" justify="end">
             <!-- 单条件筛选 -->
             <assetSel ref="assetSel" @refreshAssetList="getAssetList" />
@@ -223,80 +225,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <!-- <el-table-column width="30px">
-          <template slot-scope="scope">
-            <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
-              <el-card
-                v-if="scope.row.status === 0"
-                :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
-              <el-card
-                v-if="scope.row.status === 1"
-                :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
-              <el-card
-                v-if="scope.row.status === 2"
-                :style="{width:'10px',backgroundColor:'#589BAD',border:'0px'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
-              <el-card
-                v-if="scope.row.status === 3"
-                :style="{width:'10px',backgroundColor:'#2D5637',border:'0px'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：完成" placement="top">
-              <el-card
-                v-if="scope.row.status === 4"
-                :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px'}"
-              ></el-card>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="任务状态：超时" placement="top">
-              <el-card
-                v-if="scope.row.status === 5"
-                :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px'}"
-              ></el-card>
-            </el-tooltip>
-          </template>
-        </el-table-column>-->
-        <!-- <el-table-column
-          label="状态"
-          prop="status"
-          v-if="show_status"
-          width="160px"
-          align="left"
-          sortable="custom"
-          column-key="status"
-          :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]"
-        >
-          <template slot-scope="scope">
-            {{scope.row.status|taskStatus}}
-            <el-progress
-              :stroke-width="12"
-              :percentage="scope.row.schedule"
-              v-if="scope.row.status != 3 && scope.row.status != 4"
-            ></el-progress>
-          </template>
-        </el-table-column>-->
-        <el-table-column
-          label="进度"
-          prop="status"
-          v-if="show_status"
-          width="160px"
-          align="left"
-          sortable="custom"
-          column-key="status"
-        >
-          <!-- :filters="[{text: '暂停', value: '0'}, {text: '未开始', value: '1'}, {text: '进行中', value: '2'}, {text: '审核中', value: '3'}, {text: '完成', value: '4'}]" -->
-          <template slot-scope="scope">
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
-          </template>
-        </el-table-column>
-        <el-table-column label="小状态" prop="small_status" width="100px" v-if="show_small_status">
+        <el-table-column label="小状态/进度" prop="small_status" width="150px" v-if="show_small_status">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.small_status"
@@ -346,10 +275,11 @@
                 ></el-option>
               </div>
             </el-select>
-
+            
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'small_status')"
             >{{scope.row.small_status|taskMinStatus}}</span>
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
           </template>
         </el-table-column>
         <template v-if="groupType == 0?true:false">
@@ -806,6 +736,347 @@
         ></el-pagination>
       </div>
     </div>
+    <!-- 批量修改资产 -->
+    <el-dialog title="批量修改资产" :visible.sync="mulEditDialog" width="620px" top="5vh">
+      <el-form :model="updateMulTask" label-width="90px">
+        <el-row>
+          <el-col :span="20" style="padding-left:35px">
+            <el-row>
+              <el-col :span="8">
+                <h4 style="padding-bottom:10px">是否修改</h4>
+              </el-col>
+              <el-col :span="16">
+                <div style="font-size:12px">
+                  <span style="font-weight:bold">任务难度:</span>A+ ----> E 难---->易，默认为中等等级
+                </div>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+        
+        <!-- 制作内容 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeContent"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="制作内容" prop="content">
+              <el-input
+                v-model="updateMulTask.content"
+                type="textarea"
+                placeholder="请填写制作内容"
+                :disabled="disableContent"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 场次 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeSession"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="场次" prop="session">
+              <el-input v-model="updateMulTask.session" placeholder="请填写场次" :disabled="disableSession"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 帧数 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeFrame"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="帧数" prop="frame">
+              <el-input v-model="updateMulTask.frame" placeholder="请填写帧数" :disabled="disableFrame"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+         <!-- 帧数范围 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeFrame_range"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="帧数范围" prop="frame_range">
+              <el-input v-model="updateMulTask.frame_range" placeholder="请填写帧数范围" :disabled="disableFrame_range"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 集数 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeEpisode"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="集数" prop="episode">
+              <el-input v-model="updateMulTask.episode" placeholder="请填写集数" :disabled="disableEpisode"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+     
+        <!-- 变速信息 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeRetime"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="变速信息" prop="retime">
+              <el-input v-model="updateMulTask.retime" placeholder="请填写变速信息" :disabled="disableRetime"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 画面调整信息 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeReport"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="画面调整" prop="report">
+              <el-input v-model="updateMulTask.report" placeholder="请填写画面调整信息" :disabled="disableReport"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+       
+        <!-- 制作参考 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changePro_reference"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="制作参考" prop="pro_reference">
+              <el-input v-model="updateMulTask.pro_reference" placeholder="请填写制作参考" :disabled="disablePro_reference"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 优先级 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changePriority"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="优先级" prop="priority">
+              <el-radio v-model="updateMulTask.priority" :label="0" :disabled="disablePriority">正常</el-radio>
+              <el-radio v-model="updateMulTask.priority" :label="1" :disabled="disablePriority">优先</el-radio>          
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 难度等级 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeLevel"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="难度等级" prop="level">
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="0" :disabled="disableLevel">A+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="1" :disabled="disableLevel">A</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="2" :disabled="disableLevel">A-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="3" :disabled="disableLevel">B+</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="4" :disabled="disableLevel">B</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="5" :disabled="disableLevel">B-</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="6" :disabled="disableLevel">C+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="7" :disabled="disableLevel">C</el-radio>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="8" :disabled="disableLevel">D+</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="9" :disabled="disableLevel">D</el-radio>
+                </el-col>
+                <el-col :span="5">
+                  <el-radio v-model="updateMulTask.level" :label="10" :disabled="disableLevel">E</el-radio>
+                </el-col>
+              </el-row>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 资产状态 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeStatus"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="资产状态" prop="status">
+              <el-radio v-model="updateMulTask.status" :label="1" :disabled="disableStatus">未开始</el-radio>
+              <el-radio v-model="updateMulTask.status" :label="2" :disabled="disableStatus">已完成</el-radio>          
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 资产时间 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeTime"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="资产时间" prop="datetime">
+              <el-date-picker
+                v-model="updateMulTask.datetime"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                format="yyyy/MM/dd"
+                :disabled="disableTime"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+           <!-- 备注 -->
+        <el-row>
+          <el-col :span="6" align="center">
+            <el-switch
+              v-model="changeRemark"
+              active-color="#42d842"
+              inactive-color="#b7b7b7"
+              active-value="是"
+              inactive-value="否"
+              active-text="是"
+              inactive-text="否"
+              @change="changelist"
+            ></el-switch>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="updateMulTask.remark" placeholder="请填写备注" :disabled="disableRemark"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col align="right">
+            <el-button type="primary" @click="mulEditTasks(2)">立即修改</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
+    <!-- 添加镜头 -->
     <el-dialog :title="dialogTitle" :visible.sync="isShow" width="480px" top="5vh">
       <el-form
         :model="AssetForm"
@@ -1001,6 +1272,7 @@
 
 <style lang="scss">
 #tab-assets {
+  
   min-height: calc(100vh - 199px);
   .el-table td {
     .cell {
@@ -1038,6 +1310,9 @@ svg-icon {
 }
 .el-card {
   border-radius: 0px;
+}
+.el-button--mini{
+  padding: 7px 7px 
 }
 .btn-explain{
         padding-left:10px;
