@@ -1,6 +1,6 @@
 <template>
   <div id="my-audit" ref="drawer-parent">
-    <el-card class="custom-card">
+    <el-card class="custom-card" shadow="never">
       <div class="inputs-warp">
         <div>
           <label class="input-label">项目:</label>
@@ -84,11 +84,12 @@
       style="margin-top:20px;width:100%"
       v-loading="tableLoading"
       :data="AuditList"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
+      :header-cell-style="{background:'#F5F7FA'}"
       highlight-current-row
       @select="taskSelect"
       @select-all="taskSelect"
       :cell-style="cellStyle"
+      border
     >
       <el-table-column type="selection" width="60" align="center"></el-table-column>
       <el-table-column label="所属项目"   class-name="links">
@@ -145,7 +146,7 @@
       <el-table-column label="开始日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.total_hour" label="预设(h)" :render-header="renderheader" width="50px"></el-table-column>
+      <el-table-column prop="task.total_hour" label="预设(h)" :render-header="renderheader" width="60px"></el-table-column>
       <el-table-column label="提交日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
@@ -559,36 +560,30 @@ export default {
     margin-bottom: 15px;
   } 
   .inputs-warp {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    & > * {
-      margin-bottom: 10px; 
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        & > * {
+            margin-bottom: 10px;
+        }
+        .input-label {
+            width: 70px;
+            display: block;
+            font-weight: 100;
+            font-size: 12px;
+            margin-bottom: 4px;
+            & + * {
+                width: 200px;
+            }
+        }
     }
-    .priority{
-      width:90px;
-    }
-    .taskname{
-       width:140px;
-    }
-    
-  }
   .links {
     cursor: pointer;
     color: #2d8cf0;
   }
   .el-card {
     border-radius: 0px;
-  }
-  .input-label {
-    width: 70px;
-    display: block;
-    font-weight:100;
-    font-size:12px;
-    & + * {
-      width: 200px;
-    }
   }
 }
 .el-table--mini th,
