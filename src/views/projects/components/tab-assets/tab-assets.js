@@ -638,9 +638,11 @@ export default {
 
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
+      this.value1=false;
       if (this.authAsset) {
         switch (column.label) {
           case "镜头号":
+            this.cellCol = "name";
             break;
           case "场次":
             this.cellCol = "session";
@@ -700,6 +702,7 @@ export default {
 
     //添加进素材库
     pushMaterial(Type, id) {
+      this.value1=false;
       if (Type === 1) {
         this.materialShow = true;
         this.matrialId = id;
@@ -1013,6 +1016,7 @@ export default {
     },
     //修改资产
     editOneAsset(row) {
+      this.value1=false;
       function dateFormat(date) {
         return dayjs(date).format("YYYY/MM/DD");
       }
@@ -1176,6 +1180,7 @@ export default {
     },
     //行内修改资产保存
     saveEdit(index, row) {
+      this.value1=false;
       if (isSaved) {
         return;
       }
@@ -1592,6 +1597,7 @@ export default {
     },
     //删除单个资产
     deleteAssets(id) {
+      this.value1=false
       this.$confirm("此操作将永久删除该资产, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
