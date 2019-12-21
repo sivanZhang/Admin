@@ -15,7 +15,7 @@
       <el-table-column prop="changci" label="场次" align="center"></el-table-column>
       <el-table-column prop="jishu" label="集数" align="center"></el-table-column>
       <el-table-column prop="name" label="名称" align="center"></el-table-column>
-      <el-table-column prop="id" label="资产ID" v-if="false" align="center"></el-table-column>
+       
       <el-table-column prop="path" label="路径" align="center"></el-table-column>
       <el-table-column prop="creator_name" label="创建人名称" align="center"></el-table-column>
       

@@ -69,9 +69,7 @@
             <el-col :span="12">
               <el-checkbox v-model="show_level">难度</el-checkbox>
             </el-col>
-            <el-col :span="12">
-              <el-checkbox v-model="show_id">资产ID</el-checkbox>
-            </el-col>
+            
             <el-col :span="12">
               <el-checkbox v-model="show_small_status">小状态/进度</el-checkbox>
             </el-col>
@@ -292,7 +290,7 @@
             </template>
           </el-table-column>
         </template>
-        <el-table-column label="任务|数量" prop="task_num" width="60px;" :render-header="renderheader"></el-table-column>
+        <el-table-column label="任务数量" prop="task_num"   :render-header="renderheader" :min-width="30"></el-table-column>
         <el-table-column
           width="80px;"
           prop="session"
@@ -562,7 +560,7 @@
             >{{scope.row.level|Level}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="资产ID" v-if="show_id" align="left"></el-table-column>
+        
         <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column> 
         <el-table-column label="当前环节" align="center" width="140px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">

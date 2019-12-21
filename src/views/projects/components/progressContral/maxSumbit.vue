@@ -89,7 +89,7 @@
         <el-table-column prop="level" label="难度">
           <template slot-scope="scope">{{scope.row.level|Level}}</template>
         </el-table-column>
-        <el-table-column prop="id" label="资产ID"></el-table-column>
+         
         <el-table-column prop="creator_name" label="创建人"></el-table-column>
       
         <el-table-column label="当前环节" align="center" width="160px">

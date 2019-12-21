@@ -323,9 +323,7 @@ export default {
       if (this.show_level == true) {
         this.checkAssetList.push("难度")
       }
-      if (this.show_id == true) {
-        this.checkAssetList.push("资产ID")
-      }
+       
       if (this.show_small_status == true) {
         this.checkAssetList.push("小状态")
       }
@@ -412,9 +410,7 @@ export default {
               case "难度":
                 this.show_level = true;
                 break;
-              case "资产ID":
-                this.show_id = true;
-                break;
+              
               case "小状态":
                 this.show_small_status = true;
                 break;
