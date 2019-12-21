@@ -148,6 +148,7 @@
         :border="false"
         @cell-dblclick="editCell"
         @expand-change="expandShow"
+        @row-click="show"
       >
         <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
         <el-table-column type="expand" prop="expand" width="20px">
@@ -168,7 +169,7 @@
           width="110px"
           v-if="show_name"
           sortable="custom"
-          class-name="links"
+         
         >
           <template slot-scope="scope">
             <el-input
@@ -184,7 +185,7 @@
             </el-input>
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
-              @click="show(scope.row.id)"
+              
             >{{scope.row.name?scope.row.name:"-"}}</span>
           </template>
         </el-table-column>

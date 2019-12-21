@@ -127,6 +127,7 @@
         @filter-change="filterHandler"
         @sort-change="sortFilter"
         @cell-dblclick="editCell"
+        @row-click="showDrawer"
       >
         <!-- default-expand-all -->
         <el-table-column type="selection" :reserve-selection="true" width="50px"></el-table-column>
@@ -410,9 +411,9 @@
         >
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="任务ID" class-name="links" prop="id" width="80px" sortable="custom">
+        <el-table-column label="任务ID"  prop="id" width="80px" sortable="custom">
           <template slot-scope="scope">
-            <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
+            <span >{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column

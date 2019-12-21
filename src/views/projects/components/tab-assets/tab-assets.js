@@ -1577,9 +1577,9 @@ export default {
     },
 
     //展示资产侧栏
-    show(id) {
+    show(row) {
       this.value1 = true;
-      this.$refs["assetDrawer"].show(id);
+      this.$refs["assetDrawer"].show(row.id);
     },
     //展示任务侧栏
     showDrawer(item) {
