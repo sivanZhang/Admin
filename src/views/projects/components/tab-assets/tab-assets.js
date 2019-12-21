@@ -482,7 +482,7 @@ export default {
     }) {
       return h("span", {}, [
         h("span", {}, column.label.split("|")[0]),
-        h("br"),
+        //h("br"), // 这个有bug，排序被换行了
         h("span", {}, column.label.split("|")[1])
       ]);
     },
