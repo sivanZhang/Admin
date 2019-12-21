@@ -246,9 +246,31 @@
           v-if="show_executor"
           :filters="columnSelect2"
           column-key="executor"
+          @change="showEditIcon(scope.$index,scope.row)"
           align="center"
+          width="500"
         >
-          <template slot-scope="scope">{{scope.row.executor|executorFilter}}</template>
+          <template slot-scope="scope">
+            <template  v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'executor')">
+              <el-select
+              v-model="scope.row.executor"
+              multiple
+              @blur="showEditIcon(scope.$index,scope.row)"
+              @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+              placeholder="请选择"
+              value-key="id"
+            >
+              <el-option
+                v-for="(item,index) in executorList"
+                :key="index"
+                :label="item.name"
+                :value="item"
+              ></el-option>
+            </el-select>
+            
+            </template>
+            <template v-else>{{scope.row.executor|executorFilter}}</template>
+          </template>
         </el-table-column>
         <!-- 状态的颜色展示 -->
         <el-table-column width="30px" v-if="show_status">
@@ -1243,12 +1265,12 @@
     padding-right: 5px;
   }
 }
- .el-table th {
-    .cell {
-      padding-left: 5px;
-      padding-right: 5px;
-    }
+.el-table th {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
   }
+}
 .el-card {
   border-radius: 0px;
 }
