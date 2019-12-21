@@ -55,7 +55,6 @@ export default {
      //父组件直接通过$refs[组件ref值].getlinkTaskOutput(task的id)即可请求列表，切换筛选时自动调用的
      getlinkTaskOutput(task_id){
        getTaskDetail({id:task_id}).then(({ data })=>{
-         console.log(data)
          this.TaskOutput = data.msg
        })
      }
