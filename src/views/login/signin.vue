@@ -52,7 +52,7 @@
         type="primary"
         style="width:100%;margin-bottom:30px; height:37px;"
         @click.native.prevent="handleLogin"
-      >登录</el-button>
+      >{{loading?'登录中&hellip;':'登录'}}</el-button>
       <el-row :gutter="15">
         <el-col :span="12" class="link">
           <router-link to="/signup">申请账号</router-link>
