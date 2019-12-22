@@ -276,7 +276,7 @@ export default {
         this.iconShow = false;
     },
     deleteUser(id){
-      this.$confirm("是否删除改用户?", "提示", {
+      this.$confirm("是否删除该用户?", "提示", {
         confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "warning"
