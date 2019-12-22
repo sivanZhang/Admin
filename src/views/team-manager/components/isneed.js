@@ -3,13 +3,16 @@ import myMixin from "@/views/projects/components/mixins";
 import { getLinks } from "@/api/links";
 import { getDept } from "@/api/admin";
 import { addTask } from "@/api/task";
+import assetMulSel from "@/views/projects/components/mulConditionSel/assetMulSel";
+import assetFilter from "@/views/projects/components/filterCondition/assetFilter";
+import assetSel from "@/views/projects/components/oneConditionSel/assetSel";
 import * as HTTP from "@/api/assets";
 import { getEpisodeSession } from "@/api/statistics";
 import dayjs from "dayjs";
 let isSaved = false; //方式重复提交保存表格
 export default {
   mixins: [myMixin, thumbtackMixin],
-  components: {},
+  components: {assetMulSel,assetFilter,assetSel},
   props: [
     "scene",
     "tableLoading",
@@ -116,7 +119,11 @@ export default {
           label: "E",
           value: 10
         }
-      ]
+      ],
+      name: "",
+      oneSel: null, //保存单列筛选的条件
+      sortSelForm: {}, //保存多列筛选条件
+      multiSelect: [],
     };
   },
   filters: {
@@ -130,6 +137,123 @@ export default {
   },
   watch: {},
   methods: {
+    //获取资产或者镜头列表，type=1时表示重置（包括单条件筛选）
+    getAssetList(type, oneSel, name) {
+      this.name = name;
+      this.oneSel = oneSel;
+      let payload = {
+        tag: this.active?0:1
+      };
+      switch (type) {
+        case 1: //重置
+          this.cutType = -1;
+          this.currentPage = 1;
+          this.$refs["assetFilter"].showMul(); //重置筛选条件展示
+          this.$refs["assetSel"].refreshOneSel(); //重置单条件筛选
+          this.sortfilter = null; //重置多条件筛选存储的条件
+          
+          payload = {
+            ...payload,
+            pagenum: 20,
+            page: 1
+          };
+          break;
+        case 2: //正常查询
+          payload = {
+            ...payload,
+            pagenum: 20,
+            page: 1
+          };
+          break;
+        case 3: //单条件筛选查询
+          this.cutType = 5;
+          payload = {
+            ...payload,
+            ...oneSel,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          };
+          break;
+        case 4: //单条件筛选下的分页
+          payload = {
+            ...payload,
+            ...oneSel,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          };
+          break;
+        case -1: //正常查询下的分页
+          payload = {
+            ...payload,
+            pagenum: this.pageSize,
+            page: this.currentPage
+          };
+          break;
+      }
+      // console.log(payload)
+      this.$emit("refresh",payload);
+     
+    },
+    //多条件筛选
+    MulSel(sortSelForm, Type) {
+      this.cutType = 1;
+      this.sortSelForm = sortSelForm;
+      let data = {
+        ...sortSelForm,
+       tag:this.active?0:1
+      };
+      if (Type === 1) {
+        //正常筛选
+        data = {
+          ...data,
+          pagenum: 20,
+          page: 1
+        };
+      } else {
+        //处理分页
+        data = {
+          ...data,
+          pagenum: this.pageSize,
+          page: this.currentPage
+        };
+      }
+      this.multiSelect = sortSelForm;
+      this.$emit("refresh",data);
+    },
+     //重置筛选条件展示
+     selRefresh() {
+      this.$refs["assetFilter"].showMul();
+    },
+     //筛选条件展示
+     filterCondition(showMulChoose, sortSelForm) {
+      this.$refs["assetFilter"].filterCondition(showMulChoose, sortSelForm);
+    },
+    //删除筛选条件，剩余条件再搜索
+    closeSelectedTag(sortSelForm, Type) {
+      this.cutType = 2;
+      this.sortSelForm = sortSelForm;
+      let data = {
+        ...sortSelForm,
+        tag:this.active?0:1
+      };
+      if (Type === 1) {
+        //正常请求
+        data = {
+          ...data,
+          pagenum: 20,
+          page: 1
+        };
+      } else {
+        //处理分页
+        data = {
+          ...data,
+          pagenum: this.pageSize,
+          page: this.currentPage
+        };
+      }
+      this.multiSelect = sortSelForm;
+      this.$emit("refresh",data);
+    },
     getProjectNum() {
       //获取集数列表
       getEpisodeSession({

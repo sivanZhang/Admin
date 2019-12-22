@@ -19,7 +19,6 @@
       </el-tab-pane>
       <el-tab-pane label="已分配镜头" name="second">
         <isNeed
-          
           :scene="sceneUnneed"
           :tableLoading="tableLoading"
           :pageSize="pageSize2"
@@ -40,7 +39,7 @@
 import { noNeedScene, needScene } from "@/api/assets";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import myMixin from "@/views/projects/components/mixins";
-import isNeed from "@/views/team-manager/components/isNeed";
+import isNeed from "@/views/team-manager/components/isNeed.vue";
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: "team-manager",
@@ -77,13 +76,19 @@ export default {
 
   methods: {
     //未分配镜头
-    getNeedScene() {
+    getNeedScene(item) {
       this.sceneNeed = [];
-      let payload = {
+      let payload = {}
+      if(item){
+        payload={...item}
+      }else{
+        payload={
         tag: 0,
         pagenum: this.pageSize,
         page: this.currentPage
       };
+      }
+      
       this.tableLoading = true;
       needScene(payload).then(({ data }) => {
         this.sceneNeed = [...data.msg];
@@ -93,13 +98,18 @@ export default {
       });
     },
     //已分配镜头
-    getNotNeedScene() {
+    getNotNeedScene(item) {
       this.sceneUnneed = [];
-      let payload = {
-        tag: 1,
+      let payload = {}
+      if(item){
+        payload={...item}
+      }else{
+        payload={
+        tag: 0,
         pagenum: this.pageSize2,
         page: this.currentPage2
       };
+      }
       this.tableLoading = true;
       noNeedScene(payload).then(({ data }) => {
         this.sceneUnneed = [...data.msg];

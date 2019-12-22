@@ -3,13 +3,30 @@
   <div id="isNeed">
     <div>
       <el-row :gutter="24" style="padding-bottom:15px;">
+         <el-col :span="16" style="padding-bottom:15px;">
         <el-button
           type="success"
           @click="mulEditTasks(1)"
           icon="el-icon-edit"
           :disabled="this.multipleSelection.length === 0"
         >批量修改</el-button>
+         </el-col>
+         <el-col :span="8" align="right">
+          <el-row type="flex" justify="end">
+            <!-- 单条件筛选 -->
+            <assetSel ref="assetSel" @refreshAssetList="getAssetList" />
+            <!-- 多条件筛选 -->
+            <assetMulSel
+              ref="assetMulSel"
+              @refresh_sortMul="MulSel"
+              @filterCondition="filterCondition"
+              @selRefresh="selRefresh"
+            />
+            <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
+          </el-row>
+        </el-col>
       </el-row>
+       <assetFilter ref="assetFilter" @refresh_close="closeSelectedTag" />
     </div>
     <el-table
       ref="sceneNeed"
