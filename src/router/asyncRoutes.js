@@ -47,7 +47,7 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/overview/project'),
           meta: {
             title: '项目概览',
-            icon: 'tree'
+            icon: 'tree',
           }
         },
         {
@@ -56,8 +56,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/training/training-project'),
           meta: {
             title: '练习项目',
-            icon: 'tree2'
-          }
+            icon: 'tree2',
+          },
         }
       ]
     },
@@ -69,40 +69,39 @@ export default function asyncRoutes(params) {
       meta: {
         title: '组长工作台',
         icon: 'team-manager',
-        roles: 'dept_manager'
+        roles: 'dept_manager'||'view_training_project'
       },
-      children: [
-        {
-          path: 'team-manager',
-          name: 'team-manager',
-          component: () => import('@/views/team-manager'),
-          meta: {
-            title: '任务分配',
-            icon: 'team-manager',
-            roles: 'dept_manager'
-          }
-        },
-        {
-          path: 'statistic-manager',
-          name: 'statistic-manager',
-          component: () => import('@/views/team-manager/statistic-manager'),
-          meta: {
-            title: '数据统计',
-            icon: 'statistic-manager',
-            roles: 'dept_manager'
-          }
-        },
-        {
-          path: 'remember-time',
-          name: 'remember-time',
-          component: () => import('@/views/team-manager/memberTime'),
-          meta: {
-            title: '人员工时',
-            icon: 'statistic-manager',
-            roles: 'dept_manager'
-          }
+      children: [{
+        path: 'team-manager',
+        name: 'team-manager',
+        component: () =>
+          import('@/views/team-manager'),
+        meta: {
+          title: '任务分配',
+          icon: 'team-manager',
+          roles: 'dept_manager'||'view_training_project'
         }
-      ]
+      }, {
+        path: 'statistic-manager',
+        name: 'statistic-manager',
+        component: () =>
+          import('@/views/team-manager/statistic-manager'),
+        meta: {
+          title: '数据统计',
+          icon: 'statistic-manager',
+          roles: 'dept_manager'||'view_training_project'
+        }
+      }, {
+        path: 'remember-time',
+        name: 'remember-time',
+        component: () =>
+          import('@/views/team-manager/memberTime'),
+        meta: {
+          title: '人员工时',
+          icon: 'statistic-manager',
+          roles: 'dept_manager'||'view_training_project'
+        }
+      }]
     },
     {
       path: '/mine',
@@ -251,7 +250,8 @@ export default function asyncRoutes(params) {
       alwaysShow: true,
       meta: {
         title: '考勤管理',
-        icon: 'kq'
+        icon: 'kq',
+        roles: 'view_training_project'
       },
       children: [
         {
@@ -260,7 +260,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/checking-in/extra-work'),
           meta: {
             title: '加班申请',
-            icon: 'jiaban'
+            icon: 'jiaban',
+            roles: 'view_training_project'
           }
         },
         {
@@ -269,7 +270,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/checking-in/view-extra-work'),
           meta: {
             title: '加班查看',
-            icon: 'jbck'
+            icon: 'jbck',
+            roles: 'view_training_project'
           }
         },
         {
@@ -278,7 +280,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/checking-in/approve-extra-work'),
           meta: {
             title: '加班审批',
-            icon: 'jbsp'
+            icon: 'jbsp',
+            roles: 'view_training_project'
           }
         },
         {
@@ -287,7 +290,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/checking-in/manage-work'),
           meta: {
             title: '工时管理',
-            icon: 'team-manager'
+            icon: 'team-manager',
+            roles: 'view_training_project'
           }
         },
         {
@@ -296,7 +300,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/checking-in/clock-in'),
           meta: {
             title: '打卡管理',
-            icon: 'daka'
+            icon: 'daka',
+            roles: 'view_training_project'
           }
         }
       ]
@@ -378,7 +383,8 @@ export default function asyncRoutes(params) {
       redirect: 'noRedirect',
       meta: {
         title: '系统设置',
-        icon: 'settings'
+        icon: 'settings',
+        roles: 'view_training_project'
       },
       children: [
         {
@@ -387,7 +393,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/admin/userGroup'),
           meta: {
             title: '用户',
-            icon: 'group'
+            icon: 'group',
+            roles: 'view_training_project'
           }
         },
         {
@@ -396,7 +403,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/admin/profession'),
           meta: {
             title: '部门及工种',
-            icon: 'profession'
+            icon: 'profession',
+            roles: 'view_training_project'
           }
         },
         {
@@ -406,7 +414,7 @@ export default function asyncRoutes(params) {
           meta: {
             title: '角色管理',
             icon: 'role',
-            roles: 'manage_role'
+            roles: 'manage_role'||' view_training_project'
           }
         },
         {
@@ -415,7 +423,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/admin/bind'),
           meta: {
             title: '绑定',
-            icon: 'bangding'
+            icon: 'bangding',
+            roles: 'view_training_project'
           }
         },
         {
@@ -424,7 +433,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/admin/customAttrs'),
           meta: {
             title: '自定义属性',
-            icon: 'custom-attrs'
+            icon: 'custom-attrs',
+            roles: 'view_training_project'
           }
         },
         {
@@ -433,7 +443,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/admin/time-management'),
           meta: {
             title: '时间管理',
-            icon: 'fs'
+            icon: 'fs',
+            roles: 'view_training_project'
           }
         },
         {
@@ -442,7 +453,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/checking-in/extra-approve'),
           meta: {
             title: '加班审批模板',
-            icon: 'extra-approve'
+            icon: 'extra-approve',
+            roles: 'view_training_project'
           }
         },
         {
@@ -451,7 +463,8 @@ export default function asyncRoutes(params) {
           component: () => import('@/views/admin/menu'),
           meta: {
             title: '考勤时间设置',
-            icon: 'menu'
+            icon: 'menu',
+            roles: 'view_training_project'
           }
         }
       ]
