@@ -176,7 +176,7 @@
               placeholder="请输入"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+        
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.name?scope.row.name:"-"}}</span>
@@ -308,7 +308,7 @@
               placeholder="请输入场次"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol=='session')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+             
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.session?scope.row.session:"-"}}</span>
@@ -335,7 +335,7 @@
               placeholder="请输入集数"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'episode')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+              
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.episode?scope.row.episode:"-"}}</span>
@@ -384,7 +384,7 @@
               placeholder="请输入帧数范围"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame_range')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+         
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             ></el-input>
             <span
@@ -407,7 +407,7 @@
               placeholder="请输入制作参考内容"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'reference')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+              
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
@@ -432,7 +432,7 @@
               placeholder="请输入画面调整信息"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'report')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+      
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.report?scope.row.report:"-"}}</span>
@@ -456,7 +456,7 @@
               placeholder="请输入变速信息"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'retime')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+             
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <span>{{scope.row.retime?scope.row.retime:"-"}}</span>
@@ -494,7 +494,7 @@
               placeholder="请输入制作内容"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+        
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             ></el-input>
             <span style="white-space: pre-line;" v-else>{{scope.row.content?scope.row.content:"-"}}</span>
@@ -671,7 +671,7 @@
               placeholder="请输入备注"
               v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'remark')"
               @change="showEditIcon"
-              @blur="saveEdit(scope.$index,scope.row)"
+            
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             >
               <p v-html="scope.row.remark"></p>
