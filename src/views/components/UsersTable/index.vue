@@ -118,12 +118,16 @@
               />
             </el-tooltip>
             <el-tooltip effect="dark" content="取消" placement="top">
-              <el-button type="primary" icon="el-icon-error" @click="cancleUser(scope.row)" />
+              <el-button v-if="editing&&clickId === scope.row.id" type="primary" icon="el-icon-error" @click="cancleUser(scope.row)" />
             </el-tooltip>
 
-            <!-- <el-tooltip content="删除用户" placement="top">
-            <el-button icon="el-icon-delete" type="text" style="color:red"  />
-            </el-tooltip>-->
+            <el-tooltip effect="dark" content="删除" placement="top">
+               <el-button 
+                v-if="!editing||clickId !== scope.row.id" 
+                icon="el-icon-delete" 
+                type="danger"   
+                @click="deleteUser(scope.row.id)"/>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -270,22 +274,24 @@ export default {
         row.is_active =this.Info.is_active;
         this.editing = false;
         this.iconShow = false;
-      // this.$confirm("是否取消该操作?", "提示", {
-      //   confirmButtonText: "确认",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // }).then(() => {
-      //   console.log(id);
-      //   deleteUser({ ids: id, method: "delete " }).then(({ data }) => {
-      //     console.log(data.msg);
-      //     if (data.status === 0) {
-      //       this.$emit("refresh");
-      //       this.$message.success(data.msg);
-      //     } else {
-      //       this.$message.error(data.msg);
-      //     }
-      //   });
-      // });
+    },
+    deleteUser(id){
+      this.$confirm("是否删除改用户?", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        // console.log(id);
+        deleteUser({ ids: id, method: "delete " }).then(({ data }) => {
+          // console.log(data.msg);
+          if (data.status === 0) {
+            this.$emit("refresh");
+            this.$message.success(data.msg);
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
