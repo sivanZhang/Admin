@@ -149,3 +149,8 @@ export function getDeptMember(params) {
     params
   })
 }
+
+//获取某项目下所有的环节
+export function getOneProjectLinks(params){
+  return AXIOS.get('/projects/projects/?id=&dept',{params})
+}

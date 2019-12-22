@@ -1,6 +1,7 @@
 import {
   getProjectMember,
-  getEpisodeSession
+  getEpisodeSession,
+  getOneProjectLinks
 } from '@/api/statistics'
 import {
   setupMenu,
@@ -71,6 +72,7 @@ export default {
       columnSelect2: [], // 执行人列表
       columnSelect3: [], // 集数列表
       columnSelect4: [], // 场次列表
+      colomnSelect5: [], //环节列表
       LinkList: [],
       FormList: [{}],
       selectList: [],
@@ -102,6 +104,7 @@ export default {
       filterSession: [],
       filterEpisode: [],
       filterPriority: [],
+      filterDept:[],
       filterGrade: [],
       filterExecutor: [],
       sort: null,
@@ -138,49 +141,49 @@ export default {
       clickId: null,
       iconShow: false,
       LevelList: [{
-        label: 'A+',
-        value: 0
-      },
-      {
-        label: 'A',
-        value: 1
-      },
-      {
-        label: 'A-',
-        value: 2
-      },
-      {
-        label: 'B+',
-        value: 3
-      },
-      {
-        label: 'B',
-        value: 4
-      },
-      {
-        label: 'B-',
-        value: 5
-      },
-      {
-        label: 'C+',
-        value: 6
-      },
-      {
-        label: 'C',
-        value: 7
-      },
-      {
-        label: 'D+',
-        value: 8
-      },
-      {
-        label: 'D',
-        value: 9
-      },
-      {
-        label: 'E',
-        value: 10
-      }
+          label: 'A+',
+          value: 0
+        },
+        {
+          label: 'A',
+          value: 1
+        },
+        {
+          label: 'A-',
+          value: 2
+        },
+        {
+          label: 'B+',
+          value: 3
+        },
+        {
+          label: 'B',
+          value: 4
+        },
+        {
+          label: 'B-',
+          value: 5
+        },
+        {
+          label: 'C+',
+          value: 6
+        },
+        {
+          label: 'C',
+          value: 7
+        },
+        {
+          label: 'D+',
+          value: 8
+        },
+        {
+          label: 'D',
+          value: 9
+        },
+        {
+          label: 'E',
+          value: 10
+        }
       ],
       start_date: null,
       end_date: null,
@@ -237,7 +240,7 @@ export default {
   },
   watch: {
     active: {
-      handler: function(newVal, oldVal) {
+      handler: function (newVal, oldVal) {
         if (newVal === 1 && this.TaskForm.asset) {
           // console.log(this.TaskForm.asset);
 
@@ -285,7 +288,9 @@ export default {
       }
       getDeptUsers({
         id
-      }).then(({ data }) => {
+      }).then(({
+        data
+      }) => {
         this.executorList = data.users
         if (data.users.length) {
           this.executorList.forEach(t => {
@@ -506,6 +511,20 @@ export default {
           })
         }
       )
+      //  获取所有环节列表
+      getOneProjectLinks({
+        id: this.$route.params.id,
+        dept: ''
+      }).then(({
+        data
+      }) => {
+        [...data.msg].map(item => {
+          this.colomnSelect5.push({
+            value: item.dept__id,
+            text: item.dept__name
+          })
+        })
+      })
     },
     // 是否显示行内修改框
     showEditIcon(index, row) {
@@ -647,7 +666,7 @@ export default {
           case 2:
             return {
               background: '#C64b2b',
-              color: '#FFFFFF'
+                color: '#FFFFFF'
             }
         }
       } else if (column.property == 'grade') {
@@ -655,7 +674,7 @@ export default {
           case 0:
             return {
               background: '#C64b2b',
-              color: '#FFFFFF'
+                color: '#FFFFFF'
             }
         }
       }
@@ -664,14 +683,14 @@ export default {
       }
     },
     changelist() {
-      this.value1 == "是"?this.disabled1 = false:this.disabled1 = true;
-      this.value2 == "是"?this.disabled2 = false:this.disabled2 = true;
-      this.value3 == "是"?this.disabled3 = false:this.disabled3 = true;
-      this.value4 == "是"?this.disabled4 = false:this.disabled4 = true;
-      this.value5 == "是"?this.disabled5 = false:this.disabled5 = true;
-      this.value6 == "是"?this.disabled6 = false:this.disabled6 = true;
-      this.value7 == "是"?this.disabled7 = false:this.disabled7 = true;
-      this.value8 == "是"?this.disabled8 = false:this.disabled8 = true;
+      this.value1 == "是" ? this.disabled1 = false : this.disabled1 = true;
+      this.value2 == "是" ? this.disabled2 = false : this.disabled2 = true;
+      this.value3 == "是" ? this.disabled3 = false : this.disabled3 = true;
+      this.value4 == "是" ? this.disabled4 = false : this.disabled4 = true;
+      this.value5 == "是" ? this.disabled5 = false : this.disabled5 = true;
+      this.value6 == "是" ? this.disabled6 = false : this.disabled6 = true;
+      this.value7 == "是" ? this.disabled7 = false : this.disabled7 = true;
+      this.value8 == "是" ? this.disabled8 = false : this.disabled8 = true;
     },
     // 批量修改任务
     mulEditTasks(Type) {
@@ -1036,8 +1055,8 @@ export default {
       this.createLoading = true
 
       addLinks({
-        links: [...this.FormList]
-      })
+          links: [...this.FormList]
+        })
         .then(({
           data
         }) => {
@@ -1086,8 +1105,8 @@ export default {
       }
       this.selectList = JSON.parse(
         JSON.stringify(this.DeptList)
-          .replace(/name/g, 'label')
-          .replace(/id/g, 'value')
+        .replace(/name/g, 'label')
+        .replace(/id/g, 'value')
       )
       changeList(this.selectList)
     },
@@ -1162,12 +1181,12 @@ export default {
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
             datetime: [
-              new Date(dateFormat2(this.ActiveRow.start_date)) > 0
-                ? new Date(dateFormat2(this.ActiveRow.start_date))
-                : '',
-              new Date(dateFormat2(this.ActiveRow.end_date)) > 0
-                ? new Date(dateFormat2(this.ActiveRow.end_date))
-                : ''
+              new Date(dateFormat2(this.ActiveRow.start_date)) > 0 ?
+              new Date(dateFormat2(this.ActiveRow.start_date)) :
+              '',
+              new Date(dateFormat2(this.ActiveRow.end_date)) > 0 ?
+              new Date(dateFormat2(this.ActiveRow.end_date)) :
+              ''
             ]
           }
           this.isDialogShow = true
@@ -1191,12 +1210,12 @@ export default {
             ...this.ActiveRow,
 
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.start_date))
-                : '',
-              new Date(dateFormat(this.ActiveRow.end_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.end_date))
-                : ''
+              new Date(dateFormat(this.ActiveRow.start_date)) > 0 ?
+              new Date(dateFormat(this.ActiveRow.start_date)) :
+              '',
+              new Date(dateFormat(this.ActiveRow.end_date)) > 0 ?
+              new Date(dateFormat(this.ActiveRow.end_date)) :
+              ''
             ],
             executorlist,
             manager: this.ActiveRow.manager ? this.ActiveRow.manager.id : null,
@@ -1372,10 +1391,10 @@ export default {
     // 删除任务http请求
     deleteTask() {
       this.$confirm('删除任务后无法恢复，确认删除?', '注意', {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
         .then(() => {
           const ids = this.multipleSelection.map(item => item.id).join(',')
           HTTP.deleteTask({
@@ -1420,6 +1439,16 @@ export default {
           // item = Number(item);
           this.filterSession[index] = item
         })
+      }
+      if (val.dept) {
+        this.filterDept = []
+        this.filterDept = [...val.dept]
+
+        this.filterDept.forEach((item, index) => {
+          //item = Number(item);
+          this.filterDept[index] = item
+        })
+        // console.log(this.filterDept)
       }
       if (val.grade) {
         this.filterGrade = []
@@ -1480,6 +1509,12 @@ export default {
         data = {
           ...data,
           session: String(this.filterSession)
+        }
+      }
+      if (this.filterDept.length) {
+        data = {
+          ...data,
+          dept: String(this.filterDept)
         }
       }
       if (this.filterGrade.length) {
@@ -1650,7 +1685,7 @@ export default {
     },
 
     // 优先级格式化显示
-    Priority: function(row, column) {
+    Priority: function (row, column) {
       switch (row.priority) {
         case 0:
           return '低'
@@ -1664,7 +1699,7 @@ export default {
       }
     },
     // 难度格式化显示
-    Grade: function(row, column) {
+    Grade: function (row, column) {
       switch (row.grade) {
         case 0:
           return '简单'

@@ -216,6 +216,8 @@
           sortable="custom" 
           v-if="show_link_dept_name"
           width="60px"
+          column-key="dept"
+          :filters="colomnSelect5"
         >
           <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
         </el-table-column>
