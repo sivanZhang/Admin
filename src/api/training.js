@@ -41,3 +41,27 @@ export function setRecord(data){
 export function removeRecord(data){
     return AXIOS.post('/projects/scoreconfig/',data)
 }
+//按照任务的打分成绩排名
+export function getTaskRecord(params){
+    return AXIOS.get('/teachingsystem/statistics/?task_score',{params})
+}
+//按照审批通过的任务提交时间来排名
+export function getApproveTimeRecord(params){
+    return AXIOS.get('/teachingsystem/submition_time',{params})
+}
+//按照考勤时间排名
+export function getAttendanceRecord(params){
+    return AXIOS.get('/teachingsystem/statistics/?attendance',{params})
+}
+//按照权重排名
+export function getWeightRecord(params){
+    return AXIOS.get('/teachingsystem/statistics/?weight_socre',{params})
+}
+//查看项目下面的环节
+export function getProjectLinks(params){
+    return AXIOS.get('/teachingsystem/statistics/',{params})
+}
+//刷新成绩
+export function refreshRecord(data){
+    return AXIOS.post('/teachingsystem/statistics/',data)
+}
