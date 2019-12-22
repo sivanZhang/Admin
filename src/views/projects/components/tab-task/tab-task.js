@@ -1514,7 +1514,7 @@ export default {
       if (this.filterDept.length) {
         data = {
           ...data,
-          dept: String(this.filterDept)
+          depts: String(this.filterDept)
         }
       }
       if (this.filterGrade.length) {
