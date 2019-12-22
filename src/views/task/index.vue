@@ -32,8 +32,8 @@
                   <el-card
                     @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
-                    v-for="item of DraftArr"
-                    :key="item.id"
+                    v-for="(item,index) of DraftArr"
+                    :key="index"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#59e0e8',color:'#fff',padding:'5px'}"
                   >
@@ -65,8 +65,8 @@
                   <el-card
                     @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
-                    v-for="item of InProgressArr"
-                    :key="item.id"
+                    v-for="(item,index) of InProgressArr"
+                    :key="index"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#589BAD',color:'#fff',padding:'5px'}"
                   >
@@ -98,8 +98,8 @@
                   <el-card
                     @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
-                    v-for="item of PauseArr"
-                    :key="item.id"
+                    v-for="(item,index) of PauseArr"
+                    :key="index"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#F9ce8c',color:'#fff',padding:'5px'}"
                   >
@@ -131,8 +131,8 @@
                   <el-card
                     @click.native="openDialog(item)"
                     :style="{margin:'10px 0'}"
-                    v-for="item of TimeOutArr"
-                    :key="item.id"
+                    v-for="(item,index) of TimeOutArr"
+                    :key="index"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#C64b2b',color:'#fff',padding:'5px'}"
                   >
@@ -156,8 +156,8 @@
                 <div class="board-column-content">
                   <el-card
                     :style="{margin:'10px 0'}"
-                    v-for="item of ApproveingArr"
-                    :key="item.id"
+                    v-for="(item,index) of ApproveingArr"
+                    :key="index"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#2D5637',color:'#fff',padding:'5px'}"
                   >
@@ -181,8 +181,8 @@
                 <div class="board-column-content">
                   <el-card
                     :style="{margin:'10px 0'}"
-                    v-for="item of FinishedArr"
-                    :key="item.id"
+                    v-for="(item,index) of FinishedArr"
+                    :key="index"
                     :data-taskid="item.id"
                     :body-style="{backgroundColor:'#2f5c85',color:'#fff',padding:'5px'}"
                   >
@@ -285,8 +285,8 @@
                 slot="prepend"
               >
                 <el-option
-                  v-for="item in columnSelect"
-                  :key="item.value"
+                  v-for="(item,index) in columnSelect"
+                  :key="index"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
@@ -308,8 +308,8 @@
                 @keyup.enter.native="task(changecolor)"
               >
                 <el-option
-                  v-for="item in columnSelect2"
-                  :key="item.value"
+                  v-for="(item,index) in columnSelect2"
+                  :key="index"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
@@ -339,8 +339,8 @@
                 @keyup.enter.native="task(changecolor)"
               >
                 <el-option
-                  v-for="item in GradeList"
-                  :key="item.value"
+                  v-for="(item,index) in GradeList"
+                  :key="item.value+index"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
@@ -470,8 +470,8 @@
                   class="my-select"
                 >
                   <el-option
-                    v-for="item in StatusList"
-                    :key="item.value"
+                    v-for="(item,index) in StatusList"
+                    :key="index"
                     :label="item.label"
                     :value="item.value"
                   ></el-option>

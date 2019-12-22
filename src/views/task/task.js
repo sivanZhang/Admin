@@ -19,15 +19,12 @@ import tabLog from './components/tab-log'
 import tabApprove from './components/tab-approve'
 import tabTaskDtail from './components/tab-task-detail'
 import history from '@/views/task/components/tab-history'
-// import linkTaskOutput from "@/views/task/components/tab-linkTaskOutput";
+import linkTaskOutput from "./components/tab-linkTaskOutput"
 import approveLog from '@/views/components/approve-log'
 import thumbtackMixin from '@/utils/thumbtack-mixin'
 import dayjs from 'dayjs'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
 import info from '@/components/projectDrawer/components/info'
-import {
-  mapState
-} from 'vuex'
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -39,8 +36,8 @@ export default {
     approveLog,
     history,
     assetDrawer,
-    info
-    // linkTaskOutput
+    info,
+    linkTaskOutput
   },
   data() {
     return {
