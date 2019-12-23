@@ -240,6 +240,8 @@ export default {
       disableReport:true,
       disableFrame_range:true,
       disablePro_reference:true,
+      list:[],
+      info:[]
     };
   },
   beforeMount() {
@@ -631,7 +633,21 @@ export default {
         paddingRight: 5
       };
     },
-
+    //取消编辑
+    cancleEdit(index, row){
+      this.dbCell = false;
+      this.editing = false;
+      this.iconShow = false;
+      this.info = JSON.parse(this.list);
+      row.name = this.info.name;
+      row.frame = this.info.frame;
+      row.session = this.info.session;
+      row.episode = this.info.episode;
+      row.frame_range = this.info.frame_range;
+      row.report = this.info.report;
+      row.retime = this.info.retime;
+      row.content = this.info.content;
+    },
     //双击修改单元格获取焦点
     editCell(row, column, cell, event) {
       this.value1=false;
@@ -693,6 +709,7 @@ export default {
           value: newObj[column.property],
           property: column.property
         };
+        this.list = JSON.stringify(row);
       }
     },
 
@@ -1013,6 +1030,7 @@ export default {
     //修改资产
     editOneAsset(row) {
       this.value1=false;
+      this.list = JSON.stringify(row);
       function dateFormat(date) {
         return dayjs(date).format("YYYY/MM/DD");
       }

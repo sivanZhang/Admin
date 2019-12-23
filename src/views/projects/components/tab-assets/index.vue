@@ -169,7 +169,7 @@
           sortable="custom"
          
         >
-          <template slot-scope="scope">
+          <template slot-scope="scope" style="display:flex">
             <el-input
               size="small"
               v-model="scope.row.name"
@@ -185,6 +185,15 @@
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'name')"
               
             >{{scope.row.name?scope.row.name:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'name')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;padding-top:7px;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         <!-- <el-table-column type="index" :index="indexMethod" align="center" v-if="ind"></el-table-column> -->
@@ -292,7 +301,8 @@
         </template>
         <el-table-column label="任务数量" prop="task_num"   :render-header="renderheader" :min-width="30"></el-table-column>
         <el-table-column
-          width="80px;"
+          width="100px;"
+          style="padding-left:100px;"
           prop="session"
           label="场次"
           align="center"
@@ -316,10 +326,19 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol!='session')"
             >{{scope.row.session?scope.row.session:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'session')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
-          width="80px;"
+          width="100px;"
           prop="episode"
           label="集数"
           align="center"
@@ -343,10 +362,20 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'episode')"
             >{{scope.row.episode?scope.row.episode:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'episode')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
 
         <el-table-column
+          width="100px;"
           prop="frame"
           label="帧数"
           align="left"
@@ -368,6 +397,15 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame')"
             >{{scope.row.frame?scope.row.frame:"-"}}</span>
+            <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -390,6 +428,15 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame_range')"
             >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame_range')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
 
@@ -440,6 +487,15 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
             >{{scope.row.report?scope.row.report:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'report')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -464,6 +520,15 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'retime')"
             >{{scope.row.retime?scope.row.retime:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'retime')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -498,6 +563,15 @@
               @keyup.enter.native="saveEdit(scope.$index,scope.row)"
             ></el-input>
             <span style="white-space: pre-line;" v-else>{{scope.row.content?scope.row.content:"-"}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -555,9 +629,18 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <span
+            <span style="padding-left:50px;"
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'level')"
             >{{scope.row.level|Level}}</span>
+             <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'level')"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue;"
+                @click="cancleEdit(scope.$index,scope.row)"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
         
@@ -683,13 +766,13 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="100px" v-if="authAsset">
+        <el-table-column label="操作" align="center" width="110px" v-if="authAsset">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="导出至素材库" placement="top">
               <svg-icon
                 icon-class="exportMaterial"
                 @click="pushMaterial(1,scope.row.id)"
-                style="cursor:pointer;margin-right:10px"
+                style="cursor:pointer;margin-right:10px;margin-top:8px"
               />
             </el-tooltip>
             <el-tooltip effect="dark" content="修改" placement="top">
@@ -716,6 +799,16 @@
                 icon="el-icon-delete"
                 style="color:red"
                 type="text"
+                v-if="!editing||clickId !== scope.row.id"
+              />
+            </el-tooltip>
+            <el-tooltip effect="dark" content="取消" placement="top">
+              <el-button
+                v-if="editing&&clickId === scope.row.id"
+                type="text"
+                icon="el-icon-circle-close"
+                style="color:blue"
+                @click="cancleEdit(scope.$index,scope.row)"
               />
             </el-tooltip>
           </template>
@@ -1264,6 +1357,9 @@
       padding-left: 5px;
       padding-right: 5px;
     }
+  }
+   .el-table .cell {
+    display:flex !important;
   }
   .links {
     cursor: pointer;
