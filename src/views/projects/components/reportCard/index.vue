@@ -4,7 +4,7 @@
     <el-tabs v-model="activeName" @tab-click="tabclick">
       <el-tab-pane label="按权重排名" name="tab1" lazy>
         <el-table
-          :data="LinkList"
+          :data="LinkList.slice((currentPage4-1)*pageSize4,currentPage4*pageSize4)"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
           style="width:100%"
           highlight-current-row
@@ -37,6 +37,17 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+          <el-pagination
+            @size-change="handleSizeChange4"
+            @current-change="handleCurrentChange4"
+            :current-page="currentPage4"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize4"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="LinkList.length"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="按考勤时间排名" name="tab2" :disabled="disabledtab2" lazy>
         <el-table
@@ -156,6 +167,8 @@ export default {
       pageSize2: 20,
       currentPage3: 1,
       pageSize3: 20,
+      currentPage4: 1,
+      pageSize4: 20,
       pageSizeList: [20, 30, 50, 100],
       userInfo: this.$store.state.login.userInfo,
       LinkList: [],
@@ -234,6 +247,17 @@ export default {
       getApproveTimeRecord({ link_id: link_id }).then(({ data }) => {
         this.ApproveTimeRecord = [...data.msg];
       });
+    },
+    //分页,按权重排名时的
+    handleSizeChange4(val) {
+      this.pageSize4 = val;
+    },
+    handleCurrentChange4(currentPage) {
+      this.currentPage4 = currentPage;
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage4 - 1) * this.pageSize4 + index + 1;
     },
     //分页
     handleSizeChange(val) {
