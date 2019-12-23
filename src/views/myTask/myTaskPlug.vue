@@ -40,6 +40,9 @@
         >
           <el-table-column prop="project.name" label="项目" align="center"></el-table-column>
           <el-table-column prop="task.name" label="任务" align="left"></el-table-column>
+          <el-table-column label="状态" align="center" width="80">
+              <template slot-scope="scope">{{scope.row.task.status|taskStatus}}</template>
+           </el-table-column>
           <el-table-column label="起止日期" align="center">
             <el-table-column label="开始日期" align="left" width="90px">
               <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
