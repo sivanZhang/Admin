@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <label class="input-label">审批结果:</label>
-                    <el-select v-model="httpParams.approve_result" placeholder="请选择">
+                    <el-select v-model="httpParams.approve_result" placeholder="请选择" style="width:120px;">
                         <el-option label="同意" :value="1"></el-option>
                         <el-option label="拒绝" :value="0"></el-option>
                     </el-select>

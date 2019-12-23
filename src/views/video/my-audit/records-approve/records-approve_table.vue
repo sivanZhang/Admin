@@ -4,7 +4,7 @@
             <el-table-column label="名称" prop="approve_task__name" header-align="center" />
             <el-table-column label="路径" prop="path" header-align="center" />
             <el-table-column label="内容" prop="approve_task__content" header-align="center" />
-            <el-table-column label="状态" align="center" width="100">
+            <el-table-column label="状态" align="center" width="80">
                 <template slot-scope="scope">
                     {{
                     scope.row.approve_task__status | taskStatus

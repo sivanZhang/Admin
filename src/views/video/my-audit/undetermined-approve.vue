@@ -30,6 +30,7 @@
             multiple
             filterable
             class="priority select"
+            style="width:120px;"
           >
             <el-option
               v-for="item in prioritysLevelList"
@@ -47,6 +48,7 @@
             placeholder="请选择"
             multiple
             filterable
+            style="width:120px;"
           >
             <el-option
               v-for="item in UserList"
@@ -91,7 +93,7 @@
       :cell-style="cellStyle"
       border
     >
-      <el-table-column type="selection" width="60" align="center"></el-table-column>
+      <el-table-column type="selection" width="30" align="center"></el-table-column>
       <el-table-column label="所属项目"   class-name="links">
         <template slot-scope="scope">
           <router-link
@@ -132,7 +134,7 @@
       <el-table-column prop="end_date" label="截止日期" width="85px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.task_executors" label="执行人" width="100px">
+      <el-table-column prop="task.task_executors" label="执行人" width="70px">
         <template slot-scope="scope">
           <div v-for="(item,index) of scope.row.task.task_executors" :key="index"  @click="taskBoardRightShow(scope.row.task.id)">{{item.user_name}}</div>
         </template>
@@ -355,15 +357,7 @@ export default {
       if (selectionType && !this.ProjectList) {
         this.$store.dispatch("project/get_Projects");
       }
-      },
-     // 表头换行
-    renderheader(h, { column, $index }) {
-      return h("span", {}, [
-        h("span", {}, column.label.split("|")[0]),
-        h("br"),
-        h("span", {}, column.label.split("|")[1])
-      ]);
-    },
+      }, 
     
     //状态
     cellStyle({ row, column, rowIndex, columnIndex }) {
