@@ -103,12 +103,13 @@
       </el-row>
       <div v-if="progress">
         <el-table
-          :data="progressPredict"
+          :data="progressPredict.slice((currentPage2-1)*pageSize2,currentPage2*pageSize2)"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
           style="padding-top:15px;width:100%"
           highlight-current-row
           default-expand-all
         >
+          <!-- <el-table-column type="index"></el-table-column> -->
           <el-table-column prop="deviation" label="偏离值" width="80px">
             <template slot-scope="scope">
               <svg-icon icon-class="shuzhikuang" style="width:20px;height:20px" />
@@ -151,15 +152,27 @@
             <template slot-scope="scope">{{scope.row.asset__session?scope.row.asset__session:'-'}}</template>
           </el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange2"
+          @current-change="handleCurrentChange2"
+          :current-page="currentPage2"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize2"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="progressPredict.length"
+        ></el-pagination>
+      </div>
       </div>
       <div v-if="!progress">
         <el-table
-          :data="progressPredict1"
+          :data="progressPredict1.slice((currentPage1-1)*pageSize1,currentPage1*pageSize1)"
           :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
           style="padding-top:15px;width:100%"
           highlight-current-row
           default-expand-all
         >
+          <!-- <el-table-column type="index"></el-table-column> -->
           <el-table-column prop="deviation" label="偏离值">
             <template slot-scope="scope">
               <svg-icon icon-class="shuzhikuang" style="width:20px;height:20px" />
@@ -202,6 +215,17 @@
             <template slot-scope="scope">{{scope.row.asset__session?scope.row.asset__session:'-'}}</template>
           </el-table-column>
         </el-table>
+        <div class="block" style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange1"
+          @current-change="handleCurrentChange1"
+          :current-page="currentPage1"
+          :page-sizes="pageSizeList"
+          :page-size="pageSize1"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="progressPredict1.length"
+        ></el-pagination>
+      </div>
       </div>
     </div>
     <!-- 距离截止日期为1天还未提交的任务 -->
@@ -351,6 +375,10 @@ export default {
       projectProgress: 0,
       currentPage: 1,
       pageSize: 20,
+      currentPage1: 1,
+      pageSize1: 20,
+      currentPage2: 1,
+      pageSize2: 20,
       pageSizeList: [20, 30, 50, 100],
       progressPredict: [],
       progressPredict1: [],
@@ -410,6 +438,29 @@ export default {
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
+    //任务预判断滞后分页
+    handleSizeChange2(val) {
+      this.pageSize2 = val;
+    },
+    handleCurrentChange2(currentPage) {
+      this.currentPage2 = currentPage;
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      console.log(index)
+      return (this.currentPage2 - 1) * this.pageSize2 + index + 1;
+    },
+    //任务预判断超前分页
+    handleSizeChange1(val) {
+      this.pageSize1 = val;
+    },
+    handleCurrentChange1(currentPage) {
+      this.currentPage1 = currentPage;
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage1 - 1) * this.pageSize1 + index + 1;
     },
     //指定进度条文字内容。
     format(percentage) {
