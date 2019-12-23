@@ -2,19 +2,24 @@
   <div>
     <label for>项目: {{project.name}}</label>
     <el-tabs v-model="activeName">
+      <template v-if="!trainingAuth">
       <el-tab-pane label="制作要求" name="tab6" lazy>
         <div style="width:50%">
           <info @refreshProject="getProjectDetail()" :project="project" configImg="img" />
         </div>
       </el-tab-pane>
+      </template>
       <template v-if="project.pro_type === 0">
         <el-tab-pane label="练习生" name="tab5" lazy>
           <training :trainingMenber="trainingMenber" />
         </el-tab-pane>
       </template>
+      <template v-if="!trainingAuth">
       <el-tab-pane label="进度控制" name="tab7" lazy>
         <progressContral @switch-task-tab="jumpName('tab2')"/>
       </el-tab-pane>
+      </template>
+      <template v-if="!trainingAuth">
       <el-tab-pane label="镜头" name="tab0" lazy>
         <tab-assets
           ref="scene"
@@ -47,9 +52,16 @@
       <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
-      <el-tab-pane label="数据统计" name="tab4" lazy>
-        <statistics />
+      </template>
+      <template v-if="project.pro_type === 0">
+      <el-tab-pane label="成绩单" name="tab4" lazy>
+        <reportCard />
       </el-tab-pane>
+      </template>
+      <!-- <el-tab-pane label="数据统计" name="tab4" lazy>
+        <statistics />
+      </el-tab-pane> -->
+      <template v-if="!trainingAuth">
       <el-tab-pane label="项目设置" name="tab3" lazy>
         <configProject
           :project="project"
@@ -58,6 +70,7 @@
           :auth="auth"
         />
       </el-tab-pane>
+      </template>
     </el-tabs>
   </div>
 </template>
@@ -72,6 +85,7 @@ import progressContral from "./components/progressContral/progressContral";
 import { getProjects } from "@/api/project";
 import { getTrainingProject, getProjectJoinMeb ,allScene} from "@/api/training";
 import statistics from "./components/statistics";
+import reportCard from "./components/reportCard";
 import info from "@/components/projectDrawer/components/info";
 export default {
   name: "project-detail",
@@ -82,7 +96,8 @@ export default {
     statistics,
     training,
     info,
-    progressContral
+    progressContral,
+    reportCard
   },
   data() {
     return {
@@ -95,7 +110,8 @@ export default {
       assetJump: null,
       trainingMenber: [],
       groupType: "",
-      auth:null
+      auth:null,
+      trainingAuth:this.$store.state.login.userInfo.auth.training_manager
     };
   },
   watch: {
@@ -161,6 +177,10 @@ export default {
     }
   },
   created() {
+   //如果是练习生客户，则刚进项目默认展示实习成员页面
+    if(this.trainingAuth){
+      this.activeName = "tab5";
+    }
     if (this.$route.query.type === 0) {
       // this.activeName = "tab5";
       this.groupType = "0";
