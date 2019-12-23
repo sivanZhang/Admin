@@ -47,7 +47,7 @@ export function getTaskRecord(params){
 }
 //按照审批通过的任务提交时间来排名
 export function getApproveTimeRecord(params){
-    return AXIOS.get('/teachingsystem/submition_time',{params})
+    return AXIOS.get('/teachingsystem/statistics/?submition_time',{params})
 }
 //按照考勤时间排名
 export function getAttendanceRecord(params){
@@ -64,4 +64,12 @@ export function getProjectLinks(params){
 //刷新成绩
 export function refreshRecord(data){
     return AXIOS.post('/teachingsystem/statistics/',data)
+}
+//查看项目下所有环节的人员排名
+export function getProjectAllLinks(params){
+    return AXIOS.get('/teachingsystem/statistics/',{params})
+}
+//查看资产下的所有环节的人员排名
+export function getAssetAllLinks(params){
+    return AXIOS.get('/teachingsystem/statistics/',{params})
 }
