@@ -105,3 +105,7 @@ export function taskProgress(params) {
 export function notSubmitTask(params) {
   return AXIOS.get('/projects/schedule_control/', { params })
 }
+// 查看任务的关联任务输出
+export function getLinkOutput(params) {
+  return AXIOS.get('/task/output/', { params })
+}

@@ -780,7 +780,7 @@ export default {
         date: new Date().toLocaleDateString()
 
       })
-      //  this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
+       this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
       this.logsLoading = true
       this.$refs['taskApprovelog'].getApproveLog(row.task.id)
       queryTaskRecord({

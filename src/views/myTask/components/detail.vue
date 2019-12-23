@@ -23,6 +23,9 @@
         <el-tab-pane label="任务详情" name="first">
           <tabTaskDtail ref="taskDtail" />
         </el-tab-pane>
+         <el-tab-pane label="关联任务输出" name="seven">
+        <linkTaskOutput ref="linkTaskOutput" />
+      </el-tab-pane>
         <el-tab-pane label="执行记录" name="second">
           <tabLog :loglist="LogList" :logsLoading="logsLoading" />
         </el-tab-pane>
@@ -57,6 +60,7 @@ import tabLog from "@/views/task/components/tab-log";
 import tabApprove from "@/views/task/components/tab-approve";
 import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "@/views/components/approve-log";
+import linkTaskOutput from "@/views/task/components/tab-linkTaskOutput";
 export default {
   name: "detail",
   props: ["LogList", "detailLoading", "logsLoading", "TaskRecord", "activeRow"],
@@ -96,11 +100,13 @@ export default {
     taskForm,
     tabLog,
     tabTaskDtail,
-    approveLog
+    approveLog,
+    linkTaskOutput
+
   },
   watch: {
     activeName: {
-      handler: function(newVal, oldVal) {
+      handler: function(newVal,oldVal) {
         if (newVal === "fifth") {
           this.$refs["taskApprovelog"].getApproveLog(this.TaskDetail.id);
         }
@@ -109,6 +115,7 @@ export default {
   },
   methods: {
     getTaskDetail(id) {
+      this.$refs["linkTaskOutput"].getlinkTaskOutput(id);
       queryTask({
         id: id
       })
@@ -122,6 +129,7 @@ export default {
         .catch(() => {});
       this.$nextTick(() => {
         this.$refs["taskDtail"].getDetail(id);
+       
       });
     },
     addRecord() {
@@ -154,4 +162,4 @@ export default {
 </script>
 
 <style scoped>
-</style> 
+</style>
