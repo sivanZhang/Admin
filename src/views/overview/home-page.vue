@@ -6,6 +6,8 @@ import MyManWork from './components/MyManWork'
 import MyApprove from './components/MyApprove'
 import noticeDetail from '@/components/Notice/components/notice-detail'
 import MyAllocation from './components/MyAllocation'
+import MyReportCard from './components/MyReportCard';
+import MyRanking from './components/MyRanking';
 import taskForm from '@/views/task/components/task-form'
 import tabLog from '@/views/task/components/tab-log'
 import tabApprove from '@/views/task/components/tab-approve'
@@ -31,7 +33,9 @@ export default {
     MyApprove,
     noticeDetail,
     MyAllocation,
-    // 任务侧边栏相关
+    MyReportCard,
+    MyRanking,
+    //任务侧边栏相关
     taskForm,
     tabLog,
     tabTaskDtail,
@@ -58,9 +62,10 @@ export default {
       logsLoading: false,
       TaskRecord: [],
       createLoading: false,
-      activeRow: {}, // 点击任务列表选中的列的数据
-      surplus_labor_hour: null
-    }
+      activeRow: {}, //点击任务列表选中的列的数据
+      surplus_labor_hour: null,
+      trainingAuth:this.$store.state.login.userInfo.auth.view_training_project
+    };
   },
   computed: {
     ...mapState('notice', ['Notice', 'unreadCount']),
@@ -214,20 +219,40 @@ export default {
 </script>
 <template>
   <div id="home-page" ref="drawer-parent">
+    <el-row class="home-header-card" :gutter="15" v-if="trainingAuth">
+      <el-col :span="12" class="card-warp">
+        <MyReportCard />
+      </el-col>
+      <el-col :span="12" class="card-warp">
+        <MyRanking />
+      </el-col>
+    </el-row>
     <el-row class="home-header" :gutter="15">
-      <el-col :span="16">
+      <el-col :span="8">
         <el-row class="basic" :gutter="15">
-          <el-col :span="12" class="card-warp">
+          <el-col :span="24" class="card-warp">
             <MyInfo />
           </el-col>
-          <el-col :span="12" class="card-warp">
+          <el-col :span="24" style="height:15px" />
+          <el-col :span="24" class="card-warp">
+            <MyFeedback :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="8" v-if="!trainingAuth">
+        <el-row class="basic" :gutter="15">
+           <el-col :span="24" class="card-warp" >
             <MyManWork :my-task-list="MyTaskList" />
           </el-col>
           <el-col :span="24" style="height:15px" />
-          <el-col :span="12" class="card-warp">
-            <MyFeedback :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
+          <el-col :span="24" class="card-warp">
+            <MyTaskCount :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
           </el-col>
-          <el-col :span="12" class="card-warp">
+        </el-row>
+      </el-col>
+      <el-col :span="8" v-if="trainingAuth">
+        <el-row class="aside" :gutter="15">
+          <el-col :span="24" class="card-warp">
             <MyTaskCount :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
           </el-col>
         </el-row>
@@ -451,6 +476,12 @@ export default {
     }
   }
   .home-footer {
+    .el-card {
+      height: 300px;
+    }
+  }
+  .home-header-card{
+    margin-bottom: 15px;
     .el-card {
       height: 300px;
     }
