@@ -10,8 +10,8 @@
       <el-table-column prop="task_score" label="任务成绩" width="60"></el-table-column>
       <el-table-column prop="attendance_count" label="迟到早退次数" width="60"></el-table-column>
       <el-table-column prop="submition_rank" label="提交时间排名" width="60"></el-table-column>
-      <el-table-column prop="submition_time" label="提交时间">
-        <template slot-scope="scope">{{scope.row.submition_time|dateFormat}}</template>
+      <el-table-column prop="submition_time" label="提交时间" width="85">
+        <template slot-scope="scope">{{scope.row.submition_time|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>
   </el-card>

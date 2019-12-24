@@ -16,8 +16,8 @@
         :formatter="submitionFormat"
         width="110"
       ></el-table-column>
-      <el-table-column prop="submit_time" label="提交时间" width="90">
-        <template slot-scope="scope">{{scope.row.submit_time|dateFormat}}</template>
+      <el-table-column prop="submit_time" label="提交时间" width="85">
+        <template slot-scope="scope">{{scope.row.submit_time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column prop="comment" label="评论"></el-table-column>
     </el-table>

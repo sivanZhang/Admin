@@ -126,7 +126,7 @@
             </el-table-column>
             <el-table-column prop="executor_name" label="执行人"></el-table-column>
             <el-table-column prop="value" label="任务提交时间">
-              <template slot-scope="scope">{{scope.row.submit_time|dateFormat}}</template>
+              <template slot-scope="scope">{{scope.row.submit_time|dateTimeFormat}}</template>
             </el-table-column>
             <el-table-column prop="submition" :formatter="submitionFormat" label="是否提交作业(提交并审批通过的)"> 
             </el-table-column>
