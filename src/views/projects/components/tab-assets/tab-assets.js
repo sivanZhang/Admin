@@ -1851,7 +1851,7 @@ export default {
     this.getProjectNum();
     this.$emit("getGroup");
     this.getAuth();
-    this.getAssetList(2);
+    // this.getAssetList(2);
     this.getProjectAllStatus();
     if (this.assetId) {
       this.$refs["assetDrawer"].show(this.assetId);
