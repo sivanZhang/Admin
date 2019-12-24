@@ -73,3 +73,11 @@ export function getProjectAllLinks(params){
 export function getAssetAllLinks(params){
     return AXIOS.get('/teachingsystem/statistics/',{params})
 }
+//我的成绩单
+export function myRecord(params){
+    return AXIOS.get('/teachingsystem/statistics/?my_score',{params})
+}
+//我的加权排名
+export function myWeightRecord(params){
+    return AXIOS.get('/teachingsystem/statistics/?my_weight_socre',{params})
+}
