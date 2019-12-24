@@ -1,6 +1,9 @@
 <template>
   <!-- 练习生成绩单 -->
   <div id="reportCard">
+    <div align="right" class="button-Refresh" >
+    <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
+    </div>
     <el-tabs v-model="activeName" @tab-click="tabclick">
       <el-tab-pane label="按权重排名" name="tab1" lazy>
         <el-table
@@ -185,6 +188,12 @@ export default {
     this.getProjectLinkList();
   },
   methods: {
+    //刷新成绩单
+    refreshRecord(){
+      refreshRecord({project_id:this.$route.params.id}).then(({ data })=>{
+        this.$message.success(data.msg)
+      })
+    },
     //是否提交作业格式化显示
     submitionFormat: function(row, column) {
       switch (row.submition) {
@@ -195,6 +204,7 @@ export default {
             return "否";
             break;
       }},
+    //不显示单独的成绩单页面
     tabclick(val) {
       if (val.index == 0) {
         this.disabledtab2 = true;
@@ -297,9 +307,8 @@ export default {
 </script>
 <style lang="scss">
 #reportCard {
-  .links {
-    cursor: pointer;
-    color: #2d8cf0;
+  .button-Refresh{
+    padding-right:15px
   }
 }
 </style>
