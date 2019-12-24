@@ -1,9 +1,17 @@
 <template>
   <!-- 练习生成绩单 -->
   <div id="reportCard">
-    <div align="right" class="button-Refresh" >
-    <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
-    </div>
+    <el-row>
+      <el-col :span="22" align="right" class="button-Refresh" >
+        <span class="btn-explain" @click="openExplain()">
+          使用帮助:
+          <svg-icon icon-class="wenhao" />
+        </span>
+      </el-col>
+      <el-col :span="2" align="center">
+        <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
+      </el-col>
+    </el-row>
     <el-tabs v-model="activeName" @tab-click="tabclick">
       <el-tab-pane label="按权重排名" name="tab1" lazy>
         <el-table
@@ -23,20 +31,17 @@
               <label for v-else>此环节暂无成绩表</label>
             </template>
           </el-table-column>
-          <el-table-column prop="link_id" label="环节ID">
-          </el-table-column>
           <el-table-column prop="link_dept" label="工种名称"></el-table-column>
           <el-table-column prop="link_content" label="环节内容"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-tooltip content="打开各项考勤排名" placement="top">
+              <!-- <el-tooltip content="打开各项考勤排名" placement="top"> -->
                 <el-button
                   @click="openAlongRecord(scope.row.link_id)"
-                  icon="el-icon-top-right"
                   type="text"
                   style="color:blue"
-                />
-              </el-tooltip>
+                >查看各项成绩单</el-button>
+              <!-- </el-tooltip> -->
             </template>
           </el-table-column>
         </el-table>
@@ -64,7 +69,7 @@
             <template slot-scope="scope">{{scope.row.rank}}</template>
           </el-table-column>
           <el-table-column prop="username" label="用户名"></el-table-column>
-          <el-table-column prop="duty_off_count" label="迟到早退的次数" width="200"></el-table-column>
+          <el-table-column prop="duty_off_count" label="迟到早退(次数)" width="200"></el-table-column>
         </el-table>
         <div class="block" style="text-align: right">
           <el-pagination
@@ -97,16 +102,16 @@
             <el-table-column prop="executor_name" label="执行人"></el-table-column>
           </el-table>
           <div class="block" style="text-align: right">
-          <el-pagination
-            @size-change="handleSizeChange2"
-            @current-change="handleCurrentChange2"
-            :current-page="currentPage2"
-            :page-sizes="pageSizeList"
-            :page-size="pageSize2"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="TaskRecord.length"
-          ></el-pagination>
-        </div>
+            <el-pagination
+              @size-change="handleSizeChange2"
+              @current-change="handleCurrentChange2"
+              :current-page="currentPage2"
+              :page-sizes="pageSizeList"
+              :page-size="pageSize2"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="TaskRecord.length"
+            ></el-pagination>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="按审批通过的任务提交时间排名" name="tab4" :disabled="disabledtab4" lazy>
@@ -128,23 +133,39 @@
             <el-table-column prop="value" label="任务提交时间">
               <template slot-scope="scope">{{scope.row.submit_time|dateTimeFormat}}</template>
             </el-table-column>
-            <el-table-column prop="submition" :formatter="submitionFormat" label="是否提交作业(提交并审批通过的)"> 
-            </el-table-column>
+            <el-table-column prop="submition" :formatter="submitionFormat" label="是否提交作业(提交并审批通过的)"></el-table-column>
           </el-table>
           <div class="block" style="text-align: right">
-          <el-pagination
-            @size-change="handleSizeChange3"
-            @current-change="handleCurrentChange3"
-            :current-page="currentPage3"
-            :page-sizes="pageSizeList"
-            :page-size="pageSize3"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="ApproveTimeRecord.length"
-          ></el-pagination>
+            <el-pagination
+              @size-change="handleSizeChange3"
+              @current-change="handleCurrentChange3"
+              :current-page="currentPage3"
+              :page-sizes="pageSizeList"
+              :page-size="pageSize3"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="ApproveTimeRecord.length"
+            ></el-pagination>
           </div>
         </div>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog title="注意事项" :visible.sync="SaveDialogVisible" width="365px">
+      <div class="attention-body">
+        <div class="attention-top">
+          <h3>刷新成绩单：</h3>
+          <div style="padding-top:2px">
+            点击“刷新成绩单”按钮，可以实时获取最新成绩单数据
+          </div>
+          <h3 style="padding-top:3px">加权重后的总成绩：</h3>
+          <div style="padding-top:2px">
+            <h4>总成绩值为正数：</h4>
+            说明实训效果总体较好，绝对值越大，排名越靠前
+            <h4>总成绩值为负数：</h4>
+            说明实训效果总体较差，绝对值越大，排名越靠后
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -181,29 +202,35 @@ export default {
       activeName: "tab1",
       ApproveTimeRecord: [],
       TaskRecord: [],
-      AttendanceRecord: []
+      AttendanceRecord: [],
+      SaveDialogVisible:false
     };
   },
   created() {
     this.getProjectLinkList();
   },
   methods: {
+    //打开使用帮助
+    openExplain(){
+      this.SaveDialogVisible = true;
+    },
     //刷新成绩单
-    refreshRecord(){
-      refreshRecord({project_id:this.$route.params.id}).then(({ data })=>{
-        this.$message.success(data.msg)
-      })
+    refreshRecord() {
+      refreshRecord({ project_id: this.$route.params.id }).then(({ data }) => {
+        this.$message.success(data.msg);
+      });
     },
     //是否提交作业格式化显示
     submitionFormat: function(row, column) {
       switch (row.submition) {
-         case true:
-            return "是";
-            break;
-          case false:
-            return "否";
-            break;
-      }},
+        case true:
+          return "是";
+          break;
+        case false:
+          return "否";
+          break;
+      }
+    },
     //不显示单独的成绩单页面
     tabclick(val) {
       if (val.index == 0) {
@@ -238,7 +265,7 @@ export default {
             this.$refs["LinkRecordTable"].getWeightRecords(row.link_id);
           });
         }
-      } 
+      }
     },
     //按考勤时间
     getAttendanceRecord(link_id) {
@@ -301,14 +328,26 @@ export default {
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
       return (this.currentPage3 - 1) * this.pageSize3 + index + 1;
-    },
+    }
   }
 };
 </script>
 <style lang="scss">
 #reportCard {
-  .button-Refresh{
-    padding-right:15px
+  .button-Refresh {
+    padding-top: 5px;
   }
+  .btn-explain{
+        padding-left:10px;
+        font-size:12px;
+        color:#808080;
+        cursor: pointer;
+      }
+      .attention-body{
+        padding:0px 5px 20px;
+        .attention-top{
+          font-size:12px
+        }
+      }
 }
 </style>

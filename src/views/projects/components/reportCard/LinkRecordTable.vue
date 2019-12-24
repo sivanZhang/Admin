@@ -11,7 +11,7 @@
         <el-table-column prop="executor_name" label="执行人"></el-table-column>
         <el-table-column prop="score" label="加权重后的总成绩"></el-table-column>
         <el-table-column prop="task_score" label="任务成绩"></el-table-column>
-        <el-table-column prop="attendance_count" label="迟到早退次数2"></el-table-column>
+        <el-table-column prop="attendance_count" label="迟到早退(次数)"></el-table-column>
         <el-table-column prop="submition_rank" label="提交时间排名"></el-table-column>
       </el-table> 
     </div>
