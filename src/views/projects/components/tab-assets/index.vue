@@ -235,6 +235,7 @@
         </el-table-column>
         <el-table-column label="小状态/进度" prop="small_status" width="150px" v-if="show_small_status">
           <template slot-scope="scope">
+            <div>
             <el-select
               v-model="scope.row.small_status"
               placeholder="请选择状态"
@@ -287,7 +288,10 @@
             <span
               v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'small_status')"
             >{{scope.row.small_status|taskMinStatus}}</span>
-            <el-progress :stroke-width="12" :percentage="scope.row.schedule"></el-progress>
+            <el-progress :stroke-width="12" :percentage="scope.row.schedule"
+            class="progress"
+           ></el-progress>
+            </div>
           </template>
         </el-table-column>
         <template v-if="groupType == 0?true:false">
@@ -645,13 +649,13 @@
         </el-table-column>
         
         <el-table-column prop="creator_name" label="创建人" align="left" v-if="show_creator_name"></el-table-column> 
-        <el-table-column label="当前环节" align="center" width="140px" v-if="show_link">
+        <el-table-column label="当前环节" align="center" width="160px" v-if="show_link">
           <el-table-column prop="link" label="工种" align="left">
             <template slot-scope="scope">
               <div v-for="(todo,index) of scope.row.link" :key="index">{{todo.name}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="截止日期" align="left" width="80px">
+          <el-table-column label="截止日期" align="left" width="95px">
             <template slot-scope="scope">
               <div
                 v-for="(todo,index) of scope.row.link"
@@ -1358,9 +1362,9 @@
       padding-right: 5px;
     }
   }
-   .el-table .cell {
-    display:flex !important;
-  }
+  //  .el-table .cell {
+  //   display:flex !important;
+  // }
   .links {
     cursor: pointer;
     color: #2d8cf0;
@@ -1395,5 +1399,9 @@ svg-icon {
         color:#808080;
         cursor: pointer;
       }
-
+.progress{
+  width:130px;
+  height:12px;
+  margin-bottom:5px;
+}
 </style>
