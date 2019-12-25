@@ -1,30 +1,30 @@
 <script>
-import MyInfo from './components/MyInfo'
-import MyFeedback from './components/MyFeedback'
-import MyTaskCount from './components/MyTaskCount'
-import MyManWork from './components/MyManWork'
-import MyApprove from './components/MyApprove'
-import noticeDetail from '@/components/Notice/components/notice-detail'
-import MyAllocation from './components/MyAllocation'
-import MyReportCard from './components/MyReportCard';
-import MyRanking from './components/MyRanking';
-import taskForm from '@/views/task/components/task-form'
-import tabLog from '@/views/task/components/tab-log'
-import tabApprove from '@/views/task/components/tab-approve'
-import tabTaskDtail from '@/views/task/components/tab-task-detail'
-import approveLog from '@/views/components/approve-log'
-import { mapState } from 'vuex'
-import { putNotice } from '@/api/notice'
-import thumbtackMixin from '@/utils/thumbtack-mixin'
+import MyInfo from "./components/MyInfo";
+import MyFeedback from "./components/MyFeedback";
+import MyTaskCount from "./components/MyTaskCount";
+import MyManWork from "./components/MyManWork";
+import MyApprove from "./components/MyApprove";
+import noticeDetail from "@/components/Notice/components/notice-detail";
+import MyAllocation from "./components/MyAllocation";
+import MyReportCard from "./components/MyReportCard";
+import MyRanking from "./components/MyRanking";
+import taskForm from "@/views/task/components/task-form";
+import tabLog from "@/views/task/components/tab-log";
+import tabApprove from "@/views/task/components/tab-approve";
+import tabTaskDtail from "@/views/task/components/tab-task-detail";
+import approveLog from "@/views/components/approve-log";
+import { mapState } from "vuex";
+import { putNotice } from "@/api/notice";
+import thumbtackMixin from "@/utils/thumbtack-mixin";
 import {
   addTaskRecord,
   queryTaskRecord,
   queryTask,
   getStatusTaskList
-} from '@/api/task'
-let TimeOut = null
+} from "@/api/task";
+let TimeOut = null;
 export default {
-  name: 'HomePage',
+  name: "HomePage",
   components: {
     MyInfo,
     MyTaskCount,
@@ -53,10 +53,10 @@ export default {
       // 任务侧边栏相关
       isDrawerShow: false,
       TaskDetail: {
-        name: ''
+        name: ""
       },
-      Link: '',
-      Asset: '',
+      Link: "",
+      Asset: "",
       detailLoading: false,
       LogList: [],
       logsLoading: false,
@@ -64,87 +64,87 @@ export default {
       createLoading: false,
       activeRow: {}, //点击任务列表选中的列的数据
       surplus_labor_hour: null,
-      trainingAuth:this.$store.state.login.userInfo.auth.view_training_project
+      trainingAuth: this.$store.state.login.userInfo.auth.view_training_project
     };
   },
   computed: {
-    ...mapState('notice', ['Notice', 'unreadCount']),
+    ...mapState("notice", ["Notice", "unreadCount"]),
     unreadList() {
       if (this.Notice && this.Notice.length) {
-        return this.Notice.filter(t => !t.read)
+        return this.Notice.filter(t => !t.read);
       } else {
-        return []
+        return [];
       }
     }
   },
   created() {
-    this.getMyTasks()
+    this.getMyTasks();
   },
   beforeRouteEnter(to, from, next) {
     // 刷新页面方法
     const timeOutCallBack = function() {
-      this.$store.dispatch('tagsView/delAllCachedViews', this.$route)
-      const { fullPath } = this.$route
+      this.$store.dispatch("tagsView/delAllCachedViews", this.$route);
+      const { fullPath } = this.$route;
       this.$nextTick(() => {
         this.$router.replace({
           path: `/redirect${fullPath}`
-        })
-      })
-    }
+        });
+      });
+    };
     // 此钩子函数中无法访问VUE实例（this），可在next回调的时候给个参数， setTimeout回调绑定vm为“this”，但必须bind因为是异步调用
     // 60000*15 = 延迟十五分钟刷新一次
     next(vm => {
-      TimeOut = setTimeout(timeOutCallBack.bind(vm), 60000 * 15)
-    })
+      TimeOut = setTimeout(timeOutCallBack.bind(vm), 60000 * 15);
+    });
   },
   beforeRouteLeave(to, from, next) {
-    clearTimeout(TimeOut)
-    next()
+    clearTimeout(TimeOut);
+    next();
   },
   methods: {
     // 展示 待分配镜头组件的 侧边栏 并传值
     changeLinks(arr) {
-      this.link = arr
-      this.isAssetDrawerShow = true
+      this.link = arr;
+      this.isAssetDrawerShow = true;
     },
     // 点击消息触发，参数为点击的消息数据
     handelClickNoticeItem({ url, task_id, category }) {
       // category == 1 时候跳转到我的任务后需要打开任务的侧边栏，  在stroe中传递 id识别
       if (category == 1) {
-        this.$store.commit('mine/setTaskId', task_id)
+        this.$store.commit("mine/setTaskId", task_id);
       }
       // 关闭notice的抽屉
-      this.$store.commit('notice/SET_CARDSHOW', false)
-      this.$router.push(url)
+      this.$store.commit("notice/SET_CARDSHOW", false);
+      this.$router.push(url);
     },
     cancel() {
-      this.isDialogShow = false
+      this.isDialogShow = false;
     },
     addRecord() {
-      this.createLoading = true
+      this.createLoading = true;
 
       addTaskRecord(this.TaskRecord)
         .then(res => {
           if (res.data.status === 0) {
-            this.$message.success(res.data.msg)
-            this.getMyTasks()
+            this.$message.success(res.data.msg);
+            this.getMyTasks();
           } else {
-            this.$message.warning(res.data.msg)
+            this.$message.warning(res.data.msg);
           }
-          this.isDialogShow = false
-          this.createLoading = false
-          this.isDrawerShow = false
+          this.isDialogShow = false;
+          this.createLoading = false;
+          this.isDrawerShow = false;
         })
         .catch(err => {
-          this.createLoading = false
-        })
+          this.createLoading = false;
+        });
     },
     taskBoardRightShow(row) {
-      this.isDrawerShow = true
+      this.isDrawerShow = true;
 
       this.activeRow = {
         ...row
-      }
+      };
       this.TaskRecord = Object.assign(
         {},
         {
@@ -152,25 +152,31 @@ export default {
           type: 0,
           date: new Date().toLocaleDateString()
         }
-      )
-      this.logsLoading = true
-      this.$refs['taskApprovelog'].getApproveLog(row.task.id)
+      );
+      if (this.activeRow.task && this.activeRow.task.status === 2) {
+        this.$nextTick(() => {
+          this.$refs["tabApprove"].getMakeQequire(row.task.id);
+        });
+      }
+
+      this.logsLoading = true;
+      this.$refs["taskApprovelog"].getApproveLog(row.task.id);
       queryTaskRecord({
         task_id: row.task.id
       })
         .then(({ data }) => {
-          this.LogList = [...data.msg]
-          this.logsLoading = false
+          this.LogList = [...data.msg];
+          this.logsLoading = false;
         })
         .catch(() => {
-          this.logsLoading = false
-        })
-      this.detailLoading = true
-      this.$refs['taskDetail'].getDetail(row.task.id)
+          this.logsLoading = false;
+        });
+      this.detailLoading = true;
+      this.$refs["taskDetail"].getDetail(row.task.id);
       queryTask({
         id: row.task.id
       }).then(({ data }) => {
-        this.surplus_labor_hour = data.msg.surplus_labor_hour
+        this.surplus_labor_hour = data.msg.surplus_labor_hour;
         //   this.TaskDetail = {
         //     ...data.msg
         //   };
@@ -180,42 +186,42 @@ export default {
         // })
         // .catch(() => {
         //   this.detailLoading = false;
-      })
+      });
     },
     // 修改是否已读
     updateIsRead(row) {
       if (row.read === 0) {
-        row.read = 1
+        row.read = 1;
       }
       putNotice({
-        method: 'put',
+        method: "put",
         ids: row.id,
         read: row.read
       }).then(({ data }) => {
         if (data.status === 0) {
           // this.$message.success(data.msg);
-          this.getNoticeDetail()
+          this.getNoticeDetail();
         }
-      })
+      });
     },
     // 获取我在进行中的任务
     getMyTasks() {
       getStatusTaskList({
         mytask: null,
-        status: '[0, 1, 2]',
+        status: "[0, 1, 2]",
         page: 1,
         pagenum: 100
       }).then(({ data }) => {
-        this.MyTaskList = [...data.msg]
-      })
+        this.MyTaskList = [...data.msg];
+      });
     },
     getNoticeDetail() {
-      this.$store.dispatch('notice/get_Notice', {
+      this.$store.dispatch("notice/get_Notice", {
         userid: this.$store.state.login.userInfo.id
-      })
+      });
     }
   }
-}
+};
 </script>
 <template>
   <div id="home-page" ref="drawer-parent">
@@ -241,7 +247,7 @@ export default {
       </el-col>
       <el-col :span="8" v-if="!trainingAuth">
         <el-row class="basic" :gutter="15">
-           <el-col :span="24" class="card-warp" >
+          <el-col :span="24" class="card-warp">
             <MyManWork :my-task-list="MyTaskList" />
           </el-col>
           <el-col :span="24" style="height:15px" />
@@ -271,7 +277,6 @@ export default {
                 tooltip-effect="dark"
                 @row-click="updateIsRead"
               >
-
                 <el-table-column label="消息" show-overflow-tooltip :min-width="80">
                   <template slot-scope="scope">
                     <el-tooltip
@@ -309,7 +314,6 @@ export default {
                 <el-table-column label="时间" :min-width="40">
                   <template slot-scope="scope">{{ scope.row.date|dateTimeFormat }}</template>
                 </el-table-column>
-
               </el-table>
               <el-button
                 v-show="unreadList.length>10"
@@ -415,6 +419,7 @@ export default {
         </el-tab-pane>
         <el-tab-pane label="提交审核">
           <tab-approve
+            ref="tabApprove"
             v-if="activeRow.task && activeRow.task.status === 2"
             :row="activeRow"
             @refresh="getMyTasks"
@@ -480,7 +485,7 @@ export default {
       height: 300px;
     }
   }
-  .home-header-card{
+  .home-header-card {
     margin-bottom: 15px;
     .el-card {
       height: 300px;

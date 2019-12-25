@@ -250,9 +250,11 @@
             </el-tab-pane>
             <el-tab-pane label="审核">
               <tab-approve
+               
                 v-if="activeRow.task && activeRow.task.status === 2"
                 :row="activeRow"
                 @refresh="getMyTasks"
+                ref="tabApprove"
               />
               <div v-else style="display:flex;justify-content:center">任务状态不是进行中</div>
               <div style="padding-bottom:5px;font-weight:bold">历史审批：</div>

@@ -780,7 +780,15 @@ export default {
         date: new Date().toLocaleDateString()
 
       })
-       this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
+      this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);
+      if(this.activeRow.task && this.activeRow.task.status === 2){
+
+        this.$nextTick(() => { this.$refs["tabApprove"].getMakeQequire(row.task.id);})
+      }
+     
+     // this.$refs["tabApprove"];
+      // console.log('11111111')
+      // console.log( this.$refs)
       this.logsLoading = true
       this.$refs['taskApprovelog'].getApproveLog(row.task.id)
       queryTaskRecord({
