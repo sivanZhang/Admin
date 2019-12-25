@@ -12,6 +12,9 @@
         <el-table-column prop="score" label="加权重后的总成绩"></el-table-column>
         <el-table-column prop="task_score" label="任务成绩"></el-table-column>
         <el-table-column prop="attendance_count" label="迟到早退(次数)"></el-table-column>
+        <el-table-column prop="submition_time" label="任务提交时间">
+          <template slot-scope="scope">{{scope.row.submition_time|dateTimeFormat}}</template>
+        </el-table-column>
         <el-table-column prop="submition_rank" label="提交时间排名"></el-table-column>
       </el-table> 
     </div>
