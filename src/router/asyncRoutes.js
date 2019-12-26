@@ -139,6 +139,15 @@ export default function asyncRoutes(params) {
             title: '我的工时',
             icon: 'fs'
           }
+        },
+        {
+          path: 'out-task',
+          name: 'out-task',
+          component: () => import('@/views/out-task'),
+          meta: {
+            title: '外包任务',
+            icon: 'outTask'
+          }
         }
       ]
       // }, {

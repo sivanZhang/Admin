@@ -109,3 +109,7 @@ export function notSubmitTask(params) {
 export function getLinkOutput(params) {
   return AXIOS.get('/task/output/', { params })
 }
+//获取待提交外包任务的列表
+export function getOutTask(params) {
+  return AXIOS.get('/task/task/?pend_submit', { params })
+}
