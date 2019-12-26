@@ -73,7 +73,11 @@
                 </el-col>
                 <el-col :span="6">
                   <label for>工种名称</label>
+
                   ： {{ActiveGroup?ActiveGroup.name:'--'}}
+                  <font
+                    style="font-size:8px;"
+                  >({{ActiveGroup?ActiveGroup.alias:'--'}})</font>
                 </el-col>
 
                 <el-col :span="6">
@@ -113,7 +117,9 @@
         <el-form-item label="工种名" label-width="20%" prop="name">
           <el-input v-model.trim="GroupForm.name" autocomplete="off" style="width:100%"></el-input>
         </el-form-item>
-
+        <el-form-item label="工种别名" label-width="20%" prop="alias">
+          <el-input v-model.trim="GroupForm.alias" autocomplete="off" style="width:100%"></el-input>
+        </el-form-item>
         <el-form-item label="负责人" label-width="20%" prop="chargerid">
           <el-select v-model="GroupForm.chargerid" placeholder="负责人" style="width:100%" filterable>
             <el-option
@@ -207,7 +213,14 @@ export default {
             message: "工种名称未填写"
           }
         ],
-
+        alias: [
+          // { required: true, message: "请输入别名", trigger: "blur" },
+          {
+            pattern: /^[a-zA-Z][A-Za-z\s]*[a-zA-Z]*$/,
+            message: "请输入英文",
+            trigger: "change"
+          }
+        ],
         chargerid: [
           {
             required: true,
@@ -236,7 +249,7 @@ export default {
   },
   methods: {
     jumpChange(val) {
-      console.log(val);
+      //  console.log(val);
       getDept({
         id: val
       })
@@ -520,7 +533,7 @@ export default {
       this.$refs["GroupForm"].resetFields();
     },
     pageRouter() {
-      console.log(this.$route.query.id);
+      //  console.log(this.$route.query.id);
       getDept({
         id: this.$route.query.id
       })
@@ -557,7 +570,6 @@ export default {
 .el-tree-node__content {
   border-bottom: 1px solid #dfe6ec;
   height: 35px;
-  font:12px;
-  
+  font: 12px;
 }
 </style>  
