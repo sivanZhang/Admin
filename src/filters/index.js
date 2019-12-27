@@ -223,7 +223,7 @@ export function taskStatus(data) {
     case 5:
       return '超时'
     case 6:
-      return '审核通过'
+      return '反馈中'
   }
 }
 // 小状态

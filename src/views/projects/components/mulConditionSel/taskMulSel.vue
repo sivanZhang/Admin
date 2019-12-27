@@ -65,7 +65,7 @@
                 <el-option label="审核中" :value="3"></el-option>
                 <el-option label="完成" :value="4"></el-option>
                 <el-option label="超时" :value="5"></el-option>
-                <el-option label="审核通过" :value="6"></el-option>
+                <el-option label="反馈中" :value="6"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
