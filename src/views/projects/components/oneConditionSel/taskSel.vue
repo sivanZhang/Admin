@@ -331,7 +331,7 @@ export default {
           this.name = { user: this.keyword };
           break;
         case "total_hour":
-          this.keyword && (data = { ...data, content: this.keyword });
+          this.keyword && (data = { ...data, total_hour: this.keyword });
           this.name = { total_hour: this.keyword };
           break;
         case "start_date":
