@@ -1,15 +1,21 @@
 <template>
   <div>
-    <el-row >
-      <el-col :span="4" style="font-size:14px;">制作要求:</el-col>
+    <el-row>
+      <el-col :span="4">
+        <font style="font-size:12px;">制作要求:</font>
+      </el-col>
       <el-col :span="19" style="font-size:12px;">{{taskdetail}}</el-col>
     </el-row>
-   <div style="text-align: right;">
-    <el-checkbox v-model="status_finish" size="mini" style="margin-bottom:10px;">确认满足制作要求</el-checkbox>
-   </div>
+    <div style="text-align: right;">
+      <el-checkbox v-model="status_finish" style="margin-bottom:10px;" size="small" border>确认满足制作要求</el-checkbox>
+    </div>
     <el-form :model="formInline" label-position="left" label-width="100px">
-      <el-form-item label="成果路径:" >
-        <el-input v-model="formInline.path" placeholder="请输入待审核的成功文件所在路径..." style="margin-left:-18px;"></el-input>
+      <el-form-item label="成果路径:">
+        <el-input
+          v-model="formInline.path"
+          placeholder="请输入待审核的成功文件所在路径..."
+          style="margin-left:-18px;"
+        ></el-input>
       </el-form-item>
       <el-form-item class="text-right">
         <el-button type="primary" @click="submitForm">提交</el-button>
@@ -93,5 +99,7 @@ export default {
 .text-right {
   text-align: right;
 }
-
+.el-checkbox.is-bordered {
+  border: 1px solid white;
+}
 </style>
