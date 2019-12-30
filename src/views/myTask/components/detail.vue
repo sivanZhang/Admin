@@ -147,7 +147,7 @@ export default {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
-        getDirs({ id: self.taskRecord.task_id, os: self.os || 'windows' }).then(({ data }) => {
+        getDirs({ id: self.taskRecord.task_id, working:"", os: self.os || 'windows' }).then(({ data }) => {
           appManager.text = `path@${data.msg}`
         })
       })
