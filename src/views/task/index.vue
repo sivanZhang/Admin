@@ -407,8 +407,7 @@
           <el-table-column
             prop="task.dept.name"
             label="环节"
-            header-align="left"
-            show-overflow-tooltip
+            header-align="left" 
           ></el-table-column>
           <el-table-column label="截止日期" header-align="left" width="100px">
             <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
@@ -515,12 +514,11 @@
               <div @click="taskBoardRightShow(scope.row)">{{scope.row.task.id}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="task.name" header-align="left" label="任务名称" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="task.name" header-align="left" label="任务名称"  ></el-table-column>
           <el-table-column
             prop="task.content"
             header-align="left"
-            label="任务内容"
-            show-overflow-tooltip
+            label="任务内容" 
           ></el-table-column>
           <!-- <el-table-column label="创建日期" header-align="left">
             <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
