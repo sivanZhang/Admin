@@ -1,8 +1,10 @@
 import AXIOS from '@/utils/request'
 
 // 获取任务默认审批提交路径
-export function getDirs() {
-  return AXIOS.get('/task/dirs/')
+export function getDirs(params) {
+  return AXIOS.get('/task/dirs/', {
+    params
+  })
 }
 
 // 获取任务执行记录
