@@ -2,7 +2,10 @@
   <!-- 练习生成绩单 -->
   <div id="reportCard">
     <el-row>
-      <el-col :span="22" align="right" class="button-Refresh" >
+      <el-col :span="2">
+        <el-button icon="el-icon-upload2" type="success" @click="targetUpload" :disabled="ButtontDisabled">导出</el-button>
+      </el-col>
+      <el-col :span="20" align="right" class="button-Refresh" >
         <span class="btn-explain" @click="openExplain()">
           使用帮助:
           <svg-icon icon-class="wenhao" />
@@ -98,8 +101,14 @@
                 {{scope.row.rank}}
               </template>
             </el-table-column>
+            <el-table-column prop="executor_name" label="学员"></el-table-column>
+            <el-table-column prop="asset__name" label="镜头号"></el-table-column>
             <el-table-column prop="score" label="成绩"></el-table-column>
-            <el-table-column prop="executor_name" label="执行人"></el-table-column>
+            <el-table-column prop="suggestion" label="修改意见"></el-table-column>
+            <el-table-column prop="submit_time" label="任务提交时间">
+              <template slot-scope="scope">{{scope.row.submit_time|dateTimeFormat}}</template>
+            </el-table-column>
+            <el-table-column prop="asset__remark" label="备注"></el-table-column>
           </el-table>
           <div class="block" style="text-align: right">
             <el-pagination
@@ -162,9 +171,26 @@
             说明实训效果总体较好，绝对值越大，排名越靠前
             <h4>总成绩值为负数：</h4>
             说明实训效果总体较差，绝对值越大，排名越靠后
+            <h3 style="padding-top:3px">导出：</h3>
+            导出的是当前环节中，按“任务打分成绩排名”的成绩单
           </div>
         </div>
       </div>
+    </el-dialog>
+    <!-- 导出 -->
+    <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
+      <el-row>
+        <el-col :span="6">
+          <span>excel文件</span>
+        </el-col>
+        <el-col :span="18">
+          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadVisible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadExcel">确定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -203,13 +229,42 @@ export default {
       ApproveTimeRecord: [],
       TaskRecord: [],
       AttendanceRecord: [],
-      SaveDialogVisible:false
+      SaveDialogVisible:false,
+      uploadVisible:false,
+      ButtontDisabled:true,
+      link_id:null,
+      path: null,
     };
   },
   created() {
     this.getProjectLinkList();
   },
   methods: {
+    // 成绩单任务导出dialog
+    targetUpload() {
+      const data = {
+        link_id: this.link_id,
+        print: 'null'
+      }
+      getTaskRecord(data).then(({ data }) => {
+        if (data.status === 0) {
+            this.uploadVisible = true;
+            this.path = data.path
+          }
+      })
+        .catch(err => {
+          this.$message.error(data.msg)
+        })
+    },
+    // 导出Excel
+    download() {
+      const data = this.$store.state.BASE_URL + this.path
+      window.location.href = data
+      this.uploadVisible = false
+    },
+    uploadExcel() {
+      this.uploadVisible = false
+    },
     //打开使用帮助
     openExplain(){
       this.SaveDialogVisible = true;
@@ -237,6 +292,7 @@ export default {
         this.disabledtab2 = true;
         this.disabledtab3 = true;
         this.disabledtab4 = true;
+        this.ButtontDisabled = true;
       }
     },
     //展示项目下面的环节
@@ -249,10 +305,12 @@ export default {
     },
     //展示单独的成绩单
     openAlongRecord(item) {
+      this.link_id = item;
       this.activeName = "tab2";
       this.disabledtab2 = false;
       this.disabledtab3 = false;
       this.disabledtab4 = false;
+      this.ButtontDisabled = false;
       this.getAttendanceRecord(item);
       this.getApproveTimeRecord(item);
       this.getTaskRecord(item);
