@@ -106,5 +106,7 @@ export default {
 }
 .el-checkbox.is-bordered {
   border: 1px solid white;
+  margin-right: 18px;
+  padding-right: 0px
 }
 </style>
