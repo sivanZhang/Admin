@@ -18,7 +18,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item class="text-right">
-        <el-button type="primary" @click="submitForm">提交</el-button>
+        <el-button type="primary" @click="submitForm" class="btn">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -96,8 +96,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.text-right {
-  text-align: right;
+// .text-right {
+//   text-align: right;
+//   margin-left: 50px;
+// }
+.btn{
+   margin-right: 18px;
 }
 .el-checkbox.is-bordered {
   border: 1px solid white;
