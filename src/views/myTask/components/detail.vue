@@ -43,6 +43,7 @@
           <tab-approve
             v-if="activeRow.task && activeRow.task.status === 2"
             :row="activeRow"
+            :pathPlugin="pathPlugin"
           />
           <div
             v-if="activeRow.task && activeRow.task.status === 3"
@@ -116,7 +117,8 @@ export default {
         comment: [
           { message: '请输入任务完成情况说明', trigger: 'blur' }
         ]
-      }
+      },
+      pathPlugin: ''
     }
   },
   watch: {
@@ -149,7 +151,10 @@ export default {
         var appManager = objects.app_manager
         getDirs({ id: self.taskRecord.task_id, working:"", os: self.os || 'windows' }).then(({ data }) => {
           appManager.text = `path@${data.msg}`
+          this.pathPlugin = data.msg;
         })
+      }).catch(err=>{
+        this.pathPlugin = ''
       })
     },
     getTaskDetail(id) {
