@@ -63,7 +63,7 @@ export default {
   methods: {
     handelClick(path) {
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
-        objects.app_manager.text = `path@${path}`
+        objects.app_manager.text = `read@${path}`
       })
     },
     // 父组件直接通过$refs[组件ref值].getlinkTaskOutput(task的id)即可请求列表，切换筛选时自动调用的
