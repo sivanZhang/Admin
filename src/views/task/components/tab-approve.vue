@@ -12,8 +12,9 @@
     <el-form :model="formInline" label-position="left" label-width="100px">
       <el-form-item label="成果路径:">
         <el-input
+        clearable
           v-model="formInline.path"
-          placeholder="请输入待审核的成功文件所在路径..."
+          :placeholder="pathPlugin?'':'请输入待审核的成功文件所在路径...'"
           style="margin-left:-18px;"
         ></el-input>
       </el-form-item>
@@ -27,7 +28,7 @@
 import { taskApprove, getTaskDetail } from "@/api/task";
 export default {
   name: "my-task-approve",
-  props: ["row"],
+  props: ["row","pathPlugin"],
   data() {
     return {
       status_finish: false,
@@ -35,7 +36,7 @@ export default {
       formInline: {
         dept_id: this.row.task.dept.id,
         task_id: this.row.task.id,
-        path: ""
+        path: this.pathPlugin ? this.pathPlugin : ''
       }
     };
   },
