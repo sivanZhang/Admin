@@ -827,11 +827,7 @@ export default {
       }) => {
         this.historyVersion = [...data.msg]
       })
-      getProjects({id:this.project_id}).then(({ data })=>{
-        if(data.msg.id!=undefined){
-          this.project = data.msg
-        }
-      })
+       this.getProjectDetail()
       gettestProjects({id:this.project_id}).then(({ data })=>{
         if(data.msg.id!=undefined){
           this.testproject_id=data.msg.id
@@ -841,6 +837,11 @@ export default {
         }
         
       })
+    },
+    getProjectDetail() {
+        getProjects({ id: this.project_id }).then(({ data }) => {
+          this.project = data.msg;
+        });
     },
     // 任务板展示更多跳转任务列表
     openList(status) {
