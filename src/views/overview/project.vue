@@ -18,6 +18,7 @@
           :project="project"
           :RemarksData="RemarksData"
           @refreshRemark="updateRemark()"
+           @refreshProject="getProjectDetail()"
           :assetsList="TableData"
           :taskList="taskList"
           :attrsList="attrsList"
@@ -178,6 +179,8 @@ import DrawerHeader from "@/components/projectDrawer/components/Header";
 import thumbtackMixin from "@/utils/thumbtack-mixin"
 import { delOneProject } from "@/api/project";
 import { searchBind, getAttrsEntityList } from "@/api/attrs";
+import { getProjects } from "@/api/project";
+import { getTrainingProject, getProjectJoinMeb ,allScene} from "@/api/training";
 export default {
   name: "project",
   mixins: [thumbtackMixin], //drawer图钉效果
@@ -215,7 +218,6 @@ export default {
     },
     show(item) {
       this.project = item;
-      //console.log(this.project);
       this.isDrawerShow = true;
       const msg = {
         appid: this.project.id,
@@ -241,6 +243,17 @@ export default {
         this.customAttrs = [...data.msg];
         this.attrsTypeNum = 4
       });
+    },
+    getProjectDetail() {
+      if (this.$route.query.type == "0") {
+        getTrainingProject({ id: this.project.id }).then(({ data }) => {
+          this.project = data.msg;
+        });
+      } else {
+        getProjects({ id: this.project.id }).then(({ data }) => {
+          this.project = data.msg;
+        });
+      }
     },
      updateRemark() {
       getRemark({

@@ -15,7 +15,7 @@
           </el-tab-pane>
           <!-- <el-tab-pane label="动态" name="fifth">动态</el-tab-pane> -->
           <el-tab-pane label="信息" name="sixth">
-            <info :project="project" />
+            <info :project="project" @refreshProject="getProjectDetail()"/>
             <el-divider />
             <attrsBind
               :project="project"
@@ -41,7 +41,6 @@ import assets from "@/components/projectDrawer/components/assets";
 import task from "@/components/projectDrawer/components/task";
 import joinDept from "@/components/projectDrawer/components/joinDept";
 import attrsBind from "@/components/projectDrawer/components/attrsBind";
-
 export default {
   props: [
     "project",
@@ -60,6 +59,9 @@ export default {
   name: "projectDrawer",
   components: { remarks, info, assets, task, joinDept, attrsBind },
   methods: {
+    getProjectDetail() {
+      this.$emit("refreshProject")
+    },
     updateRemark(){
       //console.log("父亲");
       this.$emit("refreshRemark")

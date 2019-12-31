@@ -127,7 +127,7 @@
                 type="text"
                 ref="input"
                 class="input"
-                v-model="mac"
+                v-model="copyProjecr.Mac.value"
                 @keyup.enter="saveItem('Mac')"
               />
               <el-button @click="saveItem('Mac')" type="primary">修改</el-button>
@@ -168,18 +168,18 @@
         <el-row>
           <el-col :span="6" class="comment">负责人</el-col>
           <el-col :span="18" class="comment">
-            <!-- <div
+            <div
               v-if="!copyProjecr.charger_name.isEdit"
               @mouseover="showIcon('charger_name',true)"
               @mouseleave="showIcon('charger_name',false)"
-            > -->
+            >
               <span>{{project.charger_name}}</span>
-              <!-- <i
+              <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&copyProjecr.charger_name.isShowEditeIcon"
                 @click="editItem('charger_name')"
-              ></i> 
+              ></i>
             </div>
             <div v-else>
               <el-select
@@ -197,7 +197,7 @@
               </el-select>
               <el-button @click="saveItem('charger_name')" type="primary">修改</el-button>
               <el-button @click="cancelChange('charger_name')">取消</el-button>
-            </div>-->
+            </div>
           </el-col>
         </el-row>
         <el-row>
@@ -205,22 +205,22 @@
           <el-col :span="18" class="comment">
             <div @mouseover="showEdit6=true" @mouseleave="showEdit6 = false">
               <span v-if="!editing6">{{project.status|projectStatus}}</span>
-              <!-- <i
+              <i
                 class="el-icon-edit"
                 style="color:blue"
                 v-if="$store.state.login.userInfo.auth.manage_project&&showEdit6"
                 @click="edit(5)"
-              ></i> -->
+              ></i>
             </div>
             <div v-if="editing6">
-              <!-- <el-select v-model="status" placeholder="请选择工作流" ref="selete" @change="save(5)">
+              <el-select v-model="status" placeholder="请选择工作流" ref="selete" @change="save(5)">
                 <el-option label="未开始" :value="0"></el-option>
                 <el-option label="正在进行" :value="1"></el-option>
                 <el-option label="已完成" :value="2"></el-option>
                 <el-option label="超期" :value="3"></el-option>
                 <el-option label="重启" :value="4"></el-option>
               </el-select>
-              <el-button @click="save(5)" type="primary">修改</el-button> -->
+              <el-button @click="save(5)" type="primary">修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -957,6 +957,7 @@ export default {
       if (Type === 7) {
         this.showEdit8 = false;
         this.editing8 = true;
+
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -964,6 +965,7 @@ export default {
       if (Type === 8) {
         this.showEdit9 = false;
         this.editing9 = true;
+
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -971,6 +973,7 @@ export default {
       if (Type === 9) {
         this.showEdit10 = false;
         this.editing10 = true;
+
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
@@ -978,6 +981,7 @@ export default {
       if (Type === 10) {
         this.showEdit11 = false;
         this.editing11 = true;
+
         this.$nextTick(() => {
           this.$refs.start.focus();
         });
@@ -985,6 +989,7 @@ export default {
       if (Type === 11) {
         this.showEdit12 = false;
         this.editing12 = true;
+
         this.$nextTick(() => {
           this.$refs.end.focus();
         });
@@ -992,6 +997,7 @@ export default {
       if (Type === 12) {
         this.showEdit13 = false;
         this.editing13 = true;
+
         this.$nextTick(() => {
           this.$refs.start.focus();
         });
@@ -999,6 +1005,7 @@ export default {
       if (Type === 13) {
         this.showEdit14 = false;
         this.editing14 = true;
+
         this.$nextTick(() => {
           this.$refs.end.focus();
         });
@@ -1110,6 +1117,7 @@ export default {
           charger: this.charger
         };
       }
+
       if (Type === 4) {
         this.editing5 = false;
         data = {
@@ -1150,6 +1158,7 @@ export default {
           linux_path: this.linux
         };
       }
+
       if (Type === 12) {
         this.editing13 = false;
         data = {
@@ -1166,6 +1175,7 @@ export default {
           end: dataFormat(this.date_end)
         };
       }
+
       if (Type === 22) {
         this.editing23 = false;
         data = {
@@ -1453,3 +1463,4 @@ export default {
   }
 }
 </style>
+
