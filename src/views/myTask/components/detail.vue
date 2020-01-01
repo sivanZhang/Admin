@@ -92,7 +92,9 @@ export default {
       debugCustom: {
         os: '',
         result: null,
-        id: ''
+        id: '',
+        appManager: null,
+        isRequest: false
       },
       os: 'windows',
       activeName: 'first',
@@ -141,7 +143,7 @@ export default {
   },
   created() {
     const self = this
-    new QWebChannel(qt.webChannelTransport, function({ objects }) {
+    new QWebChannel(qt.webChannelTransport, ({ objects }) => {
       var appManager = objects.app_manager
       appManager.textChanged.connect(function(os) {
         if (os) {
@@ -156,16 +158,18 @@ export default {
   methods: {
     handelClick() {
       const self = this
-      this.debugCustom.os = this.os
-      this.debugCustom.id = this.taskRecord.task_id
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
+        self.debugCustom.appManager = appManager
         getDirs({
           id: self.taskRecord.task_id,
           working: '',
           os: self.os
         }).then(res => {
-          this.debugCustom.result = res
+          self.debugCustom.os = self.os
+          self.debugCustom.id = self.taskRecord.task_id
+          self.debugCustom.isRequest = true
+          self.debugCustom.result = res
           appManager.text = `path@${res.msg}`
         })
       })
