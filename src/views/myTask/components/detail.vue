@@ -94,6 +94,7 @@ export default {
         result: null,
         id: ''
       },
+      os:'',
       activeName: 'first',
       surplus_labor_hour: null,
       createLoading: false,
