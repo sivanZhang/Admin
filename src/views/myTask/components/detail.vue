@@ -12,7 +12,6 @@
       <el-col :span="4">
         <div>项目名称：</div>
         <div>所属资产：</div>
-        {{ debugCustom }}
       </el-col>
       <el-col :span="10">
         <div>{{ TaskDetail.project.name }}</div>
@@ -89,13 +88,6 @@ export default {
   ],
   data() {
     return {
-      debugCustom: {
-        os: '',
-        result: null,
-        id: '',
-        appManager: null,
-        isRequest: false
-      },
       os: 'windows',
       activeName: 'first',
       surplus_labor_hour: null,
@@ -160,17 +152,12 @@ export default {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
-        self.debugCustom.appManager = appManager
         getDirs({
           id: self.taskRecord.task_id,
           working: '',
           os: self.os
-        }).then(res => {
-          self.debugCustom.os = self.os
-          self.debugCustom.id = self.taskRecord.task_id
-          self.debugCustom.isRequest = true
-          self.debugCustom.result = res
-          appManager.text = `path@${res.msg}`
+        }).then(({ data }) => {
+          appManager.text = `path@${data.msg}`
         })
       })
     },
