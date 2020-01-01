@@ -12,7 +12,7 @@
       <el-col :span="4">
         <div>项目名称：</div>
         <div>所属资产：</div>
-        {{debugCustom}}
+        {{ debugCustom }}
       </el-col>
       <el-col :span="10">
         <div>{{ TaskDetail.project.name }}</div>
@@ -94,7 +94,7 @@ export default {
         result: null,
         id: ''
       },
-      os:'',
+      os: 'windows',
       activeName: 'first',
       surplus_labor_hour: null,
       createLoading: false,
@@ -144,7 +144,9 @@ export default {
     new QWebChannel(qt.webChannelTransport, function({ objects }) {
       var appManager = objects.app_manager
       appManager.textChanged.connect(function(os) {
-        self.os = os || 'windows'
+        if (os) {
+          self.os = os
+        }
       })
     })
   },
@@ -158,7 +160,6 @@ export default {
       this.debugCustom.id = this.taskRecord.task_id
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
-
         getDirs({
           id: self.taskRecord.task_id,
           working: '',
