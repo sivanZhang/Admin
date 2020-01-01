@@ -841,6 +841,7 @@ export default {
     getProjectDetail() {
         getProjects({ id: this.project_id }).then(({ data }) => {
           this.project = data.msg;
+          this.task(this.changecolor);
         });
     },
     // 任务板展示更多跳转任务列表
