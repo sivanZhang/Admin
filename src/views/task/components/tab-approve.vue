@@ -69,7 +69,7 @@ export default {
   methods: {
     getInitalPath() {
       if (this.taskId) {
-        getDirs({ id: this.taskRecord.task_id, os: this.os }).then(({ data }) => {
+        getDirs({ id: this.taskId, os: this.os }).then(({ data }) => {
           this.formInline.path = data.msg
         })
       }
