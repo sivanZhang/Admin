@@ -5,7 +5,7 @@
         <el-col :span="4">
           <svg-icon icon-class="people2" style="width:50px;height:50px;" />
         </el-col>
-        <el-col :span="20">
+        <el-col :span="13">
           <el-row style="font-size:20px">{{ loginMessage.msg }}</el-row>
           <el-row style="padding-top:10px">
             <el-col :span="3" align="left">邮箱：</el-col>
@@ -23,6 +23,9 @@
             </el-col>
           </el-row>
         </el-col>
+        <el-col :span="7" align="center" style="margin-top:50px">
+          <el-button type="primary" @click="getTaskList()">刷新任务列表</el-button>
+        </el-col>
       </el-row>
     </div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -37,6 +40,7 @@
           highlight-current-row
           row-class-name="hover"
           style="width: 100%;"
+          v-loading="tableLoading"
         >
           <el-table-column prop="project.name" label="项目" align="center" />
           <el-table-column prop="task.name" label="任务" align="left" />
@@ -123,22 +127,30 @@ export default {
       detailLoading: false,
       logsLoading: false,
       TaskRecord: [],
-      activeRow: {}
+      activeRow: {},
+      tableLoading:false
     }
   },
   created() {
-    queryMyTask({
-      inplugin: null
-    }).then(({ data }) => {
-      this.MyTask = [...data.msg]
-      // console.log(this.MyTask);
-    })
+    this.getTaskList();
   },
   mounted() {
     document.body.style.minWidth = 'auto'
   },
 
   methods: {
+    getTaskList() {
+      this.tableLoading=true;
+      queryMyTask({
+      inplugin: null
+    }).then(({ data }) => {
+      this.MyTask = [...data.msg]
+      this.tableLoading=false;
+      // console.log(this.MyTask);
+    }).catch(()=>{
+      this.tableLoading=false;
+    })
+    },
     activename() {
       this.activeName = 'first'
     },
