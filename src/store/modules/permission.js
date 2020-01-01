@@ -39,8 +39,8 @@ export function filterAsyncRoutes(routes, UserRoles) {
 }
 
 const state = {
-  routes: [], // 用来在侧边栏显示已经挂载的路由列表
-  addRoutes: [] // 筛选出来有权限进入的动态路由
+  routes: [], // 当前用户可以访问的所有路由
+  addRoutes: [] // 筛选出来有权限进入的动态路由，最后添加到routers中
 }
 
 const mutations = {
@@ -52,7 +52,6 @@ const mutations = {
 
 const actions = {
   generateRoutes({
-    state,
     commit,
     rootState
   }) {
@@ -61,17 +60,13 @@ const actions = {
       let accessedRoutes = []
       if (judgeTraining(UserRoles)) {
         accessedRoutes = [...trainingRouter]
-
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes(), UserRoles)
       }
       commit('SET_ROUTES', accessedRoutes)
       router.addRoutes(accessedRoutes)
       resolve(accessedRoutes)
-
       // accessedRoutes有权限的路由
-
-
     })
   }
 }
