@@ -14,7 +14,7 @@
         <el-input
         clearable
           v-model="formInline.path"
-          :placeholder="pathPlugin?'':'请输入待审核的成功文件所在路径...'"
+          :placeholder="pathPlugin?'':'请输入成果文件路径...'"
           style="margin-left:-18px;"
         ></el-input>
       </el-form-item>
