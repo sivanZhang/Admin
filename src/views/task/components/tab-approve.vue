@@ -61,8 +61,7 @@ export default {
         if (newVal) {
           this.getInitalPath()
         }
-      },
-      immediate: true
+      }
     }
 
   },
