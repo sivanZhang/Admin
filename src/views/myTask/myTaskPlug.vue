@@ -30,10 +30,67 @@
     </div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="我的任务" name="first">
+        <el-row style="padding-bottom:10px">
+      <el-col style="text-align:right">
+        <div style="display:flex;justify-content:flex-end">
+          <el-select v-model="colSel" placeholder="请选择" style="width:130px" filterable size="mini">
+            <el-option
+              v-for="item in columnSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-input
+            v-if="colShow"
+            placeholder="输入关键字搜索"
+            v-model="keyword"
+            size="mini"
+            @keyup.enter.native="getMyTask()"
+            style="width:240px"
+          ></el-input>
+          <el-select
+            v-if="colSel === 'status'"
+            v-model="colSel2"
+            placeholder="请选择"
+            style="width:300px;margin-top:1px"
+            multiple
+            filterable
+            size="mini"
+          >
+            <el-option
+              v-for="item in columnSelect2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <div v-if="colSel === 'start_date' || colSel === 'end_date'">
+            <el-date-picker
+              v-model="timeSelection"
+              type="date"
+              placeholder="选择日期"
+              size="mini"
+              style="width:130px"
+            ></el-date-picker>
+            <span style="text-align:center;padding-top:3px">至</span>
+            <el-date-picker
+              v-model="timeSelection2"
+              type="date"
+              placeholder="选择日期"
+              size="mini"
+              style="width:130px"
+            ></el-date-picker>
+          </div>
+          <el-button @click="getMyTask()" type="primary" style="margin-left:5px">查询</el-button>
+          <el-button @click="reMyTask()" type="primary">重置</el-button>
+        </div>
+      </el-col>
+    </el-row>
         <el-table
           ref="assetTable"
           v-loading="tableLoading"
-          :data="MyTask"
+          :data="MyTask.slice((currentPage-1)*pageSize,currentPage*pageSize)"
           border
           :stripe="true"
           :row-style="{'font-size':'13px'}"
@@ -43,10 +100,27 @@
           style="width: 100%;"
         >
           <el-table-column prop="project.name" label="项目" align="center" />
-          <el-table-column prop="task.name" label="任务" align="left" />
-          <el-table-column label="状态" align="center" width="80">
-            <template slot-scope="scope">{{ scope.row.task.status|taskStatus }}</template>
+          <el-table-column prop="asset.name" label="镜头号/资产" align="center" />
+          <el-table-column label="缩略图" width="180px" align="center">
+            <template slot-scope="scope">
+              <el-image
+                :src="$store.state.BASE_URL+scope.row.asset.image"
+                style="width: 180px;height: 100px;cursor: pointer; display:block;"
+                :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span class="dot">...</span>
+                </div>
+                <div slot="error" class="image-slot">
+                  <el-image
+                    :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
+                  ></el-image>
+                </div>
+              </el-image>
+            </template>
           </el-table-column>
+          <el-table-column prop="task.name" label="任务" align="center" />
           <el-table-column label="起止日期" align="center">
             <el-table-column label="开始日期" align="left" width="90px">
               <template slot-scope="scope">{{ scope.row.task.start_date|dateFormat }}</template>
@@ -55,7 +129,66 @@
               <template slot-scope="scope">{{ scope.row.task.end_date|dateFormat }}</template>
             </el-table-column>
           </el-table-column>
-          <el-table-column prop="asset.name" label="资产" align="center" />
+          <!-- <el-table-column label="状态" align="center" width="80">
+            <template slot-scope="scope">{{ scope.row.task.status|taskStatus }}</template>
+          </el-table-column> -->
+         <el-table-column width="30px">
+        <template slot-scope="scope">
+          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 0"
+              :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px',padding: '25px 5px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 1"
+              :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px',padding: '25px 5px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 2"
+              :style="{width:'10px',backgroundColor:'#589BAD',border:'0px',padding: '25px 5px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 3"
+              :style="{width:'10px',backgroundColor:'#2D5637',border:'0px',padding: '25px 5px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 4"
+              :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px',padding: '25px 5px'}"
+            ></el-card>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+            <el-card
+              v-if="scope.row.task.status === 5"
+              :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px',padding: '25px 5px'}"
+            ></el-card>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="任务状态/进度"
+        prop="status"
+        width="180px"
+        align="center"
+      
+      >
+        <template slot-scope="scope">
+         {{ scope.row.task.status|taskStatus }}
+          <el-progress
+            :stroke-width="12"
+            :percentage="scope.row.task.schedule"
+            v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
+          ></el-progress>
+          <div v-if="scope.row.task.status == 3">{{scope.row.task.statements}}</div>
+        </template>
+      </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-tooltip content="打开任务" placement="top">
@@ -69,6 +202,17 @@
             </template>
           </el-table-column>
         </el-table>
+          <div class="block" style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="MyTask.length"
+      ></el-pagination>
+    </div>
       </el-tab-pane>
       <el-tab-pane label="任务详情" name="second" disabled lazy>
         <detail
@@ -93,11 +237,11 @@ import {
   queryTaskRecord,
   queryTask,
   getStatusTaskList
-} from '@/api/task'
-import detail from './components/detail'
-import approveLog from '@/views/components/approve-log'
+} from "@/api/task";
+import detail from "./components/detail";
+import approveLog from "@/views/components/approve-log";
 export default {
-  name: 'MyTaskPlug',
+  name: "MyTaskPlug",
   components: {
     detail,
     approveLog
@@ -107,9 +251,9 @@ export default {
       appManager: null,
       value1: false,
       id: this.$store.state.login.userInfo.id,
-      activeName: 'first',
+      activeName: "first",
       loginMessage: this.$store.state.login.userInfo,
-      MyTask: null,
+      MyTask:  [],
       asset: {},
       project: {},
       currentPage: 1,
@@ -117,10 +261,10 @@ export default {
       pageSizeList: [10, 20, 50, 100],
       TaskDetail: {
         asset: {
-          name: ''
+          name: ""
         },
         project: {
-          image: ''
+          image: ""
         }
       },
       LogList: [],
@@ -128,16 +272,122 @@ export default {
       logsLoading: false,
       TaskRecord: [],
       activeRow: {},
-      tableLoading: false
-    }
+      tableLoading: false,
+       StatusList: [
+        {
+          label: "暂停",
+          value: 0
+        },
+        {
+          label: "未开始",
+          value: 1
+        },
+        {
+          label: "进行中",
+          value: 2
+        },
+        {
+          label: "超时",
+          value: 5
+        }
+      ],
+      colSel: "project_name",
+      keyword: "",
+      columnSelect: [
+        {
+          value: "project_name",
+          label: "项目名称"
+        },
+        {
+          value: "assetname",
+          label: "镜头号/资产"
+        },
+        {
+          value: "start_date",
+          label: "开始日期"
+        },
+        {
+        value: 'end_date',
+        label: '结束日期'
+      },
+        {
+          value: "status",
+          label: "状态"
+        }
+      ],
+      name: "",
+      colShow: true,
+      colSel2: [],
+      columnSelect2: [],
+      timeSelection: "",
+      timeSelection2: "",
+      currentGrade: null
+    
+    };
   },
   created() {
     this.getTaskList()
   },
   mounted() {
-    document.body.style.minWidth = 'auto'
+    document.body.style.minWidth = "auto";
   },
+ watch: {
+    colSel: {
+      handler: function(newVal, oldVal) {
+        this.columnSelect2 = [];
+        switch (newVal) {
+          case "status":
+            this.colShow = false;
+            this.columnSelect2 = [
+              {
+                value: 0,
+                label: "暂停"
+              },
+              {
+                value: 1,
+                label: "未开始"
+              },
+              {
+                value: 2,
+                label: "进行中"
+              },
+              {
+                value: 3,
+                label: "审核中"
+              },
+              {
+                value: 4,
+                label: "完成"
+              },
+              {
+                value: 5,
+                label: "超时"
+              },
+              {
+                value: 6,
+                label: "反馈中"
+              }
+            ];
+            break;
 
+          case "start_date":
+            this.colShow = false;
+            this.timeSelection = "";
+            this.timeSelection2 = "";
+            break;
+          case "end_date":
+            this.colShow = false;
+            this.timeSelection = "";
+            this.timeSelection2 = "";
+            break;
+          default:
+            this.colShow = true;
+            this.colSel2 = [];
+            this.columnSelect2 = [];
+        }
+      }
+    }
+  },
   methods: {
     getTaskList() {
       this.tableLoading = true
@@ -152,49 +402,161 @@ export default {
       })
     },
     activename() {
-      this.activeName = 'first'
+      this.activeName = "first";
     },
     handleClick(tab, event) {
-      console.log(tab, event)
+     // console.log(tab, event);
+    },
+     //搜索
+    getMyTask() {
+      let data = {};
+      function DateFormat(dateVal) {
+        return new Date(dateVal).toLocaleDateString();
+      }
+      switch (this.colSel) {
+        case "project_name":
+          this.keyword &&
+            (data = {
+              ...data,
+              project_name: this.keyword,
+              pagenum: 20,
+              page: 1
+            });
+          this.name = { project_name: this.keyword };
+          break;
+        case "assetname":
+          this.keyword &&
+            (data = { ...data, assetname: this.keyword, pagenum: 20, page: 1 });
+          this.name = { assetname: this.keyword };
+          break;
+        case "start_date":
+          if (!this.timeSelection && this.timeSelection2) {
+            data = {
+              ...data,
+              start: "" + "," + DateFormat(this.timeSelection2),
+              pagenum: 20,
+              page: 1
+            };
+          } else if (this.timeSelection && !this.timeSelection2) {
+            data = {
+              ...data,
+              start: DateFormat(this.timeSelection) + "," + "",
+              pagenum: 20,
+              page: 1
+            };
+          } else {
+            data = {
+              ...data,
+              start:
+                DateFormat(this.timeSelection) +
+                "," +
+                DateFormat(this.timeSelection2),
+              pagenum: 20,
+              page: 1
+            };
+          }
+          this.name = {
+            start_date: DateFormat(this.timeSelection)
+          };
+          break;
+        case "end_date":
+          if (!this.timeSelection && this.timeSelection2) {
+            data = {
+              ...data,
+              end: "" + "," + DateFormat(this.timeSelection2),
+              pagenum: 20,
+              page: 1
+            };
+          } else if (this.timeSelection && !this.timeSelection2) {
+            data = {
+              ...data,
+              end: DateFormat(this.timeSelection) + "," + "",
+              pagenum: 20,
+              page: 1
+            };
+          } else {
+            data = {
+              ...data,
+              end:
+                DateFormat(this.timeSelection) +
+                "," +
+                DateFormat(this.timeSelection2),
+              pagenum: 20,
+              page: 1
+            };
+          }
+          this.name = { end_date: DateFormat(this.timeSelection) };
+          break;
+        case "status":
+          if (this.colSel2.length) {
+            data = {
+              ...data,
+              status: "[" + String(this.colSel2) + "]",
+              pagenum: 20,
+              page: 1
+            };
+            this.name = { status: "[" + String(this.colSel2) + "]" };
+          }
+          break;
+      }
+      getStatusTaskList(data).then(({ data }) => {
+        this.MyTask = [...data.msg];
+        // this.authRole = data.auth.can_manage_material_state;
+        this.currentPage = 1;
+      });
+    },
+     //重置
+    reMyTask() {
+      getStatusTaskList().then(
+        ({ data }) => {
+          this.MyTask = [...data.msg];
+      //    this.currentPage = 1;
+          this.keyword = "";
+          this.colSel = "project_name";
+          this.colSel2 = [];
+          this.timeSelection = "";
+          this.timeSelection2 = "";
+        }
+      );
     },
     // 分页
     handleSizeChange(val) {
-      this.pageSize = val
+      this.pageSize = val;
       // console.log(this.pagesize);
     },
     handleCurrentChange(currentPage) {
-      this.currentPage = currentPage
+      this.currentPage = currentPage;
       // console.log(this.currentPage);
     },
     // 解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
-      return (this.currentPage - 1) * this.pageSize + index + 1
+      return (this.currentPage - 1) * this.pageSize + index + 1;
     },
     openTaskDetail(row) {
-      this.activeRow = { ...row }
+      this.activeRow = { ...row };
       this.TaskRecord = Object.assign(
         {},
         {
           task_id: row.task.id,
           type: 0
         }
-      )
-      this.logsLoading = true
+      );
+      this.logsLoading = true;
 
       queryTaskRecord({
         task_id: row.task.id
       })
         .then(({ data }) => {
-          this.LogList = [...data.msg]
-          this.logsLoading = false
+          this.LogList = [...data.msg];
+          this.logsLoading = false;
         })
         .catch(() => {
-          this.logsLoading = false
-        })
-      this.detailLoading = true
+          this.logsLoading = false;
+        });
+      this.detailLoading = true;
       this.$nextTick(() => {
-        this.$refs['Detail'].getTaskDetail(row.task.id)
-      })
+        this.$refs["Detail"].getTaskDetail(row.task.id);
+      });
 
       // queryTask({
       //   id: row.task.id
@@ -208,10 +570,10 @@ export default {
       //   .catch(() => {
       //     this.detailLoading = false;
       //   });
-      this.activeName = 'second'
+      this.activeName = "second";
     }
   }
-}
+};
 </script>
 
 <style scoped>

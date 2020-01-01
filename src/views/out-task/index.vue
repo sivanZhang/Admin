@@ -530,10 +530,10 @@ export default {
     },
     //重置
     reOutTask() {
-      getOutTask({ pagenum: this.pageSize, page: this.currentPage }).then(
+      getOutTask().then(
         ({ data }) => {
           this.outTaskLiist = [...data.msg];
-          this.currentPage = 1;
+         // this.currentPage = 1;
           this.keyword = "";
           this.colSel = "project_name";
           this.colSel2 = [];
@@ -544,7 +544,7 @@ export default {
     },
     //获取待提交外包任务列表
     getOutTaskList() {
-      getOutTask({ pagenum: this.pageSize, page: this.currentPage }).then(
+      getOutTask().then(
         ({ data }) => {
           this.outTaskLiist = [...data.msg];
           // console.log("111111111");
