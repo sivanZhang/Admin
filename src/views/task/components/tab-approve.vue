@@ -55,15 +55,21 @@ export default {
           this.getInitalPath()
         }
       }
+    },
+    os: {
+      handler(newVal) {
+        if (newVal) {
+          this.getInitalPath()
+        }
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.getInitalPath()
+
   },
   methods: {
     getInitalPath() {
-      if (this.os && this.taskId) {
-        getDirs({ id: self.taskRecord.task_id, os: this.os || 'windows' }).then(({ data }) => {
+      if (this.taskId) {
+        getDirs({ id: this.taskRecord.task_id, os: this.os }).then(({ data }) => {
           this.formInline.path = data.msg
         })
       }
