@@ -245,13 +245,15 @@ export default {
       });
     },
     getProjectDetail() {
-      if (this.$route.query.type == "0") {
+      if (this.trainingProject) {
         getTrainingProject({ id: this.project.id }).then(({ data }) => {
           this.project = data.msg;
+          this.getTrainingProject();
         });
       } else {
         getProjects({ id: this.project.id }).then(({ data }) => {
           this.project = data.msg;
+          this.getProjects();
         });
       }
     },
@@ -288,6 +290,16 @@ export default {
           this.$store.dispatch("project/get_Projects");
         });
       });
+    },
+    getProjects(){
+         getProjects().then(({data})=>{
+             this.$store.commit("project/SET_PROJECTS", data.msg);
+         })
+    },
+    getTrainingProject(){
+      getTrainingProject().then(({data})=>{
+            this.$store.commit('trainingStatus/SET_TRAINPROJECT',data.msg);
+      })
     }
   },
   created() {

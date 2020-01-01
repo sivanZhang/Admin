@@ -4,16 +4,6 @@
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-          <el-tab-pane label="评论" name="first">
-            <remarks :project="project" :RemarksData="RemarksData" @refreshRemark="updateRemark()"></remarks>
-          </el-tab-pane>
-          <el-tab-pane label="任务" name="second">
-            <task :taskList="taskList"></task>
-          </el-tab-pane>
-          <el-tab-pane label="资产" name="third">
-            <assets :project="project" :assetsList="assetsList" />
-          </el-tab-pane>
-          <!-- <el-tab-pane label="动态" name="fifth">动态</el-tab-pane> -->
           <el-tab-pane label="信息" name="sixth">
             <info :project="project" @refreshProject="getProjectDetail()"/>
             <el-divider />
@@ -25,6 +15,16 @@
               :attrsTypeNum="attrsTypeNum"
             />
           </el-tab-pane>
+          <el-tab-pane label="评论" name="first">
+            <remarks :project="project" :RemarksData="RemarksData" @refreshRemark="updateRemark()"></remarks>
+          </el-tab-pane>
+          <el-tab-pane label="任务" name="second">
+            <task :taskList="taskList"></task>
+          </el-tab-pane>
+          <el-tab-pane label="资产" name="third">
+            <assets :project="project" :assetsList="assetsList" />
+          </el-tab-pane>
+          <!-- <el-tab-pane label="动态" name="fifth">动态</el-tab-pane> -->
           <el-tab-pane label="参与工种" name="seventh">
             <joinDept :project="project" />
           </el-tab-pane>
@@ -53,7 +53,7 @@ export default {
   ],
   data() {
     return {
-      activeTab: "first"
+      activeTab: "sixth"
     };
   },
   name: "projectDrawer",
