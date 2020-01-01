@@ -31,62 +31,68 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="我的任务" name="first">
         <el-row style="padding-bottom:10px">
-      <el-col style="text-align:right">
-        <div style="display:flex;justify-content:flex-end">
-          <el-select v-model="colSel" placeholder="请选择" style="width:130px" filterable size="mini">
-            <el-option
-              v-for="item in columnSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-input
-            v-if="colShow"
-            placeholder="输入关键字搜索"
-            v-model="keyword"
-            size="mini"
-            @keyup.enter.native="getMyTask()"
-            style="width:240px"
-          ></el-input>
-          <el-select
-            v-if="colSel === 'status'"
-            v-model="colSel2"
-            placeholder="请选择"
-            style="width:300px;margin-top:1px"
-            multiple
-            filterable
-            size="mini"
-          >
-            <el-option
-              v-for="item in columnSelect2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <div v-if="colSel === 'start_date' || colSel === 'end_date'">
-            <el-date-picker
-              v-model="timeSelection"
-              type="date"
-              placeholder="选择日期"
-              size="mini"
-              style="width:130px"
-            ></el-date-picker>
-            <span style="text-align:center;padding-top:3px">至</span>
-            <el-date-picker
-              v-model="timeSelection2"
-              type="date"
-              placeholder="选择日期"
-              size="mini"
-              style="width:130px"
-            ></el-date-picker>
-          </div>
-          <el-button @click="getMyTask()" type="primary" style="margin-left:5px">查询</el-button>
-          <el-button @click="reMyTask()" type="primary">重置</el-button>
-        </div>
-      </el-col>
-    </el-row>
+          <el-col style="text-align:right">
+            <div style="display:flex;justify-content:flex-end">
+              <el-select
+                v-model="colSel"
+                placeholder="请选择"
+                style="width:130px"
+                filterable
+                size="mini"
+              >
+                <el-option
+                  v-for="item in columnSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <el-input
+                v-if="colShow"
+                placeholder="输入关键字搜索"
+                v-model="keyword"
+                size="mini"
+                @keyup.enter.native="getMyTask()"
+                style="width:240px"
+              ></el-input>
+              <el-select
+                v-if="colSel === 'status'"
+                v-model="colSel2"
+                placeholder="请选择"
+                style="width:300px;margin-top:1px"
+                multiple
+                filterable
+                size="mini"
+              >
+                <el-option
+                  v-for="item in columnSelect2"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <div v-if="colSel === 'start_date' || colSel === 'end_date'">
+                <el-date-picker
+                  v-model="timeSelection"
+                  type="date"
+                  placeholder="选择日期"
+                  size="mini"
+                  style="width:130px"
+                ></el-date-picker>
+                <span style="text-align:center;padding-top:3px">至</span>
+                <el-date-picker
+                  v-model="timeSelection2"
+                  type="date"
+                  placeholder="选择日期"
+                  size="mini"
+                  style="width:130px"
+                ></el-date-picker>
+              </div>
+              <el-button @click="getMyTask()" type="primary" style="margin-left:5px">查询</el-button>
+              <el-button @click="reMyTask()" type="primary">重置</el-button>
+            </div>
+          </el-col>
+        </el-row>
         <el-table
           ref="assetTable"
           v-loading="tableLoading"
@@ -131,64 +137,58 @@
           </el-table-column>
           <!-- <el-table-column label="状态" align="center" width="80">
             <template slot-scope="scope">{{ scope.row.task.status|taskStatus }}</template>
-          </el-table-column> -->
-         <el-table-column width="30px">
-        <template slot-scope="scope">
-          <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 0"
-              :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px',padding: '25px 5px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 1"
-              :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px',padding: '25px 5px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 2"
-              :style="{width:'10px',backgroundColor:'#589BAD',border:'0px',padding: '25px 5px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 3"
-              :style="{width:'10px',backgroundColor:'#2D5637',border:'0px',padding: '25px 5px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：完成" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 4"
-              :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px',padding: '25px 5px'}"
-            ></el-card>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="任务状态：超时" placement="top">
-            <el-card
-              v-if="scope.row.task.status === 5"
-              :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px',padding: '25px 5px'}"
-            ></el-card>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="任务状态/进度"
-        prop="status"
-        width="180px"
-        align="center"
-      
-      >
-        <template slot-scope="scope">
-         {{ scope.row.task.status|taskStatus }}
-          <el-progress
-            :stroke-width="12"
-            :percentage="scope.row.task.schedule"
-            v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
-          ></el-progress>
-          <div v-if="scope.row.task.status == 3">{{scope.row.task.statements}}</div>
-        </template>
-      </el-table-column>
+          </el-table-column>-->
+          <el-table-column width="30px">
+            <template slot-scope="scope">
+              <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 0"
+                  :style="{width:'10px',backgroundColor:'#F9ce8c',border:'0px',padding: '25px 5px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：未开始" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 1"
+                  :style="{width:'10px',backgroundColor:'#59e0e8',border:'0px',padding: '25px 5px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：进行中" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 2"
+                  :style="{width:'10px',backgroundColor:'#589BAD',border:'0px',padding: '25px 5px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：审核中" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 3"
+                  :style="{width:'10px',backgroundColor:'#2D5637',border:'0px',padding: '25px 5px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：完成" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 4"
+                  :style="{width:'10px',backgroundColor:'#2f5c85',border:'0px',padding: '25px 5px'}"
+                ></el-card>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="任务状态：超时" placement="top">
+                <el-card
+                  v-if="scope.row.task.status === 5"
+                  :style="{width:'10px',backgroundColor:'#C64b2b',border:'0px',padding: '25px 5px'}"
+                ></el-card>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="任务状态/进度" prop="status" width="180px" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.task.status|taskStatus }}
+              <el-progress
+                :stroke-width="12"
+                :percentage="scope.row.task.schedule"
+                v-if="scope.row.task.status != 3 && scope.row.task.status != 4"
+              ></el-progress>
+              <div v-if="scope.row.task.status == 3">{{scope.row.task.statements}}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-tooltip content="打开任务" placement="top">
@@ -202,17 +202,17 @@
             </template>
           </el-table-column>
         </el-table>
-          <div class="block" style="text-align: right">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="pageSizeList"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="MyTask.length"
-      ></el-pagination>
-    </div>
+        <div class="block" style="text-align: right">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="pageSizeList"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="MyTask.length"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="任务详情" name="second" disabled lazy>
         <detail
@@ -253,7 +253,7 @@ export default {
       id: this.$store.state.login.userInfo.id,
       activeName: "first",
       loginMessage: this.$store.state.login.userInfo,
-      MyTask:  [],
+      MyTask: [],
       asset: {},
       project: {},
       currentPage: 1,
@@ -273,7 +273,7 @@ export default {
       TaskRecord: [],
       activeRow: {},
       tableLoading: false,
-       StatusList: [
+      StatusList: [
         {
           label: "暂停",
           value: 0
@@ -307,9 +307,9 @@ export default {
           label: "开始日期"
         },
         {
-        value: 'end_date',
-        label: '结束日期'
-      },
+          value: "end_date",
+          label: "结束日期"
+        },
         {
           value: "status",
           label: "状态"
@@ -322,16 +322,15 @@ export default {
       timeSelection: "",
       timeSelection2: "",
       currentGrade: null
-    
     };
   },
   created() {
-    this.getTaskList()
+    this.getTaskList();
   },
   mounted() {
     document.body.style.minWidth = "auto";
   },
- watch: {
+  watch: {
     colSel: {
       handler: function(newVal, oldVal) {
         this.columnSelect2 = [];
@@ -390,24 +389,28 @@ export default {
   },
   methods: {
     getTaskList() {
-      this.tableLoading = true
-      queryMyTask({
-        inplugin: null
-      }).then(({ data }) => {
-        this.MyTask = [...data.msg]
-        this.tableLoading = false
-      // console.log(this.MyTask);
-      }).catch(() => {
-        this.tableLoading = false
-      })
+      this.tableLoading = true;
+      let data = {};
+      data = {
+        status: "[0,1,2,5]",
+      };
+      getStatusTaskList(data)
+        .then(({ data }) => {
+          this.MyTask = [...data.msg];
+          this.tableLoading = false;
+          // console.log(this.MyTask);
+        })
+        .catch(() => {
+          this.tableLoading = false;
+        });
     },
     activename() {
       this.activeName = "first";
     },
     handleClick(tab, event) {
-     // console.log(tab, event);
+      // console.log(tab, event);
     },
-     //搜索
+    //搜索
     getMyTask() {
       let data = {};
       function DateFormat(dateVal) {
@@ -505,19 +508,23 @@ export default {
         this.currentPage = 1;
       });
     },
-     //重置
+    //重置
     reMyTask() {
-      getStatusTaskList().then(
-        ({ data }) => {
-          this.MyTask = [...data.msg];
-      //    this.currentPage = 1;
-          this.keyword = "";
-          this.colSel = "project_name";
-          this.colSel2 = [];
-          this.timeSelection = "";
-          this.timeSelection2 = "";
-        }
-      );
+      let data = {};
+      data = {
+        status: "[0,1,2,5]",
+        pagenum: this.pageSize,
+        page: this.currentPage
+      };
+      getStatusTaskList(data).then(({ data }) => {
+        this.MyTask = [...data.msg];
+        //    this.currentPage = 1;
+        this.keyword = "";
+        this.colSel = "project_name";
+        this.colSel2 = [];
+        this.timeSelection = "";
+        this.timeSelection2 = "";
+      });
     },
     // 分页
     handleSizeChange(val) {
