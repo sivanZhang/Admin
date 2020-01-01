@@ -4,7 +4,7 @@
       <el-col :span="4">
         <font style="font-size:12px;">制作要求:</font>
       </el-col>
-      <el-col :span="19" style="font-size:12px;">{{taskdetail}}</el-col>
+      <el-col :span="19" style="font-size:12px;">{{ taskdetail }}</el-col>
     </el-row>
     <div style="text-align: right;">
       <el-checkbox v-model="status_finish" style="margin-bottom:10px;" size="small" border>确认满足制作要求</el-checkbox>
@@ -12,23 +12,23 @@
     <el-form :model="formInline" label-position="left" label-width="100px">
       <el-form-item label="成果路径:">
         <el-input
-        clearable
           v-model="formInline.path"
+          clearable
           :placeholder="pathPlugin?'':'请输入成果文件路径...'"
           style="margin-left:-18px;"
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item class="text-right">
-        <el-button type="primary" @click="submitForm" class="btn">提交</el-button>
+        <el-button type="primary" class="btn" @click="submitForm">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
-import { taskApprove, getTaskDetail } from "@/api/task";
+import { taskApprove, getTaskDetail, getDirs } from '@/api/task'
 export default {
-  name: "my-task-approve",
-  props: ["row","pathPlugin"],
+  name: 'MyTaskApprove',
+  props: ['row', 'pathPlugin', 'taskId', 'os'],
   data() {
     return {
       status_finish: false,
@@ -36,39 +36,51 @@ export default {
       formInline: {
         dept_id: this.row.task.dept.id,
         task_id: this.row.task.id,
-        path: this.pathPlugin ? this.pathPlugin : ''
+        path: ''
       }
-    };
+    }
   },
   watch: {
     row: {
+      deep: true,
       handler: function(newVal, oldVal) {
         if (newVal) {
-          let dept = newVal.task.dept;
-          let task = newVal.task;
+          const dept = newVal.task.dept
+          const task = newVal.task
           this.formInline = {
             dept_id: dept.id,
             task_id: task.id,
-            path: ""
-          };
+            path: ''
+          }
+          this.getInitalPath()
         }
       }
     }
   },
+  created() {
+    this.getInitalPath()
+  },
   methods: {
+    getInitalPath() {
+      if (this.os && this.taskId) {
+        getDirs({ id: self.taskRecord.task_id, os: this.os || 'windows' }).then(({ data }) => {
+          this.formInline.path = data.msg
+        })
+      }
+    },
     getMakeQequire(task_id) {
       getTaskDetail({ id: task_id }).then(({ data }) => {
         if (data.status === 0) {
-          this.taskdetail = data.msg.content;
+          this.taskdetail = data.msg.content
         }
-      });
+      })
     },
-    //表单提交，提交审核
+    // 表单提交，提交审核
     submitForm() {
       if (this.status_finish == false) {
-        this.$alert("请勾选确认满足制作要求", "提示", {
-          confirmButtonText: "确定"
-        });
+        this.$alert('请勾选确认满足制作要求', '提示', {
+          confirmButtonText: '确定'
+        })
       }
       // console.log("表单");
       // console.log(this.formInline);
@@ -76,25 +88,25 @@ export default {
         taskApprove(this.formInline)
           .then(res => {
             if (res.data.status === 0) {
-              //提交审核成功
-              this.$message.success(res.data.msg);
-              this.$emit("refresh");
-              this.formInline.path = "";
-              this.$emit("getRow");
-              this.status_finish = false;
+              // 提交审核成功
+              this.$message.success(res.data.msg)
+              this.$emit('refresh')
+              this.formInline.path = ''
+              this.$emit('getRow')
+              this.status_finish = false
             } else {
-              this.$message.warning(res.data.msg);
-              this.formInline.path = "";
-              this.$emit("getRow");
-              this.status_finish = false;
+              this.$message.warning(res.data.msg)
+              this.formInline.path = ''
+              this.$emit('getRow')
+              this.status_finish = false
             }
           })
-          .catch(err => {});
+          .catch(err => {})
       }
       //  this.status_finish=false;
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 // .text-right {

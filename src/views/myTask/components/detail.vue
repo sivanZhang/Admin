@@ -22,7 +22,7 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="任务详情" name="first">
           <tabTaskDtail ref="taskDtail" />
-          <el-button type="primary" @click="handelClick" class="create">创建工程</el-button>
+          <el-button type="primary" class="create" @click="handelClick">创建工程</el-button>
         </el-tab-pane>
         <el-tab-pane label="关联任务输出" name="seven">
           <linkTaskOutput ref="linkTaskOutput" />
@@ -43,7 +43,8 @@
           <tab-approve
             v-if="activeRow.task && activeRow.task.status === 2"
             :row="activeRow"
-            :pathPlugin="pathPlugin"
+            :task-id="taskRecord.task_id"
+            :os="os"
           />
           <div
             v-if="activeRow.task && activeRow.task.status === 3"
@@ -117,8 +118,7 @@ export default {
         comment: [
           { message: '请输入任务完成情况说明', trigger: 'blur' }
         ]
-      },
-      pathPlugin: ''
+      }
     }
   },
   watch: {
@@ -137,7 +137,7 @@ export default {
     new QWebChannel(qt.webChannelTransport, function({ objects }) {
       var appManager = objects.app_manager
       appManager.textChanged.connect(function(os) {
-        self.os = os
+        self.os = os || 'windows'
       })
     })
   },
@@ -149,12 +149,13 @@ export default {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
-        getDirs({ id: self.taskRecord.task_id, working:"", os: self.os || 'windows' }).then(({ data }) => {
+        getDirs({
+          id: self.taskRecord.task_id,
+          working: '',
+          os: self.os
+        }).then(({ data }) => {
           appManager.text = `path@${data.msg}`
-          this.pathPlugin = data.msg;
         })
-      }).catch(err=>{
-        this.pathPlugin = ''
       })
     },
     getTaskDetail(id) {
@@ -201,7 +202,7 @@ export default {
 </script>
 
 <style scoped>
-.create{
-  margin-top: 15px;
+.create {
+    margin-top: 15px;
 }
 </style>

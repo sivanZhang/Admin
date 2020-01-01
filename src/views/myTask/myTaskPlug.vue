@@ -32,6 +32,7 @@
       <el-tab-pane label="我的任务" name="first">
         <el-table
           ref="assetTable"
+          v-loading="tableLoading"
           :data="MyTask"
           border
           :stripe="true"
@@ -40,7 +41,6 @@
           highlight-current-row
           row-class-name="hover"
           style="width: 100%;"
-          v-loading="tableLoading"
         >
           <el-table-column prop="project.name" label="项目" align="center" />
           <el-table-column prop="task.name" label="任务" align="left" />
@@ -92,7 +92,7 @@ import {
   putTaskRecord,
   queryTaskRecord,
   queryTask,
-  getStatusTaskList,
+  getStatusTaskList
 } from '@/api/task'
 import detail from './components/detail'
 import approveLog from '@/views/components/approve-log'
@@ -128,11 +128,11 @@ export default {
       logsLoading: false,
       TaskRecord: [],
       activeRow: {},
-      tableLoading:false
+      tableLoading: false
     }
   },
   created() {
-    this.getTaskList();
+    this.getTaskList()
   },
   mounted() {
     document.body.style.minWidth = 'auto'
@@ -140,16 +140,16 @@ export default {
 
   methods: {
     getTaskList() {
-      this.tableLoading=true;
+      this.tableLoading = true
       queryMyTask({
-      inplugin: null
-    }).then(({ data }) => {
-      this.MyTask = [...data.msg]
-      this.tableLoading=false;
+        inplugin: null
+      }).then(({ data }) => {
+        this.MyTask = [...data.msg]
+        this.tableLoading = false
       // console.log(this.MyTask);
-    }).catch(()=>{
-      this.tableLoading=false;
-    })
+      }).catch(() => {
+        this.tableLoading = false
+      })
     },
     activename() {
       this.activeName = 'first'
