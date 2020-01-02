@@ -378,7 +378,7 @@ export default {
               ...payload,
              episode: String(this.colSel2)
             };
-            this.name = { episode: "[" + String(this.colSel2) + "]" };
+            this.name = { episode:  String(this.colSel2) };
           }
           break;
           case "session":
@@ -387,7 +387,7 @@ export default {
               ...payload,
               session: String(this.colSel2)
             };
-            this.name = { session: "[" + String(this.colSel2) + "]" };
+            this.name = { session: String(this.colSel2) };
           }
           break;
         case "level":
@@ -408,7 +408,7 @@ export default {
             this.name = { priority: "[" + String(this.colSel2) + "]" };
           }
       }
-      this.$emit("refreshAssetList",3,payload,name)
+      this.$emit("refreshAssetList",3,payload,this.name)
     },
     //重置
     refreshOneSel() {

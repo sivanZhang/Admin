@@ -1296,7 +1296,8 @@ export default {
           ...this.multiSelect,
           ...this.name,
           project: this.$route.params.id,
-          print: "null"
+          print: "null",
+          asset_type: this.drawerType === "scene" ? 0 : 1
         })
         .then(({
           data
