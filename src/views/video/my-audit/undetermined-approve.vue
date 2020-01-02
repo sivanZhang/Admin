@@ -124,8 +124,16 @@
           </el-image>
         </template>
       </el-table-column>
-     
-       
+      <el-table-column prop="asset_episode" label="集数" width="120px;" >
+         <template slot-scope="scope">
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.asset_episode}}</div>
+        </template>
+      </el-table-column>
+       <el-table-column prop="asset_session" label="场次" width="120px;" >
+         <template slot-scope="scope">
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.asset_session}}</div>
+        </template>
+      </el-table-column>  
       <el-table-column prop="task.content" label="任务内容" width="120px;" >
          <template slot-scope="scope">
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.content}}</div>
@@ -580,9 +588,20 @@ export default {
     border-radius: 0px;
   }
 }
-.el-table--mini th,
-.el-table--mini td {
+.el-table--mini th{
   padding: 12px 0;
+}
+
+.el-table--mini td {
+  padding: 0;
+}
+.cell{
+  padding-left:0px !important;
+  padding-right:0px !important;
+  text-align: center;
+}
+.el-image{
+  display:block !important;
 }
  .btn-explain{
         padding-left:30px;

@@ -20,11 +20,11 @@
         </el-table-column>
         <el-table-column label="镜头" header-align="center">
             <el-table-column label="镜头号" prop="approve_asset__name" header-align="center" />
-            <el-table-column label="缩略图" align="center" width="180">
+            <el-table-column label="缩略图" align="center" width="180" height="100">
                 <template slot-scope="scope">
                     <el-image
                         :src="$store.state.BASE_URL+scope.row.approve_asset__image"
-                        style="width: 160px;height: 90px;cursor: pointer"
+                        style="width: 180px;height: 100px;cursor: pointer;"
                         :preview-src-list="[$store.state.BASE_URL+scope.row.approve_asset__image]"
                     >
                         <div slot="placeholder" class="image-slot">
@@ -39,6 +39,8 @@
                     </el-image>
                 </template>
             </el-table-column>
+            <el-table-column prop="approve_asset__episode" label="集数" header-align="center" />
+            <el-table-column prop="approve_asset__session" label="场次"  header-align="center" />
         </el-table-column>
         <el-table-column label="所属项目" prop="approve_task__name" header-align="center" />
         <!-- <el-table-column label="项目" header-align="center">
