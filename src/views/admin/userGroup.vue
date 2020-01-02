@@ -82,6 +82,15 @@
         <el-form-item label="是否启用" prop="isactive">
           <el-switch v-model="userForm.isactive"></el-switch>
         </el-form-item>
+         <el-form-item label="是否为练习生" prop="trainingMenber">
+          <el-switch 
+            v-model="userForm.trainingMenber"  
+            @change="showSchool">
+            </el-switch>
+        </el-form-item>
+        <el-form-item label="学校" prop="school" v-show="userForm.trainingMenber">
+          <el-input v-model="userForm.school" @input="change($event)" ></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button type="primary" @click="addUser">立即添加</el-button>
@@ -157,7 +166,9 @@ export default {
       dealUserCount: 0,
       userForm: {
         password: "123456",
-        isactive: true
+        isactive: true,
+        trainingMenber:false
+
       },
       resetPassForm: {
         pass: "",
@@ -173,7 +184,7 @@ export default {
       buttonStates: {
         createLoading: false
       },
-      multipleSelection: []
+      multipleSelection: [],
     };
   },
 
@@ -301,6 +312,9 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    showSchool(){
+      this.userForm.trainingMenber ==!this.userForm.trainingMenber;
     }
   },
 
