@@ -7,15 +7,15 @@
       <el-table-column prop="rank" label="排名"></el-table-column>
       <el-table-column prop="asset__name" label="镜头号" show-overflow-tooltip></el-table-column>
       <el-table-column prop="link__content" label="环节内容" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="approve_task" label="任务ID"></el-table-column>
+      <!-- <el-table-column prop="approve_task" label="任务ID"></el-table-column> -->
       <el-table-column prop="score" label="审批评分"></el-table-column>
       <el-table-column prop="submition_count" label="提交次数"></el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="submit_flag"
         label="是否提交作业(提交并审批通过的)"
         :formatter="submitionFormat"
         width="110"
-      ></el-table-column>
+      ></el-table-column> -->
       <el-table-column prop="submit_time" label="提交时间" width="85">
         <template slot-scope="scope">{{scope.row.submit_time|dateTimeFormat}}</template>
       </el-table-column>
