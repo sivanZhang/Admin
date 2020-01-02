@@ -2,18 +2,17 @@
   <!-- 练习生成绩单 -->
   <div id="reportCard">
     <el-row>
-      <el-col :span="2">
+      <el-col :span="3">
         <el-button icon="el-icon-upload2" type="success" @click="targetUpload" :disabled="ButtontDisabled">导出</el-button>
+        <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
       </el-col>
-      <el-col :span="20" align="right" class="button-Refresh" >
+      <el-col :span="2" class="button-Refresh" >
         <span class="btn-explain" @click="openExplain()">
           使用帮助:
           <svg-icon icon-class="wenhao" />
         </span>
       </el-col>
-      <el-col :span="2" align="center">
-        <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
-      </el-col>
+      
     </el-row>
     <el-tabs v-model="activeName" @tab-click="tabclick">
       <el-tab-pane label="按权重排名" name="tab1" lazy>
