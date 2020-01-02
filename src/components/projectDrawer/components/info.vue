@@ -47,7 +47,7 @@
           <el-col :span="6" class="comment">项目编码</el-col>
           <el-col :span="18" class="comment">{{project.code}}</el-col>
         </el-row>
-        <el-row v-if="configImg == 'img'">
+        <el-row >
           <el-col :span="6" class="comment">制作要求</el-col>
           <el-col :span="18" class="comment">
             <div
