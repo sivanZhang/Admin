@@ -64,7 +64,8 @@ export default {
       createLoading: false,
       activeRow: {}, //点击任务列表选中的列的数据
       surplus_labor_hour: null,
-      trainingAuth: this.$store.state.login.userInfo.auth.view_training_project
+      trainingAuth: this.$store.state.login.userInfo.auth.view_training_project,
+      system_auth: this.$store.state.login.userInfo.auth.system_auth,
     };
   },
   computed: {
@@ -245,7 +246,7 @@ export default {
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="8" v-if="!trainingAuth">
+      <el-col :span="8" v-if="system_auth">
         <el-row class="basic" :gutter="15">
           <el-col :span="24" class="card-warp">
             <MyManWork :my-task-list="MyTaskList" />
@@ -256,7 +257,7 @@ export default {
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="8" v-if="trainingAuth">
+      <el-col :span="8" v-if="trainingAuth&&!system_auth">
         <el-row class="aside" :gutter="15">
           <el-col :span="24" class="card-warp">
             <MyTaskCount :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
