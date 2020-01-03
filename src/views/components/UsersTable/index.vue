@@ -323,8 +323,6 @@ export default {
         type: "warning"
       }).then(() => {
         this.iconShow = false;
-        // console.log("save");
-        // console.log(row);
         editUserDetail({
           method: "put",
           userid: row.id,
