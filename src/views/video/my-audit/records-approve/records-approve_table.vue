@@ -4,7 +4,7 @@
             <el-table-column label="名称" prop="approve_task__name" header-align="center" />
             <el-table-column label="路径" prop="path" header-align="center" />
             <el-table-column label="内容" prop="approve_task__content" header-align="center" />
-            <el-table-column label="状态" align="center" width="80">
+            <el-table-column label="状态" align="center" width="50">
                 <template slot-scope="scope">
                     {{
                     scope.row.approve_task__status | taskStatus
@@ -15,7 +15,7 @@
                 label="执行人"
                 prop="approve_task_executors"
                 header-align="center"
-                width="100"
+                width="80"
             />
         </el-table-column>
         <el-table-column label="镜头" header-align="center">
@@ -49,15 +49,15 @@
       <el-table-column label="实习成绩" prop="score" />
         </el-table-column>-->
         <el-table-column label="审批" align="center">
-            <el-table-column label="审批结果" align="center" width="100">
+            <el-table-column label="结果" align="center" width="40">
                 <template slot-scope="scope">
                     {{
                     scope.row.approve_result ? "同意" : "拒绝"
                     }}
                 </template>
             </el-table-column>
-            <el-table-column label="审批意见" prop="suggestion" align="center" />
-            <el-table-column label="审批时间" align="center">
+            <el-table-column label="意见" prop="suggestion" align="left" />
+            <el-table-column label="时间" align="center">
                 <template slot-scope="scope">{{ scope.row.date | dateTimeFormat }}</template>
             </el-table-column>
         </el-table-column>
