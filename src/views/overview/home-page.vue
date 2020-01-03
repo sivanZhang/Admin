@@ -66,6 +66,7 @@ export default {
       surplus_labor_hour: null,
       trainingAuth: this.$store.state.login.userInfo.auth.view_training_project,
       system_auth: this.$store.state.login.userInfo.auth.system_auth,
+      view_training_teacher:this.$store.state.login.userInfo.role.role
     };
   },
   computed: {
@@ -79,6 +80,9 @@ export default {
     }
   },
   created() {
+    if(this.view_training_teacher!=null){
+      return this.view_training_teacher=this.view_training_teacher.includes('练习生导师')
+    }
     this.getMyTasks();
   },
   beforeRouteEnter(to, from, next) {
@@ -226,7 +230,7 @@ export default {
 </script>
 <template>
   <div id="home-page" ref="drawer-parent">
-    <el-row class="home-header-card" :gutter="15" v-if="trainingAuth">
+    <el-row class="home-header-card" :gutter="15" v-if="trainingAuth&&!view_training_teacher||system_auth">
       <el-col :span="12" class="card-warp">
         <MyReportCard />
       </el-col>
