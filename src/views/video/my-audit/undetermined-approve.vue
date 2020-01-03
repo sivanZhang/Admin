@@ -139,7 +139,7 @@
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.content}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="end_date" label="截止日期" width="85px">
+      <el-table-column prop="end_date" label="截止日期" width="70px">
         <template slot-scope="scope">{{scope.row.task.end_date|dateFormat}}</template>
       </el-table-column>
       <el-table-column prop="task.task_executors" label="执行人" width="70px">
@@ -148,25 +148,25 @@
         </template>
       </el-table-column>
        
-      <el-table-column label="优先级" prop="priority">
+      <el-table-column label="优先级" prop="priority" width="45px">
         <template slot-scope="scope"> 
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.priority|taskPriority}}</div> 
         </template>
       </el-table-column>
-      <el-table-column label="开始日期" width="85px">
+      <el-table-column label="开始日期" width="70px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.total_hour" label="预设(h)" :render-header="renderheader" width="60px"></el-table-column>
-      <el-table-column label="提交日期" width="85px">
+      <el-table-column prop="task.total_hour" label="预设(h)" :render-header="renderheader" width="50px"></el-table-column>
+      <el-table-column label="提交日期" width="70px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
-      <el-table-column label="任务ID" prop="task.id" class-name="links" width="60px">
+      <el-table-column label="任务ID" prop="task.id" class-name="links" width="50px">
         <template slot-scope="scope">
           <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.task.id}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="task.name" label="任务名称"  ></el-table-column>
-      <el-table-column prop="task.dept.name" label="工种"></el-table-column>
+      <el-table-column prop="task.dept.name" label="工种" width="60px"></el-table-column>
       <!-- <el-table-column label="任务ID" class-name="links" prop="id" width="105px" sortable="custom">
           <template slot-scope="scope">
             <span @click="showDrawer(scope.row)">{{scope.row.id}}</span>
