@@ -15,7 +15,7 @@
             <el-avatar size="small">{{scope.row.username | avatarFormat}}</el-avatar>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="姓名" align="left" class-name="links">
+        <el-table-column prop="username" label="姓名" align="left" class-name="links" width="80">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -30,6 +30,22 @@
               v-if="!editing||clickId !== scope.row.id"
               @click="showDrawer(scope.row)"
             >{{scope.row.username}}</span>
+          </template>
+        </el-table-column>
+           <el-table-column prop="school" label="学校" align="left" width="140">
+          <template slot-scope="scope">
+            <el-input
+              size="small"
+              v-model="scope.row.school"
+              placeholder="请输入学校"
+              v-if="editing&&clickId === scope.row.id"
+              @change="showEditIcon"
+            >
+              <span>{{scope.row.school}}</span>
+            </el-input>
+            <span
+              v-if="!editing||clickId !== scope.row.id"
+            >{{scope.row.school}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="sex" label="性别" align="center" width="80">
@@ -269,6 +285,7 @@ export default {
         this.Info = JSON.parse(this.list);
         row.sex = this.Info.sex;
         row.username = this.Info.username;
+        row.school = this.Info.school;
         row.email = this.Info.email;
         row.phone = this.Info.phone;
         row.is_active =this.Info.is_active;
@@ -312,6 +329,7 @@ export default {
           method: "put",
           userid: row.id,
           username: row.username,
+          school: row.school,
           email: row.email,
           phone: row.phone,
           isactive: row.is_active === true ? 1 : 0,
