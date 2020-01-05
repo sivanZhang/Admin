@@ -111,7 +111,6 @@
       <taskFilter ref="taskFilter" @refresh_close="closeSelectedTag" />
       <el-table
         ref="multipleTable"
-        class="scroll-container"
         :height="curHeight"
         :data="TaskList"
         style="margin-top:15px;width:100%"
@@ -152,7 +151,6 @@
               :src="$store.state.BASE_URL+scope.row.asset.image"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
               style="width: 160px;height: 90px;cursor: pointer; display:inline-block;margin-top:5px;"
-              lazy
               fit="cover"
             >
               <div slot="placeholder" class="image-slot">
