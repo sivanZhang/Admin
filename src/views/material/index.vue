@@ -68,10 +68,10 @@
         </el-col>
       </el-row>
     </div>
+    <el-divider></el-divider>
     <el-table
       ref="materialList"
       :data="materialList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
       :cell-style="{borderRight:0}"
       highlight-current-row
       :row-key="(row)=>{ return row.id}"
@@ -84,9 +84,10 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 180px; height: 100px;cursor: pointer; display:block;"
+            style="width: 160px; height: 90px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
             v-if="!editing||clickId !== scope.row.id"
+            fit="cover"
           >
             <div slot="placeholder" class="image-slot">
               加载中
@@ -98,9 +99,10 @@
           </el-image>
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 180px; height: 100px;cursor: pointer;display:block;"
+            style="width: 160px; height: 90px;cursor: pointer;display:block;"
             @click.native="img(scope.row)"
             v-if="editing&&clickId === scope.row.id"
+            fit="cover"
           >
             <div slot="placeholder" class="image-slot">
               加载中
@@ -153,8 +155,9 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.project_image"
-            style="width: 180px; height: 100px;cursor: pointer; display:block;"
+            style="width: 160px; height: 90px;cursor: pointer; display:block;"
             :preview-src-list="[$store.state.BASE_URL+scope.row.project_image]"
+            fit="cover"
           >
             <div slot="placeholder" class="image-slot">
               加载中

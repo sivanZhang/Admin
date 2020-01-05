@@ -21,14 +21,6 @@
                     transition: all 2s;
                 }
             }
-            .image-slot {
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 56px;
-                background: #DCDFE6;
-            }
             @media screen and (max-width: 1500px) {
                 .item-project {
                     width: 25%;
