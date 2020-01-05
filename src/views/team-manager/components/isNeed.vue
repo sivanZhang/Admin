@@ -59,8 +59,8 @@
         <template slot-scope="scope">
           <el-image
             :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 180px; height: 100px;cursor: pointer; display:block;"
-            t:preview-src-lis="[$store.state.BASE_URL+scope.row.image]"
+            style="width: 160px; height: 90px;cursor: pointer; display:block;"
+            :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
           >
             <div slot="placeholder" class="image-slot">
               加载中
