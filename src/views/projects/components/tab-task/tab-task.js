@@ -33,7 +33,6 @@ import thumbtackMixin from '@/utils/thumbtack-mixin'
 import {
   getProjectJoinMeb
 } from '@/api/training'
-import dayjs from 'dayjs'
 import taskMulSel from '@/views/projects/components/mulConditionSel/taskMulSel'
 import taskFilter from '@/views/projects/components/filterCondition/taskFilter'
 import taskSel from '@/views/projects/components/oneConditionSel/taskSel'
@@ -45,6 +44,7 @@ export default {
   name: 'tab-task',
   data() {
     return {
+      rememberLoading: false,
       showdrawer: false,
       assetShow: false,
       authTask: null,
@@ -356,6 +356,7 @@ export default {
       if (this.show_total_hour == true) {
         this.checkList.push('预设时间（小时）')
       }
+      this.rememberLoading = true
       setupMenu({
         menu_type: 0,
         menu_list: String(this.checkList)
@@ -365,7 +366,9 @@ export default {
         }) => {
           this.visible = false
         }
-      )
+      ).finally(()=>{
+        this.rememberLoading = true
+      })
     },
     // 获取菜单设置
     getMenuList() {

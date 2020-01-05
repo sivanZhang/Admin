@@ -88,7 +88,7 @@
               </span>
             </el-col>
             <el-col :span="10" style="padding-top:8px" align="center">
-              <el-button type="primary" size="mini" @click="saveLongMenu">记住选择列</el-button>
+              <el-button type="primary" size="mini" @click="saveLongMenu" :loading="rememberLoading">记住选择列</el-button>
             </el-col>
             <el-button slot="reference" type="primary" icon="el-icon-setting" size="mini">展示列</el-button>
           </el-popover>
@@ -111,6 +111,7 @@
       <taskFilter ref="taskFilter" @refresh_close="closeSelectedTag" />
       <el-table
         ref="multipleTable"
+        class="scroll-container"
         :height="curHeight"
         :data="TaskList"
         style="margin-top:15px;width:100%"
@@ -130,8 +131,9 @@
         @row-click="showDrawer"
       >
         <!-- default-expand-all -->
-        <el-table-column type="selection" :reserve-selection="true" width="30px"></el-table-column>
+        <el-table-column :key="1" type="selection" :reserve-selection="true" width="40" align="center"></el-table-column>
         <el-table-column
+        :key="2"
           label="镜头号"
           v-if="show_asset_name"
           prop="asset"
@@ -144,12 +146,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="缩略图" v-if="show_project_image" width="180px">
+        <el-table-column :key="3" label="缩略图" v-if="show_project_image" width="180px" align="center">
           <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
               :src="$store.state.BASE_URL+scope.row.asset.image"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
-              style="width: 180px;height: 100px;cursor: pointer; display:block;"
+              style="width: 160px;height: 90px;cursor: pointer; display:inline-block;margin-top:5px;"
+              lazy
+              fit="cover"
             >
               <div slot="placeholder" class="image-slot">
                 加载中
@@ -165,6 +169,7 @@
         </el-table-column>
 
         <el-table-column
+        :key="4"
           label="集数"
           prop="episode"
           sortable="custom"
@@ -175,6 +180,7 @@
           <template slot-scope="scope">{{scope.row.episode?scope.row.episode:"-"}}</template>
         </el-table-column>
         <el-table-column
+        :key="5"
           label="场次"
           prop="session"
           sortable="custom"
@@ -185,6 +191,7 @@
           <template slot-scope="scope">{{scope.row.session?scope.row.session:"-"}}</template>>
         </el-table-column>
         <el-table-column
+        :key="6"
           label="制作内容"
           align="left"
           :max-width="70"
@@ -211,6 +218,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="7"
           label="环节"
           prop="dept"
           sortable="custom" 
@@ -222,6 +230,7 @@
           <template slot-scope="scope">{{scope.row.link_dept_name}}</template>
         </el-table-column>
         <el-table-column
+        :key="8"
           label="截止日期"
           width="90px"
           v-if="show_end_date"
@@ -243,6 +252,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="9"
           label="执行人" 
           v-if="show_executor"
           :filters="columnSelect2"
@@ -274,7 +284,7 @@
           </template>
         </el-table-column>
         <!-- 状态的颜色展示 -->
-        <el-table-column width="30px" v-if="show_status">
+        <el-table-column :key="10" width="30px" v-if="show_status">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="任务状态：暂停" placement="top">
               <el-card
@@ -315,6 +325,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="11"
           label="状态"
           prop="status"
           v-if="show_status"
@@ -334,8 +345,9 @@
             <div v-if="scope.row.status == 3">{{scope.row.statements}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="提交次数" prop="submit_num"  :min-width="35"></el-table-column>
+        <el-table-column :key="12" label="提交次数" prop="submit_num"  :min-width="35"></el-table-column>
         <el-table-column
+        :key="13"
           prop="priority"
           label="优先级"
           :formatter="Priority"
@@ -363,6 +375,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="14"
           prop="grade"
           label="难度"
           :formatter="Grade"
@@ -397,6 +410,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="15"
           label="开始日期"
           width="85px"
           v-if="show_start_date"
@@ -418,6 +432,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="16"
           :render-header="renderheader"
           prop="total_hour"
           align="center"
@@ -426,6 +441,7 @@
           v-if="show_total_hour"
         ></el-table-column>
         <el-table-column
+        :key="17"
           label="最后提交时间"
           header-align="left"
           width="60px"
@@ -433,7 +449,7 @@
         >
           <template slot-scope="scope">{{scope.row.latest_submit_time|dateFormat}}</template>
         </el-table-column>
-         <el-table-column label="操作" align="center" v-if="authTask">
+         <el-table-column :key="18" label="操作" align="center" v-if="authTask">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="添加子任务" placement="top">
               <span>
@@ -465,12 +481,13 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="任务ID"  prop="id" width="80px" sortable="custom">
+        <el-table-column :key="19" label="任务ID"  prop="id" width="80px" sortable="custom">
           <template slot-scope="scope">
             <span >{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column
+        :key="20"
           prop="name"
           label="任务名称" 
           v-if="show_name"
@@ -495,6 +512,7 @@
           </template>
         </el-table-column>
         <el-table-column
+        :key="21"
           label="创建日期"
           width="100px"
           v-if="show_create_time"
@@ -517,7 +535,7 @@
             <el-progress :stroke-width="12" :percentage="scope.row.schedule?scope.row.schedule:0"></el-progress>
           </template>
         </el-table-column>-->
-        <el-table-column label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
+        <el-table-column :key="22" label="创建者" v-if="show_creator_name" prop="user" link_dept_name>
           <template slot-scope="scope">{{scope.row.creator.name}}</template>
         </el-table-column>
         <!-- <el-table-column
