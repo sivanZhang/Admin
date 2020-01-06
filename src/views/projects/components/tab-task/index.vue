@@ -126,8 +126,7 @@
         v-loading="tableLoading"
         @filter-change="filterHandler"
         @sort-change="sortFilter"
-        @cell-dblclick="editCell"
-        @row-click="showDrawer"
+        @cell-dblclick="editCell"       
       >
         <!-- default-expand-all -->
         <el-table-column :key="1" type="selection" :reserve-selection="true" width="40" align="center"></el-table-column>
@@ -148,6 +147,7 @@
         <el-table-column :key="3" label="缩略图" v-if="show_project_image" width="180px" align="center">
           <template slot-scope="scope" v-if="!scope.row.pid">
             <el-image
+            @contextmenu.prevent="showDrawer(scope.row)"
               :src="$store.state.BASE_URL+scope.row.asset.image"
               :preview-src-list="[$store.state.BASE_URL+scope.row.asset.image]"
               style="width: 160px;height: 90px;cursor: pointer; display:inline-block;margin-top:5px;"
@@ -159,6 +159,7 @@
               </div>
               <div slot="error" class="image-slot">
                 <el-image
+                 @contextmenu.prevent="showDrawer(scope.row)"
                   :src="$store.state.BASE_URL+'images/appfile/1573029716.780075picture.png'"
                 ></el-image>
               </div>
