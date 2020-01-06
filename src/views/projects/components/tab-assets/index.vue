@@ -143,7 +143,7 @@
         v-loading="tableLoading"
         @filter-change="filterHandler"
         @sort-change="sortFilter"
-        :border="false"
+        border
         @cell-dblclick="editCell"
         @expand-change="expandShow"
         @row-click="show"
