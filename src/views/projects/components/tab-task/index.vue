@@ -146,6 +146,7 @@
 
         <el-table-column :key="3" label="缩略图" v-if="show_project_image" width="180px" align="center">
           <template slot-scope="scope" v-if="!scope.row.pid">
+            <el-tooltip effect="dark" content="右击展示侧边栏" placement="top">
             <el-image
             @contextmenu.prevent="showDrawer(scope.row)"
               :src="$store.state.BASE_URL+scope.row.asset.image"
@@ -164,6 +165,7 @@
                 ></el-image>
               </div>
             </el-image>
+            </el-tooltip>
           </template>
         </el-table-column>
 
