@@ -88,6 +88,12 @@ export function getProjectMember(params) {
     params
   })
 }
+//获取项目任务中执行人列表
+export function getProjectTaskMember(params) {
+  return AXIOS.get('/projects/stat/?task_executors', {
+    params
+  })
+}
 //获取项目中的场次和集数
 export function getEpisodeSession(params) {
   return AXIOS.get('/projects/projects/', {

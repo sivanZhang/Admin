@@ -1,7 +1,8 @@
 import {
   getProjectMember,
   getEpisodeSession,
-  getOneProjectLinks
+  getOneProjectLinks,
+  getProjectTaskMember
 } from '@/api/statistics'
 import {
   setupMenu,
@@ -467,9 +468,8 @@ export default {
 
     getProjectNum() {
       // 获取执行人的列表
-      getProjectMember({
-        id: this.$route.params.id,
-        members: ''
+      getProjectTaskMember({
+        id: this.$route.params.id
       }).then(
         ({
           data
@@ -1256,9 +1256,10 @@ export default {
             end_date: changeDateFormat(this.TaskForm.datetime[1]),
             project: this.$route.params.id
           }
-          console.log(data)
           if (this.TaskForm.executorlist.length) {
             data['executorlist'] = data['executorlist'].join()
+          }else{
+            data['executorlist'] = null
           }
           delete data.datetime
           // 若果是修改
@@ -1477,7 +1478,7 @@ export default {
         // console.log(this.filterExecutor);
 
         this.filterExecutor.forEach((item, index) => {
-          item = Number(item)
+          // item = Number(item)
           this.filterExecutor[index] = item
         })
       }
@@ -1535,7 +1536,7 @@ export default {
       if (this.filterExecutor.length) {
         data = {
           ...data,
-          executor_ids: '[' + String(this.filterExecutor) + ']'
+          executor_ids:  String(this.filterExecutor)
         }
       }
 
