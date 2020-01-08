@@ -80,10 +80,10 @@ export default {
     }
   },
   created() {
+    this.getMyTasks();
     if(this.view_training_teacher!=null){
       return this.view_training_teacher=this.view_training_teacher.includes('练习生导师')
-    }
-    this.getMyTasks();
+    } 
   },
   beforeRouteEnter(to, from, next) {
     // 刷新页面方法
