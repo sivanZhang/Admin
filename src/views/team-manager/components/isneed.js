@@ -668,7 +668,7 @@ export default {
         }
       } else if (column.property == "level") {
         switch (row.level) {
-          case 3:
+          case 0:
             return {
               background: "#C64b2b",
               color: "#FFFFFF"
