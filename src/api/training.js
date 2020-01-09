@@ -47,7 +47,7 @@ export function getTaskRecord(params){
 }
 //按照审批通过的任务提交时间来排名
 export function getApproveTimeRecord(params){
-    return AXIOS.get('/teachingsystem/statistics/?submition_time',{params})
+    return AXIOS.get('/teachingsystem/statistics/?submition',{params})
 }
 //按照考勤时间排名
 export function getAttendanceRecord(params){
