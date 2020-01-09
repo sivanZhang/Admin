@@ -105,7 +105,7 @@ export default {
         payload={...item}
       }else{
         payload={
-        tag: 0,
+        tag: 1,
         pagenum: this.pageSize2,
         page: this.currentPage2
       };
