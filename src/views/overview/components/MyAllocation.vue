@@ -7,9 +7,9 @@
       <el-button type="text" @click="$router.push({path:'/team-manager/team-manager'})">查看更多</el-button>
     </el-row>
     <el-table :data="sceneNeed">
-      <el-table-column label="镜头号" prop="name" show-overflow-tooltip class-name="links">
+      <el-table-column label="镜头号" prop="asset_name" show-overflow-tooltip class-name="links">
         <template slot-scope="scope">
-          <span @click="showDrawer(scope.row)">{{ scope.row.name }}</span>
+          <span @click="showDrawer(scope.row)">{{ scope.row.asset_name }}</span>
         </template>
       </el-table-column>
 
@@ -265,10 +265,10 @@ export default {
       this.TaskForm.name = this.assetName
     },
     showDrawer(row) {
-      this.assetId = row.id
-      this.assetName = row.name
+      this.assetId = row.asset_id
+      this.assetName = row.asset_name
 
-      getLinks({ asset: row.id }).then(({ data }) => {
+      getLinks({ asset: row.asset_id }).then(({ data }) => {
         this.$emit('changeLinks', data.msg)
       })
     },
