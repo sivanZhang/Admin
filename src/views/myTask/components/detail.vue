@@ -138,7 +138,7 @@ export default {
       handler: function(newVal, oldVal) {
         new QWebChannel(qt.webChannelTransport, ({ objects }) => {
           var appManager = objects.app_manager
-          appManager.text = `init@ @${self.taskRecord.task_id}`
+          appManager.text = `init@ @${this.taskRecord.task_id}`
         })
       }
     }
