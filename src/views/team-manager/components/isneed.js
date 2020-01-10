@@ -678,7 +678,7 @@ export default {
       return { borderRight: 0 };
     },
     //展示添加任务表单
-    showTaskForm(link_id, dept_id, content, date_and_user) {
+    showTaskForm(link_id, dept_id, content, date_and_user,assetId,assetName,create_date,end_date) {
       getDept({
         id: dept_id
       }).then(res => {
@@ -691,20 +691,23 @@ export default {
         {
           priority: 0,
           grade: 7,
-          asset: this.assetId,
+          asset: assetId==null?this.assetId:assetId,
           project: this.$route.params.id,
           link_id,
           content
         }
       );
-      const linkdatastart = date_and_user.date_start;
-      const linkdataend = date_and_user.date_end;
-      this.linkstart = linkdatastart;
+      if(assetName ==null||create_date ==null ||end_date ==null ||date_and_user!= null){
+        let linkdatastart = date_and_user.date_start;
+      let linkdataend = date_and_user.date_end;
+        this.linkstart = linkdatastart;
       this.linkend = linkdataend;
-      // const data = this.assetTaskList.filter(item => {
-      //   return item.asset.id === this.TaskForm.asset;
-      // });
       this.TaskForm.name = this.assetName;
+      } else{ 
+        this.linkstart = create_date;
+        this.linkend = end_date;
+        this.TaskForm.name = assetName;
+      }
     },
     //总工时默认值
     changeTime(val) {
@@ -750,26 +753,30 @@ export default {
                 this.cancelTask();
                 this.isDialogShow = false;
                 this.value1 = false;
-                this.getScene();
+                this.$emit("refresh");
+                this.getScene();           
               }
             })
             .catch(err => {
               this.createTaskLoading = false;
             });
+         //   this.$emit("refresh");
         } else {
           return false;
         }
-      });
+      });     
     },
     change() {
       this.$forceUpdate();
     },
     showDrawer(row) {
       this.value1 = true;
-      this.assetId = row.id;
-      this.assetName = row.name;
-      getLinks({ asset: row.id }).then(({ data }) => {
+      this.assetId = row.asset_id;
+      this.assetName = row.asset_name;
+      getLinks({ asset: row.asset_id }).then(({ data }) => {
         this.link = [...data.msg];
+        // console.log('1111111111')
+        // console.log(this.link)
       });
     },
     handleSelectionChange(val) {

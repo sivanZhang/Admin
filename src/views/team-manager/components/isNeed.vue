@@ -3,15 +3,15 @@
   <div id="isNeed">
     <div>
       <el-row :gutter="24" style="padding-bottom:15px;">
-         <el-col :span="16" style="padding-bottom:15px;">
-        <el-button
-          type="success"
-          @click="mulEditTasks(1)"
-          icon="el-icon-edit"
-          :disabled="this.multipleSelection.length === 0"
-        >批量修改</el-button>
-         </el-col>
-         <el-col :span="8" align="right">
+        <el-col :span="16" style="padding-bottom:15px;">
+          <el-button
+            type="success"
+            @click="mulEditTasks(1)"
+            icon="el-icon-edit"
+            :disabled="this.multipleSelection.length === 0"
+          >批量修改</el-button>
+        </el-col>
+        <el-col :span="8" align="right">
           <el-row type="flex" justify="end">
             <!-- 单条件筛选 -->
             <assetSel ref="assetSel" @refreshAssetList="getAssetList" />
@@ -26,7 +26,7 @@
           </el-row>
         </el-col>
       </el-row>
-       <assetFilter ref="assetFilter" @refresh_close="closeSelectedTag" />
+      <assetFilter ref="assetFilter" @refresh_close="closeSelectedTag" />
     </div>
     <el-table
       ref="sceneNeed"
@@ -50,9 +50,9 @@
           >{{scope.row.project_name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column label="镜头号" prop="name" width="120px">
+      <el-table-column label="镜头号" prop="asset_name" width="120px">
         <template slot-scope="scope">
-          <span @click="showDrawer(scope.row)">{{scope.row.name?scope.row.name:"-"}}</span>
+          <span @click="showDrawer(scope.row)">{{scope.row.asset_name?scope.row.asset_name:"-"}}</span>
         </template>
       </el-table-column>
       <el-table-column label="缩略图" prop="image" width="180px">
@@ -238,20 +238,56 @@
           >{{scope.row.level|Level}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="active?'未分配环节':'已分配环节'" align="center" width="160px">
-        <el-table-column prop="link" label="工种" align="left">
+      <el-table-column :label="active?'未分配环节':'已分配环节'" align="center" width="180px">
+        <el-table-column prop="link" label="工种" align="left" width="100px">
           <template slot-scope="scope">
-            <div v-for="(todo,index) of scope.row.not_allcoted_link" :key="index">{{todo.dept_name}}</div>
+            <div v-if="active=='true'">
+              <div v-for="(todo,index) of scope.row.not_allcoted_link" :key="index">
+                {{todo.dept_name}}
+                <el-tooltip effect="dark" content="添加任务" placement="top">
+                  <span>
+                    <i
+                      type="primary"
+                      class="el-icon-plus"
+                      style="color:blue"
+                      @click="showTaskForm(
+                        todo.link_id,todo.dept_id,scope.row.content,null,
+                        scope.row.asset_id,scope.row.asset_name,todo.dept_date_start,todo.dept_date_end)"
+                    ></i>
+                  </span>
+                </el-tooltip>
+              </div>
+            </div>
+            <div v-else>
+              <div v-for="(todo,index) of scope.row.allcoted_link" :key="index">{{todo.dept_name}}</div>
+            </div>
           </template>
         </el-table-column>
+
         <el-table-column label="截止日期" align="left" width="95px">
           <template slot-scope="scope">
+            <div v-if="active=='true'">
+              <div
+                v-for="(todo,index) of scope.row.not_allcoted_link"
+                :key="index"
+                style="position:top"
+              >{{todo.dept_date_end|dateFormat}}</div>
+            </div>
+            <div v-else>
+              <div
+                v-for="(todo,index) of scope.row.allcoted_link"
+                :key="index"
+                style="position:top"
+              >{{todo.dept_date_end|dateFormat}}</div>
+            </div>
+          </template>
+          <!-- <template slot-scope="scope">
             <div
-              v-for="(todo,index) of scope.row.not_allcoted_link"
+              v-for="(todo,index) of scope.row.allcoted_link"
               :key="index"
               style="position:top"
             >{{todo.dept_date_end|dateFormat}}</div>
-          </template>
+          </template>-->
         </el-table-column>
       </el-table-column>
       <el-table-column label="创建日期" align="left" width="160px" prop="date">
@@ -348,7 +384,7 @@
                     <i
                       class="el-icon-plus"
                       style="color:blue"
-                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
+                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user,null,null,null,null)"
                     ></i>
                   </span>
                 </el-tooltip>
@@ -796,7 +832,6 @@
   </div>
 </template>
 <script src="./isneed.js">
-
 </script>
 
 <style lang='scss' scoped>
