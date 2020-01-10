@@ -28,7 +28,7 @@
           <linkTaskOutput ref="linkTaskOutput" />
         </el-tab-pane>
         <el-tab-pane label="执行记录" name="second">
-          <tabLog :loglist="LogList" :logs-loading="logsLoading" />
+          <tabLog :loglist="logList" :logs-loading="logsLoading" />
         </el-tab-pane>
         <el-tab-pane label="执行任务" name="third">
           <task-form
