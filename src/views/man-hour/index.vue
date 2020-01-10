@@ -44,11 +44,11 @@
       </template>
       <el-table :data="projectCount">
         <!-- <el-table-column type="selection" width="55px"></el-table-column> -->
-        <el-table-column label="缩略图" align="center" width="80px;" v-if="show_image">
+        <el-table-column label="缩略图" align="center" width="180px;" v-if="show_image">
           <template slot-scope="scope">
             <el-image
               :src="$store.state.BASE_URL+scope.row.image"
-              style="width: 40px;height: 27px;cursor: pointer;"
+            style="width:180px;height: 100px;cursor: pointer; display:inline-block;margin-bottom:-10px"
               :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
               v-if="!editing||clickId !== scope.row.id"
             >
