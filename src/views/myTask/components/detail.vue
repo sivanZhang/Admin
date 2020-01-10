@@ -151,7 +151,6 @@ export default {
     handelClick() {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
-        appManager.text = `path@${data.msg}@${self.taskRecord.task_id}`
         var appManager = objects.app_manager
         getDirs({
           id: self.taskRecord.task_id,
