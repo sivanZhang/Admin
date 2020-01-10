@@ -31,7 +31,7 @@
 </template>
 <script>
 import { taskApprove, getTaskDetail, getDirs } from '@/api/task'
-import QWebChannel from '@/view/myTask/plugin/qwebchannel.js'
+import QWebChannel from '@/views/myTask/plugin/qwebchannel.js'
 export default {
   name: 'MyTaskApprove',
   props: ['row', 'pathPlugin', 'taskId', 'os'],
