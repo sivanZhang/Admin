@@ -39,7 +39,7 @@
             @cancel="cancel"
           />
         </el-tab-pane>
-        <el-tab-pane label="提交审核" name="fourth">
+        <el-tab-pane label="提交审核" name="fourth" lazy>
           <tab-approve
             v-if="activeRow.task && activeRow.task.status === 2"
             :row="activeRow"

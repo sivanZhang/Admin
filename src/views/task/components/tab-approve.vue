@@ -48,6 +48,7 @@ export default {
   },
   watch: {
     row: {
+      immediate: true,
       deep: true,
       handler: function(newVal, oldVal) {
         if (newVal) {
@@ -61,14 +62,10 @@ export default {
           this.getInitalPath()
         }
       }
-    },
-    os: {
-      handler(newVal) {
-        if (newVal) {
-          this.getInitalPath()
-        }
-      }
     }
+  },
+  created() {
+    this.getInitalPath()
   },
   methods: {
     getInitalPath() {
