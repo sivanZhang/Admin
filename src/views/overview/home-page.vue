@@ -107,6 +107,10 @@ export default {
     next();
   },
   methods: {
+    //侧边栏添加任务
+    showTaskForm(link_id,dept_id,content,date_and_user){
+       this.$refs.MyAllocation.showTaskForm(link_id,dept_id,content,date_and_user)
+    },
     // 展示 待分配镜头组件的 侧边栏 并传值
     changeLinks(arr) {
       this.link = arr;
@@ -340,7 +344,7 @@ export default {
         <MyApprove />
       </el-col>
       <el-col :span="12" class="card-warp">
-        <MyAllocation @changeLinks="changeLinks" />
+        <MyAllocation @changeLinks="changeLinks" ref="MyAllocation"/>
       </el-col>
     </el-row>
     <!-- 待分配镜头的抽屉组件 -->
@@ -374,7 +378,7 @@ export default {
                     <i
                       class="el-icon-plus"
                       style="color:blue"
-                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)"
+                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)" 
                     />
                   </span>
                 </el-tooltip>
