@@ -224,6 +224,7 @@
           :task-record="TaskRecord"
           :active-row="activeRow"
           @activename="activename"
+          :os="os"
         />
       </el-tab-pane>
     </el-tabs>
@@ -241,6 +242,7 @@ import {
 } from '@/api/task'
 import detail from './components/detail'
 import approveLog from '@/views/components/approve-log'
+import QWebChannel from './plugin/qwebchannel.js'
 export default {
   name: 'MyTaskPlug',
   components: {
@@ -322,7 +324,8 @@ export default {
       columnSelect2: [],
       timeSelection: '',
       timeSelection2: '',
-      currentGrade: null
+      currentGrade: null,
+      os: 'windows'
     }
   },
   watch: {
@@ -384,6 +387,15 @@ export default {
   },
   created() {
     this.getTaskList()
+    const self = this
+    new QWebChannel(qt.webChannelTransport, ({ objects }) => {
+      var appManager = objects.app_manager
+      appManager.textChanged.connect(function(os) {
+        if (os) {
+          self.os = os
+        }
+      })
+    })
   },
   mounted() {
     document.body.style.minWidth = 'auto'

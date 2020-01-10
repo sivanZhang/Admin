@@ -48,7 +48,6 @@ export default {
   },
   watch: {
     row: {
-      immediate: true,
       deep: true,
       handler: function(newVal, oldVal) {
         if (newVal) {
@@ -65,6 +64,7 @@ export default {
     }
   },
   created() {
+    this.formInline.path = ''
     this.getInitalPath()
   },
   methods: {
@@ -94,14 +94,11 @@ export default {
     },
     // 表单提交，提交审核
     submitForm() {
-      if (this.status_finish == false) {
+      if (!this.status_finish) {
         this.$alert('请勾选确认满足制作要求', '提示', {
           confirmButtonText: '确定'
         })
-      }
-      // console.log("表单");
-      // console.log(this.formInline);
-      else if (this.status_finish == true) {
+      } else {
         taskApprove(this.formInline)
           .then(res => {
             if (res.data.status === 0) {
@@ -118,7 +115,6 @@ export default {
               this.status_finish = false
             }
           })
-          .catch(err => {})
       }
       //  this.status_finish=false;
     }

@@ -39,8 +39,9 @@
             @cancel="cancel"
           />
         </el-tab-pane>
-        <el-tab-pane label="提交审核" name="fourth" lazy>
+        <el-tab-pane label="提交审核" name="fourth">
           <tab-approve
+            ref="tab-approve"
             v-if="activeRow.task && activeRow.task.status === 2"
             :row="activeRow"
             :task-id="taskRecord.task_id"
@@ -84,11 +85,11 @@ export default {
     'detailLoading',
     'logsLoading',
     'taskRecord',
-    'activeRow'
+    'activeRow',
+    'os'
   ],
   data() {
     return {
-      os: 'windows',
       activeName: 'first',
       surplus_labor_hour: null,
       createLoading: false,
@@ -131,18 +132,16 @@ export default {
           )
         }
       }
+    },
+    activeRow: {
+      deep: true,
+      handler: function(newVal, oldVal) {
+        new QWebChannel(qt.webChannelTransport, ({ objects }) => {
+          var appManager = objects.app_manager
+          appManager.text = `init@ @${self.taskRecord.task_id}`
+        })
+      }
     }
-  },
-  created() {
-    const self = this
-    new QWebChannel(qt.webChannelTransport, ({ objects }) => {
-      var appManager = objects.app_manager
-      appManager.textChanged.connect(function(os) {
-        if (os) {
-          self.os = os
-        }
-      })
-    })
   },
   mounted() {
     document.body.style.minWidth = 'auto'
@@ -158,6 +157,7 @@ export default {
           os: self.os
         }).then(({ data }) => {
           appManager.text = `path@${data.msg}@${self.taskRecord.task_id}`
+          this.$refs['tab-approve'].getInitalPath()
         })
       })
     },
