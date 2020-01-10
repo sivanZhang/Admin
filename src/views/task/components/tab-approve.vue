@@ -7,7 +7,12 @@
       <el-col :span="19" style="font-size:12px;">{{ taskdetail }}</el-col>
     </el-row>
     <div style="text-align: right;">
-      <el-checkbox v-model="status_finish" style="margin-bottom:10px;" size="small" border>确认满足制作要求</el-checkbox>
+      <el-checkbox
+        v-model="status_finish"
+        style="margin-bottom:10px;"
+        size="small"
+        border
+      >确认满足制作要求</el-checkbox>
     </div>
     <el-form :model="formInline" label-position="left" label-width="100px">
       <el-form-item label="成果路径:">
@@ -26,6 +31,7 @@
 </template>
 <script>
 import { taskApprove, getTaskDetail, getDirs } from '@/api/task'
+import QWebChannel from '@/view/myTask/plugin/qwebchannel.js'
 export default {
   name: 'MyTaskApprove',
   props: ['row', 'pathPlugin', 'taskId', 'os'],
@@ -63,15 +69,24 @@ export default {
         }
       }
     }
-
   },
   methods: {
     getInitalPath() {
-      if (this.taskId) {
+      const self = this
+      new QWebChannel(qt.webChannelTransport, ({ objects }) => {
+        var appManager = objects.app_manager
+        appManager.text = 'approve@getpath'
+        appManager.textChanged.connect(function(approve_path) {
+          if (approve_path) {
+            self.formInline.path = approve_path
+          }
+        })
+      })
+      /* if (this.taskId) {
         getDirs({ id: this.taskId, os: this.os }).then(({ data }) => {
           this.formInline.path = data.msg
         })
-      }
+      } */
     },
     getMakeQequire(task_id) {
       getTaskDetail({ id: task_id }).then(({ data }) => {
@@ -118,12 +133,12 @@ export default {
 //   text-align: right;
 //   margin-left: 50px;
 // }
-.btn{
-   margin-right: 18px;
+.btn {
+    margin-right: 18px;
 }
 .el-checkbox.is-bordered {
-  border: 1px solid white;
-  margin-right: 18px;
-  padding-right: 0px
+    border: 1px solid white;
+    margin-right: 18px;
+    padding-right: 0px;
 }
 </style>
