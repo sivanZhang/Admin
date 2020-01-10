@@ -154,6 +154,32 @@ export default {
         callback();
       }
     };
+    var validateEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请填写邮箱'));
+      } else {
+        if (value !== '') { 
+          var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          if(!reg.test(value)){
+            callback(new Error('请检查邮箱格式'));
+          }
+        }
+        callback();
+      }
+    };
+    var validateMobilePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('手机号不可为空'));
+      } else {
+        if (value !== '') { 
+          var reg=/^1[3456789]\d{9}$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入有效的手机号码'));
+          }
+        }
+        callback();
+      }
+    };
     return {
       tLoading:false,
       radio: 1,
@@ -175,12 +201,11 @@ export default {
         checkPass: ""
       },
       rules: {
-      
-          pass: [{ validator: validatePass, trigger: "blur" }],
+        pass: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
-            username: [{ required: true, message: "请输入用户名", trigger: "blur" }
-        ],
-        email: [{ required: true, message: "请输入邮箱", trigger: "blur" }]},
+        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        email: [{ validator:validateEmail, trigger: "blur" }],
+        phone: [{ validator:validateMobilePhone, trigger: "blur" }]},
       buttonStates: {
         createLoading: false
       },
