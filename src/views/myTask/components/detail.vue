@@ -145,12 +145,12 @@ export default {
       immediate: true,
       deep: true,
       handler: function(newVal, oldVal) {
-        this.test1 = '监听到任务变化了'
+        this.test = '监听到任务变化了'
         const self = this
         new QWebChannel(qt.webChannelTransport, function({ objects }) {
           var appManager = objects.app_manager
-          appManager.text = `init@ @${self.taskRecord.task_id}`
-          self.test1 = "程序运行到  'init@'代码中了"
+          appManager.text = 'init@' + ' ' + '@' + self.taskRecord.task_id
+          self.test = "程序运行到  'init@'代码中了"
         })
       }
     }
@@ -163,6 +163,7 @@ export default {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
+        self.test1='运行到插件内了'
         getDirs({
           id: self.taskRecord.task_id,
           working: '',
@@ -170,6 +171,7 @@ export default {
         }).then(({ data }) => {
           appManager.text = `path@${data.msg}@${self.taskRecord.task_id}`
           self.$refs['tab-approve'].getInitalPath()
+          self.test1='异步执行完了'
         })
       })
     },

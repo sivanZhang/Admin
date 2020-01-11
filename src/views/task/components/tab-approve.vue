@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="4">
-        <font style="font-size:12px;">制作要求:</font>
+        <font style="font-size:12px;">制作要求:  {{test}}</font>
       </el-col>
       <el-col :span="19" style="font-size:12px;">{{ taskdetail }}</el-col>
     </el-row>
@@ -34,9 +34,18 @@ import { taskApprove, getTaskDetail, getDirs } from '@/api/task'
 import QWebChannel from '@/views/myTask/plugin/qwebchannel.js'
 export default {
   name: 'MyTaskApprove',
-  props: ['row', 'pathPlugin', 'taskId', 'os'],
+  props: {
+    row: {
+      default: null,
+      type: Object
+    },
+    pathPlugin: Boolean,
+    taskId: Number,
+    os: String
+  }, // ['row', 'pathPlugin', 'taskId', 'os']
   data() {
     return {
+      test:'是否执行了成果路径代码',
       status_finish: false,
       taskdetail: [],
       formInline: {
@@ -47,19 +56,17 @@ export default {
     }
   },
   watch: {
-    row: {
-      deep: true,
+    'row.task.id': {
+      immediate: true,
       handler: function(newVal, oldVal) {
-        if (newVal) {
-          const dept = newVal.task.dept
-          const task = newVal.task
-          this.formInline = {
-            dept_id: dept.id,
-            task_id: task.id,
-            path: ''
-          }
-          this.getInitalPath()
+        const dept = newVal.task.dept
+        const task = newVal.task
+        this.formInline = {
+          dept_id: dept.id,
+          task_id: task.id,
+          path: ''
         }
+        this.getInitalPath()
       }
     }
   },
@@ -69,14 +76,20 @@ export default {
   },
   methods: {
     getInitalPath() {
+      this.test = '触发函数成功 下一步..触发回调'
       const self = this
-      new QWebChannel(qt.webChannelTransport, ({ objects }) => {
+      new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
         appManager.text = 'approve@getpath'
         appManager.textChanged.connect(function(approve_path) {
+          
           if (approve_path) {
             self.formInline.path = approve_path
+          } else {
+            self.formInline.path = ''
           }
+
+          self.test='触发回调成功'+'数据：'+approve_path
         })
       })
       /* if (this.taskId) {
