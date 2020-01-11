@@ -4,25 +4,33 @@
       <el-col :span="10">
         <el-image
           class="mini-image"
-          :src="TaskDetail.project.image?$store.state.BASE_URL+TaskDetail.project.image:''"
+          :src="
+            TaskDetail.project.image
+              ? $store.state.BASE_URL + TaskDetail.project.image
+              : ''
+          "
           fit="cover"
           style="width: 170px;height: 120px;float: left;margin-right: 10px"
         />
       </el-col>
       <el-col :span="4">
-        <div>项目名称：{{test}}</div>
-        <div>所属资产：{{test1}}</div>
+        <div>项目名称：{{ test }}</div>
+        <div>所属资产：{{ test1 }}</div>
       </el-col>
       <el-col :span="10">
         <div>{{ TaskDetail.project.name }}</div>
-        <div>{{ TaskDetail.asset.name?TaskDetail.asset.name:"-" }}</div>
+        <div>{{ TaskDetail.asset.name ? TaskDetail.asset.name : "-" }}</div>
       </el-col>
     </el-row>
     <div>
       <el-tabs v-model="activeName">
         <el-tab-pane label="任务详情" name="first">
           <tabTaskDtail ref="taskDtail" />
-          <el-button type="primary" class="create" @click="handelClick">创建工程</el-button>
+          <el-button
+            type="primary"
+            class="create"
+            @click="handelClick"
+          >创建工程</el-button>
         </el-tab-pane>
         <el-tab-pane label="关联任务输出" name="seven">
           <linkTaskOutput ref="linkTaskOutput" />
@@ -50,8 +58,12 @@
           <div
             v-if="activeRow.task && activeRow.task.status === 3"
             style="display:flex;justify-content:center"
-          >任务正在审核中</div>
-          <div v-else style="display:flex;justify-content:center">任务状态未在进行中</div>
+          >
+            任务正在审核中
+          </div>
+          <div v-else style="display:flex;justify-content:center">
+            任务状态未在进行中
+          </div>
         </el-tab-pane>
         <el-tab-pane label="审批记录" name="fifth">
           <approve-log ref="taskApprovelog" />
@@ -90,8 +102,8 @@ export default {
   ],
   data() {
     return {
-      test:'是否根据点选任务发送 init了',
-      test1:'是否请求后端了',
+      test: '是否根据点选任务发送 init了',
+      test1: '是否请求后端了',
       activeName: 'first',
       surplus_labor_hour: null,
       createLoading: false,
@@ -114,14 +126,10 @@ export default {
             trigger: 'blur'
           }
         ],
-        labor_hour: [
-          { message: '请输入任务执行的工时', trigger: 'blur' }
-        ]
+        labor_hour: [{ message: '请输入任务执行的工时', trigger: 'blur' }]
       },
       rules2: {
-        comment: [
-          { message: '请输入任务完成情况说明', trigger: 'blur' }
-        ]
+        comment: [{ message: '请输入任务完成情况说明', trigger: 'blur' }]
       }
     }
   },
@@ -129,9 +137,7 @@ export default {
     activeName: {
       handler: function(newVal, oldVal) {
         if (newVal === 'fifth') {
-          this.$refs['taskApprovelog'].getApproveLog(
-            this.TaskDetail.id
-          )
+          this.$refs['taskApprovelog'].getApproveLog(this.TaskDetail.id)
         }
       }
     },
@@ -139,11 +145,12 @@ export default {
       immediate: true,
       deep: true,
       handler: function(newVal, oldVal) {
-        this.test1 = "监听到任务变化了"
-        new QWebChannel(qt.webChannelTransport, ({ objects }) => {
+        this.test1 = '监听到任务变化了'
+        const self = this
+        new QWebChannel(qt.webChannelTransport, function({ objects }) {
           var appManager = objects.app_manager
-          appManager.text = `init@ @${this.taskRecord.task_id}`
-          this.test1 = "程序运行到  'init@'代码中了"
+          appManager.text = `init@ @${self.taskRecord.task_id}`
+          self.test1 = "程序运行到  'init@'代码中了"
         })
       }
     }
@@ -211,6 +218,6 @@ export default {
 
 <style scoped>
 .create {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 </style>
