@@ -10,8 +10,8 @@
         />
       </el-col>
       <el-col :span="4">
-        <div>项目名称：</div>
-        <div>所属资产：</div>
+        <div>项目名称：{{test}}</div>
+        <div>所属资产：{{test1}}</div>
       </el-col>
       <el-col :span="10">
         <div>{{ TaskDetail.project.name }}</div>
@@ -41,8 +41,8 @@
         </el-tab-pane>
         <el-tab-pane label="提交审核" name="fourth">
           <tab-approve
-            ref="tab-approve"
             v-if="activeRow.task && activeRow.task.status === 2"
+            ref="tab-approve"
             :row="activeRow"
             :task-id="taskRecord.task_id"
             :os="os"
@@ -90,6 +90,8 @@ export default {
   ],
   data() {
     return {
+      test:'是否根据点选任务发送 init了',
+      test1:'是否请求后端了',
       activeName: 'first',
       surplus_labor_hour: null,
       createLoading: false,
@@ -134,11 +136,14 @@ export default {
       }
     },
     activeRow: {
+      immediate: true,
       deep: true,
       handler: function(newVal, oldVal) {
+        this.test1 = "监听到任务变化了"
         new QWebChannel(qt.webChannelTransport, ({ objects }) => {
           var appManager = objects.app_manager
           appManager.text = `init@ @${this.taskRecord.task_id}`
+          this.test1 = "程序运行到  'init@'代码中了"
         })
       }
     }
@@ -157,7 +162,7 @@ export default {
           os: self.os
         }).then(({ data }) => {
           appManager.text = `path@${data.msg}@${self.taskRecord.task_id}`
-          this.$refs['tab-approve'].getInitalPath()
+          self.$refs['tab-approve'].getInitalPath()
         })
       })
     },
