@@ -3,7 +3,7 @@
       <el-table
         :data="LinkRecordList"
         :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
-        style="padding-top:15px;width:100%"
+        style="width:100%"
         highlight-current-row
         default-expand-all
         :default-sort = "{prop: 'date'||'task_score'||'attendance_count'||'submition_time', order: 'descending'}"
@@ -13,7 +13,7 @@
         <el-table-column prop="score" label="加权重后的总成绩" sortable></el-table-column>
         <el-table-column prop="task_score" label="任务成绩" sortable></el-table-column>
         <el-table-column prop="attendance_count" label="迟到早退(次数)" sortable></el-table-column>
-        <el-table-column prop="submition_time" label="任务提交时间" sortable>
+        <el-table-column prop="submition_time" label="任务提交时间" width="73" sortable>
           <template slot-scope="scope">{{scope.row.submition_time|dateTimeFormat}}</template>
         </el-table-column>
         <el-table-column prop="submition_rank" label="提交时间排名"></el-table-column>

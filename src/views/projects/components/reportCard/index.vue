@@ -19,68 +19,6 @@
     </el-row>
     </div>
     <ElRow :gutter="15">
-      <ElCol :span="10">
-        <el-card>
-          <el-tabs v-model="activeName">
-            <el-tab-pane label="按考勤时间排名" name="tab1" lazy>
-              <el-table
-                :data="AttendanceRecord.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-                :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
-                style="width:100%"
-                highlight-current-row
-                default-expand-all
-              >
-                <el-table-column prop="rank" label="排名">
-                  <template slot-scope="scope">{{scope.row.rank}}</template>
-                </el-table-column>
-                <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column prop="user_normal_count" label="考勤正常(次数)" width="60"></el-table-column>
-                <el-table-column prop="user_come_late_count" label="迟到(次数)" width="50"></el-table-column>
-                <el-table-column prop="user_leave_early_count" label="早退(次数)" width="50"></el-table-column>
-                <el-table-column prop="user_dutyoff_count" label="旷课(次数)" width="50"></el-table-column>
-                <el-table-column prop="duty_off_count" label="迟到早退旷课(总次数)" width="90"></el-table-column>
-              </el-table>
-              <div class="block" style="text-align: center">
-                <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-sizes="pageSizeList"
-                  :page-size="pageSize"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="AttendanceRecord.length"
-                ></el-pagination>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="按审批通过的任务提交时间排名" name="tab2" lazy>
-              <div>
-                <el-table
-                  :data="ApproveTimeRecord.slice((currentPage3-1)*pageSize3,currentPage3*pageSize3)"
-                  :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
-                  style="width:100%"
-                  highlight-current-row
-                  default-expand-all
-                >
-                  <el-table-column type="index" :index="indexApproveTime"></el-table-column>
-                  <el-table-column prop="username" label="执行人"></el-table-column>
-                  <el-table-column prop="average_rank" label="平均成绩"></el-table-column>
-                </el-table>
-                <div class="block" style="text-align: right">
-                  <el-pagination
-                    @size-change="handleSizeChange3"
-                    @current-change="handleCurrentChange3"
-                    :current-page="currentPage3"
-                    :page-sizes="pageSizeList"
-                    :page-size="pageSize3"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="ApproveTimeRecord.length"
-                  ></el-pagination>
-                </div>
-              </div>
-            </el-tab-pane>
-          </el-tabs>
-        </el-card>
-      </ElCol>
       <ElCol :span="14">
         <el-card>
           <el-tabs v-model="activeName1" @tab-click="tabclick">
@@ -98,7 +36,6 @@
                     <LinkRecordTable
                       ref="LinkRecordTable"
                       v-if="props.row.link_id"
-                      style="margin-left:20px"
                     />
                     <label for v-else>此环节暂无成绩表</label>
                   </template>
@@ -157,6 +94,68 @@
                     :page-size="pageSize2"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="TaskRecord.length"
+                  ></el-pagination>
+                </div>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </el-card>
+      </ElCol>
+      <ElCol :span="10">
+        <el-card>
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="按考勤时间排名" name="tab1" lazy>
+              <el-table
+                :data="AttendanceRecord.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+                :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
+                style="width:100%"
+                highlight-current-row
+                default-expand-all
+              >
+                <el-table-column prop="rank" label="排名">
+                  <template slot-scope="scope">{{scope.row.rank}}</template>
+                </el-table-column>
+                <el-table-column prop="username" label="用户名"></el-table-column>
+                <el-table-column prop="user_normal_count" label="考勤正常(次数)" width="60"></el-table-column>
+                <el-table-column prop="user_come_late_count" label="迟到(次数)" width="50"></el-table-column>
+                <el-table-column prop="user_leave_early_count" label="早退(次数)" width="50"></el-table-column>
+                <el-table-column prop="user_dutyoff_count" label="旷课(次数)" width="50"></el-table-column>
+                <el-table-column prop="duty_off_count" label="迟到早退旷课(总次数)" width="90"></el-table-column>
+              </el-table>
+              <div class="block" style="text-align: center">
+                <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page="currentPage"
+                  :page-sizes="pageSizeList"
+                  :page-size="pageSize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="AttendanceRecord.length"
+                ></el-pagination>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="按审批通过的任务提交时间排名" name="tab2" lazy>
+              <div>
+                <el-table
+                  :data="ApproveTimeRecord.slice((currentPage3-1)*pageSize3,currentPage3*pageSize3)"
+                  :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0,minHeight:'50px'}"
+                  style="width:100%"
+                  highlight-current-row
+                  default-expand-all
+                >
+                  <el-table-column type="index" :index="indexApproveTime"></el-table-column>
+                  <el-table-column prop="username" label="执行人"></el-table-column>
+                  <el-table-column prop="average_rank" label="平均成绩"></el-table-column>
+                </el-table>
+                <div class="block" style="text-align: right">
+                  <el-pagination
+                    @size-change="handleSizeChange3"
+                    @current-change="handleCurrentChange3"
+                    :current-page="currentPage3"
+                    :page-sizes="pageSizeList"
+                    :page-size="pageSize3"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="ApproveTimeRecord.length"
                   ></el-pagination>
                 </div>
               </div>
@@ -408,6 +407,12 @@ export default {
     .attention-top {
       font-size: 12px;
     }
-  }
+  }  
+}
+.el-table__expanded-cell {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-right: 0px !important;
+    padding-left: 30px !important;
 }
 </style>
