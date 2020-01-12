@@ -22,7 +22,7 @@
     <el-tabs v-model="activeName" @tab-click="handleTabClick($event)">
       <el-tab-pane label="任务详情" name="first">
         <tabTaskDtail ref="taskDtail" />
-        <el-button type="primary" @click="handelClick">创建工程</el-button>
+        <el-button class="creat-btn" type="primary" @click="handelClick">创建工程</el-button>
       </el-tab-pane>
       <el-tab-pane label="关联任务输出" name="seven">
         <linkTaskOutput ref="linkTaskOutput" />
@@ -198,6 +198,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.creat-btn{
+    margin-top: 10px;
+  }
 .header {
   display: flex;
   margin-bottom: 15px;
