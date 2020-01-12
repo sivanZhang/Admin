@@ -1,75 +1,66 @@
 <template>
   <div id="detail">
-    <el-row>
-      <el-col :span="10">
-        <el-image
-          class="mini-image"
-          :src="
-            TaskDetail.project.image
-              ? $store.state.BASE_URL + TaskDetail.project.image
-              : ''
-          "
-          fit="cover"
-          style="width: 170px;height: 120px;float: left;margin-right: 10px"
-        />
-      </el-col>
-      <el-col :span="4">
-        <div>项目名称：</div>
-        <div>所属资产：</div>
-      </el-col>
-      <el-col :span="10">
-        <div>{{ TaskDetail.project.name }}</div>
-        <div>{{ TaskDetail.asset.name ? TaskDetail.asset.name : "-" }}</div>
-      </el-col>
-    </el-row>
-    <div>
-      <el-tabs v-model="activeName" @tab-click="handleTabClick($event)">
-        <el-tab-pane label="任务详情" name="first">
-          <tabTaskDtail ref="taskDtail" />
-          <el-button
-            type="primary"
-            class="create"
-            @click="handelClick"
-          >创建工程</el-button>
-        </el-tab-pane>
-        <el-tab-pane label="关联任务输出" name="seven">
-          <linkTaskOutput ref="linkTaskOutput" />
-        </el-tab-pane>
-        <el-tab-pane label="执行记录" name="second">
-          <tabLog :loglist="logList" :logs-loading="logsLoading" />
-        </el-tab-pane>
-        <el-tab-pane label="执行任务" name="third">
-          <task-form
-            :task-record.sync="taskRecord"
-            :surplus_labor_hour="surplus_labor_hour"
-            :create-loading="createLoading"
-            @addRecord="addRecord"
-            @cancel="cancel"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="提交审核" name="fourth">
-          <tab-approve
-            v-if="activeRow.task && activeRow.task.status === 2"
-            ref="tab-approve"
-            :row="activeRow"
-            :task-id="taskRecord.task_id"
-            :os="os"
-          />
-          <div
-            v-if="activeRow.task && activeRow.task.status === 3"
-            style="display:flex;justify-content:center"
-          >
-            任务正在审核中
-          </div>
-          <div v-else style="display:flex;justify-content:center">
-            任务状态未在进行中
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="审批记录" name="fifth">
-          <approve-log ref="taskApprovelog" />
-        </el-tab-pane>
-      </el-tabs>
+    <div class="header">
+      <el-image
+        :src="
+          TaskDetail.project.image
+            ? $store.state.BASE_URL + TaskDetail.project.image
+            : ''
+        "
+        fit="cover"
+      />
+
+      <div>
+        <div class="label">项目名称：</div>
+        <div class="label">所属资产：</div>
+      </div>
+      <div>
+        <div class="values">{{ TaskDetail.project.name }}</div>
+        <div class="values">{{ TaskDetail.asset.name ? TaskDetail.asset.name : "-" }}</div>
+      </div>
     </div>
+    <el-tabs v-model="activeName" @tab-click="handleTabClick($event)">
+      <el-tab-pane label="任务详情" name="first">
+        <tabTaskDtail ref="taskDtail" />
+        <el-button type="primary" @click="handelClick">创建工程</el-button>
+      </el-tab-pane>
+      <el-tab-pane label="关联任务输出" name="seven">
+        <linkTaskOutput ref="linkTaskOutput" />
+      </el-tab-pane>
+      <el-tab-pane label="执行记录" name="second">
+        <tabLog :loglist="logList" :logs-loading="logsLoading" />
+      </el-tab-pane>
+      <el-tab-pane label="执行任务" name="third">
+        <task-form
+          :task-record.sync="taskRecord"
+          :surplus_labor_hour="surplus_labor_hour"
+          :create-loading="createLoading"
+          @addRecord="addRecord"
+          @cancel="cancel"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="提交审核" name="fourth">
+        <tab-approve
+          v-if="activeRow.task && activeRow.task.status === 2"
+          ref="tab-approve"
+          :row="activeRow"
+          :task-id="taskRecord.task_id"
+          :os="os"
+        />
+        <div
+          v-else-if="activeRow.task.status === 3"
+          style="display:flex;justify-content:center"
+        >
+          任务正在审核中
+        </div>
+        <div v-else style="display:flex;justify-content:center">
+          任务状态未在进行中
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="审批记录" name="fifth">
+        <approve-log ref="taskApprovelog" />
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -146,7 +137,7 @@ export default {
   methods: {
     handleTabClick(e) {
       if (e.name === 'fourth') {
-        this.$refs['tab-approve'].getInitalPath('click事件')
+        this.$refs['tab-approve'].getInitalPath()
       }
     },
     handelClick() {
@@ -194,7 +185,7 @@ export default {
           this.$emit('activename')
           this.createLoading = false
         })
-        .catch(err => {
+        .catch(() => {
           this.createLoading = false
           this.$emit('activename')
         })
@@ -206,8 +197,19 @@ export default {
 }
 </script>
 
-<style scoped>
-.create {
-  margin-top: 15px;
+<style lang="scss" scoped>
+.header {
+  display: flex;
+  margin-bottom: 15px;
+  & > .el-image {
+    width: 160px;
+    height: 90px;
+  }
+  .label{
+    margin: 0 15px 10px 30px;
+  }
+  .values{
+    margin-bottom: 10px;
+  }
 }
 </style>
