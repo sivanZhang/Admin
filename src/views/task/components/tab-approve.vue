@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="4">
-        <font style="font-size:12px;">制作要求:  {{ test }}</font>
+        <font style="font-size:12px;">制作要求:</font>
       </el-col>
       <el-col :span="19" style="font-size:12px;">{{ taskdetail }}</el-col>
     </el-row>
@@ -45,7 +45,6 @@ export default {
   }, // ['row', 'pathPlugin', 'taskId', 'os']
   data() {
     return {
-      test: '是否执行了成果路径代码',
       status_finish: false,
       taskdetail: [],
       formInline: {
@@ -62,41 +61,25 @@ export default {
       handler: function(newVal, oldVal) {
         const dept = newVal.task.dept
         const task = newVal.task
-        this.formInline = {
-          dept_id: dept.id,
-          task_id: task.id,
-          path: ''
-        }
+        this.formInline.dept_id = dept.id
+        this.formInline.task_id = task.id
         this.getInitalPath()
       }
     }
   },
-  created() {
-    this.formInline.path = ''
-    this.getInitalPath()
-  },
   methods: {
-    getInitalPath(str='不是外部触发') {
-      this.test = '触发函数成功 下一步..触发回调 '+str
+    getInitalPath() {
       const self = this
+      this.formInline.path = ''
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
         appManager.text = 'approve@getpath'
         appManager.textChanged.connect(function(approve_path) {
           if (approve_path) {
             self.formInline.path = approve_path
-          } else {
-            self.formInline.path = ''
           }
-
-          self.test = '触发回调成功' + str
         })
       })
-      /* if (this.taskId) {
-        getDirs({ id: this.taskId, os: this.os }).then(({ data }) => {
-          this.formInline.path = data.msg
-        })
-      } */
     },
     getMakeQequire(task_id) {
       getTaskDetail({ id: task_id }).then(({ data }) => {

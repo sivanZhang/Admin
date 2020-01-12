@@ -14,8 +14,8 @@
         />
       </el-col>
       <el-col :span="4">
-        <div>项目名称：{{ test }}</div>
-        <div>所属资产：{{ test1 }}</div>
+        <div>项目名称：</div>
+        <div>所属资产：</div>
       </el-col>
       <el-col :span="10">
         <div>{{ TaskDetail.project.name }}</div>
@@ -102,8 +102,6 @@ export default {
   ],
   data() {
     return {
-      test: '是否根据点选任务发送 init了',
-      test1: '是否请求后端了',
       activeName: 'first',
       surplus_labor_hour: null,
       createLoading: false,
@@ -140,19 +138,6 @@ export default {
           this.$refs['taskApprovelog'].getApproveLog(this.TaskDetail.id)
         }
       }
-    },
-    activeRow: {
-      immediate: true,
-      deep: true,
-      handler: function(newVal, oldVal) {
-        this.test = '监听到任务变化了'
-        const self = this
-        new QWebChannel(qt.webChannelTransport, function({ objects }) {
-          var appManager = objects.app_manager
-          appManager.text = 'init@' + ' ' + '@' + self.taskRecord.task_id
-          self.test = "程序运行到  'init@'代码中了"
-        })
-      }
     }
   },
   mounted() {
@@ -160,15 +145,14 @@ export default {
   },
   methods: {
     handleTabClick(e) {
-      if (e.name === 'fourth') {
+      /* if (e.name === 'fourth') {
         this.$refs['tab-approve'].getInitalPath('click事件')
-      }
+      } */
     },
     handelClick() {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
-        self.test1 = '运行到插件内了'
         getDirs({
           id: self.taskRecord.task_id,
           working: '',
@@ -176,7 +160,6 @@ export default {
         }).then(({ data }) => {
           appManager.text = `path@${data.msg}@${self.taskRecord.task_id}`
           self.$refs['tab-approve'].getInitalPath()
-          self.test1 = '异步执行完了'
         })
       })
     },
