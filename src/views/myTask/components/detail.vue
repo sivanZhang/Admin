@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
     <div>
-      <el-tabs v-model="activeName">
+      <el-tabs v-model="activeName" @tab-click="handleTabClick($event)">
         <el-tab-pane label="任务详情" name="first">
           <tabTaskDtail ref="taskDtail" />
           <el-button
@@ -159,11 +159,16 @@ export default {
     document.body.style.minWidth = 'auto'
   },
   methods: {
+    handleTabClick(e) {
+      if (e.name === 'fourth') {
+        this.$refs['tab-approve'].getInitalPath('click事件')
+      }
+    },
     handelClick() {
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
-        self.test1='运行到插件内了'
+        self.test1 = '运行到插件内了'
         getDirs({
           id: self.taskRecord.task_id,
           working: '',
@@ -171,7 +176,7 @@ export default {
         }).then(({ data }) => {
           appManager.text = `path@${data.msg}@${self.taskRecord.task_id}`
           self.$refs['tab-approve'].getInitalPath()
-          self.test1='异步执行完了'
+          self.test1 = '异步执行完了'
         })
       })
     },

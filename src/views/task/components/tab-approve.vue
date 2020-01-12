@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="4">
-        <font style="font-size:12px;">制作要求:  {{test}}</font>
+        <font style="font-size:12px;">制作要求:  {{ test }}</font>
       </el-col>
       <el-col :span="19" style="font-size:12px;">{{ taskdetail }}</el-col>
     </el-row>
@@ -45,7 +45,7 @@ export default {
   }, // ['row', 'pathPlugin', 'taskId', 'os']
   data() {
     return {
-      test:'是否执行了成果路径代码',
+      test: '是否执行了成果路径代码',
       status_finish: false,
       taskdetail: [],
       formInline: {
@@ -56,7 +56,8 @@ export default {
     }
   },
   watch: {
-    'row.task.id': {
+    row: {
+      deep: true,
       immediate: true,
       handler: function(newVal, oldVal) {
         const dept = newVal.task.dept
@@ -75,21 +76,20 @@ export default {
     this.getInitalPath()
   },
   methods: {
-    getInitalPath() {
-      this.test = '触发函数成功 下一步..触发回调'
+    getInitalPath(str='不是外部触发') {
+      this.test = '触发函数成功 下一步..触发回调 '+str
       const self = this
       new QWebChannel(qt.webChannelTransport, function({ objects }) {
         var appManager = objects.app_manager
         appManager.text = 'approve@getpath'
         appManager.textChanged.connect(function(approve_path) {
-          
           if (approve_path) {
             self.formInline.path = approve_path
           } else {
             self.formInline.path = ''
           }
 
-          self.test='触发回调成功'+'数据：'+approve_path
+          self.test = '触发回调成功' + str
         })
       })
       /* if (this.taskId) {
