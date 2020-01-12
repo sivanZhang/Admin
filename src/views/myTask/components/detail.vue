@@ -145,9 +145,9 @@ export default {
   },
   methods: {
     handleTabClick(e) {
-      /* if (e.name === 'fourth') {
+      if (e.name === 'fourth') {
         this.$refs['tab-approve'].getInitalPath('click事件')
-      } */
+      }
     },
     handelClick() {
       const self = this
