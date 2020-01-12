@@ -1,5 +1,8 @@
 $linkCorlor:#2d8cf0;
-
+.ivu-drawer-close .ivu-icon-ios-close {
+  bottom: 10px;
+  top: 0%;
+}
 #layout_main {
   .el-table--mini th, .el-table--mini td {
     padding: 0;
@@ -122,4 +125,5 @@ $linkCorlor:#2d8cf0;
   .el-card {
     border-radius: 0px;
   }
+  
 }
