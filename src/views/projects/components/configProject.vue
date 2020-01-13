@@ -429,12 +429,13 @@
         </el-tab-pane>
         <el-tab-pane label="权重配置" name="sixth">
           <div class="weightSetting">
+            <span>(&nbsp;&nbsp;</span>
             <el-input  v-model="record" placeholder="权重" oninput="value=value.replace(/[^\d.]/g,'')"/>
-            <span>&nbsp;*&nbsp;成绩&nbsp;&nbsp;+&nbsp;&nbsp;</span>
+            <span>&nbsp;*&nbsp;打分成绩&nbsp;&nbsp;-&nbsp;&nbsp;</span>
             <el-input  v-model="submitTime" placeholder="权重" oninput="value=value.replace(/[^\d.]/g,'')"/>
-            <span>&nbsp;*&nbsp;提交时间排名&nbsp;&nbsp;+&nbsp;&nbsp;</span>
+            <span>&nbsp;*&nbsp;提交时间排名&nbsp;&nbsp;-&nbsp;&nbsp;</span>
             <el-input  v-model="attendance" placeholder="权重" oninput="value=value.replace(/[^\d.]/g,'')"/>
-            <span>&nbsp;*&nbsp;考勤排名&nbsp;&nbsp;=&nbsp;&nbsp;单次排名&nbsp;&nbsp;</span>
+            <span>&nbsp;*&nbsp;缺勤次数&nbsp;&nbsp;)&nbsp;&nbsp;/10&nbsp;&nbsp;=&nbsp;&nbsp;单次排名&nbsp;&nbsp;</span>
             <el-button type="primary" @click="saveWeightSetting">保存</el-button>
             <el-button type="danger" @click="deleteWeightSetting">删除</el-button>
           </div>
