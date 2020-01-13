@@ -113,7 +113,7 @@
             <el-table :data="taskList" border highlight-current-row>
               <el-table-column label="任务名称" prop="name" show-overflow-tooltip></el-table-column>
               <el-table-column label="制作内容" prop="content" show-overflow-tooltip></el-table-column>
-              <el-table-column label="环节" prop="dept.name"></el-table-column>
+              <!-- <el-table-column label="环节" prop="dept.name"></el-table-column> -->
               <!-- <el-table-column label="任务主管" prop="manager.name"></el-table-column> -->
               <el-table-column label="记录工时" prop="record_hour"></el-table-column>
               <el-table-column label="创建时间" prop="create_time" width="90px">
