@@ -2,21 +2,21 @@
   <!-- 练习生成绩单 -->
   <div id="reportCard">
     <div style="padding-bottom:10px">
-    <el-row>
-      <el-col :span="24" align="right">
-        <el-button
-          icon="el-icon-upload2"
-          type="success"
-          @click="targetUpload"
-          :disabled="ButtontDisabled"
-        >导出</el-button>
-        <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
-        <span class="btn-explain" @click="openExplain()">
-          使用帮助:
-          <svg-icon icon-class="wenhao" />
-        </span>
-      </el-col>
-    </el-row>
+      <el-row>
+        <el-col :span="24" align="right">
+          <el-button
+            icon="el-icon-upload2"
+            type="success"
+            @click="targetUpload"
+            :disabled="ButtontDisabled"
+          >导出</el-button>
+          <el-button type="primary" @click="refreshRecord()">刷新成绩单</el-button>
+          <span class="btn-explain" @click="openExplain()">
+            使用帮助:
+            <svg-icon icon-class="wenhao" />
+          </span>
+        </el-col>
+      </el-row>
     </div>
     <ElRow :gutter="15">
       <ElCol :span="14">
@@ -33,10 +33,7 @@
                 <!-- <el-table-column type="index" :index="indexLinkList"></el-table-column> -->
                 <el-table-column type="expand">
                   <template slot-scope="props">
-                    <LinkRecordTable
-                      ref="LinkRecordTable"
-                      v-if="props.row.link_id"
-                    />
+                    <LinkRecordTable ref="LinkRecordTable" v-if="props.row.link_id" />
                     <label for v-else>此环节暂无成绩表</label>
                   </template>
                 </el-table-column>
@@ -45,9 +42,9 @@
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
                     <el-button
+                      icon="el-icon-upload2"
+                      type="success"
                       @click="openAlongRecord(scope.row.link_id)"
-                      type="text"
-                      style="color:blue"
                     >导出</el-button>
                   </template>
                 </el-table-column>
@@ -340,9 +337,11 @@ export default {
     },
     //按审批通过的任务提交时间
     getApproveTimeRecord() {
-      getApproveTimeRecord({ project_id: this.$route.params.id }).then(({ data }) => {
-        this.ApproveTimeRecord = [...data.msg];
-      });
+      getApproveTimeRecord({ project_id: this.$route.params.id }).then(
+        ({ data }) => {
+          this.ApproveTimeRecord = [...data.msg];
+        }
+      );
     },
     //分页,按权重排名时的
     handleSizeChange4(val) {
@@ -407,12 +406,12 @@ export default {
     .attention-top {
       font-size: 12px;
     }
-  }  
+  }
 }
 .el-table__expanded-cell {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    padding-right: 0px !important;
-    padding-left: 30px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-right: 0px !important;
+  padding-left: 30px !important;
 }
 </style>
