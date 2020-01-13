@@ -8,15 +8,15 @@
         default-expand-all
         :default-sort = "{prop: 'date'||'task_score'||'attendance_count'||'submition_time', order: 'descending'}"
       >
-        <el-table-column prop="rank" label="加权排名"></el-table-column>
-        <el-table-column prop="executor_name" label="执行人"></el-table-column>
-        <el-table-column prop="score" label="加权重后的总成绩" sortable></el-table-column>
-        <el-table-column prop="task_score" label="任务成绩" sortable></el-table-column>
-        <el-table-column prop="attendance_count" label="迟到早退(次数)" sortable></el-table-column>
-        <el-table-column prop="submition_time" label="任务提交时间" width="73" sortable>
+        <el-table-column prop="rank" label="加权排名" width="40" ></el-table-column>
+        <el-table-column prop="executor_name" label="练习生"></el-table-column>
+        <el-table-column prop="score" label="加权成绩" sortable></el-table-column>
+        <el-table-column prop="task_score" label="任务成绩" width="90" sortable></el-table-column>
+        <el-table-column prop="attendance_count" label="迟到早退(次)" sortable></el-table-column>
+        <el-table-column prop="submition_time" label="任务提交时间"   sortable>
           <template slot-scope="scope">{{scope.row.submition_time|dateTimeFormat}}</template>
         </el-table-column>
-        <el-table-column prop="submition_rank" label="提交时间排名"></el-table-column>
+        <el-table-column prop="submition_rank" label="提交时间排名" width="50" ></el-table-column>
       </el-table> 
     </div>
 </template>
