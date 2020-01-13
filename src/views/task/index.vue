@@ -242,7 +242,7 @@
             <el-tab-pane label="执行任务">
               <task-form
                 :surplus_labor_hour="surplus_labor_hour"
-                :TaskRecord="TaskRecord"
+                :task-record.sync="TaskRecord"
                 :createLoading="createLoading"
                 @addRecord="addRecord"
                 @cancel="cancel"

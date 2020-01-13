@@ -68,7 +68,7 @@ export default {
       }
       ],
       createLoading: false,
-      TaskRecord: [],
+      TaskRecord: {},
       isDialogShow: false,
       MyTaskList: [],
       MyTaskList1: [],
