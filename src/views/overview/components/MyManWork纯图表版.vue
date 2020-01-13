@@ -198,7 +198,15 @@ export default {
         labor_hour: [
           { required: true, message: "请输入工时", trigger: "blur" }
         ],
-        task_id: [{ required: true, message: "请选择任务", trigger: "blur" }]
+        task_id: [{ required: true, message: "请选择任务", trigger: "blur" }],
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        content: [{ required: true, message: "请输入完成内容", trigger: "blur" }],
+        schedule: [
+          { required: true, message: "请输入完成进度", trigger: "blur" }
+        ],
+        date: [
+          { required: true, message: "请选择日期", trigger: "blur" }
+        ],
       },
       weekHour: {},
       monthHour: {},

@@ -1,13 +1,19 @@
 <template>
   <div>
-    <el-form v-model="TaskRecord" ref="task-form" label-width="100px" label-position="left">
+    <el-form 
+    :rules="rules" 
+    :model="TaskRecord" 
+    ref="task-form" 
+    label-width="100px" 
+    label-position="left"
+    >
       <el-form-item label="标题" prop="title">
         <el-input type="text" v-model="TaskRecord.title" style="width:100%"></el-input>
       </el-form-item>
       <el-form-item label="完成内容" prop="content">
         <el-input type="textarea" v-model="TaskRecord.content" style="width:100%"></el-input>
       </el-form-item>
-      <el-form-item label="完成进度" prop="content">
+      <el-form-item label="完成进度" prop="schedule">
         <el-row type="flex" align="middle">
           <el-col :span="10">
             <el-input-number v-model="TaskRecord.schedule" :min="0" :max="100" :step="10" @blur="BlurText($event)"></el-input-number>
@@ -74,7 +80,18 @@ export default {
           color: "#5cb87a",
           percentage: 100
         }
-      ]
+      ],
+       rules: {
+        labor_hour: [{ required: true, message: "请输入工时", trigger: "blur" }],
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        content: [{ required: true, message: "请输入完成内容", trigger: "blur" }],
+        schedule: [
+          { required: true, message: "请输入完成进度", trigger: "blur" }
+        ],
+        date: [
+          { required: true, message: "请选择日期", trigger: "blur" }
+        ],
+      },
     };
   },
   methods: {
@@ -88,7 +105,11 @@ export default {
      }
     },
     addRecord() {
-      this.$emit("addRecord");
+      this.$refs["task-form"].validate(valid => {
+        if (valid) {
+           this.$emit("addRecord");
+        }
+      })
     },
     cancel() {
       this.$emit("cancel");
