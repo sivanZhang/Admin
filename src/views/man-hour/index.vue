@@ -99,8 +99,11 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="每日工时" name="first">
           <el-table :data="dayManWork" v-loading="detailLoading" border highlight-current-row>
-            <el-table-column label="日期">
+            <el-table-column label="创建日期">
               <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
+            </el-table-column>
+            <el-table-column label="执行日期">
+              <template slot-scope="scope">{{scope.row.record_time|dateFormat}}</template>
             </el-table-column>
             <el-table-column prop="work_hours" label="工时"></el-table-column>
           </el-table>
@@ -179,6 +182,8 @@ export default {
       clickId: null,
       startTime: "",
       endTime: "",
+      Hour_start:"",
+      Hour_end:"",
       options: [
         {
           value: "1",
@@ -209,12 +214,16 @@ export default {
   },
   methods: {
     showDetail(row) {
+       function dateFormat(date) {
+        return new Date(date * 1000).toLocaleDateString();
+      }
       this.currentPName = `${row.name} 工时详情`;
       this.showdrawer = true;
       this.detailLoading = true;
-      let data = { project_day_id: row.id };
+      let data = { project_day_id: row.id,
+                  start: this.Hour_start,
+                  end: this.Hour_end, };
       let data2 = { project_id: row.id };
-
       Ajax.getManHour(data)
         .then(({ data }) => {
           this.dayManWork = [...data.msg.date_list];
@@ -287,10 +296,11 @@ export default {
           end: (this.endTime = dataFormat(this.value1[1]))
         };
       }
+      this.Hour_start=data.start,
+      this.Hour_end=data.end,
        Ajax.getMyManHour(data).then(({ data }) => {
           this.projectCount = [...data.project_info];
           if (data.overtime_count === 0 && data.task_count === 0) {
-            console.log("nonn")
             this.noneDate = true;
             return;
           } else {
