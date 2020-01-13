@@ -3,6 +3,12 @@
     <div style="padding-bottom:10px">
       <el-button type="primary" @click="projectTemplate(3)">保存模板</el-button>
       <el-button type="primary" @click="projectTemplate(1)">项目模板</el-button>
+      <template v-if="project.pro_type === 0">
+      <span class="btn-explain" @click="openExplain()">
+        使用帮助:
+        <svg-icon icon-class="wenhao" />
+      </span>
+      </template>
     </div>
     <el-tabs
       tab-position="left"
@@ -683,6 +689,16 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 使用帮助 -->
+    <el-dialog title="注意事项" :visible.sync="SaveDialogVisible" width="365px">
+      <div class="attention-body">
+        <div class="attention-top">
+          <h3>成绩单的权重配置</h3>
+          <div style="padding-top:2px"><span class="attention-content">计算公式:</span>
+          单次排名 =（打分成绩 * 成绩权重 - 缺勤次数 * 缺勤权重 - 提交时间排名 * 提交时间权重）/ 10</div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -791,7 +807,8 @@ export default {
       sceneId: null,
       record:'',
       submitTime:'',
-      attendance:''
+      attendance:'',
+      SaveDialogVisible: false,
     };
   },
   created() {
@@ -822,6 +839,10 @@ export default {
     ...mapState("admin", ["DeptList", "UserList"])
   },
   methods: {
+    //打开使用帮助
+    openExplain() {
+      this.SaveDialogVisible = true;
+    },
     //获取权重配置
     getRecordSetting(){
       getRecord({ project_id:this.project.id }).then(({ data })=>{
@@ -1344,6 +1365,16 @@ export default {
 }
 </style>
 <style lang="scss">
+.attention-body {
+    padding: 0px 5px 20px;
+    .attention-top {
+      font-size: 12px;
+    }
+    .attention-content{
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
 .el-checkbox__inner {
   margin-right: 10px;
 }
@@ -1374,5 +1405,6 @@ export default {
       padding-right: 5px;
     }
   }
+ 
 }
 </style>
