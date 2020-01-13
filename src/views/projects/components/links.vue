@@ -204,7 +204,9 @@
           </el-select>
         </el-form-item>
         <template v-if="pro_type == 0">
-          <el-form-item label="执行小组" prop="group_id">
+          <el-form-item label="执行小组" prop="group_id"
+          :rules="[{ required: true, message: '请填入执行小组', trigger: 'blur' }]"
+          >
             <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
               <el-option
                 v-for="(item,index) of trainingMenber"
@@ -216,7 +218,9 @@
           </el-form-item>
         </template>
         <template v-else>
-          <el-form-item label="任务执行人" prop="executorlist">
+          <el-form-item label="任务执行人" prop="executorlist"
+          :rules="[{ required: true, message: '请填入任务执行人', trigger: 'blur' }]"
+          >
             <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择执行人">
               <el-option
                 v-for="item of DeptUsers"
