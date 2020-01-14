@@ -65,6 +65,12 @@ export function getStatusTaskList(params) {
     params
   })
 }
+// 返回标准项目的任务
+export function getStandardTaskList(params) {
+  return AXIOS.get('/task/task/?fill_hour', {
+    params
+  })
+}
 // 提交我完成的任务
 export function taskApprove(data) {
   return AXIOS.post('/approve/approve_submit/', data)
