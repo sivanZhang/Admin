@@ -60,7 +60,7 @@ export default {
       detailLoading: false,
       LogList: [],
       logsLoading: false,
-      TaskRecord: [],
+      TaskRecord: {},
       createLoading: false,
       activeRow: {}, //点击任务列表选中的列的数据
       surplus_labor_hour: null,
