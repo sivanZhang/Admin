@@ -48,7 +48,7 @@
         <el-form-item label="选择任务" prop="task_id">
           <el-select v-model="TaskForm.task_id" placeholder="请选择填报任务" @change="selMyTask">
             <el-option
-              v-for="item in MyTaskList"
+              v-for="item in MyStandardTaskList"
               :key="item.task.id"
               :label="item.task.name"
               :value="item.task.id"
@@ -179,7 +179,7 @@ export default {
     PieNestedChart
   },
   props: {
-    MyTaskList: {
+    MyStandardTaskList: {
       type: Array,
       default: []
     }

@@ -20,7 +20,8 @@ import {
   addTaskRecord,
   queryTaskRecord,
   queryTask,
-  getStatusTaskList
+  getStatusTaskList,
+  getStandardTaskList
 } from "@/api/task";
 let TimeOut = null;
 export default {
@@ -50,6 +51,7 @@ export default {
       isAssetDrawerShow: false,
       deptList: this.$store.state.login.userInfo.dept,
       MyTaskList: [],
+      MyStandardTaskList: [],
       // 任务侧边栏相关
       isDrawerShow: false,
       TaskDetail: {
@@ -213,8 +215,17 @@ export default {
         }
       });
     },
-    // 获取我在进行中的任务
     getMyTasks() {
+      //获取我在进行中的标准项目下的任务
+      getStandardTaskList({
+        mytask: null,
+        status: "[0, 1, 2]",
+        page: 1,
+        pagenum: 100
+      }).then(({ data }) => {
+        this.MyStandardTaskList = [...data.msg];
+      });
+      // 获取我在进行中的标准和实训项目中的任务
       getStatusTaskList({
         mytask: null,
         status: "[0, 1, 2]",
@@ -257,7 +268,7 @@ export default {
       <el-col :span="8" v-if="system_auth">
         <el-row class="basic" :gutter="15">
           <el-col :span="24" class="card-warp">
-            <MyManWork :my-task-list="MyTaskList" />
+            <MyManWork :MyStandardTaskList="MyStandardTaskList" />
           </el-col>
           <el-col :span="24" style="height:15px" />
           <el-col :span="24" class="card-warp">
