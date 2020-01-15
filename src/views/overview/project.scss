@@ -95,6 +95,12 @@
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
+                .btn-explain{
+                    .svg-icon{
+                        width: 2em;
+                        height: 2em;
+                    }
+                }
             }
             .Instructions:hover
               {
