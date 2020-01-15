@@ -28,6 +28,7 @@
       </el-row>
       <assetFilter ref="assetFilter" @refresh_close="closeSelectedTag" />
     </div>
+
     <el-table
       ref="sceneNeed"
       :data="scene"
@@ -239,9 +240,9 @@
         </template>
       </el-table-column>
       <el-table-column :label="active?'未分配环节':'已分配环节'" align="center" width="180px">
-        <el-table-column prop="link" label="工种" align="left" width="100px">
+        <el-table-column prop="link" label="工种" align="left" width="150px">
           <template slot-scope="scope">
-            <div v-if="active=='true'">
+            <div v-if="active">
               <div v-for="(todo,index) of scope.row.not_allcoted_link" :key="index">
                 {{todo.dept_name}}
                 <el-tooltip effect="dark" content="添加任务" placement="top">
@@ -263,31 +264,31 @@
             </div>
           </template>
         </el-table-column>
-
-        <el-table-column label="截止日期" align="left" width="95px">
+        <el-table-column label="截止日期" align="left" width="95px" v-if="active=='true'">
           <template slot-scope="scope">
-            <div v-if="active=='true'">
+            <div v-if="active">
               <div
                 v-for="(todo,index) of scope.row.not_allcoted_link"
                 :key="index"
                 style="position:top"
               >{{todo.dept_date_end|dateFormat}}</div>
             </div>
-            <div v-else>
+            <!-- <div v-else>
               <div
                 v-for="(todo,index) of scope.row.allcoted_link"
                 :key="index"
                 style="position:top"
-              >{{todo.dept_date_end|dateFormat}}</div>
+              >{{todo.dept_date_end|dateFormat}} </div>
+            </div>-->
+          </template>
+        </el-table-column>
+        <el-table-column label="执行人" align="left" width="150px" v-else>
+          <template slot-scope="scope">
+            <div v-for="(pitem,pindex) of scope.row.allcoted_link" :key="pindex">
+              <!-- {{pitem.dept_name}}: -->
+              <span v-for="(citem,cindex) of pitem.executors" :key="cindex">{{citem}}</span>
             </div>
           </template>
-          <!-- <template slot-scope="scope">
-            <div
-              v-for="(todo,index) of scope.row.allcoted_link"
-              :key="index"
-              style="position:top"
-            >{{todo.dept_date_end|dateFormat}}</div>
-          </template>-->
         </el-table-column>
       </el-table-column>
       <el-table-column label="创建日期" align="left" width="160px" prop="date">

@@ -58,6 +58,44 @@
             ></el-option>
           </el-select>
         </div>
+         <div>
+          <label class="input-label">集数:</label>
+          <el-select
+            v-model="searchParams.asset_episode"
+            clearable
+            placeholder="请选择"
+            multiple
+            filterable
+            style="width:120px;"
+          >
+            <el-option
+              v-for="item in getEpisodes"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </div>
+        <div  style="margin-left:5px;">
+          <label class="input-label">场次:</label>
+          <el-select
+            v-model="searchParams.asset_session"
+            clearable
+            placeholder="请选择"
+            multiple
+            filterable
+            class="priority select"
+            style="width:120px;"
+          >
+            <el-option
+              v-for="item in getSessions"
+              :key="item"
+              :label="item"
+              :value="item" 
+            ></el-option>
+          </el-select>
+        </div>
+        
         <div>
           <label class="input-label">镜头号:</label>
           <el-input placeholder="请输入内容" v-model="searchParams.asset_name" clearable />
@@ -70,6 +108,7 @@
           <label class="input-label">任务内容:</label>
           <el-input placeholder="请输入内容" v-model="searchParams.task_content" clearable />
         </div>
+         
         <el-button-group>
           <el-button type="primary" @click="queryMyTasks">查询</el-button>
           <el-button @click="resetMyTasks">重置</el-button>
@@ -126,12 +165,12 @@
       </el-table-column>
       <el-table-column prop="asset_episode" label="集数" width="120px;" >
          <template slot-scope="scope">
-          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.asset_episode}}</div>
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.asset_episode?scope.row.asset_episode:"-"}}</div>
         </template>
       </el-table-column>
        <el-table-column prop="asset_session" label="场次" width="120px;" >
          <template slot-scope="scope">
-          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.asset_session}}</div>
+          <div @click="taskBoardRightShow(scope.row.task.id)">{{scope.row.asset_session?scope.row.asset_session:"-"}}</div>
         </template>
       </el-table-column>  
       <el-table-column prop="task.content" label="任务内容" width="120px;" >
@@ -156,7 +195,7 @@
       <el-table-column label="开始日期" width="70px">
         <template slot-scope="scope">{{scope.row.task.start_date|dateFormat}}</template>
       </el-table-column>
-      <el-table-column prop="task.total_hour" label="预设(h)" :render-header="renderheader" width="50px"></el-table-column>
+      <el-table-column prop="task.total_hour" label="预设(h)"  width="50px"></el-table-column>
       <el-table-column label="提交日期" width="70px">
         <template slot-scope="scope">{{scope.row.task.create_time|dateFormat}}</template>
       </el-table-column>
@@ -274,6 +313,7 @@ import tabTaskDtail from "@/views/task/components/tab-task-detail";
 import approveLog from "@/views/components/approve-log";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
 import { getApprove } from "@/api/video";
+//import { getProjectMember, getEpisodeSession } from "@/api/statistics";
 export default {
   name:'undetermined-approve',
   mixins: [thumbtackMixin],
@@ -309,7 +349,8 @@ export default {
       SearchResult: [],
       out_suggestion: "",
       checked: false, 
-        
+       getEpisodes:[], 
+       getSessions:[],
       submitLoading: false,
       form_obj: {},
       isDrawerShow: false,
@@ -344,8 +385,22 @@ export default {
       }
     }
     
+    
   },
   methods: {
+    //获得场次和集数
+      queryepisodes() {
+        getApprove().then(({ data }) => {
+        // console.log('11111')
+        // console.log(data)
+        this.getEpisodes = [...data.episodes];
+        this.getSessions = [...data.sessions];
+        // console.log('11111')
+        // console.log( this.getEpisodes)
+      })
+     
+      },
+     
      openExplain() {
       this.dialogVisible = true;
     },
@@ -366,7 +421,7 @@ export default {
         this.$store.dispatch("project/get_Projects");
       }
       }, 
-    
+     
     //状态
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.property == "priority") {
@@ -511,6 +566,8 @@ export default {
       propFormat("project_ids");
       propFormat("prioritys");
       propFormat("executor_ids");
+      propFormat("asset_episode");
+      propFormat("asset_session");
       Object.entries(params).forEach(t => {
         if (!t[1]) {
           delete params[t[0]];
@@ -552,6 +609,7 @@ export default {
   },
   mounted() {
     this.getMyTasks();
+    this.queryepisodes();
     
   }
 };

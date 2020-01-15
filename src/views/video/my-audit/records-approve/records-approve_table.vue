@@ -39,8 +39,18 @@
                     </el-image>
                 </template>
             </el-table-column>
-            <el-table-column prop="approve_asset__episode" label="集数" header-align="center" />
-            <el-table-column prop="approve_asset__session" label="场次"  header-align="center" />
+            <!-- <el-table-column prop="approve_asset__episode" label="集数" header-align="center" />
+            <el-table-column prop="approve_asset__session" label="场次"  header-align="center" /> -->
+            <el-table-column prop="approve_asset__episode" label="集数" width="120px;" >
+         <template slot-scope="scope">
+          <div>{{scope.row.approve_asset__episode?scope.row.approve_asset__episode:"-"}}</div>
+        </template>
+      </el-table-column>
+       <el-table-column prop="approve_asset__session" label="场次" width="120px;" >
+         <template slot-scope="scope">
+          <div >{{scope.row.approve_asset__session?scope.row.approve_asset__session:"-"}}</div>
+        </template>
+      </el-table-column>  
         </el-table-column>
         <el-table-column label="所属项目" prop="approve_task__name" header-align="center" />
         <!-- <el-table-column label="项目" header-align="center">
