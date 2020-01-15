@@ -2,10 +2,12 @@
        .active3{
            border: 1px solid #C64b2b;
        }
+         .dialog{
+             .el-dialog__header {
+                 display: none;
+             }
+         }
 
-        .el-dialog__header {
-            display: none;
-        }
         .container {
             width: 100%;
             min-width: 1200px!important;
@@ -79,6 +81,33 @@
                     right: 15px;
                     top: 140px;
                 }
+            }
+            .Instructions{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                position: fixed;
+                bottom: 30px;
+                right: 0px;
+                background-color: #dfdddd;
+                z-index: 5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+            .Instructions:hover
+              {
+               background: #ff7e11;
+             }
+            .notice-matter {
+                padding-left: 5px;
+                padding-bottom: 20px;
+                padding-right: 5px;
+                .notice-content{
+                    padding-top:2px;
+                }
+                
             }
         }
     }

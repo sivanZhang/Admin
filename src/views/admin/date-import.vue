@@ -51,14 +51,14 @@
         <div style="font-size:12px">
           <h3>必填字段</h3>
           <div style="padding-top:2px">
-            <span span style="font-weight:bold">节假日名：</span>不符合要求则返回“节假日名是必填字段”；
+            <span style="font-weight:bold">节假日名：</span>不符合要求则返回“节假日名是必填字段”；
           </div>
           <div style="padding-top:2px">
             <span style="font-weight:bold">日期：</span>格式可为 "yyyy.mm.dd" &nbsp;&nbsp; "yyyy/mm/dd"&nbsp;&nbsp;
             "yyyy-mm-dd"&nbsp;&nbsp;"yyyymmdd"&nbsp;&nbsp;"yyyy年mm月dd日"；不符合要求则返回“日期是必填字段”；
           </div>
           <div style="padding-top:2px">
-            <span span style="font-weight:bold">调休：</span>如果是调休日期的话，该字段值为“调休”，否则返回“调休是必填字段”；
+            <span style="font-weight:bold">调休：</span>如果是调休日期的话，该字段值为“调休”，否则返回“调休是必填字段”；
           </div>
           <div style="padding-top:2px;font-size:12px">
             <div style="padding-top:2px">

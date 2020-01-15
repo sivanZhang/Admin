@@ -161,8 +161,35 @@
           </el-card>
         </div>
       </template>
+    <!-- 添加使用帮助 -->
+      <el-tooltip class="item" effect="dark" content="使用帮助" placement="top">
+        <div class="Instructions" @click="openExplain()">
+           <span class="btn-explain">
+              <svg-icon style="icon" icon-class="instruction" />
+           </span>
+         </div>
+      </el-tooltip>
     </div>
-    <el-dialog :visible.sync="isShowImg" width="768px" top="80px" :show-close="false">
+    <el-dialog  title="注意事项" :visible.sync="dialogVisible" width="365px">
+      <div class="notice-matter">
+        <div style="font-size:12px">
+          <h3>权限控制说明</h3>
+          <div class="notice-content" style="padding-top:3px">
+            <span style="font-weight:bold">制片&nbsp;/&nbsp;统筹:</span>&nbsp;拥有所有项目的全部权限
+          </div>
+          <div class="notice-content">
+            <span style="font-weight:bold">组长:</span>&nbsp;可以查看项目的部门&nbsp;/&nbsp;镜头&nbsp;/&nbsp;信息属性
+          </div>
+          <div class="notice-content">
+            <span style="font-weight:bold">制作人员:</span>&nbsp;可以查看本人的任务 &nbsp;/&nbsp;镜头&nbsp;/&nbsp;自己参与的项目
+          </div>
+          <div class="notice-content">
+            <span style="font-weight:bold">全部人员:</span>&nbsp;可以查看素材库
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog class="dialog" :visible.sync="isShowImg" width="768px" top="80px" :show-close="false">
       <img :src="src" style="width:100%" />
     </el-dialog>
   </div>
@@ -200,7 +227,8 @@ export default {
       taskList: [],
       attrsList: [],
       customAttrs: [],
-      attrsTypeNum:null
+      attrsTypeNum:null,
+      dialogVisible:false,
     };
   },
   props: ["trainingProject"],
@@ -208,6 +236,10 @@ export default {
     ...mapState("project", ["ProjectList"])
   },
   methods: {
+    //添加权限说明
+    openExplain() {
+      this.dialogVisible = true;
+    },
     showImg(url = null) {
       if (url) {
         this.src = url;
