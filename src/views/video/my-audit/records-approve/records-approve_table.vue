@@ -39,8 +39,6 @@
                     </el-image>
                 </template>
             </el-table-column>
-            <!-- <el-table-column prop="approve_asset__episode" label="集数" header-align="center" />
-            <el-table-column prop="approve_asset__session" label="场次"  header-align="center" /> -->
             <el-table-column prop="approve_asset__episode" label="集数" width="120px;" >
          <template slot-scope="scope">
           <div>{{scope.row.approve_asset__episode?scope.row.approve_asset__episode:"-"}}</div>

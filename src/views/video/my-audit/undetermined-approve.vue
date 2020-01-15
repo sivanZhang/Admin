@@ -391,12 +391,8 @@ export default {
     //获得场次和集数
       queryepisodes() {
         getApprove().then(({ data }) => {
-        // console.log('11111')
-        // console.log(data)
         this.getEpisodes = [...data.episodes];
         this.getSessions = [...data.sessions];
-        // console.log('11111')
-        // console.log( this.getEpisodes)
       })
      
       },

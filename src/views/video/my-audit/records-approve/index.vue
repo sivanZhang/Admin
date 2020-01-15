@@ -12,7 +12,12 @@
         </div>
         <div>
           <label class="input-label">审批结果:</label>
-          <el-select v-model="httpParams.approve_result" multiple placeholder="请选择" style="width:120px;">
+          <el-select
+            v-model="httpParams.approve_result"
+            multiple
+            placeholder="请选择"
+            style="width:120px;"
+          >
             <el-option label="同意" :value="1"></el-option>
             <el-option label="拒绝" :value="0"></el-option>
           </el-select>
@@ -94,20 +99,19 @@ export default {
   },
   created() {
     this.get_Records();
-      this.queryepisodes();
+    this.queryepisodes();
   },
   methods: {
-     //获得场次和集数
-      queryepisodes() {
-        getRecords({
+    //获得场次和集数
+    queryepisodes() {
+      getRecords({
         pagenum: 20,
         page: 1
       }).then(({ data }) => {
         this.getEpisodes = [...data.episodes];
         this.getSessions = [...data.sessions];
-      })
-
-      },
+      });
+    },
     // 监听分页每页大小改变
     handleSizeChange(pageSize) {
       this.httpParams.pagenum = pageSize;
@@ -129,13 +133,12 @@ export default {
     // http查询我的审核记录数据
     get_Records() {
       // // 去掉空值参数
-
       // Object.keys(this.httpParams).forEach(t => {
       //   if (!this.httpParams[t] && this.httpParams[t] !== 0) {
       //     delete this.httpParams[t];
       //   }
       // });
-       const params = { ...this.httpParams };
+      const params = { ...this.httpParams };
       // 值为数组的属性转换为带","的字符串
       function propFormat(prop) {
         if (prop in params && prop.length) {
@@ -144,7 +147,7 @@ export default {
           delete params[prop];
         }
       }
-       propFormat("approve_result");
+      propFormat("approve_result");
       propFormat("asset_episode");
       propFormat("asset_session");
       Object.entries(params).forEach(t => {
