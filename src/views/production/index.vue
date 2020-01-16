@@ -266,6 +266,9 @@ export default {
 };
 </script>
 <style>
+.v-modal {
+    position: static !important
+}
 .el-table--mini th, .el-table--mini td {
   padding: 0;
 }

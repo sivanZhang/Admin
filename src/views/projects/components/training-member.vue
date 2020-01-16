@@ -149,8 +149,6 @@ export default {
         project_id: this.$route.params.id,
         user_id: row.userid
       }).then(({ data }) => {
-        console.log('1111')
-        console.log(data)
         const option = {
           title: {
             text: "练习画像"
