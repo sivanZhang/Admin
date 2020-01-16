@@ -108,6 +108,7 @@ import MyCharts from "@/components/ECharts/BaseECharts";
 import { trainTask, checkInAll, getRange } from "@/api/statistics";
 import production from "@/views/production";
 import PieCharts from "@/components/ECharts/PieChart";
+import {studentPortraya} from "@/api/training";
 export default {
   name: "training-member",
   mixins: [thumbtackMixin],
@@ -139,15 +140,17 @@ export default {
   methods: {
     // 打开个人排名抽屉
     openRanking(row) {
-      console.log(row)
+    //  console.log(row)
       this.usernameTitle = row.username;
       this.teamId = row.id;
       this.user_id = row.userid;
       this.isRankingShow = true;
-      getRange({
-        id: this.$route.params.id,
-        userid: row.userid
+      studentPortraya({
+        project_id: this.$route.params.id,
+        user_id: row.userid
       }).then(({ data }) => {
+        console.log('1111')
+        console.log(data)
         const option = {
           title: {
             text: "练习画像"
@@ -199,10 +202,10 @@ export default {
               data: [
                 {
                   value: [
-                    data.msg.score,
-                    data.msg.attendance,
-                    data.msg.submittime,
-                    data.msg.total
+                    data.score,
+                    data.attendance_rank,
+                    data.submition_rank,
+                    data.total_rank
                   ],
                   name: "个人所有排名"
                 }

@@ -81,3 +81,7 @@ export function myRecord(params){
 export function myWeightRecord(params){
     return AXIOS.get('/teachingsystem/statistics/?my_weight_socre',{params})
 }
+//实习生画像
+export function studentPortraya(params){
+    return AXIOS.get('/teachingsystem/portraya/',{params})
+}
