@@ -1292,13 +1292,18 @@ export default {
     },
     //跳转导出页面dialog
     targetUpload() {
-      HTTP.queryAssets({
-          ...this.multiSelect,
-          ...this.name,
-          project: this.$route.params.id,
-          print: "null",
-          asset_type: this.drawerType === "scene" ? 0 : 1
-        })
+      const data = {
+        ...this.multiSelect,
+        ...this.name,
+        project: this.$route.params.id,
+        print: "null",
+        asset_type: this.drawerType === "scene" ? 0 : 1,
+        ids:this.multipleSelection.map(item => item.id).join(',')
+      }
+      if (data.ids.length === 0) {
+        delete data.ids;
+      }
+      HTTP.queryAssets(data)
         .then(({
           data
         }) => {

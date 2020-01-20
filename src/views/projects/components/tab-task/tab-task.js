@@ -822,7 +822,11 @@ export default {
         ...this.name,
         ...this.multiSelect,
         project: this.$route.params.id,
-        print: 'null'
+        print: 'null',
+        ids:this.multipleSelection.map(item => item.id).join(',')
+      }
+      if (data.ids.length === 0) {
+        delete data.ids;
       }
       HTTP.queryTask(data)
         .then(({
