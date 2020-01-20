@@ -3,8 +3,8 @@
   <div style="display:flex;width:400px">
     <el-select v-model="colSel" placeholder="请选择" style="width:130px;" filterable>
       <el-option
-        v-for="item in columnSelect"
-        :key="item.value"
+        v-for="(item,index) in columnSelect"
+        :key="index"
         :label="item.label"
         :value="item.value"
       ></el-option>
@@ -26,8 +26,23 @@
       @change="getAssetList()"
     >
       <el-option
-        v-for="item in columnSelect2"
-        :key="item.value"
+        v-for="(item,index) in columnSelect2"
+        :key="index"
+        :label="item.label"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+    <el-select
+      v-if="colSel === 'allocation'"
+      v-model="colSel2"
+      placeholder="请选择"
+      style="width:300px;margin-top:1px"
+      filterable
+      @change="getAssetList()"
+    >
+      <el-option
+        v-for="(item,index) in columnSelect2"
+        :key="index"
         :label="item.label"
         :value="item.value"
       ></el-option>
@@ -56,6 +71,10 @@ export default {
         {
           value: "name",
           label: "镜头号"
+        },
+        {
+          value: "allocation",
+          label: "镜头分配"
         },
         {
           value: "session",
@@ -130,6 +149,12 @@ export default {
       filterText: ""
     };
   },
+  mounted() {
+   // console.log(this.$store.state.login.userInfo.auth.dept_manager)
+    if (this.$store.state.login.userInfo.auth.dept_manager !== true) {
+      this.delArr(this.columnSelect,"镜头分配")
+  }
+  },
   watch: {
     colSel: {
       handler: function(newVal, oldVal) {
@@ -158,6 +183,20 @@ export default {
               {
                 value: 4,
                 label: "完成"
+              }
+            ];
+            break;
+          case "allocation":
+            this.colShow = false;
+            this.colSel2 = [1];
+            this.columnSelect2 = [
+              {
+                value: 1,
+                label: "未分配"
+              },
+              {
+                value: 2,
+                label: "已分配"
               }
             ];
             break;
@@ -237,7 +276,7 @@ export default {
             break;
           case "episode":
             this.colShow = false;
-            this.columnSelect2=[];
+            this.columnSelect2 = [];
             getEpisodeSession({ id: this.$route.params.id, episode: "" }).then(
               ({ data }) => {
                 [...data.msg].map(item => {
@@ -251,7 +290,7 @@ export default {
             break;
           case "session":
             this.colShow = false;
-            this.columnSelect2=[];
+            this.columnSelect2 = [];
             getEpisodeSession({ id: this.$route.params.id, session: "" }).then(
               ({ data }) => {
                 [...data.msg].map(item => {
@@ -272,6 +311,16 @@ export default {
     }
   },
   methods: {
+   delArr(arr,target){
+        for(let i=0;i<arr.length;i++){
+            if(arr[i].label===target){
+                arr.splice(i,1)
+            }
+        }
+        return arr
+
+    },
+
     getAssetList() {
       function DateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
@@ -287,6 +336,14 @@ export default {
               page: 1
             });
           this.name = { name: this.filterText };
+          break;
+        case "allocation":
+          payload = {
+            ...payload,
+            asset_active: this.colSel2
+          };
+          this.name = { asset_active: this.colSel2 };
+
           break;
         case "inner_version":
           this.filterText &&
@@ -372,16 +429,16 @@ export default {
             this.name = { status: "[" + String(this.colSel2) + "]" };
           }
           break;
-          case "episode":
+        case "episode":
           if (this.colSel2.length) {
             payload = {
               ...payload,
-             episode: String(this.colSel2)
+              episode: String(this.colSel2)
             };
-            this.name = { episode:  String(this.colSel2) };
+            this.name = { episode: String(this.colSel2) };
           }
           break;
-          case "session":
+        case "session":
           if (this.colSel2.length) {
             payload = {
               ...payload,
@@ -408,7 +465,7 @@ export default {
             this.name = { priority: "[" + String(this.colSel2) + "]" };
           }
       }
-      this.$emit("refreshAssetList",3,payload,this.name)
+      this.$emit("refreshAssetList", 3, payload, this.name);
     },
     //重置
     refreshOneSel() {
