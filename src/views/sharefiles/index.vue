@@ -38,7 +38,7 @@
         <el-card>
           <h4 slot="header">文件列表</h4>
           <div>
-            <el-row>
+            <el-row type="flex">
               <el-col :span="16">
                 <el-button
                   v-show="auth"
