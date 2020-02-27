@@ -106,37 +106,38 @@
               </el-col>
             </el-row>
           </div>
-          <div style="margin-top:15px; border: 1px solid #dfe6ec;">
+          <div style="margin-top:15px">
             <el-table
               :row-key="row=>row.id"
               @selection-change="handleSelectionChange"
               :data="tableData"
               style="width: 100%"
               ref="tableData"
-              :header-cell-style="{'font-size':'12px',background:'#eef1f6',color:'#606266'}"
+              border
+              :header-cell-style="{height:'50px'}"
             >
-              <el-table-column type="selection" :reserve-selection="true" width="55px"></el-table-column>
-              <el-table-column type="index"></el-table-column>
-              <el-table-column prop="name" label="插件名称">
+              <el-table-column type="selection" :reserve-selection="true" width="60px" align="center"></el-table-column>
+              <el-table-column type="index" align="center"></el-table-column>
+              <el-table-column prop="name" header-align="center" label="插件名称">
                 <template slot-scope="scope">{{scope.row.name}}</template>
               </el-table-column>
-              <el-table-column prop="software" label="适用软件">
+              <el-table-column prop="software" label="适用软件" header-align="center">
                 <template slot-scope="scope">{{scope.row.software}}</template>
               </el-table-column>
 
-              <el-table-column prop="version" label="插件版本">
+              <el-table-column prop="version" label="插件版本" header-align="center">
                 <template slot-scope="scope">{{scope.row.version}}</template>
               </el-table-column>
 
-              <el-table-column prop="pubdate" label="发布日期">
+              <el-table-column prop="pubdate" label="发布日期" align="center">
                 <template slot-scope="scope">{{scope.row.pubdate|dateFormat}}</template>
               </el-table-column>
-              <el-table-column prop="filepath" label="插件文件">
+              <el-table-column prop="filepath" label="插件文件" align="center">
                 <template slot-scope="scope">
                   <span @click="download(scope.row)" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" v-if="auth">
+              <el-table-column label="操作" v-if="auth" align="center">
                 <template slot-scope="scope">
                   <el-tooltip effect="dark" content="删除" placement="top">
                     <el-button
