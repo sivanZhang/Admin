@@ -67,6 +67,7 @@ export default {
       activeRow: {}, //点击任务列表选中的列的数据
       surplus_labor_hour: null,
       trainingAuth: this.$store.state.login.userInfo.auth.view_training_project,
+      can_assign_task: this.$store.state.login.userInfo.auth.can_assign_task,
       system_auth: this.$store.state.login.userInfo.auth.system_auth,
       view_training_teacher:this.$store.state.login.userInfo.role.role
     };
@@ -354,7 +355,7 @@ export default {
       <el-col :span="12" class="card-warp">
         <MyApprove />
       </el-col>
-      <el-col :span="12" class="card-warp">
+      <el-col :span="12" class="card-warp" v-if="can_assign_task">
         <MyAllocation @changeLinks="changeLinks" ref="MyAllocation"/>
       </el-col>
     </el-row>
