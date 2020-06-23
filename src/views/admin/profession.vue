@@ -15,7 +15,7 @@
               highlight-current
               ref="tree"
               :data="DeptList"
-              @node-click="handleGroupClick"
+            @node-click="handleGroupClick"
               :props="defaultProps"
               default-expand-all
               :expand-on-click-node="false"
@@ -123,7 +123,7 @@
         <el-form-item label="负责人" label-width="20%" prop="chargerid">
           <el-select v-model="GroupForm.chargerid" placeholder="负责人" style="width:100%" filterable>
             <el-option
-              v-for="(item,index) of UserList"
+              v-for="(item,index) of AllMembers"
               :label="item.username"
               :value="item.id"
               :key="index"
@@ -179,11 +179,12 @@ import {
 import usersTable from "@/views/components/UsersTable";
 import links from "./components/links";
 import { mapState } from "vuex";
-
+import { getUserList } from "@/api/admin";
 export default {
   name: "profession",
   data() {
     return {
+    UserList:[],
       tableLoading: false,
       isDrawerShow: false,
       activeTemplate: null,
@@ -245,9 +246,16 @@ export default {
         active: this.isActive && !this.error
       };
     },
-    ...mapState("admin", ["UserList", "DeptList", "DeptAuth"])
+    ...mapState("admin", [ "DeptList", "DeptAuth"])
+   
   },
+
   methods: {
+    getAllUserlist() {
+      getUserList().then(({ data }) => {
+       this.AllMembers = [...data];
+         })
+    },
     jumpChange(val) {
       //  console.log(val);
       getDept({
@@ -261,6 +269,7 @@ export default {
     },
     //http获取“用户组”列表
     getDeptList() {
+    //  this. getAllUserlist();
       this.$store.dispatch("admin/get_DeptList");
     },
     async changeMember() {
@@ -314,6 +323,7 @@ export default {
       this.isMemberEditShow = false;
     },
     openChangeMember(type = 0) {
+     
       this.SelectMembers = [];
 
       if (type) {
@@ -325,8 +335,7 @@ export default {
             title: "添加成员"
           }
         );
-
-        this.AllMembers = Object.assign({}, this.UserList);
+     this.getAllUserlist();
       } else {
         this.MemberEditState = Object.assign(
           {},
@@ -476,6 +485,7 @@ export default {
     //打开“用户组”弹窗
 
     openGroupForm(type, node = null) {
+      this. getAllUserlist();
       if (type === "add") {
         if (node) {
           this.DialogType = Object.assign(
@@ -550,6 +560,7 @@ export default {
     }
   },
   created() {
+  //  this. getAllUserlist();
     this.getDeptList();
     if (this.$route.query.id) {
       this.pageRouter();
