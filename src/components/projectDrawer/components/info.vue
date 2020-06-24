@@ -55,7 +55,7 @@
               @mouseover="showIcon('requirement',true)"
               @mouseleave="showIcon('requirement',false)"
             >
-              <span>{{project.requirement?project.requirement:"-"}}</span>
+              <span v-html="project.requirement">{{project.requirement?project.requirement:"-"}}</span>
               <i
                 class="el-icon-edit"
                 style="color:blue"
