@@ -271,7 +271,7 @@ export default {
         {
           overtime_hour: row.overtime_hour,
           reason: row.reason,
-          task: row.task.id,
+          // task: row.task.id,
           method: "put",
           id: row.overtime_id
         }
