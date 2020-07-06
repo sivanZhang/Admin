@@ -370,7 +370,7 @@ export default {
       .video-comment {
         padding: 10px;
         background: #fff;
-        height: 100%;
+        height: 425px!important;
         overflow: auto;
       }
       .video-info,
