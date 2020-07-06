@@ -214,9 +214,9 @@ export default {
   },
   methods: {
     showDetail(row) {
-       function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      //  function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       this.currentPName = `${row.name} 工时详情`;
       this.showdrawer = true;
       this.detailLoading = true;
@@ -245,49 +245,63 @@ export default {
       var nowDay = now.getDate(); //当前日
       var nowMonth = now.getMonth(); //当前月
       var nowYear = now.getFullYear(); //当前年
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/卖萌/dd hh:mm:ss'
+      function dataFormat(time) {
+        // return new Date(params).toLocaleDateString(); //'yyyy/卖萌/dd hh:mm:ss'
+        var d = new Date(time);
+        var curr_date = d.getDate();
+        var curr_month = d.getMonth() + 1;
+        var curr_year = d.getFullYear();
+        var h = d.getHours(); //获取小时
+        var m = d.getMinutes(); //获取分钟
+        var s = d.getSeconds(); //获取秒
+        String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+        String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+        String(h).length < 2 ? (h = "0" + h) : h;
+        String(m).length < 2 ? (m = "0" + m) : m;
+        String(s).length < 2 ? (s = "0" + s) : s;
+        var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+        return timeformat;
       }
       let data = {};
       if (this.value == 1) {
          data = {
           total_count: "",
-          start: (this.startTime = new Date(
+          start: (this.startTime = dataFormat(new Date(
             nowYear,
             nowMonth,
             nowDay - nowDayOfWeek
-          ).toLocaleDateString()),
-          end: (this.endTime = now.toLocaleDateString())
+          ))),
+          end: (this.endTime = dataFormat(now))
         };
       } else if (this.value == 2) {
          data = {
           total_count: "",
-          start: (this.startTime = new Date(
+          start: (this.startTime = dataFormat(new Date(
             nowYear,
             nowMonth,
             1
-          ).toLocaleDateString()),
-          end: (this.endTime = new Date().toLocaleDateString())
+          ))),
+          end: (this.endTime = dataFormat(new Date()))
         };
       } else if (this.value == 3) {
          data = {
           total_count: "",
-          start: (this.startTime = new Date(
+          start: (this.startTime = dataFormat(new Date(
             nowYear,
             nowMonth - 1,
             nowDay
-          ).toLocaleDateString()),
-          end: (this.endTime = new Date().toLocaleDateString())
+          ))),
+          end: (this.endTime = dataFormat(new Date()))
         };
       } else if (this.value == 4) {
         data = {
           total_count: "",
-          start: (this.startTime = new Date(
+          start: (this.startTime = dataFormat(new Date(
             nowYear,
             nowMonth - 3,
             nowDay
-          ).toLocaleDateString()),
-          end: (this.endTime = new Date().toLocaleDateString())
+          ))),
+          end: (this.endTime = dataFormat(new Date()))
         };
       } else {
          data = {

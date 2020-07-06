@@ -710,6 +710,23 @@ import { mapState } from "vuex";
 import { returnStatement } from "@babel/types";
 import { constants } from "crypto";
 import dayjs from "dayjs";
+function dataFormat(time) {
+    // return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+    var d = new Date(time);
+      var curr_date = d.getDate();
+      var curr_month = d.getMonth() + 1;
+      var curr_year = d.getFullYear();
+      var h = d.getHours(); //获取小时
+      var m = d.getMinutes(); //获取分钟
+      var s = d.getSeconds(); //获取秒
+      String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+      String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+      String(h).length < 2 ? (h = "0" + h) : h;
+      String(m).length < 2 ? (m = "0" + m) : m;
+      String(s).length < 2 ? (s = "0" + s) : s;
+      var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+      return timeformat;
+}
 export default {
   props: ["project", "authAsset", "configImg"],
   name: "info",
@@ -1089,9 +1106,6 @@ export default {
       }
     },
     save(Type) {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
       let data = null;
       if (Type === 0) {
         this.editing = false;
@@ -1239,9 +1253,7 @@ export default {
         });
     },
     save2(Type) {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
+      
       let data = null;
       if (Type === 3) {
         this.editing4 = false;

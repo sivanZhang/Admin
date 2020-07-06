@@ -21,7 +21,6 @@
             style="width:250px"
           >
             <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
-              {{item.dept.name}}
               <template v-if="authLink">
                 <el-tooltip effect="dark" content="添加任务" placement="top">
                   <span style="padding-left:5px">
@@ -470,6 +469,40 @@ import { mapState } from "vuex";
 import myMixin from "./mixins";
 import { type } from "os";
 import { getProjectJoinMeb } from "@/api/training";
+function dataFormat(time) {
+      // return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
+      var d = new Date(time);
+      var curr_date = d.getDate();
+      var curr_month = d.getMonth() + 1;
+      var curr_year = d.getFullYear();
+      var h = d.getHours(); //获取小时
+      var m = d.getMinutes(); //获取分钟
+      var s = d.getSeconds(); //获取秒
+      String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+      String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+      String(h).length < 2 ? (h = "0" + h) : h;
+      String(m).length < 2 ? (m = "0" + m) : m;
+      String(s).length < 2 ? (s = "0" + s) : s;
+      var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+      return timeformat;
+};
+function dateFormat(time) {
+        // return new Date(date * 1000).toLocaleDateString();
+        var d = new Date(time*1000);
+        var curr_date = d.getDate();
+        var curr_month = d.getMonth() + 1;
+        var curr_year = d.getFullYear();
+        var h = d.getHours(); //获取小时
+        var m = d.getMinutes(); //获取分钟
+        var s = d.getSeconds(); //获取秒
+        String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+        String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+        String(h).length < 2 ? (h = "0" + h) : h;
+        String(m).length < 2 ? (m = "0" + m) : m;
+        String(s).length < 2 ? (s = "0" + s) : s;
+        var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+        return timeformat;
+      }
 export default {
   mixins: [myMixin],
   name: "links",
@@ -492,8 +525,10 @@ export default {
       content: null,
       datetime: null,
       datacontent: null,
-      linkstart: null,
-      linkend: null,
+      linkstart: dataFormat(new Date()),
+      linkend: dataFormat(new Date()),
+      // linkstart: null,
+      // linkend: null,
       linkTemplateDialog: false,
       linkActiveName: "link-first",
       templateDetail: true,
@@ -626,9 +661,9 @@ export default {
     },
     //总工时默认值
     changeTime(val) {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      // }
       const totalHour =
         (this.TaskForm.datetime[1] - this.TaskForm.datetime[0]) /
         (1000 * 3600 * 24);
@@ -654,9 +689,9 @@ export default {
     //串行环节调整顺序（上移）
     upmove(Index, index, item) {
       //console.log(item);
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      // function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       const data = [
         {
           id: item.link_id,
@@ -697,9 +732,9 @@ export default {
     },
     //串行环节顺序调整（下移）
     downmove(Index, index, item) {
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      // function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       const data = [
         {
           id: item.link_id,
@@ -740,9 +775,9 @@ export default {
     },
     //并行环节合并（向前合并）
     leftmove(Index) {
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      // function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       const data = [
         {
           id: this.LinkList[Index][0].link_id,
@@ -773,9 +808,9 @@ export default {
     },
     //并行环节合并（向后合并）
     rightmove(Index) {
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      // function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       const data = [
         {
           id: this.LinkList[Index][0].link_id,
@@ -790,7 +825,7 @@ export default {
           dept: this.LinkList[Index][0].dept.id
         }
       ];
-      console.log(data);
+      // console.log(data);
       updateLink({
         method: "put",
         links: data
@@ -807,9 +842,9 @@ export default {
     //串行环节拆分
     unpack(item) {
       console.log(item);
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      // function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       const data = [
         {
           id: item.link_id,
@@ -821,7 +856,6 @@ export default {
           dept: item.dept.id
         }
       ];
-      console.log(data);
       updateLink({
         method: "put",
         links: data
@@ -894,9 +928,9 @@ export default {
     },
     //展示要修改的环节信息
     showLinkForm(item) {
-      function dateFormat(date) {
-        return new Date(date * 1000).toLocaleDateString();
-      }
+      // function dateFormat(date) {
+      //   return new Date(date * 1000).toLocaleDateString();
+      // }
       getLink({ link: item.link_id }).then(({ data }) => {
         if (data.status === 0) {
           this.oneLinkForm = data.msg;
@@ -904,29 +938,29 @@ export default {
           this.content = data.msg.content;
           this.dept = data.msg.dept;
           this.datetime = [
-            new Date(dateFormat(data.msg.date_and_user.date_start)) > 0
-              ? new Date(dateFormat(data.msg.date_and_user.date_start))
+            data.msg.date_and_user.date_start !=null
+              ? dateFormat(data.msg.date_and_user.date_start)
               : "",
-            new Date(dateFormat(data.msg.date_and_user.date_end)) > 0
-              ? new Date(dateFormat(data.msg.date_and_user.date_end))
+            data.msg.date_and_user.date_end != null
+              ? dateFormat(data.msg.date_and_user.date_end)
               : ""
           ];
+
           this.isLinkDialogShow = true;
           this.updateLinkForm = {
             dept: this.dept.id,
             content: this.content,
             datetime: this.datetime
           };
-          //console.log(this.updateLinkForm);
         }
       });
     },
     //更新修改的环节信息
     updateLink() {
-      //console.log(this.updateLinkForm);
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
+      // console.log(this.updateLinkForm);
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      // }
       if (this.updateLinkForm.dept.length) {
         this.updateLinkForm.dept = this.updateLinkForm.dept[
           this.updateLinkForm.dept.length - 1
@@ -959,9 +993,9 @@ export default {
       this.$refs["TaskForm"].validate(valid => {
         if (valid) {
           this.createTaskLoading = true;
-          function dataFormat(params) {
-            return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-          }
+          // function dataFormat(params) {
+          //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+          // }
           if (this.pro_type == 1) {
             let data = {
               ...this.TaskForm,
@@ -1031,9 +1065,9 @@ export default {
     },
     //给某一资产添加环节
     addLinks() {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      // }
       this.FormList.forEach((item, index) => {
         this.FormList[index] = Object.assign({}, this.FormList[index], {
           dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
@@ -1058,9 +1092,9 @@ export default {
         }
       });
       this.createLoading = true;
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      }
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      // }
       addLinks({ links: [...this.FormList] })
         .then(({ data }) => {
           this.createLoading = false;
@@ -1099,9 +1133,9 @@ export default {
             }
           });
         } else if (this.LinkList[Index].length > 0 && item.pid === 0) {
-          function dataFormat(params) {
-            return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-          }
+          // function dataFormat(params) {
+          //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+          // }
           const data = {
             id: this.LinkList[Index][1].link_id,
             content: this.LinkList[Index][1].content,

@@ -152,6 +152,22 @@ export default {
         });
     },
     taskBoardRightShow(row) {
+      function DateFormat(time) {
+         var d = new Date(time);
+          var curr_date = d.getDate();
+          var curr_month = d.getMonth() + 1;
+          var curr_year = d.getFullYear();
+          var h = d.getHours(); //获取小时
+          var m = d.getMinutes(); //获取分钟
+          var s = d.getSeconds(); //获取秒
+          String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+          String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+          String(h).length < 2 ? (h = "0" + h) : h;
+          String(m).length < 2 ? (m = "0" + m) : m;
+          String(s).length < 2 ? (s = "0" + s) : s;
+          var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+          return timeformat;
+      }
       this.isDrawerShow = true;
 
       this.activeRow = {
@@ -162,7 +178,8 @@ export default {
         {
           task_id: row.task.id,
           type: 0,
-          date: new Date().toLocaleDateString()
+          date: DateFormat(new Date())
+          // date: new Date().toLocaleDateString()
         }
       );
       if (this.activeRow.task && this.activeRow.task.status === 2) {

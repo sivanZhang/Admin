@@ -39,7 +39,40 @@ import taskFilter from '@/views/projects/components/filterCondition/taskFilter'
 import taskSel from '@/views/projects/components/oneConditionSel/taskSel'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
 import taskDrawer from '@/views/projects/components/ShowDrawer/taskDrawer'
-
+function dataFormat(time) {
+  // return new Date(dateVal).toLocaleDateString();
+  var d = new Date(time);
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth() + 1;
+    var curr_year = d.getFullYear();
+    var h = d.getHours(); //获取小时
+    var m = d.getMinutes(); //获取分钟
+    var s = d.getSeconds(); //获取秒
+    String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+    String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+    String(h).length < 2 ? (h = "0" + h) : h;
+    String(m).length < 2 ? (m = "0" + m) : m;
+    String(s).length < 2 ? (s = "0" + s) : s;
+    var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+    return timeformat;
+};
+function dateFormat(time) {
+  // return new Date(dateVal).toLocaleDateString();
+  var d = new Date(time*1000);
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth() + 1;
+    var curr_year = d.getFullYear();
+    var h = d.getHours(); //获取小时
+    var m = d.getMinutes(); //获取分钟
+    var s = d.getSeconds(); //获取秒
+    String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+    String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+    String(h).length < 2 ? (h = "0" + h) : h;
+    String(m).length < 2 ? (m = "0" + m) : m;
+    String(s).length < 2 ? (s = "0" + s) : s;
+    var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+    return timeformat;
+};
 export default {
   mixins: [myMixin, thumbtackMixin],
   name: 'tab-task',
@@ -559,10 +592,10 @@ export default {
     },
     // 行内修改资产保存
     saveEdit(index, row) {
-      function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString()
-        // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-      }
+      // function DateFormat(dateVal) {
+      //   return new Date(dateVal).toLocaleDateString()
+      //   // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+      // }
       this.iconShow = false
       this.dbCell = false
       const payload = {
@@ -573,8 +606,8 @@ export default {
         ...this.ImgForm,
         name: row.name,
         method: 'put',
-        start_date: DateFormat(this.start_date),
-        end_date: DateFormat(this.end_date)
+        start_date: dataFormat(this.start_date),
+        end_date: dataFormat(this.end_date)
       }
       if (this.cellCol === 'executor') {
         payload.associatedlist = row.executor.map(t => t.id).join()
@@ -697,9 +730,9 @@ export default {
     },
     // 批量修改任务
     mulEditTasks(Type) {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
-      }
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
+      // }
       if (Type === 1) {
         this.mulEditDialog = true
       } else {
@@ -961,9 +994,9 @@ export default {
         })
     },
     changeTime(val) {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
-      }
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
+      // }
       const totalHour =
         (this.TaskForm.datetime[1] - this.TaskForm.datetime[0]) /
         (1000 * 3600 * 24)
@@ -1033,9 +1066,9 @@ export default {
     },
     // 给某一资产添加环节
     addLinks() {
-      function dataFormat(params) {
-        return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
-      }
+      // function dataFormat(params) {
+      //   return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
+      // }
       this.FormList.forEach((item, index) => {
         this.FormList[index] = Object.assign({}, this.FormList[index], {
           dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
@@ -1178,30 +1211,29 @@ export default {
             return false
           }
           this.dialogTitle = `创建 ${this.ActiveRow.name} 的子任务`
-
-          function dateFormat2(date) {
-            return new Date(date * 1000).toLocaleDateString()
-          }
+          // function dataFormat(date) {
+          //   return new Date(date * 1000).toLocaleDateString()
+          // }
           this.TaskForm = {
             priority: 0,
             grade: 7,
             pid: this.ActiveRow.id,
             asset: this.ActiveRow.asset.id,
             datetime: [
-              new Date(dateFormat2(this.ActiveRow.start_date)) > 0
-                ? new Date(dateFormat2(this.ActiveRow.start_date))
+              this.ActiveRow.start_date !=null
+                ? dateFormat(this.ActiveRow.start_date)
                 : '',
-              new Date(dateFormat2(this.ActiveRow.end_date)) > 0
-                ? new Date(dateFormat2(this.ActiveRow.end_date))
+                this.ActiveRow.end_date !=null
+                ? dateFormat(this.ActiveRow.end_date)
                 : ''
             ]
           }
           this.isDialogShow = true
           break
         case 3:
-          function dateFormat(date) {
-            return new Date(date * 1000).toLocaleDateString()
-          }
+          // function dateFormat(date) {
+          //   return new Date(date * 1000).toLocaleDateString()
+          // }
           this.isDialogShow = true
           if (!Object.keys(this.ActiveRow).length) {
             this.$message.error('请选择要修改的任务')
@@ -1217,11 +1249,11 @@ export default {
             ...this.ActiveRow,
 
             datetime: [
-              new Date(dateFormat(this.ActiveRow.start_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.start_date))
+              this.ActiveRow.start_date !=null
+                ? dateFormat(this.ActiveRow.start_date)
                 : '',
-              new Date(dateFormat(this.ActiveRow.end_date)) > 0
-                ? new Date(dateFormat(this.ActiveRow.end_date))
+              this.ActiveRow.end_date !=null
+                ? dateFormat(this.ActiveRow.end_date)
                 : ''
             ],
             executorlist,
@@ -1249,15 +1281,15 @@ export default {
         if (valid) {
           this.buttonStates.createLoading = true
 
-          function changeDateFormat(dateVal) {
-            return new Date(dateVal).toLocaleDateString()
-            // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-          }
+          // function changeDateFormat(dateVal) {
+          //   return new Date(dateVal).toLocaleDateString()
+          //   // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+          // }
           const data = {
             ...this.TaskForm,
             grade: this.updateMulTask.grade,
-            start_date: changeDateFormat(this.TaskForm.datetime[0]),
-            end_date: changeDateFormat(this.TaskForm.datetime[1]),
+            start_date: dataFormat(this.TaskForm.datetime[0]),
+            end_date: dataFormat(this.TaskForm.datetime[1]),
             project: this.$route.params.id
           }
           if (this.TaskForm.executorlist.length) {
@@ -1311,10 +1343,10 @@ export default {
     editMainTask() {
       this.$refs['TaskRef'].validate(valid => {
         if (valid) {
-          function changeDateFormat(dateVal) {
-            return new Date(dateVal).toLocaleDateString()
-            // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-          }
+          // function changeDateFormat(dateVal) {
+          //   return new Date(dateVal).toLocaleDateString()
+          //   // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
+          // }
           if (this.$route.query.type == 0) {
             // console.log(this.TaskForm);
             const dataMulTask = {
@@ -1328,8 +1360,8 @@ export default {
 
               content: this.TaskForm.content,
 
-              start_date: changeDateFormat(this.TaskForm.datetime[0]),
-              end_date: changeDateFormat(this.TaskForm.datetime[1]),
+              start_date: dataFormat(this.TaskForm.datetime[0]),
+              end_date: dataFormat(this.TaskForm.datetime[1]),
 
               total_hour: this.TaskForm.total_hour,
 
@@ -1358,8 +1390,8 @@ export default {
           } else {
             const data = {
               ...this.TaskForm,
-              start_date: changeDateFormat(this.TaskForm.datetime[0]),
-              end_date: changeDateFormat(this.TaskForm.datetime[1]),
+              start_date: dataFormat(this.TaskForm.datetime[0]),
+              end_date: dataFormat(this.TaskForm.datetime[1]),
               project: this.$route.params.id
             }
             if (this.TaskForm.executorlist.length) {

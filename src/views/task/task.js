@@ -25,6 +25,23 @@ import thumbtackMixin from '@/utils/thumbtack-mixin'
 import dayjs from 'dayjs'
 import assetDrawer from '@/views/projects/components/ShowDrawer/assetDrawer'
 import info from '@/components/projectDrawer/components/info'
+function dataFormat(time) {
+  // return new Date(dateVal).toLocaleDateString();
+  var d = new Date(time);
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth() + 1;
+    var curr_year = d.getFullYear();
+    var h = d.getHours(); //获取小时
+    var m = d.getMinutes(); //获取分钟
+    var s = d.getSeconds(); //获取秒
+    String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+    String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+    String(h).length < 2 ? (h = "0" + h) : h;
+    String(m).length < 2 ? (m = "0" + m) : m;
+    String(s).length < 2 ? (s = "0" + s) : s;
+    var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+    return timeformat;
+}
 export default {
   mixins: [thumbtackMixin],
   components: {
@@ -732,7 +749,7 @@ export default {
       this.TaskRecord = Object.assign({}, {
         task_id: obj.id,
         type: 0,
-        date: new Date().toLocaleDateString()
+        date: dataFormat(new Date())
       })
       queryTask({
         id: obj.id
@@ -777,7 +794,7 @@ export default {
       this.TaskRecord = Object.assign({}, {
         task_id: row.task.id,
         type: 0,
-        date: new Date().toLocaleDateString()
+        date: dataFormat(new Date())
 
       })
       this.$refs["linkTaskOutput"].getlinkTaskOutput(row.task.id);

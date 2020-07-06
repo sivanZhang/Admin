@@ -671,8 +671,22 @@ export default {
     //查询素材库
     searchMaterial() {
       let data = {};
-      function DateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
+      //对时间进行格式化
+      function formatdate(time) {
+          var d = new Date(time);
+          var curr_date = d.getDate();
+          var curr_month = d.getMonth() + 1;
+          var curr_year = d.getFullYear();
+          var h = d.getHours(); //获取小时
+          var m = d.getMinutes(); //获取分钟
+          var s = d.getSeconds(); //获取秒
+          String(curr_month).length < 2 ? (curr_month = "0" + curr_month) : curr_month;
+          String(curr_date).length < 2 ? (curr_date = "0" + curr_date) : curr_date;
+          String(h).length < 2 ? (h = "0" + h) : h;
+          String(m).length < 2 ? (m = "0" + m) : m;
+          String(s).length < 2 ? (s = "0" + s) : s;
+          var timeformat = curr_year + "/" + curr_month + "/" + curr_date ;
+          return timeformat;
       }
       if (this.colSel == "name" && this.keyword) {
         data = {
@@ -701,7 +715,7 @@ export default {
       if (this.colSel == "date") {
         data = {
           ...data,
-          date: DateFormat(this.timeSelection)
+          date: formatdate(this.timeSelection)
         };
       }
       getMaterial(data).then(({ data }) => {
