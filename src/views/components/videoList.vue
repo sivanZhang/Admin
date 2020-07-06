@@ -82,7 +82,7 @@ export default {
       if (e) {
         item = {
           ...item,
-          url: this.$store.state.BASE_URL + item.path //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
+          url: this.$store.state.BASE_URL + item.media_path //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
         };
         this.selectProjects.push(item);
       } else {
