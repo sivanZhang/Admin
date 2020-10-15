@@ -815,6 +815,7 @@ export default {
     this.getStatus();
     this.getPeojectAllStatus();
     this.getRecordSetting();
+    this.getDeptList()
   },
   watch: {
     activeName: {
