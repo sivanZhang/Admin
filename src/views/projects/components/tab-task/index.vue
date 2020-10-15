@@ -866,11 +866,10 @@
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
         <el-col :span="18">
-          <el-form :model="item" label-width="90px">
+          <el-form :model="item" label-width="90px" ref="item" :rules=linkrules>
             <el-form-item
               label="环节内容"
               prop="content"
-              :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
               <el-input
                 type="textarea"
@@ -882,7 +881,6 @@
             <el-form-item
               label="当前工种"
               prop="dept"
-              :rules="[{ required: true, message: '请输入当前工种', trigger: 'blur' }]"
             >
               <el-cascader
                 v-model="item.dept"
@@ -917,7 +915,7 @@
       </el-row>
       <el-row type="flex" justify="end">
         <el-button @click="cancel">取消</el-button>
-        <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addLinks('item')">立即创建</el-button>
       </el-row>
     </el-dialog>
     <!-- 任务导出 -->

@@ -21,6 +21,7 @@
             style="width:250px"
           >
             <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
+              {{item.dept.name}}
               <template v-if="authLink">
                 <el-tooltip effect="dark" content="添加任务" placement="top">
                   <span style="padding-left:5px">
@@ -109,11 +110,10 @@
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
         <el-col :span="18">
-          <el-form :model="item" label-width="90px">
+          <el-form :model="item" label-width="90px" ref="item" :rules=linkrules>
             <el-form-item
               label="环节内容"
               prop="content"
-              :rules="[{ required: true, message: '请输入环节内容', trigger: 'blur' }]"
             >
               <el-input
                 type="textarea"
@@ -125,7 +125,6 @@
             <el-form-item
               label="当前工种"
               prop="dept"
-              :rules="[{ required: true, message: '请输入当前工种', trigger: 'blur' }]"
             >
               <el-cascader
                 v-model="item.dept"
@@ -160,7 +159,7 @@
       </el-row>
       <el-row type="flex" justify="end">
         <el-button @click="cancel">取消</el-button>
-        <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addLinks('item')">立即创建</el-button>
       </el-row>
     </el-dialog>
     <!-- 添加任务 -->
@@ -540,7 +539,11 @@ export default {
       titleTemplate: "",
       selAsset: [],
       templateId: null,
-      trainingMenber: []
+      trainingMenber: [],
+      linkrules:{
+        content:[{required: true, message: '请输入环节内容', trigger: 'blur' }],
+        dept:[{ required: true, message: '请输入当前工种', trigger: 'blur' }]
+      }
     };
   },
   props: ["LinkList", "project", "LinkAssetList", "pro_type", "authLink"],
@@ -1064,52 +1067,55 @@ export default {
       });
     },
     //给某一资产添加环节
-    addLinks() {
-      // function dataFormat(params) {
-      //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      // }
-      this.FormList.forEach((item, index) => {
-        this.FormList[index] = Object.assign({}, this.FormList[index], {
-          dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
-          asset: this.project.id
-        });
-
-        if (
-          "datetime" in this.FormList[index] &&
-          this.FormList[index].datetime.length
-        ) {
-          this.FormList[index] = {
-            ...this.FormList[index],
-            date_start: dataFormat(this.FormList[index].datetime[0]),
-            date_end: dataFormat(this.FormList[index].datetime[1])
-          };
-          delete this.FormList[index].datetime;
-        }
-        if (index === 0) {
-          this.FormList[index].pid = 0;
-        } else {
-          this.FormList[index].pid = this.FormList[index - 1].dept;
-        }
-      });
-      this.createLoading = true;
-      // function dataFormat(params) {
-      //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-      // }
-      addLinks({ links: [...this.FormList] })
-        .then(({ data }) => {
-          this.createLoading = false;
-          this.$message.success(data.msg);
-          if (data.status === 0) {
-            this.$emit("refresh");
-            this.$emit("refresh_assetList");
+    addLinks(formName) {
+      this.$refs[formName][0].validate((valid) => {
+        if(valid){   
+          this.FormList.forEach((item, index) => {
+            this.FormList[index] = Object.assign({}, this.FormList[index], {
+              dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
+              asset: this.project.id
+            });
+            if (
+              "datetime" in this.FormList[index] &&
+              this.FormList[index].datetime.length
+            ) {
+              this.FormList[index] = {
+                ...this.FormList[index],
+                date_start: dataFormat(this.FormList[index].datetime[0]),
+                date_end: dataFormat(this.FormList[index].datetime[1])
+              };
+            }
+            if (index === 0) {
+              this.FormList[index].pid = 0;
+            } else {
+              this.FormList[index].pid = this.FormList[index - 1].dept;
+            }
+          });
+          this.createLoading = true;
+          addLinks({ links: [...this.FormList] })
+          .then(({ data }) => {
+            this.createLoading = false;
+            this.$message.success(data.msg);
+            if (data.status === 0) {
+              this.$emit("refresh");
+              this.$emit("refresh_assetList");
+              this.isDialogShow = false;
+              this.FormList = [{}];
+            }else{
+              this.isDialogShow = true;
+              for(var i=0;i<this.FormList.length;i++){
+                this.FormList[i].dept = ''
+              }
+            }
+          })
+          .catch(err => {
             this.isDialogShow = false;
-            this.FormList = [{}];
-          }
-        })
-        .catch(err => {
-          this.isDialogShow = false;
-          this.createLoading = false;
-        });
+            this.createLoading = false;
+          });
+        }else {
+          return false;
+        }
+      }) 
     },
     //环节删除
     removeLink(item, Index, index) {
