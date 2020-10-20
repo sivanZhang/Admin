@@ -217,6 +217,7 @@ export default {
         alias: [
           // { required: true, message: "请输入别名", trigger: "blur" },
           {
+            required: true,
             pattern: /^[a-zA-Z][A-Za-z\s]*[a-zA-Z]*$/,
             message: "请输入英文",
             trigger: "change"
