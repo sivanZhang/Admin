@@ -218,8 +218,8 @@ export default {
           // { required: true, message: "请输入别名", trigger: "blur" },
           {
             required: true,
-            pattern: /^[a-zA-Z][A-Za-z\s]*[a-zA-Z]*$/,
-            message: "请输入英文",
+            pattern: /^[A-Za-z0-9]+$$/,
+            message: "请输入英文或数字",
             trigger: "change"
           }
         ],
