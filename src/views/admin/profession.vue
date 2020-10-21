@@ -115,10 +115,10 @@
     <el-dialog :title="DialogType.title" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="GroupForm" ref="GroupForm" :rules="GroupRules">
         <el-form-item label="工种名" label-width="20%" prop="name">
-          <el-input v-model.trim="GroupForm.name" autocomplete="off" style="width:100%"></el-input>
+          <el-input v-model="GroupForm.name" autocomplete="off" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="工种别名" label-width="20%" prop="alias">
-          <el-input v-model.trim="GroupForm.alias" autocomplete="off" style="width:100%"></el-input>
+          <el-input v-model="GroupForm.alias" autocomplete="off" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="负责人" label-width="20%" prop="chargerid">
           <el-select v-model="GroupForm.chargerid" placeholder="负责人" style="width:100%" filterable>
@@ -138,7 +138,7 @@
         <el-button
           :loading="Loadings.addDeptLoading"
           type="primary"
-          @click="DialogType.type==='add'?appendGroup():updateGroup()"
+          @click="DialogType.type==='add'?appendGroup(GroupForm):updateGroup(GroupForm)"
         >提 交</el-button>
       </div>
     </el-dialog>
@@ -423,20 +423,28 @@ export default {
       });
     },
 
-    updateGroup() {
+    updateGroup(GroupForm) {
       //验证表单
 
       this.$refs["GroupForm"].validate(async valid => {
         if (valid) {
           this.Loadings.addDeptLoading = true;
 
-          await putDept(this.GroupForm)
+          await putDept(GroupForm)
             .then(({ data }) => {
               this.Loadings.addDeptLoading = false;
 
               if (data.status === 0) {
                 this.$message.success(data.msg);
-
+                this.ActiveGroup = GroupForm
+                 getDept({
+                      id: GroupForm.id
+                    })
+                      .then(({ data }) => {
+                        const msg = data.msg;
+                        this.ActiveGroup = { ...msg };
+                      })
+                      .catch(err => {});
                 this.getDeptList();
               } else {
                 this.$message.error(data.msg);
@@ -525,26 +533,21 @@ export default {
             type
           }
         );
-
         this.GroupForm = Object.assign(
           {},
           {
             id: this.ActiveGroup.id,
-
             method: "put",
-
+            alias:this.ActiveGroup.alias,
             name: this.ActiveGroup.name,
-
-            chargerid: this.ActiveGroup.charger_id
+            chargerid: this.ActiveGroup.charger_id,
           }
         );
       }
-
+      
       this.dialogFormVisible = true;
-      this.$refs["GroupForm"].resetFields();
     },
     pageRouter() {
-      //  console.log(this.$route.query.id);
       getDept({
         id: this.$route.query.id
       })
