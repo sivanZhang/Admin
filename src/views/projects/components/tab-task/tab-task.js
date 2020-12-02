@@ -290,14 +290,18 @@ export default {
           }) => {
             const linkData = [...data.msg]
             this.LinkList = []
-            linkData.forEach(item => {
-              item.forEach(ct => {
-                this.LinkList.push(ct)
+
+            if(linkData!=''){
+              linkData.forEach(item => {
+                item.forEach(ct => {
+                  this.LinkList.push(ct)
+                })
               })
-            })
-            const linktime = this.LinkList[0].date_and_user
-            this.linkstart = linktime.date_start
-            this.linkend = linktime.date_end
+              const linktime = this.LinkList[0].date_and_user
+              this.linkstart = linktime.date_start
+              this.linkend = linktime.date_end
+            }
+            
           })
         }
         if (oldVal === 1 && this.TaskForm.link_id) {
