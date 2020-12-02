@@ -1663,8 +1663,8 @@ export default {
         case 2: // 正常查询
           data = {
             ...data,
-            pagenum: 20,
-            page: 1
+            pagenum: this.pageSize,
+            page: this.currentPage
           }
           break
 
