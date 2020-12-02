@@ -205,14 +205,15 @@
           <el-form-item label="执行小组" prop="group_id"
           :rules="[{ required: true, message: '请填入执行小组', trigger: 'blur' }]"
           >
-            <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
-              <el-option
-                v-for="(item,index) of trainingMenber"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
+            <el-cascader 
+            v-model="TaskForm.group_id" 
+            filterable 
+            :options="SelectMenber"
+            change-on-select
+            :props="{ multiple: true,checkStrictly: true,expandTrigger: 'hover'}"
+            clearable
+            placeholder="请选择分组">
+            </el-cascader>
           </el-form-item>
         </template>
         <template v-else>
@@ -540,6 +541,7 @@ export default {
       selAsset: [],
       templateId: null,
       trainingMenber: [],
+      SelectMenber: [],
       linkrules:{
         content:[{required: true, message: '请输入环节内容', trigger: 'blur' }],
         dept:[{ required: true, message: '请输入当前工种', trigger: 'blur' }]
@@ -561,6 +563,7 @@ export default {
           getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
             ({ data }) => {
               this.trainingMenber = [...data.msg];
+              this.formatMemberList()
             }
           );
         }
@@ -571,6 +574,30 @@ export default {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
+    //获取小组成员列表
+    async formatMemberList() {
+      function changeList(arr) {
+        for (const item of arr) {
+          if (item["members"] && item["members"].length) {
+            changeList(item["members"]);
+          } else {
+            item["members"] = null;
+          }
+        }
+      }
+      let SelectMenber = JSON.parse(
+        JSON.stringify(this.trainingMenber)
+          .replace(/username/g, "label")
+          .replace(/userid/g, "value")
+      );
+      this.SelectMenber = JSON.parse(
+        JSON.stringify(SelectMenber)
+          .replace(/name/g, "label")
+          .replace(/id/g, "value")
+          .replace(/members/g, "children")
+      );
+      changeList(this.SelectMenber);  
+    },
     //环节模板
     LinkTemplate(Type, row) {
       //获取模板列表
@@ -1023,8 +1050,16 @@ export default {
                 this.createTaskLoading = false;
               });
           } else {
+            let params = null;
+            if (this.TaskForm.group_id.length) {
+              let idList = [];
+              idList = this.TaskForm.group_id.map(i => {
+                return i[i.length - 1];
+              });
+              params = {...params, group_id: idList.join() };
+            }
             let dataMulTask = {
-              group_id: this.TaskForm.group_id,
+              ...params,
 
               link_id: this.TaskForm.link_id,
 

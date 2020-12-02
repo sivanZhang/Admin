@@ -683,14 +683,15 @@
             <el-form-item label="执行小组" prop="group_id"
             :rules="[{ required: true, message: '请输入执行小组', trigger: 'blur' }]"
             >
-              <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
-                <el-option
-                  v-for="(item,index) of trainingMenber"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
+              <el-cascader 
+                v-model="TaskForm.group_id" 
+                filterable 
+                :options="SelectMenber"
+                change-on-select
+                :props="{ multiple: true,checkStrictly: true,expandTrigger: 'hover'}"
+                clearable   
+                placeholder="请选择分组">
+                </el-cascader>
             </el-form-item>
           </template>
           <template v-else>

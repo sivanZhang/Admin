@@ -151,6 +151,7 @@ export default {
       linkstart: null,
       linkend: null,
       trainingMenber: [],
+      SelectMenber: [],
       mulEditDialog: false,
       updateMulTask: {},
       value1: '否',
@@ -850,8 +851,33 @@ export default {
           data
         }) => {
           this.trainingMenber = [...data.msg]
+          this.formatMemberList()
         }
       )
+    },
+    //获取小组成员列表
+    async formatMemberList() {
+      function changeList(arr) {
+        for (const item of arr) {
+          if (item["members"] && item["members"].length) {
+            changeList(item["members"]);
+          } else {
+            item["members"] = null;
+          }
+        }
+      }
+      let SelectMenber = JSON.parse(
+        JSON.stringify(this.trainingMenber)
+          .replace(/username/g, "label")
+          .replace(/userid/g, "value")
+      );
+      this.SelectMenber = JSON.parse(
+        JSON.stringify(SelectMenber)
+          .replace(/name/g, "label")
+          .replace(/id/g, "value")
+          .replace(/members/g, "children")
+      );
+      changeList(this.SelectMenber);  
     },
     // 任务导出dialog
     targetUpload() {
@@ -1354,14 +1380,17 @@ export default {
     editMainTask() {
       this.$refs['TaskRef'].validate(valid => {
         if (valid) {
-          // function changeDateFormat(dateVal) {
-          //   return new Date(dateVal).toLocaleDateString()
-          //   // 'yyyy/mm/dd hh:mm:ss'  return `${new Date(date * 1000).toLocaleDateString()} ${new Date(date * 1000).toTimeString().split(' ')[0]}`
-          // }
           if (this.$route.query.type == 0) {
-            // console.log(this.TaskForm);
+            let params = null;
+            if (this.TaskForm.group_id.length) {
+              let idList = [];
+              idList = this.TaskForm.group_id.map(i => {
+                return i[i.length - 1];
+              });
+              params = {...params, group_id: idList.join() };
+            }
             const dataMulTask = {
-              group_id: this.TaskForm.group_id,
+              ...params,
 
               link_id: this.TaskForm.link_id,
 
@@ -1384,7 +1413,6 @@ export default {
 
               grade: this.TaskForm.grade
             }
-            // console.log(dataMulTask);
             HTTP.mulCreateTasks(dataMulTask)
               .then(({
                 data
