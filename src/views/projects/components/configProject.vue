@@ -902,6 +902,9 @@ export default {
             this.groupDialog = false;
             this.$message.success(data.msg);
             this.getGroupList();
+            this.groupForm={
+              projectid: this.project.id
+            }
           } else {
             this.$message.error(data.msg);
           }
@@ -1000,6 +1003,9 @@ export default {
             this.teamDialog = false;
             this.$message.success(data.msg);
             this.getTeam();
+            this.teamForm = {
+              projectid: this.project.id
+            }
           }
         });
       }
