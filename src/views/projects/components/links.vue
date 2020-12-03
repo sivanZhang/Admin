@@ -579,6 +579,7 @@ export default {
     // 判断执行小组：选组的话只能单选，选组中的人支持多选
     selectMember(val){
       //是否与上次的类型相同
+      if(this.TaskForm.group_id !==undefined){
         let changeFlag=false;
         let  changeItem=null;
         if(this.shareScopeEnd.length===0){
@@ -586,7 +587,7 @@ export default {
         }
         else{
             //与原数组比对
-            if(this.TaskForm.group_id !==undefined){
+            
               this.TaskForm.group_id.forEach((item)=>{
               //与原数组的类型相同
                   if(item[0]!==this.shareScopeEnd[0][0]){
@@ -594,13 +595,14 @@ export default {
                       changeItem=item;
                   }
               });
-            }           
+                   
         }
         if(changeFlag){
           this.TaskForm.group_id=[];
           this.TaskForm.group_id.push(changeItem);
         }
         this.shareScopeEnd = this.TaskForm.group_id;
+      }    
     },
     //获取小组成员列表
     async formatMemberList() {
