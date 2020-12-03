@@ -235,6 +235,7 @@ export default {
       checkList: [],
       SaveDialogVisible: false,
       executorList: [],
+      shareScopeEnd:[],
       linkrules:{
         content:[{required: true, message: '请输入环节内容', trigger: 'blur' }],
         dept:[{ required: true, message: '请输入当前工种', trigger: 'blur' }]
@@ -1380,20 +1381,51 @@ export default {
         }
       })
     },
+    // 对于实训项目跟实习生项目创建任务时调用不同接口 
+    addTask(type,parm){
+      if(type ==1){
+        // 创建任务时：调用分配任务执行人接口
+        HTTP.addTask(parm).then(({
+          data
+        }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg)
+            this.mainTaskShow = false
+            this.active = 0
+            this.getTasks(2)
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+      }else{
+        // 创建任务时：调用分配执行小组接口
+        HTTP.mulCreateTasks(parm)
+          .then(({
+            data
+          }) => {
+            this.$message.success(data.msg)
+            if (data.status === 0) {
+              this.mainTaskShow = false
+              this.active = 0
+              this.getTasks(2)
+              t
+            }
+          })
+          .catch(err => {})
+      }      
+    },
     // 添加主任务
     editMainTask() {
       this.$refs['TaskRef'].validate(valid => {
         if (valid) {
           if (this.$route.query.type == 0) {
             let params = null;
-            if (this.TaskForm.group_id.length) {
               let idList = [];
               idList = this.TaskForm.group_id.map(i => {
                 return i[i.length - 1];
               });
-              params = {...params, group_id: idList.join() };
-            }
-            const dataMulTask = {
+              params = {...params, user_ids: idList.join() };
+              let dataMulTask = {
               ...params,
 
               link_id: this.TaskForm.link_id,
@@ -1416,20 +1448,8 @@ export default {
               priority: this.TaskForm.priority,
 
               grade: this.TaskForm.grade
-            }
-            HTTP.mulCreateTasks(dataMulTask)
-              .then(({
-                data
-              }) => {
-                this.$message.success(data.msg)
-                if (data.status === 0) {
-                  this.mainTaskShow = false
-                  this.active = 0
-                  this.getTasks(2)
-                  t
-                }
-              })
-              .catch(err => {})
+            };
+            this.addTask(2,dataMulTask)
           } else {
             const data = {
               ...this.TaskForm,
@@ -1441,20 +1461,21 @@ export default {
               data['executorlist'] = data['executorlist'].join()
             }
             // 若果是修改
-            HTTP.addTask(data).then(({
-              data
-            }) => {
-              if (data.status === 0) {
-                this.$message.success(data.msg)
-                this.mainTaskShow = false
-                this.active = 0
-                this.getTasks(2)
+            this.addTask(1,data)
+            // HTTP.addTask(data).then(({
+            //   data
+            // }) => {
+            //   if (data.status === 0) {
+            //     this.$message.success(data.msg)
+            //     this.mainTaskShow = false
+            //     this.active = 0
+            //     this.getTasks(2)
 
-                // console.log(this.mainTaskShow);
-              } else {
-                this.$message.error(data.msg)
-              }
-            })
+            //     // console.log(this.mainTaskShow);
+            //   } else {
+            //     this.$message.error(data.msg)
+            //   }
+            // })
           }
         }
       })

@@ -688,7 +688,7 @@
                 filterable 
                 :options="SelectMenber"
                 change-on-select
-                :props="{ multiple: true,checkStrictly: true,expandTrigger: 'hover'}"
+                :props="{ multiple: true,checkStrictly: false,expandTrigger: 'hover'}"
                 clearable   
                 placeholder="请选择分组">
                 </el-cascader>
