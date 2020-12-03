@@ -239,7 +239,8 @@ export default {
       linkrules:{
         content:[{required: true, message: '请输入环节内容', trigger: 'blur' }],
         dept:[{ required: true, message: '请输入当前工种', trigger: 'blur' }]
-      }
+      },
+      dialogVisible:false,
     }
   },
   beforeMount() {
@@ -325,6 +326,10 @@ export default {
     }
   },
   methods: {
+    // 执行小组的使用帮助
+    openExplainExecu(){
+      this.dialogVisible = true;
+    },
     //
     get_RowDeptUsers(id, e = true) {
       if (!e) {

@@ -215,6 +215,13 @@
             @change="selectMember"
             placeholder="请选择分组">
             </el-cascader>
+            <span
+            @click="openExplain()"
+            class="btn-explain"
+          >
+            使用帮助:
+            <svg-icon icon-class="wenhao" />
+          </span>
           </el-form-item>
         </template>
         <template v-else>
@@ -449,6 +456,18 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 执行小组说明 -->
+    <el-dialog title="注意事项" :visible.sync="dialogVisible" width="350px">
+      <div  class="notice-matter" style="font-size:14px">
+          <h3>功能：</h3>
+          <div style="padding-top:3px">实现以小组为单位，对小组内的成员分配任务</div>
+          <h3>操作：</h3>
+          <div style="padding-top:3px">1、执行小组选项表第一列：表示小组名称，只支持单选。</div>
+          <div style="padding-top:3px">2、执行小组选项表第二列：表示当前小组成员，支持多选。</div>
+          <h3>结果：</h3>
+          <div style="padding-top:3px">任务创建成功后，每个任务中已分配的小组成员会获取到任务并需要执行处理</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -547,7 +566,8 @@ export default {
       linkrules:{
         content:[{required: true, message: '请输入环节内容', trigger: 'blur' }],
         dept:[{ required: true, message: '请输入当前工种', trigger: 'blur' }]
-      }
+      },
+      dialogVisible:false,
     };
   },
   props: ["LinkList", "project", "LinkAssetList", "pro_type", "authLink"],
@@ -576,6 +596,10 @@ export default {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
+    // 执行小组的使用帮助
+    openExplain() {
+      this.dialogVisible = true;
+    },
     // 判断执行小组：选组的话只能单选，选组中的人支持多选
     selectMember(val){
       //是否与上次的类型相同
