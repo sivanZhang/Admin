@@ -31,10 +31,8 @@
         <el-form-item label="剩余工时">{{surplus_labor_hour?surplus_labor_hour:0}}</el-form-item>
       <el-form-item label="工时" prop="labor_hour">
         <el-input-number
-          :disabled="surplus_labor_hour?false:true"
           v-model="TaskRecord.labor_hour"
           :min="0"
-          :max="surplus_labor_hour < 24? surplus_labor_hour: 24"
         ></el-input-number>
       </el-form-item>
       <el-form-item label="日期" prop="date">
@@ -49,7 +47,7 @@
     </el-form>
     <el-row type="flex" justify="end">
       <el-button @click="cancel">取消</el-button>
-        <el-button :loading="createLoading" type="primary" @click="addRecord()" :disabled="surplus_labor_hour?false:true">提交</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addRecord()">提交</el-button>
     </el-row>
   </div>
 </template>
