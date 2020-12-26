@@ -50,7 +50,10 @@
         />
       </el-tab-pane>
       <el-tab-pane label="任务" name="tab2" lazy>
-        <tab-task ref="tab-task" :asset-list="AssetList" @getAssetList="getAssetList()" />
+        <tab-task ref="tabtask" 
+        :activeName="activeName"
+        @jumpName="jumpName"
+        :asset-list="AssetList" @getAssetList="getAssetList()" />
       </el-tab-pane>
       </template>
       <template v-if="project.pro_type === 0">
@@ -125,6 +128,10 @@ export default {
           this.$nextTick(() => {
           this.$refs["scene2"].getAssetList(2);
           })
+        }else if(newVal === "tab2"){
+          this.$nextTick(() => {
+            this.$refs["tabtask"].getAssetList(2);
+          });
         }
       }
     }

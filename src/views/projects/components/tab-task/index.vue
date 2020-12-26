@@ -683,14 +683,22 @@
             <el-form-item label="执行小组" prop="group_id"
             :rules="[{ required: true, message: '请输入执行小组', trigger: 'blur' }]"
             >
-              <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
-                <el-option
-                  v-for="(item,index) of trainingMenber"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
+              <el-cascader 
+                v-model="TaskForm.group_id" 
+                filterable 
+                :options="SelectMenber"
+                change-on-select
+                :props="{ multiple: true,checkStrictly: false,expandTrigger: 'hover'}"
+                clearable   
+                placeholder="请选择分组">
+                </el-cascader>
+                <span
+                  @click="openExplainExecu()"
+                  class="btn-explain"
+                >
+                  使用帮助:
+                  <svg-icon icon-class="wenhao" />
+                </span>
             </el-form-item>
           </template>
           <template v-else>
@@ -1211,6 +1219,18 @@
             在不同客户端中，仍然会展示选择的列
           </div>
         </div>
+      </div>
+    </el-dialog>
+    <!-- 执行小组说明 -->
+    <el-dialog title="注意事项" :visible.sync="dialogVisible" width="350px">
+      <div  class="notice-matter" style="font-size:14px">
+          <h3>功能：</h3>
+          <div style="padding-top:3px">实现以小组为单位，对小组内的成员分配任务</div>
+          <h3>操作：</h3>
+          <div style="padding-top:3px">1、执行小组选项表第一列：表示小组名称，只支持单选。</div>
+          <div style="padding-top:3px">2、执行小组选项表第二列：表示当前小组成员，支持多选。</div>
+          <h3>结果：</h3>
+          <div style="padding-top:3px">任务创建成功后，每个任务中已分配的小组成员会获取到任务并需要执行处理</div>
       </div>
     </el-dialog>
     <!-- 打开任务侧栏 -->

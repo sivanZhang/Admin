@@ -1377,8 +1377,8 @@ export default {
         case 2: //正常查询
           payload = {
             ...payload,
-            pagenum: 20,
-            page: 1
+            pagenum: this.pageSize,
+            page: this.currentPage
           };
           break;
         case 3: //单条件筛选查询
@@ -1693,13 +1693,16 @@ export default {
       this.$refs["assetForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
+          // 立即创建
           if (this.DialogName == 1) {
             if (this.activeName === "tab0") {
+              // 镜头
               this.AssetForm = Object.assign({}, this.AssetForm, {
                 project: this.$route.params.id,
                 asset_type: 0
               });
             } else {
+              // 资产
               this.AssetForm = Object.assign({}, this.AssetForm, {
                 project: this.$route.params.id,
                 asset_type: 1
@@ -1712,7 +1715,7 @@ export default {
               }) => {
                 this.createLoading = false;
                 this.$message.success(data.msg);
-                if (data.status === 0) {
+                if (data.status === 0) {                                               
                   this.getAssetList(2);
                   this.AssetForm = Object.assign({}, {
                     priority: 0
@@ -1724,6 +1727,7 @@ export default {
                 this.createLoading = false;
               });
           }
+          // 立即修改
           if (this.DialogName === 2) {
             this.AssetForm = Object.assign({}, this.AssetForm, {
               method: "put"

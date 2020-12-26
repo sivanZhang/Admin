@@ -205,14 +205,23 @@
           <el-form-item label="执行小组" prop="group_id"
           :rules="[{ required: true, message: '请填入执行小组', trigger: 'blur' }]"
           >
-            <el-select v-model="TaskForm.group_id" filterable placeholder="请选择分组">
-              <el-option
-                v-for="(item,index) of trainingMenber"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
+            <el-cascader 
+            v-model="TaskForm.group_id" 
+            filterable 
+            :options="SelectMenber"
+            change-on-select
+            :props="{ multiple: true,checkStrictly: false,expandTrigger: 'hover'}"
+            clearable
+            @change="selectMember"
+            placeholder="请选择分组">
+            </el-cascader>
+            <span
+            @click="openExplain()"
+            class="btn-explain"
+          >
+            使用帮助:
+            <svg-icon icon-class="wenhao" />
+          </span>
           </el-form-item>
         </template>
         <template v-else>
@@ -447,6 +456,18 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 执行小组说明 -->
+    <el-dialog title="注意事项" :visible.sync="dialogVisible" width="350px">
+      <div  class="notice-matter" style="font-size:14px">
+          <h3>功能：</h3>
+          <div style="padding-top:3px">实现以小组为单位，对小组内的成员分配任务</div>
+          <h3>操作：</h3>
+          <div style="padding-top:3px">1、执行小组选项表第一列：表示小组名称，只支持单选。</div>
+          <div style="padding-top:3px">2、执行小组选项表第二列：表示当前小组成员，支持多选。</div>
+          <h3>结果：</h3>
+          <div style="padding-top:3px">任务创建成功后，每个任务中已分配的小组成员会获取到任务并需要执行处理</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -540,10 +561,13 @@ export default {
       selAsset: [],
       templateId: null,
       trainingMenber: [],
+      SelectMenber: [],
+      shareScopeEnd:[],
       linkrules:{
         content:[{required: true, message: '请输入环节内容', trigger: 'blur' }],
         dept:[{ required: true, message: '请输入当前工种', trigger: 'blur' }]
-      }
+      },
+      dialogVisible:false,
     };
   },
   props: ["LinkList", "project", "LinkAssetList", "pro_type", "authLink"],
@@ -561,6 +585,7 @@ export default {
           getProjectJoinMeb({ id: this.$route.params.id, users: "users" }).then(
             ({ data }) => {
               this.trainingMenber = [...data.msg];
+              this.formatMemberList()
             }
           );
         }
@@ -571,6 +596,62 @@ export default {
     ...mapState("admin", ["DeptList"]) //DeptUsers是根据登录账号得来的
   },
   methods: {
+    // 执行小组的使用帮助
+    openExplain() {
+      this.dialogVisible = true;
+    },
+    // 判断执行小组：选组的话只能单选，选组中的人支持多选
+    selectMember(val){
+      //是否与上次的类型相同
+      if(this.TaskForm.group_id !==undefined){
+        let changeFlag=false;
+        let  changeItem=null;
+        if(this.shareScopeEnd.length===0){
+            this.TaskForm.group_id = val;
+        }
+        else{
+            //与原数组比对
+            
+              this.TaskForm.group_id.forEach((item)=>{
+              //与原数组的类型相同
+                  if(item[0]!==this.shareScopeEnd[0][0]){
+                      changeFlag = true;
+                      changeItem=item;
+                  }
+              });
+                   
+        }
+        if(changeFlag){
+          this.TaskForm.group_id=[];
+          this.TaskForm.group_id.push(changeItem);
+        }
+        this.shareScopeEnd = this.TaskForm.group_id;
+      }    
+    },
+    //获取小组成员列表
+    async formatMemberList() {
+      function changeList(arr) {
+        for (const item of arr) {
+          if (item["members"] && item["members"].length) {
+            changeList(item["members"]);
+          } else {
+            item["members"] = null;
+          }
+        }
+      }
+      let SelectMenber = JSON.parse(
+        JSON.stringify(this.trainingMenber)
+          .replace(/username/g, "label")
+          .replace(/userid/g, "value")
+      );
+      this.SelectMenber = JSON.parse(
+        JSON.stringify(SelectMenber)
+          .replace(/name/g, "label")
+          .replace(/id/g, "value")
+          .replace(/members/g, "children")
+      );
+      changeList(this.SelectMenber);  
+    },
     //环节模板
     LinkTemplate(Type, row) {
       //获取模板列表
@@ -990,15 +1071,44 @@ export default {
           this.isLinkDialogShow = false;
         }
       });
+    },   
+    // 对于实训项目跟实习生项目创建任务时调用不同接口 
+    addTask(type,parm){
+      if(type ==1){
+        // 创建任务时：调用分配任务执行人接口
+        addTask(parm)
+        .then(({ data }) => {
+          this.createTaskLoading = false;
+          this.$message.success(data.msg);
+          if (data.status === 0) {
+            this.cancelTask();
+            this.isDialogShow = false;
+          }
+        })
+        .catch(err => {
+          this.createTaskLoading = false;
+        });
+      }else{
+        // 创建任务时：调用分配执行小组接口
+        mulCreateTasks(parm)
+          .then(({ data }) => {
+            this.createTaskLoading = false;
+            this.$message.success(data.msg);
+            if (data.status === 0) {
+              this.cancelTask();
+              this.isDialogShow = false;
+            }
+          })
+          .catch(err => {
+            this.createTaskLoading = false;
+          });
+      }      
     },
     //给某一环节添加任务
     addTasks() {
       this.$refs["TaskForm"].validate(valid => {
         if (valid) {
           this.createTaskLoading = true;
-          // function dataFormat(params) {
-          //   return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
-          // }
           if (this.pro_type == 1) {
             let data = {
               ...this.TaskForm,
@@ -1010,21 +1120,16 @@ export default {
               data["executorlist"] = data["executorlist"].join();
             }
             delete data.datetime;
-            addTask(data)
-              .then(({ data }) => {
-                this.createTaskLoading = false;
-                this.$message.success(data.msg);
-                if (data.status === 0) {
-                  this.cancelTask();
-                  this.isDialogShow = false;
-                }
-              })
-              .catch(err => {
-                this.createTaskLoading = false;
-              });
+            this.addTask(1,data)
           } else {
-            let dataMulTask = {
-              group_id: this.TaskForm.group_id,
+            let params = null;
+              let idList = [];
+              idList = this.TaskForm.group_id.map(i => {
+                return i[i.length - 1];
+              });
+              params = {...params, user_ids: idList.join() };
+              let dataMulTask = {
+              ...params,
 
               link_id: this.TaskForm.link_id,
 
@@ -1047,20 +1152,8 @@ export default {
 
               grade: this.TaskForm.grade
             };
-            //console.log(dataMulTask);
-            mulCreateTasks(dataMulTask)
-              .then(({ data }) => {
-                this.createTaskLoading = false;
-                this.$message.success(data.msg);
-                if (data.status === 0) {
-                  this.cancelTask();
-                  this.isDialogShow = false;
-                }
-              })
-              .catch(err => {
-                this.createTaskLoading = false;
-              });
-          }
+            this.addTask(2,dataMulTask)
+            }
         } else {
           return false;
         }
