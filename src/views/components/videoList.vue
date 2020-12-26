@@ -2,37 +2,50 @@
   <div class="video-cont">
     <div id="videoSliderList">
       <el-button
-        v-for="(item,index) in selectProjects"
+        v-for="(item, index) in selectProjects"
         :key="index"
-        :type="currentPlayId==item.task.id?'success':''"
-        @click="initSource(index),getCurrentPlayId(item.task.id)"
+        :type="currentPlayId == item.task.id ? 'success' : ''"
+        @click="initSource(index), getCurrentPlayId(item.task.id)"
         icon="el-icon-video-play"
-        style="margin: 10px 2%;"
-      >{{item.task.name}}</el-button>
+        style="margin: 10px 2%"
+        >{{ item.task.name }}</el-button
+      >
     </div>
     <el-divider content-position="left">选中播放审核：</el-divider>
     <el-checkbox-group v-model="selectProjectIds">
       <div class="list">
-        <div class="item" v-for="(item,index) in projectList" :key="index">
+        <div class="item" v-for="(item, index) in projectList" :key="index">
           <el-checkbox
             :label="index"
             :key="index"
-            @change="changeCheckedProject($event,item,index)"
+            @change="changeCheckedProject($event, item, index)"
           >
-            <p class="pro-name">{{item.task.name}}</p>
+            <p class="pro-name">{{ item.task.name }}</p>
           </el-checkbox>
-          <div style="margin-top:5px">
+          <div style="margin-top: 5px">
             <el-image
-              :src="item.project.image?$store.state.BASE_URL+item.asset_image:''"
+              :src="
+                item.project.image
+                  ? $store.state.BASE_URL + item.asset_image
+                  : ''
+              "
               fit="cover"
             >
               <div
                 slot="error"
-                style="height: 100%;display: flex;justify-content: center;align-items: center;font-size: 56px;background: #dcdfe6;"
+                style="
+                  height: 100%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  font-size: 56px;
+                  background: #dcdfe6;
+                "
               >
-                <i class="el-icon-picture" style="color:#909399"></i>
+                <i class="el-icon-picture" style="color: #909399"></i>
               </div>
             </el-image>
+            {{ item }}
           </div>
         </div>
       </div>
@@ -47,7 +60,7 @@ export default {
       projectList: [],
       selectProjectIds: [],
       selectProjects: [],
-      currentPlayId: -1
+      currentPlayId: -1,
     };
   },
   created() {
@@ -80,18 +93,23 @@ export default {
      */
     changeCheckedProject(e, item, index) {
       if (e) {
+        let { path } = item;
+        //  去掉路径前面的 '/'
+        if (/^\//.test(path)) {
+          path = path.slice(1);
+        }
         item = {
           ...item,
-          url: this.$store.state.BASE_URL + item.media_path //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
+          url: this.$store.state.BASE_URL + path, //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
         };
         this.selectProjects.push(item);
       } else {
-        this.selectProjects = this.selectProjects.filter(t => {
+        this.selectProjects = this.selectProjects.filter((t) => {
           return t.task.id !== item.task.id;
         });
       }
     },
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

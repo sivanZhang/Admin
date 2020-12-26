@@ -8,7 +8,6 @@
         label-width="100px"
         class="demo-ProjectForm"
         label-position="left"
-        hide-required-asterisk
       >
         <el-upload
           accept="image/jpeg, image/gif, image/png"
@@ -93,7 +92,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="起止日期" required prop="datetime">
+        <el-form-item label="起止日期"  prop="datetime">
           <el-date-picker
             v-model="ProjectForm.datetime"
             type="daterange"
@@ -282,12 +281,7 @@ export default {
       rules: {
         name: [{ required: true, message: "请输入项目名称", trigger: "blur" }],
         code: [{ required: true, message: "请输入项目编码", trigger: "blur" }],
-        start: [
-          { required: true, message: "请输入项目开始日期", trigger: "blur" }
-        ],
-        end: [
-          { required: true, message: "请输入项目结束日期", trigger: "blur" }
-        ],
+        datetime:[ { type: 'date', required: true, message: '请选择日期', trigger: 'change' },],
         budget: [
           {
             pattern: /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/,
@@ -477,24 +471,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-.el-upload-dragger {
-  width: 440px;
-  height: 220px;
-  border: 0px;
-}
-.el-upload-dragger:hover {
-  border-color: transparent;
-}
 
-.el-dialog__body {
-  padding: 10px 20px;
-}
-.el-form-item--mini .el-form-item__label {
-  line-height: 28px;
-  font-size: 12px;
-}
-</style>
 <style lang="scss" scoped>
 .line {
   text-align: center;
@@ -536,6 +513,28 @@ label {
 }
 </style>
 <style lang="scss">
+.el-upload-dragger {
+  width: 440px;
+  height: 220px;
+  border: 0px;
+}
+.el-upload-dragger:hover {
+  border-color: transparent;
+}
+
+.el-dialog__body {
+  padding: 10px 20px;
+}
+.el-form-item--mini .el-form-item__label {
+  line-height: 28px;
+  font-size: 12px;
+}
+#create-project{
+  .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before{
+    position: absolute;
+    left: 12px;
+  }
+}
 .box {
   overflow: auto;
   border: 1px solid #e8eaec;
