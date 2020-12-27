@@ -145,6 +145,8 @@ export default {
     keyup() {
       window.addEventListener("keydown", this.handelKeyDownCustom, false);
     },
+
+    // 按钮控制播放器回调
     handelKeyDownCustom(event) {
       const frameTime = 1 / 25;
       var _self = this;
@@ -191,18 +193,20 @@ export default {
     initVideoUrl(project, pWidth, pHeight) {
       const _self = this;
       _self.currentProject = project;
-      this.isLoadVideo = true;
-
+      
       // 如果审核的是图片
       if (this.isImage(project.media_path)) {
         this.$refs.imageDraw.loadImage(project.url);
         this.isLoadVideo = false;
+        this.videoPlayer.pause();
         return;
       }
-
+      this.$refs.imageDraw.exitDrawImage()
+      this.isLoadVideo = true;
       const url = project.url;
       _self.playerControls.stateIcon = "el-icon-video-pause";
-      (this.videoPlayerNoVideoIsShow = false), (this.videoUrl = url);
+      this.videoPlayerNoVideoIsShow = false
+      this.videoUrl = url
       this.videoPlayer.width(pWidth + "px");
       this.videoPlayer.height(pHeight + "px");
       this.videoPlayer.src(this.videoUrl);
