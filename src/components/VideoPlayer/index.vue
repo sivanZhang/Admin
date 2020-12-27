@@ -87,7 +87,7 @@ import ImageDraw from "@/components/ImageDraw";
 import videojs from "video.js";
 import "./lib/videojs.framebyframe.js";
 import "video.js/dist/video-js.css";
-import { CLIENT_RENEG_LIMIT } from 'tls';
+import { CLIENT_RENEG_LIMIT } from "tls";
 export default {
   name: "VideoPlayer",
   components: { ImageDraw },
@@ -193,7 +193,7 @@ export default {
     initVideoUrl(project, pWidth, pHeight) {
       const _self = this;
       _self.currentProject = project;
-      
+
       // 如果审核的是图片
       if (this.isImage(project.media_path)) {
         this.$refs.imageDraw.loadImage(project.url);
@@ -201,12 +201,12 @@ export default {
         this.videoPlayer.pause();
         return;
       }
-      this.$refs.imageDraw.exitDrawImage()
+      this.$refs.imageDraw.exitDrawImage();
       this.isLoadVideo = true;
       const url = project.url;
       _self.playerControls.stateIcon = "el-icon-video-pause";
-      this.videoPlayerNoVideoIsShow = false
-      this.videoUrl = url
+      this.videoPlayerNoVideoIsShow = false;
+      this.videoUrl = url;
       this.videoPlayer.width(pWidth + "px");
       this.videoPlayer.height(pHeight + "px");
       this.videoPlayer.src(this.videoUrl);
@@ -451,6 +451,9 @@ export default {
 </script>
 
 <style lang="scss">
+.video-js .vjs-error-display.vjs-modal-dialog {
+  display: none;
+}
 .player-box {
   width: 100%;
   height: 100%;

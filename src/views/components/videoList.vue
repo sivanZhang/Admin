@@ -92,6 +92,9 @@ export default {
      * @param {Object} item 点击卡片多选按钮时返回的资产对象
      */
     changeCheckedProject(e, item, index) {
+      function isImage(src) {
+        return /\.(gif|png|jpg)$/i.test(src);
+      }
       if (e) {
         let { path } = item;
         //  去掉路径前面的 '/'
@@ -100,8 +103,22 @@ export default {
         }
         item = {
           ...item,
-          url: this.$store.state.BASE_URL + path, //本地调试'47HK2MpfKwqx1510325093.mp4'//正式：this.$store.state.BASE_URL+item.path
+          url: this.$store.state.BASE_URL + path,
         };
+
+        //  防止图片跨域的本地调试代码
+        // let test = ''
+        // if(isImage(path)){
+        //   test =  (Math.floor(Math.random()*2)+1)+'.png'
+        // }else{
+        //   test = (Math.floor(Math.random()*2)+1)+'.mp4'
+        // }
+        // item = {
+        //   ...item,
+        //   // url: this.$store.state.BASE_URL + path,
+        //   url:test
+        // };
+
         this.selectProjects.push(item);
       } else {
         this.selectProjects = this.selectProjects.filter((t) => {
