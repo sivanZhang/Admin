@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container signup">
 
     <el-form ref="emailForm" :model="emailForm" :rules="emailRules" class="login-form">
       <div class="title-container">
@@ -220,7 +220,7 @@
   $dark_gray: #889aa4;
   $light_gray: #eee;
 
-  .login-container {
+  .signup.login-container {
     min-height: 100%;
     width: 100%;
     background-color: $bg;

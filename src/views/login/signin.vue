@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container signin">
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">wefxs</h3>
+        <h3 class="title">影视后期工作流环节协同管理软件</h3>
       </div>
 
       <el-form-item prop="username">
@@ -201,19 +201,17 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
-.login-container {
+.signin.login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
-  overflow: hidden;
 
   .login-form {
     position: relative;
     width: 407px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 239px 35px 0;
     margin: 0 auto;
-    overflow: hidden;
   }
 
   .svg-container {
@@ -225,8 +223,11 @@ $light_gray: #eee;
   }
 
   .title-container {
-    position: relative;
-
+    position: absolute;
+    top: 160px;
+    width: 500px;
+    left: 50%;
+    transform: translateX(-50%);
     .title {
       font-size: 26px;
       color: $light_gray;
