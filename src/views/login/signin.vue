@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">wefxs</h3>
+        <h3 class="title">影视后期项目管理平台软件</h3>
       </div>
 
       <el-form-item prop="username">

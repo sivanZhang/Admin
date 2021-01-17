@@ -4,7 +4,7 @@
       <div id="videoTabs" class="video-tabs">
         <!-- 侧栏展示Tab页 -->
         <el-tabs v-model="activeTab">
-          <el-tab-pane label="环节" name="first">
+          <!-- <el-tab-pane label="环节" name="first">
             <links
               :link-list="LinkList"
               :project="project"
@@ -15,6 +15,9 @@
               :pro_type="pro_type"
               :authLink="authLink"
             ></links>
+          </el-tab-pane> -->
+          <el-tab-pane label="进度管理" name="first">
+            <taskForm />
           </el-tab-pane>
           <el-tab-pane label="评论" name="second">
             <remarks :project="project" :RemarksData="RemarksData" @refreshRemark="updateRemark" />
@@ -81,7 +84,8 @@
 <script>
 import remarks from "@/components/projectDrawer/components/remarks";
 import info from "@/components/projectDrawer/components/info";
-import links from "@/views/projects/components/links";
+// import links from "@/views/projects/components/links";
+import taskForm from '@/views/task/components/task-form'
 import history from "@/views/task/components/tab-history";
 import { addLinks, getLinks } from "@/api/links";
 import { getHistoryVersion } from "@/api/assets";
@@ -121,7 +125,7 @@ export default {
       }
     }
   },
-  components: { remarks, info, links, approveLog, attrsBind, history },
+  components: { remarks, info, /* links, */ approveLog, attrsBind, history,taskForm },
 
   methods: {
     updateRemark() {

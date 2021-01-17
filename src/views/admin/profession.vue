@@ -69,7 +69,7 @@
                     v-if="DeptAuth"
                     :disabled="showList"
                   >删除成员</el-button>
-                  <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button>
+                  <!-- <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button> -->
                 </el-col>
                 <el-col :span="6">
                   <label for>工种名称</label>

@@ -20,7 +20,7 @@
       </el-tab-pane>
       </template>
       <template v-if="!trainingAuth">
-      <el-tab-pane label="镜头" name="tab0" lazy>
+      <el-tab-pane label="镜头" name="tab0" >
         <tab-assets
           ref="scene"
           :activeName="activeName"
@@ -44,17 +44,17 @@
           :assetJump="assetJump"
           :assetId="assetId"
           @jumpName="jumpName"
-          :groupType="groupType"
+          :groupType="groupType"  
           @getGroup="getGroupAuth"
           notShow="false"
         />
       </el-tab-pane>
-      <el-tab-pane label="任务" name="tab2" lazy>
+      <!-- <el-tab-pane label="任务" name="tab2" lazy>
         <tab-task ref="tabtask" 
         :activeName="activeName"
         @jumpName="jumpName"
         :asset-list="AssetList" @getAssetList="getAssetList()" />
-      </el-tab-pane>
+      </el-tab-pane> -->
       </template>
       <template v-if="project.pro_type === 0">
       <el-tab-pane label="成绩单" name="tab4" lazy>
