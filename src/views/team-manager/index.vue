@@ -2,7 +2,7 @@
 <template>
   <div id="team-manager" ref="drawer-parent">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="未分配镜头" name="first" lazy>
+      <el-tab-pane label="未分配资产" name="first" lazy>
         <isNeed
           active="true"
           :scene="sceneNeed"
@@ -17,7 +17,7 @@
           @refresh="getNeedScene"
         />
       </el-tab-pane>
-      <el-tab-pane label="已分配镜头" name="second">
+      <el-tab-pane label="已分配资产" name="second">
         <isNeed
           :scene="sceneUnneed"
           :tableLoading="tableLoading"

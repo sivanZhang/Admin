@@ -5,36 +5,50 @@
         <el-card>
           <h4 slot="header">部门与工种</h4>
           <div>
-            <el-row type="flex" align="middle" class="nav-title" v-if="DeptAuth">
-              <el-button @click="openGroupForm('add')" type="success" style="width:100%">添加工种</el-button>
+            <el-row
+              type="flex"
+              align="middle"
+              class="nav-title"
+              v-if="DeptAuth"
+            >
+              <el-button
+                @click="openGroupForm('add')"
+                type="success"
+                style="width: 100%"
+                >添加工种</el-button
+              >
             </el-row>
-            <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
+            <el-input
+              class="search-group"
+              placeholder="输入关键字进行搜索"
+              v-model="filterText"
+            ></el-input>
             <el-tree
               class="filter-tree"
               empty-text="未创建工种"
               highlight-current
               ref="tree"
               :data="DeptList"
-            @node-click="handleGroupClick"
+              @node-click="handleGroupClick"
               :props="defaultProps"
               default-expand-all
               :expand-on-click-node="false"
               :filter-node-method="searchGroup"
             >
               <span class="custom-tree-node" slot-scope="{ node, data }">
-                <span style="margin-right:6px;">{{node.label}}</span>
+                <span style="margin-right: 6px">{{ node.label }}</span>
                 <span class="iconWarp">
                   <i
                     class="el-icon-plus"
-                    @click="openGroupForm('add',data)"
-                    style="color:#409EFF"
+                    @click="openGroupForm('add', data)"
+                    style="color: #409eff"
                     title="添加子工种"
                     v-if="DeptAuth"
                   ></i>
                   <i
                     class="el-icon-delete"
                     @click="removeGroup(data)"
-                    style="color:#F56C6C"
+                    style="color: #f56c6c"
                     title="删除当前工种"
                     v-if="DeptAuth"
                   ></i>
@@ -50,80 +64,53 @@
           <div>
             <div class="t-header">
               <el-row type="flex" align="middle">
-                <el-col :span="12">
-                  <el-button
-                    @click="openGroupForm('update')"
-                    type="primary"
-                    v-if="DeptAuth"
-                    :disabled="showList"
-                  >修改工种信息</el-button>
-                  <el-button
-                    @click="openChangeMember(1)"
-                    type="primary"
-                    v-if="DeptAuth"
-                    :disabled="showList"
-                  >添加成员</el-button>
-                  <el-button
-                    @click="openChangeMember(0)"
-                    type="danger"
-                    v-if="DeptAuth"
-                    :disabled="showList"
-                  >删除成员</el-button>
-                  <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button>
-                </el-col>
-                <el-col :span="6">
-                  <label for>工种名称</label>
-
-                  ： {{ActiveGroup?ActiveGroup.name:'--'}}
-                  <font
-                    style="font-size:8px;"
-                  >({{ActiveGroup?ActiveGroup.alias:'--'}})</font>
-                </el-col>
-
-                <el-col :span="6">
-                  <label for>工种负责人</label>
-                  ：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
+                <el-col :span="24">
+                  {{ activeTemplate?activeTemplate.name + "的审批流程":'审批流程' }}
                 </el-col>
               </el-row>
             </div>
-            <users-table :UserList="GroupUsers" :table-loading="tableLoading" @jump="jumpChange"></users-table>
+            <links
+              v-if="activeTemplate"
+              :LinkTemplateList="LinkTemplateList"
+              :deptId="activeTemplate.id"
+              :deptName="activeTemplate.name"
+              @refresh="show(ActiveGroup)"
+              :DeptAuth="DeptAuth"
+            ></links>
           </div>
         </el-card>
       </ElCol>
     </ElRow>
-    <!-- 右击侧栏展示审批流程 -->
-    <template v-if="isDrawerShow">
-      <Drawer
-        scrollable
-        :title="activeTemplate.name+'的审批流程'"
-        v-model="isDrawerShow"
-        width="512px"
-        inner
-        :mask-style="{backgroundColor: 'transparent'}"
-        :transfer="false"
-      >
-        <links
-          :LinkTemplateList="LinkTemplateList"
-          :deptId="activeTemplate.id"
-          :deptName="activeTemplate.name"
-          @refresh="show(ActiveGroup)"
-          :DeptAuth="DeptAuth"
-        ></links>
-      </Drawer>
-    </template>
     <!-- 添加用户组弹出框 -->
-    <el-dialog :title="DialogType.title" :visible.sync="dialogFormVisible" width="460px">
+    <el-dialog
+      :title="DialogType.title"
+      :visible.sync="dialogFormVisible"
+      width="460px"
+    >
       <el-form :model="GroupForm" ref="GroupForm" :rules="GroupRules">
         <el-form-item label="工种名" label-width="20%" prop="name">
-          <el-input v-model="GroupForm.name" autocomplete="off" style="width:100%"></el-input>
+          <el-input
+            v-model="GroupForm.name"
+            autocomplete="off"
+            style="width: 100%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="工种别名" label-width="20%" prop="alias">
-          <el-input v-model="GroupForm.alias" autocomplete="off" style="width:100%"></el-input>
+          <el-input
+            v-model="GroupForm.alias"
+            autocomplete="off"
+            style="width: 100%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="负责人" label-width="20%" prop="chargerid">
-          <el-select v-model="GroupForm.chargerid" placeholder="负责人" style="width:100%" filterable>
+          <el-select
+            v-model="GroupForm.chargerid"
+            placeholder="负责人"
+            style="width: 100%"
+            filterable
+          >
             <el-option
-              v-for="(item,index) of AllMembers"
+              v-for="(item, index) of AllMembers"
               :label="item.username"
               :value="item.id"
               :key="index"
@@ -138,15 +125,30 @@
         <el-button
           :loading="Loadings.addDeptLoading"
           type="primary"
-          @click="DialogType.type==='add'?appendGroup(GroupForm):updateGroup(GroupForm)"
-        >提 交</el-button>
+          @click="
+            DialogType.type === 'add'
+              ? appendGroup(GroupForm)
+              : updateGroup(GroupForm)
+          "
+          >提 交</el-button
+        >
       </div>
     </el-dialog>
 
-    <el-dialog :title="MemberEditState['title']" :visible.sync="isMemberEditShow" width="460px">
-      <el-select v-model="SelectMembers" multiple placeholder="请选择" style="width:100%" filterable>
+    <el-dialog
+      :title="MemberEditState['title']"
+      :visible.sync="isMemberEditShow"
+      width="460px"
+    >
+      <el-select
+        v-model="SelectMembers"
+        multiple
+        placeholder="请选择"
+        style="width: 100%"
+        filterable
+      >
         <el-option
-          v-for="(item,index) of AllMembers"
+          v-for="(item, index) of AllMembers"
           :label="item.username"
           :value="item.id"
           :key="index"
@@ -158,9 +160,10 @@
 
         <el-button
           :loading="Loadings.memberEditLoading"
-          :type="MemberEditState.type?'primary':'danger'"
+          :type="MemberEditState.type ? 'primary' : 'danger'"
           @click="changeMember"
-        >{{MemberEditState.type?'添 加':'删 除'}}</el-button>
+          >{{ MemberEditState.type ? "添 加" : "删 除" }}</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -173,7 +176,7 @@ import {
   putDept,
   removeDept,
   getWKTemplate,
-  getRoles
+  getRoles,
 } from "@/api/admin";
 
 import usersTable from "@/views/components/UsersTable";
@@ -184,7 +187,7 @@ export default {
   name: "profession",
   data() {
     return {
-    UserList:[],
+      UserList: [],
       tableLoading: false,
       isDrawerShow: false,
       activeTemplate: null,
@@ -200,7 +203,7 @@ export default {
       defaultProps: {
         children: "children",
 
-        label: "name"
+        label: "name",
       },
       GroupForm: {},
       dialogFormVisible: false,
@@ -211,8 +214,8 @@ export default {
 
             trigger: "blur",
 
-            message: "工种名称未填写"
-          }
+            message: "工种名称未填写",
+          },
         ],
         alias: [
           // { required: true, message: "请输入别名", trigger: "blur" },
@@ -220,8 +223,8 @@ export default {
             required: true,
             pattern: /^[A-Za-z0-9]+$$/,
             message: "请输入英文或数字",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         chargerid: [
           {
@@ -229,48 +232,47 @@ export default {
 
             trigger: "blur",
 
-            message: "工种负责人未选择"
-          }
-        ]
+            message: "工种负责人未选择",
+          },
+        ],
       },
       Loadings: {
         addDeptLoading: false,
 
-        memberEditLoading: false
+        memberEditLoading: false,
       },
-      showList: true
+      showList: true,
     };
   },
   computed: {
-    classObject: function() {
+    classObject: function () {
       return {
-        active: this.isActive && !this.error
+        active: this.isActive && !this.error,
       };
     },
-    ...mapState("admin", [ "DeptList", "DeptAuth"])
-   
+    ...mapState("admin", ["DeptList", "DeptAuth"]),
   },
 
   methods: {
     getAllUserlist() {
       getUserList().then(({ data }) => {
-       this.AllMembers = [...data];
-         })
+        this.AllMembers = [...data];
+      });
     },
     jumpChange(val) {
       //  console.log(val);
       getDept({
-        id: val
+        id: val,
       })
         .then(({ data }) => {
           const msg = data.msg;
           this.handleGroupClick(msg);
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     //http获取“用户组”列表
     getDeptList() {
-    //  this. getAllUserlist();
+      //  this. getAllUserlist();
       this.$store.dispatch("admin/get_DeptList");
     },
     async changeMember() {
@@ -283,20 +285,20 @@ export default {
       let data = {
         id: this.ActiveGroup.id,
 
-        method: "put"
+        method: "put",
       };
 
       if (this.MemberEditState.type) {
         data = {
           ...data,
 
-          add_user_ids: this.SelectMembers.join()
+          add_user_ids: this.SelectMembers.join(),
         };
       } else {
         data = {
           ...data,
 
-          del_user_ids: this.SelectMembers.join()
+          del_user_ids: this.SelectMembers.join(),
         };
       }
 
@@ -324,7 +326,6 @@ export default {
       this.isMemberEditShow = false;
     },
     openChangeMember(type = 0) {
-     
       this.SelectMembers = [];
 
       if (type) {
@@ -333,17 +334,17 @@ export default {
           {
             type,
 
-            title: "添加成员"
+            title: "添加成员",
           }
         );
-     this.getAllUserlist();
+        this.getAllUserlist();
       } else {
         this.MemberEditState = Object.assign(
           {},
           {
             type,
 
-            title: "删除成员"
+            title: "删除成员",
           }
         );
 
@@ -369,7 +370,7 @@ export default {
       console.log(this.activeTemplate.id);
       this.isDrawerShow = true;
       getWKTemplate({
-        dept: this.activeTemplate.id
+        dept: this.activeTemplate.id,
       }).then(({ data }) => {
         this.LinkTemplateList = [...data.msg];
         // console.log("LinkTemplateList");
@@ -378,26 +379,27 @@ export default {
     },
 
     // 工种单击触发事件
-    handleGroupClick(data) {
+    async handleGroupClick(data) {
       this.showList = false;
       this.ActiveGroup = { ...data };
       this.tableLoading = true;
-      getDept({
-        id: data.id
+      await getDept({
+        id: data.id,
       })
         .then(({ data }) => {
           this.GroupUsers = [...data.users];
           this.tableLoading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           this.tableLoading = false;
         });
+      this.show(this.ActiveGroup);
     },
 
     appendGroup() {
       //验证表单
 
-      this.$refs["GroupForm"].validate(async valid => {
+      this.$refs["GroupForm"].validate(async (valid) => {
         if (valid) {
           this.Loadings.addDeptLoading = true;
 
@@ -426,7 +428,7 @@ export default {
     updateGroup(GroupForm) {
       //验证表单
 
-      this.$refs["GroupForm"].validate(async valid => {
+      this.$refs["GroupForm"].validate(async (valid) => {
         if (valid) {
           this.Loadings.addDeptLoading = true;
 
@@ -436,15 +438,15 @@ export default {
 
               if (data.status === 0) {
                 this.$message.success(data.msg);
-                this.ActiveGroup = GroupForm
-                 getDept({
-                      id: GroupForm.id
-                    })
-                      .then(({ data }) => {
-                        const msg = data.msg;
-                        this.ActiveGroup = { ...msg };
-                      })
-                      .catch(err => {});
+                this.ActiveGroup = GroupForm;
+                getDept({
+                  id: GroupForm.id,
+                })
+                  .then(({ data }) => {
+                    const msg = data.msg;
+                    this.ActiveGroup = { ...msg };
+                  })
+                  .catch((err) => {});
                 this.getDeptList();
               } else {
                 this.$message.error(data.msg);
@@ -466,12 +468,12 @@ export default {
 
         cancelButtonText: "取消",
 
-        type: "warning"
+        type: "warning",
       }).then(() => {
         removeDept({
           id: data.id,
 
-          method: "delete"
+          method: "delete",
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
@@ -494,7 +496,7 @@ export default {
     //打开“用户组”弹窗
 
     openGroupForm(type, node = null) {
-      this. getAllUserlist();
+      this.getAllUserlist();
       if (type === "add") {
         if (node) {
           this.DialogType = Object.assign(
@@ -502,14 +504,14 @@ export default {
             {
               title: "添加子工种",
 
-              type
+              type,
             }
           );
 
           this.GroupForm = Object.assign(
             {},
             {
-              parentid: node.id
+              parentid: node.id,
             }
           );
         } else {
@@ -518,7 +520,7 @@ export default {
             {
               title: "添加工种",
 
-              type
+              type,
             }
           );
 
@@ -530,7 +532,7 @@ export default {
           {
             title: "修改工种信息",
 
-            type
+            type,
           }
         );
         this.GroupForm = Object.assign(
@@ -538,33 +540,33 @@ export default {
           {
             id: this.ActiveGroup.id,
             method: "put",
-            alias:this.ActiveGroup.alias,
+            alias: this.ActiveGroup.alias,
             name: this.ActiveGroup.name,
             chargerid: this.ActiveGroup.charger_id,
           }
         );
       }
-      
+
       this.dialogFormVisible = true;
     },
     pageRouter() {
       getDept({
-        id: this.$route.query.id
+        id: this.$route.query.id,
       })
         .then(({ data }) => {
           const msg = data.msg;
           this.handleGroupClick(msg);
         })
-        .catch(err => {});
-    }
+        .catch((err) => {});
+    },
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
-    }
+    },
   },
   created() {
-  //  this. getAllUserlist();
+    //  this. getAllUserlist();
     this.getDeptList();
     if (this.$route.query.id) {
       this.pageRouter();
@@ -573,8 +575,8 @@ export default {
 
   components: {
     usersTable,
-    links
-  }
+    links,
+  },
 };
 </script>
 

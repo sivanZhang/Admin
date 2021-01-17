@@ -2,14 +2,14 @@
 <template>
   <div id="isNeed">
     <div>
-      <el-row :gutter="24" style="padding-bottom:15px;">
-        <el-col :span="16" style="padding-bottom:15px;">
+      <el-row :gutter="24" style="padding-bottom: 15px">
+        <el-col :span="16" style="padding-bottom: 15px">
           <el-button
             type="success"
-            @click="mulEditTasks(1)"
-            icon="el-icon-edit"
-            :disabled="this.multipleSelection.length === 0"
-          >批量修改</el-button>
+            @click="changeVisible(true)"
+            icon="el-icon-plus"
+            >添加资产</el-button
+          >
         </el-col>
         <el-col :span="8" align="right">
           <el-row type="flex" justify="end">
@@ -22,7 +22,12 @@
               @filterCondition="filterCondition"
               @selRefresh="selRefresh"
             />
-            <el-button @click="getAssetList(1)" type="primary" style="margin-left: 15px">重置</el-button>
+            <el-button
+              @click="getAssetList(1)"
+              type="primary"
+              style="margin-left: 15px"
+              >重置</el-button
+            >
           </el-row>
         </el-col>
       </el-row>
@@ -32,62 +37,94 @@
     <el-table
       ref="sceneNeed"
       :data="scene"
-      :header-cell-style="{background:'#eef1f6',color:'#606266',borderRight:0}"
-      :row-style="{height:50}"
+      :header-cell-style="{
+        background: '#eef1f6',
+        color: '#606266',
+        borderRight: 0,
+      }"
+      :row-style="{ height: 50 }"
       highlight-current-row
-      :row-key="(row)=>{ return row.id}"
+      :row-key="
+        (row) => {
+          return row.id;
+        }
+      "
       @selection-change="handleSelectionChange"
       :border="false"
       v-loading="tableLoading"
       :cell-style="cellStyle"
       @cell-dblclick="editCell"
     >
-      <el-table-column type="selection" :reserve-selection="true" width="50px" align="right"></el-table-column>
+      <el-table-column
+        type="selection"
+        :reserve-selection="true"
+        width="50px"
+        align="right"
+      ></el-table-column>
       <el-table-column type="index" :index="indexMethod"></el-table-column>
       <el-table-column label="项目名称" class-name="links">
         <template slot-scope="scope">
           <router-link
-            :to="{name:'project-detail',params:{id:scope.row.project_id},query:{type:scope.row.project_type}}"
-          >{{scope.row.project_name}}</router-link>
+            :to="{
+              name: 'project-detail',
+              params: { id: scope.row.project_id },
+              query: { type: scope.row.project_type },
+            }"
+            >{{ scope.row.project_name }}</router-link
+          >
         </template>
       </el-table-column>
       <el-table-column label="镜头号" prop="asset_name" width="120px">
         <template slot-scope="scope">
-          <span @click="showDrawer(scope.row)">{{scope.row.asset_name?scope.row.asset_name:"-"}}</span>
+          <span @click="showDrawer(scope.row)">{{
+            scope.row.asset_name ? scope.row.asset_name : "-"
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="缩略图" prop="image" width="180px">
         <template slot-scope="scope">
           <el-image
-            :src="$store.state.BASE_URL+scope.row.image"
-            style="width: 160px; height: 90px;cursor: pointer; display:block;"
-            :preview-src-list="[$store.state.BASE_URL+scope.row.image]"
+            :src="$store.state.BASE_URL + scope.row.image"
+            style="width: 160px; height: 90px; cursor: pointer; display: block"
+            :preview-src-list="[$store.state.BASE_URL + scope.row.image]"
           >
             <div slot="placeholder" class="image-slot">
               加载中
               <span class="dot">...</span>
             </div>
             <div slot="error" class="image-slot">
-              <i class="el-icon-picture" style="color:#909399"></i>
+              <i class="el-icon-picture" style="color: #909399"></i>
             </div>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="session" label="场次" align="center" column-key="session">
+      <el-table-column
+        prop="session"
+        label="场次"
+        align="center"
+        column-key="session"
+      >
         <template slot-scope="scope">
           <el-input
             size="small"
             v-model="scope.row.session"
             placeholder="请输入场次"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol=='session')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'session')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
-            <span>{{scope.row.session?scope.row.session:"-"}}</span>
+            <span>{{ scope.row.session ? scope.row.session : "-" }}</span>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol!='session')"
-          >{{scope.row.session?scope.row.session:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'session')
+            "
+            >{{ scope.row.session ? scope.row.session : "-" }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="episode" label="集数" align="center">
@@ -96,15 +133,22 @@
             size="small"
             v-model="scope.row.episode"
             placeholder="请输入集数"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'episode')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'episode')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
-            <span>{{scope.row.episode?scope.row.episode:"-"}}</span>
+            <span>{{ scope.row.episode ? scope.row.episode : "-" }}</span>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'episode')"
-          >{{scope.row.episode?scope.row.episode:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'episode')
+            "
+            >{{ scope.row.episode ? scope.row.episode : "-" }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="frame" label="帧数" align="left">
@@ -113,64 +157,109 @@
             size="small"
             v-model="scope.row.frame"
             placeholder="请输入帧数"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'frame')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
-            <span>{{scope.row.frame?scope.row.frame:"-"}}</span>
+            <span>{{ scope.row.frame ? scope.row.frame : "-" }}</span>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame')"
-          >{{scope.row.frame?scope.row.frame:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'frame')
+            "
+            >{{ scope.row.frame ? scope.row.frame : "-" }}</span
+          >
         </template>
       </el-table-column>
-      <el-table-column prop="frame_range" label="帧数范围" align="left" width="120px">
+      <el-table-column
+        prop="frame_range"
+        label="帧数范围"
+        align="left"
+        width="120px"
+      >
         <template slot-scope="scope">
           <el-input
             size="small"
             v-model="scope.row.frame_range"
             placeholder="请输入帧数范围"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'frame_range')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'frame_range')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           ></el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'frame_range')"
-          >{{scope.row.frame_range?scope.row.frame_range:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'frame_range')
+            "
+            >{{ scope.row.frame_range ? scope.row.frame_range : "-" }}</span
+          >
         </template>
       </el-table-column>
-      <el-table-column prop="pro_reference" label="制作参考" align="left" width="120px">
+      <el-table-column
+        prop="pro_reference"
+        label="制作参考"
+        align="left"
+        width="120px"
+      >
         <template slot-scope="scope">
           <el-input
             size="small"
             v-model="scope.row.pro_reference"
             placeholder="请输入制作参考内容"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'reference')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'reference')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
-            <span>{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
+            <span>{{
+              scope.row.pro_reference ? scope.row.pro_reference : "-"
+            }}</span>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'reference')"
-          >{{scope.row.pro_reference?scope.row.pro_reference:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'reference')
+            "
+            >{{ scope.row.pro_reference ? scope.row.pro_reference : "-" }}</span
+          >
         </template>
       </el-table-column>
-      <el-table-column prop="report" label="画面调整信息" align="left" width="120px">
+      <el-table-column
+        prop="report"
+        label="画面调整信息"
+        align="left"
+        width="120px"
+      >
         <template slot-scope="scope">
           <el-input
             size="small"
             v-model="scope.row.report"
             placeholder="请输入画面调整信息"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'report')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'report')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
-            <span>{{scope.row.report?scope.row.report:"-"}}</span>
+            <span>{{ scope.row.report ? scope.row.report : "-" }}</span>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'report')"
-          >{{scope.row.report?scope.row.report:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'report')
+            "
+            >{{ scope.row.report ? scope.row.report : "-" }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="retime" label="变速信息" align="left">
@@ -179,15 +268,22 @@
             size="small"
             v-model="scope.row.retime"
             placeholder="请输入变速信息"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'retime')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'retime')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
-            <span>{{scope.row.retime?scope.row.retime:"-"}}</span>
+            <span>{{ scope.row.retime ? scope.row.retime : "-" }}</span>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'retime')"
-          >{{scope.row.retime?scope.row.retime:"-"}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'retime')
+            "
+            >{{ scope.row.retime ? scope.row.retime : "-" }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="content" label="制作内容" align="left">
@@ -196,26 +292,38 @@
             size="small"
             v-model="scope.row.content"
             placeholder="请输入制作内容"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'content')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'content')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           ></el-input>
-          <span style="white-space: pre-line;" v-else>{{scope.row.content?scope.row.content:"-"}}</span>
+          <span style="white-space: pre-line" v-else>{{
+            scope.row.content ? scope.row.content : "-"
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="priority" label="优先级">
         <template slot-scope="scope">
           <el-select
             v-model="scope.row.priority"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'priority')"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'priority')
+            "
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
             <el-option label="正常" :value="0"></el-option>
             <el-option label="优先" :value="1"></el-option>
           </el-select>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'priority')"
-          >{{scope.row.priority|Priority}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'priority')
+            "
+            >{{ scope.row.priority | Priority }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="level" label="难度">
@@ -223,9 +331,12 @@
           <el-select
             v-model="scope.row.level"
             placeholder="请选择难度"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'level')"
-            @change="showEditIcon(scope.$index,scope.row)"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'level')
+            "
+            @change="showEditIcon(scope.$index, scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
             <el-option
               v-for="item of LevelList"
@@ -235,43 +346,75 @@
             ></el-option>
           </el-select>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'level')"
-          >{{scope.row.level|Level}}</span>
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'level')
+            "
+            >{{ scope.row.level | Level }}</span
+          >
         </template>
       </el-table-column>
-      <el-table-column :label="active?'未分配环节':'已分配环节'" align="center" width="180px">
+      <el-table-column
+        :label="active ? '未分配环节' : '已分配环节'"
+        align="center"
+        width="180px"
+      >
         <el-table-column prop="link" label="工种" align="left" width="150px">
           <template slot-scope="scope">
             <div v-if="active">
-              <div v-for="(todo,index) of scope.row.not_allcoted_link" :key="index">
-                {{todo.dept_name}}
+              <div
+                v-for="(todo, index) of scope.row.not_allcoted_link"
+                :key="index"
+              >
+                {{ todo.dept_name }}
                 <el-tooltip effect="dark" content="添加任务" placement="top">
                   <span>
                     <i
                       type="primary"
                       class="el-icon-plus"
-                      style="color:blue"
-                      @click="showTaskForm(
-                        todo.link_id,todo.dept_id,scope.row.content,null,
-                        scope.row.asset_id,scope.row.asset_name,todo.dept_date_start,todo.dept_date_end)"
+                      style="color: blue"
+                      @click="
+                        showTaskForm(
+                          todo.link_id,
+                          todo.dept_id,
+                          scope.row.content,
+                          null,
+                          scope.row.asset_id,
+                          scope.row.asset_name,
+                          todo.dept_date_start,
+                          todo.dept_date_end
+                        )
+                      "
                     ></i>
                   </span>
                 </el-tooltip>
               </div>
             </div>
             <div v-else>
-              <div v-for="(todo,index) of scope.row.allcoted_link" :key="index">{{todo.dept_name}}</div>
+              <div
+                v-for="(todo, index) of scope.row.allcoted_link"
+                :key="index"
+              >
+                {{ todo.dept_name }}
+              </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="截止日期" align="left" width="95px" v-if="active=='true'">
+        <el-table-column
+          label="截止日期"
+          align="left"
+          width="95px"
+          v-if="active == 'true'"
+        >
           <template slot-scope="scope">
             <div v-if="active">
               <div
-                v-for="(todo,index) of scope.row.not_allcoted_link"
+                v-for="(todo, index) of scope.row.not_allcoted_link"
                 :key="index"
-                style="position:top"
-              >{{todo.dept_date_end|dateFormat}}</div>
+                style="position: top"
+              >
+                {{ todo.dept_date_end | dateFormat }}
+              </div>
             </div>
             <!-- <div v-else>
               <div
@@ -284,35 +427,54 @@
         </el-table-column>
         <el-table-column label="执行人" align="left" width="150px" v-else>
           <template slot-scope="scope">
-            <div v-for="(pitem,pindex) of scope.row.allcoted_link" :key="pindex">
+            <div
+              v-for="(pitem, pindex) of scope.row.allcoted_link"
+              :key="pindex"
+            >
               <!-- {{pitem.dept_name}}: -->
-              <span v-for="(citem,cindex) of pitem.executors" :key="cindex">{{citem}}</span>
+              <span v-for="(citem, cindex) of pitem.executors" :key="cindex">{{
+                citem
+              }}</span>
             </div>
           </template>
         </el-table-column>
       </el-table-column>
       <el-table-column label="创建日期" align="left" width="160px" prop="date">
-        <template slot-scope="scope">{{scope.row.create_date|dateFormat}}</template>
+        <template slot-scope="scope">{{
+          scope.row.create_date | dateFormat
+        }}</template>
       </el-table-column>
       <el-table-column label="截止日期" align="left" width="160px" prop="date">
-        <template slot-scope="scope">{{scope.row.total_date_end|dateFormat}}</template>
+        <template slot-scope="scope">{{
+          scope.row.total_date_end | dateFormat
+        }}</template>
       </el-table-column>
 
-      <el-table-column prop="total_hours" label="总工时" align="left"></el-table-column>
+      <el-table-column
+        prop="total_hours"
+        label="总工时"
+        align="left"
+      ></el-table-column>
       <el-table-column prop="remark" label="备注" align="left">
         <template slot-scope="scope">
           <el-input
             size="small"
             v-model="scope.row.remark"
             placeholder="请输入备注"
-            v-if="(editing&&clickId === scope.row.id)||(dbCell&&cellId === scope.row.id&&cellCol == 'remark')"
+            v-if="
+              (editing && clickId === scope.row.id) ||
+              (dbCell && cellId === scope.row.id && cellCol == 'remark')
+            "
             @change="showEditIcon"
-            @keyup.enter.native="saveEdit(scope.$index,scope.row)"
+            @keyup.enter.native="saveEdit(scope.$index, scope.row)"
           >
             <p v-html="scope.row.remark"></p>
           </el-input>
           <span
-            v-if="(!editing||clickId !== scope.row.id)&&(!dbCell||cellId !== scope.row.id||cellCol != 'remark')"
+            v-if="
+              (!editing || clickId !== scope.row.id) &&
+              (!dbCell || cellId !== scope.row.id || cellCol != 'remark')
+            "
           >
             <p v-html="scope.row.remark"></p>
           </span>
@@ -322,20 +484,20 @@
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改" placement="top">
             <el-button
-              @click="editOneAsset(scope.row,scope.$index)"
+              @click="editOneAsset(scope.row, scope.$index)"
               icon="el-icon-edit"
               type="text"
-              style="color:blue"
-              v-if="!editing||clickId !== scope.row.id"
+              style="color: blue"
+              v-if="!editing || clickId !== scope.row.id"
             />
           </el-tooltip>
           <el-tooltip effect="dark" content="确认" placement="top">
             <el-button
-              v-if="editing&&clickId === scope.row.id"
+              v-if="editing && clickId === scope.row.id"
               type="text"
               icon="el-icon-check"
-              style="color:green"
-              @click="saveEdit(scope.$index,scope.row)"
+              style="color: green"
+              @click="saveEdit(scope.$index, scope.row)"
             />
           </el-tooltip>
         </template>
@@ -351,7 +513,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :page-count="pageCount"
         :total="total"
-        style="margin-top:10px"
+        style="margin-top: 10px"
       ></el-pagination>
     </div>
 
@@ -366,36 +528,67 @@
       :inner="isInner"
       title="环节"
     >
-      <div style="display:flex;overflow:auto">
+      <div style="display: flex; overflow: auto">
         <el-steps
           direction="vertical"
           :active="1"
           style="width:250px;display:flex；justify-content:flex-start"
-          v-for="(todo,Index) of link"
+          v-for="(todo, Index) of link"
           :key="Index"
         >
-          <el-step v-for="item of todo" :key="item.link_id" status="process" style="width:250px">
-            <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
-              {{item.dept.name}}
+          <el-step
+            v-for="item of todo"
+            :key="item.link_id"
+            status="process"
+            style="width: 250px"
+          >
+            <div
+              slot="title"
+              style="
+                font-size: 14px;
+                display: flex;
+                justify-content: flex-start;
+              "
+            >
+              {{ item.dept.name }}
               <template
-                v-if="deptList.filter(todo=>{  return todo.id === item.dept.id}).length"
+                v-if="
+                  deptList.filter((todo) => {
+                    return todo.id === item.dept.id;
+                  }).length
+                "
               >
                 <el-tooltip effect="dark" content="添加任务" placement="top">
-                  <span style="padding-left:5px">
+                  <span style="padding-left: 5px">
                     <i
                       class="el-icon-plus"
-                      style="color:blue"
-                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user,null,null,null,null)"
+                      style="color: blue"
+                      @click="
+                        showTaskForm(
+                          item.link_id,
+                          item.dept.id,
+                          item.content,
+                          item.date_and_user,
+                          null,
+                          null,
+                          null,
+                          null
+                        )
+                      "
                     ></i>
                   </span>
                 </el-tooltip>
               </template>
             </div>
-            <ul slot="description" style="width:250px;">
-              <li>制作要求: {{item.content}}</li>
+            <ul slot="description" style="width: 250px">
+              <li>制作要求: {{ item.content }}</li>
               <template>
-                <li>开始日期: {{item.date_and_user.date_start|dateFormat}}</li>
-                <li>截止日期: {{item.date_and_user.date_end|dateFormat}}</li>
+                <li>
+                  开始日期: {{ item.date_and_user.date_start | dateFormat }}
+                </li>
+                <li>
+                  截止日期: {{ item.date_and_user.date_end | dateFormat }}
+                </li>
               </template>
             </ul>
           </el-step>
@@ -404,13 +597,29 @@
     </Drawer>
 
     <!-- 添加任务 -->
-    <el-dialog title="添加任务" :visible.sync="isCreateTaskShow" width="512px" center :modal="false">
-      <el-form :model="TaskForm" :rules="rules" ref="TaskForm" label-width="100px">
+    <el-dialog
+      title="添加任务"
+      :visible.sync="isCreateTaskShow"
+      width="512px"
+      center
+      :modal="false"
+    >
+      <el-form
+        :model="TaskForm"
+        :rules="rules"
+        ref="TaskForm"
+        label-width="100px"
+      >
         <el-form-item label="任务名称" prop="name">
           <el-input v-model="TaskForm.name" @input="change($event)"></el-input>
         </el-form-item>
         <el-form-item label="任务内容" prop="content">
-          <el-input type="textarea" :rows="3" v-model="TaskForm.content" @input="change($event)"></el-input>
+          <el-input
+            type="textarea"
+            :rows="3"
+            v-model="TaskForm.content"
+            @input="change($event)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
           <!-- <el-input v-model="TaskForm.code"></el-input> -->
@@ -433,7 +642,11 @@
           <el-radio v-model="TaskForm.grade" :label="10">E</el-radio>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
-          <el-select v-model="TaskForm.status" filterable placeholder="请选择任务状态">
+          <el-select
+            v-model="TaskForm.status"
+            filterable
+            placeholder="请选择任务状态"
+          >
             <el-option
               v-for="item of StatusList"
               :label="item.label"
@@ -443,7 +656,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务执行人" prop="executorlist">
-          <el-select v-model="TaskForm.executorlist" filterable multiple placeholder="请选择执行人">
+          <el-select
+            v-model="TaskForm.executorlist"
+            filterable
+            multiple
+            placeholder="请选择执行人"
+          >
             <el-option
               v-for="item of DeptUsers"
               :label="item.username"
@@ -453,12 +671,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="环节时间">
-          <el-row style="padding-left:10px;font-size: 12px;">
-            <el-col :span="6">{{linkstart|dateFormat}}</el-col>
+          <el-row style="padding-left: 10px; font-size: 12px">
+            <el-col :span="6">{{ linkstart | dateFormat }}</el-col>
             <el-col :span="3">
               <span>至</span>
             </el-col>
-            <el-col :span="15">{{linkend|dateFormat}}</el-col>
+            <el-col :span="15">{{ linkend | dateFormat }}</el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="任务时间" prop="datetime">
@@ -473,27 +691,41 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="总工时" prop="total_hour">
-          <el-input v-model="TaskForm.total_hour" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+          <el-input
+            v-model="TaskForm.total_hour"
+            oninput="value=value.replace(/[^\d.]/g,'')"
+          ></el-input>
         </el-form-item>
 
         <el-form-item>
           <el-button @click="cancelTask">取消</el-button>
-          <el-button :loading="createTaskLoading" type="primary" @click="addTasks">立即创建</el-button>
+          <el-button
+            :loading="createTaskLoading"
+            type="primary"
+            @click="addTasks"
+            >立即创建</el-button
+          >
         </el-form-item>
       </el-form>
     </el-dialog>
     <!-- 批量修改资产 -->
-    <el-dialog title="批量修改资产" :visible.sync="mulEditDialog" width="620px" top="5vh">
+    <el-dialog
+      title="批量修改资产"
+      :visible.sync="mulEditDialog"
+      width="620px"
+      top="5vh"
+    >
       <el-form :model="updateMulTask" label-width="90px">
         <el-row>
-          <el-col :span="20" style="padding-left:35px">
+          <el-col :span="20" style="padding-left: 35px">
             <el-row>
               <el-col :span="8">
-                <h4 style="padding-bottom:10px">是否修改</h4>
+                <h4 style="padding-bottom: 10px">是否修改</h4>
               </el-col>
               <el-col :span="16">
-                <div style="font-size:12px">
-                  <span style="font-weight:bold">任务难度:</span>A+ ----> E 难---->易，默认为中等等级
+                <div style="font-size: 12px">
+                  <span style="font-weight: bold">任务难度:</span>A+ ----> E
+                  难---->易，默认为中等等级
                 </div>
               </el-col>
             </el-row>
@@ -565,7 +797,11 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="帧数" prop="frame">
-              <el-input v-model="updateMulTask.frame" placeholder="请填写帧数" :disabled="disableFrame"></el-input>
+              <el-input
+                v-model="updateMulTask.frame"
+                placeholder="请填写帧数"
+                :disabled="disableFrame"
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -707,8 +943,18 @@
           </el-col>
           <el-col :span="18">
             <el-form-item label="优先级" prop="priority">
-              <el-radio v-model="updateMulTask.priority" :label="0" :disabled="disablePriority">正常</el-radio>
-              <el-radio v-model="updateMulTask.priority" :label="1" :disabled="disablePriority">优先</el-radio>
+              <el-radio
+                v-model="updateMulTask.priority"
+                :label="0"
+                :disabled="disablePriority"
+                >正常</el-radio
+              >
+              <el-radio
+                v-model="updateMulTask.priority"
+                :label="1"
+                :disabled="disablePriority"
+                >优先</el-radio
+              >
             </el-form-item>
           </el-col>
         </el-row>
@@ -730,41 +976,96 @@
             <el-form-item label="难度等级" prop="level">
               <el-row>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="0" :disabled="disableLevel">A+</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="0"
+                    :disabled="disableLevel"
+                    >A+</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="1" :disabled="disableLevel">A</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="1"
+                    :disabled="disableLevel"
+                    >A</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="2" :disabled="disableLevel">A-</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="2"
+                    :disabled="disableLevel"
+                    >A-</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="3" :disabled="disableLevel">B+</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="3"
+                    :disabled="disableLevel"
+                    >B+</el-radio
+                  >
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="4" :disabled="disableLevel">B</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="4"
+                    :disabled="disableLevel"
+                    >B</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="5" :disabled="disableLevel">B-</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="5"
+                    :disabled="disableLevel"
+                    >B-</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="6" :disabled="disableLevel">C+</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="6"
+                    :disabled="disableLevel"
+                    >C+</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="7" :disabled="disableLevel">C</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="7"
+                    :disabled="disableLevel"
+                    >C</el-radio
+                  >
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="8" :disabled="disableLevel">D+</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="8"
+                    :disabled="disableLevel"
+                    >D+</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="9" :disabled="disableLevel">D</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="9"
+                    :disabled="disableLevel"
+                    >D</el-radio
+                  >
                 </el-col>
                 <el-col :span="5">
-                  <el-radio v-model="updateMulTask.level" :label="10" :disabled="disableLevel">E</el-radio>
+                  <el-radio
+                    v-model="updateMulTask.level"
+                    :label="10"
+                    :disabled="disableLevel"
+                    >E</el-radio
+                  >
                 </el-col>
               </el-row>
             </el-form-item>
@@ -825,9 +1126,74 @@
         </el-row>
         <el-row>
           <el-col align="right">
-            <el-button type="primary" @click="mulEditTasks(2)">立即修改</el-button>
+            <el-button type="primary" @click="mulEditTasks(2)"
+              >立即修改</el-button
+            >
           </el-col>
         </el-row>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog title="创建资产" :visible.sync="formDataVisible" width="480px" top="5vh">
+      <el-form
+        :model="formData"
+        :rules="rules"
+        ref="assetForm"
+        label-width="100px"
+        hide-required-asterisk
+        label-position="left"
+      >
+        <el-upload
+          accept="image/jpeg, image/gif, image/png"
+          ref="upload"
+          class="upload-demo"
+          action="/api/appfile/appfile/"
+          :headers="headers"
+          :on-success="handleSuccess"
+          drag
+          :show-file-list="false"
+        >
+          <el-image v-if="SRC" style="width: 100%; height: 100%" :src="SRC"></el-image>
+          <template v-else>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </template>
+        </el-upload>
+        <el-form-item label="资产名称" prop="name">
+          <el-input v-model="formData.name" @input="change($event)"></el-input>
+        </el-form-item>
+        <el-form-item label="存放路径" prop="path">
+          <el-input v-model="formData.path" @input="change($event)"></el-input>
+        </el-form-item>
+        <el-form-item label="优先等级" prop="priority">
+          <!-- <el-input v-model="AssetForm.code"></el-input> -->
+          <el-radio v-model="formData.priority" :label="0">正常</el-radio>
+          <el-radio v-model="formData.priority" :label="1">优先</el-radio>
+        </el-form-item>
+        <el-form-item label="难度" prop="level">
+          <el-select v-model="formData.level" placeholder="请选择难度">
+            <el-option
+              v-for="item of LevelList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <!-- <el-form-item label="所属团队" prop="team">
+          <el-input v-model="AssetForm.category"></el-input>
+        </el-form-item>-->
+        <el-form-item>
+          <el-button @click="changeVisible(false)">取消</el-button>
+          <el-button
+            type="primary"
+            @click="changeVisible(false)"
+          >立即创建</el-button>
+        </el-form-item>
       </el-form>
     </el-dialog>
   </div>

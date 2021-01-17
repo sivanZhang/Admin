@@ -1,4 +1,7 @@
 import thumbtackMixin from "@/utils/thumbtack-mixin";
+import {
+  getToken
+} from "@/utils/auth";
 import myMixin from "@/views/projects/components/mixins";
 import { getLinks } from "@/api/links";
 import { getDept } from "@/api/admin";
@@ -42,6 +45,8 @@ export default {
   ],
   data() {
     return {
+      formData:{},
+      formDataVisible:false,
       multipleSelection: [],
       value1: false,
       deptUser: [],
@@ -141,6 +146,71 @@ export default {
       oneSel: null, //保存单列筛选的条件
       sortSelForm: {}, //保存多列筛选条件
       multiSelect: [],
+      rules: {
+        name: [{
+          required: true,
+          message: "请输入名称",
+          trigger: "blur"
+        }],
+        priority: [{
+          required: true,
+          message: "请输入优先等级",
+          trigger: "blur"
+        }],
+        level: [{
+          required: true,
+          message: "请输入难度",
+          trigger: "blur"
+        }]
+      },
+      headers: {
+        Authorization: `JWT ${getToken()}`
+      },
+      evelList: [{
+        label: "A+",
+        value: 0
+      },
+      {
+        label: "A",
+        value: 1
+      },
+      {
+        label: "A-",
+        value: 2
+      },
+      {
+        label: "B+",
+        value: 3
+      },
+      {
+        label: "B",
+        value: 4
+      },
+      {
+        label: "B-",
+        value: 5
+      },
+      {
+        label: "C+",
+        value: 6
+      },
+      {
+        label: "C",
+        value: 7
+      },
+      {
+        label: "D+",
+        value: 8
+      },
+      {
+        label: "D",
+        value: 9
+      },
+      {
+        label: "E",
+        value: 10
+      }
+    ],
     };
   },
   filters: {
@@ -154,6 +224,12 @@ export default {
   },
   watch: {},
   methods: {
+    handleSuccess(){
+
+    },
+    changeVisible(bl){
+      this.formDataVisible = bl
+    },
     //获取资产或者镜头列表，type=1时表示重置（包括单条件筛选）
     getAssetList(type, oneSel, name) {
       this.name = name;
